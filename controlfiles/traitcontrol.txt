@@ -1,0 +1,48 @@
+treefile = oz_spheno_mcc183.tre
+traitfile = skinks_shape1_smallval.txt
+sampleFromPriorOnly = 0
+runMCMC = 1
+loadEventData = 0
+eventDataInfile = treepars.txt
+initializeModel = 1
+updateBetaScale = 1
+updateNodeStateScale = 1
+updateBetaShiftScale = 1
+MeanSpeciationLengthFraction = 3
+
+updateEventRateScale = 4.0
+localGlobalMoveRatio = 5
+
+
+betaInit = 1
+betaShiftInit = 0.0
+
+targetNumber = 1
+betaInitPrior = 1
+betaShiftPrior = 0.05
+
+useObservedMinMaxAsTraitPriors = 1
+traitPriorMin = 0
+traitPriorMax = 0
+
+mcmcOutfile = bmcmcout.txt
+betaOutfile = bbetarates.txt
+acceptrateOutfile = baccept.txt
+nodeStateOutfile = bnodestate.txt
+eventDataOutfile = beventdata.txt
+
+treeWriteFreq = 100000
+mcmcWriteFreq = 20000
+eventDataWriteFreq = 50000
+acceptWriteFreq = 20000
+printFreq = 10000
+NumberGenerations = 50000000
+
+updateRateEventNumber = 1
+updateRateEventPosition = 1
+updateRateEventRate = 1
+updateRateBeta0 = 1
+updateRateBetaShift = 1
+updateRateNodeState = 25
+
+initialNumberEvents = 0
