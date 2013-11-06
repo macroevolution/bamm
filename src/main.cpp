@@ -24,6 +24,7 @@
 #include "TraitModel.h"
 
 
+// Specify the type of BAMM run at compile-time
 //#define BUILD_TYPE_DEFAULT "speciationextinction"
 #define BUILD_TYPE_DEFAULT "trait"
 
