@@ -155,6 +155,9 @@ public:
 	
 	double			getLastLH(void)	{  return _lastLH;	}
 	
+	
+	void			initializeModelFromEventDataFileTrait(void);
+	
 private:
 	
 	//	parameters of the model:

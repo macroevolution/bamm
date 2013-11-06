@@ -1,4 +1,4 @@
-treefile = examples/diversification/whales/whaletree.tre
+treefile = ../examples/diversification/whales/whaletree.tre
 sampleFromPriorOnly = 0
 runMCMC = 1
 loadEventData = 0
@@ -49,4 +49,3 @@ updateRateLambdaShift = 1
 updateRateMu0 = 1
 
 initialNumberEvents = 0
-

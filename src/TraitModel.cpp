@@ -30,7 +30,7 @@ double TraitModel::mhColdness = 1.0;
 
 #define OLDWAY
 #undef OLDWAY
-
+ 
 TraitModel::TraitModel(MbRandom * ranptr, Tree * tp, Settings * sp){
 	
 	_lastLH = 0.0;
@@ -129,6 +129,12 @@ TraitModel::TraitModel(MbRandom * ranptr, Tree * tp, Settings * sp){
 	// 
 	treePtr->setMeanBranchTraitRates();
 	
+	if (sttings->getLoadEventData()){
+		cout << "\nLoading model data from file: " << sttings->getEventDataInfile() << endl;
+		initializeModelFromEventDataFileTrait();
+	}	
+	
+	
 	setCurrLnLTraits(computeLikelihoodTraits());
 	
  	cout << "Model object successfully initialized." << endl;
@@ -157,6 +163,132 @@ TraitModel::~TraitModel(void){
  
  
  */
+
+void TraitModel::initializeModelFromEventDataFileTrait(void){
+	// Part 1. Read from file
+	
+	// Assumes each parameter is on a new line:
+	// In order:
+	// sp1, sp2, time (absolute), beta0, shiftparm
+	// 5 parameters, so k * 5 lines in file, where k is number of events (k >= 1, if root included)
+	
+	ifstream infile(sttings->getEventDataInfile().c_str());
+	cout << "Initializing model from <<" << sttings->getEventDataInfile() << ">>" << endl;	
+	vector<string> species1;
+	vector<string> species2;
+	vector<double> etime;
+	vector<double> beta_par1;
+	vector<double> beta_par2;
+	
+	if (!infile.good()){
+		cout << "Bad Filename. Exiting\n" << endl;
+		exit(1);
+	}
+	
+	
+	string tempstring;
+	
+	int index = 0;
+	
+	while (infile){
+		
+		string tempstring;
+		//getline(infile, tempstring, '\t');
+		getline(infile, tempstring);
+		
+		cout << index << setw(10) << tempstring.c_str() << "\n";
+		
+		species1.push_back(tempstring);	
+		
+		//getline(infile, tempstring, '\t');
+		getline(infile, tempstring);
+
+		cout << index << setw(10) << tempstring.c_str() << "\n";
+		species2.push_back(tempstring);
+		
+		//getline(infile, tempstring, '\t');
+		getline(infile, tempstring);
+		
+		cout << index << setw(10) << tempstring.c_str() << "\n";
+		etime.push_back(atof(tempstring.c_str()));
+		
+		//getline(infile, tempstring, '\t');
+		getline(infile, tempstring);
+		
+		cout << index << setw(10) << tempstring.c_str() << "\n";
+		beta_par1.push_back(atof(tempstring.c_str()));
+		
+		//getline(infile, tempstring, '\t');
+		getline(infile, tempstring);
+		
+		cout << index << setw(10) << tempstring.c_str() << "\n";
+		beta_par2.push_back(atof(tempstring.c_str()));
+		
+		index++;
+		
+		if (infile.peek() == EOF) 
+			break;
+		
+	}
+	
+	infile.close();
+	
+	cout << "Read a total of " << species1.size() << " events" << endl;	
+	for (int i = 0; i < species1.size(); i++){
+		cout << species1[i] << "\t" << species2[i] << "\t" << etime[i] << "\t" << beta_par1[i] << "\t" << beta_par2[i] << endl;
+	}
+	
+	
+	for (int i = 0; i < species1.size(); i++){
+		cout << endl << "MRCA of : " <<  species1[i] << "\t" << species2[i] << endl;
+		if (species2[i] != "NA" & species1[i] != "NA"){
+			
+			Node* x = treePtr->getNodeMRCA(species1[i].c_str(), species2[i].c_str());	
+			if (x  == treePtr->getRoot()){
+				
+				// Only including this "root time setting" to replicate previous bug - Nov 1 2013
+				rootEvent->setAbsoluteTime(etime[i]);
+				rootEvent->setBetaInit(beta_par1[i]);
+				rootEvent->setBetaShift(beta_par2[i]);
+
+			}else{
+				double deltaT = x->getTime() - etime[i];
+				
+				double newmaptime = x->getMapStart() + deltaT;
+ 
+				TraitBranchEvent* newEvent = new TraitBranchEvent(beta_par1[i], beta_par2[i], x, treePtr, ran, newmaptime, _scale);
+				newEvent->getEventNode()->getTraitBranchHistory()->addEventToBranchHistory(newEvent);
+				eventCollection.insert(newEvent);
+				forwardSetBranchHistories(newEvent);
+				treePtr->setMeanBranchTraitRates();
+			}
+			
+		}else if (species2[i] == "NA" & species1[i] != "NA"){
+			
+			Node* x = treePtr->getNodeByName(species1[i].c_str());
+			
+			double deltaT = x->getTime() - etime[i];
+			double newmaptime = x->getMapStart() + deltaT;
+			
+			TraitBranchEvent* newEvent = new TraitBranchEvent(beta_par1[i], beta_par2[i], x, treePtr, ran, newmaptime, _scale);
+			newEvent->getEventNode()->getTraitBranchHistory()->addEventToBranchHistory(newEvent);
+			eventCollection.insert(newEvent);
+			forwardSetBranchHistories(newEvent);
+			treePtr->setMeanBranchTraitRates();			
+ 
+		}else{
+			cout << "Error in Model::initializeModelFromEventDataFile" << endl;
+			exit(1);
+		}
+		
+		//cout << i << "\t" << computeLikelihoodBranches() << "\t" << computeLogPrior() << endl;
+	}
+	
+	cout << "Added " << eventCollection.size() << " pre-defined events to tree, plus root event" << endl;
+	printEventData();
+}
+
+
 
 
 void TraitModel::addEventToTree(double x){
@@ -1777,11 +1909,12 @@ bool TraitModel::isEventConfigurationValid(TraitBranchEvent * be){
 void TraitModel::printEventData(void){
 	
 	TraitBranchEvent * be = rootEvent;
-	cout << "RtBt: " << be->getBetaInit() << "\tSf: " << be->getBetaShift() << "\t";
+	cout << "RtBt: " << be->getBetaInit() << "\tSf: " << be->getBetaShift() << "\tAtime:" << be->getAbsoluteTime() << endl;
 	int ctr = 0;
 	for (std::set<TraitBranchEvent*>::iterator i = eventCollection.begin(); i != eventCollection.end(); i++){
 		be = (*i);
-		cout << ctr++ << "\tBt: " << be->getBetaInit() << "\tSt: " << be->getBetaShift() << "\tMap: " << be->getMapTime() << endl;;
+		cout << ctr++ << "\tBt: " << be->getBetaInit() << "\tSt: " << be->getBetaShift() << "\tMap: " << be->getMapTime();
+		cout << "\tAtime:" << be->getAbsoluteTime() << endl;
 	
 	}
 	cout << endl;

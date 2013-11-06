@@ -16,6 +16,7 @@
 #include "MbRandom.h"
 #include "node.h"
  
+ 
 
 // Made event time variable from the start with shift variable passed to constructor...
 
@@ -27,7 +28,13 @@ TraitBranchEvent::TraitBranchEvent(double beta, double shift, Node *x, Tree *tp,
 	_betaInit = beta;
 	_betaShift = shift;
  
-	_absTime = tp->getAbsoluteTimeFromMapTime(map);
+	if (tp->getRoot() == x){
+		_absTime = 0.0;
+	}else{
+		_absTime = tp->getAbsoluteTimeFromMapTime(map);
+	}
+ 
+	
 	
 	nodeptr = x;
 	mapTime = map;

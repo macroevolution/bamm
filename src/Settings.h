@@ -219,8 +219,10 @@ public:
 	void	trait_initializeSettings(string controlFilename);
 	
 	void	initializeSettings(string controlFilename);
-	
 	void	initializeSettings(void);
+	
+	void	checkAreInitialSettingsValid(void);
+	void	checkAreTraitInitialSettingsValid(void);
 	
 	void	trait_printCurrentSettings(bool printOnlyChangesToDefaults);
 	void	printCurrentSettings(bool printOnlyChangesToDefaults);

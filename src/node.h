@@ -381,6 +381,8 @@ public:
 
 	void			printCanHoldEventByNode(void);	
 	
+
+	void			echoMeanBranchTraitRates(void);
 	
 };
 

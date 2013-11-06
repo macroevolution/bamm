@@ -825,6 +825,150 @@ void Settings::initializeSettings(string controlFilename){
 	
 }
 
+
+void Settings::checkAreInitialSettingsValid(void){
+
+	cout << "currently does not check for valid settings" << endl;
+	cout << " in speciation-extinction BAMM" << endl << endl;
+	cout << "This will be fixed in a future release of BAMM" << endl << endl;
+}
+
+
+
+void Settings::checkAreTraitInitialSettingsValid(void){
+
+	
+	vector<string> paramsNotSpecified;
+ 
+	if (isDefault_traitfile){
+		paramsNotSpecified.push_back("traitfile");
+	}
+	if (isDefault_treefile){
+		paramsNotSpecified.push_back("treefile");
+	}
+	if (isDefault_sampleFromPriorOnly){
+		paramsNotSpecified.push_back("sampleFromPriorOnly");
+	}
+	if (isDefault_initializeModel){
+		paramsNotSpecified.push_back("initializeModel");
+	}
+	if (isDefault_runMCMC){
+		paramsNotSpecified.push_back("runMCMC");
+	}
+	if (isDefault_updateBetaScale){
+		paramsNotSpecified.push_back("updateBetaScale");
+	}
+	if (isDefault_updateNodeStateScale){
+		paramsNotSpecified.push_back("updateNodeStateScale");
+	}
+	if (isDefault_betaInit){
+		paramsNotSpecified.push_back("betaInit");
+	}
+	if (isDefault_updateBetaShiftScale){
+		paramsNotSpecified.push_back("updateBetaShiftScale");
+	}
+	if (isDefault_updateEventRateScale){
+		paramsNotSpecified.push_back("updateEventRateScale");
+	}
+	if (isDefault_betaShift){
+		paramsNotSpecified.push_back("betaShift");
+	}
+	if (isDefault_localGlobalMoveRatio){
+		paramsNotSpecified.push_back("localGlobalMoveRatio");
+	}
+	if (isDefault_targetNumber){
+		paramsNotSpecified.push_back("targetNumber");
+	}
+	if (isDefault_betaInitPrior){
+		paramsNotSpecified.push_back("betaInitPrior");
+	}
+	if (isDefault_betaShiftPrior){
+		paramsNotSpecified.push_back("betaInitPrior");
+	}
+	if (isDefault_useObservedMinMaxAsTraitPriors){
+		paramsNotSpecified.push_back("useObservedMinMaxAsTraitPriors");
+	}
+	if (isDefault_traitPriorMin){
+		paramsNotSpecified.push_back("traitPriorMin");
+	}
+	if (isDefault_traitPriorMax){
+		paramsNotSpecified.push_back("traitPriorMax");
+	}
+	if (isDefault_mcmcOutfile){
+		paramsNotSpecified.push_back("mcmcOutfile");
+	}
+	if (isDefault_eventDataOutfile){
+		paramsNotSpecified.push_back("eventDataOutfile");
+	}
+	if (isDefault_betaOutfile){
+		paramsNotSpecified.push_back("betaOutfile");
+	}
+	if (isDefault_nodeStateOutfile){
+		paramsNotSpecified.push_back("nodeStateOutfile");
+	}
+	if (isDefault_acceptrateOutfile){
+		paramsNotSpecified.push_back("acceptRateOutfile");
+	}
+	if (isDefault_treeWriteFreq){
+		paramsNotSpecified.push_back("treeWriteFreq");
+	}
+	if (isDefault_eventDataWriteFreq){
+		paramsNotSpecified.push_back("eventDataWriteFreq");
+	}
+	if (isDefault_mcmcWriteFreq){
+		paramsNotSpecified.push_back("mcmcWriteFreq");
+	}
+	if (isDefault_acceptWriteFreq){
+		paramsNotSpecified.push_back("acceptWriteFreq");
+	}
+	if (isDefault_printFreq){
+		paramsNotSpecified.push_back("printFreq");
+	}
+	if (isDefault_NGENS){
+		paramsNotSpecified.push_back("NumberGenerations");
+	}
+	if (isDefault_updateRateEventNumber){
+		paramsNotSpecified.push_back("updateRateEventNumber");
+	}
+	if (isDefault_updateRateEventRate){
+		paramsNotSpecified.push_back("updateRateEventRate");
+	}
+	if (isDefault_updateRateEventPosition){
+		paramsNotSpecified.push_back("updateRateEventPosition");
+	}
+	if (isDefault_updateRateBeta0){
+		paramsNotSpecified.push_back("updateRateBeta0");
+	}
+	if (isDefault_updateRateBetaShift){
+		paramsNotSpecified.push_back("updateRateBetaShift");
+	}
+	if (isDefault_updateRateNodeState){
+		paramsNotSpecified.push_back("updateRateNodeState");
+	}
+	if (isDefault_initialNumberEvents){
+		paramsNotSpecified.push_back("initialNumberEvents");
+	}
+	if (isDefault_loadEventData){
+		paramsNotSpecified.push_back("loadEventData");
+	}
+	if (isDefault_eventDataInfile){
+		paramsNotSpecified.push_back("eventDataInfile");
+	}
+ 
+	if (paramsNotSpecified.size() > 0){
+		cout << "\nPrinting parameters with default settings: " << endl << endl;
+		
+		for (int i = 0; i < paramsNotSpecified.size(); i++){
+			cout << setw(25) << paramsNotSpecified[i] << endl;
+		}
+		cout << "\nSome or all of these may be problematic, potentially resulting in fatal errors " << endl << endl;
+	}
+	
+	
+
+}
+
+
 bool Settings::stringToBool(const char * x){
 	bool bval;
 	if (atoi(x) == 0){

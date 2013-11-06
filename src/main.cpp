@@ -144,7 +144,8 @@ int main (int argc, char * argv[]) {
 			}
 			
 			
-			mySettings.parseCommandLineInput(argc, instrings, modeltype);	
+			mySettings.parseCommandLineInput(argc, instrings, modeltype);
+			mySettings.checkAreTraitInitialSettingsValid();
 		}else{
 			cout << "Uninterpretable input. Exiting BAMM." << endl;
 			exit(1);
@@ -163,7 +164,7 @@ int main (int argc, char * argv[]) {
 		
 		
 		intree.initializeTraitValues();
- 
+		
 		
 		if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()){
 			cout << "Initializing model but not running MCMC" << endl;
@@ -174,8 +175,12 @@ int main (int argc, char * argv[]) {
 			cout << "Initializing model and MCMC chain" << endl;
 			TraitModel myModel(&myRNG, &intree, &mySettings);		
 			TraitMCMC myMCMC(&myRNG, &myModel, &mySettings);
+		
+			//intree.echoMeanBranchTraitRates();
+		
 		}
  
+
 	}else {
 		cout << "Unsupported analysis" << endl;
 		exit(1);

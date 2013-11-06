@@ -1765,6 +1765,18 @@ void Tree::echoMeanBranchRates(void){
 
 }
 
+void Tree::echoMeanBranchTraitRates(void){
+	
+	for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
+		Node * x = (*i);
+		cout << x->getName() << "\t" << x->getMeanBeta() << endl;	
+ 
+	}
+	
+	
+}
+
+
 
 void Tree::writeBranchSpeciationRatesToFile(string fname, bool append){
 	
@@ -2535,6 +2547,11 @@ void Tree::computeMeanTraitRatesByNode(Node * x){
 				rate = ((beta0/zpar) * ( exp(zpar*t2) - exp( zpar * t1)));
 			}
 	
+			//cout << x << "\t" << "1st event on branch: " << endl;
+			//cout << "T1: " << t1 <<  "\tT2: " << t2 << endl;
+			//cout << "rate pars: b0\t" << beta0 << "\tzpar:\t" << zpar << endl;
+
+			
 			
 			for (int k = 1; k < n_events; k++){
 				
@@ -2550,6 +2567,7 @@ void Tree::computeMeanTraitRatesByNode(Node * x){
 					rate += (beta0/zpar) * ( exp(zpar*t2) - exp(zpar * t1));					
 				}
 				//cout << k-1 <<  "\tt1: " <<  t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck<<endl;
+				
 				tcheck += (t2 - t1);
 			}
 			
@@ -2566,10 +2584,16 @@ void Tree::computeMeanTraitRatesByNode(Node * x){
 			}
 			tcheck += (t2 - t1);
 			
-			//cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck <<endl;
-			//cout << "timecheck: " << tcheck <<  "\tBrlen: " << getBrlen() << "\tNevents: " << n_events << endl;	
+			//cout << x << "\t2nd event on branch: " << endl;
+			//cout << "T1: " << t1 <<  "\tT2: " << t2 << endl;
+			//cout << "rate pars: b0\t" << beta0 << "\tzpar:\t" << zpar << endl;
+			//cout << "Branch length: " << x->getBrlen() << endl << endl;
+			
 			// The overall mean rate across the branch:
 			rate /= (x->getBrlen());
+			
+			//cout << "Rate: " << rate << endl;
+			
 		}
 		x->setMeanBeta(rate);
 	
