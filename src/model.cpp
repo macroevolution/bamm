@@ -1813,33 +1813,30 @@ double Model::computeLogPrior(void){
 
 	*/ 
 	
+
 	logPrior += ran->lnExponentialPdf(sttings->getLambdaInitPrior(), rootEvent->getLamInit());
-	logPrior += ran->lnExponentialPdf(sttings->getMuInitPrior(), rootEvent->getMuInit());
+	
 	logPrior += ran->lnNormalPdf((double)0.0, sttings->getLambdaShiftPrior(), rootEvent->getLamShift());
+
+	logPrior += ran->lnExponentialPdf(sttings->getMuInitPrior(), rootEvent->getMuInit());
+	
 	logPrior += ran->lnNormalPdf((double)0.0, sttings->getMuShiftPrior(), rootEvent->getMuShift());
-	
+
 	int ctr = 0;
-	//cout << ctr <<"\n1: " << logPrior << endl;	
-	//cout << endl << endl << "nevents: " << getNumberOfEvents() << endl;
-	//cout << "ROOT" << rootEvent << "\t" << ctr << "\t" << rootEvent->getLamShift() << "\t"  << logPrior << endl;
-	
+
 
 	for (std::set<BranchEvent*>::iterator i = eventCollection.begin(); i != eventCollection.end(); i++){
 
 		//cout << *i << "\t" << ctr << "\tLamInit: " << (*i)->getLamInit() << "\t"  << logPrior << endl;		
-	
+
 		logPrior += ran->lnExponentialPdf(sttings->getLambdaInitPrior(), (*i)->getLamInit());		
 		
-		//cout << *i << "\t" << ctr << "\t" << (*i)->getLamShift() << "\t"  << logPrior << endl;		
-		logPrior += ran->lnNormalPdf((double)0.0, sttings->getLambdaShiftPrior(), (*i)->getLamShift());
-		//cout << *i << "\t" << ctr << "\t" << (*i)->getLamShift() << "\t"  << logPrior << endl;
+		logPrior += ran->lnNormalPdf((double)0.0, sttings->getLambdaShiftPrior(), (*i)->getLamShift());		
 		
 		logPrior += ran->lnExponentialPdf(sttings->getMuInitPrior(), (*i)->getMuInit());
-		//cout << ctr << "\n3: " << logPrior << endl;	
 		
 		logPrior += ran->lnNormalPdf((double)0.0, sttings->getMuShiftPrior(), (*i)->getMuShift());
-		
-		//cout << ctr <<"\n4: " << logPrior  << "\t" << (*i)->getLamInit() << endl;	
+				
 		ctr++;
 		
 	}
@@ -1851,7 +1848,6 @@ double Model::computeLogPrior(void){
 	//logPrior += ran->lnPoissonProb(getEventRate(), eventCollection.size());
  	// But this is already incorporated, because the move probabilities explicitly use this
  
-	//cout << "logPrior: " << logPrior << endl;
 	return logPrior;
 	
 }
