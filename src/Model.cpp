@@ -16,7 +16,8 @@
 
 #include "Model.h"
 #include "MbRandom.h"
-#include "node.h"
+#include "Node.h"
+#include "Tree.h"
 #include "BranchHistory.h"
 #include "Settings.h"
 #include "Utilities.h"

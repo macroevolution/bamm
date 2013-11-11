@@ -10,7 +10,8 @@
 #include "MCMC.h"
 #include "Model.h"
 #include "MbRandom.h"
-#include "node.h"
+#include "Node.h"
+#include "Tree.h"
 #include "Settings.h"
  
 MCMC::MCMC(MbRandom * ran, Model * mymodel, Settings * sp){

@@ -18,7 +18,8 @@
 #include <limits>
 
 #include "MbRandom.h"
-#include "node.h"
+#include "Node.h"
+#include "Tree.h"
 #include "TraitBranchHistory.h"
 #include "Settings.h"
 #include "Utilities.h"

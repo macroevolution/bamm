@@ -14,7 +14,8 @@
 #include <sstream>
 
 #include "BranchEvent.h"
-#include "node.h"
+#include "Node.h"
+#include "Tree.h"
 #include "MbRandom.h"
 #include "Model.h"
 #include "BranchHistory.h"

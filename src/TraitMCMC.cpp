@@ -18,7 +18,8 @@
 #include "TraitMCMC.h"
 #include "TraitModel.h"
 #include "MbRandom.h"
-#include "node.h"
+#include "Node.h"
+#include "Tree.h"
 #include "Settings.h"
 
 TraitMCMC::TraitMCMC(MbRandom * ran, TraitModel * mymodel, Settings * sp){
