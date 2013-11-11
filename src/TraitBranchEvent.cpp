@@ -1,18 +1,17 @@
 /*
- *  TraitEvent.cpp
+ *  TraitBranchEvent.cpp
  *  BAMMt
  *
  *  Created by Dan Rabosky on 6/20/12.
   *
  */
 
-#include "TraitEvent.h"
+#include "TraitBranchEvent.h"
 
  
 #include <iostream>
 #include <stdlib.h>
 
-#include "TraitEvent.h"
 #include "MbRandom.h"
 #include "node.h"
  

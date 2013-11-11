@@ -1,5 +1,5 @@
 /*
- *  TraitEvent.h
+ *  TraitBranchEvent.h
  *  BAMMt
  *
  *  Created by Dan Rabosky on 6/20/12.
@@ -15,8 +15,8 @@
  
  */
 
-#ifndef TRAITEVENT_H
-#define TRAITEVENT_H
+#ifndef TRAITBRANCHEVENT_H
+#define TRAITBRANCHEVENT_H
 
 
 

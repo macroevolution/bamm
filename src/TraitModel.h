@@ -14,7 +14,7 @@
 #include <set>
 #include <vector>
 
-#include "TraitEvent.h"
+#include "TraitBranchEvent.h"
 
 using namespace std;
 

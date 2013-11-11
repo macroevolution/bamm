@@ -5,7 +5,7 @@
 
 #include <set>
 
-#include "TraitEvent.h"
+#include "TraitBranchEvent.h"
 #include "Utilities.h"
 
 class TraitBranchEvent;
