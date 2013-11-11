@@ -1,5 +1,5 @@
 /*
- *  event.h
+ *  BranchEvent.h
  *  rateshift
  *
  *  Created by Dan Rabosky on 12/5/11.
@@ -10,8 +10,8 @@
  
  */
 
-#ifndef EVENT_H
-#define EVENT_H
+#ifndef BRANCHEVENT_H
+#define BRANCHEVENT_H
 
 
 

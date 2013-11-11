@@ -19,7 +19,7 @@
 
 #include <set>
 
-#include "event.h"
+#include "BranchEvent.h"
 #include "Utilities.h"
 
 class BranchEvent;

@@ -6,14 +6,6 @@
   *
  */
 
-/*
- *  event.h
- *  rateshift
- *
- *  Created by Dan Rabosky on 12/5/11.
- 
- 
- */
 
 #ifndef TRAITBRANCHEVENT_H
 #define TRAITBRANCHEVENT_H

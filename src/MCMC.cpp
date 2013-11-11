@@ -7,7 +7,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include "mcmc.h"
+#include "MCMC.h"
 #include "model.h"
 #include "MbRandom.h"
 #include "node.h"

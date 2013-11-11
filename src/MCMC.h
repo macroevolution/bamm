@@ -1,5 +1,5 @@
 /*
- *  mcmc.h
+ *  MCMC.h
  *  rateshift
  *
  *  Created by Dan Rabosky on 12/2/11.

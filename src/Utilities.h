@@ -14,7 +14,7 @@
 
 #include <math.h>
 
-#include "event.h"
+#include "BranchEvent.h"
 #include "TraitBranchEvent.h"
 
 

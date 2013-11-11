@@ -1,5 +1,5 @@
 /*
- *  event.cpp
+ *  BranchEvent.cpp
  *  rateshift
  *
  *  Created by Dan Rabosky on 12/5/11.
@@ -8,7 +8,7 @@
 #include <iostream>
 #include <stdlib.h>
 
-#include "event.h"
+#include "BranchEvent.h"
 #include "MbRandom.h"
 #include "node.h"
 #include "Utilities.h"

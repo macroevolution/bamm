@@ -13,12 +13,12 @@
 #include <iomanip>
 #include <sstream>
 
-#include "event.h"
+#include "BranchEvent.h"
 #include "node.h"
 #include "MbRandom.h"
 #include "model.h"
 #include "BranchHistory.h"
-#include "mcmc.h"
+#include "MCMC.h"
 #include "Settings.h"
 #include "TraitMCMC.h"
 #include "TraitModel.h"
