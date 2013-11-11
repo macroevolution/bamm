@@ -177,19 +177,19 @@ void TraitMCMC::setUpdateWeights(void){
 	parWts.push_back(sttings->getUpdateRateNumberTimeVariablePartitions());		// 6 freq of updates to timevarying/constant
 	
 	double sumwts = parWts[0];
-	for (int i = 1; i < parWts.size(); i++){
+	for (vector<double>::size_type i = 1; i < parWts.size(); i++){
 		sumwts += parWts[i];
 		parWts[i] += parWts[i-1];	
 	}
 	
-	for (int i = 0; i < parWts.size(); i++)
+	for (vector<double>::size_type i = 0; i < parWts.size(); i++)
 		parWts[i] /= sumwts;
 	
 	//for (int i = 0; i < parWts.size(); i++)
 	//	cout << parWts[i] << endl;
 	
 	// Define vectors to hold accept/reject data:
-	for (int i = 0; i < parWts.size(); i++){
+	for (vector<double>::size_type i = 0; i < parWts.size(); i++){
 		acceptCount.push_back(0);
 		rejectCount.push_back(0);
 	}
@@ -202,7 +202,7 @@ void TraitMCMC::setUpdateWeights(void){
 int TraitMCMC::pickParameterClassToUpdate(void){
 	double rn = ranPtr->uniformRv();
 	int parm = 0;
-	for (int i = 0; i < parWts.size(); i++){
+	for (vector<double>::size_type i = 0; i < parWts.size(); i++){
 		if (rn <= parWts[i]){
 			parm = i;
 			break;
@@ -334,7 +334,7 @@ void TraitMCMC::writeParamAcceptRates(void){
 	
 	ofstream outStream;
 	outStream.open(acceptFile.c_str(), ofstream::app);
-	for (int i = 0; i < acceptCount.size(); i++){
+	for (vector<int>::size_type i = 0; i < acceptCount.size(); i++){
 		double rate = (double)acceptCount[i] / ((double)(acceptCount[i] + rejectCount[i]));
 		outStream << rate;
 		if (i < (acceptCount.size() - 1)){
@@ -346,7 +346,7 @@ void TraitMCMC::writeParamAcceptRates(void){
 	}
 	outStream.close();
 	
-	for (int i = 0; i < acceptCount.size(); i++){
+	for (vector<int>::size_type i = 0; i < acceptCount.size(); i++){
 		acceptCount[i] = 0;
 		rejectCount[i] = 0;
 	}	

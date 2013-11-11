@@ -25,7 +25,7 @@
 class BranchEvent;
 class comp_history;
  
-
+typedef std::set<BranchEvent*, comp_history>::size_type EventSetSizeType;
 
 
 class BranchHistory {

@@ -349,8 +349,8 @@ void Settings::trait_initializeSettings(string controlFilename){
 	
 	_allParametersSetToDefaults = false;
 	
-	int parmCount = 0;
-	int ppw = 35;
+	//int parmCount = 0;
+	//int ppw = 35;
 	
 	ifstream infile(controlFilename.c_str());
 	if (!infile.good()){
@@ -407,7 +407,7 @@ void Settings::trait_initializeSettings(string controlFilename){
 	}
 	
 	
-	for (int i = 0; i < varName.size(); i++){
+	for (vector<string>::size_type i = 0; i < varName.size(); i++){
 		//cout << setw(30) << varName[i] << setw(20) << varValue[i] << endl;
 		
 		if (varName[i] == "treefile"){
@@ -547,7 +547,7 @@ void Settings::trait_initializeSettings(string controlFilename){
 		cout << "\tto valid model parameters.";
 		cout << "Check the following to see if they are ";
 		cout << "\tspecified (or spelled) correctly:" << endl << endl;
-		for (int i = 0; i < paramsNotFound.size(); i++){
+		for (vector<string>::size_type i = 0; i < paramsNotFound.size(); i++){
 			cout << setw(30) << paramsNotFound[i] << endl;		
 		}
 		cout << endl << "********************************" << endl << endl;
@@ -576,8 +576,8 @@ void Settings::initializeSettings(string controlFilename){
 
 	_allParametersSetToDefaults = false;
 	
-	int parmCount = 0;
-	int ppw = 35;
+	//int parmCount = 0;
+	//int ppw = 35;
 	
 	ifstream infile(controlFilename.c_str());
 	if (!infile.good()){
@@ -634,7 +634,7 @@ void Settings::initializeSettings(string controlFilename){
 	}
  
 
-	for (int i = 0; i < varName.size(); i++){
+	for (vector<string>::size_type i = 0; i < varName.size(); i++){
 		//cout << setw(30) << varName[i] << setw(20) << varValue[i] << endl;
  
 		if (varName[i] == "treefile"){
@@ -805,7 +805,7 @@ void Settings::initializeSettings(string controlFilename){
 		cout << "\tto valid model parameters.";
 		cout << "Check the following to see if they are ";
 		cout << "\tspecified (or spelled) correctly:" << endl << endl;
-		for (int i = 0; i < paramsNotFound.size(); i++){
+		for (vector<string>::size_type i = 0; i < paramsNotFound.size(); i++){
 			 cout << setw(30) << paramsNotFound[i] << endl;		
 		}
 		cout << endl << "********************************" << endl << endl;
@@ -958,7 +958,7 @@ void Settings::checkAreTraitInitialSettingsValid(void){
 	if (paramsNotSpecified.size() > 0){
 		cout << "\nPrinting parameters with default settings: " << endl << endl;
 		
-		for (int i = 0; i < paramsNotSpecified.size(); i++){
+		for (vector<string>::size_type i = 0; i < paramsNotSpecified.size(); i++){
 			cout << setw(25) << paramsNotSpecified[i] << endl;
 		}
 		cout << "\nSome or all of these may be problematic, potentially resulting in fatal errors " << endl << endl;

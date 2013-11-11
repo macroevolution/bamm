@@ -188,13 +188,15 @@ int	BranchHistory::getNumberOfEventsOnInterval(double t1, double t2){
 
 
 
-BranchEvent* BranchHistory::getEventByIndexPosition(int i){
+BranchEvent* BranchHistory::getEventByIndexPosition(int index){
+  EventSetSizeType i = static_cast<EventSetSizeType>(index);
 	if (i >= eventsOnBranch.size() ){
 		cout << "BranchHistory::getEventByIndexPosition error - accessing invalid event" << endl;
+    return NULL;
 	}else{
 		
 		std::set<BranchEvent*>::iterator myIt = eventsOnBranch.begin();
-		for (int k = 0; k < i; k++)
+		for (EventSetSizeType k = 0; k < i; k++)
 			myIt++;
 		return (*myIt);
 	}

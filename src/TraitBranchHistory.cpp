@@ -97,13 +97,15 @@ TraitBranchEvent*  TraitBranchHistory::getLastEvent(TraitBranchEvent* x){
 }
 
 
-TraitBranchEvent* TraitBranchHistory::getEventByIndexPosition(int i){
+TraitBranchEvent* TraitBranchHistory::getEventByIndexPosition(int index){
+  EventSetSizeType i = static_cast<EventSetSizeType>(index);
 	if (i >= eventsOnBranch.size() ){
 		cout << "BranchHistory::getEventByIndexPosition error - accessing invalid event" << endl;
+    return NULL;
 	}else{
 		
 		std::set<TraitBranchEvent*>::iterator myIt = eventsOnBranch.begin();
-		for (int k = 0; k < i; k++)
+		for (EventSetSizeType k = 0; k < i; k++)
 			myIt++;
 		return (*myIt);
 	}

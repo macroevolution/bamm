@@ -53,7 +53,7 @@ Model::Model(MbRandom * ranptr, Tree * tp, Settings * sp){
 	
 	// reduce weird autocorrelation of values at start by calling RNG a few times...
 	for (int i =0; i<100; i++)
-		double x = ranptr->uniformRv();
+		ranptr->uniformRv();
 	
 	ran = ranptr;
 	treePtr = tp;
@@ -61,7 +61,7 @@ Model::Model(MbRandom * ranptr, Tree * tp, Settings * sp){
  	
 
  	
-	double bl = treePtr->getTotalMapLength(); // total map length (required to set priors)
+	treePtr->getTotalMapLength(); // total map length (required to set priors)
 	
 	// Set parameter values for model object, including priors etc.
 	
@@ -240,7 +240,7 @@ void Model::initializeModelFromEventDataFile(void){
 	infile.close();
 	
 	cout << "Read a total of " << species1.size() << " events" << endl;		
-	for (int i = 0; i < species1.size(); i++){
+	for (vector<string>::size_type i = 0; i < species1.size(); i++){
 		//cout << endl << "MRCA of : " <<  species1[i] << "\t" << species2[i] << endl;
 		if (species2[i] != "NA" & species1[i] != "NA"){
  
@@ -309,6 +309,7 @@ void Model::initializeModelFromEventDataFile(void){
 
 void Model::addEventToTree(double x){
 	
+#ifdef ADAPTIVE_MCMC_PROPOSAL
 	
 	// For now, the rates of speciation and extinction are set to whatever they should be based
 	// on the ancestralNodeEvent
@@ -316,8 +317,6 @@ void Model::addEventToTree(double x){
 	double atime = treePtr->getAbsoluteTimeFromMapTime(x);
 	BranchHistory * bh = xnode->getBranchHistory();
 	BranchEvent * be = bh->getAncestralNodeEvent();
-	
-#ifdef ADAPTIVE_MCMC_PROPOSAL
 
 	double elapsed = atime - be->getAbsoluteTime();
 	double curLam = be->getLamInit() * exp( elapsed * be->getLamShift() );
@@ -406,6 +405,7 @@ void Model::addEventToTree(void){
 	double bb = treePtr->getTotalMapLength();
 	double x = ran->uniformRv(aa, bb);
 
+#ifdef ADAPTIVE_MCMC_PROPOSAL
 	
 	// For now, the rates of speciation and extinction are set to whatever they should be based
 	// on the ancestralNodeEvent
@@ -413,9 +413,6 @@ void Model::addEventToTree(void){
 	double atime = treePtr->getAbsoluteTimeFromMapTime(x);
 	BranchHistory * bh = xnode->getBranchHistory();
 	BranchEvent * be = bh->getAncestralNodeEvent();
-	
-#ifdef ADAPTIVE_MCMC_PROPOSAL
-
  
 	double elapsed = atime - be->getAbsoluteTime();
 	double curLam = be->getLamInit() * exp( elapsed * be->getLamShift() );
@@ -548,7 +545,7 @@ void Model::eventLocalMove(void){
 		BranchEvent* chosenEvent = chooseEventAtRandom();
 		
 		// corresponding node defining branch on which event occurs
-		Node* theEventNode = chosenEvent->getEventNode();
+		//Node* theEventNode = chosenEvent->getEventNode();
 
 		// this is the event preceding the chosen event: histories should be set forward from here..
 		BranchEvent* previousEvent = chosenEvent->getEventNode()->getBranchHistory()->getLastEvent(chosenEvent);
@@ -583,7 +580,7 @@ void Model::eventGlobalMove(void){
 		// this is the event preceding the chosen event: histories should be set forward from here..
 		BranchEvent* previousEvent = chosenEvent->getEventNode()->getBranchHistory()->getLastEvent(chosenEvent);
 				
-		Node* theEventNode = chosenEvent->getEventNode();
+		//Node* theEventNode = chosenEvent->getEventNode();
 		
 		// private variable
 		lastEventModified = chosenEvent;
@@ -1193,7 +1190,7 @@ void Model::moveEventMH(void){
 
 void Model::updateLambdaInitMH(void){
 	
-	int n_events = eventCollection.size() + 1;
+	//int n_events = eventCollection.size() + 1;
 	int toUpdate = ran->sampleInteger(0, eventCollection.size());
 	BranchEvent* be = rootEvent;
 	
@@ -1262,7 +1259,7 @@ void Model::updateLambdaInitMH(void){
 
 void Model::updateLambdaShiftMH(void){
 	
-	int n_events = eventCollection.size() + 1;
+	//int n_events = eventCollection.size() + 1;
 	int toUpdate = ran->sampleInteger(0, eventCollection.size());
 	BranchEvent* be = rootEvent;
 	
@@ -1342,7 +1339,7 @@ void Model::updateLambdaShiftMH(void){
  */
 void Model::updateTimeVariablePartitionsMH(void){
 	
-	int n_events = eventCollection.size() + 1;
+	//int n_events = eventCollection.size() + 1;
 	int toUpdate = ran->sampleInteger(0, eventCollection.size());
 	BranchEvent* be = rootEvent;
 	
@@ -1378,7 +1375,7 @@ void Model::updateTimeVariablePartitionsMH(void){
 
 void Model::updateMuInitMH(void){
 	
-	int n_events = eventCollection.size() + 1;
+	//int n_events = eventCollection.size() + 1;
 	int toUpdate = ran->sampleInteger(0, eventCollection.size());
 	BranchEvent* be = rootEvent;
 	
@@ -1450,7 +1447,7 @@ void Model::updateMuInitMH(void){
 
 void Model::updateMuShiftMH(void){
 	
-	int n_events = eventCollection.size() + 1;
+	//int n_events = eventCollection.size() + 1;
 	int toUpdate = ran->sampleInteger(0, eventCollection.size());
 	BranchEvent* be = rootEvent;
 	
@@ -2014,7 +2011,7 @@ double	Model::getMHacceptanceRate(void){
 
 BranchEvent* Model::getEventByIndex(int x){
 
-	int ctr = 0;
+	//int ctr = 0;
 	std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
 	for (int i = 0; i <= x; i++){
 		myIt++;

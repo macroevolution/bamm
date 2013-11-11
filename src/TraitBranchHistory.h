@@ -11,7 +11,7 @@
 class TraitBranchEvent;
 class comp_history;
 
-
+typedef std::set<TraitBranchEvent*, comp_history>::size_type EventSetSizeType;
 
 
 

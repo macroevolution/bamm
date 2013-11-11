@@ -133,8 +133,9 @@ Node* Node::getRandomLeftTipNode(void){
 			}
 			return xnode;
 		}
-	}
- 
+	} else {
+    return NULL;
+  }
 }
 
 Node* Node::getRandomRightTipNode(void){
@@ -149,7 +150,9 @@ Node* Node::getRandomRightTipNode(void){
 			}
 			return xnode;
 		}
-	}
+	} else {
+    return NULL;
+  }
 }
 
 
@@ -218,7 +221,7 @@ Tree::Tree(string fname, MbRandom * rnptr){
 	setBranchingTimes(root);
 	 
 	 
-	Node* tmp = root->getRtDesc();	
+	//Node* tmp = root->getRtDesc();	
 	//cout << "tmptime: " << tmp->getMapStart() << "\t" << tmp->getMapEnd() << endl;
 	
 	//cout << "roottime: " << root->getMapStart() << "\t" << root->getMapEnd() << endl;
@@ -842,13 +845,12 @@ void Tree::deleteExtinctNodes(void){
  
 void Tree::setTaxonCountFromNewickString(string ts){
 	int count = 0;
-	for (int i = 0; i < ts.size(); i++){
+	for (string::size_type i = 0; i < ts.size(); i++){
 		char c = ts[i];
 		if (c == ',')
 			count++;
 	}
 	_ntaxa = count+1;
-	return;
 }
 
 
@@ -869,11 +871,11 @@ void Tree::buildTreeFromNewickString(string ts){
 	
 	//int nextInterNode = _ntaxa;
 	//int taxCounter = 0;
-	int nodecounter = 0;
+	//int nodecounter = 0;
 	
 	//std::set<Node*>::iterator NodeIterator = nodes.begin();
 	
-	for(int i=0; i<ts.size(); i++){
+	for(string::size_type i=0; i<ts.size(); i++){
 		
 		char c = ts[i];
 		//cout << c << endl;
@@ -1010,7 +1012,7 @@ void Tree::setAge(void){
 	// age here defined as MAX node time (node times start with 0 at root)
 	double mx = 0;
 	for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
-		if ((*i)->getTime() == NULL)
+		if ((*i)->getTime() == 0)
 			setNodeTimes(root);
 		if ((*i)->getTime() > mx)
 			mx = (*i)->getTime();
@@ -1965,7 +1967,7 @@ void Tree::getPhenotypes(string fname){
 	for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
 		if ((*i)->getLfDesc() == NULL && (*i)->getRtDesc() == NULL ){
 			
-			for (int k = 0; k < spnames.size(); k++){
+			for (vector<string>::size_type k = 0; k < spnames.size(); k++){
 				if ((*i)->getName() == spnames[k]){
 					(*i)->setTraitValue(traits[k]);
 					(*i)->setIsTraitFixed(true);
@@ -2033,7 +2035,7 @@ void Tree::getPhenotypesMissingLatent(string fname){
 	for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
 		if ((*i)->getLfDesc() == NULL && (*i)->getRtDesc() == NULL ){
 			
-			for (int k = 0; k < spnames.size(); k++){
+			for (vector<string>::size_type k = 0; k < spnames.size(); k++){
 				if ((*i)->getName() == spnames[k]){
 					(*i)->setTraitValue(traits[k]);
 					(*i)->setIsTraitFixed(true);
@@ -2208,7 +2210,7 @@ void Tree::initializeSpeciationExtinctionModel(string fname){
 	for (std::vector<Node*>::iterator i = downPassSeq.begin(); i != downPassSeq.end(); i++){
 
 		if ((*i)->getLfDesc() == NULL && (*i)->getRtDesc() == NULL ){
-			for (int k = 0; k < spnames.size(); k++){
+			for (vector<string>::size_type k = 0; k < spnames.size(); k++){
 				if ((*i)->getName() == spnames[k]){
 					
 					double Einit = (double)1 - sfracs[k];
@@ -2429,7 +2431,7 @@ void Tree::loadPreviousNodeStates(Tree * ostree){
 	cout << "ostree read into loadpreviousstates" << endl;
 	
 	
-	for (int i = 0; i < downPassSeq.size(); i++){
+	for (vector<Node*>::size_type i = 0; i < downPassSeq.size(); i++){
 		double cstate = ostree->getNodeFromDownpassSeq(i)->getBrlen();
 		getNodeFromDownpassSeq(i)->setTraitValue(cstate);
 	

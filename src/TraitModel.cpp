@@ -39,7 +39,7 @@ TraitModel::TraitModel(MbRandom * ranptr, Tree * tp, Settings * sp){
 	
 	// reduce weird autocorrelation of values at start by calling RNG a few times...
 	for (int i =0; i<100; i++)
-		double x = ranptr->uniformRv();
+		ranptr->uniformRv();
 	
 	ran = ranptr;
 	treePtr = tp;
@@ -47,7 +47,7 @@ TraitModel::TraitModel(MbRandom * ranptr, Tree * tp, Settings * sp){
 	
 	//cout << "model ML: " << treePtr->getTotalMapLength() << endl;
 	
-	double bl = treePtr->getTotalMapLength(); // total map length (required to set priors)
+	treePtr->getTotalMapLength(); // total map length (required to set priors)
 	
 	// Set parameter values for model object, including priors etc.
 	
@@ -234,12 +234,12 @@ void TraitModel::initializeModelFromEventDataFileTrait(void){
 	infile.close();
 	
 	cout << "Read a total of " << species1.size() << " events" << endl;	
-	for (int i = 0; i < species1.size(); i++){
+	for (vector<string>::size_type i = 0; i < species1.size(); i++){
 		cout << species1[i] << "\t" << species2[i] << "\t" << etime[i] << "\t" << beta_par1[i] << "\t" << beta_par2[i] << endl;
 	}
 	
 	
-	for (int i = 0; i < species1.size(); i++){
+	for (vector<string>::size_type i = 0; i < species1.size(); i++){
 		cout << endl << "MRCA of : " <<  species1[i] << "\t" << species2[i] << endl;
 		if (species2[i] != "NA" & species1[i] != "NA"){
 			
@@ -296,10 +296,10 @@ void TraitModel::addEventToTree(double x){
 	
 	// For now, the rates of speciation and extinction are set to whatever they should be based
 	// on the ancestralNodeEvent
-	Node * xnode = treePtr->mapEventToTree(x);
-	double atime = treePtr->getAbsoluteTimeFromMapTime(x);
-	TraitBranchHistory * bh = xnode->getTraitBranchHistory();
-	TraitBranchEvent * be = bh->getAncestralNodeEvent();
+	//Node * xnode = treePtr->mapEventToTree(x);
+	//double atime = treePtr->getAbsoluteTimeFromMapTime(x);
+	//TraitBranchHistory * bh = xnode->getTraitBranchHistory();
+	//TraitBranchEvent * be = bh->getAncestralNodeEvent();
 	
 	//double elapsed = atime - be->getAbsoluteTime();
 	//double newbeta = be->getBetaInit() * exp( elapsed * be->getBetaShift());
@@ -352,6 +352,7 @@ void TraitModel::addEventToTree(void){
 	double bb = treePtr->getTotalMapLength();
 	double x = ran->uniformRv(aa, bb);
 	
+#ifdef OLDWAY
 	
 	// For now, the rates of speciation and extinction are set to whatever they should be based
 	// on the ancestralNodeEvent
@@ -359,8 +360,6 @@ void TraitModel::addEventToTree(void){
 	double atime = treePtr->getAbsoluteTimeFromMapTime(x);
 	TraitBranchHistory * bh = xnode->getTraitBranchHistory();
 	TraitBranchEvent * be = bh->getAncestralNodeEvent();
-	
-#ifdef OLDWAY
 
 	double elapsed = atime - be->getAbsoluteTime();
 	double newbeta = be->getBetaInit() * exp( elapsed * be->getBetaShift());
@@ -415,9 +414,9 @@ void TraitModel::addEventToTreeWithSetBeta(double beta, double bshift){
 	
 	// For now, the rates of speciation and extinction are set to whatever they should be based
 	// on the ancestralNodeEvent
-	Node * xnode = treePtr->mapEventToTree(x);
-	double atime = treePtr->getAbsoluteTimeFromMapTime(x);
-	TraitBranchHistory * bh = xnode->getTraitBranchHistory();
+	//Node * xnode = treePtr->mapEventToTree(x);
+	//double atime = treePtr->getAbsoluteTimeFromMapTime(x);
+	//TraitBranchHistory * bh = xnode->getTraitBranchHistory();
 	//TraitBranchEvent * be = bh->getAncestralNodeEvent();
 	
 	//double elapsed = atime - be->getAbsoluteTime();
@@ -509,7 +508,7 @@ void TraitModel::eventLocalMove(void){
 		TraitBranchEvent* chosenEvent = chooseEventAtRandom();
 		
 		// corresponding node defining branch on which event occurs
-		Node* theEventNode = chosenEvent->getEventNode();
+		//Node* theEventNode = chosenEvent->getEventNode();
 		
 		// this is the event preceding the chosen event: histories should be set forward from here..
 		TraitBranchEvent* previousEvent = chosenEvent->getEventNode()->getTraitBranchHistory()->getLastEvent(chosenEvent);
@@ -552,7 +551,7 @@ void TraitModel::eventGlobalMove(void){
 		
 		//cout << "EGM: moving " << chosenEvent << "\tLastEvent: " << previousEvent << endl;
 		
-		Node* theEventNode = chosenEvent->getEventNode();
+		//Node* theEventNode = chosenEvent->getEventNode();
 		
 		// private variable
 		lastEventModified = chosenEvent;
@@ -583,7 +582,7 @@ void TraitModel::eventGlobalMove(void){
 void TraitModel::revertMovedEventToPrevious(void){
 
 
-	double startLH = getCurrLnLTraits();
+	//double startLH = getCurrLnLTraits();
 	
 	// Get LAST EVENT from position of event to be removed:
 	
@@ -1131,7 +1130,7 @@ void TraitModel::moveEventMH(void){
  */
 void TraitModel::updateTimeVariablePartitionsMH(void){
 	
-	int n_events = eventCollection.size() + 1;
+	//int n_events = eventCollection.size() + 1;
 	int toUpdate = ran->sampleInteger(0, eventCollection.size());
 	TraitBranchEvent* be = rootEvent;
 	
@@ -1773,7 +1772,7 @@ double	TraitModel::getMHacceptanceRate(void){
 
 TraitBranchEvent* TraitModel::getEventByIndex(int x){
 	
-	int ctr = 0;
+	//int ctr = 0;
 	std::set<TraitBranchEvent*>::iterator myIt = eventCollection.begin();
 	for (int i = 0; i <= x; i++){
 		myIt++;
@@ -1942,7 +1941,7 @@ void TraitModel::setMinMaxTraitPriors(void){
 	vector<double> tvec;
 	for (int i = 0; i < nnodes; i++){
 		Node * xnode = treePtr->getNodeFromDownpassSeq(i);
-		if (xnode->getTraitValue() != NULL){
+		if (xnode->getTraitValue() != 0){
 			tvec.push_back(xnode->getTraitValue());
 		}
 	}
