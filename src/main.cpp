@@ -16,7 +16,7 @@
 #include "BranchEvent.h"
 #include "node.h"
 #include "MbRandom.h"
-#include "model.h"
+#include "Model.h"
 #include "BranchHistory.h"
 #include "MCMC.h"
 #include "Settings.h"

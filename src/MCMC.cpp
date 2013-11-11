@@ -8,7 +8,7 @@
 #include <iomanip>
 
 #include "MCMC.h"
-#include "model.h"
+#include "Model.h"
 #include "MbRandom.h"
 #include "node.h"
 #include "Settings.h"

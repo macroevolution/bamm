@@ -1,5 +1,5 @@
 /*
- *  model.cpp
+ *  Model.cpp
  *  rateshift
  *
  *  Created by Dan Rabosky on 12/1/11.
@@ -14,7 +14,7 @@
 #include <fstream>
 #include <limits>
 
-#include "model.h"
+#include "Model.h"
 #include "MbRandom.h"
 #include "node.h"
 #include "BranchHistory.h"

@@ -1,4 +1,4 @@
-OBJS = main.o BranchHistory.o MCMC.o BranchEvent.o node.o Settings.o TraitModel.o TraitMCMC.o MbRandom.o Utilities.o TraitBranchHistory.o TraitBranchEvent.o model.o
+OBJS = main.o BranchHistory.o MCMC.o BranchEvent.o node.o Settings.o TraitModel.o TraitMCMC.o MbRandom.o Utilities.o TraitBranchHistory.o TraitBranchEvent.o Model.o
 CC = g++
 DEBUG = -g
 CFLAGS = -Wall -c -m64 -O3 -funroll-loops $(DEBUG)
@@ -43,8 +43,8 @@ TraitBranchHistory.o: TraitBranchHistory.cpp TraitBranchHistory.h TraitBranchEve
 TraitBranchEvent.o: TraitBranchEvent.cpp TraitBranchEvent.h
 	$(CC) $(CFLAGS) TraitBranchEvent.cpp
 
-model.o: model.cpp model.h BranchEvent.h
-	$(CC) $(CFLAGS) model.cpp
+Model.o: Model.cpp Model.h BranchEvent.h
+	$(CC) $(CFLAGS) Model.cpp
 
 clean:
 	rm -rf *.o bamm
