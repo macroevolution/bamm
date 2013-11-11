@@ -1,5 +1,5 @@
 /*
- *  branchHistory.cpp
+ *  BranchHistory.cpp
  *  rateshift
  *
  *  Created by Dan Rabosky on 12/14/11.
@@ -12,13 +12,13 @@
 
 #include <stdlib.h>
 
-#include "branchHistory.h"
+#include "BranchHistory.h"
 
 using namespace std;
 
 BranchHistory::BranchHistory(void){
 	
-	//cout << "branchHistory ctor" << endl;
+	//cout << "BranchHistory ctor" << endl;
 	nodeEvent = NULL;
 	ancestralNodeEvent = NULL;
 	

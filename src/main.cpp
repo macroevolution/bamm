@@ -17,7 +17,7 @@
 #include "node.h"
 #include "MbRandom.h"
 #include "model.h"
-#include "branchHistory.h"
+#include "BranchHistory.h"
 #include "mcmc.h"
 #include "Settings.h"
 #include "TraitMCMC.h"

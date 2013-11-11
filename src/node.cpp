@@ -9,7 +9,7 @@
 
 #include "node.h"
 
-#include "branchHistory.h"
+#include "BranchHistory.h"
 #include "TraitBranchHistory.h"
 #include "MbRandom.h"
 //#include "phenotype.h"
@@ -1397,7 +1397,7 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart, double tst
 	tstart += getAnc()->getTime();
 	tstop += getAnc()->getTime();
 	
-	// This is required by the branchHistory functions 
+	// This is required by the BranchHistory functions 
 	int n_events = bh->getNumberOfEventsOnInterval(tstart, tstop);	
 	//cout << "anctime: " << getAnc()->getTime() << "\tstart : " << tstart << "\tstop: " << tstop << endl;
 	
@@ -1520,7 +1520,7 @@ double Node::computeSpeciationRateIntervalAbsoluteTime(double tstart, double tst
 	tstart += getAnc()->getTime();
 	tstop += getAnc()->getTime();
 	
-	// This is required by the branchHistory functions 
+	// This is required by the BranchHistory functions 
 	int n_events = bh->getNumberOfEventsOnInterval(tstart, tstop);	
 	//cout << "anctime: " << getAnc()->getTime() << "\tstart : " << tstart << "\tstop: " << tstop << endl;
 	
@@ -1633,7 +1633,7 @@ double Node::computeExtinctionRateIntervalRelativeTime(double tstart, double tst
 	tstart += getAnc()->getTime();
 	tstop += getAnc()->getTime();
 	
-	// This is required by the branchHistory functions 
+	// This is required by the BranchHistory functions 
 	int n_events = bh->getNumberOfEventsOnInterval(tstart, tstop);	
 	
 	if (n_events == 0){
@@ -1731,7 +1731,7 @@ double Node::computeExtinctionRateIntervalRelativeTime(double tstart, double tst
 /*
  
  Set mean speciation rates on each branch by going over all nodes
- and accessing branchHistory attribute.
+ and accessing BranchHistory attribute.
  
  If multiple events on a particular branch, the meanBranchRate is 
  just the arithmetic average of the rates (for now, anyway).

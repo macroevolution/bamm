@@ -17,7 +17,7 @@
 #include "model.h"
 #include "MbRandom.h"
 #include "node.h"
-#include "branchHistory.h"
+#include "BranchHistory.h"
 #include "Settings.h"
 #include "Utilities.h"
 
@@ -1911,7 +1911,7 @@ void Model::printStartAndEndEventStatesForBranch(Node* x){
 
 void Model::forwardSetBranchHistories(BranchEvent* x){
 	// If there is another event occurring more recent (closer to tips)
-	//	do nothing. Even just sits in branchHistory but doesn't affect
+	//	do nothing. Even just sits in BranchHistory but doesn't affect
 	//	state of any other nodes.
 	
 	

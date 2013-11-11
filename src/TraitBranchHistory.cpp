@@ -12,7 +12,7 @@ using namespace std;
 
 TraitBranchHistory::TraitBranchHistory(void){
 	
-	//cout << "branchHistory ctor" << endl;
+	//cout << "BranchHistory ctor" << endl;
 	nodeEvent = NULL;
 	ancestralNodeEvent = NULL;
 	

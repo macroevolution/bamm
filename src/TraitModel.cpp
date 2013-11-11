@@ -1672,7 +1672,7 @@ void TraitModel::printStartAndEndEventStatesForBranch(Node* x){
 
 void TraitModel::forwardSetBranchHistories(TraitBranchEvent* x){
 	// If there is another event occurring more recent (closer to tips)
-	//	do nothing. Even just sits in branchHistory but doesn't affect
+	//	do nothing. Even just sits in BranchHistory but doesn't affect
 	//	state of any other nodes.
 	
 	

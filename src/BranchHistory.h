@@ -1,10 +1,10 @@
 /*
- *  branchHistory.h
+ *  BranchHistory.h
  *  rateshift
  *
  *  Created by Dan Rabosky on 12/14/11.
  *
- ptr to branchHistory will be included with Node constructor
+ ptr to BranchHistory will be included with Node constructor
  each node has reference to all events associated with the branch
  If no events occur on branch, you still can obtain the event reference for 
  the node itself and the end of the branch very easily
