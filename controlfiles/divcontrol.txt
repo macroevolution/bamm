@@ -1,0 +1,51 @@
+treefile = ../examples/diversification/whales/whaletree.tre
+sampleFromPriorOnly = 0
+runMCMC = 1
+loadEventData = 0
+eventDataInfile = NONE_SPECIFIED
+initializeModel = 1
+useGlobalSamplingProbability = 1
+globalSamplingFraction = 0.850
+updateLambdaInitScale = 2.0
+updateMuInitScale = 2.0
+updateLambdaShiftScale = .1
+updateMuShiftScale = 0.75
+updateEventRateScale = 4.0
+localGlobalMoveRatio = 10.0
+minCladeSizeForShift = 1
+
+lambdaInit0 = 0.032
+lambdaShift0 = 0
+muInit0 = .005
+muShift0 = 0
+
+targetNumber = 1.0
+lambdaInitPrior = 1.0
+lambdaShiftPrior = 0.05
+muInitPrior = 1.0
+muShiftPrior = 0.05
+MeanSpeciationLengthFraction = 1.0
+segLength = 0.5
+
+mcmcOutfile = bmcmcout.txt
+lambdaOutfile = blambdarates.txt
+muOutfile = bmurates.txt
+acceptrateOutfile = baccept.txt
+lambdaNodeOutfile = bnodelambda.txt
+eventDataOutfile = beventdata.txt
+
+treeWriteFreq = 20000
+mcmcWriteFreq = 1000
+eventDataWriteFreq = 5000
+
+acceptWriteFreq = 5000
+printFreq = 1000
+NumberGenerations = 10000000
+updateRateEventNumber = 0.1
+updateRateEventPosition = 1
+updateRateEventRate = 1
+updateRateLambda0 = 1
+updateRateLambdaShift = 1
+updateRateMu0 = 1
+
+initialNumberEvents = 0
