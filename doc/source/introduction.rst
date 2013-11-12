@@ -11,3 +11,11 @@ For example, an event may be a change in speciation rate
 or a change in the rate of body size evolution.
 BAMM assumes that events occur across the branches
 of a phylogenetic tree under a compound Poisson process.
+
+.. figure:: normal.png
+   :width: 640
+   :align: center
+
+   Figure 1: Normal distribution
+
+This is not part of the figure caption.
