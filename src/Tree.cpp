@@ -7,11 +7,9 @@
 
 #include "Tree.h"
 #include "Node.h"
-
 #include "BranchHistory.h"
 #include "TraitBranchHistory.h"
 #include "MbRandom.h"
-//#include "phenotype.h"
 
 
 //#define DEBUG_TIME_VARIABLE

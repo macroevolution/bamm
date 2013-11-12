@@ -13,12 +13,9 @@
 #include <iomanip>
 #include <sstream>
 
-#include "BranchEvent.h"
-#include "Node.h"
 #include "Tree.h"
 #include "MbRandom.h"
 #include "Model.h"
-#include "BranchHistory.h"
 #include "MCMC.h"
 #include "Settings.h"
 #include "TraitMCMC.h"

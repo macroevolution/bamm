@@ -12,8 +12,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <math.h>
-
 #include "BranchEvent.h"
 #include "TraitBranchEvent.h"
 

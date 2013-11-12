@@ -13,8 +13,6 @@
 #include <set>
 #include <vector>
 
-#include "TraitBranchEvent.h"
-
 using namespace std;
 
 //Forward declarations

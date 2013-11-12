@@ -17,7 +17,6 @@
 
 #include <set>
 
-#include "BranchEvent.h"
 #include "Utilities.h"
 
 class BranchEvent;

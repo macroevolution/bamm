@@ -6,26 +6,23 @@
   *
  */
 
-#include "TraitBranchEvent.h"
-
-
 #include <iostream>
 #include <stdlib.h>
 
+#include "TraitBranchEvent.h"
 #include "MbRandom.h"
 #include "Node.h"
 #include "Tree.h"
 
 
-
-// Made event time variable from the start with shift variable passed to constructor...
-
+// Made event time variable from the start
+// with shift variable passed to constructor
 
 TraitBranchEvent::TraitBranchEvent(double beta, double shift, Node* x, Tree* tp,
                                    MbRandom* rp, double map, double scale)
 {
 
-    // Speciation and extinction from new event assumed constant in time...
+    // Speciation and extinction from new event assumed constant in time
 
     _betaInit = beta;
     _betaShift = shift;

@@ -4,8 +4,6 @@
 #include <set>
 #include <vector>
 
-#include "BranchEvent.h"
-
 using namespace std;
 
 //Forward declarations
@@ -13,6 +11,7 @@ class Tree;
 class Node;
 class MbRandom;
 class Settings;
+class BranchEvent;
 
 double safeExponentiation(double x);
 double proportionalShrink(double x, double scale);

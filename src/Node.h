@@ -20,7 +20,6 @@ class branchEvent;
 class eventSet;
 class Phenotype;
 
-
 class BranchHistory;
 class TraitBranchHistory;
 

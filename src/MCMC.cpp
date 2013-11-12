@@ -1,7 +1,3 @@
-
-
-
-
 #include <sstream>
 #include <fstream>
 #include <iostream>
@@ -13,6 +9,8 @@
 #include "Node.h"
 #include "Tree.h"
 #include "Settings.h"
+#include "BranchEvent.h"
+
 
 MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
 {

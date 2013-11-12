@@ -6,10 +6,6 @@
   *
  */
 
-#include "TraitMCMC.h"
-
-
-
 #include <sstream>
 #include <fstream>
 #include <iostream>
@@ -21,6 +17,8 @@
 #include "Node.h"
 #include "Tree.h"
 #include "Settings.h"
+#include "TraitBranchEvent.h"
+
 
 TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
 {
