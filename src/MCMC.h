@@ -16,61 +16,57 @@
 using namespace std;
 
 class MbRandom;
-class Model; 
+class Model;
 class Settings;
 
 
-class MCMC{
+class MCMC
+{
 
 public:
-	MCMC(MbRandom * ran, Model * mymodel, Settings * sp);
-	~MCMC(void);
-	
-	void		writeStateToFile(void);
-	void		printStateData(void);
-	void		writeBranchSpeciationRatesToFile(void);
-	void		writeBranchExtinctionRatesToFile(void);
-	void		writeNodeSpeciationRatesToFile(void);
-	void		writeEventDataToFile(void);
-	
-	int			pickParameterClassToUpdate(void);
-	void		updateState(int parm);
-	
-	void		setUpdateWeights(void);
- 
-	void		writeParamAcceptRates(void);
- 
-	
+
+    MCMC(MbRandom* ran, Model* mymodel, Settings* sp);
+    ~MCMC();
+
+    void writeStateToFile();
+    void printStateData();
+    void writeBranchSpeciationRatesToFile();
+    void writeBranchExtinctionRatesToFile();
+    void writeNodeSpeciationRatesToFile();
+    void writeEventDataToFile();
+
+    int  pickParameterClassToUpdate();
+    void updateState(int parm);
+
+    void setUpdateWeights();
+
+    void writeParamAcceptRates();
+
 private:
-	MbRandom		*ranPtr;
-	Model			*ModelPtr;
-	Settings		*sttings;
-	
-	vector<double>	parWts;
-	
-	vector<int>		acceptCount;
-	vector<int>		rejectCount;
-	
-	string			mcmcOutfile;
-	string			lambdaOutfile;
-	string			lambdaNodeOutfile;
-	string			muOutfile;
-	string			acceptFile;
-	string			eventDataFile;
-	
-	int				_treeWriteFreq;
-	int				_eventDataWriteFreq;
-	int				_mcmcWriteFreq;
-	int				_acceptWriteFreq;
-	int				_printFreq;
-	int				_NGENS;
-	
+
+    MbRandom* ranPtr;
+    Model*    ModelPtr;
+    Settings* sttings;
+
+    vector<double> parWts;
+
+    vector<int> acceptCount;
+    vector<int> rejectCount;
+
+    string mcmcOutfile;
+    string lambdaOutfile;
+    string lambdaNodeOutfile;
+    string muOutfile;
+    string acceptFile;
+    string eventDataFile;
+
+    int _treeWriteFreq;
+    int _eventDataWriteFreq;
+    int _mcmcWriteFreq;
+    int _acceptWriteFreq;
+    int _printFreq;
+    int _NGENS;
 };
 
 
-
 #endif
-
-
-
-

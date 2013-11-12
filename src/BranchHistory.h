@@ -6,11 +6,9 @@
  *
  ptr to BranchHistory will be included with Node constructor
  each node has reference to all events associated with the branch
- If no events occur on branch, you still can obtain the event reference for 
+ If no events occur on branch, you still can obtain the event reference for
  the node itself and the end of the branch very easily
- 
- 
- 
+
  */
 
 
@@ -24,84 +22,96 @@
 
 class BranchEvent;
 class comp_history;
- 
+
 typedef std::set<BranchEvent*, comp_history>::size_type EventSetSizeType;
 
 
-class BranchHistory {
+class BranchHistory
+{
 
 private:
-	BranchEvent*					nodeEvent; // event describing focal node
-	BranchEvent*					ancestralNodeEvent; // event describing ancestor...
 
-	// set of all events on branch. Of length 0 if no events occurred on branch.
-	// Also, if no events occur on branch, then entire branch is described by
-	// the event referenced at nodeEvent;
-	
-	std::set<BranchEvent*,comp_history>	eventsOnBranch;  
+    BranchEvent* nodeEvent;          // event describing focal node
+    BranchEvent* ancestralNodeEvent; // event describing ancestor
 
-	// New parameters, March 24 2012 for burst-speciation model
-	double				_meanLambda;
-	double				_meanMu;
-			
-	
-	
-		
+    // Set of all events on branch. Of length 0 if no events occurred on branch.
+    // Also, if no events occur on branch, then entire branch is described by
+    // the event referenced at nodeEvent;
+    std::set<BranchEvent*, comp_history> eventsOnBranch;
+
+    // New parameters, March 24 2012 for burst-speciation model
+    double _meanLambda;
+    double _meanMu;
+
 public:
-		
-	BranchHistory(void);
-	~BranchHistory(void);	
-	
-	
-	BranchEvent*		getLastEvent(void); // get last event on branch
-	
-	// get last event from a reference event that occurred on branch:
-	BranchEvent*		getLastEvent(BranchEvent* x); 
-	BranchEvent*		getLastEvent(double ttime);
-	BranchEvent*		getNextEvent(double ttime);
-	int					getNumberOfEventsOnInterval(double t1, double t2);
-	BranchEvent*		getEventByIndexPosition(int i);
-	
-	void				setNodeEvent(BranchEvent* x)				{ nodeEvent = x; }
-	BranchEvent*		getNodeEvent(void)							{ return nodeEvent; }
-	
-	void				setAncestralNodeEvent(BranchEvent* x)		{ ancestralNodeEvent = x; }
-	BranchEvent*		getAncestralNodeEvent(void)					{ return ancestralNodeEvent;  } 
-	void				printBranchHistory(void);
-	void				reversePrintBranchHistory(void);
-	
-	void				popEventOffBranchHistory(BranchEvent* x)	{ eventsOnBranch.erase(x); }
-	void				addEventToBranchHistory(BranchEvent * x)	{ eventsOnBranch.insert(x); }
-	int					getNumberOfBranchEvents(void)				{ return eventsOnBranch.size(); }
-	
-	
-};	
+
+    BranchHistory();
+    ~BranchHistory();
+
+    BranchEvent* getLastEvent(); // get last event on branch
+
+    // Get last event from a reference event that occurred on branch:
+    BranchEvent* getLastEvent(BranchEvent* x);
+    BranchEvent* getLastEvent(double ttime);
+    BranchEvent* getNextEvent(double ttime);
+    int getNumberOfEventsOnInterval(double t1, double t2);
+    BranchEvent* getEventByIndexPosition(int i);
+
+    void         setNodeEvent(BranchEvent* x);
+    BranchEvent* getNodeEvent();
+
+    void         setAncestralNodeEvent(BranchEvent* x);
+    BranchEvent* getAncestralNodeEvent();
+
+    void printBranchHistory();
+    void reversePrintBranchHistory();
+
+    void popEventOffBranchHistory(BranchEvent* x);
+    void addEventToBranchHistory(BranchEvent* x);
+    int  getNumberOfBranchEvents();
+};
 
 
+inline void BranchHistory::setNodeEvent(BranchEvent* x)
+{
+    nodeEvent = x;
+}
 
+
+inline BranchEvent* BranchHistory::getNodeEvent()
+{
+    return nodeEvent;
+}
+
+
+inline void BranchHistory::setAncestralNodeEvent(BranchEvent* x)
+{
+    ancestralNodeEvent = x;
+}
+
+
+inline BranchEvent* BranchHistory::getAncestralNodeEvent()
+{
+    return ancestralNodeEvent;
+}
+
+
+inline void BranchHistory::popEventOffBranchHistory(BranchEvent* x)
+{
+    eventsOnBranch.erase(x);
+}
+
+
+inline void BranchHistory::addEventToBranchHistory(BranchEvent* x)
+{
+    eventsOnBranch.insert(x);
+}
+
+
+inline int BranchHistory::getNumberOfBranchEvents()
+{
+    return eventsOnBranch.size();
+}
 
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

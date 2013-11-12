@@ -13,193 +13,576 @@
 #include <set>
 #include <vector>
 
-using namespace	std;
+using namespace std;
 
 class MbRandom;
 class branchEvent;
 class eventSet;
 class Phenotype;
-	
- 
+
+
 class BranchHistory;
 class TraitBranchHistory;
 
 
-class Node{
+class Node
+{
 
 private:
-	Node * _lfDesc;
-	Node * _rtDesc;
-	Node * _anc;
-	string _name;
-	
-	string _cladeName;
-	
-	int _index;
-	double _time;
-	double _brlen; //
-	double _branchTime;
-	
-	int _tipDescCount;
-	bool _isExtant;
-	bool _isTip;
-	bool _isConstant;
-	bool _isLivingTip;
-	
-	// specific for mapping:
-	double _mapStart;
-	double _mapEnd;
-	
-	BranchHistory*	history;
-	TraitBranchHistory* _traitHistory;
-	
-	
-	// For phenotypes:
-	//Phenotype*		pheno;
-	double	_trait; // trait value
-	double	_meanBeta; // mean phenotypic rate
-	double	_nodeBeta; // exact value at node.
-	bool	_isTraitFixed; // is trait value a free parameter?
-	
-	
-	
-	//specific stuff for compound poisson rate model
-	double _meanSpeciationRate;
-	double _meanExtinctionRate;
-	
-	// Node rates for time-varying models:
-	double _nodeLambda;
-	double _nodeMu;
-	
-	
-	
-	double _di; // initial value of speciation probability (at node)
-	double _ei; // initial value of extinction probability (at node)
-	double _etip; // initial value (sampling fraction) at tip descended from node
-	
-	// value of log-likelihood at end of branch (after combining w speciation event):
-	//		Zero if node is terminal. 
-	double _nodeLikelihood; 
 
-	// flag for whether node can or cannot define branch that can hold event:
-	bool	_canHoldEvent;
-	
- 
-	
+    Node*  _lfDesc;
+    Node*  _rtDesc;
+    Node*  _anc;
+    string _name;
+
+    string _cladeName;
+
+    int    _index;
+    double _time;
+    double _brlen;
+    double _branchTime;
+
+    int  _tipDescCount;
+    bool _isExtant;
+    bool _isTip;
+    bool _isConstant;
+    bool _isLivingTip;
+
+    // specific for mapping:
+    double _mapStart;
+    double _mapEnd;
+
+    BranchHistory*  history;
+    TraitBranchHistory* _traitHistory;
+
+    // For phenotypes:
+    double _trait; // trait value
+    double _meanBeta; // mean phenotypic rate
+    double _nodeBeta; // exact value at node.
+    bool   _isTraitFixed; // is trait value a free parameter?
+
+    //specific stuff for compound poisson rate model
+    double _meanSpeciationRate;
+    double _meanExtinctionRate;
+
+    // Node rates for time-varying models:
+    double _nodeLambda;
+    double _nodeMu;
+
+    double _di;   // initial value of speciation probability (at node)
+    double _ei;   // initial value of extinction probability (at node)
+    double _etip; // initial value (sampling frac.) at tip descended from node
+
+    // value of log-likelihood at end of branch
+    // (after combining w speciation event):
+    //  Zero if node is terminal.
+    double _nodeLikelihood;
+
+    // Flag for whether node can or cannot define branch that can hold event:
+    bool _canHoldEvent;
+
 public:
-	Node(void); 
-	Node(int x);
-	void setLfDesc(Node * x)	{ _lfDesc = x; }
-	void setRtDesc(Node * x)	{ _rtDesc = x; }
-	void nullifyLfDesc(void)	{ _lfDesc = NULL; }
-	void nullifyRtDesc(void)	{ _rtDesc = NULL; }
-	void nullifyAnc(void)		{ _anc = NULL; }
-	void setAnc(Node * x)		{ _anc = x; }
-	void setName(string x)		{ _name = x; }
-	void setIndex(int x)		{ _index = x; }
-	void setTime(double x)		{ _time = x; }
-	void setBrlen(double x)		{ _brlen = x; }
-	
-	void setTipDescCount(int x)	{ _tipDescCount = x; }
-	
-	
-	Node * getLfDesc(void)		{ return _lfDesc; }
-	Node * getRtDesc(void)		{ return _rtDesc; }
-	Node * getAnc(void)			{ return _anc; }
-	string getName(void)		{ return _name; }
-	int getIndex(void)			{ return _index; }
-	double getTime(void)		{ return _time; }
-	double getBrlen(void)		{ return _brlen; }
-	int getTipDescCount(void)	{ return _tipDescCount; }
-	int getDescCount(void);
-	void setExtantStatus(bool x) { _isExtant = x;	}  
-	bool getExtantStatus(void)	{ return _isExtant; }
-	
-	void setIsTip(bool x)		{ _isTip = x;		}
-	bool getIsTip(void)			{ return _isTip;	}
-	void setIsConstant(bool x)	{ _isConstant = x; }
-	bool getIsConstant(void)	{ return _isConstant; }
-	
-	void setIsLivingTip(bool x)	{ _isLivingTip = x; }
-	bool getIsLivingTip(void)	{ return _isLivingTip;  }
 
-	// Get a random TIP node descended from lfdesc of a given node
-	Node *	getRandomLeftTipNode(void);
+    Node();
+    Node(int x);
 
-	// Get random RIGHT TIP node
-	Node *	getRandomRightTipNode(void);
-	
-	// Specific for treemap:
-	void setMapStart(double x)	{ _mapStart = x; }
-	double getMapStart(void)	{ return _mapStart; }
-	void setMapEnd(double x)	{ _mapEnd = x; }
-	double getMapEnd(void)		{ return _mapEnd; }
-	
-	//Need to includet this
-	BranchHistory* getBranchHistory(void)	{ return history;  }
-	TraitBranchHistory* getTraitBranchHistory(void)	{ return _traitHistory;	}
-	
-	
-	void	setMeanSpeciationRate(double x)	{ _meanSpeciationRate = x; }
-	double	getMeanSpeciationRate(void)		{  return _meanSpeciationRate;  }
-	
-	void	setMeanExtinctionRate(double x)	{ _meanExtinctionRate = x;		}
-	double	getMeanExtinctionRate(void)		{ return _meanExtinctionRate;	}
-	
-	void	computeNodeBranchSpeciationParams(void);
-	void	computeNodeBranchExtinctionParams(void);
-	
-	void	setNodeLambda(double x)			{ _nodeLambda = x;		} 
-	double	getNodeLambda(void)				{ return _nodeLambda;	}
-	
-	void	setNodeMu(double x)				{ _nodeMu = x;			}
-	double	getNodeMu(void)					{ return _nodeMu;		}
-	
-	void	setNodeBeta(double x)			{ _nodeBeta = x;		}
-	double	getNodeBeta(void)				{ return _nodeBeta;		}
-	
+    void  setLfDesc(Node* x);
+    Node* getLfDesc();
 
-	/*********/
-	
-	// phenotypic stuff:
-	void	setTraitValue(double x)			{ _trait = x;		}
-	double	getTraitValue(void)				{ return _trait;	}
-	void	setMeanBeta(double x)			{ _meanBeta = x;	}
-	double	getMeanBeta(void)				{ return _meanBeta; }
-	void	setIsTraitFixed(bool x)			{ _isTraitFixed = x;}
-	bool	getIsTraitFixed(void)			{ return _isTraitFixed; }
-	
-	// Speciation-extinction calculations
-	void	setEinit(double x)					{ _ei = x;		}
-	double	getEinit(void)						{ return _ei;	}
-	void	setDinit(double x)					{ _di = x;		}
-	double	getDinit(void)						{ return _di;	}
-	void	setEtip(double x)					{ _etip = x;	}
-	double	getEtip(void)						{ return _etip; }
+    void  setRtDesc(Node* x);
+    Node* getRtDesc();
 
-	void	setNodeLikelihood(double x)			{ _nodeLikelihood = x;		}
-	double	getNodeLikelihood(void)				{ return _nodeLikelihood;	}
+    void nullifyLfDesc();
+    void nullifyRtDesc();
+    void nullifyAnc();
 
-	bool	getCanHoldEvent(void)			{ return _canHoldEvent; };
-	void	setCanHoldEvent(bool x)			{ _canHoldEvent = x;	};
+    void  setAnc(Node* x);
+    Node* getAnc();
 
-	// branching times
-	void	setBranchTime(double x)			{ _branchTime = x;		}
-	double	getBranchTime(void)				{ return _branchTime;	}
-	
-	void	setCladeName(string x)			{ _cladeName = x;		}
-	string	getCladeName(void)				{ return _cladeName;	}
+    void   setName(string x);
+    string getName();
 
-	//double	computeSpeciationRateInterval(double tstart, double tstop);
-	double	computeSpeciationRateIntervalRelativeTime(double tstart, double tstop);
-	double	computeSpeciationRateIntervalAbsoluteTime(double tstart, double tstop);
-	double	computeExtinctionRateIntervalRelativeTime(double tstart, double tstop);
- 
-	
-	double	getPointExtinction(double branchtime);
-	
-	
+    void setIndex(int x);
+    int  getIndex();
+
+    void   setTime(double x);
+    double getTime();
+
+    void   setBrlen(double x);
+    double getBrlen();
+
+    void setTipDescCount(int x);
+    int  getTipDescCount();
+
+    int getDescCount();
+
+    void setExtantStatus(bool x);
+    bool getExtantStatus();
+
+    void setIsTip(bool x);
+    bool getIsTip();
+
+    void setIsConstant(bool x);
+    bool getIsConstant();
+
+    void setIsLivingTip(bool x);
+    bool getIsLivingTip();
+
+    // Get a random TIP node descended from lfdesc of a given node
+    Node* getRandomLeftTipNode();
+
+    // Get random RIGHT TIP node
+    Node* getRandomRightTipNode();
+
+    // Specific for treemap:
+    void   setMapStart(double x);
+    double getMapStart();
+
+    void   setMapEnd(double x);
+    double getMapEnd();
+
+    //Need to includet this
+    BranchHistory* getBranchHistory();
+    TraitBranchHistory* getTraitBranchHistory();
+
+    void   setMeanSpeciationRate(double x);
+    double getMeanSpeciationRate();
+
+    void   setMeanExtinctionRate(double x);
+    double getMeanExtinctionRate();
+
+    void computeNodeBranchSpeciationParams();
+    void computeNodeBranchExtinctionParams();
+
+    void   setNodeLambda(double x);
+    double getNodeLambda();
+
+    void   setNodeMu(double x);
+    double getNodeMu();
+
+    void   setNodeBeta(double x);
+    double getNodeBeta();
+
+    /*********/
+
+    // Phenotypic stuff:
+    void setTraitValue(double x);
+    double getTraitValue();
+
+    void setMeanBeta(double x);
+    double getMeanBeta();
+
+    void setIsTraitFixed(bool x);
+    bool getIsTraitFixed();
+
+    // Speciation-extinction calculations
+    void   setEinit(double x);
+    double getEinit();
+
+    void   setDinit(double x);
+    double getDinit();
+
+    void   setEtip(double x);
+    double getEtip();
+
+    void setNodeLikelihood(double x);
+    double getNodeLikelihood();
+
+    bool getCanHoldEvent();
+    void setCanHoldEvent(bool x);
+
+    void   setBranchTime(double x);
+    double getBranchTime();
+
+    void setCladeName(string x);
+    string getCladeName();
+
+    double computeSpeciationRateIntervalRelativeTime
+        (double tstart, double tstop);
+    double computeSpeciationRateIntervalAbsoluteTime
+        (double tstart, double tstop);
+    double computeExtinctionRateIntervalRelativeTime
+        (double tstart, double tstop);
+
+    double getPointExtinction(double branchtime);
 };
+
+
+inline void Node::setLfDesc(Node* x)
+{
+    _lfDesc = x;
+}
+
+
+inline void Node::setRtDesc(Node* x)
+{
+    _rtDesc = x;
+}
+
+
+inline void Node::nullifyLfDesc()
+{
+    _lfDesc = NULL;
+}
+
+
+inline void Node::nullifyRtDesc()
+{
+    _rtDesc = NULL;
+}
+
+
+inline void Node::nullifyAnc()
+{
+    _anc = NULL;
+}
+
+
+inline void Node::setAnc(Node* x)
+{
+    _anc = x;
+}
+
+
+inline void Node::setName(string x)
+{
+    _name = x;
+}
+
+
+inline void Node::setIndex(int x)
+{
+    _index = x;
+}
+
+
+inline void Node::setTime(double x)
+{
+    _time = x;
+}
+
+
+inline void Node::setBrlen(double x)
+{
+    _brlen = x;
+}
+
+
+inline void Node::setTipDescCount(int x)
+{
+    _tipDescCount = x;
+}
+
+
+inline Node* Node::getLfDesc()
+{
+    return _lfDesc;
+}
+
+
+inline Node* Node::getRtDesc()
+{
+    return _rtDesc;
+}
+
+
+inline Node* Node::getAnc()
+{
+    return _anc;
+}
+
+
+inline string Node::getName()
+{
+    return _name;
+}
+
+
+inline int Node::getIndex()
+{
+    return _index;
+}
+
+
+inline double Node::getTime()
+{
+    return _time;
+}
+
+
+inline double Node::getBrlen()
+{
+    return _brlen;
+}
+
+
+inline int Node::getTipDescCount()
+{
+    return _tipDescCount;
+}
+
+
+inline void Node::setExtantStatus(bool x)
+{
+    _isExtant = x;
+}
+
+
+inline bool Node::getExtantStatus()
+{
+    return _isExtant;
+}
+
+
+inline void Node::setIsTip(bool x)
+{
+    _isTip = x;
+}
+
+
+inline bool Node::getIsTip()
+{
+    return _isTip;
+}
+
+
+inline void Node::setIsConstant(bool x)
+{
+    _isConstant = x;
+}
+
+
+inline bool Node::getIsConstant()
+{
+    return _isConstant;
+}
+
+
+inline void Node::setIsLivingTip(bool x)
+{
+    _isLivingTip = x;
+}
+
+
+inline bool Node::getIsLivingTip()
+{
+    return _isLivingTip;
+}
+
+
+inline void Node::setMapStart(double x)
+{
+    _mapStart = x;
+}
+
+
+inline double Node::getMapStart()
+{
+    return _mapStart;
+}
+
+
+inline void Node::setMapEnd(double x)
+{
+    _mapEnd = x;
+}
+
+
+inline double Node::getMapEnd()
+{
+    return _mapEnd;
+}
+
+
+inline BranchHistory* Node::getBranchHistory()
+{
+    return history;
+}
+
+
+inline TraitBranchHistory* Node::getTraitBranchHistory()
+{
+    return _traitHistory;
+}
+
+inline void Node::setMeanSpeciationRate(double x)
+{
+    _meanSpeciationRate = x;
+}
+
+
+inline double Node::getMeanSpeciationRate()
+{
+    return _meanSpeciationRate;
+}
+
+
+inline void Node::setMeanExtinctionRate(double x)
+{
+    _meanExtinctionRate = x;
+}
+
+
+inline double Node::getMeanExtinctionRate()
+{
+    return _meanExtinctionRate;
+}
+
+
+inline void Node::setNodeLambda(double x)
+{
+    _nodeLambda = x;
+}
+
+
+inline double Node::getNodeLambda()
+{
+    return _nodeLambda;
+}
+
+
+inline void Node::setNodeMu(double x)
+{
+    _nodeMu = x;
+}
+
+
+inline double Node::getNodeMu()
+{
+    return _nodeMu;
+}
+
+
+inline void Node::setNodeBeta(double x)
+{
+    _nodeBeta = x;
+}
+
+
+inline double Node::getNodeBeta()
+{
+    return _nodeBeta;
+}
+
+
+inline void Node::setTraitValue(double x)
+{
+    _trait = x;
+}
+
+
+inline double Node::getTraitValue()
+{
+    return _trait;
+}
+
+
+inline void Node::setMeanBeta(double x)
+{
+    _meanBeta = x;
+}
+
+
+inline double Node::getMeanBeta()
+{
+    return _meanBeta;
+}
+
+
+inline void Node::setIsTraitFixed(bool x)
+{
+    _isTraitFixed = x;
+}
+
+
+inline bool Node::getIsTraitFixed()
+{
+    return _isTraitFixed;
+}
+
+
+inline void Node::setEinit(double x)
+{
+    _ei = x;
+}
+
+
+inline double Node::getEinit()
+{
+    return _ei;
+}
+
+
+inline void Node::setDinit(double x)
+{
+    _di = x;
+}
+
+
+inline double Node::getDinit()
+{
+    return _di;
+}
+
+
+inline void Node::setEtip(double x)
+{
+    _etip = x;
+}
+
+
+inline double Node::getEtip()
+{
+    return _etip;
+}
+
+
+inline void Node::setNodeLikelihood(double x)
+{
+    _nodeLikelihood = x;
+}
+
+
+inline double Node::getNodeLikelihood()
+{
+    return _nodeLikelihood;
+}
+
+
+inline bool Node::getCanHoldEvent()
+{
+    return _canHoldEvent;
+}
+
+
+inline void Node::setCanHoldEvent(bool x)
+{
+    _canHoldEvent = x;
+}
+
+
+inline void Node::setBranchTime(double x)
+{
+    _branchTime = x;
+}
+
+
+inline double Node::getBranchTime()
+{
+    return _branchTime;
+}
+
+
+inline void Node::setCladeName(string x)
+{
+    _cladeName = x;
+}
+
+
+inline string Node::getCladeName()
+{
+    return _cladeName;
+}
 
 
 #endif

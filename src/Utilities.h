@@ -18,29 +18,27 @@
 #include "TraitBranchEvent.h"
 
 
+class comp_history
+{
 
-
-class comp_history {
-    
 public:
-	bool		operator()(BranchEvent* m1, BranchEvent* m2) const { return (*m1 < *m2); }
-	bool		operator()(TraitBranchEvent* m1, TraitBranchEvent* m2) const { return (*m1 < *m2); }
-	
+
+    bool operator()(BranchEvent* m1, BranchEvent* m2) const;
+    bool operator()(TraitBranchEvent* m1, TraitBranchEvent* m2) const;
 };
 
-/*
 
-double safeExponentiation(double x) {
-	
-	if (x > 0.0)
-		return 1.0;
-	else if (x < -100.0)
-		return 0.0;
-	else
-		return exp(x);
-	
+inline bool comp_history::operator()(BranchEvent* m1, BranchEvent* m2) const
+{
+   return (*m1 < *m2);
 }
-*/
+
+
+inline bool comp_history::operator()(TraitBranchEvent* m1,
+                                     TraitBranchEvent* m2) const
+{
+    return (*m1 < *m2);
+}
 
 
 #endif
