@@ -5,8 +5,6 @@
 #include <set>
 #include <vector>
 
-using namespace std;
-
 class MbRandom;
 class branchEvent;
 class eventSet;
@@ -22,11 +20,11 @@ class Tree
 private:
 
     Node* root;
-    set<Node*> nodes;
-    vector<Node*> downPassSeq;
+    std::set<Node*> nodes;
+    std::vector<Node*> downPassSeq;
 
     // Internal node set:: for choosing random node to update state
-    set<Node*> internalNodeSet;
+    std::set<Node*> internalNodeSet;
 
     MbRandom* ranPtr;
     double _startTime;
@@ -51,14 +49,14 @@ private:
 
     // New data for mapping events to nodes:
     // Nodes subtended by a branch that can hold an event
-    set<Node*> mappableNodes;
+    std::set<Node*> mappableNodes;
     double _totalMapLength;
 
-    set<Node*> _tempNodeSet;
+    std::set<Node*> _tempNodeSet;
 
 public:
 
-    Tree(string fname, MbRandom* rnptr);
+    Tree(std::string fname, MbRandom* rnptr);
 
     Tree();
     ~Tree();
@@ -101,8 +99,8 @@ public:
 
     Node* getRoot();
 
-    string getNewick();
-    void   writeTree(Node* p, stringstream& ss);
+    std::string getNewick();
+    void   writeTree(Node* p, std::stringstream& ss);
 
     int  getNumberTips();
     int  getNumberExtantTips();
@@ -115,8 +113,8 @@ public:
     void writeNodeData();
     void setBranchLengths();
     void deleteExtinctNodes();
-    void buildTreeFromNewickString(string ts);
-    void setTaxonCountFromNewickString(string ts);
+    void buildTreeFromNewickString(std::string ts);
+    void setTaxonCountFromNewickString(std::string ts);
     bool isValidChar(char x);
 
     void setNodeTimes(Node* p);
@@ -124,14 +122,14 @@ public:
 
     double getAge();
     void   setAge();
-    vector<double> getBranchingTimes();
+    std::vector<double> getBranchingTimes();
 
-    void writeMeanBranchTraitRateTree(Node* p, stringstream& ss);
+    void writeMeanBranchTraitRateTree(Node* p, std::stringstream& ss);
     void setMeanBranchTraitRates();
 
     // Functions for phenotypic evolution:
-    void getPhenotypes(string fname);
-    void getPhenotypesMissingLatent(string fname);
+    void getPhenotypes(std::string fname);
+    void getPhenotypesMissingLatent(std::string fname);
 
     void  printTraitValues();
     void  initializeTraitValues();
@@ -150,21 +148,21 @@ public:
 
     void echoMeanBranchRates();
 
-    void writeMeanBranchSpeciationTree(Node* p, stringstream& ss);
-    void writeBranchSpeciationRatesToFile(string fname, bool append);
-    void writeBranchExtinctionRatesToFile(string fname, bool append);
+    void writeMeanBranchSpeciationTree(Node* p, std::stringstream& ss);
+    void writeBranchSpeciationRatesToFile(std::string fname, bool append);
+    void writeBranchExtinctionRatesToFile(std::string fname, bool append);
 
 
-    void writeMeanBranchExtinctionTree(Node* p, stringstream& ss);
-    void writeNodeSpeciationTree(Node* p, stringstream& ss);
+    void writeMeanBranchExtinctionTree(Node* p, std::stringstream& ss);
+    void writeNodeSpeciationTree(Node* p, std::stringstream& ss);
 
-    void writeMeanBranchNetDivRateTree(Node* p, stringstream& ss);
-    void writeBranchPhenotypes(Node* p, stringstream& ss);
+    void writeMeanBranchNetDivRateTree(Node* p, std::stringstream& ss);
+    void writeBranchPhenotypes(Node* p, std::stringstream& ss);
 
     // speciation-extinction initialization:
 
     // File for species-specific values.  
-    void initializeSpeciationExtinctionModel(string fname);
+    void initializeSpeciationExtinctionModel(std::string fname);
     void initializeSpeciationExtinctionModel(double sampFraction);
     void printInitialSpeciationExtinctionRates();
 
@@ -187,9 +185,9 @@ public:
 
     void computeMeanTraitRatesByNode(Node* x);
 
-    Node* getNodeMRCA(string A, string B);
+    Node* getNodeMRCA(std::string A, std::string B);
     void  passUpFillTempNodeArray(Node* x);
-    Node* getNodeByName(string A);
+    Node* getNodeByName(std::string A);
 
     void printNodeTraitRates();
 

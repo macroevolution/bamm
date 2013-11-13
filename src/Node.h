@@ -10,10 +10,6 @@
 #define NODE_H
 
 #include <string>
-#include <set>
-#include <vector>
-
-using namespace std;
 
 class MbRandom;
 class branchEvent;
@@ -32,9 +28,9 @@ private:
     Node*  _lfDesc;
     Node*  _rtDesc;
     Node*  _anc;
-    string _name;
+    std::string _name;
 
-    string _cladeName;
+    std::string _cladeName;
 
     int    _index;
     double _time;
@@ -98,8 +94,8 @@ public:
     void  setAnc(Node* x);
     Node* getAnc();
 
-    void   setName(string x);
-    string getName();
+    void   setName(std::string x);
+    std::string getName();
 
     void setIndex(int x);
     int  getIndex();
@@ -193,8 +189,8 @@ public:
     void   setBranchTime(double x);
     double getBranchTime();
 
-    void setCladeName(string x);
-    string getCladeName();
+    void setCladeName(std::string x);
+    std::string getCladeName();
 
     double computeSpeciationRateIntervalRelativeTime
         (double tstart, double tstop);
@@ -243,7 +239,7 @@ inline void Node::setAnc(Node* x)
 }
 
 
-inline void Node::setName(string x)
+inline void Node::setName(std::string x)
 {
     _name = x;
 }
@@ -291,7 +287,7 @@ inline Node* Node::getAnc()
 }
 
 
-inline string Node::getName()
+inline std::string Node::getName()
 {
     return _name;
 }
@@ -572,13 +568,13 @@ inline double Node::getBranchTime()
 }
 
 
-inline void Node::setCladeName(string x)
+inline void Node::setCladeName(std::string x)
 {
     _cladeName = x;
 }
 
 
-inline string Node::getCladeName()
+inline std::string Node::getCladeName()
 {
     return _cladeName;
 }

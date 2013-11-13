@@ -51,7 +51,7 @@ double Model::mhColdness = 1.0;
 Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
 {
 
-    cout << endl << "Initializing model object...." << endl;
+    std::cout << std::endl << "Initializing model object...." << std::endl;
 
     // reduce weird autocorrelation of values at start by calling RNG a few times...
     for (int i = 0; i < 100; i++)
@@ -151,7 +151,7 @@ Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
     // set NodeEvent of root node equal to the rootEvent:
     tp->getRoot()->getBranchHistory()->setNodeEvent(rootEvent);
 
-    //cout << "Root time, after initializing B: " << getRootEvent()->getAbsoluteTime() << endl;
+    //std::cout << "Root time, after initializing B: " << getRootEvent()->getAbsoluteTime() << std::endl;
 
     //initializing all branch histories to equal the root event:
     forwardSetBranchHistories(rootEvent);
@@ -159,11 +159,11 @@ Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
     treePtr->setMeanBranchSpeciation();
     treePtr->setMeanBranchExtinction();
 
-    //cout << "Root time, after initializing C: " << getRootEvent()->getAbsoluteTime() << endl;
+    //std::cout << "Root time, after initializing C: " << getRootEvent()->getAbsoluteTime() << std::endl;
 
     // 9.14.2012: initialize by previous event histories.
     if (sttings->getLoadEventData()) {
-        cout << "\nLoading model data from file...." << endl;
+        std::cout << "\nLoading model data from file...." << std::endl;
         initializeModelFromEventDataFile();
     }
 
@@ -171,10 +171,10 @@ Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
     setCurrLnLBranches(computeLikelihoodBranches());
 
     setCurrLnLTraits(0.0);
-    cout << "Model object successfully initialized." << endl;
-    cout << "Initial log-likelihood: " << getCurrLnLBranches() << endl << endl;
+    std::cout << "Model object successfully initialized." << std::endl;
+    std::cout << "Initial log-likelihood: " << getCurrLnLBranches() << std::endl << std::endl;
     if (sttings->getSampleFromPriorOnly())
-        cout << "\tNote that you have chosen to sample from prior only." << endl;
+        std::cout << "\tNote that you have chosen to sample from prior only." << std::endl;
 
     // this parameter only set during model-jumping.
     _logQratioJump = 0.0;
@@ -198,41 +198,41 @@ void Model::initializeModelFromEventDataFile(void)
 
     // Part 1. Read from file
 
-    ifstream infile(sttings->getEventDataInfile().c_str());
-    cout << "Initializing model from <<" << sttings->getEventDataInfile() << ">>" <<
-         endl;
-    vector<string> species1;
-    vector<string> species2;
-    vector<double> etime;
-    vector<double> lam_par1;
-    vector<double> lam_par2;
-    vector<double> mu_par1;
-    vector<double> mu_par2;
+    std::ifstream infile(sttings->getEventDataInfile().c_str());
+    std::cout << "Initializing model from <<" << sttings->getEventDataInfile() << ">>" <<
+         std::endl;
+    std::vector<std::string> species1;
+    std::vector<std::string> species2;
+    std::vector<double> etime;
+    std::vector<double> lam_par1;
+    std::vector<double> lam_par2;
+    std::vector<double> mu_par1;
+    std::vector<double> mu_par2;
 
     if (!infile.good()) {
-        cout << "Bad Filename. Exiting\n" << endl;
+        std::cout << "Bad Filename. Exiting\n" << std::endl;
         exit(1);
     }
 
 
-    string tempstring;
+    std::string tempstring;
 
     while (infile) {
         //string tempstring;
         getline(infile, tempstring, '\t');
-        //cout << tempstring.c_str() << "\t";
+        //std::cout << tempstring.c_str() << "\t";
         species1.push_back(tempstring);
 
         getline(infile, tempstring, '\t');
-        //cout << tempstring.c_str() << "\t";
+        //std::cout << tempstring.c_str() << "\t";
         species2.push_back(tempstring);
 
         getline(infile, tempstring, '\t');
-        //cout << tempstring.c_str() << "\t";
+        //std::cout << tempstring.c_str() << "\t";
         etime.push_back(atof(tempstring.c_str()));
 
         getline(infile, tempstring, '\t');
-        //cout << tempstring.c_str() << "\n";
+        //std::cout << tempstring.c_str() << "\n";
         lam_par1.push_back(atof(tempstring.c_str()));
 
         getline(infile, tempstring, '\t');
@@ -251,9 +251,9 @@ void Model::initializeModelFromEventDataFile(void)
 
     infile.close();
 
-    cout << "Read a total of " << species1.size() << " events" << endl;
-    for (vector<string>::size_type i = 0; i < species1.size(); i++) {
-        //cout << endl << "MRCA of : " <<  species1[i] << "\t" << species2[i] << endl;
+    std::cout << "Read a total of " << species1.size() << " events" << std::endl;
+    for (std::vector<std::string>::size_type i = 0; i < species1.size(); i++) {
+        //std::cout << std::endl << "MRCA of : " <<  species1[i] << "\t" << species2[i] << std::endl;
         if (species2[i] != "NA" & species1[i] != "NA") {
 
             Node* x = treePtr->getNodeMRCA(species1[i].c_str(), species2[i].c_str());
@@ -266,9 +266,9 @@ void Model::initializeModelFromEventDataFile(void)
                 double deltaT = x->getTime() - etime[i];
 
                 double newmaptime = x->getMapStart() + deltaT;
-                //cout << endl << x->getTime() << "\t" << x->getAnc()->getTime() << endl;
-                //cout << "maptimes: " << x->getMapStart() << "\t" << x->getMapEnd() << "\tcurmap: " << newmaptime << endl;
-                //cout << etime[i] << "\t" << treePtr->getAbsoluteTimeFromMapTime(newmaptime) << endl;
+                //std::cout << std::endl << x->getTime() << "\t" << x->getAnc()->getTime() << std::endl;
+                //std::cout << "maptimes: " << x->getMapStart() << "\t" << x->getMapEnd() << "\tcurmap: " << newmaptime << std::endl;
+                //std::cout << etime[i] << "\t" << treePtr->getAbsoluteTimeFromMapTime(newmaptime) << std::endl;
                 BranchEvent* newEvent =  new BranchEvent(lam_par1[i], lam_par2[i], mu_par1[i],
                         mu_par2[i], x, treePtr, ran, newmaptime, _scale);
                 newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(newEvent);
@@ -277,7 +277,7 @@ void Model::initializeModelFromEventDataFile(void)
                 forwardSetBranchHistories(newEvent);
                 treePtr->setMeanBranchSpeciation();
                 treePtr->setMeanBranchExtinction();
-                //cout << newEvent->getAbsoluteTime() << "\t" << newEvent->getLamInit() << "\t" << newEvent->getLamShift() << "\t" << newEvent->getMuInit() << endl;
+                //std::cout << newEvent->getAbsoluteTime() << "\t" << newEvent->getLamInit() << "\t" << newEvent->getLamShift() << "\t" << newEvent->getMuInit() << std::endl;
             }
 
         } else if (species2[i] == "NA" & species1[i] != "NA") {
@@ -292,18 +292,18 @@ void Model::initializeModelFromEventDataFile(void)
             forwardSetBranchHistories(newEvent);
             treePtr->setMeanBranchSpeciation();
             treePtr->setMeanBranchExtinction();
-            //cout << newEvent->getAbsoluteTime() << "\t" << newEvent->getLamInit() << "\t" << newEvent->getLamShift() << "\t" << newEvent->getMuInit() << endl;
+            //std::cout << newEvent->getAbsoluteTime() << "\t" << newEvent->getLamInit() << "\t" << newEvent->getLamShift() << "\t" << newEvent->getMuInit() << std::endl;
 
         } else {
-            cout << "Error in Model::initializeModelFromEventDataFile" << endl;
+            std::cout << "Error in Model::initializeModelFromEventDataFile" << std::endl;
             exit(1);
         }
 
-        //cout << i << "\t" << computeLikelihoodBranches() << "\t" << computeLogPrior() << endl;
+        //std::cout << i << "\t" << computeLikelihoodBranches() << "\t" << computeLogPrior() << std::endl;
     }
 
-    cout << "Added " << eventCollection.size() <<
-         " pre-defined events to tree, plus root event" << endl;
+    std::cout << "Added " << eventCollection.size() <<
+         " pre-defined events to tree, plus root event" << std::endl;
 
     //printEvents();
 
@@ -515,12 +515,12 @@ void Model::printEvents(void)
     //          nodeptr
     //
     int n_events = eventCollection.size();
-    cout << "N_events: " << n_events << endl;
+    std::cout << "N_events: " << n_events << std::endl;
     int counter = 1;
     for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
             i != eventCollection.end(); i++)
-        cout << "event " << counter++ << "\tAddress: " << (*i) << "\t" <<
-             (*i)->getMapTime() << "\tNode: " << (*i)->getEventNode() << endl << endl;
+        std::cout << "event " << counter++ << "\tAddress: " << (*i) << "\t" <<
+             (*i)->getMapTime() << "\tNode: " << (*i)->getEventNode() << std::endl << std::endl;
 
 
 }
@@ -633,7 +633,7 @@ void Model::eventGlobalMove(void)
         forwardSetBranchHistories(chosenEvent);
 
     }
-    //cout << "leave globalMove" << endl;
+    //std::cout << "leave globalMove" << std::endl;
 
     treePtr->setMeanBranchSpeciation();
     treePtr->setMeanBranchExtinction();
@@ -713,7 +713,7 @@ void Model::deleteEventFromTree(BranchEvent* be)
 {
 
     if (be == rootEvent) {
-        cout << "Can't delete root event" << endl;
+        std::cout << "Can't delete root event" << std::endl;
         exit(1);
     } else {
         // erase from branch history:
@@ -744,7 +744,7 @@ void Model::deleteEventFromTree(BranchEvent* be)
 
         // delete from global node set
         delete (be);
-        //cout << "deleted..." << endl;
+        //std::cout << "deleted..." << std::endl;
 
         eventCollection.erase(be);
 
@@ -764,7 +764,7 @@ void Model::deleteEventFromTree(BranchEvent* be)
 void Model::deleteRandomEventFromTree(void)
 {
 
-    //cout << endl << endl << "START Delete: " << endl;
+    //std::cout << std::endl << std::endl << "START Delete: " << std::endl;
     //printBranchHistories(treePtr->getRoot());
 
     // can only delete event if more than root node present.
@@ -835,7 +835,7 @@ void Model::deleteRandomEventFromTree(void)
 
 #endif
 
-                //cout << (*i) << endl;
+                //std::cout << (*i) << std::endl;
 
                 currNode->getBranchHistory()->popEventOffBranchHistory((*i));
 
@@ -983,11 +983,11 @@ void Model::changeNumberOfEventsMH(void)
 
 
         if (acceptMove) {
-            //cout << "gaining event in changeNumberOfEventsMH " << endl;
-            //cout << "gainaccept" << computeLikelihoodBranches()  << endl;
+            //std::cout << "gaining event in changeNumberOfEventsMH " << std::endl;
+            //std::cout << "gainaccept" << computeLikelihoodBranches()  << std::endl;
 
             //addEventToTree();
-            //cout << "Calliing isValid from ChangeNumberEvents::gain" << endl;
+            //std::cout << "Calliing isValid from ChangeNumberEvents::gain" << std::endl;
 
             bool isValidConfig = isEventConfigurationValid(lastEventModified);
 
@@ -997,7 +997,7 @@ void Model::changeNumberOfEventsMH(void)
                 acceptLast = 1;
             } else {
                 // Need to get rid of event that was just gained...
-                //cout << "Invalid event config from addEventToTree - deleting." << endl;
+                //std::cout << "Invalid event config from addEventToTree - deleting." << std::endl;
                 deleteEventFromTree(lastEventModified);
                 rejectCount++;
                 acceptLast = 0;
@@ -1006,7 +1006,7 @@ void Model::changeNumberOfEventsMH(void)
 
 
         } else {
-            //cout << "gainreject" << computeLikelihoodBranches() << endl;
+            //std::cout << "gainreject" << computeLikelihoodBranches() << std::endl;
 
             // Delete event.
             deleteEventFromTree(lastEventModified);
@@ -1020,9 +1020,9 @@ void Model::changeNumberOfEventsMH(void)
 
 
     } else {
-        //cout << "loss: initial LH: " << computeLikelihoodBranches() << endl;
+        //std::cout << "loss: initial LH: " << computeLikelihoodBranches() << std::endl;
         deleteRandomEventFromTree();
-        //cout << "loss: LH after deleteRandomEvent" << computeLikelihoodBranches() << endl;
+        //std::cout << "loss: LH after deleteRandomEvent" << computeLikelihoodBranches() << std::endl;
 
         proposedState = currState - 1;
 
@@ -1075,10 +1075,10 @@ void Model::changeNumberOfEventsMH(void)
             acceptMove = acceptMetropolisHastings(logHR);
 
 
-        //cout << "loss: " << acceptMove << "\t" << PropLnLik << "\tLT " << getCurrLnLTraits() + getCurrLnLBranches() << endl;
+        //std::cout << "loss: " << acceptMove << "\t" << PropLnLik << "\tLT " << getCurrLnLTraits() + getCurrLnLBranches() << std::endl;
 
         if (acceptMove) {
-            //cout << "loss accept, LH: " << computeLikelihoodBranches() << "\tlikBranches" << likBranches << endl;
+            //std::cout << "loss accept, LH: " << computeLikelihoodBranches() << "\tlikBranches" << likBranches << std::endl;
             setCurrLnLTraits(likTraits);
 
             setCurrLnLBranches(likBranches);
@@ -1088,21 +1088,21 @@ void Model::changeNumberOfEventsMH(void)
 
 
         } else {
-            //cout << "loss reject, LH: " << computeLikelihoodBranches() << "\tlikBranches" << likBranches << endl;
+            //std::cout << "loss reject, LH: " << computeLikelihoodBranches() << "\tlikBranches" << likBranches << std::endl;
 
             restoreLastDeletedEvent();
 
             // speciation-extinction rates on branches automatically updated after restoreLastDeletedEvent()
 
-            //cout << "loss reject restored, LH: " << computeLikelihoodBranches() << "\tlikBranches" << likBranches << endl;
+            //std::cout << "loss reject restored, LH: " << computeLikelihoodBranches() << "\tlikBranches" << likBranches << std::endl;
             rejectCount++;
             acceptLast = 0;
         }
 
     }
 
-    //cout << currState << "\t" << proposedState << "\tAcc: " << acceptMove << "\tOP: " << oldLogPrior;
-    //cout << "\tNP: " << newLogPrior << "\tqratio: " << _logQratioJump << endl;
+    //std::cout << currState << "\t" << proposedState << "\tAcc: " << acceptMove << "\tOP: " << oldLogPrior;
+    //std::cout << "\tNP: " << newLogPrior << "\tqratio: " << _logQratioJump << std::endl;
 
     incrementGeneration();
 
@@ -1117,7 +1117,7 @@ void Model::moveEventMH(void)
         double localMoveProb = _localGlobalMoveRatio / (1 + _localGlobalMoveRatio);
 
         bool isLocalMove = (ran->uniformRv() <= localMoveProb);
-        //cout << "is local: " << isLocalMove << endl;
+        //std::cout << "is local: " << isLocalMove << std::endl;
 
         if (isLocalMove) {
             // Local move, with event drawn at random
@@ -1144,7 +1144,7 @@ void Model::moveEventMH(void)
 
             bool acceptMove = false;
             bool isValid = false;
-            //cout << "calling isValid from moveEventMH::local" << endl;
+            //std::cout << "calling isValid from moveEventMH::local" << std::endl;
             isValid = isEventConfigurationValid(lastEventModified);
 
             if (std::isinf(likeRatio) ) {
@@ -1152,7 +1152,7 @@ void Model::moveEventMH(void)
             } else if (isValid)
                 acceptMove = acceptMetropolisHastings(logHR);
             else {
-                //cout << "Invalid event configuration from LocalMove" << endl;
+                //std::cout << "Invalid event configuration from LocalMove" << std::endl;
             }
 
             //const bool acceptMove = acceptMetropolisHastings(logHR);
@@ -1179,7 +1179,7 @@ void Model::moveEventMH(void)
         } else {
             // global move, event drawn at random
             eventGlobalMove();
-            //cout << "successful global move" << endl;
+            //std::cout << "successful global move" << std::endl;
 #ifdef NO_DATA
             double likBranches = 0;
             double PropLnLik = likBranches;
@@ -1423,8 +1423,8 @@ void Model::updateTimeVariablePartitionsMH(void)
 
     } else {
         // Should not be able to get here:
-        cout << "Invalid _isEventTimeVariable in Model::UpdateTimeVariablePartitionsMH"
-             << endl;
+        std::cout << "Invalid _isEventTimeVariable in Model::UpdateTimeVariablePartitionsMH"
+             << std::endl;
         throw;
     }
 
@@ -1677,7 +1677,7 @@ double Model::computeLikelihoodBranchesByInterval(void)
             double curLam = 0.0;
 
             while (starttime > 0) {
-                //cout << starttime << "\t" << endtime << endl;
+                //std::cout << starttime << "\t" << endtime << std::endl;
                 starttime -= _segLength;
                 if (starttime < 0)
                     starttime = 0.0;
@@ -1804,7 +1804,7 @@ double Model::computeLikelihoodBranchesByInterval(void)
             // If so, set to -Inf, leading to automatic rejection of state
 
             if (lEinit > MAX_E_PROB | rEinit > MAX_E_PROB) {
-                //cout << xnode << "\t" << lEinit << "\t" << rEinit << endl;
+                //std::cout << xnode << "\t" << lEinit << "\t" << rEinit << std::endl;
                 return -INFINITY;
             }
 
@@ -1899,7 +1899,7 @@ double Model::computeLogPrior(void)
     for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
             i != eventCollection.end(); i++) {
 
-        //cout << *i << "\t" << ctr << "\tLamInit: " << (*i)->getLamInit() << "\t"  << logPrior << endl;
+        //std::cout << *i << "\t" << ctr << "\tLamInit: " << (*i)->getLamInit() << "\t"  << logPrior << std::endl;
 
         logPrior += ran->lnExponentialPdf(sttings->getLambdaInitPrior(),
                                           (*i)->getLamInit());
@@ -1943,7 +1943,7 @@ bool Model::acceptMetropolisHastings(const double lnR)
 
 void Model::initializeBranchHistories(Node* x)
 {
-    //cout << x << endl;
+    //std::cout << x << std::endl;
     x->getBranchHistory()->setNodeEvent(rootEvent);
 
     if (x->getAnc() != NULL)
@@ -1963,9 +1963,9 @@ void Model::printStartAndEndEventStatesForBranch(Node* x)
 {
 
     if (x != treePtr->getRoot())
-        cout << "Node: " << x << "\tAnc: " <<
+        std::cout << "Node: " << x << "\tAnc: " <<
              x->getBranchHistory()->getAncestralNodeEvent() << "\tevent: " <<
-             x->getBranchHistory()->getNodeEvent() << endl;
+             x->getBranchHistory()->getNodeEvent() << std::endl;
 
     if (x->getLfDesc() != NULL)
         printStartAndEndEventStatesForBranch(x->getLfDesc());
@@ -2000,10 +2000,10 @@ void Model::forwardSetBranchHistories(BranchEvent* x)
     //   since the events will have been inserted in the correct order.
 
     Node* myNode = x->getEventNode();
-    //cout << "Node: " << myNode << endl;
+    //std::cout << "Node: " << myNode << std::endl;
 
-    //cout << endl << endl;
-    //cout << "event in forwardSet: " << x << endl;
+    //std::cout << std::endl << std::endl;
+    //std::cout << "event in forwardSet: " << x << std::endl;
 
     //printEventData();
 
@@ -2060,11 +2060,11 @@ void Model::printBranchHistories(Node* x)
 {
 
     if (x != treePtr->getRoot()) {
-        cout << "Node: " << x;
-        cout << "\t#Events: " << x->getBranchHistory()->getNumberOfBranchEvents() <<
+        std::cout << "Node: " << x;
+        std::cout << "\t#Events: " << x->getBranchHistory()->getNumberOfBranchEvents() <<
              "\tStart: ";
-        cout << x->getBranchHistory()->getAncestralNodeEvent() << "\tEnd: ";
-        cout << x->getBranchHistory()->getNodeEvent() << endl;
+        std::cout << x->getBranchHistory()->getAncestralNodeEvent() << "\tEnd: ";
+        std::cout << x->getBranchHistory()->getNodeEvent() << std::endl;
 
     }
     if (x->getLfDesc() != NULL)
@@ -2112,11 +2112,11 @@ void Model::printExtinctionParams(void)
     if (eventCollection.size() > 0) {
         for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
                 i != eventCollection.end(); i++)
-            cout << (*i) << "\t" << (*i)->getMuInit() << "\t" << (*i)->getMuShift() << endl;
+            std::cout << (*i) << "\t" << (*i)->getMuInit() << "\t" << (*i)->getMuShift() << std::endl;
 
     }
-    cout << rootEvent << "\t" << rootEvent->getMuInit() << "\t" <<
-         rootEvent->getMuShift() << endl << endl;
+    std::cout << rootEvent << "\t" << rootEvent->getMuInit() << "\t" <<
+         rootEvent->getMuShift() << std::endl << std::endl;
 
 
 }
@@ -2147,7 +2147,7 @@ int Model::countTimeVaryingRatePartitions(void)
 
  */
 
-void Model::getEventDataString(stringstream& ss)
+void Model::getEventDataString(std::stringstream& ss)
 {
 
     ss << getGeneration() << ",";
@@ -2191,7 +2191,7 @@ void Model::getEventDataString(stringstream& ss)
 
 bool Model::isEventConfigurationValid(BranchEvent* be)
 {
-    //cout << "enter isEventConfigValid" << endl;
+    //std::cout << "enter isEventConfigValid" << std::endl;
     bool isValidConfig = false;
 
     if (be->getEventNode() == treePtr->getRoot()) {
@@ -2211,7 +2211,7 @@ bool Model::isEventConfigurationValid(BranchEvent* be)
         Node* lf = anc->getLfDesc();
         Node* rt = anc->getRtDesc();
 
-        //cout << "a: " << anc << "\tb: " << lf << "\tc: " << rt << endl;
+        //std::cout << "a: " << anc << "\tb: " << lf << "\tc: " << rt << std::endl;
 
         // test ancestor for events on branch:
 
@@ -2236,7 +2236,7 @@ bool Model::isEventConfigurationValid(BranchEvent* be)
         else if (badsum < 3)
             isValidConfig = true;
         else {
-            cout << "problem in Model::isEventConfigurationValid" << endl;
+            std::cout << "problem in Model::isEventConfigurationValid" << std::endl;
             exit(1);
         }
 
@@ -2244,7 +2244,7 @@ bool Model::isEventConfigurationValid(BranchEvent* be)
     }
 
 
-    //cout << "leaving isEventConfigValid. Value: " << isValidConfig << endl;
+    //std::cout << "leaving isEventConfigValid. Value: " << isValidConfig << std::endl;
     return isValidConfig;
 }
 
@@ -2266,7 +2266,7 @@ double safeExponentiation(double x)
 
 void Model::debugLHcalculation(void)
 {
-    cout << "This does not currently support anything" << endl;
+    std::cout << "This does not currently support anything" << std::endl;
 
 }
 

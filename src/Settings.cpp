@@ -16,7 +16,6 @@
 
 #include "Settings.h"
 
-using namespace std;
 
 /*
     Should rewrite this to NOT initialize any variables - just set to 0.
@@ -347,7 +346,7 @@ void Settings::trait_initializeSettings(void)
 
 
 // Fixing this : March 4 2013
-void Settings::trait_initializeSettings(string controlFilename)
+void Settings::trait_initializeSettings(std::string controlFilename)
 {
 
 
@@ -357,51 +356,51 @@ void Settings::trait_initializeSettings(string controlFilename)
     //int parmCount = 0;
     //int ppw = 35;
 
-    ifstream infile(controlFilename.c_str());
+    std::ifstream infile(controlFilename.c_str());
     if (!infile.good()) {
-        cout << "Control filename invalid" << endl;
-        cout << "Exiting." << endl;
+        std::cout << "Control filename invalid" << std::endl;
+        std::cout << "Exiting." << std::endl;
         throw;
     }
 
-    cout << "Reading control file <<" << controlFilename.c_str() << ">>" << endl;
+    std::cout << "Reading control file <<" << controlFilename.c_str() << ">>" << std::endl;
 
-    vector<string> varName;
-    vector<string> varValue;
-    vector<string> paramsNotFound;
-    string s1, s2;
+    std::vector<std::string> varName;
+    std::vector<std::string> varValue;
+    std::vector<std::string> paramsNotFound;
+    std::string s1, s2;
 
 
     while (infile) {
         getline(infile, s1, '\n');
 
-        // strip whitespace out of tempstring:
+        // strip whitespace out of tempstd::string:
         //      both spaces and tabs:
 
         // What is the int(*)(int) doing????
         s1.erase(remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
 
-        //tempstring.erase(remove_if(tempstring.begin(), tempstring.end(), isspace), tempstring.end());
+        //tempstd::string.erase(remove_if(tempstd::string.begin(), tempstd::string.end(), isspace), tempstd::string.end());
 
 
         // Only add if has size > 0 (gets rid of empty lines)
         if (s1.size() > 0) {
-            vector<string> tmpstr;
+            std::vector<std::string> tmpstr;
 
             // NOw use second getline to split by '=' characters:
 
-            istringstream stemp(s1);
+            std::istringstream stemp(s1);
             while (getline(stemp, s2, '='))
                 tmpstr.push_back(s2);
             if (tmpstr.size() == 2) {
                 varName.push_back(tmpstr[0]);
                 varValue.push_back(tmpstr[1]);
             } else
-                cout << "Invalid size of input line in control file" << endl;
+                std::cout << "Invalid size of input line in control file" << std::endl;
 
             //getline(stemp, s2, '=');
-            //cout << s2 << endl;
-            //stringvec.push_back(s1);
+            //std::cout << s2 << std::endl;
+            //std::stringvec.push_back(s1);
 
         }
 
@@ -410,8 +409,8 @@ void Settings::trait_initializeSettings(string controlFilename)
     }
 
 
-    for (vector<string>::size_type i = 0; i < varName.size(); i++) {
-        //cout << setw(30) << varName[i] << setw(20) << varValue[i] << endl;
+    for (std::vector<std::string>::size_type i = 0; i < varName.size(); i++) {
+        //std::cout << std::setw(30) << varName[i] << std::setw(20) << varValue[i] << std::endl;
 
         if (varName[i] == "treefile") {
             _treefile = varValue[i];
@@ -436,7 +435,7 @@ void Settings::trait_initializeSettings(string controlFilename)
         } else if (varName[i] == "updateBetaScale") {
             _updateBetaScale = atof(varValue[i].c_str());
             isDefault_updateBetaScale = false;
-            //cout << left << setw(ppw) << "updateLambdaInitScale" << "\t" << _updateLambdaInitScale << endl;
+            //std::cout << left << std::setw(ppw) << "updateLambdaInitScale" << "\t" << _updateLambdaInitScale << std::endl;
 
         } else if (varName[i] == "updateNodeStateScale") {
             _updateNodeStateScale = atof(varValue[i].c_str());
@@ -543,19 +542,19 @@ void Settings::trait_initializeSettings(string controlFilename)
 
     }
 
-    cout << "Read a total of <<" << varName.size() <<
-         ">> parameter settings from control file" << endl;
+    std::cout << "Read a total of <<" << varName.size() <<
+         ">> parameter settings from control file" << std::endl;
     if (paramsNotFound.size() > 0) {
-        cout << endl << "********************************" << endl;
-        cout << "BAMM error: one or more parameters from control file do not correspond"
-             << endl;
-        cout << "\tto valid model parameters.";
-        cout << "Check the following to see if they are ";
-        cout << "\tspecified (or spelled) correctly:" << endl << endl;
-        for (vector<string>::size_type i = 0; i < paramsNotFound.size(); i++)
-            cout << setw(30) << paramsNotFound[i] << endl;
-        cout << endl << "********************************" << endl << endl;
-        cout << "Execution of BAMM terminated..." << endl;
+        std::cout << std::endl << "********************************" << std::endl;
+        std::cout << "BAMM error: one or more parameters from control file do not correspond"
+             << std::endl;
+        std::cout << "\tto valid model parameters.";
+        std::cout << "Check the following to see if they are ";
+        std::cout << "\tspecified (or spelled) correctly:" << std::endl << std::endl;
+        for (std::vector<std::string>::size_type i = 0; i < paramsNotFound.size(); i++)
+            std::cout << std::setw(30) << paramsNotFound[i] << std::endl;
+        std::cout << std::endl << "********************************" << std::endl << std::endl;
+        std::cout << "Execution of BAMM terminated..." << std::endl;
         exit(1);
 
     }
@@ -573,11 +572,11 @@ void Settings::trait_initializeSettings(string controlFilename)
 
 void Settings::trait_printCurrentSettings(bool printOnlyChangesToDefaults)
 {
-    cout << "print settings for trait module not yet supported" << endl;
+    std::cout << "print settings for trait module not yet supported" << std::endl;
     exit(1);
 }
 
-void Settings::initializeSettings(string controlFilename)
+void Settings::initializeSettings(std::string controlFilename)
 {
 
     _allParametersSetToDefaults = false;
@@ -585,51 +584,51 @@ void Settings::initializeSettings(string controlFilename)
     //int parmCount = 0;
     //int ppw = 35;
 
-    ifstream infile(controlFilename.c_str());
+    std::ifstream infile(controlFilename.c_str());
     if (!infile.good()) {
-        cout << "Control filename invalid" << endl;
-        cout << "Exiting." << endl;
+        std::cout << "Control filename invalid" << std::endl;
+        std::cout << "Exiting." << std::endl;
         throw;
     }
 
-    cout << "Reading control file <<" << controlFilename.c_str() << ">>" << endl;
+    std::cout << "Reading control file <<" << controlFilename.c_str() << ">>" << std::endl;
 
-    vector<string> varName;
-    vector<string> varValue;
-    vector<string> paramsNotFound;
-    string s1, s2;
+    std::vector<std::string> varName;
+    std::vector<std::string> varValue;
+    std::vector<std::string> paramsNotFound;
+    std::string s1, s2;
 
 
     while (infile) {
         getline(infile, s1, '\n');
 
-        // strip whitespace out of tempstring:
+        // strip whitespace out of tempstd::string:
         //      both spaces and tabs:
 
         // What is the int(*)(int) doing????
         s1.erase(remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
 
-        //tempstring.erase(remove_if(tempstring.begin(), tempstring.end(), isspace), tempstring.end());
+        //tempstd::string.erase(remove_if(tempstd::string.begin(), tempstd::string.end(), isspace), tempstd::string.end());
 
 
         // Only add if has size > 0 (gets rid of empty lines)
         if (s1.size() > 0) {
-            vector<string> tmpstr;
+            std::vector<std::string> tmpstr;
 
             // NOw use second getline to split by '=' characters:
 
-            istringstream stemp(s1);
+            std::istringstream stemp(s1);
             while (getline(stemp, s2, '='))
                 tmpstr.push_back(s2);
             if (tmpstr.size() == 2) {
                 varName.push_back(tmpstr[0]);
                 varValue.push_back(tmpstr[1]);
             } else
-                cout << "Invalid size of input line in control file" << endl;
+                std::cout << "Invalid size of input line in control file" << std::endl;
 
             //getline(stemp, s2, '=');
-            //cout << s2 << endl;
-            //stringvec.push_back(s1);
+            //std::cout << s2 << std::endl;
+            //std::stringvec.push_back(s1);
 
         }
 
@@ -638,8 +637,8 @@ void Settings::initializeSettings(string controlFilename)
     }
 
 
-    for (vector<string>::size_type i = 0; i < varName.size(); i++) {
-        //cout << setw(30) << varName[i] << setw(20) << varValue[i] << endl;
+    for (std::vector<std::string>::size_type i = 0; i < varName.size(); i++) {
+        //std::cout << std::setw(30) << varName[i] << std::setw(20) << varValue[i] << std::endl;
 
         if (varName[i] == "treefile") {
             _treefile = varValue[i];
@@ -664,17 +663,17 @@ void Settings::initializeSettings(string controlFilename)
         } else if (varName[i] == "sampleProbsFilename") {
             _sampleProbsFilename = varValue[i];
             isDefault_sampleProbsFilename = false;
-            //cout << left << setw(ppw) << "sampleProbsFilename" << "\t" << _sampleProbsFilename << endl;
+            //std::cout << left << std::setw(ppw) << "sampleProbsFilename" << "\t" << _sampleProbsFilename << std::endl;
 
         } else if (varName[i] == "globalSamplingFraction") {
             _globalSamplingFraction = atof(varValue[i].c_str());
             isDefault_globalSamplingFraction = false;
-            //cout << left << setw(ppw) << "globalSamplingFraction" << "\t" << _globalSamplingFraction << endl;
+            //std::cout << left << std::setw(ppw) << "globalSamplingFraction" << "\t" << _globalSamplingFraction << std::endl;
 
         } else if (varName[i] == "updateLambdaInitScale") {
             _updateLambdaInitScale = atof(varValue[i].c_str());
             isDefault_updateLambdaInitScale = false;
-            //cout << left << setw(ppw) << "updateLambdaInitScale" << "\t" << _updateLambdaInitScale << endl;
+            //std::cout << left << std::setw(ppw) << "updateLambdaInitScale" << "\t" << _updateLambdaInitScale << std::endl;
 
         } else if (varName[i] == "updateMuInitScale") {
             _updateMuInitScale = atof(varValue[i].c_str());
@@ -802,19 +801,19 @@ void Settings::initializeSettings(string controlFilename)
 
     }
 
-    cout << "Read a total of <<" << varName.size() <<
-         ">> parameter settings from control file" << endl;
+    std::cout << "Read a total of <<" << varName.size() <<
+         ">> parameter settings from control file" << std::endl;
     if (paramsNotFound.size() > 0) {
-        cout << endl << "********************************" << endl;
-        cout << "BAMM error: one or more parameters from control file do not correspond"
-             << endl;
-        cout << "\tto valid model parameters.";
-        cout << "Check the following to see if they are ";
-        cout << "\tspecified (or spelled) correctly:" << endl << endl;
-        for (vector<string>::size_type i = 0; i < paramsNotFound.size(); i++)
-            cout << setw(30) << paramsNotFound[i] << endl;
-        cout << endl << "********************************" << endl << endl;
-        cout << "Execution of BAMM terminated..." << endl;
+        std::cout << std::endl << "********************************" << std::endl;
+        std::cout << "BAMM error: one or more parameters from control file do not correspond"
+             << std::endl;
+        std::cout << "\tto valid model parameters.";
+        std::cout << "Check the following to see if they are ";
+        std::cout << "\tspecified (or spelled) correctly:" << std::endl << std::endl;
+        for (std::vector<std::string>::size_type i = 0; i < paramsNotFound.size(); i++)
+            std::cout << std::setw(30) << paramsNotFound[i] << std::endl;
+        std::cout << std::endl << "********************************" << std::endl << std::endl;
+        std::cout << "Execution of BAMM terminated..." << std::endl;
         exit(1);
 
     }
@@ -834,9 +833,9 @@ void Settings::initializeSettings(string controlFilename)
 void Settings::checkAreInitialSettingsValid(void)
 {
 
-    cout << "currently does not check for valid settings" << endl;
-    cout << " in speciation-extinction BAMM" << endl << endl;
-    cout << "This will be fixed in a future release of BAMM" << endl << endl;
+    std::cout << "currently does not check for valid settings" << std::endl;
+    std::cout << " in speciation-extinction BAMM" << std::endl << std::endl;
+    std::cout << "This will be fixed in a future release of BAMM" << std::endl << std::endl;
 }
 
 
@@ -845,7 +844,7 @@ void Settings::checkAreTraitInitialSettingsValid(void)
 {
 
 
-    vector<string> paramsNotSpecified;
+    std::vector<std::string> paramsNotSpecified;
 
     if (isDefault_traitfile)
         paramsNotSpecified.push_back("traitfile");
@@ -925,12 +924,12 @@ void Settings::checkAreTraitInitialSettingsValid(void)
         paramsNotSpecified.push_back("eventDataInfile");
 
     if (paramsNotSpecified.size() > 0) {
-        cout << "\nPrinting parameters with default settings: " << endl << endl;
+        std::cout << "\nPrinting parameters with default settings: " << std::endl << std::endl;
 
-        for (vector<string>::size_type i = 0; i < paramsNotSpecified.size(); i++)
-            cout << setw(25) << paramsNotSpecified[i] << endl;
-        cout << "\nSome or all of these may be problematic, potentially resulting in fatal errors "
-             << endl << endl;
+        for (std::vector<std::string>::size_type i = 0; i < paramsNotSpecified.size(); i++)
+            std::cout << std::setw(25) << paramsNotSpecified[i] << std::endl;
+        std::cout << "\nSome or all of these may be problematic, potentially resulting in fatal errors "
+             << std::endl << std::endl;
     }
 
 
@@ -946,7 +945,7 @@ bool Settings::stringToBool(const char* x)
     else if (atoi(x) == 1)
         bval = true;
     else {
-        cout << "Invalid boolean when initializing class Settings" << endl;
+        std::cout << "Invalid boolean when initializing class Settings" << std::endl;
         throw;
     }
     return bval;
@@ -960,222 +959,222 @@ void Settings::printCurrentSettings(bool printOnlyChangesToDefaults)
 
 
 
-    cout << "*****************************************************" << endl;
-    cout << "Current parameter settings: " << endl;
+    std::cout << "*****************************************************" << std::endl;
+    std::cout << "Current parameter settings: " << std::endl;
     if (printOnlyChangesToDefaults) {
-        cout << "\tPrinting only changes to default settings" << endl;
-        cout << endl;
+        std::cout << "\tPrinting only changes to default settings" << std::endl;
+        std::cout << std::endl;
         if (!isDefault_treefile)
-            cout << right << setw(ppw) << "treefile" << "\t\t" << _treefile << endl;
+            std::cout << std::right << std::setw(ppw) << "treefile" << "\t\t" << _treefile << std::endl;
         if (!isDefault_loadEventData)
-            cout << right << setw(ppw) << "loadEventData" << "\t\t" << _loadEventData <<
-                 endl;
+            std::cout << std::right << std::setw(ppw) << "loadEventData" << "\t\t" << _loadEventData <<
+                 std::endl;
         if (!isDefault_eventDataInfile)
-            cout << right << setw(ppw) << "eventDataInfile" << "\t\t" << _eventDataInfile <<
-                 endl;
+            std::cout << std::right << std::setw(ppw) << "eventDataInfile" << "\t\t" << _eventDataInfile <<
+                 std::endl;
         if (!isDefault_sampleFromPriorOnly)
-            cout << right << setw(ppw) << "sampleFromPriorOnly" << "\t\t" <<
-                 _sampleFromPriorOnly << endl;
+            std::cout << std::right << std::setw(ppw) << "sampleFromPriorOnly" << "\t\t" <<
+                 _sampleFromPriorOnly << std::endl;
         if (!isDefault_runMCMC)
-            cout << right << setw(ppw) << "runMCMC" << "\t\t" << _runMCMC << endl;
+            std::cout << std::right << std::setw(ppw) << "runMCMC" << "\t\t" << _runMCMC << std::endl;
         if (!isDefault_initializeModel)
-            cout << right << setw(ppw) << "initializeModel" << "\t\t" << _initializeModel <<
-                 endl;
+            std::cout << std::right << std::setw(ppw) << "initializeModel" << "\t\t" << _initializeModel <<
+                 std::endl;
         if (!isDefault_useGlobalSamplingProbability)
-            cout << right << setw(ppw) << "useGlobalSamplingProbability" << "\t\t" <<
-                 _useGlobalSamplingProbability << endl;
+            std::cout << std::right << std::setw(ppw) << "useGlobalSamplingProbability" << "\t\t" <<
+                 _useGlobalSamplingProbability << std::endl;
         if (!isDefault_sampleProbsFilename)
-            cout << right << setw(ppw) << "sampleProbsFilename" << "\t\t" <<
-                 _sampleProbsFilename << endl;
+            std::cout << std::right << std::setw(ppw) << "sampleProbsFilename" << "\t\t" <<
+                 _sampleProbsFilename << std::endl;
         if (!isDefault_globalSamplingFraction)
-            cout << right << setw(ppw) << "globalSamplingFraction" << "\t\t" <<
-                 _globalSamplingFraction << endl;
+            std::cout << std::right << std::setw(ppw) << "globalSamplingFraction" << "\t\t" <<
+                 _globalSamplingFraction << std::endl;
         if (!isDefault_updateLambdaInitScale)
-            cout << right << setw(ppw) << "updateLambdaInitScale" << "\t\t" <<
-                 _updateLambdaInitScale << endl;
+            std::cout << std::right << std::setw(ppw) << "updateLambdaInitScale" << "\t\t" <<
+                 _updateLambdaInitScale << std::endl;
         if (!isDefault_updateMuInitScale)
-            cout << right << setw(ppw) << "updateMuInitScale" << "\t\t" <<
-                 _updateMuInitScale << endl;
+            std::cout << std::right << std::setw(ppw) << "updateMuInitScale" << "\t\t" <<
+                 _updateMuInitScale << std::endl;
         if (!isDefault_updateLambdaShiftScale)
-            cout << right << setw(ppw) << "updateLambdaShiftScale" << "\t\t" <<
-                 _updateLambdaShiftScale << endl;
+            std::cout << std::right << std::setw(ppw) << "updateLambdaShiftScale" << "\t\t" <<
+                 _updateLambdaShiftScale << std::endl;
         if (!isDefault_updateMuShiftScale)
-            cout << right << setw(ppw) << "updateMuShiftScale" << "\t\t" <<
-                 _updateMuShiftScale << endl;
+            std::cout << std::right << std::setw(ppw) << "updateMuShiftScale" << "\t\t" <<
+                 _updateMuShiftScale << std::endl;
         if (!isDefault_lambdaInit0)
-            cout << right << setw(ppw) << "lambdaInit0" << "\t\t" << _lambdaInit0 << endl;
+            std::cout << std::right << std::setw(ppw) << "lambdaInit0" << "\t\t" << _lambdaInit0 << std::endl;
         if (!isDefault_lambdaShift0)
-            cout << right << setw(ppw) << "lambdaShift0" << "\t\t" << _lambdaShift0 << endl;
+            std::cout << std::right << std::setw(ppw) << "lambdaShift0" << "\t\t" << _lambdaShift0 << std::endl;
         if (!isDefault_muInit0)
-            cout << right << setw(ppw) << "muInit0" << "\t\t" << _muInit0 << endl;
+            std::cout << std::right << std::setw(ppw) << "muInit0" << "\t\t" << _muInit0 << std::endl;
         if (!isDefault_muShift0)
-            cout << right << setw(ppw) << "muShift0" << "\t\t" << _muShift0 << endl;
+            std::cout << std::right << std::setw(ppw) << "muShift0" << "\t\t" << _muShift0 << std::endl;
         if (!isDefault_updateEventRateScale)
-            cout << right << setw(ppw) << "updateEventRateScale" << "\t\t" <<
-                 _updateEventRateScale << endl;
+            std::cout << std::right << std::setw(ppw) << "updateEventRateScale" << "\t\t" <<
+                 _updateEventRateScale << std::endl;
         if (!isDefault_localGlobalMoveRatio)
-            cout << right << setw(ppw) << "localGlobalMoveRatio" << "\t\t" <<
-                 _localGlobalMoveRatio << endl;
+            std::cout << std::right << std::setw(ppw) << "localGlobalMoveRatio" << "\t\t" <<
+                 _localGlobalMoveRatio << std::endl;
         if (!isDefault_targetNumber)
-            cout << right << setw(ppw) << "targetNumber" << "\t\t" << _targetNumber << endl;
+            std::cout << std::right << std::setw(ppw) << "targetNumber" << "\t\t" << _targetNumber << std::endl;
         if (!isDefault_lambdaInitPrior)
-            cout << right << setw(ppw) << "lambdaInitPrior" << "\t\t" << _lambdaInitPrior <<
-                 endl;
+            std::cout << std::right << std::setw(ppw) << "lambdaInitPrior" << "\t\t" << _lambdaInitPrior <<
+                 std::endl;
         if (!isDefault_lambdaShiftPrior)
-            cout << right << setw(ppw) << "lambdaShiftPrior" << "\t\t" << _lambdaShiftPrior
-                 << endl;
+            std::cout << std::right << std::setw(ppw) << "lambdaShiftPrior" << "\t\t" << _lambdaShiftPrior
+                 << std::endl;
         if (!isDefault_muInitPrior)
-            cout << right << setw(ppw) << "muInitPrior" << "\t\t" << _muInitPrior << endl;
+            std::cout << std::right << std::setw(ppw) << "muInitPrior" << "\t\t" << _muInitPrior << std::endl;
         if (!isDefault_muShiftPrior)
-            cout << right << setw(ppw) << "muShiftPrior" << "\t\t" << _muShiftPrior << endl;
+            std::cout << std::right << std::setw(ppw) << "muShiftPrior" << "\t\t" << _muShiftPrior << std::endl;
         if (!isDefault_MeanSpeciationLengthFraction)
-            cout << right << setw(ppw) << "MeanSpeciationLengthFraction" << "\t\t" <<
-                 _MeanSpeciationLengthFraction << endl;
+            std::cout << std::right << std::setw(ppw) << "MeanSpeciationLengthFraction" << "\t\t" <<
+                 _MeanSpeciationLengthFraction << std::endl;
         if (!isDefault_segLength)
-            cout << right << setw(ppw) << "segLength" << "\t\t" << _segLength << endl;
+            std::cout << std::right << std::setw(ppw) << "segLength" << "\t\t" << _segLength << std::endl;
         if (!isDefault_mcmcOutfile)
-            cout << right << setw(ppw) << "mcmcOutfile" << "\t\t" << _mcmcOutfile << endl;
+            std::cout << std::right << std::setw(ppw) << "mcmcOutfile" << "\t\t" << _mcmcOutfile << std::endl;
         if (!isDefault_lambdaOutfile)
-            cout << right << setw(ppw) << "lambdaOutfile" << "\t\t" << _lambdaOutfile <<
-                 endl;
+            std::cout << std::right << std::setw(ppw) << "lambdaOutfile" << "\t\t" << _lambdaOutfile <<
+                 std::endl;
         if (!isDefault_muOutfile)
-            cout << right << setw(ppw) << "muOutfile" << "\t\t" << _muOutfile << endl;
+            std::cout << std::right << std::setw(ppw) << "muOutfile" << "\t\t" << _muOutfile << std::endl;
         if (!isDefault_acceptrateOutfile)
-            cout << right << setw(ppw) << "acceptrateOutfile" << "\t\t" <<
-                 _acceptrateOutfile << endl;
+            std::cout << std::right << std::setw(ppw) << "acceptrateOutfile" << "\t\t" <<
+                 _acceptrateOutfile << std::endl;
         if (!isDefault_lambdaNodeOutfile)
-            cout << right << setw(ppw) << "lambdaNodeOutfile" << "\t\t" <<
-                 _lambdaNodeOutfile << endl;
+            std::cout << std::right << std::setw(ppw) << "lambdaNodeOutfile" << "\t\t" <<
+                 _lambdaNodeOutfile << std::endl;
         if (!isDefault_treeWriteFreq)
-            cout << right << setw(ppw) << "treeWriteFreq" << "\t\t" << _treeWriteFreq <<
-                 endl;
+            std::cout << std::right << std::setw(ppw) << "treeWriteFreq" << "\t\t" << _treeWriteFreq <<
+                 std::endl;
         if (!isDefault_mcmcWriteFreq)
-            cout << right << setw(ppw) << "mcmcWriteFreq" << "\t\t" << _mcmcWriteFreq <<
-                 endl;
+            std::cout << std::right << std::setw(ppw) << "mcmcWriteFreq" << "\t\t" << _mcmcWriteFreq <<
+                 std::endl;
         if (!isDefault_eventDataWriteFreq)
-            cout << right << setw(ppw) << "eventDataWriteFreq" << "\t\t" <<
-                 _eventDataWriteFreq << endl;
+            std::cout << std::right << std::setw(ppw) << "eventDataWriteFreq" << "\t\t" <<
+                 _eventDataWriteFreq << std::endl;
         if (!isDefault_acceptWriteFreq)
-            cout << right << setw(ppw) << "acceptWriteFreq" << "\t\t" << _acceptWriteFreq <<
-                 endl;
+            std::cout << std::right << std::setw(ppw) << "acceptWriteFreq" << "\t\t" << _acceptWriteFreq <<
+                 std::endl;
         if (!isDefault_printFreq)
-            cout << right << setw(ppw) << "printFreq" << "\t\t" << _printFreq << endl;
+            std::cout << std::right << std::setw(ppw) << "printFreq" << "\t\t" << _printFreq << std::endl;
         if (!isDefault_NGENS)
-            cout << right << setw(ppw) << "NGENS" << "\t\t" << _NGENS << endl;
+            std::cout << std::right << std::setw(ppw) << "NGENS" << "\t\t" << _NGENS << std::endl;
         if (!isDefault_updateRateEventNumber)
-            cout << right << setw(ppw) << "updateRateEventNumber" << "\t\t" <<
-                 _updateRateEventNumber << endl;
+            std::cout << std::right << std::setw(ppw) << "updateRateEventNumber" << "\t\t" <<
+                 _updateRateEventNumber << std::endl;
         if (!isDefault_updateRateEventPosition)
-            cout << right << setw(ppw) << "updateRateEventPosition" << "\t\t" <<
-                 _updateRateEventPosition << endl;
+            std::cout << std::right << std::setw(ppw) << "updateRateEventPosition" << "\t\t" <<
+                 _updateRateEventPosition << std::endl;
         if (!isDefault_updateRateEventRate)
-            cout << right << setw(ppw) << "updateRateEventRate" << "\t\t" <<
-                 _updateRateEventRate << endl;
+            std::cout << std::right << std::setw(ppw) << "updateRateEventRate" << "\t\t" <<
+                 _updateRateEventRate << std::endl;
         if (!isDefault_updateRateLambda0)
-            cout << right << setw(ppw) << "updateRateLambda0" << "\t\t" <<
-                 _updateRateLambda0 << endl;
+            std::cout << std::right << std::setw(ppw) << "updateRateLambda0" << "\t\t" <<
+                 _updateRateLambda0 << std::endl;
         if (!isDefault_updateRateLambdaShift)
-            cout << right << setw(ppw) << "updateRateLambdaShift" << "\t\t" <<
-                 _updateRateLambdaShift << endl;
+            std::cout << std::right << std::setw(ppw) << "updateRateLambdaShift" << "\t\t" <<
+                 _updateRateLambdaShift << std::endl;
         if (!isDefault_updateRateMu0)
-            cout << right << setw(ppw) << "updateRateMu0" << "\t\t" << _updateRateMu0 <<
-                 endl;
+            std::cout << std::right << std::setw(ppw) << "updateRateMu0" << "\t\t" << _updateRateMu0 <<
+                 std::endl;
         if (!isDefault_updateRateMuShift)
-            cout << right << setw(ppw) << "updateRateMuShift" << "\t\t" <<
-                 _updateRateMuShift << endl;
+            std::cout << std::right << std::setw(ppw) << "updateRateMuShift" << "\t\t" <<
+                 _updateRateMuShift << std::endl;
         if (!isDefault_initialNumberEvents)
-            cout << right << setw(ppw) << "initialNumberEvents" << "\t\t" <<
-                 _initialNumberEvents << endl;
+            std::cout << std::right << std::setw(ppw) << "initialNumberEvents" << "\t\t" <<
+                 _initialNumberEvents << std::endl;
         if (!isDefault_minCladeSizeForShift)
-            cout << right << setw(ppw) << "minCladeSizeForShift" << "\t\t" <<
-                 _minCladeSizeForShift << endl;
+            std::cout << std::right << std::setw(ppw) << "minCladeSizeForShift" << "\t\t" <<
+                 _minCladeSizeForShift << std::endl;
 
     } else {
-        cout << "\tPrinting ALL parameter settings " << endl;
-        cout << endl;
-        cout << right << setw(ppw) << "treefile" << "\t\t" << _treefile << endl;
-        cout << right << setw(ppw) << "sampleFromPriorOnly" << "\t\t" <<
-             _sampleFromPriorOnly << endl;
-        cout << right << setw(ppw) << "runMCMC" << "\t\t" << _runMCMC << endl;
-        cout << right << setw(ppw) << "initializeModel" << "\t\t" << _initializeModel <<
-             endl;
-        cout << right << setw(ppw) << "useGlobalSamplingProbability" << "\t\t" <<
-             _useGlobalSamplingProbability << endl;
-        cout << right << setw(ppw) << "sampleProbsFilename" << "\t\t" <<
-             _sampleProbsFilename << endl;
-        cout << right << setw(ppw) << "eventDataInfile" << "\t\t" << _eventDataInfile <<
-             endl;
-        cout << right << setw(ppw) << "globalSamplingFraction" << "\t\t" <<
-             _globalSamplingFraction << endl;
-        cout << right << setw(ppw) << "updateLambdaInitScale" << "\t\t" <<
-             _updateLambdaInitScale << endl;
-        cout << right << setw(ppw) << "updateMuInitScale" << "\t\t" <<
-             _updateMuInitScale << endl;
-        cout << right << setw(ppw) << "updateLambdaShiftScale" << "\t\t" <<
-             _updateLambdaShiftScale << endl;
-        cout << right << setw(ppw) << "updateMuShiftScale" << "\t\t" <<
-             _updateMuShiftScale << endl;
-        cout << right << setw(ppw) << "lambdaInit0" << "\t\t" << _lambdaInit0 << endl;
-        cout << right << setw(ppw) << "lambdaShift0" << "\t\t" << _lambdaShift0 << endl;
-        cout << right << setw(ppw) << "muInit0" << "\t\t" << _muInit0 << endl;
-        cout << right << setw(ppw) << "muShift0" << "\t\t" << _muShift0 << endl;
-        cout << right << setw(ppw) << "updateEventRateScale" << "\t\t" <<
-             _updateEventRateScale << endl;
-        cout << right << setw(ppw) << "localGlobalMoveRatio" << "\t\t" <<
-             _localGlobalMoveRatio << endl;
-        cout << right << setw(ppw) << "targetNumber" << "\t\t" << _targetNumber << endl;
-        cout << right << setw(ppw) << "lambdaInitPrior" << "\t\t" << _lambdaInitPrior <<
-             endl;
-        cout << right << setw(ppw) << "lambdaShiftPrior" << "\t\t" << _lambdaShiftPrior
-             << endl;
-        cout << right << setw(ppw) << "muInitPrior" << "\t\t" << _muInitPrior << endl;
-        cout << right << setw(ppw) << "muShiftPrior" << "\t\t" << _muShiftPrior << endl;
-        cout << right << setw(ppw) << "MeanSpeciationLengthFraction" << "\t\t" <<
-             _MeanSpeciationLengthFraction << endl;
-        cout << right << setw(ppw) << "segLength" << "\t\t" << _segLength << endl;
-        cout << right << setw(ppw) << "mcmcOutfile" << "\t\t" << _mcmcOutfile << endl;
-        cout << right << setw(ppw) << "lambdaOutfile" << "\t\t" << _lambdaOutfile <<
-             endl;
-        cout << right << setw(ppw) << "muOutfile" << "\t\t" << _muOutfile << endl;
-        cout << right << setw(ppw) << "acceptrateOutfile" << "\t\t" <<
-             _acceptrateOutfile << endl;
-        cout << right << setw(ppw) << "lambdaNodeOutfile" << "\t\t" <<
-             _lambdaNodeOutfile << endl;
-        cout << right << setw(ppw) << "treeWriteFreq" << "\t\t" << _treeWriteFreq <<
-             endl;
-        cout << right << setw(ppw) << "eventDataWriteFreq" << "\t\t" <<
-             _eventDataWriteFreq << endl;
-        cout << right << setw(ppw) << "mcmcWriteFreq" << "\t\t" << _mcmcWriteFreq <<
-             endl;
-        cout << right << setw(ppw) << "acceptWriteFreq" << "\t\t" << _acceptWriteFreq <<
-             endl;
-        cout << right << setw(ppw) << "printFreq" << "\t\t" << _printFreq << endl;
-        cout << right << setw(ppw) << "NGENS" << "\t\t" << _NGENS << endl;
-        cout << right << setw(ppw) << "updateRateEventNumber" << "\t\t" <<
-             _updateRateEventNumber << endl;
-        cout << right << setw(ppw) << "updateRateEventPosition" << "\t\t" <<
-             _updateRateEventPosition << endl;
-        cout << right << setw(ppw) << "updateRateEventRate" << "\t\t" <<
-             _updateRateEventRate << endl;
-        cout << right << setw(ppw) << "updateRateLambda0" << "\t\t" <<
-             _updateRateLambda0 << endl;
-        cout << right << setw(ppw) << "updateRateLambdaShift" << "\t\t" <<
-             _updateRateLambdaShift << endl;
-        cout << right << setw(ppw) << "updateRateMu0" << "\t\t" << _updateRateMu0 <<
-             endl;
-        cout << right << setw(ppw) << "updateRateMuShift" << "\t\t" <<
-             _updateRateMuShift << endl;
-        cout << right << setw(ppw) << "initialNumberEvents" << "\t\t" <<
-             _initialNumberEvents << endl;
-        cout << right << setw(ppw) << "minCladeSizeForShift" << "\t\t" <<
-             _minCladeSizeForShift << endl;
+        std::cout << "\tPrinting ALL parameter settings " << std::endl;
+        std::cout << std::endl;
+        std::cout << std::right << std::setw(ppw) << "treefile" << "\t\t" << _treefile << std::endl;
+        std::cout << std::right << std::setw(ppw) << "sampleFromPriorOnly" << "\t\t" <<
+             _sampleFromPriorOnly << std::endl;
+        std::cout << std::right << std::setw(ppw) << "runMCMC" << "\t\t" << _runMCMC << std::endl;
+        std::cout << std::right << std::setw(ppw) << "initializeModel" << "\t\t" << _initializeModel <<
+             std::endl;
+        std::cout << std::right << std::setw(ppw) << "useGlobalSamplingProbability" << "\t\t" <<
+             _useGlobalSamplingProbability << std::endl;
+        std::cout << std::right << std::setw(ppw) << "sampleProbsFilename" << "\t\t" <<
+             _sampleProbsFilename << std::endl;
+        std::cout << std::right << std::setw(ppw) << "eventDataInfile" << "\t\t" << _eventDataInfile <<
+             std::endl;
+        std::cout << std::right << std::setw(ppw) << "globalSamplingFraction" << "\t\t" <<
+             _globalSamplingFraction << std::endl;
+        std::cout << std::right << std::setw(ppw) << "updateLambdaInitScale" << "\t\t" <<
+             _updateLambdaInitScale << std::endl;
+        std::cout << std::right << std::setw(ppw) << "updateMuInitScale" << "\t\t" <<
+             _updateMuInitScale << std::endl;
+        std::cout << std::right << std::setw(ppw) << "updateLambdaShiftScale" << "\t\t" <<
+             _updateLambdaShiftScale << std::endl;
+        std::cout << std::right << std::setw(ppw) << "updateMuShiftScale" << "\t\t" <<
+             _updateMuShiftScale << std::endl;
+        std::cout << std::right << std::setw(ppw) << "lambdaInit0" << "\t\t" << _lambdaInit0 << std::endl;
+        std::cout << std::right << std::setw(ppw) << "lambdaShift0" << "\t\t" << _lambdaShift0 << std::endl;
+        std::cout << std::right << std::setw(ppw) << "muInit0" << "\t\t" << _muInit0 << std::endl;
+        std::cout << std::right << std::setw(ppw) << "muShift0" << "\t\t" << _muShift0 << std::endl;
+        std::cout << std::right << std::setw(ppw) << "updateEventRateScale" << "\t\t" <<
+             _updateEventRateScale << std::endl;
+        std::cout << std::right << std::setw(ppw) << "localGlobalMoveRatio" << "\t\t" <<
+             _localGlobalMoveRatio << std::endl;
+        std::cout << std::right << std::setw(ppw) << "targetNumber" << "\t\t" << _targetNumber << std::endl;
+        std::cout << std::right << std::setw(ppw) << "lambdaInitPrior" << "\t\t" << _lambdaInitPrior <<
+             std::endl;
+        std::cout << std::right << std::setw(ppw) << "lambdaShiftPrior" << "\t\t" << _lambdaShiftPrior
+             << std::endl;
+        std::cout << std::right << std::setw(ppw) << "muInitPrior" << "\t\t" << _muInitPrior << std::endl;
+        std::cout << std::right << std::setw(ppw) << "muShiftPrior" << "\t\t" << _muShiftPrior << std::endl;
+        std::cout << std::right << std::setw(ppw) << "MeanSpeciationLengthFraction" << "\t\t" <<
+             _MeanSpeciationLengthFraction << std::endl;
+        std::cout << std::right << std::setw(ppw) << "segLength" << "\t\t" << _segLength << std::endl;
+        std::cout << std::right << std::setw(ppw) << "mcmcOutfile" << "\t\t" << _mcmcOutfile << std::endl;
+        std::cout << std::right << std::setw(ppw) << "lambdaOutfile" << "\t\t" << _lambdaOutfile <<
+             std::endl;
+        std::cout << std::right << std::setw(ppw) << "muOutfile" << "\t\t" << _muOutfile << std::endl;
+        std::cout << std::right << std::setw(ppw) << "acceptrateOutfile" << "\t\t" <<
+             _acceptrateOutfile << std::endl;
+        std::cout << std::right << std::setw(ppw) << "lambdaNodeOutfile" << "\t\t" <<
+             _lambdaNodeOutfile << std::endl;
+        std::cout << std::right << std::setw(ppw) << "treeWriteFreq" << "\t\t" << _treeWriteFreq <<
+             std::endl;
+        std::cout << std::right << std::setw(ppw) << "eventDataWriteFreq" << "\t\t" <<
+             _eventDataWriteFreq << std::endl;
+        std::cout << std::right << std::setw(ppw) << "mcmcWriteFreq" << "\t\t" << _mcmcWriteFreq <<
+             std::endl;
+        std::cout << std::right << std::setw(ppw) << "acceptWriteFreq" << "\t\t" << _acceptWriteFreq <<
+             std::endl;
+        std::cout << std::right << std::setw(ppw) << "printFreq" << "\t\t" << _printFreq << std::endl;
+        std::cout << std::right << std::setw(ppw) << "NGENS" << "\t\t" << _NGENS << std::endl;
+        std::cout << std::right << std::setw(ppw) << "updateRateEventNumber" << "\t\t" <<
+             _updateRateEventNumber << std::endl;
+        std::cout << std::right << std::setw(ppw) << "updateRateEventPosition" << "\t\t" <<
+             _updateRateEventPosition << std::endl;
+        std::cout << std::right << std::setw(ppw) << "updateRateEventRate" << "\t\t" <<
+             _updateRateEventRate << std::endl;
+        std::cout << std::right << std::setw(ppw) << "updateRateLambda0" << "\t\t" <<
+             _updateRateLambda0 << std::endl;
+        std::cout << std::right << std::setw(ppw) << "updateRateLambdaShift" << "\t\t" <<
+             _updateRateLambdaShift << std::endl;
+        std::cout << std::right << std::setw(ppw) << "updateRateMu0" << "\t\t" << _updateRateMu0 <<
+             std::endl;
+        std::cout << std::right << std::setw(ppw) << "updateRateMuShift" << "\t\t" <<
+             _updateRateMuShift << std::endl;
+        std::cout << std::right << std::setw(ppw) << "initialNumberEvents" << "\t\t" <<
+             _initialNumberEvents << std::endl;
+        std::cout << std::right << std::setw(ppw) << "minCladeSizeForShift" << "\t\t" <<
+             _minCladeSizeForShift << std::endl;
 
     }
 
 
-    cout << endl;
+    std::cout << std::endl;
 
-    cout << "*****************************************************" << endl;
+    std::cout << "*****************************************************" << std::endl;
 
 
 
@@ -1190,22 +1189,22 @@ void Settings::printCurrentSettings(bool printOnlyChangesToDefaults)
 
  */
 
-void Settings::parseCommandLineInput(int argc, vector<string>& instrings,
-                                     string modeltype)
+void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrings,
+                                     std::string modeltype)
 {
 
 
-    vector<string> badFlags;
+    std::vector<std::string> badFlags;
     int i = 0;
     while (i + 1 != argc) {
         if (instrings[i] == "-control") {
-            string controlfile = instrings[i + 1];
-            cout << "\n\nInitializing BAMM using control file <<" << controlfile << ">>" <<
-                 endl;
-            ifstream instream(controlfile.c_str());
+            std::string controlfile = instrings[i + 1];
+            std::cout << "\n\nInitializing BAMM using control file <<" << controlfile << ">>" <<
+                 std::endl;
+            std::ifstream instream(controlfile.c_str());
             if (!instream) {
-                cout << "File not found error: cannot locate control file in\n";
-                cout <<  "specified directory. Exiting BAMM" << endl << endl;
+                std::cout << "File not found error: cannot locate control file in\n";
+                std::cout <<  "specified directory. Exiting BAMM" << std::endl << std::endl;
                 exit(1);
             } else {
                 if (modeltype == "speciationextinction")
@@ -1213,7 +1212,7 @@ void Settings::parseCommandLineInput(int argc, vector<string>& instrings,
                 else if (modeltype == "trait")
                     trait_initializeSettings(controlfile);
                 else
-                    cout << "Unsupported modeltype in Settings::parseCommandLineInput" << endl;
+                    std::cout << "Unsupported modeltype in Settings::parseCommandLineInput" << std::endl;
 
                 break; // exit for loop if initialized with controlfile...
             }
@@ -1231,7 +1230,7 @@ void Settings::parseCommandLineInput(int argc, vector<string>& instrings,
     }
 
     if (areAllParametersSetToDefaults()) {
-        cout << "Failed to initialize parameter values\nExiting BAMM" << endl;
+        std::cout << "Failed to initialize parameter values\nExiting BAMM" << std::endl;
         exit(1);
 
     }

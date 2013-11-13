@@ -13,8 +13,6 @@
 #include <string>
 #include <stdlib.h>
 
-using namespace std;
-
 
 class Settings
 {
@@ -32,12 +30,12 @@ private:
     bool _loadEventData;
 
     // Files:
-    string _treefile;
-    string _eventDataInfile;
+    std::string _treefile;
+    std::string _eventDataInfile;
 
     // Accounting for incomplete sampling:
     bool   _useGlobalSamplingProbability;
-    string _sampleProbsFilename;
+    std::string _sampleProbsFilename;
     double _globalSamplingFraction;
 
     // Parameters relevant to implementation of class Model:
@@ -67,12 +65,12 @@ private:
     int _minCladeSizeForShift;
 
     // Class MCMC parameters::General
-    string _mcmcOutfile;
-    string _lambdaOutfile;
-    string _muOutfile;
-    string _acceptrateOutfile;
-    string _lambdaNodeOutfile;
-    string _eventDataOutfile;
+    std::string _mcmcOutfile;
+    std::string _lambdaOutfile;
+    std::string _muOutfile;
+    std::string _acceptrateOutfile;
+    std::string _lambdaNodeOutfile;
+    std::string _eventDataOutfile;
 
     int _treeWriteFreq;
     int _mcmcWriteFreq;
@@ -101,7 +99,7 @@ private:
     // Troubleshooting time-variable model:
 
     /* Specific parameters for class TraitModel */
-    string _traitfile;
+    std::string _traitfile;
 
     double _updateBetaScale;
     double _updateNodeStateScale;
@@ -121,8 +119,8 @@ private:
     double _updateRateNodeState;
 
     // Output:
-    string _betaOutfile;
-    string _nodeStateOutfile;
+    std::string _betaOutfile;
+    std::string _nodeStateOutfile;
 
     bool _useObservedMinMaxAsTraitPriors;
 
@@ -211,9 +209,9 @@ public:
     ~Settings();
 
     void trait_initializeSettings();
-    void trait_initializeSettings(string controlFilename);
+    void trait_initializeSettings(std::string controlFilename);
 
-    void initializeSettings(string controlFilename);
+    void initializeSettings(std::string controlFilename);
     void initializeSettings();
 
     void checkAreInitialSettingsValid();
@@ -223,8 +221,8 @@ public:
     void printCurrentSettings(bool printOnlyChangesToDefaults);
 
     bool stringToBool(const char* x);
-    void parseCommandLineInput(int argc, vector<string>& instrings,
-        string modeltype);
+    void parseCommandLineInput(int argc,
+        std::vector<std::string>& instrings, std::string modeltype);
 
     bool areAllParametersSetToDefaults();
     bool getRunTraitModel();
@@ -239,11 +237,11 @@ public:
 
     // Load previous settings?
     bool   getLoadEventData();
-    string getEventDataInfile();
+    std::string getEventDataInfile();
 
     // Sampling probabilities:
-    string getTreeFilename();
-    string getSampleProbsFilename();
+    std::string getTreeFilename();
+    std::string getSampleProbsFilename();
     double getGlobalSamplingFraction();
 
     // Class Model parameters:
@@ -268,12 +266,12 @@ public:
     int getMinCladeSizeForShift();
 
     // Class MCMC parameters:
-    string getMCMCoutfile();
-    string getEventDataOutfile();
-    string getLambdaOutfile();
-    string getMuOutfile();
-    string getAcceptrateOutfile();
-    string getLambdaNodeOutfile();
+    std::string getMCMCoutfile();
+    std::string getEventDataOutfile();
+    std::string getLambdaOutfile();
+    std::string getMuOutfile();
+    std::string getAcceptrateOutfile();
+    std::string getLambdaNodeOutfile();
 
     int getTreeWriteFreq();
     int getEventDataWriteFreq();
@@ -297,7 +295,7 @@ public:
 
     /* Parameters specific to trait evolution module */
 
-    string getTraitFile();
+    std::string getTraitFile();
 
     double getUpdateBetaScale();
     double getUpdateNodeStateScale();
@@ -315,8 +313,8 @@ public:
     bool   getUseObservedMinMaxAsTraitPriors();
     void   setTraitPriorMin(double x);
     void   setTraitPriorMax(double x);
-    string getBetaOutfile();
-    string getNodeStateOutfile();
+    std::string getBetaOutfile();
+    std::string getNodeStateOutfile();
 };
 
 
@@ -368,19 +366,19 @@ inline bool Settings::getLoadEventData()
 }
 
 
-inline string Settings::getEventDataInfile()
+inline std::string Settings::getEventDataInfile()
 {
     return  _eventDataInfile;
 }
 
 
-inline string Settings::getTreeFilename()
+inline std::string Settings::getTreeFilename()
 {
     return _treefile;
 }
 
 
-inline string Settings::getSampleProbsFilename()
+inline std::string Settings::getSampleProbsFilename()
 {
     return _sampleProbsFilename;
 }
@@ -500,37 +498,37 @@ inline int Settings::getMinCladeSizeForShift()
 }
 
 
-inline string Settings::getMCMCoutfile()
+inline std::string Settings::getMCMCoutfile()
 {
     return _mcmcOutfile;
 }
 
 
-inline string Settings::getEventDataOutfile()
+inline std::string Settings::getEventDataOutfile()
 {
     return _eventDataOutfile;
 }
 
 
-inline string Settings::getLambdaOutfile()
+inline std::string Settings::getLambdaOutfile()
 {
     return _lambdaOutfile;
 }
 
 
-inline string Settings::getMuOutfile()
+inline std::string Settings::getMuOutfile()
 {
     return _muOutfile;
 }
 
 
-inline string Settings::getAcceptrateOutfile()
+inline std::string Settings::getAcceptrateOutfile()
 {
     return _acceptrateOutfile;
 }
 
 
-inline string Settings::getLambdaNodeOutfile()
+inline std::string Settings::getLambdaNodeOutfile()
 {
     return _lambdaNodeOutfile;
 }
@@ -626,7 +624,7 @@ inline int Settings::getInitialNumberEvents()
 }
 
 
-inline string Settings::getTraitFile()
+inline std::string Settings::getTraitFile()
 {
     return _traitfile;
 }
@@ -728,13 +726,13 @@ inline void Settings::setTraitPriorMax(double x)
 }
 
 
-inline string Settings::getBetaOutfile()
+inline std::string Settings::getBetaOutfile()
 {
     return _betaOutfile;
 }
 
 
-inline string Settings::getNodeStateOutfile()
+inline std::string Settings::getNodeStateOutfile()
 {
     return _nodeStateOutfile;
 }

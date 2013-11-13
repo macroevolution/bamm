@@ -102,7 +102,7 @@ void TraitBranchEvent::moveEventLocal(void)
     oldMapTime = mapTime;
 
     double shift = ranPtr->uniformRv(0, epsilon) - 0.5 * epsilon;
-    //cout << "shifting event by " << shift << endl;
+    //std::cout << "shifting event by " << shift << std::endl;
 
     incrementMapPosition(shift);
 
@@ -134,7 +134,7 @@ void TraitBranchEvent::incrementMapPosition(double ink)
         ink = temp - mapend; // residual...
 
         if (getEventNode() == treePtr->getRoot()) {
-            cout << " Root problem in incrementMapPosition: should never get here" << endl;
+            std::cout << " Root problem in incrementMapPosition: should never get here" << std::endl;
             throw;
         }
 
@@ -149,7 +149,7 @@ void TraitBranchEvent::incrementMapPosition(double ink)
                 setEventNode(treePtr->getRoot()->getLfDesc());
 
             else {
-                cout << " error in incrementMapPosition()" << endl;
+                std::cout << " error in incrementMapPosition()" << std::endl;
                 throw;
             }
             setMapTime(getEventNode()->getMapEnd());
@@ -213,7 +213,7 @@ void TraitBranchEvent::incrementMapPosition(double ink)
             incrementMapPosition(ink);
 
         } else {
-            cout << "Problem in incrementMapPosition()" << endl;
+            std::cout << "Problem in incrementMapPosition()" << std::endl;
             throw;
         }
 
@@ -245,7 +245,7 @@ void TraitBranchEvent::incrementMapPosition(double ink){
 
     if (temp < b_start){
         if (getEventNode() == treePtr->getRoot()){
-            cout << "Root problem: should never get here!" << endl;
+            std::cout << "Root problem: should never get here!" << std::endl;
         }
 
         ink = temp - b_start;
@@ -298,7 +298,7 @@ void TraitBranchEvent::incrementMapPosition(double ink){
             incrementMapPosition(ink);
 
         }else{
-            cout << "Problem in incrementMapPosition()" << endl;
+            std::cout << "Problem in incrementMapPosition()" << std::endl;
             throw;
         }
     }else{

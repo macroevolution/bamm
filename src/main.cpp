@@ -37,12 +37,12 @@ int main (int argc, char* argv[])
 
 
     //for (int i = 0; i < argc; i++){
-    //  cout << argc << "\t" << argv[i] << endl;
+    //  std::cout << argc << "\t" << argv[i] << std::endl;
     //}
 
 
-    string modeltype = BUILD_TYPE_DEFAULT;
-    //string modeltype = "trait";
+    std::string modeltype = BUILD_TYPE_DEFAULT;
+    //std::string modeltype = "trait";
 
     MbRandom myRNG;
     Settings mySettings;
@@ -50,40 +50,40 @@ int main (int argc, char* argv[])
     if (modeltype == "speciationextinction") {
 
         for (int i = 0; i < 20; i++)
-            cout << "#";
+            std::cout << "#";
 
-        cout << endl << endl  << "SPECIATION-EXTINCTION BAMM" << endl << endl;
+        std::cout << std::endl << std::endl  << "SPECIATION-EXTINCTION BAMM" << std::endl << std::endl;
 
         for (int i = 0; i < 20; i++)
-            cout << "#";
+            std::cout << "#";
         if (argc <= 1) {
-            cout << "\nInitializing BAMM with default settings." << endl;
-            cout << "\tThis may not be OK - consult manual for usage information\n" << endl;
+            std::cout << "\nInitializing BAMM with default settings." << std::endl;
+            std::cout << "\tThis may not be OK - consult manual for usage information\n" << std::endl;
             mySettings.initializeSettings();
         } else if (argc > 1) {
             // IF > 1 things read assume other args:
-            vector<string> instrings;
+            std::vector<std::string> instrings;
             for (int i = 0; i < argc; i++)
                 instrings.push_back(argv[i]);
             mySettings.parseCommandLineInput(argc, instrings, modeltype);
         } else {
-            cout << "Uninterpretable input. Exiting BAMM." << endl;
+            std::cout << "Uninterpretable input. Exiting BAMM." << std::endl;
             exit(1);
         }
 
 
         mySettings.printCurrentSettings(true);
-        string treefile = mySettings.getTreeFilename();
+        std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
 
         if (mySettings.getUseGlobalSamplingProbability()) {
-            cout << "Initializing with global sampling probability\n" << endl;
+            std::cout << "Initializing with global sampling probability\n" << std::endl;
             intree.initializeSpeciationExtinctionModel(
                 mySettings.getGlobalSamplingFraction());
 
         } else {
-            cout << "Species-specific sampling fractions are not validated yet...\n" <<
-                 endl;
+            std::cout << "Species-specific sampling fractions are not validated yet...\n" <<
+                 std::endl;
             // code should be supported for this but need to check..
             intree.initializeSpeciationExtinctionModel(mySettings.getSampleProbsFilename());
             //throw;
@@ -92,10 +92,10 @@ int main (int argc, char* argv[])
         //intree.printCanHoldEventByNode();
 
 
-        cout << endl << endl;
+        std::cout << std::endl << std::endl;
         //intree.setAllNodesCanHoldEvent();
 
-        cout << "MinCladeSize: " << mySettings.getMinCladeSizeForShift() << endl;
+        std::cout << "MinCladeSize: " << mySettings.getMinCladeSizeForShift() << std::endl;
 
         intree.setCanNodeHoldEventByDescCount(mySettings.getMinCladeSizeForShift());
 
@@ -105,14 +105,14 @@ int main (int argc, char* argv[])
 
         if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
             Model myModel(&myRNG, &intree, &mySettings);
-            cout << "Initializing model but not running MCMC" << endl;
+            std::cout << "Initializing model but not running MCMC" << std::endl;
 
         } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
             Model myModel(&myRNG, &intree, &mySettings);
             MCMC myMCMC(&myRNG, &myModel, &mySettings);
 
         } else
-            cout << "Unsupported option in main....\n" << endl;
+            std::cout << "Unsupported option in main....\n" << std::endl;
 
 
 
@@ -121,20 +121,20 @@ int main (int argc, char* argv[])
     } else if (modeltype == "trait") {
 
         for (int i = 0; i < 20; i++)
-            cout << "#";
+            std::cout << "#";
 
-        cout << endl << endl  << "TRAIT BAMM" << endl << endl;
+        std::cout << std::endl << std::endl  << "TRAIT BAMM" << std::endl << std::endl;
 
         for (int i = 0; i < 20; i++)
-            cout << "#";
+            std::cout << "#";
 
         if (argc <= 1) {
-            cout << "\nInitializing BAMMt with default settings." << endl;
-            cout << "\tThis may not be OK - consult manual for usage information\n" << endl;
+            std::cout << "\nInitializing BAMMt with default settings." << std::endl;
+            std::cout << "\tThis may not be OK - consult manual for usage information\n" << std::endl;
             mySettings.trait_initializeSettings();
         } else if (argc > 1) {
             // IF > 1 things read assume other args:
-            vector<string> instrings;
+            std::vector<std::string> instrings;
             for (int i = 0; i < argc; i++)
                 instrings.push_back(argv[i]);
 
@@ -142,13 +142,13 @@ int main (int argc, char* argv[])
             mySettings.parseCommandLineInput(argc, instrings, modeltype);
             mySettings.checkAreTraitInitialSettingsValid();
         } else {
-            cout << "Uninterpretable input. Exiting BAMM." << endl;
+            std::cout << "Uninterpretable input. Exiting BAMM." << std::endl;
             exit(1);
         }
 
 
         //mySettings.trait_printCurrentSettings(true);
-        string treefile = mySettings.getTreeFilename();
+        std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
 
         intree.setAllNodesCanHoldEvent();
@@ -162,12 +162,12 @@ int main (int argc, char* argv[])
 
 
         if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
-            cout << "Initializing model but not running MCMC" << endl;
+            std::cout << "Initializing model but not running MCMC" << std::endl;
             TraitModel myModel(&myRNG, &intree, &mySettings);
         }
 
         if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
-            cout << "Initializing model and MCMC chain" << endl;
+            std::cout << "Initializing model and MCMC chain" << std::endl;
             TraitModel myModel(&myRNG, &intree, &mySettings);
             TraitMCMC myMCMC(&myRNG, &myModel, &mySettings);
 
@@ -177,7 +177,7 @@ int main (int argc, char* argv[])
 
 
     } else {
-        cout << "Unsupported analysis" << endl;
+        std::cout << "Unsupported analysis" << std::endl;
         exit(1);
     }
 

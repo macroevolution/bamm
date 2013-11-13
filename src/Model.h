@@ -4,8 +4,6 @@
 #include <set>
 #include <vector>
 
-using namespace std;
-
 //Forward declarations
 class Tree;
 class Node;
@@ -135,7 +133,7 @@ public:
     int countTimeVaryingRatePartitions();
 
     // Generate string with event data:
-    void getEventDataString(stringstream& ss);
+    void getEventDataString(std::stringstream& ss);
 
     bool isEventConfigurationValid(BranchEvent* be);
 
@@ -198,7 +196,7 @@ private:
     int acceptCount;
     int rejectCount;
 
-    set<BranchEvent*> eventCollection; // does NOT contain root event
+    std::set<BranchEvent*> eventCollection; // does NOT contain root event
     BranchEvent* rootEvent; // branch event at root node; can't be modified
 
     double lastDeletedEventMapTime; // map time of last deleted event

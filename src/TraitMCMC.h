@@ -14,8 +14,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 class MbRandom;
 class TraitModel;
 class Settings;
@@ -48,16 +46,16 @@ private:
     TraitModel* ModelPtr;
     Settings* sttings;
 
-    vector<double> parWts;
+    std::vector<double> parWts;
 
-    vector<int> acceptCount;
-    vector<int> rejectCount;
+    std::vector<int> acceptCount;
+    std::vector<int> rejectCount;
 
-    string mcmcOutfile;
-    string betaOutfile;
-    string nodeStateOutfile;
-    string acceptFile;
-    string eventDataFile;
+    std::string mcmcOutfile;
+    std::string betaOutfile;
+    std::string nodeStateOutfile;
+    std::string acceptFile;
+    std::string eventDataFile;
 
     int _treeWriteFreq;
     int _mcmcWriteFreq;

@@ -23,7 +23,7 @@
 TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
 {
 
-    cout << "Initializing Trait MCMC object..." << endl;
+    std::cout << "Initializing Trait MCMC object..." << std::endl;
 
     ranPtr = ran;
     ModelPtr = mymodel;
@@ -46,13 +46,13 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     _NGENS =            sttings->getNGENS();
 
 
-    ifstream outStream(mcmcOutfile.c_str());
+    std::ifstream outStream(mcmcOutfile.c_str());
     if (outStream) {
-        cout << "Output file for MCMC data exists: " << endl;
-        cout << setw(30) << " overwriting " << mcmcOutfile << endl;
+        std::cout << "Output file for MCMC data exists: " << std::endl;
+        std::cout << std::setw(30) << " overwriting " << mcmcOutfile << std::endl;
         outStream.close();
 
-        string filedelete("rm ");
+        std::string filedelete("rm ");
         filedelete.append(mcmcOutfile);
 
         system(filedelete.c_str());
@@ -60,48 +60,48 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     }
 
     //check if file exists; delete;
-    ifstream outStream2(betaOutfile.c_str());
+    std::ifstream outStream2(betaOutfile.c_str());
     if (outStream2) {
-        cout << "Output file for beta exists: " << endl;
-        cout << setw(30) << " overwriting " << betaOutfile << endl;
+        std::cout << "Output file for beta exists: " << std::endl;
+        std::cout << std::setw(30) << " overwriting " << betaOutfile << std::endl;
         outStream2.close();
 
-        string filedelete("rm ");
+        std::string filedelete("rm ");
         filedelete.append(betaOutfile);
 
         system(filedelete.c_str());
 
     }
 
-    ifstream outStream3(nodeStateOutfile.c_str());
+    std::ifstream outStream3(nodeStateOutfile.c_str());
     if (outStream3) {
-        cout << "Output file for node states exists: " << endl;
-        cout << setw(30) << " overwriting " << nodeStateOutfile << endl;
+        std::cout << "Output file for node states exists: " << std::endl;
+        std::cout << std::setw(30) << " overwriting " << nodeStateOutfile << std::endl;
         outStream3.close();
 
-        string filedelete("rm ");
+        std::string filedelete("rm ");
         filedelete.append(nodeStateOutfile);
 
         system(filedelete.c_str());
 
     }
 
-    ifstream outStream4(acceptFile.c_str());
+    std::ifstream outStream4(acceptFile.c_str());
     if (outStream4) {
-        cout << "Output file for acceptrates exists: " << endl;
-        cout << setw(30) << " overwriting " << acceptFile << endl;
+        std::cout << "Output file for acceptrates exists: " << std::endl;
+        std::cout << std::setw(30) << " overwriting " << acceptFile << std::endl;
         outStream4.close();
-        string filedelete("rm ");
+        std::string filedelete("rm ");
         filedelete.append(acceptFile);
         system(filedelete.c_str());
     }
 
-    ifstream outStream6(eventDataFile.c_str());
+    std::ifstream outStream6(eventDataFile.c_str());
     if (outStream6) {
-        cout << "Output file for event data: " << endl;
-        cout << setw(30) << " overwriting " << eventDataFile << endl;
+        std::cout << "Output file for event data: " << std::endl;
+        std::cout << std::setw(30) << " overwriting " << eventDataFile << std::endl;
         outStream6.close();
-        string filedelete("rm ");
+        std::string filedelete("rm ");
         filedelete.append(eventDataFile);
         system(filedelete.c_str());
     }
@@ -113,12 +113,12 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     for (int i = 0; i < sttings->getInitialNumberEvents(); i++)
         ModelPtr->addEventToTree();
 
-    cout << "MCMC object successfully initialized." << endl << endl;
-    cout << "Running MCMC chain for " << _NGENS << " generations." << endl << endl;
+    std::cout << "MCMC object successfully initialized." << std::endl << std::endl;
+    std::cout << "Running MCMC chain for " << _NGENS << " generations." << std::endl << std::endl;
 
-    cout << setw(10) << "Generation" << setw(10) << "lnLik" <<  setw(10);
-    cout << "N_shifts" << setw(15) << "LogPrior" << setw(15) << "acceptRate" <<
-         endl;
+    std::cout << std::setw(10) << "Generation" << std::setw(10) << "lnLik" <<  std::setw(10);
+    std::cout << "N_shifts" << std::setw(15) << "LogPrior" << std::setw(15) << "acceptRate" <<
+         std::endl;
 
     /*run chain*/
     for (int i = 0; i < _NGENS; i++) {
@@ -183,19 +183,19 @@ void TraitMCMC::setUpdateWeights(void)
         sttings->getUpdateRateNumberTimeVariablePartitions());     // 6 freq of updates to timevarying/constant
 
     double sumwts = parWts[0];
-    for (vector<double>::size_type i = 1; i < parWts.size(); i++) {
+    for (std::vector<double>::size_type i = 1; i < parWts.size(); i++) {
         sumwts += parWts[i];
         parWts[i] += parWts[i - 1];
     }
 
-    for (vector<double>::size_type i = 0; i < parWts.size(); i++)
+    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++)
         parWts[i] /= sumwts;
 
     //for (int i = 0; i < parWts.size(); i++)
-    //  cout << parWts[i] << endl;
+    //  std::cout << parWts[i] << std::endl;
 
-    // Define vectors to hold accept/reject data:
-    for (vector<double>::size_type i = 0; i < parWts.size(); i++) {
+    // Define std::vectors to hold accept/reject data:
+    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++) {
         acceptCount.push_back(0);
         rejectCount.push_back(0);
     }
@@ -209,7 +209,7 @@ int TraitMCMC::pickParameterClassToUpdate(void)
 {
     double rn = ranPtr->uniformRv();
     int parm = 0;
-    for (vector<double>::size_type i = 0; i < parWts.size(); i++) {
+    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++) {
         if (rn <= parWts[i]) {
             parm = i;
             break;
@@ -236,12 +236,12 @@ void TraitMCMC::updateState(int parm)
         ModelPtr->updateNodeStateMH();
     else if (parm == 6) {
         // Update time variable partition:
-        cout << "should update isTimeVariable" << endl;
+        std::cout << "should update isTimeVariable" << std::endl;
         ModelPtr->setAcceptLastUpdate(1);
 
     } else {
         // should never get here...throw exception?
-        cout << "Bad parm to update\n" << endl;
+        std::cout << "Bad parm to update\n" << std::endl;
     }
 
     if (ModelPtr->getAcceptLastUpdate() == 1)
@@ -249,10 +249,10 @@ void TraitMCMC::updateState(int parm)
     else if ( ModelPtr->getAcceptLastUpdate() == 0 )
         rejectCount[parm]++;
     else if ( ModelPtr->getAcceptLastUpdate() == -1) {
-        cout << "failed somewhere in MH step, parm " << parm << endl;
+        std::cout << "failed somewhere in MH step, parm " << parm << std::endl;
         throw;
     } else {
-        cout << "invalid accept/reject flag in model object" << endl;
+        std::cout << "invalid accept/reject flag in model object" << std::endl;
         throw;
     }
     // reset to unmodified value
@@ -269,8 +269,8 @@ void TraitMCMC::writeStateToFile(void)
     //replace file...
 
 
-    ofstream outStream;
-    outStream.open(mcmcOutfile.c_str(), ofstream::app);
+    std::ofstream outStream;
+    outStream.open(mcmcOutfile.c_str(), std::ofstream::app);
     outStream << ModelPtr->getGeneration() << ","  << ModelPtr->getNumberOfEvents()
               << ",";
     outStream << ModelPtr->computeLogPrior() << ",";
@@ -278,7 +278,7 @@ void TraitMCMC::writeStateToFile(void)
     outStream << ModelPtr->getEventRate() << "," <<
               ModelPtr->getRootEvent()->getBetaInit() << ",";
     outStream << ModelPtr->getRootEvent()->getBetaShift() << ",";
-    outStream << ModelPtr->getRootEvent()->getEventNode()->getTraitValue() << endl;
+    outStream << ModelPtr->getRootEvent()->getEventNode()->getTraitValue() << std::endl;
     outStream.close();
 
 }
@@ -294,13 +294,13 @@ void TraitMCMC::writeStateToFile(void)
 void TraitMCMC::printStateData(void)
 {
 
-    cout << setw(10) << ModelPtr->getGeneration() << setw(10);
-    cout << ModelPtr->getCurrLnLTraits() << setw(10);
-    cout << ModelPtr->getNumberOfEvents() << setw(10);
-    cout << ModelPtr->computeLogPrior() << setw(15);
-    //  cout << "OtherL: " << ModelPtr->computeLikelihoodBranchesByInterval() << setw(10);
-    //cout << ModelPtr->getEventRate() << setw(10);
-    cout << "Accp: " << ModelPtr->getMHacceptanceRate() << endl;
+    std::cout << std::setw(10) << ModelPtr->getGeneration() << std::setw(10);
+    std::cout << ModelPtr->getCurrLnLTraits() << std::setw(10);
+    std::cout << ModelPtr->getNumberOfEvents() << std::setw(10);
+    std::cout << ModelPtr->computeLogPrior() << std::setw(15);
+    //  std::cout << "OtherL: " << ModelPtr->computeLikelihoodBranchesByInterval() << std::setw(10);
+    //std::cout << ModelPtr->getEventRate() << std::setw(10);
+    std::cout << "Accp: " << ModelPtr->getMHacceptanceRate() << std::endl;
 
 }
 
@@ -309,19 +309,19 @@ void TraitMCMC::printStateData(void)
 void TraitMCMC::writeBranchBetaRatesToFile(void)
 {
 
-    string outname = betaOutfile;
+    std::string outname = betaOutfile;
 
     ModelPtr->getTreePtr()->setMeanBranchTraitRates();
 
-    stringstream outdata;
+    std::stringstream outdata;
     ModelPtr->getTreePtr()->writeMeanBranchTraitRateTree(
         ModelPtr->getTreePtr()->getRoot(), outdata);
 
     outdata << ";";
 
-    ofstream outStream;
-    outStream.open(outname.c_str(), ofstream::app);
-    outStream << outdata.str() << endl;
+    std::ofstream outStream;
+    outStream.open(outname.c_str(), std::ofstream::app);
+    outStream << outdata.str() << std::endl;
     outStream.close();
 
 }
@@ -330,18 +330,18 @@ void TraitMCMC::writeBranchBetaRatesToFile(void)
 void TraitMCMC::writeNodeStatesToFile(void)
 {
 
-    string outname =  nodeStateOutfile;
+    std::string outname =  nodeStateOutfile;
 
-    stringstream outdata;
+    std::stringstream outdata;
 
     ModelPtr->getTreePtr()->writeBranchPhenotypes(ModelPtr->getTreePtr()->getRoot(),
             outdata);
 
     outdata << ";";
 
-    ofstream outStream;
-    outStream.open(outname.c_str(), ofstream::app);
-    outStream << outdata.str() << endl;
+    std::ofstream outStream;
+    outStream.open(outname.c_str(), std::ofstream::app);
+    outStream << outdata.str() << std::endl;
     outStream.close();
 
 }
@@ -349,9 +349,9 @@ void TraitMCMC::writeNodeStatesToFile(void)
 void TraitMCMC::writeParamAcceptRates(void)
 {
 
-    ofstream outStream;
-    outStream.open(acceptFile.c_str(), ofstream::app);
-    for (vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
+    std::ofstream outStream;
+    outStream.open(acceptFile.c_str(), std::ofstream::app);
+    for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
         double rate = (double)acceptCount[i] / ((double)(acceptCount[i] +
                                                 rejectCount[i]));
         outStream << rate;
@@ -363,7 +363,7 @@ void TraitMCMC::writeParamAcceptRates(void)
     }
     outStream.close();
 
-    for (vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
+    for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
         acceptCount[i] = 0;
         rejectCount[i] = 0;
     }
@@ -373,14 +373,14 @@ void TraitMCMC::writeParamAcceptRates(void)
 void TraitMCMC::writeEventDataToFile(void)
 {
 
-    string outname = eventDataFile;
+    std::string outname = eventDataFile;
 
-    stringstream eventData;
+    std::stringstream eventData;
     ModelPtr->getEventDataString(eventData);
 
-    ofstream outstream;
-    outstream.open(eventDataFile.c_str(), ofstream::app);
-    outstream << eventData.str() << endl;
+    std::ofstream outstream;
+    outstream.open(eventDataFile.c_str(), std::ofstream::app);
+    outstream << eventData.str() << std::endl;
     outstream.close();
 
 }

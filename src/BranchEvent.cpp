@@ -26,7 +26,7 @@ BranchEvent::BranchEvent(double speciation, double lamshift, double extinction,
 {
     // Speciation and extinction from new event assumed constant in time...
 
-    //cout << "Event ctor: lambda_init " << speciation << endl;
+    //std::cout << "Event ctor: lambda_init " << speciation << std::endl;
 
     _lamInit = speciation;
     _lamShift = lamshift;
@@ -110,7 +110,7 @@ void BranchEvent::moveEventLocal(void)
     oldMapTime = mapTime;
 
     double shift = ranPtr->uniformRv(0, epsilon) - 0.5 * epsilon;
-    //cout << "shifting event by " << shift << endl;
+    //std::cout << "shifting event by " << shift << std::endl;
 
     incrementMapPosition(shift);
 
@@ -144,7 +144,7 @@ void BranchEvent::incrementMapPosition(double ink)
         ink = temp - mapend; // residual...
 
         if (getEventNode() == treePtr->getRoot()) {
-            cout << " Root problem in incrementMapPosition: should never get here" << endl;
+            std::cout << " Root problem in incrementMapPosition: should never get here" << std::endl;
             throw;
         }
 
@@ -227,7 +227,7 @@ void BranchEvent::incrementMapPosition(double ink)
             incrementMapPosition(ink);
 
         } else {
-            cout << "Problem in incrementMapPosition()" << endl;
+            std::cout << "Problem in incrementMapPosition()" << std::endl;
             throw;
         }
 

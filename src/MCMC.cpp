@@ -15,7 +15,7 @@
 MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
 {
 
-    cout << "Initializing MCMC object..." << endl;
+    std::cout << "Initializing MCMC object..." << std::endl;
 
     ranPtr = ran;
     ModelPtr = mymodel;
@@ -39,13 +39,13 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     _NGENS =                sttings->getNGENS();
 
 
-    ifstream outStream(mcmcOutfile.c_str());
+    std::ifstream outStream(mcmcOutfile.c_str());
     if (outStream) {
-        cout << "Output file for MCMC data exists: " << endl;
-        cout << setw(30) << " overwriting " << mcmcOutfile << endl;
+        std::cout << "Output file for MCMC data exists: " << std::endl;
+        std::cout << std::setw(30) << " overwriting " << mcmcOutfile << std::endl;
         outStream.close();
 
-        string filedelete("rm ");
+        std::string filedelete("rm ");
         filedelete.append(mcmcOutfile);
 
         system(filedelete.c_str());
@@ -53,58 +53,58 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     }
 
     //check if file exists; delete;
-    ifstream outStream2(lambdaOutfile.c_str());
+    std::ifstream outStream2(lambdaOutfile.c_str());
     if (outStream2) {
-        cout << "Output file for lambda exists: " << endl;
-        cout << setw(30) << " overwriting " << lambdaOutfile << endl;
+        std::cout << "Output file for lambda exists: " << std::endl;
+        std::cout << std::setw(30) << " overwriting " << lambdaOutfile << std::endl;
         outStream2.close();
 
-        string filedelete("rm ");
+        std::string filedelete("rm ");
         filedelete.append(lambdaOutfile);
 
         system(filedelete.c_str());
 
     }
 
-    ifstream outStream3(muOutfile.c_str());
+    std::ifstream outStream3(muOutfile.c_str());
     if (outStream3) {
-        cout << "Output file for mu exists: " << endl;
-        cout << setw(30) << " overwriting " << muOutfile << endl;
+        std::cout << "Output file for mu exists: " << std::endl;
+        std::cout << std::setw(30) << " overwriting " << muOutfile << std::endl;
         outStream3.close();
 
-        string filedelete("rm ");
+        std::string filedelete("rm ");
         filedelete.append(muOutfile);
 
         system(filedelete.c_str());
 
     }
 
-    ifstream outStream4(acceptFile.c_str());
+    std::ifstream outStream4(acceptFile.c_str());
     if (outStream4) {
-        cout << "Output file for acceptrates exists: " << endl;
-        cout << setw(30) << " overwriting " << acceptFile << endl;
+        std::cout << "Output file for acceptrates exists: " << std::endl;
+        std::cout << std::setw(30) << " overwriting " << acceptFile << std::endl;
         outStream4.close();
-        string filedelete("rm ");
+        std::string filedelete("rm ");
         filedelete.append(acceptFile);
         system(filedelete.c_str());
     }
 
-    ifstream outStream5(lambdaNodeOutfile.c_str());
+    std::ifstream outStream5(lambdaNodeOutfile.c_str());
     if (outStream5) {
-        cout << "Output file for lambdaNodeData: " << endl;
-        cout << setw(30) << " overwriting " << lambdaNodeOutfile << endl;
+        std::cout << "Output file for lambdaNodeData: " << std::endl;
+        std::cout << std::setw(30) << " overwriting " << lambdaNodeOutfile << std::endl;
         outStream5.close();
-        string filedelete("rm ");
+        std::string filedelete("rm ");
         filedelete.append(lambdaNodeOutfile);
         system(filedelete.c_str());
     }
 
-    ifstream outStream6(eventDataFile.c_str());
+    std::ifstream outStream6(eventDataFile.c_str());
     if (outStream6) {
-        cout << "Output file for event data: " << endl;
-        cout << setw(30) << " overwriting " << eventDataFile << endl;
+        std::cout << "Output file for event data: " << std::endl;
+        std::cout << std::setw(30) << " overwriting " << eventDataFile << std::endl;
         outStream6.close();
-        string filedelete("rm ");
+        std::string filedelete("rm ");
         filedelete.append(eventDataFile);
         system(filedelete.c_str());
     }
@@ -116,12 +116,12 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     for (int i = 0; i < sttings->getInitialNumberEvents(); i++)
         ModelPtr->addEventToTree();
 
-    cout << "MCMC object successfully initialized." << endl << endl;
-    cout << "Running MCMC chain for " << _NGENS << " generations." << endl << endl;
+    std::cout << "MCMC object successfully initialized." << std::endl << std::endl;
+    std::cout << "Running MCMC chain for " << _NGENS << " generations." << std::endl << std::endl;
 
-    cout << setw(10) << "Generation" << setw(10) << "lnLik" <<  setw(10);
-    cout << "N_shifts" << setw(15) << "LogPrior" << setw(15) << "acceptRate" <<
-         endl;
+    std::cout << std::setw(10) << "Generation" << std::setw(10) << "lnLik" <<  std::setw(10);
+    std::cout << "N_shifts" << std::setw(15) << "LogPrior" << std::setw(15) << "acceptRate" <<
+         std::endl;
 
     /*run chain*/
     for (int i = 0; i < _NGENS; i++) {
@@ -182,19 +182,19 @@ void MCMC::setUpdateWeights(void)
         sttings->getUpdateRateNumberTimeVariablePartitions()); // freq of updates to timevarying/constant
 
     double sumwts = parWts[0];
-    for (vector<double>::size_type i = 1; i < parWts.size(); i++) {
+    for (std::vector<double>::size_type i = 1; i < parWts.size(); i++) {
         sumwts += parWts[i];
         parWts[i] += parWts[i - 1];
     }
 
-    for (vector<double>::size_type i = 0; i < parWts.size(); i++)
+    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++)
         parWts[i] /= sumwts;
 
     //for (int i = 0; i < parWts.size(); i++)
-    //  cout << parWts[i] << endl;
+    //  std::cout << parWts[i] << std::endl;
 
-    // Define vectors to hold accept/reject data:
-    for (vector<double>::size_type i = 0; i < parWts.size(); i++) {
+    // Define std::vectors to hold accept/reject data:
+    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++) {
         acceptCount.push_back(0);
         rejectCount.push_back(0);
     }
@@ -208,7 +208,7 @@ int MCMC::pickParameterClassToUpdate(void)
 {
     double rn = ranPtr->uniformRv();
     int parm = 0;
-    for (vector<double>::size_type i = 0; i < parWts.size(); i++) {
+    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++) {
         if (rn <= parWts[i]) {
             parm = i;
             break;
@@ -237,12 +237,12 @@ void MCMC::updateState(int parm)
         ModelPtr->updateMuShiftMH();
     else if (parm == 7) {
         // Update time variable partition:
-        cout << "should update isTimeVariable" << endl;
+        std::cout << "should update isTimeVariable" << std::endl;
         ModelPtr->setAcceptLastUpdate(1);
 
     } else {
         // should never get here...throw exception?
-        cout << "Bad parm to update\n" << endl;
+        std::cout << "Bad parm to update\n" << std::endl;
     }
 
     if (ModelPtr->getAcceptLastUpdate() == 1)
@@ -250,10 +250,10 @@ void MCMC::updateState(int parm)
     else if ( ModelPtr->getAcceptLastUpdate() == 0 )
         rejectCount[parm]++;
     else if ( ModelPtr->getAcceptLastUpdate() == -1) {
-        cout << "failed somewhere in MH step, parm " << parm << endl;
+        std::cout << "failed somewhere in MH step, parm " << parm << std::endl;
         throw;
     } else {
-        cout << "invalid accept/reject flag in model object" << endl;
+        std::cout << "invalid accept/reject flag in model object" << std::endl;
         throw;
     }
     // reset to unmodified value
@@ -270,8 +270,8 @@ void MCMC::writeStateToFile(void)
     //replace file...
 
 
-    ofstream outStream;
-    outStream.open(mcmcOutfile.c_str(), ofstream::app);
+    std::ofstream outStream;
+    outStream.open(mcmcOutfile.c_str(), std::ofstream::app);
     outStream << ModelPtr->getGeneration() << ","  << ModelPtr->getNumberOfEvents()
               << ",";
     outStream << ModelPtr->computeLogPrior() << ",";
@@ -280,7 +280,7 @@ void MCMC::writeStateToFile(void)
               ModelPtr->getRootEvent()->getLamInit() << ",";
     outStream << ModelPtr->getRootEvent()->getLamShift() << ",";
     outStream << ModelPtr->getRootEvent()->getMuInit() << ",";
-    outStream << ModelPtr->getRootEvent()->getMuShift() << endl;
+    outStream << ModelPtr->getRootEvent()->getMuShift() << std::endl;
     outStream.close();
 
 }
@@ -296,13 +296,13 @@ void MCMC::writeStateToFile(void)
 void MCMC::printStateData(void)
 {
 
-    cout << setw(10) << ModelPtr->getGeneration() << setw(10);
-    cout << ModelPtr->getCurrLnLBranches() << setw(10);
-    cout << ModelPtr->getNumberOfEvents() << setw(10);
-    cout << ModelPtr->computeLogPrior() << setw(15);
-//  cout << "OtherL: " << ModelPtr->computeLikelihoodBranchesByInterval() << setw(10);
-    //cout << ModelPtr->getEventRate() << setw(10);
-    cout << "Accp: " << ModelPtr->getMHacceptanceRate() << endl;
+    std::cout << std::setw(10) << ModelPtr->getGeneration() << std::setw(10);
+    std::cout << ModelPtr->getCurrLnLBranches() << std::setw(10);
+    std::cout << ModelPtr->getNumberOfEvents() << std::setw(10);
+    std::cout << ModelPtr->computeLogPrior() << std::setw(15);
+//  std::cout << "OtherL: " << ModelPtr->computeLikelihoodBranchesByInterval() << std::setw(10);
+    //std::cout << ModelPtr->getEventRate() << std::setw(10);
+    std::cout << "Accp: " << ModelPtr->getMHacceptanceRate() << std::endl;
 
 }
 
@@ -311,20 +311,20 @@ void MCMC::printStateData(void)
 void MCMC::writeBranchSpeciationRatesToFile(void)
 {
 
-    string outname = lambdaOutfile;
+    std::string outname = lambdaOutfile;
 
     ModelPtr->getTreePtr()->setMeanBranchSpeciation();
 
-    stringstream outdata;
+    std::stringstream outdata;
 
     ModelPtr->getTreePtr()->writeMeanBranchSpeciationTree(
         ModelPtr->getTreePtr()->getRoot(), outdata);
 
     outdata << ";";
 
-    ofstream outStream;
-    outStream.open(outname.c_str(), ofstream::app);
-    outStream << outdata.str() << endl;
+    std::ofstream outStream;
+    outStream.open(outname.c_str(), std::ofstream::app);
+    outStream << outdata.str() << std::endl;
     outStream.close();
 
 }
@@ -333,20 +333,20 @@ void MCMC::writeBranchSpeciationRatesToFile(void)
 void MCMC::writeNodeSpeciationRatesToFile(void)
 {
 
-    string outname = lambdaNodeOutfile;
+    std::string outname = lambdaNodeOutfile;
 
     ModelPtr->getTreePtr()->setMeanBranchSpeciation();
 
-    stringstream outdata;
+    std::stringstream outdata;
 
     ModelPtr->getTreePtr()->writeNodeSpeciationTree(
         ModelPtr->getTreePtr()->getRoot(), outdata);
 
     outdata << ";";
 
-    ofstream outStream;
-    outStream.open(outname.c_str(), ofstream::app);
-    outStream << outdata.str() << endl;
+    std::ofstream outStream;
+    outStream.open(outname.c_str(), std::ofstream::app);
+    outStream << outdata.str() << std::endl;
     outStream.close();
 
 }
@@ -355,18 +355,18 @@ void MCMC::writeNodeSpeciationRatesToFile(void)
 void MCMC::writeBranchExtinctionRatesToFile(void)
 {
 
-    string outname = muOutfile;
+    std::string outname = muOutfile;
 
 
     ModelPtr->getTreePtr()->setMeanBranchExtinction();
-    stringstream outdata;
+    std::stringstream outdata;
     ModelPtr->getTreePtr()->writeMeanBranchExtinctionTree(
         ModelPtr->getTreePtr()->getRoot(), outdata);
     outdata << ";";
 
-    ofstream outStream;
-    outStream.open(outname.c_str(), ofstream::app);
-    outStream << outdata.str() << endl;
+    std::ofstream outStream;
+    outStream.open(outname.c_str(), std::ofstream::app);
+    outStream << outdata.str() << std::endl;
     outStream.close();
 
 }
@@ -374,9 +374,9 @@ void MCMC::writeBranchExtinctionRatesToFile(void)
 void MCMC::writeParamAcceptRates(void)
 {
 
-    ofstream outStream;
-    outStream.open(acceptFile.c_str(), ofstream::app);
-    for (vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
+    std::ofstream outStream;
+    outStream.open(acceptFile.c_str(), std::ofstream::app);
+    for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
         double rate = (double)acceptCount[i] / ((double)(acceptCount[i] +
                                                 rejectCount[i]));
         outStream << rate;
@@ -388,7 +388,7 @@ void MCMC::writeParamAcceptRates(void)
     }
     outStream.close();
 
-    for (vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
+    for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
         acceptCount[i] = 0;
         rejectCount[i] = 0;
     }
@@ -398,26 +398,14 @@ void MCMC::writeParamAcceptRates(void)
 void MCMC::writeEventDataToFile(void)
 {
 
-    string outname = eventDataFile;
+    std::string outname = eventDataFile;
 
-    stringstream eventData;
+    std::stringstream eventData;
     ModelPtr->getEventDataString(eventData);
 
-    ofstream outstream;
-    outstream.open(eventDataFile.c_str(), ofstream::app);
-    outstream << eventData.str() << endl;
+    std::ofstream outstream;
+    outstream.open(eventDataFile.c_str(), std::ofstream::app);
+    outstream << eventData.str() << std::endl;
     outstream.close();
 
 }
-
-
-
-
-
-
-
-
-
-
-
-

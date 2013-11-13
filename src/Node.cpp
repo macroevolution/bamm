@@ -191,24 +191,24 @@ void Node::computeNodeBranchSpeciationParams(void)
                 rate /= getBrlen();
             }
 
-            //cout << "Tree::setMeanBranchSpeciation" << endl;
-            //cout << lam0 << "\t" << zpar << "\t" << rate << endl;
+            //std::cout << "Tree::setMeanBranchSpeciation" << std::endl;
+            //std::cout << lam0 << "\t" << zpar << "\t" << rate << std::endl;
 
         } else {
 
 
-            //cout << endl << endl;
-            //cout << "Branch start: " << getAnc()->getTime() << "\tBranch End: " << getTime() << endl;
-            //cout << "N events: " << n_events << endl;
-            //cout << "event times: " << "\t";
+            //std::cout << std::endl << std::endl;
+            //std::cout << "Branch start: " << getAnc()->getTime() << "\tBranch End: " << getTime() << std::endl;
+            //std::cout << "N events: " << n_events << std::endl;
+            //std::cout << "event times: " << "\t";
             //for (int k = 0; k <n_events; k++)
-            //  cout << bh->getEventByIndexPosition(k)->getAbsoluteTime() << "\t";
-            //cout << endl;
+            //  std::cout << bh->getEventByIndexPosition(k)->getAbsoluteTime() << "\t";
+            //std::cout << std::endl;
 
             double tcheck = 0.0;
             double t1 = getAnc()->getTime();
             double t2 = bh->getEventByIndexPosition(0)->getAbsoluteTime();
-            //cout << "Premod: t1: " << t1 << "\tt2: " << t2 << "\t" << t2 - t1 << endl;
+            //std::cout << "Premod: t1: " << t1 << "\tt2: " << t2 << "\t" << t2 - t1 << std::endl;
 
             tcheck += (t2 - t1);
 
@@ -227,7 +227,7 @@ void Node::computeNodeBranchSpeciationParams(void)
 
                 rate = ((lam0 / zpar) * ( exp(zpar * t2) - exp( zpar * t1)));
             }
-            //cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1  << "\t" << tcheck << endl;
+            //std::cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1  << "\t" << tcheck << std::endl;
 
 
             for (int k = 1; k < n_events; k++) {
@@ -243,7 +243,7 @@ void Node::computeNodeBranchSpeciationParams(void)
                     rate += lam0 * (t2 - t1);
                 else
                     rate += (lam0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-                //cout << k-1 <<  "\tt1: " <<  t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck<<endl;
+                //std::cout << k-1 <<  "\tt1: " <<  t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck<<std::endl;
                 tcheck += (t2 - t1);
             }
 
@@ -259,8 +259,8 @@ void Node::computeNodeBranchSpeciationParams(void)
                 rate += (lam0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
             tcheck += (t2 - t1);
 
-            //cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck <<endl;
-            //cout << "timecheck: " << tcheck <<  "\tBrlen: " << getBrlen() << "\tNevents: " << n_events << endl;
+            //std::cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck <<std::endl;
+            //std::cout << "timecheck: " << tcheck <<  "\tBrlen: " << getBrlen() << "\tNevents: " << n_events << std::endl;
             // The overall mean rate across the branch:
             rate /= (getBrlen());
         }
@@ -335,7 +335,7 @@ void Node::computeNodeBranchExtinctionParams(void)
             double tcheck = 0.0;
             double t1 = getAnc()->getTime();
             double t2 = bh->getEventByIndexPosition(0)->getAbsoluteTime();
-            //cout << "Premod: t1: " << t1 << "\tt2: " << t2 << "\t" << t2 - t1 << endl;
+            //std::cout << "Premod: t1: " << t1 << "\tt2: " << t2 << "\t" << t2 - t1 << std::endl;
 
             tcheck += (t2 - t1);
 
@@ -354,7 +354,7 @@ void Node::computeNodeBranchExtinctionParams(void)
 
                 rate = ((r0 / zpar) * ( exp(zpar * t2) - exp( zpar * t1)));
             }
-            //cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1  << "\t" << tcheck << endl;
+            //std::cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1  << "\t" << tcheck << std::endl;
 
 
             for (int k = 1; k < n_events; k++) {
@@ -371,7 +371,7 @@ void Node::computeNodeBranchExtinctionParams(void)
                     rate += r0 * (t2 - t1);
                 else
                     rate += (r0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-                //cout << k-1 <<  "\tt1: " <<  t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck<<endl;
+                //std::cout << k-1 <<  "\tt1: " <<  t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck<<std::endl;
                 tcheck += (t2 - t1);
             }
 
@@ -387,8 +387,8 @@ void Node::computeNodeBranchExtinctionParams(void)
                 rate += (r0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
             tcheck += (t2 - t1);
 
-            //cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck <<endl;
-            //cout << "timecheck: " << tcheck <<  "\tBrlen: " << getBrlen() << "\tNevents: " << n_events << endl;
+            //std::cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck <<std::endl;
+            //std::cout << "timecheck: " << tcheck <<  "\tBrlen: " << getBrlen() << "\tNevents: " << n_events << std::endl;
             // The overall mean rate across the branch:
             rate /= (getBrlen());
         }
@@ -440,7 +440,7 @@ double Node::getPointExtinction(double branchtime)
         }
         reltime = abstime - lastEvent->getAbsoluteTime();
         if (reltime < 0) {
-            cout << "Invalid time in Node::getPointExtinction() " << endl;
+            std::cout << "Invalid time in Node::getPointExtinction() " << std::endl;
             throw;
         }
         curMu = lastEvent->getMuInit() * exp((reltime * lastEvent->getMuShift()));
@@ -465,14 +465,14 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
 {
 
     if ((tstart >= tstop) | (tstart < 0) | (tstop > getBrlen()) ) {
-        cout << "Invalid arguments to Node::computeSPeciationRateIntervalRelativeTime"
-             << endl;
+        std::cout << "Invalid arguments to Node::computeSPeciationRateIntervalRelativeTime"
+             << std::endl;
         throw;
     }
     BranchHistory* bh = getBranchHistory();
 
     double rate = 0.0;
-    //cout << "at start: tstart: " << tstart << "\ttstop: " << tstop << endl;
+    //std::cout << "at start: tstart: " << tstart << "\ttstop: " << tstop << std::endl;
 
     // COnvert start and stop times to absolute times...
     tstart += getAnc()->getTime();
@@ -480,14 +480,14 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
 
     // This is required by the BranchHistory functions
     int n_events = bh->getNumberOfEventsOnInterval(tstart, tstop);
-    //cout << "anctime: " << getAnc()->getTime() << "\tstart : " << tstart << "\tstop: " << tstop << endl;
+    //std::cout << "anctime: " << getAnc()->getTime() << "\tstart : " << tstart << "\tstop: " << tstop << std::endl;
 
     if (n_events == 0) {
 
         double t1 = tstart;
         double t2 = tstop;
         // times must be relative to event occurrence time:
-        //cout << "LE time: " << bh->getLastEvent(tstart)->getAbsoluteTime() << endl;
+        //std::cout << "LE time: " << bh->getLastEvent(tstart)->getAbsoluteTime() << std::endl;
 
         t1 -= bh->getLastEvent(tstart)->getAbsoluteTime();
         t2 -= bh->getLastEvent(tstart)->getAbsoluteTime();
@@ -495,7 +495,7 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
         double zpar = bh->getLastEvent(tstart)->getLamShift();
         double lam0 = bh->getLastEvent(tstart)->getLamInit();
 
-        //cout << "z: " << zpar << "\tlam0: " << lam0 << "\tt1: " << t1 << "\tt2: " << t2 << endl;
+        //std::cout << "z: " << zpar << "\tlam0: " << lam0 << "\tt1: " << t1 << "\tt2: " << t2 << std::endl;
 
         if (zpar == 0)
             rate = lam0;
@@ -503,10 +503,10 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
             rate = (lam0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
             rate /= (t2 - t1);
         }
-        //cout << "Rate: " <<  rate << endl;
+        //std::cout << "Rate: " <<  rate << std::endl;
         if ((t1 < 0 ) | (t2 < t1)) {
-            cout << "error in Node::computeSpeciationRateInterval - times are bad...\n" <<
-                 endl;
+            std::cout << "error in Node::computeSpeciationRateInterval - times are bad...\n" <<
+                 std::endl;
             throw;
         }
 
@@ -534,7 +534,7 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
 
             rate = ((lam0 / zpar) * ( exp(zpar * trel2) - exp( zpar * trel1)));
         }
-        //cout << "rate1 : " << rate;
+        //std::cout << "rate1 : " << rate;
         be = bh->getNextEvent(tabs1);
         for (int k = 1; k < n_events; k++) {
 
@@ -567,9 +567,9 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
             //rate2 = (lam0/zpar) * ( exp(zpar*trel2) - exp(zpar * trel1));
         }
         tcheck += (trel2 - trel1);
-        //cout << "\trate2: " << rate2 << endl;
-        //cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck <<endl;
-        //cout << "timecheck: " << tcheck <<  "\tBrlen: " << getBrlen() << "\tNevents: " << n_events << endl;
+        //std::cout << "\trate2: " << rate2 << std::endl;
+        //std::cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck <<std::endl;
+        //std::cout << "timecheck: " << tcheck <<  "\tBrlen: " << getBrlen() << "\tNevents: " << n_events << std::endl;
         // The overall mean rate across the branch:
         rate /= tcheck;
     }
@@ -590,15 +590,15 @@ double Node::computeSpeciationRateIntervalAbsoluteTime(double tstart,
 {
 
     if ((tstart >= tstop) | (tstart < getAnc()->getTime()) | (tstop > getTime()) ) {
-        cout << "Invalid arguments to Node::computeSPeciationRateIntervalAbsoluteTime"
-             << endl;
+        std::cout << "Invalid arguments to Node::computeSPeciationRateIntervalAbsoluteTime"
+             << std::endl;
         throw;
     }
 
     BranchHistory* bh = getBranchHistory();
 
     double rate = 0.0;
-    //cout << "at start: tstart: " << tstart << "\ttstop: " << tstop << endl;
+    //std::cout << "at start: tstart: " << tstart << "\ttstop: " << tstop << std::endl;
 
     // COnvert start and stop times to absolute times...
     tstart += getAnc()->getTime();
@@ -606,14 +606,14 @@ double Node::computeSpeciationRateIntervalAbsoluteTime(double tstart,
 
     // This is required by the BranchHistory functions
     int n_events = bh->getNumberOfEventsOnInterval(tstart, tstop);
-    //cout << "anctime: " << getAnc()->getTime() << "\tstart : " << tstart << "\tstop: " << tstop << endl;
+    //std::cout << "anctime: " << getAnc()->getTime() << "\tstart : " << tstart << "\tstop: " << tstop << std::endl;
 
     if (n_events == 0) {
 
         double t1 = tstart;
         double t2 = tstop;
         // times must be relative to event occurrence time:
-        //cout << "LE time: " << bh->getLastEvent(tstart)->getAbsoluteTime() << endl;
+        //std::cout << "LE time: " << bh->getLastEvent(tstart)->getAbsoluteTime() << std::endl;
 
         t1 -= bh->getLastEvent(tstart)->getAbsoluteTime();
         t2 -= bh->getLastEvent(tstart)->getAbsoluteTime();
@@ -621,7 +621,7 @@ double Node::computeSpeciationRateIntervalAbsoluteTime(double tstart,
         double zpar = bh->getLastEvent(tstart)->getLamShift();
         double lam0 = bh->getLastEvent(tstart)->getLamInit();
 
-        //cout << "z: " << zpar << "\tlam0: " << lam0 << "\tt1: " << t1 << "\tt2: " << t2 << endl;
+        //std::cout << "z: " << zpar << "\tlam0: " << lam0 << "\tt1: " << t1 << "\tt2: " << t2 << std::endl;
 
         if (zpar == 0)
             rate = lam0;
@@ -629,10 +629,10 @@ double Node::computeSpeciationRateIntervalAbsoluteTime(double tstart,
             rate = (lam0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
             rate /= (t2 - t1);
         }
-        //cout << "Rate: " <<  rate << endl;
+        //std::cout << "Rate: " <<  rate << std::endl;
         if ((t1 < 0 ) | (t2 < t1)) {
-            cout << "error in Node::computeSpeciationRateInterval - times are bad...\n" <<
-                 endl;
+            std::cout << "error in Node::computeSpeciationRateInterval - times are bad...\n" <<
+                 std::endl;
             throw;
         }
 
@@ -660,7 +660,7 @@ double Node::computeSpeciationRateIntervalAbsoluteTime(double tstart,
 
             rate = ((lam0 / zpar) * ( exp(zpar * trel2) - exp( zpar * trel1)));
         }
-        //cout << "rate1 : " << rate;
+        //std::cout << "rate1 : " << rate;
         be = bh->getNextEvent(tabs1);
         for (int k = 1; k < n_events; k++) {
 
@@ -693,9 +693,9 @@ double Node::computeSpeciationRateIntervalAbsoluteTime(double tstart,
             //rate2 = (lam0/zpar) * ( exp(zpar*trel2) - exp(zpar * trel1));
         }
         tcheck += (trel2 - trel1);
-        //cout << "\trate2: " << rate2 << endl;
-        //cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck <<endl;
-        //cout << "timecheck: " << tcheck <<  "\tBrlen: " << getBrlen() << "\tNevents: " << n_events << endl;
+        //std::cout << "\trate2: " << rate2 << std::endl;
+        //std::cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck <<std::endl;
+        //std::cout << "timecheck: " << tcheck <<  "\tBrlen: " << getBrlen() << "\tNevents: " << n_events << std::endl;
         // The overall mean rate across the branch:
         rate /= tcheck;
     }
@@ -709,8 +709,8 @@ double Node::computeExtinctionRateIntervalRelativeTime(double tstart,
 {
 
     if ((tstart >= tstop) | (tstart < 0) | (tstop > getBrlen()) ) {
-        cout << "Invalid arguments to Node::computeExtinctionRateIntervalRelativeTime"
-             << endl;
+        std::cout << "Invalid arguments to Node::computeExtinctionRateIntervalRelativeTime"
+             << std::endl;
         throw;
     }
     BranchHistory* bh = getBranchHistory();
@@ -743,8 +743,8 @@ double Node::computeExtinctionRateIntervalRelativeTime(double tstart,
         }
 
         if ((t1 < 0 ) | (t2 < t1)) {
-            cout << "error in Node::computeExtinctionRateInterval - times are bad...\n" <<
-                 endl;
+            std::cout << "error in Node::computeExtinctionRateInterval - times are bad...\n" <<
+                 std::endl;
             throw;
         }
 

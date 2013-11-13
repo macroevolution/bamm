@@ -13,12 +13,11 @@
 
 #include "BranchHistory.h"
 
-using namespace std;
 
 BranchHistory::BranchHistory(void)
 {
 
-    //cout << "BranchHistory ctor" << endl;
+    //std::cout << "BranchHistory ctor" << std::endl;
     nodeEvent = NULL;
     ancestralNodeEvent = NULL;
 
@@ -37,15 +36,15 @@ void BranchHistory::printBranchHistory(void)
 {
 
     int nEvents = eventsOnBranch.size();
-    cout << "nodeEvent: " << nodeEvent << "\tancestorEvent: " << ancestralNodeEvent
-         << endl;
+    std::cout << "nodeEvent: " << nodeEvent << "\tancestorEvent: " <<
+        ancestralNodeEvent << std::endl;
 
-    cout << "events on branch: " << nEvents << endl;
+    std::cout << "events on branch: " << nEvents << std::endl;
     if (nEvents > 0) {
-        for (std::set<BranchEvent*, comp_history>::iterator i = eventsOnBranch.begin();
-                i != eventsOnBranch.end(); i++)
-            cout << (*i) << "\t\t" << (*i)->getMapTime() << "\t" <<
-                 (*i)->getAbsoluteTime() << endl;
+        for (std::set<BranchEvent*, comp_history>::iterator i =
+                eventsOnBranch.begin(); i != eventsOnBranch.end(); i++)
+            std::cout << (*i) << "\t\t" << (*i)->getMapTime() << "\t" <<
+                 (*i)->getAbsoluteTime() << std::endl;
     }
 
 }
@@ -54,12 +53,12 @@ void BranchHistory::printBranchHistory(void)
 void BranchHistory::reversePrintBranchHistory(void)
 {
 
-    cout << "Reverse printing events on branch: " << endl;
+    std::cout << "Reverse printing events on branch: " << std::endl;
 
     std::set<BranchEvent*>::iterator myIt = eventsOnBranch.end();
     myIt--;
     for ( ; myIt != eventsOnBranch.begin()--; myIt--)
-        cout << "event at: " <<  (*myIt)->getMapTime() << endl;
+        std::cout << "event at: " <<  (*myIt)->getMapTime() << std::endl;
 
 
 }
@@ -97,11 +96,11 @@ BranchEvent* BranchHistory::getLastEvent(BranchEvent* x)
         } else {
 
         }
-        //cout << "count: " << counter << endl;
+        //std::cout << "count: " << counter << std::endl;
     }
 
     if (theLastEvent == NULL)
-        cout << "problem in BranchHistory::getLastEvent()" << endl;
+        std::cout << "problem in BranchHistory::getLastEvent()" << std::endl;
 
     return   theLastEvent;
 
@@ -202,8 +201,8 @@ BranchEvent* BranchHistory::getEventByIndexPosition(int index)
 {
     EventSetSizeType i = static_cast<EventSetSizeType>(index);
     if (i >= eventsOnBranch.size() ) {
-        cout << "BranchHistory::getEventByIndexPosition error - accessing invalid event"
-             << endl;
+        std::cout << "BranchHistory::getEventByIndexPosition error - accessing invalid event"
+             << std::endl;
         return NULL;
     } else {
 
@@ -214,9 +213,3 @@ BranchEvent* BranchHistory::getEventByIndexPosition(int index)
     }
 
 }
-
-
-
-
-
-

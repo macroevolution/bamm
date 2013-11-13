@@ -13,8 +13,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 class MbRandom;
 class Model;
 class Settings;
@@ -48,17 +46,17 @@ private:
     Model*    ModelPtr;
     Settings* sttings;
 
-    vector<double> parWts;
+    std::vector<double> parWts;
 
-    vector<int> acceptCount;
-    vector<int> rejectCount;
+    std::vector<int> acceptCount;
+    std::vector<int> rejectCount;
 
-    string mcmcOutfile;
-    string lambdaOutfile;
-    string lambdaNodeOutfile;
-    string muOutfile;
-    string acceptFile;
-    string eventDataFile;
+    std::string mcmcOutfile;
+    std::string lambdaOutfile;
+    std::string lambdaNodeOutfile;
+    std::string muOutfile;
+    std::string acceptFile;
+    std::string eventDataFile;
 
     int _treeWriteFreq;
     int _eventDataWriteFreq;

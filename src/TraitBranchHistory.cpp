@@ -1,19 +1,14 @@
-
 #include "TraitBranchHistory.h"
-
-
 
 #include <iostream>
 #include <stdio.h>
-
 #include <stdlib.h>
 
-using namespace std;
 
 TraitBranchHistory::TraitBranchHistory(void)
 {
 
-    //cout << "BranchHistory ctor" << endl;
+    //std::cout << "BranchHistory ctor" << std::endl;
     nodeEvent = NULL;
     ancestralNodeEvent = NULL;
 
@@ -32,15 +27,15 @@ void TraitBranchHistory::printBranchHistory(void)
 {
 
     int nEvents = eventsOnBranch.size();
-    cout << "nodeEvent: " << nodeEvent << "\tancestorEvent: " << ancestralNodeEvent
-         << endl;
+    std::cout << "nodeEvent: " << nodeEvent << "\tancestorEvent: " << ancestralNodeEvent
+         << std::endl;
 
-    cout << "events on branch: " << nEvents << endl;
+    std::cout << "events on branch: " << nEvents << std::endl;
     if (nEvents > 0) {
         for (std::set<TraitBranchEvent*, comp_history>::iterator i =
                     eventsOnBranch.begin(); i != eventsOnBranch.end(); i++)
-            cout << (*i) << "\t\t" << (*i)->getMapTime() << "\t" <<
-                 (*i)->getAbsoluteTime() << endl;
+            std::cout << (*i) << "\t\t" << (*i)->getMapTime() << "\t" <<
+                 (*i)->getAbsoluteTime() << std::endl;
     }
 
 }
@@ -49,12 +44,12 @@ void TraitBranchHistory::printBranchHistory(void)
 void TraitBranchHistory::reversePrintBranchHistory(void)
 {
 
-    cout << "Reverse printing events on branch: " << endl;
+    std::cout << "Reverse printing events on branch: " << std::endl;
 
     std::set<TraitBranchEvent*>::iterator myIt = eventsOnBranch.end();
     myIt--;
     for ( ; myIt != eventsOnBranch.begin()--; myIt--)
-        cout << "event at: " <<  (*myIt)->getMapTime() << endl;
+        std::cout << "event at: " <<  (*myIt)->getMapTime() << std::endl;
 
 
 }
@@ -92,11 +87,11 @@ TraitBranchEvent*  TraitBranchHistory::getLastEvent(TraitBranchEvent* x)
         } else {
 
         }
-        //cout << "count: " << counter << endl;
+        //std::cout << "count: " << counter << std::endl;
     }
 
     if (theLastEvent == NULL)
-        cout << "problem in TraitBranchHistory::getLastEvent()" << endl;
+        std::cout << "problem in TraitBranchHistory::getLastEvent()" << std::endl;
 
     return   theLastEvent;
 
@@ -107,8 +102,8 @@ TraitBranchEvent* TraitBranchHistory::getEventByIndexPosition(int index)
 {
     EventSetSizeType i = static_cast<EventSetSizeType>(index);
     if (i >= eventsOnBranch.size() ) {
-        cout << "BranchHistory::getEventByIndexPosition error - accessing invalid event"
-             << endl;
+        std::cout << "BranchHistory::getEventByIndexPosition error - accessing invalid event"
+             << std::endl;
         return NULL;
     } else {
 

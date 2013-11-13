@@ -38,7 +38,6 @@
 
 #include "MbRandom.h"
 
-using namespace std;
 
 /*!
  * Constructor for MbRandom class. This constructor does not take
