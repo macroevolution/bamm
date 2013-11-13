@@ -1,0 +1,133 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		458C5BB31834266900E752D3 /* BranchEvent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BranchEvent.cpp; sourceTree = "<group>"; };
+		458C5BB41834266900E752D3 /* BranchEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BranchEvent.h; sourceTree = "<group>"; };
+		458C5BB51834266900E752D3 /* BranchHistory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BranchHistory.cpp; sourceTree = "<group>"; };
+		458C5BB61834266900E752D3 /* BranchHistory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BranchHistory.h; sourceTree = "<group>"; };
+		458C5BB71834266900E752D3 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		458C5BB81834266900E752D3 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		458C5BB91834266900E752D3 /* MbRandom.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MbRandom.cpp; sourceTree = "<group>"; };
+		458C5BBA1834266900E752D3 /* MbRandom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MbRandom.h; sourceTree = "<group>"; };
+		458C5BBB1834266900E752D3 /* MCMC.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MCMC.cpp; sourceTree = "<group>"; };
+		458C5BBC1834266900E752D3 /* MCMC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMC.h; sourceTree = "<group>"; };
+		458C5BBD1834266900E752D3 /* Model.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Model.cpp; sourceTree = "<group>"; };
+		458C5BBE1834266900E752D3 /* Model.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
+		458C5BBF1834266900E752D3 /* Node.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Node.cpp; sourceTree = "<group>"; };
+		458C5BC01834266900E752D3 /* Node.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
+		458C5BC11834266900E752D3 /* Settings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Settings.cpp; sourceTree = "<group>"; };
+		458C5BC21834266900E752D3 /* Settings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		458C5BC31834266900E752D3 /* TraitBranchEvent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TraitBranchEvent.cpp; sourceTree = "<group>"; };
+		458C5BC41834266900E752D3 /* TraitBranchEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TraitBranchEvent.h; sourceTree = "<group>"; };
+		458C5BC51834266900E752D3 /* TraitBranchHistory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TraitBranchHistory.cpp; sourceTree = "<group>"; };
+		458C5BC61834266900E752D3 /* TraitBranchHistory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TraitBranchHistory.h; sourceTree = "<group>"; };
+		458C5BC71834266900E752D3 /* TraitMCMC.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TraitMCMC.cpp; sourceTree = "<group>"; };
+		458C5BC81834266900E752D3 /* TraitMCMC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TraitMCMC.h; sourceTree = "<group>"; };
+		458C5BC91834266900E752D3 /* TraitModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TraitModel.cpp; sourceTree = "<group>"; };
+		458C5BCA1834266900E752D3 /* TraitModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TraitModel.h; sourceTree = "<group>"; };
+		458C5BCB1834266900E752D3 /* Tree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Tree.cpp; sourceTree = "<group>"; };
+		458C5BCC1834266900E752D3 /* Tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Tree.h; sourceTree = "<group>"; };
+		458C5BCD1834266900E752D3 /* Utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		458C5BA31834152800E752D3 = {
+			isa = PBXGroup;
+			children = (
+				458C5BB21834266900E752D3 /* src */,
+			);
+			sourceTree = "<group>";
+		};
+		458C5BB21834266900E752D3 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				458C5BB31834266900E752D3 /* BranchEvent.cpp */,
+				458C5BB41834266900E752D3 /* BranchEvent.h */,
+				458C5BB51834266900E752D3 /* BranchHistory.cpp */,
+				458C5BB61834266900E752D3 /* BranchHistory.h */,
+				458C5BB71834266900E752D3 /* main.cpp */,
+				458C5BB81834266900E752D3 /* Makefile */,
+				458C5BB91834266900E752D3 /* MbRandom.cpp */,
+				458C5BBA1834266900E752D3 /* MbRandom.h */,
+				458C5BBB1834266900E752D3 /* MCMC.cpp */,
+				458C5BBC1834266900E752D3 /* MCMC.h */,
+				458C5BBD1834266900E752D3 /* Model.cpp */,
+				458C5BBE1834266900E752D3 /* Model.h */,
+				458C5BBF1834266900E752D3 /* Node.cpp */,
+				458C5BC01834266900E752D3 /* Node.h */,
+				458C5BC11834266900E752D3 /* Settings.cpp */,
+				458C5BC21834266900E752D3 /* Settings.h */,
+				458C5BC31834266900E752D3 /* TraitBranchEvent.cpp */,
+				458C5BC41834266900E752D3 /* TraitBranchEvent.h */,
+				458C5BC51834266900E752D3 /* TraitBranchHistory.cpp */,
+				458C5BC61834266900E752D3 /* TraitBranchHistory.h */,
+				458C5BC71834266900E752D3 /* TraitMCMC.cpp */,
+				458C5BC81834266900E752D3 /* TraitMCMC.h */,
+				458C5BC91834266900E752D3 /* TraitModel.cpp */,
+				458C5BCA1834266900E752D3 /* TraitModel.h */,
+				458C5BCB1834266900E752D3 /* Tree.cpp */,
+				458C5BCC1834266900E752D3 /* Tree.h */,
+				458C5BCD1834266900E752D3 /* Utilities.h */,
+			);
+			name = src;
+			path = ../src;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		458C5BA51834152800E752D3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 458C5BA81834152800E752D3 /* Build configuration list for PBXProject "bamm" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 458C5BA31834152800E752D3;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		458C5BAA1834152800E752D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		458C5BAB1834152800E752D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		458C5BA81834152800E752D3 /* Build configuration list for PBXProject "bamm" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				458C5BAA1834152800E752D3 /* Debug */,
+				458C5BAB1834152800E752D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 458C5BA51834152800E752D3 /* Project object */;
+}
