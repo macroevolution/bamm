@@ -254,7 +254,7 @@ void Model::initializeModelFromEventDataFile(void)
     std::cout << "Read a total of " << species1.size() << " events" << std::endl;
     for (std::vector<std::string>::size_type i = 0; i < species1.size(); i++) {
         //std::cout << std::endl << "MRCA of : " <<  species1[i] << "\t" << species2[i] << std::endl;
-        if (species2[i] != "NA" & species1[i] != "NA") {
+        if ((species2[i] != "NA") && (species1[i] != "NA")) {
 
             Node* x = treePtr->getNodeMRCA(species1[i].c_str(), species2[i].c_str());
             if (x  == treePtr->getRoot()) {
@@ -280,7 +280,7 @@ void Model::initializeModelFromEventDataFile(void)
                 //std::cout << newEvent->getAbsoluteTime() << "\t" << newEvent->getLamInit() << "\t" << newEvent->getLamShift() << "\t" << newEvent->getMuInit() << std::endl;
             }
 
-        } else if (species2[i] == "NA" & species1[i] != "NA") {
+        } else if ((species2[i] == "NA") && (species1[i] != "NA")) {
             Node* x = treePtr->getNodeByName(species1[i].c_str());
             double deltaT = x->getTime() - etime[i];
             double newmaptime = x->getMapStart() + deltaT;
@@ -1803,7 +1803,7 @@ double Model::computeLikelihoodBranchesByInterval(void)
             // Clearly a problem if extinction values approaching/equaling 1.0
             // If so, set to -Inf, leading to automatic rejection of state
 
-            if (lEinit > MAX_E_PROB | rEinit > MAX_E_PROB) {
+            if ((lEinit > MAX_E_PROB) || (rEinit > MAX_E_PROB)) {
                 //std::cout << xnode << "\t" << lEinit << "\t" << rEinit << std::endl;
                 return -INFINITY;
             }

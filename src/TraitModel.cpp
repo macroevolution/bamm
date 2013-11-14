@@ -255,7 +255,7 @@ void TraitModel::initializeModelFromEventDataFileTrait(void)
 
     for (std::vector<std::string>::size_type i = 0; i < species1.size(); i++) {
         std::cout << std::endl << "MRCA of : " <<  species1[i] << "\t" << species2[i] << std::endl;
-        if (species2[i] != "NA" & species1[i] != "NA") {
+        if ((species2[i] != "NA") && (species1[i] != "NA")) {
 
             Node* x = treePtr->getNodeMRCA(species1[i].c_str(), species2[i].c_str());
             if (x  == treePtr->getRoot()) {
@@ -279,7 +279,7 @@ void TraitModel::initializeModelFromEventDataFileTrait(void)
                 treePtr->setMeanBranchTraitRates();
             }
 
-        } else if (species2[i] == "NA" & species1[i] != "NA") {
+        } else if ((species2[i] == "NA") && (species1[i] != "NA")) {
 
             Node* x = treePtr->getNodeByName(species1[i].c_str());
 

@@ -40,26 +40,26 @@ Settings::Settings(void)
     _loadEventData = false;
 
     _useGlobalSamplingProbability = true;
-    _globalSamplingFraction = NULL;
+    _globalSamplingFraction = 0.0;
 
     // Class Model parameters:
-    _updateLambdaInitScale = NULL;
-    _updateMuInitScale = NULL;
-    _updateLambdaShiftScale = NULL;
-    _updateMuShiftScale = NULL;
-    _lambdaInit0 = NULL;
-    _lambdaShift0 = NULL;
-    _muInit0 = NULL;
-    _muShift0 = NULL;
-    _updateEventRateScale = NULL;
-    _localGlobalMoveRatio = NULL;
-    _targetNumber = NULL;
-    _lambdaInitPrior = NULL;
-    _lambdaShiftPrior = NULL;
-    _muInitPrior = NULL;
+    _updateLambdaInitScale = 0.0;
+    _updateMuInitScale = 0.0;
+    _updateLambdaShiftScale = 0.0;
+    _updateMuShiftScale = 0.0;
+    _lambdaInit0 = 0.0;
+    _lambdaShift0 = 0.0;
+    _muInit0 = 0.0;
+    _muShift0 = 0.0;
+    _updateEventRateScale = 0.0;
+    _localGlobalMoveRatio = 0.0;
+    _targetNumber = 0.0;
+    _lambdaInitPrior = 0.0;
+    _lambdaShiftPrior = 0.0;
+    _muInitPrior = 0.0;
     _muShiftPrior = 1.0;  // This is only set for convenience for now:
-    _MeanSpeciationLengthFraction = NULL;
-    _segLength = NULL;
+    _MeanSpeciationLengthFraction = 0.0;
+    _segLength = 0.0;
 
     _minCladeSizeForShift = 1;
 
@@ -71,21 +71,21 @@ Settings::Settings(void)
     _acceptrateOutfile      =       "BAMM_mcmc_accept.txt";
     _lambdaNodeOutfile      =       "BAMM_nodeLambda.txt";
 
-    _treeWriteFreq          =       NULL;
-    _eventDataWriteFreq     =       NULL;
-    _mcmcWriteFreq          =       NULL;
-    _acceptWriteFreq        =       NULL;
-    _printFreq              =       NULL;
-    _NGENS                  =       NULL;
+    _treeWriteFreq          =       0;
+    _eventDataWriteFreq     =       0;
+    _mcmcWriteFreq          =       0;
+    _acceptWriteFreq        =       0;
+    _printFreq              =       0;
+    _NGENS                  =       0;
 
-    _updateRateEventNumber                  =   NULL;
-    _updateRateEventPosition                =   NULL;
-    _updateRateEventRate                    =   NULL;
-    _updateRateLambda0                      =   NULL;
-    _updateRateLambdaShift                  =   NULL;
-    _updateRateMu0                          =   NULL;
-    _updateRateMuShift                      =   NULL;
-    _updateRateNumberTimeVariablePartitions =   NULL;
+    _updateRateEventNumber                  =   0.0;
+    _updateRateEventPosition                =   0.0;
+    _updateRateEventRate                    =   0.0;
+    _updateRateLambda0                      =   0.0;
+    _updateRateLambdaShift                  =   0.0;
+    _updateRateMu0                          =   0.0;
+    _updateRateMuShift                      =   0.0;
+    _updateRateNumberTimeVariablePartitions =   0.0;
 
     // Other:
     _initialNumberEvents                    =   0;
@@ -151,19 +151,19 @@ Settings::Settings(void)
 
     /* Trait evolution module parameters  */
     _traitfile                  =   "EMPTY";
-    _updateBetaScale            =   NULL;
-    _updateNodeStateScale       =   NULL;
-    _updateBetaShiftScale       =   NULL;
+    _updateBetaScale            =   0.0;
+    _updateNodeStateScale       =   0.0;
+    _updateBetaShiftScale       =   0.0;
 
-    _betaInit                   =   NULL;
-    _betaShiftInit              =   NULL;
+    _betaInit                   =   0.0;
+    _betaShiftInit              =   0.0;
 
-    _rootPrior                  =   NULL;
-    _betaInitPrior              =   NULL;
-    _betaShiftPrior             =   NULL;
+    _rootPrior                  =   0.0;
+    _betaInitPrior              =   0.0;
+    _betaShiftPrior             =   0.0;
 
-    _traitPriorMin              =   NULL;
-    _traitPriorMax              =   NULL;
+    _traitPriorMin              =   0.0;
+    _traitPriorMax              =   0.0;
 
     isDefault_traitfile         = true;
     isDefault_updateBetaScale   = true;
@@ -312,8 +312,8 @@ void Settings::trait_initializeSettings(void)
 
     // These still have default values:
     _useObservedMinMaxAsTraitPriors = true;
-    _traitPriorMin                  =   NULL;
-    _traitPriorMax                  =   NULL;
+    _traitPriorMin                  =   0.0;
+    _traitPriorMax                  =   0.0;
 
     // Parameters for implementation of class MCMC:
     _mcmcOutfile            =       "BAMMt_mcmc_out.txt";

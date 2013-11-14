@@ -1572,7 +1572,7 @@ void Tree::setCanNodeBeMapped(int ndesc)
 int Tree::getDescTipCount(Node* p)
 {
     int count = 0;
-    if (p->getLfDesc() == NULL & p->getRtDesc() == NULL)
+    if ((p->getLfDesc() == NULL) & (p->getRtDesc() == NULL))
         count++;
     else {
         count += getDescTipCount(p->getLfDesc());
@@ -1953,8 +1953,8 @@ Node* Tree::getNodeMRCA(std::string A, std::string B)
 {
     //std::cout << "MRCA of " << A << "\t" << B << std::endl;
 
-    Node* nodeA;
-    Node* nodeB;
+    Node* nodeA = NULL;
+    Node* nodeB = NULL;
     bool Agood = false;
     bool Bgood = false;
 

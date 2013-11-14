@@ -17,18 +17,18 @@ Node::Node(void)
     _rtDesc = NULL;
     _anc = NULL;
     _name = "";
-    _index = NULL;
-    _time = NULL;
-    _brlen = NULL;
+    _index = 0;
+    _time = 0.0;
+    _brlen = 0.0;
     //_descCount = NULL;
-    _isTip = NULL;
-    _isExtant = NULL;
+    _isTip = false;
+    _isExtant = false;
     _isConstant = false;
 
-    _mapStart = NULL;
-    _mapEnd = NULL;
+    _mapStart = 0.0;
+    _mapEnd = 0.0;
 
-    _branchTime = NULL;
+    _branchTime = 0.0;
     _cladeName = "";
 
     BranchHistory* bh = new BranchHistory();
@@ -66,17 +66,17 @@ Node::Node(int x)
     _anc = NULL;
     _name = "";
     _index = x;
-    _time = NULL;
-    _brlen = NULL;
+    _time = 0.0;
+    _brlen = 0.0;
     //_descCount = NULL;
-    _isExtant = NULL;
-    _isTip = NULL;
+    _isExtant = false;
+    _isTip = false;
     _isConstant = false;
 
-    _mapStart = NULL;
-    _mapEnd = NULL;
+    _mapStart = 0.0;
+    _mapEnd = 0.0;
 
-    _branchTime = NULL;
+    _branchTime = 0.0;
     _cladeName = "";
 
     BranchHistory* bh = new BranchHistory();

@@ -152,11 +152,11 @@ void BranchEvent::incrementMapPosition(double ink)
 
             ink = -1 * ink;
 
-            if (treePtr->getRoot()->getLfDesc() == getEventNode() &
+            if ((treePtr->getRoot()->getLfDesc() == getEventNode()) &
                     treePtr->getRoot()->getRtDesc()->getCanHoldEvent())
                 setEventNode(treePtr->getRoot()->getRtDesc());
 
-            else if (treePtr->getRoot()->getRtDesc() == getEventNode() &
+            else if ((treePtr->getRoot()->getRtDesc() == getEventNode()) &
                      treePtr->getRoot()->getLfDesc()->getCanHoldEvent())
                 setEventNode(treePtr->getRoot()->getLfDesc());
 
