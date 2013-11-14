@@ -46,7 +46,7 @@ Node::Node(void)
 
     // For phenotypes:
     //Phenotype * pheno = new Phenotype();
-    _trait = NULL;
+    _trait = 0.0;
     _meanBeta = 0;
     _isTraitFixed = 0;
 
@@ -93,7 +93,7 @@ Node::Node(int x)
 
     // For phenotypes:
     //Phenotype * pheno = new Phenotype();
-    _trait = NULL;
+    _trait = 0.0;
     _meanBeta = 0;
     _isTraitFixed = 0;
 

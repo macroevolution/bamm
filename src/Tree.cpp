@@ -1591,7 +1591,7 @@ int Tree::getDescTipCount(Node* p)
 int Tree::countDescendantsWithValidTraitData(Node* p)
 {
     int count = 0;
-    if (p->getLfDesc() == NULL & p->getRtDesc() == NULL) {
+    if ((p->getLfDesc() == NULL) && (p->getRtDesc() == NULL)) {
         if (p->getIsTraitFixed())
             count++;
     } else {
