@@ -33,6 +33,7 @@
 
 #include <cmath>
 #include <ctime>
+#include <cstdlib>
 #include <iostream>
 #include <vector>
 
@@ -648,7 +649,7 @@ double MbRandom::dirichletPdf(const std::vector<double> &a, const std::vector<do
 	if ( tol < fabs( zSum - 1.0 ) )
 		{
 		std::cout << "Fatal error in dirichletPdf" << std::endl;
-		exit(1);
+    std::exit(1);
 		//ui->error("Fatal error in dirichletPdf");
 		//throw(MbException(MbException::ERROR));
 		}
@@ -1090,7 +1091,7 @@ double MbRandom::incompleteBeta(double a, double b, double x) {
 		if ( it_max < it )
 			{
 			std::cout << "Error in incompleteBeta: Maximum number of iterations exceeded!" << std::endl;
-			exit(1);
+      std::exit(1);
 			//ui->error("Error in incompleteBeta: Maximum number of iterations exceeded!");
 			//throw(MbException(MbException::ERROR));
 			}
