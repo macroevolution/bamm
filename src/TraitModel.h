@@ -12,6 +12,7 @@
 
 #include <set>
 #include <vector>
+#include <sstream>
 
 //Forward declarations
 class Tree;
