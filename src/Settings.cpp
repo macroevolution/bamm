@@ -607,7 +607,7 @@ void Settings::initializeSettings(std::string controlFilename)
         //      both spaces and tabs:
 
         // What is the int(*)(int) doing????
-        s1.erase(remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
+        s1.erase(std::remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
 
         //tempstd::string.erase(remove_if(tempstd::string.begin(), tempstd::string.end(), isspace), tempstd::string.end());
 

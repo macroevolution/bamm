@@ -16,6 +16,7 @@
 #include <cmath>
 #include <fstream>
 #include <limits>
+#include <algorithm>
 
 #include "MbRandom.h"
 #include "Node.h"
@@ -2034,7 +2035,7 @@ void TraitModel::setMinMaxTraitPriors(void)
             tvec.push_back(xnode->getTraitValue());
     }
 
-    sort(tvec.begin(), tvec.end());
+    std::sort(tvec.begin(), tvec.end());
 
     // std::cout << "Min: " << tvec[0] << "\tMax: " << tvec[(tvec.size() - 1)] << std::endl;
 
