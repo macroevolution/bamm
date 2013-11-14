@@ -4,6 +4,7 @@
 #include <sstream>
 #include <cmath>
 #include <iomanip>
+#include <algorithm>
 
 #include "Tree.h"
 #include "Node.h"
@@ -919,8 +920,8 @@ std::vector<double>  Tree::getBranchingTimes(void)
         if (tmp > TOL)
             btimes.push_back(tmp);
     }
-    sort(btimes.begin(), btimes.end() );
-    reverse(btimes.begin(), btimes.end());
+    std::sort(btimes.begin(), btimes.end() );
+    std::reverse(btimes.begin(), btimes.end());
     return btimes;
 }
 
