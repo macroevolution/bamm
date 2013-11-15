@@ -1,0 +1,54 @@
+getCladeRates <-
+function(ephy, weights='branchlengths', node = NULL, nodetype='include', verbose=F){
+	
+	if (!'bamm-data' %in% class(ephy)){
+		stop("Object ephy must be of class bamm-data\n");
+	}	
+	
+	if (is.null(node)){
+		nodeset <- ephy$edge[,2];
+	}else if (!is.null(node) & nodetype == 'include'){
+		nodeset <- getDesc(ephy, node)$desc_set;
+	}else if (!is.null(node) & nodetype == 'exclude'){
+		nodeset <- setdiff( ephy$edge[,2],  getDesc(ephy, node)$desc_set);
+	}else{
+		stop('error in getRateTHroughTimeMatrix\n');
+	}
+	
+	lambda_vector <- numeric(length(ephy$eventBranchSegs));
+	mu_vector <- numeric(length(ephy$eventBranchSegs));
+ 
+	
+	for (i in 1:length(ephy$eventBranchSegs)){
+		if (verbose){
+			cat('Processing sample ', i, '\n');
+		}
+		esegs <- ephy$eventBranchSegs[[i]];
+		
+		esegs <- esegs[esegs[,1] %in% nodeset, ];
+	 
+		
+		events <- ephy$eventData[[i]];
+		events <- events[order(events$index), ];			
+		
+		# relative start time of each seg, to event:
+		relsegmentstart <- esegs[,2] - ephy$eventData[[i]]$time[esegs[,4]];
+		relsegmentend <- esegs[,3] - ephy$eventData[[i]]$time[esegs[,4]];
+		lam1 <- ephy$eventData[[i]]$lam1[esegs[,4]];
+		lam2 <-  ephy$eventData[[i]]$lam2[esegs[,4]];
+		mu1 <-  ephy$eventData[[i]]$mu1[esegs[,4]];
+		mu2 <-  ephy$eventData[[i]]$mu2[esegs[,4]];
+ 		
+ 		seglengths <- esegs[,3] - esegs[,2];	
+		wts <- seglengths / sum(seglengths);
+		lamseg <- timeIntegratedBranchRate(relsegmentstart, relsegmentend, lam1, lam2) / seglengths;
+		museg <- timeIntegratedBranchRate(relsegmentstart, relsegmentend, mu1, mu2) / seglengths;
+	
+		lambda_vector[i] <- sum(lamseg * wts);
+		mu_vector[i] <- sum(museg  * wts);			
+	
+	
+	}
+		
+	return(list(lambda = lambda_vector, mu = mu_vector));
+}
