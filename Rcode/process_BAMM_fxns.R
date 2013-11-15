@@ -680,9 +680,12 @@ getEventCorrelationMatrix <- function(ephy){
 #			e.g., as you would get directly as output from BAMM with the 
 #			marginal branch length trees.
 #		Arg: (for now) 
-#			phylist	= a list of multiple phylogenetic trees, where each tre
+#			obj	= a list of multiple phylogenetic trees, where each tree
 #						has branch length equal to the mean rate on that branch
-#		
+#						OR a bamm-data object
+#			ndr = TRUE or FALSE. if TRUE the mean branch length tree will have the
+#				mean net rate on each branch, i.e., lambda - mu. if FALSE the mean
+#				rate will simply be lambda.  For trait data ndr will make no difference  
 
 getMeanBranchLengthTree <- function(obj,ndr=TRUE){
 	
@@ -691,7 +694,7 @@ getMeanBranchLengthTree <- function(obj,ndr=TRUE){
 		v <- list(edge = obj$edge, Nnode = obj$Nnode,tip.label = obj$tip.label, edge.length = obj$edge.length);
 		attributes(v) <- list(names = c("edge","Nnode","tip.label","edge.length"),class="phylo",order="cladewise");
 
-		obj <- getMarginalBranchRateMatrix(obj);
+		obj <- getMarginalBranchRateMatrix(obj,verbose=FALSE);
 		if(ndr)
 		{
 			el  <- rowMeans(obj$lambda) - rowMeans(obj$mu);
