@@ -1,5 +1,5 @@
 all: bamm
-	mkdir build
+	mkdir -p build
 	mv src/bamm build/bamm
 
 bamm:
