@@ -41,146 +41,105 @@ int main (int argc, char* argv[])
     MbRandom myRNG;
     Settings mySettings;
 
-    if (modeltype == "speciationextinction") {
+	for (int i = 0; i < 20; i++)
+		std::cout << "#";
+	
+	if (argc <= 1) {
+		
+		std::cout << "Removed option to initialized BAMM with default settings" << std::endl;
+		std::cout << "You must specify a controlfilename" << std::endl;
+		throw;
+		
+	} else if (argc > 1) {
+		// IF > 1 things read assume other args:
 
+		std::vector<std::string> instrings;
+		for (int i = 0; i < argc; i++)
+			instrings.push_back(argv[i]);
+		
+		mySettings.parseCommandLineInput(argc, instrings);
+	
+	} else {
+		std::cout << "Uninterpretable input. Exiting BAMM." << std::endl;
+		exit(1);
+	}
+	
+	
+	std::cout << mySettings.getModeltype() << std::endl;
+	
+	if (mySettings.getModeltype() == "speciationextinction"){
+		std::cout << "Initializing diversification (speciationextinction) model" << std::endl;
         for (int i = 0; i < 20; i++)
             std::cout << "#";
-
+		
         std::cout << std::endl << std::endl  << "SPECIATION-EXTINCTION BAMM" << std::endl << std::endl;
-
-        for (int i = 0; i < 20; i++)
-            std::cout << "#";
-        if (argc <= 1) {
-            std::cout << "\nInitializing BAMM with default settings." << std::endl;
-            std::cout << "\tThis may not be OK - consult manual for usage information\n" << std::endl;
-            mySettings.initializeSettings();
-        } else if (argc > 1) {
-            // IF > 1 things read assume other args:
-            std::vector<std::string> instrings;
-            for (int i = 0; i < argc; i++)
-                if (i != 1) // skip trait or speciationextinction option
-                    instrings.push_back(argv[i]);
-            argc--;
-            mySettings.parseCommandLineInput(argc, instrings, modeltype);
-        } else {
-            std::cout << "Uninterpretable input. Exiting BAMM." << std::endl;
-            exit(1);
-        }
-
-
-        mySettings.printCurrentSettings(true);
+	
+		mySettings.printCurrentSettings_Diversification(true);
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
-
+		
         if (mySettings.getUseGlobalSamplingProbability()) {
             std::cout << "Initializing with global sampling probability\n" << std::endl;
-            intree.initializeSpeciationExtinctionModel(
-                mySettings.getGlobalSamplingFraction());
-
+            intree.initializeSpeciationExtinctionModel(mySettings.getGlobalSamplingFraction());
         } else {
             std::cout << "Species-specific sampling fractions are not validated yet...\n" <<
-                 std::endl;
+			std::endl;
             // code should be supported for this but need to check..
             intree.initializeSpeciationExtinctionModel(mySettings.getSampleProbsFilename());
             //throw;
         }
-
-        //intree.printCanHoldEventByNode();
-
-
-        std::cout << std::endl << std::endl;
-        //intree.setAllNodesCanHoldEvent();
-
-        std::cout << "MinCladeSize: " << mySettings.getMinCladeSizeForShift() << std::endl;
-
-        intree.setCanNodeHoldEventByDescCount(mySettings.getMinCladeSizeForShift());
-
-        intree.setTreeMap(intree.getRoot());
-
-        //intree.printCanHoldEventByNode();
-
-        if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
+		
+		intree.setCanNodeHoldEventByDescCount(mySettings.getMinCladeSizeForShift());
+		intree.setTreeMap(intree.getRoot());
+		if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
             Model myModel(&myRNG, &intree, &mySettings);
             std::cout << "Initializing model but not running MCMC" << std::endl;
-
+			
         } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
             Model myModel(&myRNG, &intree, &mySettings);
             MCMC myMCMC(&myRNG, &myModel, &mySettings);
-
+			
         } else
-            std::cout << "Unsupported option in main....\n" << std::endl;
-
-
-
-
-
-    } else if (modeltype == "trait") {
-
+            std::cout << "Unsupported option in main....\n" << std::endl;	
+		
+	}else if (mySettings.getModeltype() == "trait"){
+	
         for (int i = 0; i < 20; i++)
             std::cout << "#";
-
-        std::cout << std::endl << std::endl  << "TRAIT BAMM" << std::endl << std::endl;
-
-        for (int i = 0; i < 20; i++)
-            std::cout << "#";
-
-        if (argc <= 1) {
-            std::cout << "\nInitializing BAMMt with default settings." << std::endl;
-            std::cout << "\tThis may not be OK - consult manual for usage information\n" << std::endl;
-            mySettings.trait_initializeSettings();
-        } else if (argc > 1) {
-            // IF > 1 things read assume other args:
-            std::vector<std::string> instrings;
-            for (int i = 0; i < argc; i++)
-                if (i != 1) // skip trait or speciationextinction option
-                    instrings.push_back(argv[i]);
-            argc--;
-
-
-            mySettings.parseCommandLineInput(argc, instrings, modeltype);
-            mySettings.checkAreTraitInitialSettingsValid();
-        } else {
-            std::cout << "Uninterpretable input. Exiting BAMM." << std::endl;
-            exit(1);
-        }
-
-
-        //mySettings.trait_printCurrentSettings(true);
+		std::cout << "Initializing phenotypic evolution (trait) model " << std::endl;
+		mySettings.checkAreInitialSettingsValid_Traits();
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
-
+		
         intree.setAllNodesCanHoldEvent();
         intree.setTreeMap(intree.getRoot());
-
-        //intree.getPhenotypes(mySettings.getTraitFile());
-        intree.getPhenotypesMissingLatent(mySettings.getTraitFile());
-
-
-        intree.initializeTraitValues();
-
-
+		intree.getPhenotypesMissingLatent(mySettings.getTraitFile());
+		intree.initializeTraitValues();
+		
         if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
             std::cout << "Initializing model but not running MCMC" << std::endl;
             TraitModel myModel(&myRNG, &intree, &mySettings);
         }
-
+		
         if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
             std::cout << "Initializing model and MCMC chain" << std::endl;
             TraitModel myModel(&myRNG, &intree, &mySettings);
             TraitMCMC myMCMC(&myRNG, &myModel, &mySettings);
 
-            //intree.echoMeanBranchTraitRates();
+        }	
 
-        }
+	}else if (mySettings.getModeltype() == "EMPTY_STRING"){
+		std::cout << "You did not specify a modeltype." << std::endl;
+		std::cout << "You must specify one of the following for parameter modeltype\n\n" << std::endl;
+		std::cout << "\t\tspeciationextinction\n\t\ttrait\n\n" << std::endl << std::endl;
+	}else{
+		
+		std::cout << "Invalid modeltype specification in controlfile" << std::endl;
+		std::cout << "Specified modeltype was <<" << mySettings.getModeltype() << ">> \n" << std::endl;
+		std::cout << "Valid options: \n" << "\t\tspeciationextinction\n\t\ttrait\n\n" << std::endl;
 
-
-    } else {
-        std::cout << "Unsupported analysis" << std::endl;
-        exit(1);
-    }
-
-
-
+	}
+	
 
     return 0;
 }

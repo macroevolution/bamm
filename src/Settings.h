@@ -32,6 +32,8 @@ private:
     // Files:
     std::string _treefile;
     std::string _eventDataInfile;
+	
+	std::string _modeltype;
 
     // Accounting for incomplete sampling:
     bool   _useGlobalSamplingProbability;
@@ -124,10 +126,18 @@ private:
 
     bool _useObservedMinMaxAsTraitPriors;
 
+	// Parameters to create vectors of input variable names 
+	//	and associated values: 
+	//		these read & populated from controlfile
+    std::vector<std::string> _varName;
+    std::vector<std::string> _varValue;	
+	
     /* ################################################# */
     // Boolean parameters to flag whether default values of a parameter
     // have changed
-    bool isDefault_treefile;
+	
+    bool isDefault_modeltype;
+	bool isDefault_treefile;
     bool isDefault_sampleFromPriorOnly;
     bool isDefault_runTraitModel;
     bool isDefault_runSpeciationExtinctionModel;
@@ -208,21 +218,25 @@ public:
     Settings();
     ~Settings();
 
-    void trait_initializeSettings();
-    void trait_initializeSettings(std::string controlFilename);
+	void initializeSettingsDevel(std::string controlFilename);
+	
+	
+    void initializeSettingsDefaults_Traits();
+    void initializeSettings_Traits();
 
-    void initializeSettings(std::string controlFilename);
-    void initializeSettings();
+    void initializeSettings_Diversification();
+    void initializeSettingsDefaults_Diversification();
 
-    void checkAreInitialSettingsValid();
-    void checkAreTraitInitialSettingsValid();
+    void checkAreInitialSettingsValid_Diversification();
+    void checkAreInitialSettingsValid_Traits();
 
-    void trait_printCurrentSettings(bool printOnlyChangesToDefaults);
-    void printCurrentSettings(bool printOnlyChangesToDefaults);
+    void printCurrentSettings_Traits(bool printOnlyChangesToDefaults);
+    void printCurrentSettings_Diversification(bool printOnlyChangesToDefaults);
 
+	std::string getModeltype();
+	
     bool stringToBool(const char* x);
-    void parseCommandLineInput(int argc,
-        std::vector<std::string>& instrings, std::string modeltype);
+    void parseCommandLineInput(int argc, std::vector<std::string>& instrings);
 
     bool areAllParametersSetToDefaults();
     bool getRunTraitModel();
@@ -736,6 +750,12 @@ inline std::string Settings::getNodeStateOutfile()
 {
     return _nodeStateOutfile;
 }
+
+inline std::string Settings::getModeltype()
+{
+	return _modeltype;
+}
+
 
 
 #endif

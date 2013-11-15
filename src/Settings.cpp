@@ -31,7 +31,8 @@ Settings::Settings(void)
     _treefile = "EMPTY_STRING";
     _sampleProbsFilename = "EMPTY_STRING";
     _eventDataInfile = "EMPTY_STRING";
-
+	_modeltype = "EMPTY_STRING";
+	
     _runTraitModel = false;
     _runSpeciationExtinctionModel = false;
     _sampleFromPriorOnly = false;
@@ -93,7 +94,7 @@ Settings::Settings(void)
     /*******************************************/
     // Set Boolean indicator variables to track
     //   changes to default parameters:
-
+	isDefault_modeltype									= true;
     isDefault_treefile                                  = true;
     isDefault_runTraitModel                             = true;
     isDefault_runSpeciationExtinctionModel              = true;
@@ -197,6 +198,79 @@ Settings::~Settings(void)
 }
 
 
+void Settings::initializeSettingsDevel(std::string controlFilename)
+{
+    std::ifstream infile(controlFilename.c_str());
+    if (!infile.good()) {
+        std::cout << "Control filename invalid" << std::endl;
+        std::cout << "Exiting." << std::endl;
+        throw;
+    }
+	
+    std::cout << "Reading control file <<" << controlFilename.c_str() << ">>" << std::endl;
+
+	std::string s1, s2;
+	
+    while (infile) {
+		getline(infile, s1, '\n');
+		
+        if (s1[0] == '#')
+			continue;
+		
+        // strip whitespace out of tempstring:
+        //      both spaces and tabs:
+		
+        // What is the int(*)(int) doing????
+        s1.erase(std::remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
+		
+        //tempstring.erase(remove_if(tempstring.begin(), tempstring.end(), isspace), tempstring.end());
+		
+		
+        // Only add if has size > 0 (gets rid of empty lines)
+        if (s1.size() > 0) {
+            std::vector<std::string> tmpstr;
+			
+            // NOw use second getline to split by '=' characters:
+
+            std::istringstream stemp(s1);
+
+            while (getline(stemp, s2, '=')){
+				tmpstr.push_back(s2);		
+			}
+
+            if (tmpstr.size() == 2) {
+                _varName.push_back(tmpstr[0]);
+                _varValue.push_back(tmpstr[1]);
+            } else
+                std::cout << "Invalid size of input line in control file" << std::endl;
+        }
+		
+        if (infile.peek() == EOF)
+            break;
+    }
+	
+	for (std::vector<std::string>::size_type i = 0; i < _varName.size(); i++){
+		//std::cout << _varName[i] << std::endl;
+		if (_varName[i] == "modeltype"){
+			_modeltype = _varValue[i];
+			isDefault_modeltype = false;
+		}
+	}
+	
+	if (_modeltype == "EMPTY_STRING"){
+        std::cout << "Invalid type of analysis" << std::endl;
+        std::cout << "Options: speciationextinction or trait" << std::endl;
+        throw;	
+	}else if (_modeltype == "speciationextinction"){
+		initializeSettings_Diversification();
+	}else if (_modeltype == "trait"){
+		initializeSettings_Traits();
+	}else{
+	
+		throw;
+	}
+	
+}
 
 
 /*
@@ -205,7 +279,7 @@ Settings::~Settings(void)
 
  */
 
-void Settings::initializeSettings(void)
+void Settings::initializeSettingsDefaults_Diversification(void)
 {
 
     _allParametersSetToDefaults = true;
@@ -279,7 +353,7 @@ void Settings::initializeSettings(void)
 
 }
 
-void Settings::trait_initializeSettings(void)
+void Settings::initializeSettingsDefaults_Traits(void)
 {
     _allParametersSetToDefaults = true;
 
@@ -346,207 +420,155 @@ void Settings::trait_initializeSettings(void)
 }
 
 
-// Fixing this : March 4 2013
-void Settings::trait_initializeSettings(std::string controlFilename)
+void Settings::initializeSettings_Traits()
 {
 
 
 
     _allParametersSetToDefaults = false;
 
-    //int parmCount = 0;
-    //int ppw = 35;
-
-    std::ifstream infile(controlFilename.c_str());
-    if (!infile.good()) {
-        std::cout << "Control filename invalid" << std::endl;
-        std::cout << "Exiting." << std::endl;
-        throw;
-    }
-
-    std::cout << "Reading control file <<" << controlFilename.c_str() << ">>" << std::endl;
-
-    std::vector<std::string> varName;
-    std::vector<std::string> varValue;
     std::vector<std::string> paramsNotFound;
-    std::string s1, s2;
 
 
-    while (infile) {
-        getline(infile, s1, '\n');
-
-        if (s1[0] == '#')
-          continue;
-
-        // strip whitespace out of tempstring:
-        //      both spaces and tabs:
-
-        // What is the int(*)(int) doing????
-        s1.erase(std::remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
-
-        //tempstring.erase(remove_if(tempstring.begin(), tempstring.end(), isspace), tempstring.end());
 
 
-        // Only add if has size > 0 (gets rid of empty lines)
-        if (s1.size() > 0) {
-            std::vector<std::string> tmpstr;
+    for (std::vector<std::string>::size_type i = 0; i < _varName.size(); i++) {
+        //std::cout << std::setw(30) << _varName[i] << std::setw(20) << _varValue[i] << std::endl;
 
-            // NOw use second getline to split by '=' characters:
-
-            std::istringstream stemp(s1);
-            while (getline(stemp, s2, '='))
-                tmpstr.push_back(s2);
-            if (tmpstr.size() == 2) {
-                varName.push_back(tmpstr[0]);
-                varValue.push_back(tmpstr[1]);
-            } else
-                std::cout << "Invalid size of input line in control file" << std::endl;
-
-            //getline(stemp, s2, '=');
-            //std::cout << s2 << std::endl;
-            //std::stringvec.push_back(s1);
-
-        }
-
-        if (infile.peek() == EOF)
-            break;
-    }
-
-
-    for (std::vector<std::string>::size_type i = 0; i < varName.size(); i++) {
-        //std::cout << std::setw(30) << varName[i] << std::setw(20) << varValue[i] << std::endl;
-
-        if (varName[i] == "treefile") {
-            _treefile = varValue[i];
+        if (_varName[i] == "treefile") {
+            _treefile = _varValue[i];
             isDefault_treefile = false;
-        } else if (varName[i] == "traitfile") {
-            _traitfile = varValue[i];
+        } else if (_varName[i] == "traitfile") {
+            _traitfile = _varValue[i];
             isDefault_traitfile = false;
-        } else if (varName[i] == "runSpeciationExtinctionModel") {
+        } else if (_varName[i] == "runSpeciationExtinctionModel") {
 
-        } else if (varName[i] == "runTraitModel") {
+        } else if (_varName[i] == "runTraitModel") {
 
-        } else if (varName[i] == "sampleFromPriorOnly") {
-            _sampleFromPriorOnly = stringToBool(varValue[i].c_str());
+        } else if (_varName[i] == "sampleFromPriorOnly") {
+            _sampleFromPriorOnly = stringToBool(_varValue[i].c_str());
 
             isDefault_sampleFromPriorOnly = false;
-        } else if (varName[i] == "initializeModel") {
-            _initializeModel = stringToBool(varValue[i].c_str());
+        } else if (_varName[i] == "initializeModel") {
+            _initializeModel = stringToBool(_varValue[i].c_str());
             isDefault_initializeModel = false;
-        } else if (varName[i] == "runMCMC") {
-            _runMCMC = stringToBool(varValue[i].c_str());
+        } else if (_varName[i] == "runMCMC") {
+            _runMCMC = stringToBool(_varValue[i].c_str());
             isDefault_runMCMC = false;
-        } else if (varName[i] == "updateBetaScale") {
-            _updateBetaScale = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateBetaScale") {
+            _updateBetaScale = atof(_varValue[i].c_str());
             isDefault_updateBetaScale = false;
             //std::cout << left << std::setw(ppw) << "updateLambdaInitScale" << "\t" << _updateLambdaInitScale << std::endl;
 
-        } else if (varName[i] == "updateNodeStateScale") {
-            _updateNodeStateScale = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateNodeStateScale") {
+            _updateNodeStateScale = atof(_varValue[i].c_str());
             isDefault_updateNodeStateScale = false;
-        } else if (varName[i] == "updateBetaShiftScale") {
-            _updateBetaShiftScale = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateBetaShiftScale") {
+            _updateBetaShiftScale = atof(_varValue[i].c_str());
             isDefault_updateBetaShiftScale = false;
-        } else if (varName[i] == "betaInit") {
-            _betaInit = atof(varValue[i].c_str());
+        } else if (_varName[i] == "betaInit") {
+            _betaInit = atof(_varValue[i].c_str());
             isDefault_betaInit = false;
-        } else if (varName[i] == "betaShiftInit") {
-            _betaShiftInit = atof(varValue[i].c_str());
+        } else if (_varName[i] == "betaShiftInit") {
+            _betaShiftInit = atof(_varValue[i].c_str());
             isDefault_betaShift = false;
-        } else if (varName[i] == "updateEventRateScale") {
-            _updateEventRateScale = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateEventRateScale") {
+            _updateEventRateScale = atof(_varValue[i].c_str());
             isDefault_updateEventRateScale = false;
-        } else if (varName[i] == "localGlobalMoveRatio") {
-            _localGlobalMoveRatio = atof(varValue[i].c_str());
+        } else if (_varName[i] == "localGlobalMoveRatio") {
+            _localGlobalMoveRatio = atof(_varValue[i].c_str());
             isDefault_localGlobalMoveRatio = false;
-        } else if (varName[i] == "targetNumber") {
-            _targetNumber = atof(varValue[i].c_str());
+        } else if (_varName[i] == "targetNumber") {
+            _targetNumber = atof(_varValue[i].c_str());
             isDefault_targetNumber = false;
-        } else if (varName[i] == "betaInitPrior") {
-            _betaInitPrior = atof(varValue[i].c_str());
+        } else if (_varName[i] == "betaInitPrior") {
+            _betaInitPrior = atof(_varValue[i].c_str());
             isDefault_betaInitPrior = false;
-        } else if (varName[i] == "betaShiftPrior") {
-            _betaShiftPrior = atof(varValue[i].c_str());
+        } else if (_varName[i] == "betaShiftPrior") {
+            _betaShiftPrior = atof(_varValue[i].c_str());
             isDefault_betaShiftPrior = false;
-        } else if (varName[i] == "useObservedMinMaxAsTraitPriors") {
-            _useObservedMinMaxAsTraitPriors = stringToBool(varValue[i].c_str());
+        } else if (_varName[i] == "useObservedMinMaxAsTraitPriors") {
+            _useObservedMinMaxAsTraitPriors = stringToBool(_varValue[i].c_str());
             isDefault_useObservedMinMaxAsTraitPriors = false;
-        } else if (varName[i] == "traitPriorMin") {
-            _traitPriorMin = atof(varValue[i].c_str());
+        } else if (_varName[i] == "traitPriorMin") {
+            _traitPriorMin = atof(_varValue[i].c_str());
             isDefault_traitPriorMin = false;
-        } else if (varName[i] == "traitPriorMax") {
-            _traitPriorMax = atof(varValue[i].c_str());
+        } else if (_varName[i] == "traitPriorMax") {
+            _traitPriorMax = atof(_varValue[i].c_str());
             isDefault_traitPriorMax = false;
-        } else if (varName[i] == "mcmcOutfile") {
-            _mcmcOutfile = varValue[i];
+        } else if (_varName[i] == "mcmcOutfile") {
+            _mcmcOutfile = _varValue[i];
             isDefault_mcmcOutfile = false;
-        } else if (varName[i] == "eventDataOutfile") {
-            _eventDataOutfile = varValue[i];
+        } else if (_varName[i] == "eventDataOutfile") {
+            _eventDataOutfile = _varValue[i];
             isDefault_eventDataOutfile = false;
-        } else if (varName[i] == "betaOutfile") {
-            _betaOutfile = varValue[i];
+        } else if (_varName[i] == "betaOutfile") {
+            _betaOutfile = _varValue[i];
             isDefault_betaOutfile = false;
-        } else if (varName[i] == "nodeStateOutfile") {
-            _nodeStateOutfile = varValue[i];
+        } else if (_varName[i] == "nodeStateOutfile") {
+            _nodeStateOutfile = _varValue[i];
             isDefault_nodeStateOutfile = false;
-        } else if (varName[i] == "acceptrateOutfile") {
-            _acceptrateOutfile = varValue[i];
+        } else if (_varName[i] == "acceptrateOutfile") {
+            _acceptrateOutfile = _varValue[i];
             isDefault_acceptrateOutfile = false;
-        } else if (varName[i] == "treeWriteFreq") {
-            _treeWriteFreq = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "treeWriteFreq") {
+            _treeWriteFreq = atoi(_varValue[i].c_str());
             isDefault_treeWriteFreq = false;
-        } else if (varName[i] == "eventDataWriteFreq") {
-            _eventDataWriteFreq = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "eventDataWriteFreq") {
+            _eventDataWriteFreq = atoi(_varValue[i].c_str());
             isDefault_eventDataWriteFreq = false;
-        } else if (varName[i] == "mcmcWriteFreq") {
-            _mcmcWriteFreq = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "mcmcWriteFreq") {
+            _mcmcWriteFreq = atoi(_varValue[i].c_str());
             isDefault_mcmcWriteFreq = false;
-        } else if (varName[i] == "acceptWriteFreq") {
-            _acceptWriteFreq = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "acceptWriteFreq") {
+            _acceptWriteFreq = atoi(_varValue[i].c_str());
             isDefault_acceptWriteFreq = false;
-        } else if (varName[i] == "printFreq") {
-            _printFreq = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "printFreq") {
+            _printFreq = atoi(_varValue[i].c_str());
             isDefault_printFreq = false;
-        } else if (varName[i] == "NumberGenerations") {
-            _NGENS = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "NumberGenerations") {
+            _NGENS = atoi(_varValue[i].c_str());
             isDefault_NGENS = false;
-        } else if (varName[i] == "updateRateEventNumber") {
-            _updateRateEventNumber  = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateRateEventNumber") {
+            _updateRateEventNumber  = atof(_varValue[i].c_str());
             isDefault_updateRateEventNumber = false;
-        } else if (varName[i] == "updateRateEventPosition") {
-            _updateRateEventPosition  = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateRateEventPosition") {
+            _updateRateEventPosition  = atof(_varValue[i].c_str());
             isDefault_updateRateEventPosition = false;
-        } else if (varName[i] == "updateRateEventRate") {
-            _updateRateEventRate = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateRateEventRate") {
+            _updateRateEventRate = atof(_varValue[i].c_str());
             isDefault_updateRateEventRate = false;
-        } else if (varName[i] == "updateRateBeta0") {
-            _updateRateBeta0 = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateRateBeta0") {
+            _updateRateBeta0 = atof(_varValue[i].c_str());
             isDefault_updateRateBeta0 = false;
-        } else if (varName[i] == "updateRateBetaShift") {
-            _updateRateBetaShift  = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateRateBetaShift") {
+            _updateRateBetaShift  = atof(_varValue[i].c_str());
             isDefault_updateRateBetaShift = false;
-        } else if (varName[i] == "updateRateNodeState") {
-            _updateRateNodeState = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "updateRateNodeState") {
+            _updateRateNodeState = atoi(_varValue[i].c_str());
             isDefault_updateRateNodeState = false;
-        } else if (varName[i] == "initialNumberEvents") {
-            _initialNumberEvents  = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "initialNumberEvents") {
+            _initialNumberEvents  = atoi(_varValue[i].c_str());
             isDefault_initialNumberEvents = false;
-        } else if (varName[i] == "loadEventData" ) {
-            _loadEventData = stringToBool(varValue[i].c_str());
+        } else if (_varName[i] == "loadEventData" ) {
+            _loadEventData = stringToBool(_varValue[i].c_str());
             isDefault_loadEventData = false;
-        } else if (varName[i] == "eventDataInfile") {
-            _eventDataInfile = varValue[i].c_str();
+        } else if (_varName[i] == "eventDataInfile") {
+            _eventDataInfile = _varValue[i].c_str();
             isDefault_eventDataInfile = false;
-        } else {
+        } else if (_varName[i] == "modeltype"){
+			// Do nothing. This is 
+			// already handled in initializeSettings() general function.
+		}else {
             // Parameter not found:
             //      add to list of potentially bad/misspelled params
             //      and print for user.
-            paramsNotFound.push_back(varName[i]);
+            paramsNotFound.push_back(_varName[i]);
         }
 
     }
 
-    std::cout << "Read a total of <<" << varName.size() <<
+    std::cout << "Read a total of <<" << _varName.size() <<
          ">> parameter settings from control file" << std::endl;
     if (paramsNotFound.size() > 0) {
         std::cout << std::endl << "********************************" << std::endl;
@@ -574,241 +596,188 @@ void Settings::trait_initializeSettings(std::string controlFilename)
 
 }
 
-void Settings::trait_printCurrentSettings(bool printOnlyChangesToDefaults)
+void Settings::printCurrentSettings_Traits(bool printOnlyChangesToDefaults)
 {
     std::cout << "print settings for trait module not yet supported" << std::endl;
     exit(1);
 }
 
-void Settings::initializeSettings(std::string controlFilename)
+void Settings::initializeSettings_Diversification()
 {
 
     _allParametersSetToDefaults = false;
 
-    //int parmCount = 0;
-    //int ppw = 35;
-
-    std::ifstream infile(controlFilename.c_str());
-    if (!infile.good()) {
-        std::cout << "Control filename invalid" << std::endl;
-        std::cout << "Exiting." << std::endl;
-        throw;
-    }
-
-    std::cout << "Reading control file <<" << controlFilename.c_str() << ">>" << std::endl;
-
-    std::vector<std::string> varName;
-    std::vector<std::string> varValue;
     std::vector<std::string> paramsNotFound;
-    std::string s1, s2;
+ 
 
+    for (std::vector<std::string>::size_type i = 0; i < _varName.size(); i++) {
+        //std::cout << std::setw(30) << _varName[i] << std::setw(20) << _varValue[i] << std::endl;
 
-    while (infile) {
-        getline(infile, s1, '\n');
-
-        if (s1[0] == '#')
-          continue;
-
-        // strip whitespace out of tempstring:
-        //      both spaces and tabs:
-
-        // What is the int(*)(int) doing????
-        s1.erase(std::remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
-
-        //tempstring.erase(remove_if(tempstring.begin(), tempstring.end(), isspace), tempstring.end());
-
-
-        // Only add if has size > 0 (gets rid of empty lines)
-        if (s1.size() > 0) {
-            std::vector<std::string> tmpstr;
-
-            // NOw use second getline to split by '=' characters:
-
-            std::istringstream stemp(s1);
-            while (getline(stemp, s2, '='))
-                tmpstr.push_back(s2);
-            if (tmpstr.size() == 2) {
-                varName.push_back(tmpstr[0]);
-                varValue.push_back(tmpstr[1]);
-            } else
-                std::cout << "Invalid size of input line in control file" << std::endl;
-
-            //getline(stemp, s2, '=');
-            //std::cout << s2 << std::endl;
-            //std::stringvec.push_back(s1);
-
-        }
-
-        if (infile.peek() == EOF)
-            break;
-    }
-
-
-    for (std::vector<std::string>::size_type i = 0; i < varName.size(); i++) {
-        //std::cout << std::setw(30) << varName[i] << std::setw(20) << varValue[i] << std::endl;
-
-        if (varName[i] == "treefile") {
-            _treefile = varValue[i];
+        if (_varName[i] == "treefile") {
+            _treefile = _varValue[i];
             isDefault_treefile = false;
-        } else if (varName[i] == "runSpeciationExtinctionModel") {
+        } else if (_varName[i] == "runSpeciationExtinctionModel") {
 
-        } else if (varName[i] == "runTraitModel") {
+        } else if (_varName[i] == "runTraitModel") {
 
-        } else if (varName[i] == "sampleFromPriorOnly") {
-            _sampleFromPriorOnly = stringToBool(varValue[i].c_str());
+        } else if (_varName[i] == "sampleFromPriorOnly") {
+            _sampleFromPriorOnly = stringToBool(_varValue[i].c_str());
 
             isDefault_sampleFromPriorOnly = false;
-        } else if (varName[i] == "initializeModel") {
-            _initializeModel = stringToBool(varValue[i].c_str());
+        } else if (_varName[i] == "initializeModel") {
+            _initializeModel = stringToBool(_varValue[i].c_str());
             isDefault_initializeModel = false;
-        } else if (varName[i] == "runMCMC") {
-            _runMCMC = stringToBool(varValue[i].c_str());
+        } else if (_varName[i] == "runMCMC") {
+            _runMCMC = stringToBool(_varValue[i].c_str());
             isDefault_runMCMC = false;
-        } else if (varName[i] == "useGlobalSamplingProbability") {
-            _useGlobalSamplingProbability = stringToBool(varValue[i].c_str());
+        } else if (_varName[i] == "useGlobalSamplingProbability") {
+            _useGlobalSamplingProbability = stringToBool(_varValue[i].c_str());
             isDefault_useGlobalSamplingProbability = false;
-        } else if (varName[i] == "sampleProbsFilename") {
-            _sampleProbsFilename = varValue[i];
+        } else if (_varName[i] == "sampleProbsFilename") {
+            _sampleProbsFilename = _varValue[i];
             isDefault_sampleProbsFilename = false;
             //std::cout << left << std::setw(ppw) << "sampleProbsFilename" << "\t" << _sampleProbsFilename << std::endl;
 
-        } else if (varName[i] == "globalSamplingFraction") {
-            _globalSamplingFraction = atof(varValue[i].c_str());
+        } else if (_varName[i] == "globalSamplingFraction") {
+            _globalSamplingFraction = atof(_varValue[i].c_str());
             isDefault_globalSamplingFraction = false;
             //std::cout << left << std::setw(ppw) << "globalSamplingFraction" << "\t" << _globalSamplingFraction << std::endl;
 
-        } else if (varName[i] == "updateLambdaInitScale") {
-            _updateLambdaInitScale = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateLambdaInitScale") {
+            _updateLambdaInitScale = atof(_varValue[i].c_str());
             isDefault_updateLambdaInitScale = false;
             //std::cout << left << std::setw(ppw) << "updateLambdaInitScale" << "\t" << _updateLambdaInitScale << std::endl;
 
-        } else if (varName[i] == "updateMuInitScale") {
-            _updateMuInitScale = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateMuInitScale") {
+            _updateMuInitScale = atof(_varValue[i].c_str());
             isDefault_updateMuInitScale = false;
-        } else if (varName[i] == "updateLambdaShiftScale") {
-            _updateLambdaShiftScale = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateLambdaShiftScale") {
+            _updateLambdaShiftScale = atof(_varValue[i].c_str());
             isDefault_updateLambdaShiftScale = false;
-        } else if (varName[i] == "updateMuShiftScale") {
-            _updateMuShiftScale = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateMuShiftScale") {
+            _updateMuShiftScale = atof(_varValue[i].c_str());
             isDefault_updateMuShiftScale = false;
-        } else if (varName[i] == "lambdaInit0") {
-            _lambdaInit0 = atof(varValue[i].c_str());
+        } else if (_varName[i] == "lambdaInit0") {
+            _lambdaInit0 = atof(_varValue[i].c_str());
             isDefault_lambdaInit0 = false;
-        } else if (varName[i] == "lambdaShift0") {
-            _lambdaShift0 = atof(varValue[i].c_str());
+        } else if (_varName[i] == "lambdaShift0") {
+            _lambdaShift0 = atof(_varValue[i].c_str());
             isDefault_lambdaShift0 = false;
-        } else if (varName[i] == "muInit0") {
-            _muInit0 = atof(varValue[i].c_str());
+        } else if (_varName[i] == "muInit0") {
+            _muInit0 = atof(_varValue[i].c_str());
             isDefault_muInit0 = false;
-        } else if (varName[i] == "muShift0") {
-            _muShift0 = atof(varValue[i].c_str());
+        } else if (_varName[i] == "muShift0") {
+            _muShift0 = atof(_varValue[i].c_str());
             isDefault_muShift0 = false;
-        } else if (varName[i] == "MeanSpeciationLengthFraction") {
-            _MeanSpeciationLengthFraction = atof(varValue[i].c_str());
+        } else if (_varName[i] == "MeanSpeciationLengthFraction") {
+            _MeanSpeciationLengthFraction = atof(_varValue[i].c_str());
             isDefault_MeanSpeciationLengthFraction = false;
-        } else if (varName[i] == "updateEventRateScale") {
-            _updateEventRateScale = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateEventRateScale") {
+            _updateEventRateScale = atof(_varValue[i].c_str());
             isDefault_updateEventRateScale = false;
-        } else if (varName[i] == "localGlobalMoveRatio") {
-            _localGlobalMoveRatio = atof(varValue[i].c_str());
+        } else if (_varName[i] == "localGlobalMoveRatio") {
+            _localGlobalMoveRatio = atof(_varValue[i].c_str());
             isDefault_localGlobalMoveRatio = false;
-        } else if (varName[i] == "targetNumber") {
-            _targetNumber = atof(varValue[i].c_str());
+        } else if (_varName[i] == "targetNumber") {
+            _targetNumber = atof(_varValue[i].c_str());
             isDefault_targetNumber = false;
-        } else if (varName[i] == "lambdaInitPrior") {
-            _lambdaInitPrior = atof(varValue[i].c_str());
+        } else if (_varName[i] == "lambdaInitPrior") {
+            _lambdaInitPrior = atof(_varValue[i].c_str());
             isDefault_lambdaInitPrior = false;
-        } else if (varName[i] == "lambdaShiftPrior") {
-            _lambdaShiftPrior = atof(varValue[i].c_str());
+        } else if (_varName[i] == "lambdaShiftPrior") {
+            _lambdaShiftPrior = atof(_varValue[i].c_str());
             isDefault_lambdaShiftPrior = false;
-        } else if (varName[i] == "muInitPrior") {
-            _muInitPrior = atof(varValue[i].c_str());
+        } else if (_varName[i] == "muInitPrior") {
+            _muInitPrior = atof(_varValue[i].c_str());
             isDefault_muInitPrior = false;
-        } else if (varName[i] == "muShiftPrior") {
-            _muShiftPrior = atof(varValue[i].c_str());
+        } else if (_varName[i] == "muShiftPrior") {
+            _muShiftPrior = atof(_varValue[i].c_str());
             isDefault_muShiftPrior = false;
-        } else if (varName[i] == "segLength") {
-            _segLength = atof(varValue[i].c_str());
+        } else if (_varName[i] == "segLength") {
+            _segLength = atof(_varValue[i].c_str());
             isDefault_segLength = false;
-        } else if (varName[i] == "mcmcOutfile") {
-            _mcmcOutfile = varValue[i];
+        } else if (_varName[i] == "mcmcOutfile") {
+            _mcmcOutfile = _varValue[i];
             isDefault_mcmcOutfile = false;
-        } else if (varName[i] == "eventDataOutfile") {
-            _eventDataOutfile = varValue[i];
+        } else if (_varName[i] == "eventDataOutfile") {
+            _eventDataOutfile = _varValue[i];
             isDefault_eventDataOutfile = false;
-        } else if (varName[i] == "lambdaOutfile") {
-            _lambdaOutfile = varValue[i];
+        } else if (_varName[i] == "lambdaOutfile") {
+            _lambdaOutfile = _varValue[i];
             isDefault_lambdaOutfile = false;
-        } else if (varName[i] == "muOutfile") {
-            _muOutfile = varValue[i];
+        } else if (_varName[i] == "muOutfile") {
+            _muOutfile = _varValue[i];
             isDefault_muOutfile = false;
-        } else if (varName[i] == "acceptrateOutfile") {
-            _acceptrateOutfile = varValue[i];
+        } else if (_varName[i] == "acceptrateOutfile") {
+            _acceptrateOutfile = _varValue[i];
             isDefault_acceptrateOutfile = false;
-        } else if (varName[i] == "lambdaNodeOutfile") {
-            _lambdaNodeOutfile = varValue[i];
+        } else if (_varName[i] == "lambdaNodeOutfile") {
+            _lambdaNodeOutfile = _varValue[i];
             isDefault_lambdaNodeOutfile = false;
-        } else if (varName[i] == "treeWriteFreq") {
-            _treeWriteFreq = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "treeWriteFreq") {
+            _treeWriteFreq = atoi(_varValue[i].c_str());
             isDefault_treeWriteFreq = false;
-        } else if (varName[i] == "eventDataWriteFreq") {
-            _eventDataWriteFreq = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "eventDataWriteFreq") {
+            _eventDataWriteFreq = atoi(_varValue[i].c_str());
             isDefault_eventDataWriteFreq = false;
-        } else if (varName[i] == "mcmcWriteFreq") {
-            _mcmcWriteFreq = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "mcmcWriteFreq") {
+            _mcmcWriteFreq = atoi(_varValue[i].c_str());
             isDefault_mcmcWriteFreq = false;
-        } else if (varName[i] == "acceptWriteFreq") {
-            _acceptWriteFreq = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "acceptWriteFreq") {
+            _acceptWriteFreq = atoi(_varValue[i].c_str());
             isDefault_acceptWriteFreq = false;
-        } else if (varName[i] == "printFreq") {
-            _printFreq = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "printFreq") {
+            _printFreq = atoi(_varValue[i].c_str());
             isDefault_printFreq = false;
-        } else if (varName[i] == "NumberGenerations") {
-            _NGENS = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "NumberGenerations") {
+            _NGENS = atoi(_varValue[i].c_str());
             isDefault_NGENS = false;
-        } else if (varName[i] == "updateRateEventNumber") {
-            _updateRateEventNumber  = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateRateEventNumber") {
+            _updateRateEventNumber  = atof(_varValue[i].c_str());
             isDefault_updateRateEventNumber = false;
-        } else if (varName[i] == "updateRateEventPosition") {
-            _updateRateEventPosition  = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateRateEventPosition") {
+            _updateRateEventPosition  = atof(_varValue[i].c_str());
             isDefault_updateRateEventPosition = false;
-        } else if (varName[i] == "updateRateEventRate") {
-            _updateRateEventRate = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateRateEventRate") {
+            _updateRateEventRate = atof(_varValue[i].c_str());
             isDefault_updateRateEventRate = false;
-        } else if (varName[i] == "updateRateLambda0") {
-            _updateRateLambda0  = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateRateLambda0") {
+            _updateRateLambda0  = atof(_varValue[i].c_str());
             isDefault_updateRateLambda0 = false;
-        } else if (varName[i] == "updateRateLambdaShift") {
-            _updateRateLambdaShift  = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateRateLambdaShift") {
+            _updateRateLambdaShift  = atof(_varValue[i].c_str());
             isDefault_updateRateLambdaShift = false;
-        } else if (varName[i] == "updateRateMu0") {
-            _updateRateMu0  = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateRateMu0") {
+            _updateRateMu0  = atof(_varValue[i].c_str());
             isDefault_updateRateMu0 = false;
-        } else if (varName[i] == "updateRateMuShift") {
-            _updateRateMuShift  = atof(varValue[i].c_str());
+        } else if (_varName[i] == "updateRateMuShift") {
+            _updateRateMuShift  = atof(_varValue[i].c_str());
             isDefault_updateRateMuShift = false;
-        } else if (varName[i] == "initialNumberEvents") {
-            _initialNumberEvents  = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "initialNumberEvents") {
+            _initialNumberEvents  = atoi(_varValue[i].c_str());
             isDefault_initialNumberEvents = false;
-        } else if (varName[i] == "loadEventData" ) {
-            _loadEventData = stringToBool(varValue[i].c_str());
+        } else if (_varName[i] == "loadEventData" ) {
+            _loadEventData = stringToBool(_varValue[i].c_str());
             isDefault_loadEventData = false;
-        } else if (varName[i] == "eventDataInfile") {
-            _eventDataInfile = varValue[i].c_str();
+        } else if (_varName[i] == "eventDataInfile") {
+            _eventDataInfile = _varValue[i].c_str();
             isDefault_eventDataInfile = false;
-        } else if (varName[i] == "minCladeSizeForShift") {
-            _minCladeSizeForShift = atoi(varValue[i].c_str());
+        } else if (_varName[i] == "minCladeSizeForShift") {
+            _minCladeSizeForShift = atoi(_varValue[i].c_str());
             isDefault_minCladeSizeForShift = false;
-        } else {
+        } else if (_varName[i] == "modeltype"){
+			// Do nothing. This is 
+			// already handled in initializeSettings() general function.
+		}else {
             // Parameter not found:
             //      add to list of potentially bad/misspelled params
             //      and print for user.
-            paramsNotFound.push_back(varName[i]);
+            paramsNotFound.push_back(_varName[i]);
         }
 
     }
 
-    std::cout << "Read a total of <<" << varName.size() <<
+    std::cout << "Read a total of <<" << _varName.size() <<
          ">> parameter settings from control file" << std::endl;
     if (paramsNotFound.size() > 0) {
         std::cout << std::endl << "********************************" << std::endl;
@@ -837,7 +806,7 @@ void Settings::initializeSettings(std::string controlFilename)
 }
 
 
-void Settings::checkAreInitialSettingsValid(void)
+void Settings::checkAreInitialSettingsValid_Diversification(void)
 {
 
     std::cout << "currently does not check for valid settings" << std::endl;
@@ -847,7 +816,7 @@ void Settings::checkAreInitialSettingsValid(void)
 
 
 
-void Settings::checkAreTraitInitialSettingsValid(void)
+void Settings::checkAreInitialSettingsValid_Traits(void)
 {
 
 
@@ -959,7 +928,7 @@ bool Settings::stringToBool(const char* x)
 }
 
 
-void Settings::printCurrentSettings(bool printOnlyChangesToDefaults)
+void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefaults)
 {
 
     int ppw = 29;
@@ -1189,22 +1158,18 @@ void Settings::printCurrentSettings(bool printOnlyChangesToDefaults)
 }
 
 
-/*
 
- This (or another function) needs to be re-written to deal with potential input files
- for TRAIT analysis versus SPECIATION-EXTINCTION analysis.
-
- */
-
-void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrings,
-                                     std::string modeltype)
+void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrings)
 {
 
-
     std::vector<std::string> badFlags;
-    int i = 0;
-    while (i + 1 != argc) {
+
+    for (std::vector<std::string>::size_type i = 0; i < (std::vector<std::string>::size_type)argc; i++) {
         if (instrings[i] == "-control") {
+			if (instrings.size() == ( i - 1)){
+				std::cout << "Error: no controfile specified" << std::endl;
+				std::cout << "Exiting\n\n" << std::endl;
+			}
             std::string controlfile = instrings[i + 1];
             std::cout << "\n\nInitializing BAMM using control file <<" << controlfile << ">>" <<
                  std::endl;
@@ -1214,15 +1179,9 @@ void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrin
                 std::cout <<  "specified directory. Exiting BAMM" << std::endl << std::endl;
                 exit(1);
             } else {
-                if (modeltype == "speciationextinction")
-                    initializeSettings(controlfile);
-                else if (modeltype == "trait")
-                    trait_initializeSettings(controlfile);
-                else
-                    std::cout << "Unsupported modeltype in Settings::parseCommandLineInput" << std::endl;
-
-                break; // exit for loop if initialized with controlfile...
+                initializeSettingsDevel(controlfile);
             }
+
         } else {
             if (i != 0) {
                 // If i == 0, we just assume that this is either (i) the path to the executable
@@ -1231,11 +1190,12 @@ void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrin
                 //  not be a valid flag...
                 badFlags.push_back(instrings[i]);
             }
-            i++;
+ 
         }
 
     }
 
+	
     if (areAllParametersSetToDefaults()) {
         std::cout << "Failed to initialize parameter values\nExiting BAMM" << std::endl;
         exit(1);

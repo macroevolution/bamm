@@ -1,4 +1,5 @@
 treefile = ../examples/diversification/whales/whaletree.tre
+modeltype = speciationextinction
 sampleFromPriorOnly = 0
 runMCMC = 1
 loadEventData = 0
