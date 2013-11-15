@@ -283,6 +283,14 @@ public:
 
     int getMinCladeSizeForShift();
     int getSeed();
+	
+	// Functions to set MCMC operators for autotuning:
+	void setUpdateLambdaInitScale(double x);
+	void setUpdateMuInitScale(double x);
+	void setUpdateLambdaShiftScale(double x);
+	void setMeanSpeciationLengthFraction(double x);
+	void setUpdateEventRateScale(double x);
+	
 
     // Class MCMC parameters:
     std::string getMCMCoutfile();
@@ -765,6 +773,27 @@ inline std::string Settings::getModeltype()
 {
 	return _modeltype;
 }
+
+inline void Settings::setUpdateLambdaInitScale(double x){
+	_updateLambdaInitScale = x;
+}
+
+inline void Settings::setUpdateMuInitScale(double x){
+	_updateMuInitScale = x;
+}
+
+inline void Settings::setUpdateLambdaShiftScale(double x){
+	_updateLambdaShiftScale = x;
+}
+
+inline void Settings::setMeanSpeciationLengthFraction(double x){
+	_MeanSpeciationLengthFraction = x;
+}
+
+inline void Settings::setUpdateEventRateScale(double x){
+	_updateEventRateScale = x;
+}
+
 
 
 #endif
