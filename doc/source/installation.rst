@@ -9,10 +9,12 @@ Installation
        tar -xzf bamm-1.0.tar.gz
 
 3. This will create the directory bamm-1.0.
-   Go into this directory and compile the programs as follows::
+   Go into this directory and compile the program as follows::
 
        cd bamm-1.0
-       . makebamm.sh
-       . makebammtrait.sh
+       make
 
-4. This will create two executable files: ``bamm`` and ``bammtrait``.
+4. This will create the directory build. 
+   Within the build directory is an executable::
+
+       bamm
