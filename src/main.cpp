@@ -19,8 +19,8 @@
 #include "TraitModel.h"
 
 void usage () {
-    std::cout << "Program usage:" << std::endl;
-    std::cout << "\t./bamm (speciationextinction|trait) -control control_filename" << std::endl<< std::endl;
+    std::cout << std::endl << "Program usage:" << std::endl;
+    std::cout << "./bamm (speciationextinction|trait) -control control_filename" << std::endl<< std::endl;
 }
 
 int main (int argc, char* argv[])
