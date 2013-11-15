@@ -3,8 +3,8 @@
  *  rateshiftcombined
  *
  *  Created by Dan Rabosky on 2/6/12.
-  *
- */
+ *
+*/
 
 
 #include <iostream>
@@ -31,8 +31,8 @@ Settings::Settings(void)
     _treefile = "EMPTY_STRING";
     _sampleProbsFilename = "EMPTY_STRING";
     _eventDataInfile = "EMPTY_STRING";
-	_modeltype = "EMPTY_STRING";
-	
+    _modeltype = "EMPTY_STRING";
+    
     _runTraitModel = false;
     _runSpeciationExtinctionModel = false;
     _sampleFromPriorOnly = false;
@@ -63,6 +63,8 @@ Settings::Settings(void)
     _segLength = 0.0;
 
     _minCladeSizeForShift = 1;
+    
+    _seed = -1;
 
     // Parameters for implementation of class MCMC:
     _mcmcOutfile            =       "BAMM_mcmc_out.txt";
@@ -94,7 +96,7 @@ Settings::Settings(void)
     /*******************************************/
     // Set Boolean indicator variables to track
     //   changes to default parameters:
-	isDefault_modeltype									= true;
+    isDefault_modeltype                                    = true;
     isDefault_treefile                                  = true;
     isDefault_runTraitModel                             = true;
     isDefault_runSpeciationExtinctionModel              = true;
@@ -146,6 +148,7 @@ Settings::Settings(void)
 
     isDefault_eventDataInfile                           = true;
     isDefault_minCladeSizeForShift                      = true;
+    isDefault_seed                                      = true;
 
     // End block of Booleans
     /*******************************************/
@@ -193,8 +196,6 @@ Settings::~Settings(void)
 {
 
 
-
-
 }
 
 
@@ -206,37 +207,37 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
         std::cout << "Exiting." << std::endl;
         throw;
     }
-	
+    
     std::cout << "Reading control file <<" << controlFilename.c_str() << ">>" << std::endl;
 
-	std::string s1, s2;
-	
+    std::string s1, s2;
+    
     while (infile) {
-		getline(infile, s1, '\n');
-		
+        getline(infile, s1, '\n');
+        
         if (s1[0] == '#')
-			continue;
-		
+            continue;
+        
         // strip whitespace out of tempstring:
         //      both spaces and tabs:
-		
+        
         // What is the int(*)(int) doing????
         s1.erase(std::remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
-		
+        
         //tempstring.erase(remove_if(tempstring.begin(), tempstring.end(), isspace), tempstring.end());
-		
-		
+        
+        
         // Only add if has size > 0 (gets rid of empty lines)
         if (s1.size() > 0) {
             std::vector<std::string> tmpstr;
-			
+            
             // NOw use second getline to split by '=' characters:
 
             std::istringstream stemp(s1);
 
             while (getline(stemp, s2, '=')){
-				tmpstr.push_back(s2);		
-			}
+                tmpstr.push_back(s2);        
+            }
 
             if (tmpstr.size() == 2) {
                 _varName.push_back(tmpstr[0]);
@@ -244,32 +245,32 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
             } else
                 std::cout << "Invalid size of input line in control file" << std::endl;
         }
-		
+        
         if (infile.peek() == EOF)
             break;
     }
-	
-	for (std::vector<std::string>::size_type i = 0; i < _varName.size(); i++){
-		//std::cout << _varName[i] << std::endl;
-		if (_varName[i] == "modeltype"){
-			_modeltype = _varValue[i];
-			isDefault_modeltype = false;
-		}
-	}
-	
-	if (_modeltype == "EMPTY_STRING"){
+    
+    for (std::vector<std::string>::size_type i = 0; i < _varName.size(); i++){
+        //std::cout << _varName[i] << std::endl;
+        if (_varName[i] == "modeltype") {
+            _modeltype = _varValue[i];
+            isDefault_modeltype = false;
+        }
+    }
+    
+    if (_modeltype == "EMPTY_STRING") {
         std::cout << "Invalid type of analysis" << std::endl;
         std::cout << "Options: speciationextinction or trait" << std::endl;
-        throw;	
-	}else if (_modeltype == "speciationextinction"){
-		initializeSettings_Diversification();
-	}else if (_modeltype == "trait"){
-		initializeSettings_Traits();
-	}else{
-	
-		throw;
-	}
-	
+        throw;    
+    } else if (_modeltype == "speciationextinction") {
+        initializeSettings_Diversification();
+    } else if (_modeltype == "trait") {
+        initializeSettings_Traits();
+    } else {
+    
+        throw;
+    }
+    
 }
 
 
@@ -557,9 +558,9 @@ void Settings::initializeSettings_Traits()
             _eventDataInfile = _varValue[i].c_str();
             isDefault_eventDataInfile = false;
         } else if (_varName[i] == "modeltype"){
-			// Do nothing. This is 
-			// already handled in initializeSettings() general function.
-		}else {
+            // Do nothing. This is 
+            // already handled in initializeSettings() general function.
+        }else {
             // Parameter not found:
             //      add to list of potentially bad/misspelled params
             //      and print for user.
@@ -766,9 +767,12 @@ void Settings::initializeSettings_Diversification()
             _minCladeSizeForShift = atoi(_varValue[i].c_str());
             isDefault_minCladeSizeForShift = false;
         } else if (_varName[i] == "modeltype"){
-			// Do nothing. This is 
-			// already handled in initializeSettings() general function.
-		}else {
+            // Do nothing. This is 
+            // already handled in initializeSettings() general function.
+        } else if (_varName[i] == "seed") {
+            _seed = atoi(_varValue[i].c_str());
+            isDefault_seed = false;
+        } else {
             // Parameter not found:
             //      add to list of potentially bad/misspelled params
             //      and print for user.
@@ -786,12 +790,12 @@ void Settings::initializeSettings_Diversification()
         std::cout << "\tto valid model parameters.";
         std::cout << "Check the following to see if they are ";
         std::cout << "\tspecified (or spelled) correctly:" << std::endl << std::endl;
-        for (std::vector<std::string>::size_type i = 0; i < paramsNotFound.size(); i++)
+        for (std::vector<std::string>::size_type i = 0; i < paramsNotFound.size(); i++) {
             std::cout << std::setw(30) << paramsNotFound[i] << std::endl;
+        }
         std::cout << std::endl << "********************************" << std::endl << std::endl;
         std::cout << "Execution of BAMM terminated..." << std::endl;
         exit(1);
-
     }
 
     //  Here we have a print block to output Settings:
@@ -801,7 +805,6 @@ void Settings::initializeSettings_Diversification()
     //      from the defaults, eg inputfilename etc.
 
     //  Output list of default parameters.
-
 
 }
 
@@ -818,8 +821,6 @@ void Settings::checkAreInitialSettingsValid_Diversification(void)
 
 void Settings::checkAreInitialSettingsValid_Traits(void)
 {
-
-
     std::vector<std::string> paramsNotSpecified;
 
     if (isDefault_traitfile)
@@ -932,8 +933,6 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
 {
 
     int ppw = 29;
-
-
 
     std::cout << "*****************************************************" << std::endl;
     std::cout << "Current parameter settings: " << std::endl;
@@ -1064,6 +1063,9 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
         if (!isDefault_minCladeSizeForShift)
             std::cout << std::right << std::setw(ppw) << "minCladeSizeForShift" << "\t\t" <<
                  _minCladeSizeForShift << std::endl;
+        if (!isDefault_seed)
+            std::cout << std::right << std::setw(ppw) << "seed" << "\t\t" <<
+                 _seed << std::endl;
 
     } else {
         std::cout << "\tPrinting ALL parameter settings " << std::endl;
@@ -1144,6 +1146,8 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
              _initialNumberEvents << std::endl;
         std::cout << std::right << std::setw(ppw) << "minCladeSizeForShift" << "\t\t" <<
              _minCladeSizeForShift << std::endl;
+        std::cout << std::right << std::setw(ppw) << "seed" << "\t\t" <<
+             _seed << std::endl;
 
     }
 
@@ -1166,10 +1170,10 @@ void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrin
 
     for (std::vector<std::string>::size_type i = 0; i < (std::vector<std::string>::size_type)argc; i++) {
         if (instrings[i] == "-control") {
-			if (instrings.size() == ( i - 1)){
-				std::cout << "Error: no controfile specified" << std::endl;
-				std::cout << "Exiting\n\n" << std::endl;
-			}
+            if (instrings.size() == ( i - 1)){
+                std::cout << "Error: no controfile specified" << std::endl;
+                std::cout << "Exiting\n\n" << std::endl;
+            }
             std::string controlfile = instrings[i + 1];
             std::cout << "\n\nInitializing BAMM using control file <<" << controlfile << ">>" <<
                  std::endl;
@@ -1192,16 +1196,12 @@ void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrin
             }
  
         }
-
     }
 
-	
     if (areAllParametersSetToDefaults()) {
         std::cout << "Failed to initialize parameter values\nExiting BAMM" << std::endl;
         exit(1);
-
     }
-
 }
 
 

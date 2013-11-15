@@ -5,7 +5,7 @@
  *  Created by Dan Rabosky on 6/9/12.
  *  Copyright 2012 DLR. All rights reserved.
  *
- */
+*/
 
 #ifndef Settings_H
 #define Settings_H
@@ -65,7 +65,9 @@ private:
     double _segLength; // Parm for splitting branches
 
     int _minCladeSizeForShift;
-
+	
+	int _seed;
+	
     // Class MCMC parameters::General
     std::string _mcmcOutfile;
     std::string _lambdaOutfile;
@@ -188,6 +190,8 @@ private:
     bool isDefault_updateRateNumberTimeVariablePartitions;
 
     bool isDefault_minCladeSizeForShift;
+    
+    bool isDefault_seed;
 
     /* specific to trait evolution */
     bool isDefault_traitfile;
@@ -278,6 +282,7 @@ public:
     double getSegLength();
 
     int getMinCladeSizeForShift();
+    int getSeed();
 
     // Class MCMC parameters:
     std::string getMCMCoutfile();
@@ -509,6 +514,11 @@ inline double Settings::getSegLength()
 inline int Settings::getMinCladeSizeForShift()
 {
     return _minCladeSizeForShift;
+}
+
+inline int Settings::getSeed()
+{
+    return _seed;
 }
 
 
@@ -755,7 +765,6 @@ inline std::string Settings::getModeltype()
 {
 	return _modeltype;
 }
-
 
 
 #endif
