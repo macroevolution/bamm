@@ -10,7 +10,9 @@ by a discrete number of evolutionary events.
 For example, an event may be a change in speciation rate
 or a change in the rate of body size evolution.
 BAMM assumes that events occur across the branches
-of a phylogenetic tree under a compound Poisson process.
+of a phylogenetic tree under a compound Poisson process. The method can be used
+to quantify complex mixtures of time-dependent, diversity-dependent, and constant-rate
+diversification processes.
 
 .. figure:: normal.png
    :width: 640
