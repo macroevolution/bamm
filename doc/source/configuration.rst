@@ -284,7 +284,7 @@ Output
 ......
 
 betaOutfile
-  The file name in which to write the phenotypic rates.
+  The file name in which to write the phenotypic rates as newick-formatted trees where the branches are scaled to the rate of phenotypic evolution.
 
 nodeStateOutfile
   *Description not yet available.*
