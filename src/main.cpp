@@ -22,12 +22,6 @@
 #include "TraitModel.h"
 
 
-// Specify the type of BAMM run at compile-time
-//#define BUILD_TYPE_DEFAULT "speciationextinction"
-#define BUILD_TYPE_DEFAULT "trait"
-
-
-
 int main (int argc, char* argv[])
 {
 
@@ -41,7 +35,7 @@ int main (int argc, char* argv[])
     //}
 
 
-    std::string modeltype = BUILD_TYPE_DEFAULT;
+    std::string modeltype = std::string(argv[1]);
     //std::string modeltype = "trait";
 
     MbRandom myRNG;
@@ -64,7 +58,9 @@ int main (int argc, char* argv[])
             // IF > 1 things read assume other args:
             std::vector<std::string> instrings;
             for (int i = 0; i < argc; i++)
-                instrings.push_back(argv[i]);
+                if (i != 1) // skip trait or speciationextinction option
+                    instrings.push_back(argv[i]);
+            argc--;
             mySettings.parseCommandLineInput(argc, instrings, modeltype);
         } else {
             std::cout << "Uninterpretable input. Exiting BAMM." << std::endl;
@@ -136,7 +132,9 @@ int main (int argc, char* argv[])
             // IF > 1 things read assume other args:
             std::vector<std::string> instrings;
             for (int i = 0; i < argc; i++)
-                instrings.push_back(argv[i]);
+                if (i != 1) // skip trait or speciationextinction option
+                    instrings.push_back(argv[i]);
+            argc--;
 
 
             mySettings.parseCommandLineInput(argc, instrings, modeltype);
