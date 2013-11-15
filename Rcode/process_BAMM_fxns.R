@@ -12,7 +12,7 @@
 #							Uses fraction (e.g, 0.25 = 25% discarded)
 #	type				=	specifies whether eventfilename refers to trait or diversification data
 #	header				=	Boolean to flag whether eventfilename contains a header
-getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=F, assign.type = 'new_way', type = 'diversification', header=TRUE){
+getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=FALSE, assign.type = 'new_way', type = 'diversification', header=TRUE){
 	
 	if (type != 'diversification' & type != 'traits'){
 		stop("Invalid 'type' specification. Should be 'diversification' or 'traits'");
@@ -33,7 +33,7 @@ getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=
 	tipLambda 	<- list();
  
 	cat("Reading event datafile: ", eventfilename, "\n\t\t...........");
- 	x <- read.csv(eventfilename, header=header, stringsAsFactors=F);
+ 	x <- read.csv(eventfilename, header=header, stringsAsFactors=FALSE);
  	uniquegens <- sort(unique(x[,1]));
  	cat("\nRead a total of ", length(uniquegens), " samples from posterior\n");
  	
@@ -107,7 +107,7 @@ getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=
 		}
 		
 		# make a dataframe:
-		dftemp <- data.frame(node=nodeVec, time=tm, lam1=lam1, lam2=lam2, mu1=mu1, mu2=mu2, stringsAsFactors=F);
+		dftemp <- data.frame(node=nodeVec, time=tm, lam1=lam1, lam2=lam2, mu1=mu1, mu2=mu2, stringsAsFactors=FALSE);
 		
 		
 		dftemp <- dftemp[order(dftemp$time), ];
@@ -260,24 +260,25 @@ exponentialRate <- Vectorize(exponentialRate);
 
 #############################################################
 #
-#	getMeanNetDivRate(....)
+#	getMeanTipRateStates(....)
 #
-# returns matrix with mean net diverisification rates at tip of tree
-#	use.names=T returns a named vector
+# returns vector of mean tip states (either net diversification rate or brownian motion
+#	rate parameter depending on the 'type' of ephy).
+#	use.names=TRUE returns a named vector
 
-getMeanNetDivRate <- function(ephy, use.names = FALSE){
+getMeanTipRateStates <- function(ephy, use.names = FALSE){
 	
 	if (!'bamm-data' %in% class(ephy)){
 		stop("Object ephy must be of class bamm-data\n");
 	}
 
-	if (use.names == F){
+	if (use.names == FALSE){
 		return(ephy$meanTipLambda - ephy$meanTipMu);
 	}
-	if (use.names == T){
-		tmp <- ephy$meanTipLambda - ephy$meanTipMu;
-		names(tmp) <- ephy$tip.label;
-		return(tmp);
+	else{
+		ret <- ephy$meanTipLambda - ephy$meanTipMu;
+		names(ret) <- ephy$tip.label;
+		return(ret);
 	}
 }
 
