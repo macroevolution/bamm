@@ -3,10 +3,7 @@
 
  This version of BAMM does speciation-extinction and trait evolution.
 
-
- */
-
-
+*/
 
 #include <iostream>
 #include <fstream>
@@ -21,6 +18,10 @@
 #include "TraitMCMC.h"
 #include "TraitModel.h"
 
+void usage () {
+    std::cout << std::endl << "Program usage:" << std::endl;
+    std::cout << "./bamm (speciationextinction|trait) -control control_filename" << std::endl<< std::endl;
+}
 
 int main (int argc, char* argv[])
 {
@@ -34,13 +35,21 @@ int main (int argc, char* argv[])
     //  std::cout << argc << "\t" << argv[i] << std::endl;
     //}
 
-
+    if (argc == 1) {
+        usage();
+        exit(0);
+    }
+    
     std::string modeltype = std::string(argv[1]);
     //std::string modeltype = "trait";
+    
+    if (modeltype == "-h" || modeltype == "h" || modeltype == "help" || modeltype == "-help") {
+        usage();
+        exit(0);
+    }
 
     MbRandom myRNG;
     Settings mySettings;
-
 	for (int i = 0; i < 20; i++)
 		std::cout << "#";
 	
@@ -88,17 +97,18 @@ int main (int argc, char* argv[])
             intree.initializeSpeciationExtinctionModel(mySettings.getSampleProbsFilename());
             //throw;
         }
-		
+        
 		intree.setCanNodeHoldEventByDescCount(mySettings.getMinCladeSizeForShift());
 		intree.setTreeMap(intree.getRoot());
 		if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
+
             Model myModel(&myRNG, &intree, &mySettings);
             std::cout << "Initializing model but not running MCMC" << std::endl;
 			
         } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
             Model myModel(&myRNG, &intree, &mySettings);
             MCMC myMCMC(&myRNG, &myModel, &mySettings);
-			
+
         } else
             std::cout << "Unsupported option in main....\n" << std::endl;	
 		
@@ -108,11 +118,13 @@ int main (int argc, char* argv[])
             std::cout << "#";
 		std::cout << "Initializing phenotypic evolution (trait) model " << std::endl;
 		mySettings.checkAreInitialSettingsValid_Traits();
+
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
 		
         intree.setAllNodesCanHoldEvent();
         intree.setTreeMap(intree.getRoot());
+
 		intree.getPhenotypesMissingLatent(mySettings.getTraitFile());
 		intree.initializeTraitValues();
 		
@@ -125,7 +137,6 @@ int main (int argc, char* argv[])
             std::cout << "Initializing model and MCMC chain" << std::endl;
             TraitModel myModel(&myRNG, &intree, &mySettings);
             TraitMCMC myMCMC(&myRNG, &myModel, &mySettings);
-
         }	
 
 	}else if (mySettings.getModeltype() == "EMPTY_STRING"){
@@ -141,9 +152,6 @@ int main (int argc, char* argv[])
 	}
 	
 
+
     return 0;
 }
-
-
-
-

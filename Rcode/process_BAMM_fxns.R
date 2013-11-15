@@ -1,7 +1,7 @@
 
 #############################################################
 #
-#	getEventDataDiversification(....)
+#	getEventData(....)
 #
 #	eventfilename		=	file where event data are stored, in bamm output format
 #	nsamples			=	number of samples from posterior to include. 
@@ -10,9 +10,13 @@
 #	verbose				=	Verbose print output for bug tracking
 #	burnin				=	How many samples from posterior to discard
 #							Uses fraction (e.g, 0.25 = 25% discarded)
-
-getEventDataDiversification <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=F, assign.type = 'new_way'){
+#	type				=	specifies whether eventfilename refers to trait or diversification data
+#	header				=	Boolean to flag whether eventfilename contains a header
+getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=F, assign.type = 'new_way', type = 'diversification', header=TRUE){
 	
+	if (type != 'diversification' & type != 'traits'){
+		stop("Invalid 'type' specification. Should be 'diversification' or 'traits'");
+	}
 	
 	if (any(is.null(c(phy$begin, phy$end)))){
 		phy <- getStartStopTimes(phy);
@@ -27,17 +31,17 @@ getEventDataDiversification <- function(phy, eventfilename, burnin=0, nsamples =
 	eventBranchSegs <- list();
 	
 	tipLambda 	<- list();
-	tipMu 		<- list();
-	
- 	meanTipLambda <- numeric(length(phy$tip.label));
- 	meanTipMu <- numeric(length(phy$tip.label));
  
 	cat("Reading event datafile: ", eventfilename, "\n\t\t...........");
- 	x <- read.csv(eventfilename, header=F, stringsAsFactors=F);
+ 	x <- read.csv(eventfilename, header=header, stringsAsFactors=F);
  	uniquegens <- sort(unique(x[,1]));
  	cat("\nRead a total of ", length(uniquegens), " samples from posterior\n");
  	
  	samplestart <- uniquegens[floor(burnin*length(uniquegens))];
+ 	if(!length(samplestart))
+ 	{
+ 		samplestart <- 0;
+ 	}
  	uniquegens <- uniquegens[uniquegens >= samplestart];
  
  	if (is.null(nsamples)){
@@ -59,6 +63,9 @@ getEventDataDiversification <- function(phy, eventfilename, burnin=0, nsamples =
  		phy <- getRecursiveSequence(phy);
  	cat('\nDone with recursive sequence\n\n');
  
+	meanTipMu <- numeric(length(phy$tip.label));
+	
+ 	meanTipLambda <- numeric(length(phy$tip.label)); 
  
  	for (i in 1:length(goodsamples)){
   		
@@ -67,14 +74,21 @@ getEventDataDiversification <- function(phy, eventfilename, burnin=0, nsamples =
 		if (verbose)
 			cat('Processing event: ', i, '\n');		
  
-		t1 <- tmpEvents[,2];
 		t1 <- tmpEvents[,2]; # desc 1
  		t2 <- tmpEvents[,3]; # desc 2
  		tm <- tmpEvents[,4]; # abs time of event
  		lam1 <- tmpEvents[,5]; # lambda parameter 1
  		lam2 <- tmpEvents[,6]; # lambda parameter 2
- 		mu1 <- tmpEvents[, 7]; # mu parameter 1
- 		mu2 <- tmpEvents[, 8]; #mu parameter 2 
+ 		if(type == 'diversification'){
+			mu1 <- tmpEvents[, 7]; # mu parameter 1
+ 			mu2 <- tmpEvents[, 8]; #mu parameter 2 
+		}
+		else{ #for bamm trait data we set the mu columns to zero because those params don't exist
+			mu1 <- rep(0, nrow(tmpEvents)); 
+ 			mu2 <- rep(0, nrow(tmpEvents)); 
+		}
+		tipMu <- list();	
+		
  		
  		# Get subtending node for each event:
  		nodeVec <- numeric(nrow(tmpEvents));
@@ -94,6 +108,8 @@ getEventDataDiversification <- function(phy, eventfilename, burnin=0, nsamples =
 		
 		# make a dataframe:
 		dftemp <- data.frame(node=nodeVec, time=tm, lam1=lam1, lam2=lam2, mu1=mu1, mu2=mu2, stringsAsFactors=F);
+		
+		
 		dftemp <- dftemp[order(dftemp$time), ];
 		dftemp$index <- 1:nrow(dftemp);
 		rownames(dftemp) <- NULL;
@@ -119,7 +135,6 @@ getEventDataDiversification <- function(phy, eventfilename, burnin=0, nsamples =
 					tphy$statevec[isDescendantNode] <- k;
 				}
 							
-				
 			}
 
 		}
@@ -176,8 +191,9 @@ getEventDataDiversification <- function(phy, eventfilename, burnin=0, nsamples =
 		tiplam <- dftemp$lam1[tipstates] * exp(dftemp$lam2[tipstates] * (stoptime - dftemp$time[tipstates]));
 		tipmu <- dftemp$mu1[tipstates];
 		
-		#meanTipLambda <- meanTipLambda + tiplam;
-		#meanTipMu <- meanTipMu + tipmu;
+		meanTipMu <- meanTipMu + tipmu/nsamples;
+		meanTipLambda <- meanTipLambda + tiplam/nsamples;
+		
 		
 		
 		### List assignments and metadata across all events:
@@ -188,7 +204,6 @@ getEventDataDiversification <- function(phy, eventfilename, burnin=0, nsamples =
 		
 		tipLambda[[i]] <- tiplam;
 		tipMu[[i]] <- tipmu;	
- 	
  	}
  	
 	phy$numberEvents <- numberEvents;
@@ -196,16 +211,21 @@ getEventDataDiversification <- function(phy, eventfilename, burnin=0, nsamples =
 	phy$eventVectors <- eventVectors;
 	phy$tipStates <- tipStates;
 	phy$tipLambda <- tipLambda;
-	phy$tipMu <- tipMu;
-	phy$meanTipLambda <- meanTipLambda / length(x);
-	phy$meanTipMu <- meanTipMu / length(x);
+	phy$meanTipLambda <- meanTipLambda;
 	phy$eventBranchSegs <- eventBranchSegs; 	
+	phy$tipMu <- tipMu;
+	phy$meanTipMu <- meanTipMu;
+	if(type == 'diversification'){	
+		phy$type = 'diversification';
+	}
+	else{
+		phy$type = 'traits';	
+	}
  	
 	# Inherits attributes of class phylo
 	# plus adds new class: bamm-data
 	class(phy) <- c('phylo', 'bamm-data');
 	return(phy);
-
 }
 
 #############################################################
@@ -238,39 +258,27 @@ exponentialRate <- function(t1, p1, p2){
 exponentialRate <- Vectorize(exponentialRate);
 
 
-
 #############################################################
 #
-#	getEventDataTraits(....)
+#	getMeanNetDivRate(....)
 #
-#	Returns class bamm-data object
+# returns matrix with mean net diverisification rates at tip of tree
+#	use.names=T returns a named vector
 
-getEventDataTraits <- function(){
+getMeanNetDivRate <- function(ephy, use.names = FALSE){
 	
-}
+	if (!'bamm-data' %in% class(ephy)){
+		stop("Object ephy must be of class bamm-data\n");
+	}
 
-
-
-#############################################################
-#
-#	getMeanTipDiversification(....)
-#
-# returns matrix with mean diversification rates at tip of tree
-
-getMeanTipDiversification <- function(){
-	
-	
-	
-	
-}
-
-#############################################################
-#
-#	getMeanTipRatePhenotypic(....)
-#
-getMeanTipRatePhenotypic <- function(){
-	
-	
+	if (use.names == F){
+		return(ephy$meanTipLambda - ephy$meanTipMu);
+	}
+	if (use.names == T){
+		tmp <- ephy$meanTipLambda - ephy$meanTipMu;
+		names(tmp) <- ephy$tip.label;
+		return(tmp);
+	}
 }
 
 #############################################################
@@ -341,8 +349,6 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 		stop("Object ephy must be of class bamm-data\n");
 	}
 	
-	
-	
 	if (is.null(node)){
 		nodeset <- ephy$edge[,2];
 	}else if (!is.null(node) & nodetype == 'include'){
@@ -386,7 +392,6 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 			tvv <- tvec[k] - events$time[estemp[,4]];
 			rates <- exponentialRate(tvv, events$lam1[estemp[,4]], events$lam2[estemp[,4]]);
 			mm[i, k] <- mean(rates);
-
 			mumat[i,k] <- mean(events$mu1[estemp[,4]]);	
 		}
 		
@@ -398,7 +403,12 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 	obj$times <- tvec;
 	
 	class(obj) <- 'bamm-ratematrix';
-	obj$type = 'diversification';
+	if(ephy$type=='diversification'){
+		obj$type = 'diversification';
+	}
+	else{
+		obj$type = 'traits';	
+	}
 	return(obj);
 }
 
@@ -575,15 +585,15 @@ timeIntegratedBranchRate <- Vectorize(timeIntegratedBranchRate);
 #########
 #############################################################
 #
-#	getMarginalBranchRateMatrixDiversification(....)
+#	getMarginalBranchRateMatrix(....)
 #
 #	get matrix of marginal rates on each branch for each sample from posterior
 # 	
 #	BAMM also can directly ouput these marginal rates,
 #		so worth having a second function that works directly
 #		with the BAMM output file, as it is much faster.
-#	
-getMarginalBranchRateMatrixDiversification <- function(ephy, verbose=F){
+#	getMarginalBranchRateMatrix
+getMarginalBranchRateMatrix <- function(ephy, verbose=F){
 	
 	if (!'bamm-data' %in% class(ephy)){
 		stop("Object ephy must be of class bamm-data\n");
@@ -755,14 +765,14 @@ getSampleCoMat <- function(phylist, modeltree){
 #
 #	This version computes for individual species
 #
-getSpeciesDiversificationRateThroughTime <- function(ephy, start.time, nbreaks=10, ndr=TRUE, species){
+getSpeciesRateThroughTime <- function(ephy, start.time, nbreaks=10, ndr=TRUE, species){
 
 	if (!'bamm-data' %in% class(ephy)){
 		stop("Object ephy must be of class bamm-data\n");
 	}
 		
 	tend <- max(branching.times(ephy))*0.999;
-	tstart <- tend - start.time;
+	tstart <- start.time #tend - start.time;
 	tseq <- seq(tstart, tend, length.out=nbreaks);
  
 	res <- numeric(nbreaks);
@@ -804,7 +814,7 @@ getSpeciesDiversificationRateThroughTime <- function(ephy, start.time, nbreaks=1
 
 #############################################################
 #
-#	getBySpeciesDiversificationMatrix <- function(...)
+#	getBySpeciesRateMatrix <- function(...)
 #
 #	Start time: how many time units before present to include
 #	nbreaks: how many time points to compute the rate
@@ -813,7 +823,7 @@ getSpeciesDiversificationRateThroughTime <- function(ephy, start.time, nbreaks=1
 #	
 #	node argument will just compute for the subtree descended from "node"
 
-getBySpeciesDiversificationMatrix <- function(ephy, start.time, nbreaks, ndr=T, node){
+getBySpeciesRateMatrix <- function(ephy, start.time, nbreaks, ndr=TRUE, node){
 	
 	
 	spset <- ephy$tip.label;
@@ -821,7 +831,7 @@ getBySpeciesDiversificationMatrix <- function(ephy, start.time, nbreaks, ndr=T, 
 	mm <- matrix(NA, nrow=length(spset), ncol=nbreaks);
 	for (i in 1:nrow(mm)){
 		#cat(spset[i], '\n')
-		mm[i,] <- getSpeciesDiversificationRateThroughTime(ephy, start.time, nbreaks, ndr, species=spset[i]);
+		mm[i,] <- getSpeciesRateThroughTime(ephy, start.time, nbreaks, ndr, species=spset[i]);
 	}
 	
 	rownames(mm) <- spset;

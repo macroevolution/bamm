@@ -13,6 +13,8 @@ BAMM Documentation
    introduction
    installation
    configuration
+   running
+   index
 
 
 

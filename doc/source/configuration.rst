@@ -15,9 +15,9 @@ parameter, an equal sign, and the value of the option or parameter::
     runMCMC = 1
 
 The path of the control file (relative to the current directory) is specified
-with the flag ``-control`` when running bamm::
+with the flag ``-control`` when running bamm. For example::
 
-    ./bamm -control divcontrol.txt
+    ./bamm speciationextinction -control divcontrol.txt
 
 
 Global Options and Parameters
@@ -26,13 +26,14 @@ Global Options and Parameters
 The following describes the configuration options and parameters
 that are required regardless of the specific model used.
 For true or false values, 1 is used for true and 0 is used for false.
-All file paths are relative to the current directory.
+Files will be relative to the current directory unless otherwise
+specified by the user.
 
 General
 .......
 
 treefile
-  The file name of the input tree (in Newick format).
+  The file name of the input tree (in Newick format). For diversification analyses, this should be ultrametric.
 
 sampleFromPriorOnly
   If true (1), run BAMM by sampling from the prior only
@@ -54,7 +55,7 @@ initializeModel
 
 NumberGenerations
   Number of MCMC generations to run.
-
+  
 MCMC Tuning
 ...........
 
@@ -71,14 +72,14 @@ Priors
 ......
 
 targetNumber
-  Expeced number of "events" or rate shifts on the tree,
+  Expected number of "events" or rate shifts on the tree,
   if there is no signal in the data.
 
 Output
 ......
 
 mcmcOutfile
-  The file name in which to write the MCMC parameter output.
+  MCMC parameter output will be written to this file.
 
 acceptrateOutfile
   *Description not yet available.*
@@ -87,7 +88,7 @@ eventDataOutfile
   *Description not yet available.*
 
 treeWriteFreq
-  Frequency (in generations) in which to write speciation/extinction rates.
+  Frequency (in generations) of writing speciation/extinction rates to file.
   To avoid very large files, use a frequency of at least 10000.
 
 mcmcWriteFreq
@@ -100,19 +101,19 @@ acceptWriteFreq
   *Description not yet available.*
 
 printFreq
-  Frequency (in generations) in which to write to the screen.
+  Frequency (in generations) of printing output to the screen.
 
 Parameter Update Rates
 ......................
 
 updateRateEventNumber
-  Frequency in which to update the number of events (shifts) on the tree.
+  Frequency of updating the number of events (shifts) on the tree.
 
 updateRateEventPosition
-  Frequency in which to move the position of a shift point.
+  Frequency of moving the position of a shift point.
 
 updateRateEventRate
-  Frequency in which to update the rate at which events occur.
+  Frequency of updating the rate at which events occur.
 
 initialNumberEvents
   *Description not yet available.*
@@ -121,20 +122,21 @@ initialNumberEvents
 Speciation/Extinction Model
 ---------------------------
 
-The following describes the configuration options and parameters
-for the speciation/extinction model in BAMM.
-To use this model, run the executable called ``bamm``.
+The following describes configuration options and parameters
+specifically for speciation/extinction analyses.
 
 General
 .......
 
 useGlobalSamplingProbability
-  If true (1), use global correction for incomplete taxon sampling
-  in the likelihood calculation.
+  If true (1), will look for a global correction for incomplete sampling (globalSamplingProbability)
+  If false (0), will look for a file that specifies clade-specific corrections for incomplete sampling (sampleProbsFilename).
+  
+globalSamplingProbability
+  Percentage of total number of species sampled in your phylogeny (between 0 and 1).
 
-globalSamplingFraction
-  Fraction (0.0 - 1.0) of the total number of species in the clade
-  that are in the tree being analyzed.
+sampleProbsFilename
+  Specifies a file with clade-specific corrections for incomplete sampling.
 
 MCMC Tuning
 ...........
@@ -192,10 +194,10 @@ Output
 ......
 
 lambdaOutfile
-  The file name in which to write branch-specific speciation rates.
+  Branch-specific speciation rates will be written to this file.
 
 muOutfile
-  The file name in which to write branch-specific extinction rates.
+  Branch-specific extinction rates will be written to thie file.
 
 lambdaNodeOutfile
   *Description not yet available.*
@@ -217,17 +219,15 @@ Phenotypic Evolution Model
 --------------------------
 
 The following describes the configuration options and parameters
-for the phenotypic evolution model in BAMM.
+specifically for the phenotypic evolution model in BAMM.
 The parameter "beta" represents the rate of phenotypic evolution
 at any point in time.
-To use this model, run the executable called ``bammtrait``.
 
 General
 .......
 
 traitfile
-  The file name the trait data, relative to the current directory.
-  The traits must be continuous characters.
+  File that names the trait data. Traits must be continuous characters.
   Each line must have a species name and the corresponding trait,
   separated by a tab.
   No header row is permitted.

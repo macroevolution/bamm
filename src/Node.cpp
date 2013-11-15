@@ -8,7 +8,7 @@
 #include "Node.h"
 #include "BranchHistory.h"
 #include "TraitBranchHistory.h"
-#include "MbRandom.h"
+//#include "MbRandom.h"
 
 
 Node::Node(void)
