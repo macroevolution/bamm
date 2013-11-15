@@ -41,6 +41,10 @@ boolean to flag whether eventfilename contains a header.
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
+\item{edge}{Edge matrix of model tree}
+\item{Nnode}{Number of nodes in model tree}
+\item{tip.label}{}
+
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
