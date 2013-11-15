@@ -33,11 +33,11 @@ BranchEvent::BranchEvent(double speciation, double lamshift, double extinction,
     _muInit = extinction;
     _muShift = mushift;
 
-    if (tp->getRoot() == x)
+    if (tp->getRoot() == x) {
         _absTime = 0.0;
-    else
+    } else {
         _absTime = tp->getAbsoluteTimeFromMapTime(map);
-
+    }
 
     nodeptr = x;
     mapTime = map;
@@ -50,9 +50,7 @@ BranchEvent::BranchEvent(double speciation, double lamshift, double extinction,
 
     _isEventTimeVariable = false;
 
-
 }
-
 
 
 BranchEvent::~BranchEvent(void)
@@ -74,9 +72,11 @@ BranchEvent::~BranchEvent(void)
 bool BranchEvent::operator<(const BranchEvent& a) const
 {
 
-    if ( mapTime > a.mapTime )
+    if ( mapTime > a.mapTime ) {
         return true;
-    return false;
+    } else {
+        return false;
+    }
 }
 
 
@@ -102,7 +102,6 @@ bool BranchEvent::operator<(const BranchEvent& a) const
 */
 
 
-
 void BranchEvent::moveEventLocal(void)
 {
 
@@ -118,18 +117,13 @@ void BranchEvent::moveEventLocal(void)
     // if node position shifts, it just brings its current attributes
     // along, e.g., lambda etc.
 
-
 }
-
-
-
 
 void BranchEvent::incrementMapPosition(double ink)
 {
 
     double mapstart = nodeptr->getMapStart();
     double mapend = nodeptr->getMapEnd();
-
 
     double temp = getMapTime() + ink;
 
@@ -153,18 +147,16 @@ void BranchEvent::incrementMapPosition(double ink)
             ink = -1 * ink;
 
             if ((treePtr->getRoot()->getLfDesc() == getEventNode()) &
-                    treePtr->getRoot()->getRtDesc()->getCanHoldEvent())
+                    treePtr->getRoot()->getRtDesc()->getCanHoldEvent()) {
                 setEventNode(treePtr->getRoot()->getRtDesc());
 
-            else if ((treePtr->getRoot()->getRtDesc() == getEventNode()) &
-                     treePtr->getRoot()->getLfDesc()->getCanHoldEvent())
+            } else if ((treePtr->getRoot()->getRtDesc() == getEventNode()) &
+                     treePtr->getRoot()->getLfDesc()->getCanHoldEvent()) {
                 setEventNode(treePtr->getRoot()->getLfDesc());
 
-            else {
+            } else {
                 // If you get here, either the right or left desc of the root CANNOT hold event
                 // Do nothing. Just go backwards and reflect off of root.
-
-
             }
             setMapTime(getEventNode()->getMapEnd());
             incrementMapPosition(ink);
@@ -175,9 +167,6 @@ void BranchEvent::incrementMapPosition(double ink)
             setMapTime(getEventNode()->getMapStart());
             incrementMapPosition(ink);
         }
-
-
-
 
     } else if (temp < mapstart) {
 
@@ -231,19 +220,14 @@ void BranchEvent::incrementMapPosition(double ink)
             throw;
         }
 
-
-    } else
+    } else {
 
         setMapTime(temp);
-
+    }
 
     setAbsoluteTime(treePtr->getAbsoluteTimeFromMapTime(getMapTime()));
 
-
 }
-
-
-
 
 void BranchEvent::moveEventGlobal(void)
 {
@@ -269,7 +253,6 @@ void BranchEvent::setEventByMapPosition(double x)
     setAbsoluteTime(treePtr->getAbsoluteTimeFromMapTime(getMapTime()));
 }
 
-
 void BranchEvent::revertOldMapPosition(void)
 {
 
@@ -278,19 +261,4 @@ void BranchEvent::revertOldMapPosition(void)
     setAbsoluteTime(treePtr->getAbsoluteTimeFromMapTime(getMapTime()));
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
