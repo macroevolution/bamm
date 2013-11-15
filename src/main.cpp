@@ -44,6 +44,7 @@ int main (int argc, char* argv[])
     //std::string modeltype = "trait";
     
     if (modeltype == "-h" || modeltype == "h" || modeltype == "help") {
+        usage();
         exit(0);
     }
 
