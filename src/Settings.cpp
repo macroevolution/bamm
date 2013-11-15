@@ -209,31 +209,29 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
     }
     
     std::cout << "Reading control file <<" << controlFilename.c_str() << ">>" << std::endl;
-
-    std::string s1, s2;
+	
+    std::string s1, s2, s_nocomment;
     
     while (infile) {
         getline(infile, s1, '\n');
-        
-        if (s1[0] == '#')
-            continue;
         
         // strip whitespace out of tempstring:
         //      both spaces and tabs:
         
         // What is the int(*)(int) doing????
         s1.erase(std::remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
-        
-        //tempstring.erase(remove_if(tempstring.begin(), tempstring.end(), isspace), tempstring.end());
-        
-        
-        // Only add if has size > 0 (gets rid of empty lines)
-        if (s1.size() > 0) {
+		
+		
+		std::istringstream sx(s1);       
+		getline(sx, s_nocomment, '#');
+		
+		// Only add if has size > 0 (gets rid of empty lines)
+        if (s_nocomment.size() > 0) {
             std::vector<std::string> tmpstr;
             
             // NOw use second getline to split by '=' characters:
 
-            std::istringstream stemp(s1);
+            std::istringstream stemp(s_nocomment);
 
             while (getline(stemp, s2, '=')){
                 tmpstr.push_back(s2);        
@@ -242,9 +240,14 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
             if (tmpstr.size() == 2) {
                 _varName.push_back(tmpstr[0]);
                 _varValue.push_back(tmpstr[1]);
-            } else
+            } else{
                 std::cout << "Invalid size of input line in control file" << std::endl;
-        }
+				std::cout << " Problematic line includes <<" << s_nocomment << ">>" << std::endl;
+				std::cout << "Terminating run\n" << std::endl;
+				exit(0);			
+			}
+
+		}
         
         if (infile.peek() == EOF)
             break;
