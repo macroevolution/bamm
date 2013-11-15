@@ -11,3 +11,8 @@
 *.lai
 *.la
 *.a
+
+# Other junk
+.DS_Store
+._*
+*~
