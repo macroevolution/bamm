@@ -1,7 +1,7 @@
 
 #############################################################
 #
-#	getEventDataDiversification(....)
+#	getEventData(....)
 #
 #	eventfilename		=	file where event data are stored, in bamm output format
 #	nsamples			=	number of samples from posterior to include. 
@@ -585,15 +585,15 @@ timeIntegratedBranchRate <- Vectorize(timeIntegratedBranchRate);
 #########
 #############################################################
 #
-#	getMarginalBranchRateMatrixDiversification(....)
+#	getMarginalBranchRateMatrix(....)
 #
 #	get matrix of marginal rates on each branch for each sample from posterior
 # 	
 #	BAMM also can directly ouput these marginal rates,
 #		so worth having a second function that works directly
 #		with the BAMM output file, as it is much faster.
-#	
-getMarginalBranchRateMatrixDiversification <- function(ephy, verbose=F){
+#	getMarginalBranchRateMatrix
+getMarginalBranchRateMatrix <- function(ephy, verbose=F){
 	
 	if (!'bamm-data' %in% class(ephy)){
 		stop("Object ephy must be of class bamm-data\n");
@@ -765,14 +765,14 @@ getSampleCoMat <- function(phylist, modeltree){
 #
 #	This version computes for individual species
 #
-getSpeciesDiversificationRateThroughTime <- function(ephy, start.time, nbreaks=10, ndr=TRUE, species){
+getSpeciesRateThroughTime <- function(ephy, start.time, nbreaks=10, ndr=TRUE, species){
 
 	if (!'bamm-data' %in% class(ephy)){
 		stop("Object ephy must be of class bamm-data\n");
 	}
 		
 	tend <- max(branching.times(ephy))*0.999;
-	tstart <- tend - start.time;
+	tstart <- start.time #tend - start.time;
 	tseq <- seq(tstart, tend, length.out=nbreaks);
  
 	res <- numeric(nbreaks);
@@ -814,7 +814,7 @@ getSpeciesDiversificationRateThroughTime <- function(ephy, start.time, nbreaks=1
 
 #############################################################
 #
-#	getBySpeciesDiversificationMatrix <- function(...)
+#	getBySpeciesRateMatrix <- function(...)
 #
 #	Start time: how many time units before present to include
 #	nbreaks: how many time points to compute the rate
@@ -823,7 +823,7 @@ getSpeciesDiversificationRateThroughTime <- function(ephy, start.time, nbreaks=1
 #	
 #	node argument will just compute for the subtree descended from "node"
 
-getBySpeciesDiversificationMatrix <- function(ephy, start.time, nbreaks, ndr=T, node){
+getBySpeciesRateMatrix <- function(ephy, start.time, nbreaks, ndr=TRUE, node){
 	
 	
 	spset <- ephy$tip.label;
@@ -831,7 +831,7 @@ getBySpeciesDiversificationMatrix <- function(ephy, start.time, nbreaks, ndr=T, 
 	mm <- matrix(NA, nrow=length(spset), ncol=nbreaks);
 	for (i in 1:nrow(mm)){
 		#cat(spset[i], '\n')
-		mm[i,] <- getSpeciesDiversificationRateThroughTime(ephy, start.time, nbreaks, ndr, species=spset[i]);
+		mm[i,] <- getSpeciesRateThroughTime(ephy, start.time, nbreaks, ndr, species=spset[i]);
 	}
 	
 	rownames(mm) <- spset;
