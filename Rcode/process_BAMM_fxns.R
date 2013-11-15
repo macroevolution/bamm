@@ -259,24 +259,25 @@ exponentialRate <- Vectorize(exponentialRate);
 
 #############################################################
 #
-#	getMeanTipDiversification(....)
+#	getMeanNetDivRate(....)
 #
-# returns matrix with mean diversification rates at tip of tree
+# returns matrix with mean net diverisification rates at tip of tree
+#	use.names=T returns a named vector
 
-getMeanTipDiversification <- function(){
+getMeanNetDivRate <- function(ephy, use.names = FALSE){
 	
-	
-	
-	
-}
+	if (!'bamm-data' %in% class(ephy)){
+		stop("Object ephy must be of class bamm-data\n");
+	}
 
-#############################################################
-#
-#	getMeanTipRatePhenotypic(....)
-#
-getMeanTipRatePhenotypic <- function(){
-	
-	
+	if (use.names == F){
+		return(ephy$meanTipLambda - ephy$meanTipMu);
+	}
+	if (use.names == T){
+		tmp <- ephy$meanTipLambda - ephy$meanTipMu;
+		names(tmp) <- ephy$tip.label;
+		return(tmp);
+	}
 }
 
 #############################################################
