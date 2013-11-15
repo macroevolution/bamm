@@ -38,6 +38,8 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     _printFreq =            sttings->getPrintFreq();
     _NGENS =                sttings->getNGENS();
 
+    _firstLine = true; // Print header for the first line of output
+
 
     std::ifstream outStream(mcmcOutfile.c_str());
     if (outStream) {
@@ -262,27 +264,34 @@ void MCMC::updateState(int parm)
 }
 
 
-
-void MCMC::writeStateToFile(void)
+void MCMC::writeStateToFile()
 {
+    // TODO: Move opening to constructor, closing to destructor
+    std::ofstream outStream(mcmcOutfile.c_str(), std::ofstream::app);
 
+    if (_firstLine) {
+      writeHeaderToStream(outStream);
+      _firstLine = false;
+    }
+    else
+      writeStateToStream(outStream);
 
-    //replace file...
-
-
-    std::ofstream outStream;
-    outStream.open(mcmcOutfile.c_str(), std::ofstream::app);
-    outStream << ModelPtr->getGeneration() << ","  << ModelPtr->getNumberOfEvents()
-              << ",";
-    outStream << ModelPtr->computeLogPrior() << ",";
-    outStream << ModelPtr->getCurrLnLBranches() << ",";
-    outStream << ModelPtr->getEventRate() << "," <<
-              ModelPtr->getRootEvent()->getLamInit() << ",";
-    outStream << ModelPtr->getRootEvent()->getLamShift() << ",";
-    outStream << ModelPtr->getRootEvent()->getMuInit() << ",";
-    outStream << ModelPtr->getRootEvent()->getMuShift() << std::endl;
     outStream.close();
+}
 
+
+void MCMC::writeHeaderToStream(std::ostream& outStream)
+{
+    outStream << "generation,numevents,logprior,llbranches\n";
+}
+
+
+void MCMC::writeStateToStream(std::ostream& outStream)
+{
+    outStream << ModelPtr->getGeneration()      << ","
+              << ModelPtr->getNumberOfEvents()  << ","
+              << ModelPtr->computeLogPrior()    << ","
+              << ModelPtr->getCurrLnLBranches() << std::endl;
 }
 
 

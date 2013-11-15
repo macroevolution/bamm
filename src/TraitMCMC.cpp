@@ -45,6 +45,8 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     _printFreq =        sttings->getPrintFreq();
     _NGENS =            sttings->getNGENS();
 
+    _firstLine = true;
+
 
     std::ifstream outStream(mcmcOutfile.c_str());
     if (outStream) {
@@ -261,26 +263,35 @@ void TraitMCMC::updateState(int parm)
 }
 
 
-
-void TraitMCMC::writeStateToFile(void)
+void TraitMCMC::writeStateToFile()
 {
+    // TODO: Move opening to constructor, closing to destructor
+    std::ofstream outStream(mcmcOutfile.c_str(), std::ofstream::app);
+
+    if (_firstLine) {
+        writeHeaderToStream(outStream);
+        _firstLine = false;
+    }
+    else
+        writeStateToStream(outStream);
 
 
-    //replace file...
-
-
-    std::ofstream outStream;
-    outStream.open(mcmcOutfile.c_str(), std::ofstream::app);
-    outStream << ModelPtr->getGeneration() << ","  << ModelPtr->getNumberOfEvents()
-              << ",";
-    outStream << ModelPtr->computeLogPrior() << ",";
-    outStream << ModelPtr->getCurrLnLTraits() << ",";
-    outStream << ModelPtr->getEventRate() << "," <<
-              ModelPtr->getRootEvent()->getBetaInit() << ",";
-    outStream << ModelPtr->getRootEvent()->getBetaShift() << ",";
-    outStream << ModelPtr->getRootEvent()->getEventNode()->getTraitValue() << std::endl;
     outStream.close();
+}
 
+
+void TraitMCMC::writeHeaderToStream(std::ostream& outStream)
+{
+    outStream << "generation,numevents,logprior,lltraits\n";
+}
+
+
+void TraitMCMC::writeStateToStream(std::ostream& outStream)
+{
+    outStream << ModelPtr->getGeneration()     << ","
+              << ModelPtr->getNumberOfEvents() << ","
+              << ModelPtr->computeLogPrior()   << ","
+              << ModelPtr->getCurrLnLTraits()  << std::endl;
 }
 
 
