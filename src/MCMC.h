@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <iosfwd>
 
 class MbRandom;
 class Model;
@@ -42,6 +43,9 @@ public:
 
 private:
 
+    void writeHeaderToStream(std::ostream& outStream);
+    void writeStateToStream(std::ostream& outStream);
+
     MbRandom* ranPtr;
     Model*    ModelPtr;
     Settings* sttings;
@@ -64,6 +68,8 @@ private:
     int _acceptWriteFreq;
     int _printFreq;
     int _NGENS;
+
+    bool _firstLine;
 };
 
 
