@@ -32,6 +32,10 @@ specified by the user.
 General
 .......
 
+modeltype
+   Should be "speciationextinction" or "trait".
+   Defines which application of BAMM will un.
+
 treefile
   The file name of the input tree (in Newick format). For diversification analyses, this should be ultrametric.
 
@@ -85,17 +89,17 @@ acceptrateOutfile
   *Description not yet available.*
 
 eventDataOutfile
-  *Description not yet available.*
+  Event details will be written to this file. 
 
 treeWriteFreq
-  Frequency (in generations) of writing speciation/extinction rates to file.
-  To avoid very large files, use a frequency of at least 10000.
+  Frequency (in generations) of writing newick-formatted trees where branch lengths are scaled to rate.
+  Use caution when setting a high write frequency, as the file size can grow quickly for large trees.
 
 mcmcWriteFreq
-  *Description not yet available.*
+  Frequency (in generations) at which MCMC details will be written to the mcmcOutfile.
 
 eventDataWriteFreq
-  *Description not yet available.*
+  Frequency (in generations) at which event details are written to the eventDataOutfile. 
 
 acceptWriteFreq
   *Description not yet available.*
@@ -160,17 +164,18 @@ Starting Parameters
 ...................
 
 lambdaInit0
-  Starting speciation rate.
+  Starting initial speciation rate.
 
 lambdaShift0
-  Starting rate change parameter for speciation
+  Starting initial rate change parameter for speciation
   (if 0, speciation rates will not change through time).
+  A negative value implies decreasing rates through time.
 
 muInit0
-  Initial extinction rate.
+  Starting Initial extinction rate.
 
 muShift0
-  *Description not yet available.*
+  Starting initial rate change parameter for extinction. Currently not implemented.
 
 Priors
 ......
@@ -194,10 +199,10 @@ Output
 ......
 
 lambdaOutfile
-  Branch-specific speciation rates will be written to this file.
+  Branch-specific speciation rates will be written to this file as newick-formatted trees.
 
 muOutfile
-  Branch-specific extinction rates will be written to thie file.
+  Branch-specific extinction rates will be written to this file as newick-formatted trees.
 
 lambdaNodeOutfile
   *Description not yet available.*
@@ -250,12 +255,12 @@ Starting Parameters
 ...................
 
 betaInit
-  Initial rate.
+  Starting initial rate.
 
 betaShiftInit
-  Initial time-dependent shift.
-  If negative, it implies a decrease in the rate of phenotypic evolution
-  through time.
+   Starting initial rate change parameter for phenotypic evolution.
+  (if 0, then constant-rate).
+  A negative value implies decreasing rates through time.
 
 Priors
 ......
