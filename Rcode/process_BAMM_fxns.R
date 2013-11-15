@@ -593,7 +593,7 @@ timeIntegratedBranchRate <- Vectorize(timeIntegratedBranchRate);
 #		so worth having a second function that works directly
 #		with the BAMM output file, as it is much faster.
 #	getMarginalBranchRateMatrix
-getMarginalBranchRateMatrix <- function(ephy, verbose=F){
+getMarginalBranchRateMatrix <- function(ephy, verbose=FALSE){
 	
 	if (!'bamm-data' %in% class(ephy)){
 		stop("Object ephy must be of class bamm-data\n");
@@ -684,29 +684,53 @@ getEventCorrelationMatrix <- function(ephy){
 #						has branch length equal to the mean rate on that branch
 #		
 
-getMeanBranchLengthTree <- function(phylist){
+getMeanBranchLengthTree <- function(obj,ndr=TRUE){
+	
+	if('bamm-data' %in% class(obj))
+	{
+		v <- list(edge = obj$edge, Nnode = obj$Nnode,tip.label = obj$tip.label, edge.length = obj$edge.length);
+		attributes(v) <- list(names = c("edge","Nnode","tip.label","edge.length"),class="phylo",order="cladewise");
 
-	v <- phylist[[1]];
-	meanvec <- numeric(length(phylist));
- 
-	el <- v$edge.length;
-	meanvec[1] <- mean(v$edge.length);
-	for (i in 2:length(phylist)){
-		el <- el + phylist[[i]]$edge.length;
-		meanvec[i] <- mean(phylist[[i]]$edge.length);
+		obj <- getMarginalBranchRateMatrix(obj);
+		if(ndr)
+		{
+			el  <- rowMeans(obj$lambda) - rowMeans(obj$mu);
+		}
+		else
+		{
+			el  <- rowMeans(obj$lambda);
+		}
+		v$edge.length <- el;
+		obj <- list();
+		obj$phy <- v;
+		obj$median <- median(el);
+		obj$mean <- mean(el);			
 	}
-	el <- el / length(phylist);
+	else if(class(obj[[1]]) == 'phylo')
+	{
+		v <- obj[[1]];
+		meanvec <- numeric(length(obj));
+ 
+		el <- v$edge.length;
+		meanvec[1] <- mean(v$edge.length);
+		for (i in 2:length(obj)){
+			el <- el + obj[[i]]$edge.length;
+			meanvec[i] <- mean(obj[[i]]$edge.length);
+		}
+		el <- el / length(obj);
 	
-	v$edge.length <- el;
-	obj <- list();
-	obj$phy <- v;
-	obj$median <- median(meanvec);
-	obj$mean <- mean(meanvec);
-	
-	return(obj);	
-		
+		v$edge.length <- el;
+		obj <- list();
+		obj$phy <- v;
+		obj$median <- median(meanvec);
+		obj$mean <- mean(meanvec);
+	}
+	else
+	{
+		stop("Method not implemented for supplied object class");
+	}
+	return(obj);		
 }
-
 
 #############################################################
 #
