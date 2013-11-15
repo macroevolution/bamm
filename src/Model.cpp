@@ -847,7 +847,7 @@ void Model::deleteRandomEventFromTree(void)
 
                 forwardSetBranchHistories(newLastEvent);
 
-
+                break;
             }
         }
     }
@@ -1635,9 +1635,7 @@ void Model::updateEventRateMH(void)
 double Model::computeLikelihoodBranches(void)
 {
 
-    double LnL = computeLikelihoodBranchesByInterval();
-
-    return LnL;
+    return computeLikelihoodBranchesByInterval();
 }
 
 

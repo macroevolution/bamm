@@ -3,10 +3,7 @@
 
  This version of BAMM does speciation-extinction and trait evolution.
 
-
- */
-
-
+*/
 
 #include <iostream>
 #include <fstream>
@@ -21,6 +18,10 @@
 #include "TraitMCMC.h"
 #include "TraitModel.h"
 
+void usage () {
+    std::cout << std::endl << "Program usage:" << std::endl;
+    std::cout << "./bamm (speciationextinction|trait) -control control_filename" << std::endl<< std::endl;
+}
 
 int main (int argc, char* argv[])
 {
@@ -34,17 +35,27 @@ int main (int argc, char* argv[])
     //  std::cout << argc << "\t" << argv[i] << std::endl;
     //}
 
-
+    if (argc == 1) {
+        usage();
+        exit(0);
+    }
+    
     std::string modeltype = std::string(argv[1]);
     //std::string modeltype = "trait";
+    
+    if (modeltype == "-h" || modeltype == "h" || modeltype == "help" || modeltype == "-help") {
+        usage();
+        exit(0);
+    }
 
     MbRandom myRNG;
     Settings mySettings;
 
     if (modeltype == "speciationextinction") {
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 20; i++) {
             std::cout << "#";
+        }
 
         std::cout << std::endl << std::endl  << "SPECIATION-EXTINCTION BAMM" << std::endl << std::endl;
 
@@ -67,7 +78,6 @@ int main (int argc, char* argv[])
             exit(1);
         }
 
-
         mySettings.printCurrentSettings(true);
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
@@ -87,7 +97,6 @@ int main (int argc, char* argv[])
 
         //intree.printCanHoldEventByNode();
 
-
         std::cout << std::endl << std::endl;
         //intree.setAllNodesCanHoldEvent();
 
@@ -106,23 +115,22 @@ int main (int argc, char* argv[])
         } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
             Model myModel(&myRNG, &intree, &mySettings);
             MCMC myMCMC(&myRNG, &myModel, &mySettings);
-
-        } else
+            
+        } else {
             std::cout << "Unsupported option in main....\n" << std::endl;
-
-
-
-
+        }
 
     } else if (modeltype == "trait") {
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 20; i++) {
             std::cout << "#";
+        }
 
         std::cout << std::endl << std::endl  << "TRAIT BAMM" << std::endl << std::endl;
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 20; i++) {
             std::cout << "#";
+        }
 
         if (argc <= 1) {
             std::cout << "\nInitializing BAMMt with default settings." << std::endl;
@@ -136,14 +144,12 @@ int main (int argc, char* argv[])
                     instrings.push_back(argv[i]);
             argc--;
 
-
             mySettings.parseCommandLineInput(argc, instrings, modeltype);
             mySettings.checkAreTraitInitialSettingsValid();
         } else {
             std::cout << "Uninterpretable input. Exiting BAMM." << std::endl;
             exit(1);
         }
-
 
         //mySettings.trait_printCurrentSettings(true);
         std::string treefile = mySettings.getTreeFilename();
@@ -155,9 +161,7 @@ int main (int argc, char* argv[])
         //intree.getPhenotypes(mySettings.getTraitFile());
         intree.getPhenotypesMissingLatent(mySettings.getTraitFile());
 
-
         intree.initializeTraitValues();
-
 
         if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
             std::cout << "Initializing model but not running MCMC" << std::endl;
@@ -172,19 +176,11 @@ int main (int argc, char* argv[])
             //intree.echoMeanBranchTraitRates();
 
         }
-
-
+        
     } else {
         std::cout << "Unsupported analysis" << std::endl;
         exit(1);
     }
 
-
-
-
     return 0;
 }
-
-
-
-
