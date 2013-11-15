@@ -10,8 +10,9 @@
 #	verbose				=	Verbose print output for bug tracking
 #	burnin				=	How many samples from posterior to discard
 #							Uses fraction (e.g, 0.25 = 25% discarded)
-###this works with traits and diversification now by specifying type = 'traits' or type = 'diversification'
-getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=F, assign.type = 'new_way', type = 'diversification'){
+#	type				=	specifies whether eventfilename refers to trait or diversification data
+#	header				=	Boolean to flag whether eventfilename contains a header
+getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=F, assign.type = 'new_way', type = 'diversification', header=TRUE){
 	
 	if (type != 'diversification' & type != 'traits'){
 		stop("Invalid 'type' specification. Should be 'diversification' or 'traits'");
@@ -32,7 +33,7 @@ getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=
 	tipLambda 	<- list();
  
 	cat("Reading event datafile: ", eventfilename, "\n\t\t...........");
- 	x <- read.csv(eventfilename, header=F, stringsAsFactors=F);
+ 	x <- read.csv(eventfilename, header=header, stringsAsFactors=F);
  	uniquegens <- sort(unique(x[,1]));
  	cat("\nRead a total of ", length(uniquegens), " samples from posterior\n");
  	
@@ -62,6 +63,9 @@ getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=
  		phy <- getRecursiveSequence(phy);
  	cat('\nDone with recursive sequence\n\n');
  
+	meanTipMu <- numeric(length(phy$tip.label));
+	
+ 	meanTipLambda <- numeric(length(phy$tip.label)); 
  
  	for (i in 1:length(goodsamples)){
   		
@@ -78,16 +82,13 @@ getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=
  		if(type == 'diversification'){
 			mu1 <- tmpEvents[, 7]; # mu parameter 1
  			mu2 <- tmpEvents[, 8]; #mu parameter 2 
-			
 		}
-		else{
-			mu1 <- rep(0, length(t1)); #tmpEvents[, 7]; # mu parameter 1
- 			mu2 <- rep(0, length(t1)); #tmpEvents[, 8]; #mu parameter 2
+		else{ #for bamm trait data we set the mu columns to zero because those params don't exist
+			mu1 <- rep(0, nrow(tmpEvents)); 
+ 			mu2 <- rep(0, nrow(tmpEvents)); 
 		}
 		tipMu <- list();	
-		meanTipMu <- numeric(length(phy$tip.label));
-	
- 		meanTipLambda <- numeric(length(phy$tip.label));
+		
  		
  		# Get subtending node for each event:
  		nodeVec <- numeric(nrow(tmpEvents));
@@ -190,8 +191,8 @@ getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=
 		tiplam <- dftemp$lam1[tipstates] * exp(dftemp$lam2[tipstates] * (stoptime - dftemp$time[tipstates]));
 		tipmu <- dftemp$mu1[tipstates];
 		
-		#meanTipMu <- meanTipMu + tipmu;
-		#meanTipLambda <- meanTipLambda + tiplam;
+		meanTipMu <- meanTipMu + tipmu/nsamples;
+		meanTipLambda <- meanTipLambda + tiplam/nsamples;
 		
 		
 		
@@ -210,10 +211,10 @@ getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=
 	phy$eventVectors <- eventVectors;
 	phy$tipStates <- tipStates;
 	phy$tipLambda <- tipLambda;
-	phy$meanTipLambda <- meanTipLambda / length(x);
+	phy$meanTipLambda <- meanTipLambda;
 	phy$eventBranchSegs <- eventBranchSegs; 	
 	phy$tipMu <- tipMu;
-	phy$meanTipMu <- meanTipMu / length(x);
+	phy$meanTipMu <- meanTipMu;
 	if(type == 'diversification'){	
 		phy$type = 'diversification';
 	}

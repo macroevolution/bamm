@@ -43,7 +43,7 @@ int main (int argc, char* argv[])
     std::string modeltype = std::string(argv[1]);
     //std::string modeltype = "trait";
     
-    if (modeltype == "-h" || modeltype == "h" || modeltype == "help") {
+    if (modeltype == "-h" || modeltype == "h" || modeltype == "help" || modeltype == "-help") {
         usage();
         exit(0);
     }
