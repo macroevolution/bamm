@@ -10,8 +10,9 @@
 #	verbose				=	Verbose print output for bug tracking
 #	burnin				=	How many samples from posterior to discard
 #							Uses fraction (e.g, 0.25 = 25% discarded)
-###this works with traits and diversification now by specifying type = 'traits' or type = 'diversification'
-getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=F, assign.type = 'new_way', type = 'diversification'){
+#	type				=	specifies whether eventfilename refers to trait or diversification data
+#	header				=	Boolean to flag whether eventfilename contains a header
+getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=F, assign.type = 'new_way', type = 'diversification', header=TRUE){
 	
 	if (type != 'diversification' & type != 'traits'){
 		stop("Invalid 'type' specification. Should be 'diversification' or 'traits'");
@@ -32,7 +33,7 @@ getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=
 	tipLambda 	<- list();
  
 	cat("Reading event datafile: ", eventfilename, "\n\t\t...........");
- 	x <- read.csv(eventfilename, header=F, stringsAsFactors=F);
+ 	x <- read.csv(eventfilename, header=header, stringsAsFactors=F);
  	uniquegens <- sort(unique(x[,1]));
  	cat("\nRead a total of ", length(uniquegens), " samples from posterior\n");
  	
