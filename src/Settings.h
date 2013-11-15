@@ -28,6 +28,8 @@ private:
     bool _runMCMC;
     bool _initializeModel;
     bool _loadEventData;
+	
+	bool _autotune;
 
     // Files:
     std::string _treefile;
@@ -138,7 +140,8 @@ private:
     // Boolean parameters to flag whether default values of a parameter
     // have changed
 	
-    bool isDefault_modeltype;
+	bool isDefault_modeltype;
+	bool isDefault_autotune;
 	bool isDefault_treefile;
     bool isDefault_sampleFromPriorOnly;
     bool isDefault_runTraitModel;
@@ -252,6 +255,7 @@ public:
     bool getSampleFromPriorOnly();
     bool getRunMCMC();
     bool getInitializeModel();
+	bool getAutotune();
 
     // Load previous settings?
     bool   getLoadEventData();
@@ -356,6 +360,10 @@ inline bool Settings::getRunTraitModel()
     return _runTraitModel;
 }
 
+inline bool Settings::getAutotune()
+{
+	return _autotune;
+}
 
 inline bool Settings::getRunSpeciationExtinctionModel()
 {

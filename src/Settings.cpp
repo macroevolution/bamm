@@ -150,6 +150,8 @@ Settings::Settings(void)
     isDefault_minCladeSizeForShift                      = true;
     isDefault_seed                                      = true;
 
+	isDefault_autotune									= true;
+	
     // End block of Booleans
     /*******************************************/
 
@@ -563,7 +565,10 @@ void Settings::initializeSettings_Traits()
         } else if (_varName[i] == "modeltype"){
             // Do nothing. This is 
             // already handled in initializeSettings() general function.
-        }else {
+        }else if (_varName[i] == "autotune"){
+			_autotune = stringToBool(_varValue[i].c_str());
+			isDefault_autotune = false;
+		}else {
             // Parameter not found:
             //      add to list of potentially bad/misspelled params
             //      and print for user.
@@ -772,7 +777,10 @@ void Settings::initializeSettings_Diversification()
         } else if (_varName[i] == "modeltype"){
             // Do nothing. This is 
             // already handled in initializeSettings() general function.
-        } else if (_varName[i] == "seed") {
+        } else if (_varName[i] == "autotune"){
+			_autotune = stringToBool(_varValue[i].c_str());
+			isDefault_autotune = false;
+		}else if (_varName[i] == "seed") {
             _seed = atoi(_varValue[i].c_str());
             isDefault_seed = false;
         } else {
