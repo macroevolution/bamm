@@ -375,13 +375,16 @@ void Settings::trait_initializeSettings(std::string controlFilename)
     while (infile) {
         getline(infile, s1, '\n');
 
-        // strip whitespace out of tempstd::string:
+        if (s1[0] == '#')
+          continue;
+
+        // strip whitespace out of tempstring:
         //      both spaces and tabs:
 
         // What is the int(*)(int) doing????
         s1.erase(std::remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
 
-        //tempstd::string.erase(remove_if(tempstd::string.begin(), tempstd::string.end(), isspace), tempstd::string.end());
+        //tempstring.erase(remove_if(tempstring.begin(), tempstring.end(), isspace), tempstring.end());
 
 
         // Only add if has size > 0 (gets rid of empty lines)
@@ -603,13 +606,16 @@ void Settings::initializeSettings(std::string controlFilename)
     while (infile) {
         getline(infile, s1, '\n');
 
-        // strip whitespace out of tempstd::string:
+        if (s1[0] == '#')
+          continue;
+
+        // strip whitespace out of tempstring:
         //      both spaces and tabs:
 
         // What is the int(*)(int) doing????
         s1.erase(std::remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
 
-        //tempstd::string.erase(remove_if(tempstd::string.begin(), tempstd::string.end(), isspace), tempstd::string.end());
+        //tempstring.erase(remove_if(tempstring.begin(), tempstring.end(), isspace), tempstring.end());
 
 
         // Only add if has size > 0 (gets rid of empty lines)
