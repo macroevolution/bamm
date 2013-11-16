@@ -39,10 +39,11 @@ Settings::Settings(void)
     _runMCMC = false;
     _initializeModel = false;
     _loadEventData = false;
-
+	_autotune = false;
+	
     _useGlobalSamplingProbability = true;
     _globalSamplingFraction = 0.0;
-
+	
     // Class Model parameters:
     _updateLambdaInitScale = 0.0;
     _updateMuInitScale = 0.0;
@@ -59,8 +60,12 @@ Settings::Settings(void)
     _lambdaShiftPrior = 0.0;
     _muInitPrior = 0.0;
     _muShiftPrior = 1.0;  // This is only set for convenience for now:
-    _MeanSpeciationLengthFraction = 0.0;
-    _segLength = 0.0;
+    
+	_updateEventLocationScale = 0.0;
+	//_MeanSpeciationLengthFraction = 0.0;
+    
+	
+	_segLength = 0.0;
 
     _minCladeSizeForShift = 1;
     
@@ -122,8 +127,10 @@ Settings::Settings(void)
     isDefault_lambdaShiftPrior                          = true;
     isDefault_muInitPrior                               = true;
     isDefault_muShiftPrior                              = true;
-    isDefault_MeanSpeciationLengthFraction              = true;
-    isDefault_segLength                                 = true;
+    isDefault_updateEventLocationScale					= true;
+	//isDefault_MeanSpeciationLengthFraction              = true;
+    
+	isDefault_segLength                                 = true;
     isDefault_mcmcOutfile                               = true;
     isDefault_eventDataOutfile                          = true;
     isDefault_lambdaOutfile                             = true;
@@ -321,8 +328,9 @@ void Settings::initializeSettingsDefaults_Diversification(void)
     _lambdaShiftPrior               = 0.5;
     _muInitPrior                    = 1.0;
     _muShiftPrior                   = 0.5; // 0
-    _MeanSpeciationLengthFraction   = 0.2;
-    _segLength                      = 1.0;
+    //_MeanSpeciationLengthFraction   = 0.2;
+    _updateEventLocationScale		= 1.0;
+	_segLength                      = 1.0;
 
     _minCladeSizeForShift           = 1;
 
@@ -382,8 +390,8 @@ void Settings::initializeSettingsDefaults_Traits(void)
     _updateEventRateScale           = 2.0;
     _localGlobalMoveRatio           = 10.0;
     _targetNumber                   = 0.5;
-    _MeanSpeciationLengthFraction   = 0.2;
-
+//   _MeanSpeciationLengthFraction   = 0.2;
+	_updateEventLocationScale		= 1.0;
     _betaInit           =   0.1;
     _betaShiftInit      =   0.0;
 
@@ -478,7 +486,10 @@ void Settings::initializeSettings_Traits()
         } else if (_varName[i] == "betaShiftInit") {
             _betaShiftInit = atof(_varValue[i].c_str());
             isDefault_betaShift = false;
-        } else if (_varName[i] == "updateEventRateScale") {
+        } else if (_varName[i] == "updateEventLocationScale"){
+			_updateEventLocationScale = atof(_varValue[i].c_str());
+			isDefault_updateEventLocationScale = false;
+		}else if (_varName[i] == "updateEventRateScale") {
             _updateEventRateScale = atof(_varValue[i].c_str());
             isDefault_updateEventRateScale = false;
         } else if (_varName[i] == "localGlobalMoveRatio") {
@@ -678,9 +689,9 @@ void Settings::initializeSettings_Diversification()
         } else if (_varName[i] == "muShift0") {
             _muShift0 = atof(_varValue[i].c_str());
             isDefault_muShift0 = false;
-        } else if (_varName[i] == "MeanSpeciationLengthFraction") {
-            _MeanSpeciationLengthFraction = atof(_varValue[i].c_str());
-            isDefault_MeanSpeciationLengthFraction = false;
+        } else if (_varName[i] == "updateEventLocationScale") {
+            _updateEventLocationScale = atof(_varValue[i].c_str());
+            isDefault_updateEventLocationScale = false;
         } else if (_varName[i] == "updateEventRateScale") {
             _updateEventRateScale = atof(_varValue[i].c_str());
             isDefault_updateEventRateScale = false;
@@ -1013,9 +1024,9 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
             std::cout << std::right << std::setw(ppw) << "muInitPrior" << "\t\t" << _muInitPrior << std::endl;
         if (!isDefault_muShiftPrior)
             std::cout << std::right << std::setw(ppw) << "muShiftPrior" << "\t\t" << _muShiftPrior << std::endl;
-        if (!isDefault_MeanSpeciationLengthFraction)
-            std::cout << std::right << std::setw(ppw) << "MeanSpeciationLengthFraction" << "\t\t" <<
-                 _MeanSpeciationLengthFraction << std::endl;
+        if (!isDefault_updateEventLocationScale)
+            std::cout << std::right << std::setw(ppw) << "updateEventLocationScale" << "\t\t" <<
+                 _updateEventLocationScale << std::endl;
         if (!isDefault_segLength)
             std::cout << std::right << std::setw(ppw) << "segLength" << "\t\t" << _segLength << std::endl;
         if (!isDefault_mcmcOutfile)
@@ -1118,8 +1129,8 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
              << std::endl;
         std::cout << std::right << std::setw(ppw) << "muInitPrior" << "\t\t" << _muInitPrior << std::endl;
         std::cout << std::right << std::setw(ppw) << "muShiftPrior" << "\t\t" << _muShiftPrior << std::endl;
-        std::cout << std::right << std::setw(ppw) << "MeanSpeciationLengthFraction" << "\t\t" <<
-             _MeanSpeciationLengthFraction << std::endl;
+        std::cout << std::right << std::setw(ppw) << "updateEventLocationScale" << "\t\t" <<
+             _updateEventLocationScale << std::endl;
         std::cout << std::right << std::setw(ppw) << "segLength" << "\t\t" << _segLength << std::endl;
         std::cout << std::right << std::setw(ppw) << "mcmcOutfile" << "\t\t" << _mcmcOutfile << std::endl;
         std::cout << std::right << std::setw(ppw) << "lambdaOutfile" << "\t\t" << _lambdaOutfile <<

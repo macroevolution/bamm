@@ -38,8 +38,6 @@ private:
     Tree* treePtr;
     MbRandom* ranPtr;
 
-    // epsilon for local move
-    double epsilon;
 
     // Keep values of the old pointer and old maptime associated
     //  with the event for FAST reference
@@ -63,7 +61,7 @@ public:
 
     // constructors, depending on whether you want trait rate or lambda/mu
     TraitBranchEvent(double beta, double shift, Node* x, Tree* tp, MbRandom* rp,
-                     double map, double scale);
+                     double map);
 
     ~TraitBranchEvent();
 
@@ -83,7 +81,7 @@ public:
     double getBetaShift();
 
     void incrementMapPosition(double ink);
-    void moveEventLocal();
+    void moveEventLocal(double stepsize);
     void moveEventGlobal();
     void setEventByMapPosition(double x);
 

@@ -17,9 +17,8 @@
 //Forward declarations:
 class Tree;
 class Node;
-class MbRandom;
 class TraitBranchEvent;
-
+class MbRandom;
 
 /*
 
@@ -43,9 +42,7 @@ private:
     double mapTime;
     Node* nodeptr;
     Tree* treePtr;
-    MbRandom* ranPtr;
-    
-    double epsilon;    // epsilon for local move
+	MbRandom* ranPtr;
 
     // Keep values of the old pointer and old maptime associated
     // with the event for FAST reference if a LOCAL proposal is rejected.
@@ -70,8 +67,7 @@ public:
 
     // constructors, depending on whether you want trait rate or lambda/mu
     BranchEvent(double speciation, double lamshift, double extinction,
-        double mushift, Node* x, Tree* tp, MbRandom* rp, double map,
-        double scale);
+        double mushift, Node* x, Tree* tp, MbRandom*rp, double map);
 
     ~BranchEvent();
 
@@ -97,7 +93,7 @@ public:
     double getMuShift();
 
     void incrementMapPosition(double ink);
-    void moveEventLocal();
+    void moveEventLocal(double stepsize);
     void moveEventGlobal();
     void setEventByMapPosition(double x);
 

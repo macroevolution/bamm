@@ -19,7 +19,7 @@
 // with shift variable passed to constructor
 
 TraitBranchEvent::TraitBranchEvent(double beta, double shift, Node* x, Tree* tp,
-                                   MbRandom* rp, double map, double scale)
+                                   MbRandom* rp, double map)
 {
 
     // Speciation and extinction from new event assumed constant in time
@@ -38,7 +38,6 @@ TraitBranchEvent::TraitBranchEvent(double beta, double shift, Node* x, Tree* tp,
     mapTime = map;
     treePtr = tp;
     ranPtr = rp;
-    epsilon = scale;
 
     oldMapTime = map;
     oldNodePtr = x;
@@ -95,16 +94,13 @@ bool TraitBranchEvent::operator<(const TraitBranchEvent& a) const
 
 
 
-void TraitBranchEvent::moveEventLocal(void)
+void TraitBranchEvent::moveEventLocal(double stepsize)
 {
 
     oldNodePtr = nodeptr;
     oldMapTime = mapTime;
 
-    double shift = ranPtr->uniformRv(0, epsilon) - 0.5 * epsilon;
-    //std::cout << "shifting event by " << shift << std::endl;
-
-    incrementMapPosition(shift);
+    incrementMapPosition(stepsize);
 
     // shouldn't actually need to update model attributes.
     // if node position shifts, it just brings its current attributes
