@@ -23,7 +23,7 @@ void usage () {
     std::cout << std::endl << "Program usage:" << std::endl;
     std::cout << "./bamm -control control_filename" << std::endl<< std::endl;
 }
-
+  
 int main (int argc, char* argv[])
 {
 
