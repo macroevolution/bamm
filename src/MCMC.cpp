@@ -14,7 +14,6 @@
 
 MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
 {
-
     std::cout << "Initializing MCMC object..." << std::endl;
 
     ranPtr = ran;
@@ -39,46 +38,65 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     _NGENS =                sttings->getNGENS();
 
     _firstLine = true; // Print header for the first line of output
-
-
+    
+    bool fileOverwite =     sttings->getOverwrite();
+    
+    
+// TODO: put all of these files checks into a more general function
+    
     std::ifstream outStream(mcmcOutfile.c_str());
     if (outStream) {
         std::cout << "Output file for MCMC data exists: " << std::endl;
+        if (!fileOverwite) {
+            std::cout << std::endl << "Warning: analysis is set to not overwrite files." << std::endl;
+            std::cout << "Either remove or rename file '" << mcmcOutfile << "', or set:" << std::endl;
+            std::cout << "    overwrite = 1" << std::endl;
+            std::cout << "in the control file to turn on file overwriting." << std::endl;
+            std::cout << std::endl << "Exiting." << std::endl;
+            exit(0);
+        }
         std::cout << std::setw(30) << " overwriting " << mcmcOutfile << std::endl;
         outStream.close();
-
         std::string filedelete("rm ");
         filedelete.append(mcmcOutfile);
-
         system(filedelete.c_str());
-
     }
 
     //check if file exists; delete;
     std::ifstream outStream2(lambdaOutfile.c_str());
     if (outStream2) {
         std::cout << "Output file for marginal branch (speciation) rates exists: " << std::endl;
+        if (!fileOverwite) {
+            std::cout << std::endl << "Warning: analysis is set to not overwrite files." << std::endl;
+            std::cout << "Either remove or rename file '" << lambdaOutfile << "', or set:" << std::endl;
+            std::cout << "    overwrite = 1" << std::endl;
+            std::cout << "in the control file to turn on file overwriting." << std::endl;
+            std::cout << std::endl << "Exiting." << std::endl;
+            exit(0);
+        }
         std::cout << std::setw(30) << " overwriting " << lambdaOutfile << std::endl;
         outStream2.close();
-
         std::string filedelete("rm ");
         filedelete.append(lambdaOutfile);
-
         system(filedelete.c_str());
-
     }
 
     std::ifstream outStream3(muOutfile.c_str());
     if (outStream3) {
         std::cout << "Output file for marginal branch (extinction) rates exists: " << std::endl;
+        if (!fileOverwite) {
+            std::cout << std::endl << "Warning: analysis is set to not overwrite files." << std::endl;
+            std::cout << "Either remove or rename file '" << muOutfile << "', or set:" << std::endl;
+            std::cout << "    overwrite = 1" << std::endl;
+            std::cout << "in the control file to turn on file overwriting." << std::endl;
+            std::cout << std::endl << "Exiting." << std::endl;
+            exit(0);
+        }
         std::cout << std::setw(30) << " overwriting " << muOutfile << std::endl;
         outStream3.close();
-
         std::string filedelete("rm ");
         filedelete.append(muOutfile);
-
         system(filedelete.c_str());
-
     }
 
 
@@ -112,6 +130,14 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     std::ifstream outStream6(eventDataFile.c_str());
     if (outStream6) {
         std::cout << "Output file for event data: " << std::endl;
+        if (!fileOverwite) {
+            std::cout << std::endl << "Warning: analysis is set to not overwrite files." << std::endl;
+            std::cout << "Either remove or rename file '" << eventDataFile << "', or set:" << std::endl;
+            std::cout << "    overwrite = 1" << std::endl;
+            std::cout << "in the control file to turn on file overwriting." << std::endl;
+            std::cout << std::endl << "Exiting." << std::endl;
+            exit(0);
+        }
         std::cout << std::setw(30) << " overwriting " << eventDataFile << std::endl;
         outStream6.close();
         std::string filedelete("rm ");
@@ -123,8 +149,9 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     setUpdateWeights();
     ModelPtr->resetGeneration();
 
-    for (int i = 0; i < sttings->getInitialNumberEvents(); i++)
+    for (int i = 0; i < sttings->getInitialNumberEvents(); i++) {
         ModelPtr->addEventToTree();
+    }
 
     std::cout << "MCMC object successfully initialized." << std::endl << std::endl;
     std::cout << "Running MCMC chain for " << _NGENS << " generations." << std::endl << std::endl;
@@ -135,41 +162,33 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
 
     /*run chain*/
     for (int i = 0; i < _NGENS; i++) {
-
-
         int parmToUpdate = pickParameterClassToUpdate();
         updateState(parmToUpdate); // update state
-
-
 
         if ((i % _treeWriteFreq) == 0) {
 
             writeBranchSpeciationRatesToFile();
             writeBranchExtinctionRatesToFile();
- 
             // Deprecating this: no need to write this
             //writeNodeSpeciationRatesToFile();
         }
 
-        if ((i % _eventDataWriteFreq) == 0)
-
+        if ((i % _eventDataWriteFreq) == 0) {
             writeEventDataToFile();
-
-
-        if ((i % _mcmcWriteFreq) == 0)
+        }
+        
+        if ((i % _mcmcWriteFreq) == 0) {
             writeStateToFile();
+        }
 
-
-
-        if ((i % _printFreq == 0))
+        if ((i % _printFreq == 0)) {
             printStateData();
+        }
 
         // Deprecating this - no need to write this accept data
         //if ((i % _acceptWriteFreq) == 0)
         //    writeParamAcceptRates();
-
     }
-
 }
 
 
@@ -181,7 +200,6 @@ MCMC::~MCMC(void)
 
 void MCMC::setUpdateWeights(void)
 {
-
     parWts.push_back(sttings->getUpdateRateEventNumber()); // event number
     parWts.push_back(sttings->getUpdateRateEventPosition()); // event position
     parWts.push_back(sttings->getUpdateRateEventRate()); // event rate
@@ -198,8 +216,9 @@ void MCMC::setUpdateWeights(void)
         parWts[i] += parWts[i - 1];
     }
 
-    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++)
+    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++) {
         parWts[i] /= sumwts;
+    }
 
     //for (int i = 0; i < parWts.size(); i++)
     //  std::cout << parWts[i] << std::endl;
@@ -209,9 +228,6 @@ void MCMC::setUpdateWeights(void)
         acceptCount.push_back(0);
         rejectCount.push_back(0);
     }
-
-
-
 }
 
 
@@ -231,36 +247,34 @@ int MCMC::pickParameterClassToUpdate(void)
 
 void MCMC::updateState(int parm)
 {
-
-    if (parm == 0)
+    if (parm == 0) {
         ModelPtr->changeNumberOfEventsMH();
-    else if (parm == 1)
+    } else if (parm == 1) {
         ModelPtr->moveEventMH();
-    else if (parm == 2)
+    } else if (parm == 2) {
         ModelPtr->updateEventRateMH();
-    else if (parm == 3)
+    } else if (parm == 3) {
         ModelPtr->updateLambdaInitMH();
-    else if (parm == 4)
+    } else if (parm == 4) {
         ModelPtr->updateLambdaShiftMH();
-    else if (parm == 5)
+    } else if (parm == 5) {
         ModelPtr->updateMuInitMH();
-    else if (parm == 6)
+    } else if (parm == 6) {
         ModelPtr->updateMuShiftMH();
-    else if (parm == 7) {
+    } else if (parm == 7) {
         // Update time variable partition:
         std::cout << "should update isTimeVariable" << std::endl;
         ModelPtr->setAcceptLastUpdate(1);
-
     } else {
         // should never get here...throw exception?
         std::cout << "Bad parm to update\n" << std::endl;
     }
 
-    if (ModelPtr->getAcceptLastUpdate() == 1)
+    if (ModelPtr->getAcceptLastUpdate() == 1) {
         acceptCount[parm]++;
-    else if ( ModelPtr->getAcceptLastUpdate() == 0 )
+    } else if ( ModelPtr->getAcceptLastUpdate() == 0 ) {
         rejectCount[parm]++;
-    else if ( ModelPtr->getAcceptLastUpdate() == -1) {
+    } else if ( ModelPtr->getAcceptLastUpdate() == -1) {
         std::cout << "failed somewhere in MH step, parm " << parm << std::endl;
         throw;
     } else {
@@ -269,7 +283,6 @@ void MCMC::updateState(int parm)
     }
     // reset to unmodified value
     ModelPtr->setAcceptLastUpdate(-1);
-
 }
 
 
@@ -277,14 +290,12 @@ void MCMC::writeStateToFile()
 {
     // TODO: Move opening to constructor, closing to destructor
     std::ofstream outStream(mcmcOutfile.c_str(), std::ofstream::app);
-
     if (_firstLine) {
       writeHeaderToStream(outStream);
       _firstLine = false;
-    }
-    else
+    } else {
       writeStateToStream(outStream);
-
+    }
     outStream.close();
 }
 
@@ -301,7 +312,7 @@ void MCMC::writeStateToStream(std::ostream& outStream)
               << ModelPtr->getNumberOfEvents()  << ","
               << ModelPtr->computeLogPrior()    << ","
               << ModelPtr->getCurrLnLBranches() << ","
-			  << ModelPtr->getEventRate() << std::endl;
+              << ModelPtr->getEventRate() << std::endl;
 }
 
 
@@ -314,7 +325,6 @@ void MCMC::writeStateToStream(std::ostream& outStream)
 */
 void MCMC::printStateData(void)
 {
-
     std::cout << std::setw(10) << ModelPtr->getGeneration() << std::setw(10);
     std::cout << ModelPtr->getCurrLnLBranches() << std::setw(10);
     std::cout << ModelPtr->getNumberOfEvents() << std::setw(10);
@@ -322,109 +332,82 @@ void MCMC::printStateData(void)
 //  std::cout << "OtherL: " << ModelPtr->computeLikelihoodBranchesByInterval() << std::setw(10);
     //std::cout << ModelPtr->getEventRate() << std::setw(10);
     std::cout << "Accp: " << ModelPtr->getMHacceptanceRate() << std::endl;
-
 }
 
 ////////
 
 void MCMC::writeBranchSpeciationRatesToFile(void)
 {
-
     std::string outname = lambdaOutfile;
-
     ModelPtr->getTreePtr()->setMeanBranchSpeciation();
-
     std::stringstream outdata;
-
     ModelPtr->getTreePtr()->writeMeanBranchSpeciationTree(
         ModelPtr->getTreePtr()->getRoot(), outdata);
-
     outdata << ";";
-
     std::ofstream outStream;
     outStream.open(outname.c_str(), std::ofstream::app);
     outStream << outdata.str() << std::endl;
     outStream.close();
-
 }
 
 
 void MCMC::writeNodeSpeciationRatesToFile(void)
 {
-
     std::string outname = lambdaNodeOutfile;
-
     ModelPtr->getTreePtr()->setMeanBranchSpeciation();
-
     std::stringstream outdata;
-
     ModelPtr->getTreePtr()->writeNodeSpeciationTree(
         ModelPtr->getTreePtr()->getRoot(), outdata);
-
     outdata << ";";
-
     std::ofstream outStream;
     outStream.open(outname.c_str(), std::ofstream::app);
     outStream << outdata.str() << std::endl;
     outStream.close();
-
 }
 
 
 void MCMC::writeBranchExtinctionRatesToFile(void)
 {
-
     std::string outname = muOutfile;
-
-
     ModelPtr->getTreePtr()->setMeanBranchExtinction();
     std::stringstream outdata;
     ModelPtr->getTreePtr()->writeMeanBranchExtinctionTree(
         ModelPtr->getTreePtr()->getRoot(), outdata);
     outdata << ";";
-
     std::ofstream outStream;
     outStream.open(outname.c_str(), std::ofstream::app);
     outStream << outdata.str() << std::endl;
     outStream.close();
-
 }
 
 void MCMC::writeParamAcceptRates(void)
 {
-
     std::ofstream outStream;
     outStream.open(acceptFile.c_str(), std::ofstream::app);
     for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
         double rate = (double)acceptCount[i] / ((double)(acceptCount[i] +
                                                 rejectCount[i]));
         outStream << rate;
-        if (i < (acceptCount.size() - 1))
+        if (i < (acceptCount.size() - 1)) {
             outStream << ",";
-        else
+        } else {
             outStream << "\n";
-
+        }
     }
     outStream.close();
-
     for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
         acceptCount[i] = 0;
         rejectCount[i] = 0;
     }
-
 }
 
 void MCMC::writeEventDataToFile(void)
 {
-
     std::string outname = eventDataFile;
-
     std::stringstream eventData;
     ModelPtr->getEventDataString(eventData);
-
     std::ofstream outstream;
     outstream.open(eventDataFile.c_str(), std::ofstream::app);
     outstream << eventData.str() << std::endl;
     outstream.close();
-
 }

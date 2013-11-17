@@ -70,6 +70,7 @@ private:
     int _minCladeSizeForShift;
 	
 	long int _seed;
+	bool _overwrite;
 	
     // Class MCMC parameters::General
     std::string _mcmcOutfile;
@@ -196,6 +197,7 @@ private:
     bool isDefault_minCladeSizeForShift;
     
     bool isDefault_seed;
+    bool isDefault_overwrite;
 
     /* specific to trait evolution */
     bool isDefault_traitfile;
@@ -290,6 +292,7 @@ public:
 
     int getMinCladeSizeForShift();
     long int getSeed();
+    bool getOverwrite();
 	
 	// Functions to set MCMC operators for autotuning:
 	void setUpdateLambdaInitScale(double x);
@@ -536,6 +539,10 @@ inline long int Settings::getSeed()
     return _seed;
 }
 
+inline bool Settings::getOverwrite()
+{
+    return _overwrite;
+}
 
 inline std::string Settings::getMCMCoutfile()
 {

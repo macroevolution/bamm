@@ -69,7 +69,9 @@ Settings::Settings(void)
     _minCladeSizeForShift = 1;
     
     _seed = -1;
-
+    _overwrite = false;
+    
+    
     // Parameters for implementation of class MCMC:
     _mcmcOutfile            =       "BAMM_mcmc_out.txt";
     _eventDataOutfile       =       "BAMM_eventdata.txt";
@@ -160,7 +162,9 @@ Settings::Settings(void)
 
     isDefault_eventDataInfile                           = true;
     isDefault_minCladeSizeForShift                      = true;
+    
     isDefault_seed                                      = true;
+    isDefault_overwrite                                 = true;
 
 	isDefault_autotune									= true;
 	
@@ -576,7 +580,15 @@ void Settings::initializeSettings_Traits()
         } else if (_varName[i] == "autotune") {
 			_autotune = stringToBool(_varValue[i].c_str());
 			isDefault_autotune = false;
-		} else {
+		} else if (_varName[i] == "seed") {
+            _seed = atoi(_varValue[i].c_str());
+            isDefault_seed = false;
+        } else if (_varName[i] == "overwrite") {
+            _overwrite = stringToBool(_varValue[i].c_str());
+            if (_overwrite) {
+                isDefault_overwrite = false;
+            }
+        } else {
             // Parameter not found:
             //      add to list of potentially bad/misspelled params
             //      and print for user.
@@ -792,6 +804,11 @@ void Settings::initializeSettings_Diversification()
 		} else if (_varName[i] == "seed") {
             _seed = atoi(_varValue[i].c_str());
             isDefault_seed = false;
+        } else if (_varName[i] == "overwrite") {
+            _overwrite = stringToBool(_varValue[i].c_str());
+            if (_overwrite) {
+                isDefault_overwrite = false;
+            }
         } else {
             // Parameter not found:
             //      add to list of potentially bad/misspelled params
@@ -1083,6 +1100,9 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
         if (!isDefault_seed)
             std::cout << std::right << std::setw(ppw) << "seed" << "\t\t" <<
                  _seed << std::endl;
+        if (!isDefault_overwrite)
+            std::cout << std::right << std::setw(ppw) << "overwrite" << "\t\t" <<
+                 _overwrite << std::endl;
 
     } else {
         std::cout << "\tPrinting ALL parameter settings " << std::endl;
@@ -1165,6 +1185,8 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
              _minCladeSizeForShift << std::endl;
         std::cout << std::right << std::setw(ppw) << "seed" << "\t\t" <<
              _seed << std::endl;
+        std::cout << std::right << std::setw(ppw) << "overwrite" << "\t\t" <<
+             _overwrite << std::endl;
 
     }
 
