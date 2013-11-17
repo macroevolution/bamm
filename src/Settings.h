@@ -308,7 +308,7 @@ public:
     std::string getAcceptrateOutfile();
     std::string getLambdaNodeOutfile();
 
-    int getTreeWriteFreq();
+    int getBranchRatesWriteFreq();
     int getEventDataWriteFreq();
     int getMCMCwriteFreq();
     int getAcceptWriteFreq();
@@ -573,7 +573,7 @@ inline std::string Settings::getLambdaNodeOutfile()
 }
 
 
-inline int Settings::getTreeWriteFreq()
+inline int Settings::getBranchRatesWriteFreq()
 {
     return _treeWriteFreq;
 }

@@ -38,7 +38,7 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     acceptFile              =   sttings->getAcceptrateOutfile();
     eventDataFile           =   sttings->getEventDataOutfile();
 
-    _treeWriteFreq =    sttings->getTreeWriteFreq();
+    _treeWriteFreq =    sttings->getBranchRatesWriteFreq();
     _mcmcWriteFreq =    sttings->getMCMCwriteFreq();
     _eventDataWriteFreq = sttings->getEventDataWriteFreq();
     _acceptWriteFreq =  sttings->getAcceptWriteFreq();
@@ -88,6 +88,9 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
 
     }
 
+    // Deprecating this:
+    
+/*
     std::ifstream outStream4(acceptFile.c_str());
     if (outStream4) {
         std::cout << "Output file for acceptrates exists: " << std::endl;
@@ -97,7 +100,8 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
         filedelete.append(acceptFile);
         system(filedelete.c_str());
     }
-
+*/
+ 
     std::ifstream outStream6(eventDataFile.c_str());
     if (outStream6) {
         std::cout << "Output file for event data: " << std::endl;
@@ -151,8 +155,8 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
         if ((i % _printFreq == 0))
             printStateData();
 
-        if ((i % _acceptWriteFreq) == 0)
-            writeParamAcceptRates();
+        //if ((i % _acceptWriteFreq) == 0)
+        //  writeParamAcceptRates();
 
     }
 

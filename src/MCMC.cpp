@@ -31,7 +31,7 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     lambdaNodeOutfile       =   sttings->getLambdaNodeOutfile();
     eventDataFile           =   sttings->getEventDataOutfile();
 
-    _treeWriteFreq =        sttings->getTreeWriteFreq();
+    _treeWriteFreq =        sttings->getBranchRatesWriteFreq();
     _eventDataWriteFreq =   sttings->getEventDataWriteFreq();
     _mcmcWriteFreq =        sttings->getMCMCwriteFreq();
     _acceptWriteFreq =      sttings->getAcceptWriteFreq();
@@ -57,7 +57,7 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     //check if file exists; delete;
     std::ifstream outStream2(lambdaOutfile.c_str());
     if (outStream2) {
-        std::cout << "Output file for lambda exists: " << std::endl;
+        std::cout << "Output file for marginal branch (speciation) rates exists: " << std::endl;
         std::cout << std::setw(30) << " overwriting " << lambdaOutfile << std::endl;
         outStream2.close();
 
@@ -70,7 +70,7 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
 
     std::ifstream outStream3(muOutfile.c_str());
     if (outStream3) {
-        std::cout << "Output file for mu exists: " << std::endl;
+        std::cout << "Output file for marginal branch (extinction) rates exists: " << std::endl;
         std::cout << std::setw(30) << " overwriting " << muOutfile << std::endl;
         outStream3.close();
 
@@ -81,6 +81,9 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
 
     }
 
+
+    // Deprecated: no longer write accept rates to file.
+/*
     std::ifstream outStream4(acceptFile.c_str());
     if (outStream4) {
         std::cout << "Output file for acceptrates exists: " << std::endl;
@@ -90,7 +93,11 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
         filedelete.append(acceptFile);
         system(filedelete.c_str());
     }
+*/ 
 
+    
+    // Deprecated: no longer write node lambda to file.
+/*
     std::ifstream outStream5(lambdaNodeOutfile.c_str());
     if (outStream5) {
         std::cout << "Output file for lambdaNodeData: " << std::endl;
@@ -100,7 +107,8 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
         filedelete.append(lambdaNodeOutfile);
         system(filedelete.c_str());
     }
-
+*/
+ 
     std::ifstream outStream6(eventDataFile.c_str());
     if (outStream6) {
         std::cout << "Output file for event data: " << std::endl;
@@ -138,9 +146,9 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
 
             writeBranchSpeciationRatesToFile();
             writeBranchExtinctionRatesToFile();
-            writeNodeSpeciationRatesToFile();
-            //writeEventDataToFile();
-            //mymodel->getTreePtr()->printNodeBranchRates();
+ 
+            // Deprecating this: no need to write this
+            //writeNodeSpeciationRatesToFile();
         }
 
         if ((i % _eventDataWriteFreq) == 0)
@@ -156,8 +164,9 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
         if ((i % _printFreq == 0))
             printStateData();
 
-        if ((i % _acceptWriteFreq) == 0)
-            writeParamAcceptRates();
+        // Deprecating this - no need to write this accept data
+        //if ((i % _acceptWriteFreq) == 0)
+        //    writeParamAcceptRates();
 
     }
 

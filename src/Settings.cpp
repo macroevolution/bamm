@@ -528,7 +528,7 @@ void Settings::initializeSettings_Traits()
         } else if (_varName[i] == "acceptrateOutfile") {
             _acceptrateOutfile = _varValue[i];
             isDefault_acceptrateOutfile = false;
-        } else if (_varName[i] == "treeWriteFreq") {
+        } else if (_varName[i] == "branchRatesWriteFreq") {
             _treeWriteFreq = atoi(_varValue[i].c_str());
             isDefault_treeWriteFreq = false;
         } else if (_varName[i] == "eventDataWriteFreq") {
@@ -734,7 +734,7 @@ void Settings::initializeSettings_Diversification()
         } else if (_varName[i] == "lambdaNodeOutfile") {
             _lambdaNodeOutfile = _varValue[i];
             isDefault_lambdaNodeOutfile = false;
-        } else if (_varName[i] == "treeWriteFreq") {
+        } else if (_varName[i] == "branchRatesWriteFreq") {
             _treeWriteFreq = atoi(_varValue[i].c_str());
             isDefault_treeWriteFreq = false;
         } else if (_varName[i] == "eventDataWriteFreq") {
@@ -892,7 +892,7 @@ void Settings::checkAreInitialSettingsValid_Traits(void)
     if (isDefault_acceptrateOutfile)
         paramsNotSpecified.push_back("acceptRateOutfile");
     if (isDefault_treeWriteFreq)
-        paramsNotSpecified.push_back("treeWriteFreq");
+        paramsNotSpecified.push_back("branchRatesWriteFreq");
     if (isDefault_eventDataWriteFreq)
         paramsNotSpecified.push_back("eventDataWriteFreq");
     if (isDefault_mcmcWriteFreq)
@@ -1043,7 +1043,7 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
             std::cout << std::right << std::setw(ppw) << "lambdaNodeOutfile" << "\t\t" <<
                  _lambdaNodeOutfile << std::endl;
         if (!isDefault_treeWriteFreq)
-            std::cout << std::right << std::setw(ppw) << "treeWriteFreq" << "\t\t" << _treeWriteFreq <<
+            std::cout << std::right << std::setw(ppw) << "branchRatesWriteFreq" << "\t\t" << _treeWriteFreq <<
                  std::endl;
         if (!isDefault_mcmcWriteFreq)
             std::cout << std::right << std::setw(ppw) << "mcmcWriteFreq" << "\t\t" << _mcmcWriteFreq <<
@@ -1140,7 +1140,7 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
              _acceptrateOutfile << std::endl;
         std::cout << std::right << std::setw(ppw) << "lambdaNodeOutfile" << "\t\t" <<
              _lambdaNodeOutfile << std::endl;
-        std::cout << std::right << std::setw(ppw) << "treeWriteFreq" << "\t\t" << _treeWriteFreq <<
+        std::cout << std::right << std::setw(ppw) << "branchRatesWriteFreq" << "\t\t" << _treeWriteFreq <<
              std::endl;
         std::cout << std::right << std::setw(ppw) << "eventDataWriteFreq" << "\t\t" <<
              _eventDataWriteFreq << std::endl;
