@@ -22,7 +22,7 @@ localGlobalMoveRatio = 5
 betaInit = 0.5
 betaShiftInit = 0.0
 
-targetNumber = 100
+poissonRatePrior = 10 # was: targetNumber
 betaInitPrior = 1
 betaShiftPrior = 0.05
 
@@ -36,7 +36,7 @@ acceptrateOutfile = baccept.txt
 nodeStateOutfile = bnodestate.txt
 eventDataOutfile = beventdata.txt
 
-treeWriteFreq = 100000
+branchRatesWriteFreq = 20000 # was: treeWriteFreq
 mcmcWriteFreq = 5000
 acceptWriteFreq = 100000
 eventDataWriteFreq = 10000
