@@ -1,10 +1,12 @@
-/*
- *  TraitModel.cpp
- *  BAMMt
- *
- *  Created by Dan Rabosky on 6/20/12.
- *
- */
+
+
+// Undefining this macro constrains analysis to NEGATIVE values
+// for the beta shift parameter
+
+#define NEGATIVE_SHIFT_PARAM
+//#undef NEGATIVE_SHIFT_PARAM
+
+
 
 #include "TraitModel.h"
 
@@ -26,6 +28,8 @@
 #include "Utilities.h"
 
 double TraitModel::mhColdness = 1.0;
+
+
 
 
 TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
@@ -101,6 +105,19 @@ TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
     //set up event at root node:
     double startTime = 0;
 
+  
+#ifdef NEGATIVE_SHIFT_PARAM
+    
+    // Constrain beta shift to be zero or less than zero.
+    if (sttings->getBetaShiftInit() > 0){
+        std::cout << "\n\n********* ERROR ******************" << std::endl;
+        std::cout << "Initial value of beta shift (betaShiftInit) cannot" << std::endl;
+        std::cout << " be positive. This parameter is constrained to negative values\n\n" << std::endl;
+        exit(0);
+    }
+#endif
+    
+    
     TraitBranchEvent* x =  new TraitBranchEvent((double)sttings->getBetaInit(),
             sttings->getBetaShiftInit(), treePtr->getRoot(), treePtr, ran, startTime);
     rootEvent = x;
@@ -294,24 +311,28 @@ void TraitModel::addEventToTree(double x)
 {
 
 
-    // For now, the rates of speciation and extinction are set to whatever they should be based
-    // on the ancestralNodeEvent
-    //Node * xnode = treePtr->mapEventToTree(x);
-    //double atime = treePtr->getAbsoluteTimeFromMapTime(x);
-    //TraitBranchHistory * bh = xnode->getTraitBranchHistory();
-    //TraitBranchEvent * be = bh->getAncestralNodeEvent();
-
-    //double elapsed = atime - be->getAbsoluteTime();
-    //double newbeta = be->getBetaInit() * exp( elapsed * be->getBetaShift());
-
-    /*      ********************* */
     // Sample beta and beta shift from prior:
     double newbeta = ran->exponentialRv(sttings->getBetaInitPrior());
     double newBetaShift = ran->normalRv(0.0, sttings->getBetaShiftPrior());
 
+    
+#ifdef NEGATIVE_SHIFT_PARAM
+    
+    newBetaShift = -fabs(newBetaShift);
+    double dens_term = log(2.0);
+    
+#else
+    double dens_term = 0.0;
+    
+    
+#endif
+    
+    
     _logQratioJump = 0.0;
     _logQratioJump += ran->lnExponentialPdf(sttings->getBetaInitPrior(), newbeta);
-    _logQratioJump += ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
+    
+    // Add log(2) [see dens_term above] because this is truncated normal distribution constrained to negative values
+    _logQratioJump += dens_term + ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
                                        newBetaShift);
 
     // End calculations:: now create event
@@ -357,7 +378,11 @@ void TraitModel::addEventToTree(void)
     double x = ran->uniformRv(aa, bb);
 
 #ifdef OLDWAY
-
+    
+    std::cout << "Problem in TraitModel::addEventToTree(void)" << std::endl;
+    std::cout << "Should not get to this part of code - deprecated" << std::endl;
+    exit(0);
+    
     // For now, the rates of speciation and extinction are set to whatever they should be based
     // on the ancestralNodeEvent
     Node* xnode = treePtr->mapEventToTree(x);
@@ -368,21 +393,32 @@ void TraitModel::addEventToTree(void)
     double elapsed = atime - be->getAbsoluteTime();
     double newbeta = be->getBetaInit() * exp( elapsed * be->getBetaShift());
     double newBetaShift = be->getBetaShift();
-
-#else
-
+ 
+#endif 
+    
     /*      ********************* */
     // Sample beta and beta shift from prior:
     double newbeta = ran->exponentialRv(sttings->getBetaInitPrior());
     double newBetaShift = ran->normalRv(0.0, sttings->getBetaShiftPrior());
-
+    
+#ifdef NEGATIVE_SHIFT_PARAM
+    
+    newBetaShift = -fabs(newBetaShift);
+    double dens_term = log(2.0);
+    
+#else
+    double dens_term = 0.0;
+    
+    
 #endif
+    
+    
 
 // End calculations:: now create event
 
     _logQratioJump = 0.0;
     _logQratioJump += ran->lnExponentialPdf(sttings->getBetaInitPrior(), newbeta);
-    _logQratioJump += ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
+    _logQratioJump += dens_term + ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
                                        newBetaShift);
 
     TraitBranchEvent* newEvent = new TraitBranchEvent(newbeta, newBetaShift,
@@ -413,8 +449,7 @@ void TraitModel::addEventToTree(void)
 
 void TraitModel::addEventToTreeWithSetBeta(double beta, double bshift)
 {
-
-
+    
     double aa = treePtr->getRoot()->getMapStart();
     double bb = treePtr->getTotalMapLength();
     double x = ran->uniformRv(aa, bb);
@@ -1347,7 +1382,10 @@ void TraitModel::updateBetaShiftMH(void)
 
     double oldShift = be->getBetaShift();
     double newShift = oldShift + ran->normalRv((double)0.0, _updateBetaShiftScale);
-
+ 
+    // Convert to negative via reflection:
+    newShift = -fabs(newShift);
+ 
     be->setBetaShift(newShift);
     treePtr->setMeanBranchTraitRates();
 
@@ -1359,6 +1397,8 @@ void TraitModel::updateBetaShiftMH(void)
 #endif
 
     // Normal prior on shift parameter:
+    // We ignore the log(2) term which cancels out.
+    
     double LogPriorRatio = ran->lnNormalPdf((double)0.0,
                                             sttings->getBetaShiftPrior(), newShift);
     LogPriorRatio -= ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
@@ -1651,16 +1691,29 @@ double TraitModel::computeLogPrior(void)
 
 
 
+    
+#ifdef NEGATIVE_SHIFT_PARAM
+
+    double dens_term = log(2.0);
+    
+#else
+    double dens_term = 0.0;
+
+#endif
+    
+    
     double logPrior = 0.0;
     logPrior += ran->lnExponentialPdf(sttings->getBetaInitPrior(),
                                       rootEvent->getBetaInit());
-    logPrior += ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
+    logPrior += dens_term + ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
                                  rootEvent->getBetaShift());
     for (std::set<TraitBranchEvent*>::iterator i = eventCollection.begin();
             i != eventCollection.end(); i++) {
         logPrior += ran->lnExponentialPdf(sttings->getBetaInitPrior(),
                                           (*i)->getBetaInit());
-        logPrior += ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
+
+        // Add log(2) to make truncated normal density but only if NEGATIVE_SHIFT_PARAM
+        logPrior += dens_term + ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
                                      (*i)->getBetaShift());
     }
 
