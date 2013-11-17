@@ -41,7 +41,7 @@
 #include <vector>
 
 #ifndef PI
-#	define PI 3.141592653589793
+#    define PI 3.141592653589793
 #endif
 
 /*! 
@@ -59,97 +59,95 @@
  * \brief MbRandom is a class for generating random variables. 
 */
 class MbRandom {
-
-	public:
-		                     MbRandom(void);                                                                           /*!< constructor: initializes the seed with current time                            */
-		                     MbRandom(long int x);                                                                     /*!< constructor: initializes the seed with supplied value                          */
-				  long int   getSeed(void);                                                                            /*!< retreives the seeds                                                            */
-					  void   setSeed(void);                                                                            /*!< initializes the seeds using the current time                                   */
-		              void   setSeed(long int s);                                                                      /*!< initializes the seeds                                                          */
-					double   chiSquareRv(double v);                                                   /* chi square */ /*!< Chi-square random variable                                                     */
+    public:
+                             MbRandom(void);                                                                           /*!< constructor: initializes the seed with current time                            */
+                             MbRandom(long int x);                                                                     /*!< constructor: initializes the seed with supplied value                          */
+                  long int   getSeed(void);                                                                            /*!< retreives the seeds                                                            */
+                      void   setSeed(void);                                                                            /*!< initializes the seeds using the current time                                   */
+                      void   setSeed(long int s);                                                                      /*!< initializes the seeds                                                          */
+                    double   chiSquareRv(double v);                                                   /* chi square */ /*!< Chi-square random variable                                                     */
                     double   chiSquarePdf(double v, double x);                                                         /*!< the chi-square probability density                                             */
                     double   lnChiSquarePdf(double v, double x);                                                       /*!< natural log of the chi-square probability density                              */
                     double   chiSquareCdf(double v, double x);                                                         /*!< the chi-square cumulative probability                                          */
-		            double   chiSquareQuantile(double prob, double v);                                                 /*!< quantile of a chi square distribution                                          */
-		     inline double   exponentialRv(double lambda);                                           /* exponential */ /*!< exponential random variable                                                    */
-		     inline double   exponentialPdf(double lambda, double x);                                                  /*!< Exponential probability density                                                */
-		     inline double   lnExponentialPdf(double lambda, double x);                                                /*!< natural log of Exponential probability density                                 */
-		     inline double   exponentialCdf(double lambda, double x);                                                  /*!< Exponential cumulative probability                                             */
-		     inline double   exponentialQuantile(double lambda, double p);                                             /*!< quantile of an exponential distribution                                        */
-		            double   gammaRv(double a, double b);                                                  /* gamma */ /*!< gamma random variable                                                          */
-		            double   gammaPdf(double a, double b, double x);                                                   /*!< Gamma probability density                                                      */
-		            double   lnGammaPdf(double a, double b, double x);                                                 /*!< natural log of Gamma probability density                                       */
-		            double   gammaCdf(double a, double b, double x);                                                   /*!< Gamma cumulative probability                                                   */
-		     inline double   gammaQuantile(double a, double b, double p);                                              /*!< quantile of gamma distribution                                                 */
- 	 	     
-			 inline double   logNormalRv(double mu, double sigma);                                    /* log normal */ /*!< log normal random variable                                                     */
-		     inline double   logNormalPdf(double mu, double sigma, double x);                                          /*!< log normal probability density                                                 */
-		     inline double   lnLogNormalPdf(double mu, double sigma, double x);                                        /*!< natural log of log normal probability density                                  */
-		     inline double   logNormalCdf(double mu, double sigma, double x);                                          /*!< log normal cumulative probability                                              */
-		            double   logNormalQuantile(double mu, double sigma, double p);                                     /*!< quantile of log normal distribution                                            */
-			 
-			 inline double   normalRv(double mu, double sigma);                                           /* normal */ /*!< normal(mu,sigma) random variable                                               */
-		     inline double   normalPdf(double mu, double var, double x); // Modified DLR Feb 2012                                             /*!< Normal probability density                                                     */
-		     inline double   lnNormalPdf(double mu, double var, double x);  // Modified DLR Feb 2012                                          /*!< natural log of Normal probability density                                      */
-		            double   normalCdf(double mu, double sigma, double x);                                             /*!< Normal cumulative probability                                                  */
-		            double   normalQuantile(double mu, double sigma, double p);                                        /*!< quantile of normal distribution                                                */
-		            
-					double   uniformRv(void);                                                       /* uniform(0,1) */ /*!< uniform(0,1) random variable                                                   */
-		     inline double   uniformPdf(void);                                                                         /*!< Uniform(0,1) probability density                                               */
-			 inline double   lnUniformPdf(void);                                                                       /*!< natural log of Uniform(0,1) probability density                                */
-		            double   uniformCdf(double x);                                                                     /*!< Uniform(0,1) cumulative probability                                            */
-		     inline double   uniformQuantile(double p);                                                                /*!< quantile of a uniform(0,1) distribuiton                                        */
-		     inline double   uniformRv(double a, double b);                                         /* uniform(a,b) */ /*!< uniform(a,b) random variable                                                   */
-		     inline double   uniformPdf(double a, double b);                                                           /*!< Uniform(a,b) probability density                                               */
-		     inline double   lnUniformPdf(double a, double b);                                                         /*!< natural log of Uniform(a,b) probability density                                */
-		            double   uniformCdf(double a, double b, double x);                                                 /*!< Uniform(a,b) cumulative probability                                            */
-		     inline double   uniformQuantile(double a, double b, double p);                                            /*!< quantile of a uniform(a,b) distribuiton                                        */
-		            double   betaRv(double a, double b);                                                    /* beta */ /*!< Beta random variable                                                           */
-		            double   betaPdf(double a, double b, double x);                                                    /*!< Beta probability density                                                       */
-		            double   lnBetaPdf(double a, double b, double x);                                                  /*!< natural log of the Beta probability density                                    */
-		            double   betaCdf(double a, double b, double x);                                                    /*!< Beta cumulative probability                                                    */
-		            double   betaQuantile(double a, double b, double p);                                               /*!< quantile of the Beta distribution                                              */
-					  void   dirichletRv(const std::vector<double> &a, std::vector<double> &z);        /* dirichlet */ /*!< Dirichlet random variable                                                      */
-		            double   dirichletPdf(const std::vector<double> &a, const std::vector<double> &z);                 /*!< Dirichlet probability density                                                  */
-		            double   lnDirichletPdf(const std::vector<double> &a, const std::vector<double> &z);               /*!< natural log of Dirichlet probability density                                   */
-		               int   discreteUniformRv(int a, int b);                                   /* discrete uniform */ /*!< discrete uniform random variable                                               */
-		     inline double   discreteUniformProb(int a, int b);                                                        /*!< discrete uniform probability                                                   */
-		     inline double   lnDiscreteUniformProb(int a, int b);                                                      /*!< natural log of discrete uniform probability                                    */
-		               int   poissonRv(double lambda);                                                   /* poisson */ /*!< Poisson random variable                                                        */
-		     inline double   poissonProb(double lambda, int x);                                                        /*!< Poisson probability                                                            */
-		     inline double   lnPoissonProb(double lambda, int x);                                                      /*!< natural log of Poisson probability                                             */
-		            double   poissonCdf(double lambda, int x);                                                         /*!< Poisson cumulative probability                                                 */
-		            double   poissonQuantile(double lambda, double p);                                                 /*!< quantile of a Poisson(lambda) distribution                                     */
-					  void   discretizeGamma(std::vector<double> &catRate, double a, double b, int nCats, bool median);/*!< calculates the average/median values for a discretized gamma distribution      */
-		            double   lnGamma(double a);                                                                        /*!< log of the gamma function                                                      */
+                    double   chiSquareQuantile(double prob, double v);                                                 /*!< quantile of a chi square distribution                                          */
+             inline double   exponentialRv(double lambda);                                           /* exponential */ /*!< exponential random variable                                                    */
+             inline double   exponentialPdf(double lambda, double x);                                                  /*!< Exponential probability density                                                */
+             inline double   lnExponentialPdf(double lambda, double x);                                                /*!< natural log of Exponential probability density                                 */
+             inline double   exponentialCdf(double lambda, double x);                                                  /*!< Exponential cumulative probability                                             */
+             inline double   exponentialQuantile(double lambda, double p);                                             /*!< quantile of an exponential distribution                                        */
+                    double   gammaRv(double a, double b);                                                  /* gamma */ /*!< gamma random variable                                                          */
+                    double   gammaPdf(double a, double b, double x);                                                   /*!< Gamma probability density                                                      */
+                    double   lnGammaPdf(double a, double b, double x);                                                 /*!< natural log of Gamma probability density                                       */
+                    double   gammaCdf(double a, double b, double x);                                                   /*!< Gamma cumulative probability                                                   */
+             inline double   gammaQuantile(double a, double b, double p);                                              /*!< quantile of gamma distribution                                                 */
+               
+             inline double   logNormalRv(double mu, double sigma);                                    /* log normal */ /*!< log normal random variable                                                     */
+             inline double   logNormalPdf(double mu, double sigma, double x);                                          /*!< log normal probability density                                                 */
+             inline double   lnLogNormalPdf(double mu, double sigma, double x);                                        /*!< natural log of log normal probability density                                  */
+             inline double   logNormalCdf(double mu, double sigma, double x);                                          /*!< log normal cumulative probability                                              */
+                    double   logNormalQuantile(double mu, double sigma, double p);                                     /*!< quantile of log normal distribution                                            */
+             
+             inline double   normalRv(double mu, double sigma);                                           /* normal */ /*!< normal(mu,sigma) random variable                                               */
+             inline double   normalPdf(double mu, double var, double x); // Modified DLR Feb 2012                                             /*!< Normal probability density                                                     */
+             inline double   lnNormalPdf(double mu, double var, double x);  // Modified DLR Feb 2012                                          /*!< natural log of Normal probability density                                      */
+                    double   normalCdf(double mu, double sigma, double x);                                             /*!< Normal cumulative probability                                                  */
+                    double   normalQuantile(double mu, double sigma, double p);                                        /*!< quantile of normal distribution                                                */
+                    
+                    double   uniformRv(void);                                                       /* uniform(0,1) */ /*!< uniform(0,1) random variable                                                   */
+             inline double   uniformPdf(void);                                                                         /*!< Uniform(0,1) probability density                                               */
+             inline double   lnUniformPdf(void);                                                                       /*!< natural log of Uniform(0,1) probability density                                */
+                    double   uniformCdf(double x);                                                                     /*!< Uniform(0,1) cumulative probability                                            */
+             inline double   uniformQuantile(double p);                                                                /*!< quantile of a uniform(0,1) distribuiton                                        */
+             inline double   uniformRv(double a, double b);                                         /* uniform(a,b) */ /*!< uniform(a,b) random variable                                                   */
+             inline double   uniformPdf(double a, double b);                                                           /*!< Uniform(a,b) probability density                                               */
+             inline double   lnUniformPdf(double a, double b);                                                         /*!< natural log of Uniform(a,b) probability density                                */
+                    double   uniformCdf(double a, double b, double x);                                                 /*!< Uniform(a,b) cumulative probability                                            */
+             inline double   uniformQuantile(double a, double b, double p);                                            /*!< quantile of a uniform(a,b) distribuiton                                        */
+                    double   betaRv(double a, double b);                                                    /* beta */ /*!< Beta random variable                                                           */
+                    double   betaPdf(double a, double b, double x);                                                    /*!< Beta probability density                                                       */
+                    double   lnBetaPdf(double a, double b, double x);                                                  /*!< natural log of the Beta probability density                                    */
+                    double   betaCdf(double a, double b, double x);                                                    /*!< Beta cumulative probability                                                    */
+                    double   betaQuantile(double a, double b, double p);                                               /*!< quantile of the Beta distribution                                              */
+                      void   dirichletRv(const std::vector<double> &a, std::vector<double> &z);        /* dirichlet */ /*!< Dirichlet random variable                                                      */
+                    double   dirichletPdf(const std::vector<double> &a, const std::vector<double> &z);                 /*!< Dirichlet probability density                                                  */
+                    double   lnDirichletPdf(const std::vector<double> &a, const std::vector<double> &z);               /*!< natural log of Dirichlet probability density                                   */
+                       int   discreteUniformRv(int a, int b);                                   /* discrete uniform */ /*!< discrete uniform random variable                                               */
+             inline double   discreteUniformProb(int a, int b);                                                        /*!< discrete uniform probability                                                   */
+             inline double   lnDiscreteUniformProb(int a, int b);                                                      /*!< natural log of discrete uniform probability                                    */
+                       int   poissonRv(double lambda);                                                   /* poisson */ /*!< Poisson random variable                                                        */
+             inline double   poissonProb(double lambda, int x);                                                        /*!< Poisson probability                                                            */
+             inline double   lnPoissonProb(double lambda, int x);                                                      /*!< natural log of Poisson probability                                             */
+                    double   poissonCdf(double lambda, int x);                                                         /*!< Poisson cumulative probability                                                 */
+                    double   poissonQuantile(double lambda, double p);                                                 /*!< quantile of a Poisson(lambda) distribution                                     */
+                      void   discretizeGamma(std::vector<double> &catRate, double a, double b, int nCats, bool median);/*!< calculates the average/median values for a discretized gamma distribution      */
+                    double   lnGamma(double a);                                                                        /*!< log of the gamma function                                                      */
 
-						// DLR modifications
-					   int   sampleInteger(int min, int max);   
-	
-	
-	private:
-	                        /* private functions */
-	                double   beta(double a, double b);                                                                 /*!< calculates the beta function                                                   */
-	                double   gamma(double x);                                                                          /*!< calculates the gamma function                                                  */
-	                double   incompleteBeta(double a, double b, double x);                                             /*!< calculates the incomplete beta function                                        */
-		            double   incompleteGamma (double x, double alpha, double LnGamma_alpha);                           /*!< calculates the incomplete gamma ratio                                          */
-		            double   lnFactorial(int n);                                                                       /*!< log of factorial [ln(n!)]                                                      */
-		            double   mbEpsilon(void);                                                                          /*!< round off unit for floating arithmetic                                         */
-		            double   normalRv(void);                                                                           /*!< standard normal(0,1) random variable                                           */
-		            double   pointNormal(double prob);                                                                 /*!< quantile of standard normal distribution                                       */
-		               int   poissonLow(double lambda);                                                                /*!< function used when calculating Poisson random variables                        */
-		               int   poissonInver(double lambda);                                                              /*!< function used when calculating Poisson random variables                        */
-		               int   poissonRatioUniforms(double lambda);                                                      /*!< function used when calculating Poisson random variables                        */
-		            double   rndGamma(double s);                                                                       /*!< function used when calculating gamma random variable                           */
-		            double   rndGamma1(double s);                                                                      /*!< function used when calculating gamma random variable                           */
-		            double   rndGamma2(double s);                                                                      /*!< function used when calculating gamma random variable                           */
-				   
-		                    /* private data */
-			      long int   seed;                                                                                     /*!< seed values for the random number generator                                    */
-		              bool   initializedFacTable;                                                                      /*!< a boolean which is false if the log factorial table has not been initialized   */
-		            double   facTable[1024];                                                                           /*!< a table containing the log of the factorial up to 1024                         */
-		              bool   availableNormalRv;                                                                        /*!< a boolean which is true if there is a normal random variable available         */
-		            double   extraNormalRv;                                                                            /*!< a normally-distributed random variable which                                   */
+                        // DLR modifications
+                       int   sampleInteger(int min, int max);   
+    
+    private:
+                            /* private functions */
+                    double   beta(double a, double b);                                                                 /*!< calculates the beta function                                                   */
+                    double   gamma(double x);                                                                          /*!< calculates the gamma function                                                  */
+                    double   incompleteBeta(double a, double b, double x);                                             /*!< calculates the incomplete beta function                                        */
+                    double   incompleteGamma (double x, double alpha, double LnGamma_alpha);                           /*!< calculates the incomplete gamma ratio                                          */
+                    double   lnFactorial(int n);                                                                       /*!< log of factorial [ln(n!)]                                                      */
+                    double   mbEpsilon(void);                                                                          /*!< round off unit for floating arithmetic                                         */
+                    double   normalRv(void);                                                                           /*!< standard normal(0,1) random variable                                           */
+                    double   pointNormal(double prob);                                                                 /*!< quantile of standard normal distribution                                       */
+                       int   poissonLow(double lambda);                                                                /*!< function used when calculating Poisson random variables                        */
+                       int   poissonInver(double lambda);                                                              /*!< function used when calculating Poisson random variables                        */
+                       int   poissonRatioUniforms(double lambda);                                                      /*!< function used when calculating Poisson random variables                        */
+                    double   rndGamma(double s);                                                                       /*!< function used when calculating gamma random variable                           */
+                    double   rndGamma1(double s);                                                                      /*!< function used when calculating gamma random variable                           */
+                    double   rndGamma2(double s);                                                                      /*!< function used when calculating gamma random variable                           */
+                   
+                            /* private data */
+                  long int   seed;                                                                                     /*!< seed values for the random number generator                                    */
+                      bool   initializedFacTable;                                                                      /*!< a boolean which is false if the log factorial table has not been initialized   */
+                    double   facTable[1024];                                                                           /*!< a table containing the log of the factorial up to 1024                         */
+                      bool   availableNormalRv;                                                                        /*!< a boolean which is true if there is a normal random variable available         */
+                    double   extraNormalRv;                                                                            /*!< a normally-distributed random variable which                                   */
 };
 
 
@@ -162,8 +160,7 @@ class MbRandom {
  * \throws Does not throw an error.
  */
 inline double MbRandom::exponentialRv(double lambda) {
-
-	return -(1.0 / lambda) * std::log( uniformRv() );
+    return -(1.0 / lambda) * std::log( uniformRv() );
 }
 
 /*!
@@ -177,8 +174,7 @@ inline double MbRandom::exponentialRv(double lambda) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::exponentialPdf(double lambda, double x) {
-
-	return lambda * exp(-lambda * x);
+    return lambda * exp(-lambda * x);
 }
 
 /*!
@@ -192,8 +188,7 @@ inline double MbRandom::exponentialPdf(double lambda, double x) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::exponentialCdf(double lambda, double x) {
-
-	return 1.0 - exp(-lambda * x);
+    return 1.0 - exp(-lambda * x);
 }
 
 /*!
@@ -207,8 +202,7 @@ inline double MbRandom::exponentialCdf(double lambda, double x) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::lnExponentialPdf(double lambda, double x) {
-
-	return (std::log(lambda) - lambda * x);
+    return (std::log(lambda) - lambda * x);
 }
 
 /*!
@@ -222,8 +216,7 @@ inline double MbRandom::lnExponentialPdf(double lambda, double x) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::exponentialQuantile(double lambda, double p) {
-
-	return -(1.0 / lambda) * std::log(1.0 - p);
+    return -(1.0 / lambda) * std::log(1.0 - p);
 }
 
 /*!
@@ -238,8 +231,7 @@ inline double MbRandom::exponentialQuantile(double lambda, double p) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::gammaQuantile(double a, double b, double p) {
-
-	return chiSquareQuantile(p, 2.0 * a) / (2.0*b);
+    return chiSquareQuantile(p, 2.0 * a) / (2.0*b);
 }
 
 /*!
@@ -252,8 +244,7 @@ inline double MbRandom::gammaQuantile(double a, double b, double p) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::logNormalRv(double mu, double sigma) {
-
-	return exp( normalRv(mu, sigma) );
+    return exp( normalRv(mu, sigma) );
 }
 
 /*!
@@ -268,18 +259,14 @@ inline double MbRandom::logNormalRv(double mu, double sigma) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::logNormalPdf(double mu, double sigma, double x) {
-
-	double pdf;
-	if ( x <= 0.0 )
-		{
-		pdf = 0.0;
-		}
-	else
-		{
-		double y = ( std::log(x) - mu ) / sigma;
-		pdf = exp( -0.5 * y * y ) / ( sigma * x * sqrt(2.0 * PI) );
-		}
-	return pdf;
+    double pdf;
+    if ( x <= 0.0 ) {
+        pdf = 0.0;
+    } else {
+        double y = ( std::log(x) - mu ) / sigma;
+        pdf = exp( -0.5 * y * y ) / ( sigma * x * sqrt(2.0 * PI) );
+    }
+    return pdf;
 }
 
 /*!
@@ -294,18 +281,14 @@ inline double MbRandom::logNormalPdf(double mu, double sigma, double x) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::logNormalCdf(double mu, double sigma, double x) {
-
-	double cdf;
-	if ( x <= 0.0 )
-		{
-		cdf = 0.0;
-		}
-	else
-		{
-		double logX = std::log(x);
-		cdf = normalCdf( mu, sigma, logX );
-		}
-	return cdf;
+    double cdf;
+    if ( x <= 0.0 ) {
+        cdf = 0.0;
+    } else {
+        double logX = std::log(x);
+        cdf = normalCdf( mu, sigma, logX );
+    }
+    return cdf;
 }
 
 /*!
@@ -320,8 +303,7 @@ inline double MbRandom::logNormalCdf(double mu, double sigma, double x) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::lnLogNormalPdf(double mu, double sigma, double x) {
-
-	return ( - 0.5 * ( (std::log(x) - mu) / sigma ) * ( (std::log(x) - mu) / sigma ) ) - std::log( sigma * x * sqrt( 2.0 * PI ) );
+    return ( - 0.5 * ( (std::log(x) - mu) / sigma ) * ( (std::log(x) - mu) / sigma ) ) - std::log( sigma * x * sqrt( 2.0 * PI ) );
 }
 
 /*!
@@ -334,8 +316,7 @@ inline double MbRandom::lnLogNormalPdf(double mu, double sigma, double x) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::normalRv(double mu, double sigma) {
-
-	return ( mu + sigma * normalRv() );
+    return ( mu + sigma * normalRv() );
 }
 
 /*!
@@ -350,9 +331,8 @@ inline double MbRandom::normalRv(double mu, double sigma) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::normalPdf(double mu, double var, double x) {
-
-	double y = (( x - mu ) * (x - mu)) / (2 * var);
-	return exp( - y)  / ( sqrt ( 2.0 * PI * var) );
+    double y = (( x - mu ) * (x - mu)) / (2 * var);
+    return exp( - y)  / ( sqrt ( 2.0 * PI * var) );
 }
 
 
@@ -360,7 +340,7 @@ inline double MbRandom::normalPdf(double mu, double var, double x) {
 
 /*inline double MbRandom::lnNormalPdf(double mu, double sigma, double x) {
 
-	return -0.5 * std::log(2.0 * PI * sigma) - 0.5 * (x - mu) * (x - mu) / (sigma * sigma);
+    return -0.5 * std::log(2.0 * PI * sigma) - 0.5 * (x - mu) * (x - mu) / (sigma * sigma);
 }*/
 
 // Fixed version
@@ -377,8 +357,8 @@ inline double MbRandom::normalPdf(double mu, double var, double x) {
  * \throws Does not throw an error.
  */
 
-inline double MbRandom::lnNormalPdf(double mu, double var, double x){
-	return ( -0.5 * std::log( 2.0 * PI * var ) - (( x - mu ) * (x - mu) ) / (2 * var) );
+inline double MbRandom::lnNormalPdf(double mu, double var, double x) {
+    return ( -0.5 * std::log( 2.0 * PI * var ) - (( x - mu ) * (x - mu) ) / (2 * var) );
 }
 
 /*!
@@ -390,8 +370,7 @@ inline double MbRandom::lnNormalPdf(double mu, double var, double x){
  * \throws Does not throw an error.
  */
 inline double MbRandom::uniformPdf(void) {
-
-	return 1.0;
+    return 1.0;
 }
 
 /*!
@@ -403,8 +382,7 @@ inline double MbRandom::uniformPdf(void) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::lnUniformPdf(void) {
-
-	return 0.0;
+    return 0.0;
 }
 
 /*!
@@ -417,8 +395,7 @@ inline double MbRandom::lnUniformPdf(void) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::uniformQuantile(double p) {
-
-	return p;
+    return p;
 }
 
 /*!
@@ -431,8 +408,7 @@ inline double MbRandom::uniformQuantile(double p) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::uniformRv(double a, double b) {
-
-	return ( a + uniformRv() * (b - a) );
+    return ( a + uniformRv() * (b - a) );
 }
 
 /*!
@@ -446,8 +422,7 @@ inline double MbRandom::uniformRv(double a, double b) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::uniformPdf(double a, double b) {
-
-	return 1.0 / (b-a);
+    return 1.0 / (b-a);
 }
 
 /*!
@@ -462,13 +437,13 @@ inline double MbRandom::uniformPdf(double a, double b) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::uniformCdf(double a, double b, double x) {
-
-	if ( x < a )
-		return 0.0;
-	else if ( x > b )
-		return 1.0;
-	else
-		return (x-a) / (b-a);
+    if ( x < a ) {
+        return 0.0;
+    } else if ( x > b ) {
+        return 1.0;
+    } else {
+        return (x-a) / (b-a);
+    }
 }
 
 /*!
@@ -482,8 +457,7 @@ inline double MbRandom::uniformCdf(double a, double b, double x) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::lnUniformPdf(double a, double b) {
-
-	return ( -std::log(b-a) );
+    return ( -std::log(b-a) );
 }
 
 /*!
@@ -498,8 +472,7 @@ inline double MbRandom::lnUniformPdf(double a, double b) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::uniformQuantile(double a, double b, double p) {
-
-	return a + (b - a) * p;
+    return a + (b - a) * p;
 }
 
 /*!
@@ -513,8 +486,7 @@ inline double MbRandom::uniformQuantile(double a, double b, double p) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::discreteUniformProb(int a, int b) {
-
-	return 1.0 / (b - a + 1);
+    return 1.0 / (b - a + 1);
 }
 
 /*!
@@ -528,8 +500,7 @@ inline double MbRandom::discreteUniformProb(int a, int b) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::lnDiscreteUniformProb(int a, int b) {
-
-	return std::log( 1.0 / (b - a + 1) );
+    return std::log( 1.0 / (b - a + 1) );
 }
 
 /*!
@@ -543,8 +514,7 @@ inline double MbRandom::lnDiscreteUniformProb(int a, int b) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::poissonProb(double lambda, int x) {
-
-	return exp(x * std::log(lambda) - lambda - lnFactorial(x));
+    return exp(x * std::log(lambda) - lambda - lnFactorial(x));
 }
 
 /*!
@@ -558,8 +528,7 @@ inline double MbRandom::poissonProb(double lambda, int x) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::lnPoissonProb(double lambda, int x) {
-
-	return ( x * std::log(lambda) - lambda - lnFactorial(x) );
+    return ( x * std::log(lambda) - lambda - lnFactorial(x) );
 }
 
 /*!
@@ -573,31 +542,27 @@ inline double MbRandom::lnPoissonProb(double lambda, int x) {
  * \throws Does not throw an error.
  */
 inline double MbRandom::poissonQuantile(double lambda, double p) {
-
-	/* Starting with x = 0, find the first value for which
-	   CDF(X-1) <= CDF <= CDF(X). */
-	double sum = 0.0;
-	int xmax = 100;
-	for (int i=0; i<=xmax; i++)
-		{
-		double sumOld = sum;
-		double newVal = 0.0;
-		if ( i == 0 )
-			{
-			newVal = exp(-lambda);
-			sum = newVal;
-			}
-		else
-			{
-			double last = newVal;
-			newVal = last * lambda / ( double ) ( i );
-			sum += newVal;
-			}
-		if ( sumOld <= p && p <= sum )
-			return i;
-		}
-	//cout << "Poisson quantile warning" << endl;
-	return xmax;
+    /* Starting with x = 0, find the first value for which
+       CDF(X-1) <= CDF <= CDF(X). */
+    double sum = 0.0;
+    int xmax = 100;
+    for (int i=0; i<=xmax; i++) {
+        double sumOld = sum;
+        double newVal = 0.0;
+        if ( i == 0 ) {
+            newVal = exp(-lambda);
+            sum = newVal;
+        } else {
+            double last = newVal;
+            newVal = last * lambda / ( double ) ( i );
+            sum += newVal;
+        }
+        if ( sumOld <= p && p <= sum ) {
+            return i;
+        }
+    }
+    //cout << "Poisson quantile warning" << endl;
+    return xmax;
 }
 
 #endif

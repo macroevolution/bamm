@@ -39,7 +39,6 @@
 
 #include "MbRandom.h"
 
-
 /*!
  * Constructor for MbRandom class. This constructor does not take
  * any parameters and initializes the seed using the current 
@@ -51,10 +50,9 @@
  * \throws Does not throw an error.
  */
 MbRandom::MbRandom(void) {
-
-	setSeed();
-	initializedFacTable = false;
-	availableNormalRv = false;
+    setSeed();
+    initializedFacTable = false;
+    availableNormalRv = false;
 }
 
 /*!
@@ -68,10 +66,9 @@ MbRandom::MbRandom(void) {
  * \throws Does not throw an error.
  */
 MbRandom::MbRandom(long int x) {
-
-	setSeed(x);
-	initializedFacTable = false;
-	availableNormalRv = false;
+    setSeed(x);
+    initializedFacTable = false;
+    availableNormalRv = false;
 }
 
 /*!
@@ -83,33 +80,28 @@ MbRandom::MbRandom(long int x) {
  * \throws Does not throw an error.
  */
 double MbRandom::chiSquareRv(double v) {
-
-	/* Cast the degrees of freedom parameter as an integer. We will see
+    /* Cast the degrees of freedom parameter as an integer. We will see
        if there is a decimal remainder later. */
-	int n = (int)(v);
-	
-	double x2;
-	if ( (double)(n) == v && n <= 100 )
-		{
-		/* If the degrees of freedom is an integer and less than 100, we
-		   generate our chi-square random variable by generating v
-		   standard normal random variables, squaring each, and taking the
-		   sum of the squared random variables. */
-		x2 = 0.0;
-		for (int i=0; i<n; i++)
-			{
-			double x = normalRv();
-			x2 += x * x;
-			}
-		}
-	else
-		{
-		/* Otherwise, we use the relationship of the chi-square to a gamma
-		   (it is a special case of the gamma) to generate the chi-square
-		   random variable. */
-		x2 = gammaRv(v/2.0, 0.5);
-		}
-	return x2;
+    int n = (int)(v);
+    
+    double x2;
+    if ( (double)(n) == v && n <= 100 ) {
+        /* If the degrees of freedom is an integer and less than 100, we
+           generate our chi-square random variable by generating v
+           standard normal random variables, squaring each, and taking the
+           sum of the squared random variables. */
+        x2 = 0.0;
+        for (int i=0; i<n; i++) {
+            double x = normalRv();
+            x2 += x * x;
+        }
+    } else {
+        /* Otherwise, we use the relationship of the chi-square to a gamma
+           (it is a special case of the gamma) to generate the chi-square
+           random variable. */
+        x2 = gammaRv(v/2.0, 0.5);
+    }
+    return x2;
 }
 
 /*!
@@ -123,18 +115,14 @@ double MbRandom::chiSquareRv(double v) {
  * \throws Does not throw an error.
  */
 double MbRandom::chiSquarePdf(double v, double x) {
-
-	double pdf;
-	if ( x < 0.0 )
-		{
-		pdf = 0.0;
-		}
-	else
-		{
-		double b = v / 2.0;
-		pdf = exp ( -0.5 * x ) * pow ( x, ( b - 1.0 ) ) / ( pow ( 2.0, b ) * gamma ( b ) );
-		}
-	return pdf;
+    double pdf;
+    if ( x < 0.0 ) {
+        pdf = 0.0;
+    } else {
+        double b = v / 2.0;
+        pdf = exp ( -0.5 * x ) * pow ( x, ( b - 1.0 ) ) / ( pow ( 2.0, b ) * gamma ( b ) );
+    }
+    return pdf;
 }
 
 /*!
@@ -148,8 +136,7 @@ double MbRandom::chiSquarePdf(double v, double x) {
  * \throws Does not throw an error.
  */
 double MbRandom::chiSquareCdf(double v, double x) {
-
-	return gammaCdf( v / 2.0, 0.5, x );
+    return gammaCdf( v / 2.0, 0.5, x );
 }
 
 /*!
@@ -163,9 +150,8 @@ double MbRandom::chiSquareCdf(double v, double x) {
  * \throws Does not throw an error.
  */
 double MbRandom::lnChiSquarePdf(double v, double x) {
-
-	double b = v / 2.0;
-	return ( -(b * log(2.0) + lnGamma(b)) - b + (b - 1.0) * log(x) );
+    double b = v / 2.0;
+    return ( -(b * log(2.0) + lnGamma(b)) - b + (b - 1.0) * log(x) );
 }
 
 /*!
@@ -179,65 +165,70 @@ double MbRandom::lnChiSquarePdf(double v, double x) {
  * \throws Does not throw an error.
  */
 double MbRandom::chiSquareQuantile(double prob, double v) {
+    double e = 0.5e-6, aa = 0.6931471805, p = prob,
+           a = 0.0, q = 0.0, p1 = 0.0, p2 = 0.0, t = 0.0, 
+           x = 0.0, b = 0.0;
 
-	double 		e = 0.5e-6, aa = 0.6931471805, p = prob,
-					a = 0.0, q = 0.0, p1 = 0.0, p2 = 0.0, t = 0.0, 
-					x = 0.0, b = 0.0;
-
-	if (p < 0.000002 || p > 0.999998 || v <= 0.0) 
-		return (-1.0);
-	double g = lnGamma(v/2.0);
-	double xx = v/2.0;   
-	double c = xx - 1.0;
-	double ch = pow((p*xx*exp(g+xx*aa)), 1.0/xx);
-	if (v >= -1.24*log(p)) 
-		goto l1;
-	if (ch-e < 0) 
-		return (ch);
-	goto l4;
-	l1:
-		if (v > 0.32) 
-			goto l3;
-		ch = 0.4;   
-		a = log(1.0-p);
-	l2:
-		q = ch;  
-		p1 = 1.0+ch*(4.67+ch);  
-		p2 = ch*(6.73+ch*(6.66+ch));
-		t = -0.5+(4.67+2.0*ch)/p1 - (6.73+ch*(13.32+3.0*ch))/p2;
-		ch -= (1.0-exp(a+g+0.5*ch+c*aa)*p2/p1)/t;
-		if (fabs(q/ch-1.0)-0.01 <= 0.0) 
-			goto l4;
-		else                       
-			goto l2;
-	l3: 
-		x = pointNormal (p);
-		p1 = 0.222222/v;   
-		ch = v*pow((x*sqrt(p1)+1.0-p1), 3.0);
-		if (ch > 2.2*v+6.0)  
-			ch = -2.0*(log(1.0-p)-c*log(0.5*ch)+g);
-	l4:
-		q = ch;   
-		p1 = 0.5*ch;
-		if ( (t = incompleteGamma(p1, xx, g)) < 0.0 ) 
-			{
-			std::cerr << "Error in function \"IncompleteGamma" << std::endl;
-			return (-1.0);
-			}
-		p2 = p-t;
-		t = p2*exp(xx*aa+g+p1-c*log(ch));   
-		b = t/ch;  
-		a = 0.5*t-b*c;
-		double s1 = (210.0+a*(140.0+a*(105.0+a*(84.0+a*(70.0+60.0*a))))) / 420.0;
-		double s2 = (420.0+a*(735.0+a*(966.0+a*(1141.0+1278.0*a))))/2520.0;
-		double s3 = (210.0+a*(462.0+a*(707.0+932.0*a)))/2520.0;
-		double s4 = (252.0+a*(672.0+1182.0*a)+c*(294.0+a*(889.0+1740.0*a)))/5040.0;
-		double s5 = (84.0+264.0*a+c*(175.0+606.0*a))/2520.0;
-		double s6 = (120.0+c*(346.0+127.0*c))/5040.0;
-		ch += t*(1+0.5*t*s1-b*c*(s1-b*(s2-b*(s3-b*(s4-b*(s5-b*s6))))));
-		if (fabs(q/ch-1.0) > e) 
-			goto l4;
-	return (ch);
+    if (p < 0.000002 || p > 0.999998 || v <= 0.0) {
+        return (-1.0);
+    }
+    double g = lnGamma(v/2.0);
+    double xx = v/2.0;   
+    double c = xx - 1.0;
+    double ch = pow((p*xx*exp(g+xx*aa)), 1.0/xx);
+    if (v >= -1.24*log(p)) {
+        goto l1;
+    }
+    if (ch-e < 0) {
+        return (ch);
+    }
+    goto l4;
+    l1:
+        if (v > 0.32) {
+            goto l3;
+        }
+        ch = 0.4;   
+        a = log(1.0-p);
+    l2:
+        q = ch;  
+        p1 = 1.0+ch*(4.67+ch);  
+        p2 = ch*(6.73+ch*(6.66+ch));
+        t = -0.5+(4.67+2.0*ch)/p1 - (6.73+ch*(13.32+3.0*ch))/p2;
+        ch -= (1.0-exp(a+g+0.5*ch+c*aa)*p2/p1)/t;
+        if (fabs(q/ch-1.0)-0.01 <= 0.0) {
+            goto l4;
+        } else {                       
+            goto l2;
+        }
+    l3: 
+        x = pointNormal (p);
+        p1 = 0.222222/v;   
+        ch = v*pow((x*sqrt(p1)+1.0-p1), 3.0);
+        if (ch > 2.2*v+6.0) {
+            ch = -2.0*(log(1.0-p)-c*log(0.5*ch)+g);
+        }
+    l4:
+        q = ch;   
+        p1 = 0.5*ch;
+        if ( (t = incompleteGamma(p1, xx, g)) < 0.0 ) {
+            std::cerr << "Error in function \"IncompleteGamma" << std::endl;
+            return (-1.0);
+        }
+        p2 = p-t;
+        t = p2*exp(xx*aa+g+p1-c*log(ch));   
+        b = t/ch;  
+        a = 0.5*t-b*c;
+        double s1 = (210.0+a*(140.0+a*(105.0+a*(84.0+a*(70.0+60.0*a))))) / 420.0;
+        double s2 = (420.0+a*(735.0+a*(966.0+a*(1141.0+1278.0*a))))/2520.0;
+        double s3 = (210.0+a*(462.0+a*(707.0+932.0*a)))/2520.0;
+        double s4 = (252.0+a*(672.0+1182.0*a)+c*(294.0+a*(889.0+1740.0*a)))/5040.0;
+        double s5 = (84.0+264.0*a+c*(175.0+606.0*a))/2520.0;
+        double s6 = (120.0+c*(346.0+127.0*c))/5040.0;
+        ch += t*(1+0.5*t*s1-b*c*(s1-b*(s2-b*(s3-b*(s4-b*(s5-b*s6))))));
+        if (fabs(q/ch-1.0) > e) {
+            goto l4;
+        }
+    return (ch);
 }
 
 /*!
@@ -250,8 +241,7 @@ double MbRandom::chiSquareQuantile(double prob, double v) {
  * \throws Does not throw an error.
  */
 double MbRandom::gammaRv(double a, double b) {
-
-	return (rndGamma(a) / b);
+    return (rndGamma(a) / b);
 }
 
 /*!
@@ -266,8 +256,7 @@ double MbRandom::gammaRv(double a, double b) {
  * \throws Does not throw an error.
  */
 double MbRandom::gammaPdf(double a, double b, double x) {
-
-	return (pow(b, a) / gamma(a)) * pow(x, a - 1.0) * exp(-x * b);
+    return (pow(b, a) / gamma(a)) * pow(x, a - 1.0) * exp(-x * b);
 }
 
 /*!
@@ -282,8 +271,7 @@ double MbRandom::gammaPdf(double a, double b, double x) {
  * \throws Does not throw an error.
  */
 double MbRandom::gammaCdf(double a, double b, double x) {
-
-	return incompleteGamma(b*x, a, lnGamma(a));
+    return incompleteGamma(b*x, a, lnGamma(a));
 }
 
 /*!
@@ -298,8 +286,7 @@ double MbRandom::gammaCdf(double a, double b, double x) {
  * \throws Does not throw an error.
  */
 double MbRandom::lnGammaPdf(double a, double b, double x) {
-
-	return a * log(b) - lnGamma(a) + (a - 1.0) * log(x) - x * b;
+    return a * log(b) - lnGamma(a) + (a - 1.0) * log(x) - x * b;
 }
 
 /*!
@@ -314,7 +301,6 @@ double MbRandom::lnGammaPdf(double a, double b, double x) {
  * \throws Does not throw an error.
  */
 double MbRandom::logNormalQuantile(double mu, double sigma, double p) {
-
   return exp( normalQuantile(mu, sigma, p) );
 }
 
@@ -331,56 +317,47 @@ double MbRandom::logNormalQuantile(double mu, double sigma, double p) {
  * \throws Does not throw an error.
  */
 double MbRandom::normalCdf(double mu, double sigma, double x) {
+    double cdf;
+    double q;
+    double z = (x - mu) / sigma;
 
-	double cdf;
-	double q;
-	double z = (x - mu) / sigma;
-
-	/* |X| <= 1.28 */
-	if ( fabs(z) <= 1.28 )
-		{
-		double a1 = 0.398942280444;
-		double a2 = 0.399903438504;
-		double a3 = 5.75885480458;
-		double a4 = 29.8213557808;
-		double a5 = 2.62433121679;
-		double a6 = 48.6959930692;
-		double a7 = 5.92885724438;
-		double y = 0.5 * z * z;
-		q = 0.5 - fabs(z) * ( a1 - a2 * y / ( y + a3 - a4 / ( y + a5 + a6 / ( y + a7 ) ) ) );
-		}
-	else if ( fabs(z) <= 12.7 )
-		{
-		double b0 = 0.398942280385;
-		double b1 = 3.8052E-08;
-		double b2 = 1.00000615302;
-		double b3 = 3.98064794E-04;
-		double b4 = 1.98615381364;
-		double b5 = 0.151679116635;
-		double b6 = 5.29330324926;
-		double b7 = 4.8385912808;
-		double b8 = 15.1508972451;
-		double b9 = 0.742380924027;
-		double b10 = 30.789933034;
-		double b11 = 3.99019417011;
-		double y = 0.5 * z * z;
-		q = exp(-y) * b0 / (fabs(z) - b1 + b2 / (fabs(z) + b3 + b4 / (fabs(z) - b5 + b6 / (fabs(z) + b7 - b8 / (fabs(z) + b9 + b10 / (fabs(z) + b11))))));
-		}
-	else
-		{
-		q = 0.0;
-		}
-	if ( z < 0.0 )
-		{
-		/* negative x */
-		cdf = q;
-		}
-	else
-		{
-		/* positive x */
-		cdf = 1.0 - q;
-		}
-	return cdf;
+    /* |X| <= 1.28 */
+    if ( fabs(z) <= 1.28 ) {
+        double a1 = 0.398942280444;
+        double a2 = 0.399903438504;
+        double a3 = 5.75885480458;
+        double a4 = 29.8213557808;
+        double a5 = 2.62433121679;
+        double a6 = 48.6959930692;
+        double a7 = 5.92885724438;
+        double y = 0.5 * z * z;
+        q = 0.5 - fabs(z) * ( a1 - a2 * y / ( y + a3 - a4 / ( y + a5 + a6 / ( y + a7 ) ) ) );
+    } else if ( fabs(z) <= 12.7 ) {
+        double b0 = 0.398942280385;
+        double b1 = 3.8052E-08;
+        double b2 = 1.00000615302;
+        double b3 = 3.98064794E-04;
+        double b4 = 1.98615381364;
+        double b5 = 0.151679116635;
+        double b6 = 5.29330324926;
+        double b7 = 4.8385912808;
+        double b8 = 15.1508972451;
+        double b9 = 0.742380924027;
+        double b10 = 30.789933034;
+        double b11 = 3.99019417011;
+        double y = 0.5 * z * z;
+        q = exp(-y) * b0 / (fabs(z) - b1 + b2 / (fabs(z) + b3 + b4 / (fabs(z) - b5 + b6 / (fabs(z) + b7 - b8 / (fabs(z) + b9 + b10 / (fabs(z) + b11))))));
+    } else {
+        q = 0.0;
+    }
+    if ( z < 0.0 ) {
+        /* negative x */
+        cdf = q;
+    } else {
+        /* positive x */
+        cdf = 1.0 - q;
+    }
+    return cdf;
 }
 
 /*!
@@ -395,10 +372,9 @@ double MbRandom::normalCdf(double mu, double sigma, double x) {
  * \throws Does not throw an error.
  */
 double MbRandom::normalQuantile(double mu, double sigma, double p) {
-	
-	double z = pointNormal(p);
-	double x = z * sigma + mu;
-	return x;
+    double z = pointNormal(p);
+    double x = z * sigma + mu;
+    return x;
 }
 
 /*!
@@ -418,15 +394,15 @@ double MbRandom::normalQuantile(double mu, double sigma, double p) {
  * \see http://stat.fsu.edu/~geo/diehard.html
  */
 double MbRandom::uniformRv(void) {
-
-	long int hi = seed / 127773;
-	long int lo = seed % 127773;
-	long int test = 16807 * lo - 2836 * hi;
-	if (test > 0)
-		seed = test;
-	else
-		seed = test + 2147483647;
-	return (double)(seed) / (double)2147483647;
+    long int hi = seed / 127773;
+    long int lo = seed % 127773;
+    long int test = 16807 * lo - 2836 * hi;
+    if (test > 0) {
+        seed = test;
+    } else {
+        seed = test + 2147483647;
+    }
+    return (double)(seed) / (double)2147483647;
 }
 
 /*!
@@ -439,13 +415,13 @@ double MbRandom::uniformRv(void) {
  * \throws Does not throw an error.
  */
 double MbRandom::uniformCdf(double x) {
-
-	if ( x < 0.0 )
-		return 0.0;
-	else if ( x > 1.0 )
-		return 1.0;
-	else
-		return x;
+    if ( x < 0.0 ) {
+        return 0.0;
+    } else if ( x > 1.0 ) {
+        return 1.0;
+    } else {
+        return x;
+    }
 }
 
 /*!
@@ -458,12 +434,11 @@ double MbRandom::uniformCdf(double x) {
  * \throws Does not throw an error.
  */
 double MbRandom::betaRv(double a, double b) {
-
-	double z0 = rndGamma( a );
-	double z1 = rndGamma( b );
-	double sum = z0 + z1;
-	double x = z0 / sum;
-	return x;
+    double z0 = rndGamma( a );
+    double z1 = rndGamma( b );
+    double sum = z0 + z1;
+    double x = z0 / sum;
+    return x;
 }
 
 /*!
@@ -477,13 +452,13 @@ double MbRandom::betaRv(double a, double b) {
  * \throws Does not throw an error.
  */
 double MbRandom::betaPdf(double a, double b, double x) {
-
-	double pdf;
-	if ( x < 0.0 || 1.0 < x )
-		pdf = 0.0;
-	else
-		pdf = pow(x, (a - 1.0)) * pow((1.0 - x), (b - 1.0)) / beta(a, b);
-	return pdf;
+    double pdf;
+    if ( x < 0.0 || 1.0 < x ) {
+        pdf = 0.0;
+    } else {
+        pdf = pow(x, (a - 1.0)) * pow((1.0 - x), (b - 1.0)) / beta(a, b);
+    }
+    return pdf;
 }
 
 /*!
@@ -497,8 +472,7 @@ double MbRandom::betaPdf(double a, double b, double x) {
  * \throws Does not throw an error.
  */
 double MbRandom::lnBetaPdf(double a, double b, double x) {
-
-	return ( (lnGamma(a + b) - lnGamma(a) - lnGamma(b)) + (a - 1.0) * log(x) + (b - 1.0) * log(1.0 - x) );
+    return ( (lnGamma(a + b) - lnGamma(a) - lnGamma(b)) + (a - 1.0) * log(x) + (b - 1.0) * log(1.0 - x) );
 }
 
 /*!
@@ -512,15 +486,15 @@ double MbRandom::lnBetaPdf(double a, double b, double x) {
  * \throws Does not throw an error.
  */
 double MbRandom::betaCdf(double a, double b, double x) {
-
-	double cdf;
-	if ( x <= 0.0 )
-		cdf = 0.0;
-	else if ( x <= 1.0 )
-		cdf = incompleteBeta(a, b, x);
-	else
-		cdf = 1.0;
-	return cdf;
+    double cdf;
+    if ( x <= 0.0 ) {
+        cdf = 0.0;
+    } else if ( x <= 1.0 ) {
+        cdf = incompleteBeta(a, b, x);
+    } else {
+        cdf = 1.0;
+    }
+    return cdf;
 }
 
 /*!
@@ -535,72 +509,66 @@ double MbRandom::betaCdf(double a, double b, double x) {
  * \throws Does not throw an error.
  */
 double MbRandom::betaQuantile(double a, double b, double p) {
+#    define MAXK 20
 
-#	define MAXK 20
+    double bcoeff;
+    double error = 0.0001;
+    double errapp = 0.01;
+    int j;
 
-	double bcoeff;
-	double error = 0.0001;
-	double errapp = 0.01;
-	int j;
+    /* estimate the solution */
+    double x = a / ( a + b );
 
-	/* estimate the solution */
-	double x = a / ( a + b );
+    double xOld = 0.0;
+    int loopCnt = 2;
+    double d[MAXK * (MAXK-1)];
+    while ( errapp <= fabs ( ( x - xOld ) / x ) && loopCnt != 0 ) {
+        xOld = x;
+        loopCnt--;
+        /* cdfX = PROB { BETA(A,B) <= X }
+           q = ( cdf - cdfX ) / pdfX */
+        double cdfX = betaCdf(a, b, x);
+        double pdfX = betaPdf(a, b, x);
+        double q = (p - cdfX) / pdfX;
+        /* D(N,K) = C(N,K) * Q**(N+K-1) / (N-1)! */
+        double t = 1.0 - x;
+        double s1 = q * ( b - 1.0 ) / t;
+        double s2 = q * ( 1.0 - a ) / x;
+        d[2-1+0*MAXK] = s1 + s2;
+        double tail = d[2-1+0*MAXK] * q / 2.0;
+        x = x + q + tail;
 
-	double xOld = 0.0;
-	int loopCnt = 2;
-	double d[MAXK * (MAXK-1)];
-	while ( errapp <= fabs ( ( x - xOld ) / x ) && loopCnt != 0 )
-		{
-		xOld = x;
-		loopCnt--;
-		/* cdfX = PROB { BETA(A,B) <= X }
-		   q = ( cdf - cdfX ) / pdfX */
-		double cdfX = betaCdf(a, b, x);
-		double pdfX = betaPdf(a, b, x);
-		double q = (p - cdfX) / pdfX;
-		/* D(N,K) = C(N,K) * Q**(N+K-1) / (N-1)! */
-		double t = 1.0 - x;
-		double s1 = q * ( b - 1.0 ) / t;
-		double s2 = q * ( 1.0 - a ) / x;
-		d[2-1+0*MAXK] = s1 + s2;
-		double tail = d[2-1+0*MAXK] * q / 2.0;
-		x = x + q + tail;
-
-		int k = 3;
-		while ( error < fabs ( tail / x ) && k <= MAXK )
-			{
-			/* find D(2,K-2) */
-			s1 = q * ((double)(k) - 2.0) * s1 / t;
-			s2 = q * (2.0 - (double)(k)) * s2 / x;
-			d[2-1+(k-2)*MAXK] = s1 + s2;
-			/* find D(3,K-3), D(4,K-4), D(5,K-5), ... , D(K-1,1) */
-			for (int i=3; i<=k-1; i++)
-				{
-				double sum2 = d[2-1+0*MAXK] * d[i-2+(k-i)*MAXK];
-				bcoeff = 1.0;
-				for ( j = 1; j <= k - i; j++ )
-					{
-					bcoeff = ( bcoeff * ( double ) ( k - i - j + 1 ) ) / ( double ) ( j );
-					sum2 = sum2 + bcoeff * d[2-1+j*MAXK] * d[i-2+(k-i-j)*MAXK];
-					}
-				d[i-1+(k-i)*MAXK] = sum2 + d[i-2+(k-i+1)*MAXK] / (double)(i - 1);
-				}
-			/* compute D(K,0) and use it to expand the series */
-			d[k-1+0*MAXK] = d[2-1+0*MAXK] * d[k-2+0*MAXK] + d[k-2+1*MAXK] / (double)(k - 1);
-			tail = d[k-1+0*MAXK] * q / (double)(k);
-			x += tail;
-			/* check for divergence */
-			if ( x <= 0.0 || 1.0 <= x )
-				{
-				std::cout << "Error in betaQuantile: The series has diverged" << std::endl;
-				x = -1.0;
-				return x;
-				}
-			k++;
-			}
-		}
-	return x;
-#	undef MAXK
+        int k = 3;
+        while ( error < fabs ( tail / x ) && k <= MAXK ) {
+            /* find D(2,K-2) */
+            s1 = q * ((double)(k) - 2.0) * s1 / t;
+            s2 = q * (2.0 - (double)(k)) * s2 / x;
+            d[2-1+(k-2)*MAXK] = s1 + s2;
+            /* find D(3,K-3), D(4,K-4), D(5,K-5), ... , D(K-1,1) */
+            for (int i=3; i<=k-1; i++) {
+                double sum2 = d[2-1+0*MAXK] * d[i-2+(k-i)*MAXK];
+                bcoeff = 1.0;
+                for ( j = 1; j <= k - i; j++ ) {
+                    bcoeff = ( bcoeff * ( double ) ( k - i - j + 1 ) ) / ( double ) ( j );
+                    sum2 = sum2 + bcoeff * d[2-1+j*MAXK] * d[i-2+(k-i-j)*MAXK];
+                }
+                d[i-1+(k-i)*MAXK] = sum2 + d[i-2+(k-i+1)*MAXK] / (double)(i - 1);
+            }
+            /* compute D(K,0) and use it to expand the series */
+            d[k-1+0*MAXK] = d[2-1+0*MAXK] * d[k-2+0*MAXK] + d[k-2+1*MAXK] / (double)(k - 1);
+            tail = d[k-1+0*MAXK] * q / (double)(k);
+            x += tail;
+            /* check for divergence */
+            if ( x <= 0.0 || 1.0 <= x ) {
+                std::cout << "Error in betaQuantile: The series has diverged" << std::endl;
+                x = -1.0;
+                return x;
+            }
+            k++;
+        }
+    }
+    return x;
+#    undef MAXK
 }
 
 /*!
@@ -614,17 +582,16 @@ double MbRandom::betaQuantile(double a, double b, double p) {
  * \throws Does not throw an error.
  */
 void MbRandom::dirichletRv(const std::vector<double> &a, std::vector<double> &z) {
-
-	int n = (int)a.size();
-	double sum = 0.0;
-	for(int i=0; i<n; i++)
-		{
-		/* z[i] = rndGamma(a[i]) / 1.0; */
-		z[i] = rndGamma(a[i]);
-		sum += z[i];
-		}
-	for(int i=0; i<n; i++)
-		z[i] /= sum;
+    int n = (int)a.size();
+    double sum = 0.0;
+    for (int i=0; i<n; i++) {
+        /* z[i] = rndGamma(a[i]) / 1.0; */
+        z[i] = rndGamma(a[i]);
+        sum += z[i];
+    }
+    for (int i=0; i<n; i++) {
+        z[i] /= sum;
+    }
 }
 
 /*!
@@ -639,35 +606,37 @@ void MbRandom::dirichletRv(const std::vector<double> &a, std::vector<double> &z)
  * \throws Throws an MbException::ERROR.
  */
 double MbRandom::dirichletPdf(const std::vector<double> &a, const std::vector<double> &z) {
-	
-	int n = (int)a.size();
-	double zSum = 0.0;
-	for (int i=0; i<n; i++)
-		zSum += z[i];
+    int n = (int)a.size();
+    double zSum = 0.0;
+    for (int i=0; i<n; i++) {
+        zSum += z[i];
+    }
 
-	double tol = 0.0001;
-	if ( tol < fabs( zSum - 1.0 ) )
-		{
-		std::cout << "Fatal error in dirichletPdf" << std::endl;
-    std::exit(1);
-		//ui->error("Fatal error in dirichletPdf");
-		//throw(MbException(MbException::ERROR));
-		}
+    double tol = 0.0001;
+    if ( tol < fabs( zSum - 1.0 ) ) {
+        std::cout << "Fatal error in dirichletPdf" << std::endl;
+        std::exit(1);
+        //ui->error("Fatal error in dirichletPdf");
+        //throw(MbException(MbException::ERROR));
+    }
 
-	double aSum = 0.0;
-	for (int i=0; i<n; i++)
-		aSum += a[i];
+    double aSum = 0.0;
+    for (int i=0; i<n; i++) {
+        aSum += a[i];
+    }
 
-	double aProd = 1.0;
-	for (int i=0; i<n; i++)
-		aProd *= gamma(a[i]);
+    double aProd = 1.0;
+    for (int i=0; i<n; i++) {
+        aProd *= gamma(a[i]);
+    }
 
-	double pdf = gamma(aSum) / aProd;
+    double pdf = gamma(aSum) / aProd;
 
-	for (int i=0; i<n; i++)
-		pdf = pdf * pow( z[i], a[i] - 1.0 );
+    for (int i=0; i<n; i++) {
+        pdf = pdf * pow( z[i], a[i] - 1.0 );
+    }
 
-	return pdf;
+    return pdf;
 }
 
 /*!
@@ -682,17 +651,19 @@ double MbRandom::dirichletPdf(const std::vector<double> &a, const std::vector<do
  * \throws Does not throw an error.
  */
 double MbRandom::lnDirichletPdf(const std::vector<double> &a, const std::vector<double> &z) {
-
-	int n = (int)a.size(); //!< we assume that a and z have the same size
-	double alpha0 = 0.0;
-	for (int i=0; i<n; i++)
-		alpha0 += a[i];
-	double lnP = lnGamma(alpha0);
-	for (int i=0; i<n; i++)
-		lnP -= lnGamma(a[i]);
-	for (int i=0; i<n; i++)
-		lnP += (a[i] - 1.0) * log(z[i]);	
-	return lnP;
+    int n = (int)a.size(); //!< we assume that a and z have the same size
+    double alpha0 = 0.0;
+    for (int i=0; i<n; i++) {
+        alpha0 += a[i];
+    }
+    double lnP = lnGamma(alpha0);
+    for (int i=0; i<n; i++) {
+        lnP -= lnGamma(a[i]);
+    }
+    for (int i=0; i<n; i++) {
+        lnP += (a[i] - 1.0) * log(z[i]);
+    }
+    return lnP;
 }
 
 /*!
@@ -707,8 +678,7 @@ double MbRandom::lnDirichletPdf(const std::vector<double> &a, const std::vector<
  * \throws Does not throw an error.
  */
 int MbRandom::discreteUniformRv(int a, int b) {
-
-	return (int)((b-a+1) * uniformRv()) + a;
+    return (int)((b-a+1) * uniformRv()) + a;
 }
 
 /*!
@@ -721,40 +691,32 @@ int MbRandom::discreteUniformRv(int a, int b) {
  * \throws Does not throw an error.
  */
 int MbRandom::poissonRv(double lambda) {
+    if (lambda < 17.0) {
+        if (lambda < 1.0e-6) {
+            if (lambda == 0.0) { 
+                return 0;
+            }
+            if (lambda < 0.0) {
+                /* there should be an error here */
+                std::cout << "Parameter negative in poisson function" << std::endl;
+            }
 
-	if (lambda < 17.0)
-		{
-		if (lambda < 1.0e-6)
-			{
-			if (lambda == 0.0) 
-				return 0;
-			if (lambda < 0.0)
-				{
-				/* there should be an error here */
-				std::cout << "Parameter negative in poisson function" << std::endl;
-				}
-
-			/* For extremely small lambda we calculate the probabilities of x = 1
-			   and x = 2 (ignoring higher x). The reason for using this 
-			   method is to prevent numerical inaccuracies in other methods. */
-			return poissonLow(lambda);
-			}
-		else 
-			{
-			/* use the inversion method */
-			return poissonInver(lambda);
-			}
-		}
-	else 
-		{
-		if (lambda > 2.0e9) 
-			{
-			/* there should be an error here */
-			std::cout << "Parameter too big in poisson function" << std::endl;
-			}
-		/* use the ratio-of-uniforms method */
-		return poissonRatioUniforms(lambda);
-		}
+            /* For extremely small lambda we calculate the probabilities of x = 1
+               and x = 2 (ignoring higher x). The reason for using this 
+               method is to prevent numerical inaccuracies in other methods. */
+            return poissonLow(lambda);
+        } else {
+            /* use the inversion method */
+            return poissonInver(lambda);
+        }
+    } else  {
+        if (lambda > 2.0e9)  {
+            /* there should be an error here */
+            std::cout << "Parameter too big in poisson function" << std::endl;
+        }
+        /* use the ratio-of-uniforms method */
+        return poissonRatioUniforms(lambda);
+    }
 }
 
 /*!
@@ -769,17 +731,17 @@ int MbRandom::poissonRv(double lambda) {
  */
 double MbRandom::poissonCdf(double lambda, int x) {
 
-	if ( x < 0 )
-		return 0.0;
-	double next = exp(-lambda);
-	double cdf = next;
-	for (int i=1; i<=x; i++)
-		{
-		double last = next;
-		next = last * lambda / (double)i;
-		cdf += next;
-		}
-	return cdf;
+    if ( x < 0 ) {
+        return 0.0;
+    }
+    double next = exp(-lambda);
+    double cdf = next;
+    for (int i=1; i<=x; i++) {
+        double last = next;
+        next = last * lambda / (double)i;
+        cdf += next;
+    }
+    return cdf;
 }
 
 /*!
@@ -800,42 +762,42 @@ double MbRandom::poissonCdf(double lambda, int x) {
  * \throws Does not throw an error.
  */
 void MbRandom::discretizeGamma(std::vector<double> &catRate, double a, double b, int nCats, bool median) {
+    double factor = a / b * nCats;
 
-	double factor = a / b * nCats;
-
-	if (median) 
-		{
-		/* the median value for each category is used to represent all of the values
-		   in that category */
-		double interval = 1.0 / (2.0 * nCats);
-		for (int i=0; i<nCats; i++) 
-			catRate[i] = chiSquareQuantile((i * 2.0 + 1.0) * interval, 2.0 * a) / (2.0 * b);
-		double t = 0.0;
-		for (int i=0; i<nCats; i++) 
-			t += catRate[i];
-		for (int i=0; i<nCats; i++)     
-			catRate[i] *= factor / t;
-		}
-	else 
-		{
-		/* the mean value for each category is used to represent all of the values
-		   in that category */
-		/* calculate the points in the gamma distribution */
-		for (int i=0; i<nCats-1; i++) 
-			catRate[i] = chiSquareQuantile((i + 1.0) / nCats, 2.0 * a) / (2.0 * b);
-		/* calculate the cumulative values */
-		double lnGammaValue = lnGamma(a + 1.0);
-		for (int i=0; i<nCats-1; i++) 
-			catRate[i] = incompleteGamma(catRate[i] * b, a + 1.0, lnGammaValue);
-		catRate[nCats-1] = 1.0;
-		/* calculate the relative values and rescale */
-		for (int i=nCats-1; i>0; i--)
-			{
-			catRate[i] -= catRate[i-1];
-			catRate[i] *= factor;
-			}
-		catRate[0] *= factor;
-		}
+    if (median) {
+        /* the median value for each category is used to represent all of the values
+           in that category */
+        double interval = 1.0 / (2.0 * nCats);
+        for (int i=0; i<nCats; i++) {
+            catRate[i] = chiSquareQuantile((i * 2.0 + 1.0) * interval, 2.0 * a) / (2.0 * b);
+        }
+        double t = 0.0;
+        for (int i=0; i<nCats; i++) {
+            t += catRate[i];
+        }
+        for (int i=0; i<nCats; i++) {
+            catRate[i] *= factor / t;
+        }
+    } else {
+        /* the mean value for each category is used to represent all of the values
+           in that category */
+        /* calculate the points in the gamma distribution */
+        for (int i=0; i<nCats-1; i++) {
+            catRate[i] = chiSquareQuantile((i + 1.0) / nCats, 2.0 * a) / (2.0 * b);
+        }
+        /* calculate the cumulative values */
+        double lnGammaValue = lnGamma(a + 1.0);
+        for (int i=0; i<nCats-1; i++) {
+            catRate[i] = incompleteGamma(catRate[i] * b, a + 1.0, lnGammaValue);
+        }
+        catRate[nCats-1] = 1.0;
+        /* calculate the relative values and rescale */
+        for (int i=nCats-1; i>0; i--) {
+            catRate[i] -= catRate[i-1];
+            catRate[i] *= factor;
+        }
+        catRate[0] *= factor;
+    }
 }
 
 /*!
@@ -848,8 +810,7 @@ void MbRandom::discretizeGamma(std::vector<double> &catRate, double a, double b,
  * \throws Does not throw an error.
  */
 double MbRandom::beta(double a, double b) {
-
-	return ( exp(lnGamma(a) + lnGamma(b) - lnGamma(a + b)) );
+    return ( exp(lnGamma(a) + lnGamma(b) - lnGamma(a + b)) );
 }
 
 /*!
@@ -861,161 +822,132 @@ double MbRandom::beta(double a, double b) {
  * \throws Does not throw an error.
  */
 double MbRandom::gamma(double x) {
+    double c[7] = { -1.910444077728E-03, 
+                    8.4171387781295E-04, 
+                    -5.952379913043012E-04, 
+                    7.93650793500350248E-04, 
+                    -2.777777777777681622553E-03, 
+                    8.333333333333333331554247E-02, 
+                    5.7083835261E-03 };
+    double fact;
+    int i;
+    int n;
+    double p[8] = { -1.71618513886549492533811, 
+                    2.47656508055759199108314E+01, 
+                    -3.79804256470945635097577E+02, 
+                    6.29331155312818442661052E+02, 
+                    8.66966202790413211295064E+02, 
+                    -3.14512729688483675254357E+04, 
+                    -3.61444134186911729807069E+04, 
+                    6.64561438202405440627855E+04 };
+    bool parity;
+    double q[8] = { -3.08402300119738975254353E+01, 
+                    3.15350626979604161529144E+02,
+                    -1.01515636749021914166146E+03,
+                    -3.10777167157231109440444E+03, 
+                    2.25381184209801510330112E+04, 
+                    4.75584627752788110767815E+03, 
+                    -1.34659959864969306392456E+05, 
+                    -1.15132259675553483497211E+05 };
+    double sqrtpi = 0.9189385332046727417803297;
+    double sum2;
+    double value;
+    double xbig = 35.040;
+    double xden;
+    double xminin = 1.18E-38;
+    double xnum;
+    double y;
+    double y1;
+    double ysq;
+    double z;
 
-	double c[7] = { -1.910444077728E-03, 
-	                8.4171387781295E-04, 
-	                -5.952379913043012E-04, 
-	                7.93650793500350248E-04, 
-	                -2.777777777777681622553E-03, 
-	                8.333333333333333331554247E-02, 
-	                5.7083835261E-03 };
-	double fact;
-	int i;
-	int n;
-	double p[8] = { -1.71618513886549492533811, 
-	                2.47656508055759199108314E+01, 
-	                -3.79804256470945635097577E+02, 
-	                6.29331155312818442661052E+02, 
-	                8.66966202790413211295064E+02, 
-	                -3.14512729688483675254357E+04, 
-	                -3.61444134186911729807069E+04, 
-	                6.64561438202405440627855E+04 };
-	bool parity;
-	double q[8] = { -3.08402300119738975254353E+01, 
-	                3.15350626979604161529144E+02,
-	                -1.01515636749021914166146E+03,
-	                -3.10777167157231109440444E+03, 
-	                2.25381184209801510330112E+04, 
-	                4.75584627752788110767815E+03, 
-	                -1.34659959864969306392456E+05, 
-	                -1.15132259675553483497211E+05 };
-	double sqrtpi = 0.9189385332046727417803297;
-	double sum2;
-	double value;
-	double xbig = 35.040;
-	double xden;
-	double xminin = 1.18E-38;
-	double xnum;
-	double y;
-	double y1;
-	double ysq;
-	double z;
+    parity = false;
+    fact = 1.0;
+    n = 0;
+    y = x;
 
-	parity = false;
-	fact = 1.0;
-	n = 0;
-	y = x;
+    if ( y <= 0.0 ) {
+        /* argument negative */
+        y = -x;
+        y1 = ( double ) ( ( int ) ( y ) );
+        value = y - y1;
 
-	if ( y <= 0.0 )
-		{
-		/* argument negative */
-		y = -x;
-		y1 = ( double ) ( ( int ) ( y ) );
-		value = y - y1;
+        if ( value != 0.0 ) {
+            if ( y1 != ( double ) ( ( int ) ( y1 * 0.5 ) ) * 2.0 ) {
+                parity = true;
+            }
+            fact = -PI / sin(PI * value);
+            y = y + 1.0;
+        } else {
+            //value = d_huge ( );
+            value = HUGE_VAL;
+            return value;
+        }
+    }
+    if ( y < mbEpsilon() ) {
+        /* argument < EPS */
+        if ( xminin <= y ) {
+            value = 1.0 / y;
+        } else {
+            //value = d_huge ( );
+            value = HUGE_VAL;
+            return value;
+        }
+    } else if ( y < 12.0 ) {
+        y1 = y;
+        /* 0.0 < argument < 1.0 */
+        if ( y < 1.0 ) {
+            z = y;
+            y = y + 1.0;
+        } else { /* 1.0 < argument < 12.0, reduce argument if necessary */
+            n = int ( y ) - 1;
+            y = y - ( double ) ( n );
+            z = y - 1.0;
+        }
+        /* evaluate approximation for 1.0 < argument < 2.0 */
+        xnum = 0.0;
+        xden = 1.0;
+        for ( i = 0; i < 8; i++ ) {
+            xnum = ( xnum + p[i] ) * z;
+            xden = xden * z + q[i];
+        }
 
-		if ( value != 0.0 )
-			{
-			if ( y1 != ( double ) ( ( int ) ( y1 * 0.5 ) ) * 2.0 )
-				parity = true;
-			fact = -PI / sin(PI * value);
-			y = y + 1.0;
-			}
-		else
-			{
-			//value = d_huge ( );
-			value = HUGE_VAL;
-			return value;
-			}
-		}
-	if ( y < mbEpsilon() )
-		{
-		/* argument < EPS */
-		if ( xminin <= y )
-			{
-			value = 1.0 / y;
-			}
-		else
-			{
-			//value = d_huge ( );
-			value = HUGE_VAL;
-			return value;
-			}
-		}
-	else if ( y < 12.0 )
-		{
-		y1 = y;
-		/* 0.0 < argument < 1.0 */
-		if ( y < 1.0 )
-			{
-			z = y;
-			y = y + 1.0;
-			}
-		/* 1.0 < argument < 12.0, reduce argument if necessary */
-		else
-			{
-			n = int ( y ) - 1;
-			y = y - ( double ) ( n );
-			z = y - 1.0;
-			}
-		/* evaluate approximation for 1.0 < argument < 2.0 */
-		xnum = 0.0;
-		xden = 1.0;
-		for ( i = 0; i < 8; i++ )
-			{
-			xnum = ( xnum + p[i] ) * z;
-			xden = xden * z + q[i];
-			}
-
-		value = xnum / xden + 1.0;
-		/* adjust result for case  0.0 < argument < 1.0 */
-		if ( y1 < y )
-			{
-			value = value / y1;
-			}
-		/* adjust result for case  2.0 < argument < 12.0 */
-		else if ( y < y1 )
-			{
-			for ( i = 1; i <= n; i++ )
-				{
-				value = value * y;
-				y = y + 1.0;
-				}
-			}
-		}
-	else
-		{
-		/* evaluate for 12 <= argument */
-		if ( y <= xbig )
-			{
-			ysq = y * y;
-			sum2 = c[6];
-			for ( i = 0; i < 6; i++ )
-				{
-				sum2 = sum2 / ysq + c[i];
-				}
-			sum2 = sum2 / y - y + sqrtpi;
-			sum2 = sum2 + ( y - 0.5 ) * log ( y );
-			value = exp ( sum2 );
-			}
-		else
-			{
-			//value = d_huge ( );
-			value = HUGE_VAL;
-			return value;
-			}
-
-		}
-	/* final adjustments and return */
-	if ( parity )
-		{
-		value = -value;
-		}
-	if ( fact != 1.0 )
-		{
-		value = fact / value;
-		}
-
-	return value;
+        value = xnum / xden + 1.0;
+        /* adjust result for case  0.0 < argument < 1.0 */
+        if ( y1 < y ) {
+            value = value / y1;
+        } else if ( y < y1 ) { /* adjust result for case  2.0 < argument < 12.0 */
+            for ( i = 1; i <= n; i++ ) {
+                value = value * y;
+                y = y + 1.0;
+            }
+        }
+    } else {
+        /* evaluate for 12 <= argument */
+        if ( y <= xbig ) {
+            ysq = y * y;
+            sum2 = c[6];
+            for ( i = 0; i < 6; i++ ) {
+                sum2 = sum2 / ysq + c[i];
+            }
+            sum2 = sum2 / y - y + sqrtpi;
+            sum2 = sum2 + ( y - 0.5 ) * log ( y );
+            value = exp ( sum2 );
+        } else {
+            //value = d_huge ( );
+            value = HUGE_VAL;
+            return value;
+        }
+    
+    }
+    /* final adjustments and return */
+    if ( parity ) {
+        value = -value;
+    }
+    if ( fact != 1.0 ) {
+        value = fact / value;
+    }
+    return value;
 }
 
 /*!
@@ -1034,92 +966,84 @@ double MbRandom::gamma(double x) {
  *      Statistics, 22.
  */
 double MbRandom::incompleteBeta(double a, double b, double x) {
+    double tol = 1.0E-07;
 
-	double tol = 1.0E-07;
+    double value;
+    if ( x <= 0.0 ) {
+        value = 0.0;
+        return value;
+    } else if ( 1.0 <= x ) {
+        value = 1.0;
+        return value;
+    }
 
-	double value;
-	if ( x <= 0.0 )
-		{
-		value = 0.0;
-		return value;
-		}
-	else if ( 1.0 <= x )
-		{
-		value = 1.0;
-		return value;
-		}
+    /* change tail if necessary and determine S */
+    double psq = a + b;
 
-	/* change tail if necessary and determine S */
-	double psq = a + b;
+    double xx, cx, pp, qq;
+    bool indx;
+    if ( a < (a + b) * x ) {
+        xx = 1.0 - x;
+        cx = x;
+        pp = b;
+        qq = a;
+        indx = true;
+    } else {
+        xx = x;
+        cx = 1.0 - x;
+        pp = a;
+        qq = b;
+        indx = false;
+    }
 
-	double xx, cx, pp, qq;
-	bool indx;
-	if ( a < (a + b) * x )
-		{
-		xx = 1.0 - x;
-		cx = x;
-		pp = b;
-		qq = a;
-		indx = true;
-		}
-	else
-		{
-		xx = x;
-		cx = 1.0 - x;
-		pp = a;
-		qq = b;
-		indx = false;
-		}
+    double term = 1.0;
+    int i = 1;
+    value = 1.0;
+    int ns = (int)(qq + cx * (a + b));
 
-	double term = 1.0;
-	int i = 1;
-	value = 1.0;
-	int ns = (int)(qq + cx * (a + b));
+    /* use Soper's reduction formulas */
+    double rx = xx / cx;
 
-	/* use Soper's reduction formulas */
-	double rx = xx / cx;
+    double temp = qq - (double)i;
+    if ( ns == 0 ) {
+        rx = xx;
+    }
 
-	double temp = qq - (double)i;
-	if ( ns == 0 )
-		rx = xx;
-
-	int it = 0;
-	int it_max = 1000;
-	for (;;)
-		{
-		it++;
-		if ( it_max < it )
-			{
-			std::cout << "Error in incompleteBeta: Maximum number of iterations exceeded!" << std::endl;
+    int it = 0;
+    int it_max = 1000;
+    for (;;) {
+        it++;
+        if ( it_max < it ) {
+            std::cout << "Error in incompleteBeta: Maximum number of iterations exceeded!" << std::endl;
       std::exit(1);
-			//ui->error("Error in incompleteBeta: Maximum number of iterations exceeded!");
-			//throw(MbException(MbException::ERROR));
-			}
-		term = term * temp * rx / ( pp + ( double ) ( i ) );
-		value = value + term;
-		temp = fabs(term);
-		if ( temp <= tol && temp <= tol * value )
-			break;
-		i++;
-		ns--;
-		if ( 0 <= ns )
-			{
-			temp = qq - (double)i;
-			if ( ns == 0 )
-				rx = xx;
-			}
-		else
-			{
-			temp = psq;
-			psq = psq + 1.0;
-			}
-		}
-		
-	/* finish calculation */
-	value = value * exp(pp * log(xx) + (qq - 1.0) * log(cx)) / (beta(a, b) * pp);
-	if ( indx )
-		value = 1.0 - value;
-	return value;
+            //ui->error("Error in incompleteBeta: Maximum number of iterations exceeded!");
+            //throw(MbException(MbException::ERROR));
+        }
+        term = term * temp * rx / ( pp + ( double ) ( i ) );
+        value = value + term;
+        temp = fabs(term);
+        if ( temp <= tol && temp <= tol * value ) {
+            break;
+        }
+        i++;
+        ns--;
+        if ( 0 <= ns ) {
+            temp = qq - (double)i;
+            if ( ns == 0 ) {
+                rx = xx;
+            }
+        } else {
+            temp = psq;
+            psq = psq + 1.0;
+        }
+    }
+        
+    /* finish calculation */
+    value = value * exp(pp * log(xx) + (qq - 1.0) * log(cx)) / (beta(a, b) * pp);
+    if ( indx ) {
+        value = 1.0 - value;
+    }
+    return value;
 }
 
 /*!
@@ -1135,69 +1059,78 @@ double MbRandom::incompleteBeta(double a, double b, double x) {
  *      Statistics, 19:285-287.
  */
 double MbRandom::incompleteGamma (double x, double alpha, double LnGamma_alpha) {
+    double p = alpha, g = LnGamma_alpha,
+           accurate = 1e-8, overflow = 1e30,
+           rn = 0.0, a = 0.0, b = 0.0, an = 0.0, 
+           gin, dif = 0.0, term = 0.0, pn[6];
 
-	double			p = alpha, g = LnGamma_alpha,
-					accurate = 1e-8, overflow = 1e30,
-					rn = 0.0, a = 0.0, b = 0.0, an = 0.0, 
-					gin, dif = 0.0, term = 0.0, pn[6];
+    if (x == 0.0) {
+        return (0.0);
+    }
+    if (x < 0 || p <= 0) {
+        return (-1.0);
+    }
 
-	if (x == 0.0) 
-		return (0.0);
-	if (x < 0 || p <= 0) 
-		return (-1.0);
-
-	double factor = exp(p*log(x)-x-g);   
-	if (x > 1 && x >= p) 
-		goto l30;
-	gin = 1.0;  
-	term = 1.0;  
-	rn = p;
-	l20:
-		rn++;
-		term *= x/rn;   
-		gin += term;
-		if (term > accurate) 
-			goto l20;
-		gin *= factor/p;
-		goto l50;
-	l30:
-		a = 1.0-p;   
-		b = a+x+1.0;  
-		term = 0.0;
-		pn[0] = 1.0;  
-		pn[1] = x;  
-		pn[2] = x+1;  
-		pn[3] = x*b;
-		gin = pn[2]/pn[3];
-	l32:
-		a++;  
-		b += 2.0;  
-		term++;   
-		an = a*term;
-		for (int i=0; i<2; i++) 
-			pn[i+4] = b*pn[i+2]-an*pn[i];
-		if (pn[5] == 0) 
-			goto l35;
-		rn = pn[4]/pn[5];   
-		dif = fabs(gin-rn);
-		if (dif>accurate) 
-			goto l34;
-		if (dif<=accurate*rn) 
-			goto l42;
-	l34:
-		gin = rn;
-	l35:
-		for (int i=0; i<4; i++) 
-			pn[i] = pn[i+2];
-		if (fabs(pn[4]) < overflow) 
-			goto l32;
-		for (int i=0; i<4; i++) 
-			pn[i] /= overflow;
-		goto l32;
-	l42:
-		gin = 1.0-factor*gin;
-	l50:
-		return (gin);
+    double factor = exp(p*log(x)-x-g);   
+    if (x > 1 && x >= p) {
+        goto l30;
+    }
+    gin = 1.0;  
+    term = 1.0;  
+    rn = p;
+    l20:
+        rn++;
+        term *= x/rn;   
+        gin += term;
+        if (term > accurate) 
+            goto l20;
+        gin *= factor/p;
+        goto l50;
+    l30:
+        a = 1.0-p;   
+        b = a+x+1.0;  
+        term = 0.0;
+        pn[0] = 1.0;  
+        pn[1] = x;  
+        pn[2] = x+1;  
+        pn[3] = x*b;
+        gin = pn[2]/pn[3];
+    l32:
+        a++;  
+        b += 2.0;  
+        term++;   
+        an = a*term;
+        for (int i=0; i<2; i++) {
+            pn[i+4] = b*pn[i+2]-an*pn[i];
+        }
+        if (pn[5] == 0) {
+            goto l35;
+        }
+        rn = pn[4]/pn[5];   
+        dif = fabs(gin-rn);
+        if (dif>accurate) {
+            goto l34;
+        }
+        if (dif<=accurate*rn) {
+            goto l42;
+        }
+    l34:
+        gin = rn;
+    l35:
+        for (int i=0; i<4; i++) {
+            pn[i] = pn[i+2];
+        }
+        if (fabs(pn[4]) < overflow) {
+            goto l32;
+        }
+        for (int i=0; i<4; i++) {
+            pn[i] /= overflow;
+        }
+        goto l32;
+    l42:
+        gin = 1.0-factor*gin;
+    l50:
+        return (gin);
 }
 
 /*!
@@ -1209,8 +1142,7 @@ double MbRandom::incompleteGamma (double x, double alpha, double LnGamma_alpha) 
  * \throws Does not throw an error.
  */
 void MbRandom::setSeed(void) {
-
-	seed = (long int)( time( 0 ) );
+    seed = (long int)( time( 0 ) );
 }
 
 /*!
@@ -1225,8 +1157,7 @@ void MbRandom::setSeed(void) {
  * \throws Does not throw an error.
  */
 void MbRandom::setSeed(long int s) { 
-
-	seed = s;
+    seed = s;
 }
 
 /*!
@@ -1239,8 +1170,7 @@ void MbRandom::setSeed(long int s) {
  * \throws Does not throw an error.
  */
 long int MbRandom::getSeed(void) {
-
-	return seed;
+    return seed;
 }
 
 /*!
@@ -1258,22 +1188,22 @@ long int MbRandom::getSeed(void) {
  */
 double MbRandom::lnGamma(double a) {
 
-	double x = a;
-	double f = 0.0;
-	double z;
-	if (x < 7) 
-		{
-		f = 1.0;  
-		z = x - 1.0;
-		while (++z < 7.0)  
-			f *= z;
-		x = z;   
-		f = -log(f);
-		}
-	z = 1.0 / (x*x);
-	return  (f + (x-0.5)*log(x) - x + 0.918938533204673 + 
-			(((-0.000595238095238*z+0.000793650793651)*z-0.002777777777778)*z +
-			0.083333333333333)/x);  
+    double x = a;
+    double f = 0.0;
+    double z;
+    if (x < 7) {
+        f = 1.0;  
+        z = x - 1.0;
+        while (++z < 7.0) {
+            f *= z;
+        }
+        x = z;   
+        f = -log(f);
+    }
+    z = 1.0 / (x*x);
+    return  (f + (x-0.5)*log(x) - x + 0.918938533204673 + 
+            (((-0.000595238095238*z+0.000793650793651)*z-0.002777777777778)*z +
+            0.083333333333333)/x);  
 }
 
 /*!
@@ -1287,11 +1217,11 @@ double MbRandom::lnGamma(double a) {
  * \throws Does not throw an error.
  */
 double MbRandom::mbEpsilon(void) {
-
-	double r = 1.0;
-	while ( 1.0 < (double)(1.0 + r)  )
-		r = r / 2.0;
-	return 2.0 * r;
+    double r = 1.0;
+    while ( 1.0 < (double)(1.0 + r)  ) {
+        r = r / 2.0;
+    }
+    return 2.0 * r;
 }
 
 /*!
@@ -1302,26 +1232,21 @@ double MbRandom::mbEpsilon(void) {
  * \throws Does not throw an error.
  */
 double MbRandom::normalRv(void) {
-
-	if ( availableNormalRv == false )
-		{
-		double v1, v2, rsq;
-		do
-			{
-			v1 = 2.0 * uniformRv() - 1.0;
-			v2 = 2.0 * uniformRv() - 1.0;
-			rsq = v1 * v1 + v2 * v2;
-			} while ( rsq >= 1.0 || rsq == 0.0 );
-		double fac = sqrt(-2.0 * log(rsq)/rsq);
-		extraNormalRv = v1 * fac;
-		availableNormalRv = true;
-		return v2 * fac;
-		}
-	else
-		{
-		availableNormalRv = false;
-		return extraNormalRv;
-		}
+    if ( availableNormalRv == false ) {
+        double v1, v2, rsq;
+        do {
+            v1 = 2.0 * uniformRv() - 1.0;
+            v2 = 2.0 * uniformRv() - 1.0;
+            rsq = v1 * v1 + v2 * v2;
+        } while ( rsq >= 1.0 || rsq == 0.0 );
+        double fac = sqrt(-2.0 * log(rsq)/rsq);
+        extraNormalRv = v1 * fac;
+        availableNormalRv = true;
+        return v2 * fac;
+    } else {
+        availableNormalRv = false;
+        return extraNormalRv;
+    }
 }
 
 /*!
@@ -1340,23 +1265,24 @@ double MbRandom::normalRv(void) {
  */
 double MbRandom::pointNormal(double prob) {
 
-	double a0 = -0.322232431088;
-	double a1 = -1.0;
-	double a2 = -0.342242088547;
-	double a3 = -0.0204231210245;
- 	double a4 = -0.453642210148e-4;
- 	double b0 = 0.0993484626060;
- 	double b1 = 0.588581570495;
- 	double b2 = 0.531103462366; 
- 	double b3 = 0.103537752850; 
- 	double b4 = 0.0038560700634;
- 	double p = prob;
-	double p1 = ( p < 0.5 ? p : 1.0 - p);
-	if (p1 < 1e-20) 
-	   return (-9999.0);
-	double y = sqrt( log(1.0/(p1*p1)) );   
-	double z = y + ((((y*a4+a3)*y+a2)*y+a1)*y+a0) / ((((y*b4+b3)*y+b2)*y+b1)*y+b0);
-	return ( p < 0.5 ? -z : z );
+    double a0 = -0.322232431088;
+    double a1 = -1.0;
+    double a2 = -0.342242088547;
+    double a3 = -0.0204231210245;
+    double a4 = -0.453642210148e-4;
+    double b0 = 0.0993484626060;
+    double b1 = 0.588581570495;
+    double b2 = 0.531103462366; 
+    double b3 = 0.103537752850; 
+    double b4 = 0.0038560700634;
+    double p = prob;
+    double p1 = ( p < 0.5 ? p : 1.0 - p);
+    if (p1 < 1e-20) {
+       return (-9999.0);
+    }
+    double y = sqrt( log(1.0/(p1*p1)) );   
+    double z = y + ((((y*a4+a3)*y+a2)*y+a1)*y+a0) / ((((y*b4+b3)*y+b2)*y+b1)*y+b0);
+    return ( p < 0.5 ? -z : z );
 }
 
 /*!
@@ -1370,16 +1296,18 @@ double MbRandom::pointNormal(double prob) {
  * \throws Does not throw an error.
  */
 int MbRandom::poissonLow(double lambda) {
-
-	double d = sqrt(lambda);
-	if (uniformRv() >= d) 
-		return 0;
-	double r = uniformRv() * d;
-	if (r > lambda * (1.0 - lambda)) 
-		return 0;
-	if (r > 0.5 * lambda * lambda * (1.0 - lambda)) 
-		return 1;
-	return 2;
+    double d = sqrt(lambda);
+    if (uniformRv() >= d) {
+        return 0;
+    }
+    double r = uniformRv() * d;
+    if (r > lambda * (1.0 - lambda)) {
+        return 0;
+    }
+    if (r > 0.5 * lambda * lambda * (1.0 - lambda)) {
+        return 1;
+    }
+    return 2;
 }
 
 /*!
@@ -1393,32 +1321,29 @@ int MbRandom::poissonLow(double lambda) {
  */
 int MbRandom::poissonInver(double lambda) {
 
-	const int bound = 130;
-	static double p_L_last = -1.0;
-	static double p_f0;
-	int x;
+    const int bound = 130;
+    static double p_L_last = -1.0;
+    static double p_f0;
+    int x;
 
-	if (lambda != p_L_last) 
-		{
-		p_L_last = lambda;
-		p_f0 = exp(-lambda);
-		} 
+    if (lambda != p_L_last) {
+        p_L_last = lambda;
+        p_f0 = exp(-lambda);
+    }
 
-	while (1) 
-		{  
-		double r = uniformRv();  
-		x = 0;  
-		double f = p_f0;
-		do 
-			{
-			r -= f;
-			if (r <= 0.0) 
-				return x;
-			x++;
-			f *= lambda;
-			r *= x;
-			} while (x <= bound);
-		}
+    while (1) {  
+        double r = uniformRv();  
+        x = 0;  
+        double f = p_f0;
+        do {
+            r -= f;
+            if (r <= 0.0) 
+                return x;
+            x++;
+            f *= lambda;
+            r *= x;
+        } while (x <= bound);
+    }
 }
 
 /*!
@@ -1434,48 +1359,50 @@ int MbRandom::poissonInver(double lambda) {
  *      Mathematics 31:181-189.
  */
 int MbRandom::poissonRatioUniforms(double lambda) {
+    static double p_L_last = -1.0;  /* previous L */
+    static double p_a;              /* hat center */
+    static double p_h;              /* hat width */
+    static double p_g;              /* ln(L) */
+    static double p_q;              /* value at mode */
+    static int p_bound;             /* upper bound */
+    int mode;                       /* mode */
+    double u;                       /* uniform random */
+    double lf;                      /* ln(f(x)) */
+    double x;                       /* real sample */
+    int k;                          /* integer sample */
 
-	static double p_L_last = -1.0;  /* previous L */
-	static double p_a;              /* hat center */
-	static double p_h;              /* hat width */
-	static double p_g;              /* ln(L) */
-	static double p_q;              /* value at mode */
-	static int p_bound;             /* upper bound */
-	int mode;                       /* mode */
-	double u;                       /* uniform random */
-	double lf;                      /* ln(f(x)) */
-	double x;                       /* real sample */
-	int k;                          /* integer sample */
+    if (p_L_last != lambda) {
+        p_L_last = lambda;
+        p_a = lambda + 0.5;
+        mode = (int)lambda;
+        p_g  = log(lambda);
+        p_q = mode * p_g - lnFactorial(mode);
+        p_h = sqrt(2.943035529371538573 * (lambda + 0.5)) + 0.8989161620588987408;
+        p_bound = (int)(p_a + 6.0 * p_h);
+    }
 
-	if (p_L_last != lambda) 
-		{
-		p_L_last = lambda;
-		p_a = lambda + 0.5;
-		mode = (int)lambda;
-		p_g  = log(lambda);
-		p_q = mode * p_g - lnFactorial(mode);
-		p_h = sqrt(2.943035529371538573 * (lambda + 0.5)) + 0.8989161620588987408;
-		p_bound = (int)(p_a + 6.0 * p_h);
-		}
-
-	while(1) 
-		{
-		u = uniformRv();
-		if (u == 0.0) 
-			continue;
-		x = p_a + p_h * (uniformRv() - 0.5) / u;
-		if (x < 0 || x >= p_bound) 
-			continue;
-		k = (int)(x);
-		lf = k * p_g - lnFactorial(k) - p_q;
-		if (lf >= u * (4.0 - u) - 3.0) 
-			break;
-		if (u * (u - lf) > 1.0) 
-			continue;
-		if (2.0 * log(u) <= lf) 
-			break;
-		}
-	return(k);
+    while(1) {
+        u = uniformRv();
+        if (u == 0.0) {
+            continue;
+        }
+        x = p_a + p_h * (uniformRv() - 0.5) / u;
+        if (x < 0 || x >= p_bound) {
+            continue;
+        }
+        k = (int)(x);
+        lf = k * p_g - lnFactorial(k) - p_q;
+        if (lf >= u * (4.0 - u) - 3.0) {
+            break;
+        }
+        if (u * (u - lf) > 1.0) {
+            continue;
+        }
+        if (2.0 * log(u) <= lf) {
+            break;
+        }
+    }
+    return(k);
 }
 
 /*!
@@ -1487,17 +1414,17 @@ int MbRandom::poissonRatioUniforms(double lambda) {
  * \throws Does not throw an error.
  */
 double MbRandom::rndGamma(double s) {
-
-	double r = 0.0;
-	if (s <= 0.0)      
-		std::cout << "Gamma parameter less than zero" << std::endl;
-	else if (s < 1.0)  
-		r = rndGamma1(s);
-	else if (s > 1.0)  
-		r = rndGamma2(s);
-	else           
-		r = -log(uniformRv());
-	return (r);
+    double r = 0.0;
+    if (s <= 0.0) {
+        std::cout << "Gamma parameter less than zero" << std::endl;
+    } else if (s < 1.0) {
+        r = rndGamma1(s);
+    } else if (s > 1.0) {
+        r = rndGamma2(s);
+    } else {           
+        r = -log(uniformRv());
+    }
+    return (r);
 }
 
 /*!
@@ -1509,35 +1436,33 @@ double MbRandom::rndGamma(double s) {
  * \throws Does not throw an error.
  */
 double MbRandom::rndGamma1(double s) {
-
-	double			r, x = 0.0, small = 1e-37, w;
-	static double   a, p, uf, ss = 10.0, d;
-	
-	if (s != ss) 
-		{
-		a  = 1.0 - s;
-		p  = a / (a + s * exp(-a));
-		uf = p * pow(small / a, s);
-		d  = a * log(a);
-		ss = s;
-		}
-	for (;;) 
-		{
-		r = uniformRv();
-		if (r > p)        
-			x = a - log((1.0 - r) / (1.0 - p)), w = a * log(x) - d;
-		else if (r>uf)  
-			x = a * pow(r / p, 1.0 / s), w = x;
-		else            
-			return (0.0);
-		r = uniformRv();
-		if (1.0 - r <= w && r > 0.0)
-		if (r*(w + 1.0) >= 1.0 || -log(r) <= w)  
-			continue;
-		break;
-		}
-		
-	return (x);
+    double            r, x = 0.0, small = 1e-37, w;
+    static double   a, p, uf, ss = 10.0, d;
+    
+    if (s != ss)  {
+        a  = 1.0 - s;
+        p  = a / (a + s * exp(-a));
+        uf = p * pow(small / a, s);
+        d  = a * log(a);
+        ss = s;
+    }
+    for (;;) {
+        r = uniformRv();
+        if (r > p) {
+            x = a - log((1.0 - r) / (1.0 - p)), w = a * log(x) - d;
+        } else if (r>uf) { 
+            x = a * pow(r / p, 1.0 / s), w = x;
+        } else {
+            return (0.0);
+        }
+        r = uniformRv();
+        if (1.0 - r <= w && r > 0.0)
+        if (r*(w + 1.0) >= 1.0 || -log(r) <= w) {
+            continue;
+        }
+        break;
+    }
+    return (x);
 }
 
 /*!
@@ -1549,31 +1474,29 @@ double MbRandom::rndGamma1(double s) {
  * \throws Does not throw an error.
  */
 double MbRandom::rndGamma2(double s) {
-
-	double			r, d, f, g, x;
-	static double	b, h, ss = 0.0;
-	
-	if (s != ss) 
-		{
-		b  = s - 1.0;
-		h  = sqrt(3.0 * s - 0.75);
-		ss = s;
-		}
-	for (;;) 
-		{
-		r = uniformRv();
-		g = r - r * r;
-		f = (r - 0.5) * h / sqrt(g);
-		x = b + f;
-		if (x <= 0.0) 
-			continue;
-		r = uniformRv();
-		d = 64.0 * r * r * g * g * g;
-		if (d * x < x - 2.0 * f * f || log(d) < 2.0 * (b * log(x / b) - f))  
-			break;
-		}
-		
-	return (x);
+    double            r, d, f, g, x;
+    static double    b, h, ss = 0.0;
+    
+    if (s != ss) {
+        b  = s - 1.0;
+        h  = sqrt(3.0 * s - 0.75);
+        ss = s;
+    }
+    for (;;) {
+        r = uniformRv();
+        g = r - r * r;
+        f = (r - 0.5) * h / sqrt(g);
+        x = b + f;
+        if (x <= 0.0) {
+            continue;
+        }
+        r = uniformRv();
+        d = 64.0 * r * r * g * g * g;
+        if (d * x < x - 2.0 * f * f || log(d) < 2.0 * (b * log(x / b) - f)) {
+            break;
+        }
+    }
+    return (x);
 }
 
 /* log factorial ln(n!) */
@@ -1592,35 +1515,31 @@ double MbRandom::rndGamma2(double s) {
  */
 double MbRandom::lnFactorial(int n) {
 
-	static const double    
-	C0 =  0.918938533204672722,
-	C1 =  1.0/12.0, 
-	C3 = -1.0/360.0;
+    static const double    
+    C0 =  0.918938533204672722,
+    C1 =  1.0/12.0, 
+    C3 = -1.0/360.0;
 
-	if (n < 1024) 
-		{
-		if (n <= 1) 
-			{
-			return 0.0;
-			}
-		if ( initializedFacTable == false ) 
-			{
-			/* make table of ln(n!) */
-			double sum = facTable[0] = 0.0;
-			for (int i=1; i<1024; i++) 
-				{
-				sum += log((double)i);
-				facTable[i] = sum;
-				}
-			initializedFacTable = true;
-			}
-		return facTable[n];
-		}
+    if (n < 1024) {
+        if (n <= 1) {
+            return 0.0;
+        }
+        if ( initializedFacTable == false ) {
+            /* make table of ln(n!) */
+            double sum = facTable[0] = 0.0;
+            for (int i=1; i<1024; i++) {
+                sum += log((double)i);
+                facTable[i] = sum;
+            }
+            initializedFacTable = true;
+        }
+        return facTable[n];
+    }
 
-	/* not found in table. use Stirling approximation */
-	double  n1, r;
-	n1 = n;  r  = 1.0 / n1;
-	return (n1 + 0.5) * log(n1) - n1 + C0 + r*(C1 + r*r*C3);
+    /* not found in table. use Stirling approximation */
+    double  n1, r;
+    n1 = n;  r  = 1.0 / n1;
+    return (n1 + 0.5) * log(n1) - n1 + C0 + r*(C1 + r*r*C3);
 }
 
 /*
@@ -1632,19 +1551,9 @@ double MbRandom::lnFactorial(int n) {
  */
 
 int MbRandom::sampleInteger(int min, int max){
-	
-	double range = (double)max - (double)min + 1;
- 
-	
-	double rnd = uniformRv()*range;
-	
- 
-	
-	int sampled = min + (int)rnd;
-	return sampled;
+    double range = (double)max - (double)min + 1;
+    double rnd = uniformRv()*range;
+    
+    int sampled = min + (int)rnd;
+    return sampled;
 }
-
-
-
-
-
