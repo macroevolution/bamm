@@ -18,7 +18,7 @@ updateMuShiftScale = 0.75
 # This parameter below has been deprecated.
 # MeanSpeciationLengthFraction = 1.0
 # The new parameter is:
-updateEventLocationScale = 2.0
+updateEventLocationScale = 2.0 # was: meanSpeciationLengthFraction
 # The meaning of this parameter is a little different 
 #	and should be documented.
 
@@ -31,7 +31,7 @@ lambdaShift0 = 0
 muInit0 = .005
 muShift0 = 0
 
-targetNumber = 1.0
+poissonRatePrior = 1.0 # was: targetNumber
 lambdaInitPrior = 1.0
 lambdaShiftPrior = 0.05
 muInitPrior = 1.0
@@ -48,7 +48,7 @@ acceptrateOutfile = baccept.txt
 lambdaNodeOutfile = bnodelambda.txt
 eventDataOutfile = beventdata.txt
 
-treeWriteFreq = 20000
+branchRatesWriteFreq = 20000 # was: treeWriteFreq
 mcmcWriteFreq = 1000
 eventDataWriteFreq = 5000
 
