@@ -183,13 +183,12 @@ private:
     // Parameters for MCMC proposals
     double _scale; // scale for moving event
     double _updateEventRateScale;
-    double _targetNumber;
     double _localGlobalMoveRatio;
 
     double eventLambda; // Poisson rate
 
     // Priors
-    double poissonRatePrior; // exponential  /* keep this in Model */
+    double _poissonRatePrior; // exponential  /* keep this in Model */
     double _lambdaInitPrior;
     double _lambdaShiftPrior;
 
@@ -317,13 +316,13 @@ inline void Model::setAcceptLastUpdate(int x)
 
 inline void Model::setPoissonRatePrior(double x)
 {
-    poissonRatePrior  = x;
+    _poissonRatePrior  = x;
 }
 
 
 inline double Model::getPoissonRatePrior()
 {
-    return poissonRatePrior;
+    return _poissonRatePrior;
 }
 
 

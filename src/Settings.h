@@ -57,7 +57,7 @@ private:
 //   double _MeanSpeciationLengthFraction;
     double _updateEventRateScale;
     double _localGlobalMoveRatio;
-    double _targetNumber;
+    double _poissonRatePrior;
 
     double _lambdaInitPrior;
     double _lambdaShiftPrior;
@@ -164,7 +164,7 @@ private:
     bool isDefault_muShift0;
     bool isDefault_updateEventRateScale;
     bool isDefault_localGlobalMoveRatio;
-    bool isDefault_targetNumber;
+    bool isDefault_poissonRatePrior;
     bool isDefault_lambdaInitPrior;
     bool isDefault_lambdaShiftPrior;
     bool isDefault_muInitPrior;
@@ -281,7 +281,7 @@ public:
 	//    double getMeanSpeciationLengthFraction();
     double getUpdateEventRateScale();
     double getLocalGlobalMoveRatio();
-    double getTargetNumberOfEvents();
+    double getPoissonRatePrior();
     double getLambdaInitPrior();
     double getLambdaShiftPrior();
     double getMuInitPrior();
@@ -490,9 +490,9 @@ inline double Settings::getLocalGlobalMoveRatio()
 }
 
 
-inline double Settings::getTargetNumberOfEvents()
+inline double Settings::getPoissonRatePrior()
 {
-    return _targetNumber;
+    return _poissonRatePrior;
 }
 
 

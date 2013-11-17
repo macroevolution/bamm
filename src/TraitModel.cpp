@@ -86,17 +86,13 @@ TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
     _updateEventRateScale = sttings->getUpdateEventRateScale();
     _localGlobalMoveRatio =
         sttings->getLocalGlobalMoveRatio(); // For Poisson process
-    _targetNumber = sttings->getTargetNumberOfEvents();
+ 
+    _poissonRatePrior = sttings->getPoissonRatePrior();
+    
 
-    // Keep poisson rate prior such that expected event rate will generate 1 event on the tree.
-    //poissonRatePrior = bl; // important to keep # of events low.
-    poissonRatePrior = 1 /
-                       _targetNumber; // should lead to TARGET number of events from prior...
-    // Keep priors in settings...
     setMinMaxTraitPriors();
 
-    eventLambda =
-        _targetNumber; // event rate, initialized to generate expected number of 1 event
+    eventLambda = 1 / _poissonRatePrior; // event rate, initialized to generate expected number of 1 event
 
     //std::cout << bl << "\t" << eventLambda << std::endl;
 
@@ -1236,8 +1232,8 @@ void TraitModel::updateEventRateMH(void)
     setEventRate(cterm * oldEventRate);
 
 
-    double LogPriorRatio = ran->lnExponentialPdf(poissonRatePrior,
-                           getEventRate()) - ran->lnExponentialPdf(poissonRatePrior, oldEventRate);
+    double LogPriorRatio = ran->lnExponentialPdf(_poissonRatePrior,
+                           getEventRate()) - ran->lnExponentialPdf(_poissonRatePrior, oldEventRate);
     double logProposalRatio = log(cterm);
     double logHR = LogPriorRatio + logProposalRatio;
     const bool acceptMove = acceptMetropolisHastings(logHR);
@@ -1675,7 +1671,7 @@ double TraitModel::computeLogPrior(void)
 
     // and prior on number of events:
 
-    logPrior += ran->lnExponentialPdf(poissonRatePrior , getEventRate());
+    logPrior += ran->lnExponentialPdf(_poissonRatePrior , getEventRate());
 
     return logPrior;
 

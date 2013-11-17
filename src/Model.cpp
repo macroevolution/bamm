@@ -102,12 +102,11 @@ Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
 
     _updateEventRateScale = sttings->getUpdateEventRateScale();
     _localGlobalMoveRatio =
-        sttings->getLocalGlobalMoveRatio(); // For Poisson process
-    _targetNumber = sttings->getTargetNumberOfEvents();
-
-
-    poissonRatePrior = 1 /
-                       _targetNumber; // should lead to TARGET number of events from prior...
+        sttings->getLocalGlobalMoveRatio();
+    
+    // For Poisson process
+    
+    _poissonRatePrior = sttings->getPoissonRatePrior();
 
     _lambdaInitPrior = sttings->getLambdaInitPrior();
     _lambdaShiftPrior = sttings->getLambdaShiftPrior();
@@ -116,8 +115,7 @@ Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
     _muInitPrior = sttings->getMuInitPrior();
     _muShiftPrior = sttings->getMuShiftPrior();
 
-    eventLambda =
-        _targetNumber; // event rate, initialized to generate expected number of _targetNumber events
+    eventLambda = 1 / sttings->getPoissonRatePrior(); // event rate, initialized to generate expected number of _targetNumber events
 
     //Parameter for splitting branch into pieces for numerical computation
     _segLength = sttings->getSegLength();
@@ -1593,14 +1591,14 @@ void Model::updateEventRateMH(void)
     double cterm = exp( _updateEventRateScale * (ran->uniformRv() - 0.5) );
     setEventRate(cterm * oldEventRate);
 
-    double LogPriorRatio = ran->lnExponentialPdf(poissonRatePrior,
-                           getEventRate()) - ran->lnExponentialPdf(poissonRatePrior, oldEventRate);
+    double LogPriorRatio = ran->lnExponentialPdf(_poissonRatePrior,
+                           getEventRate()) - ran->lnExponentialPdf(_poissonRatePrior, oldEventRate);
     double logProposalRatio = log(cterm);
 
 
     // Experimental code:
     // Sample new event rate from prior directly with each step.
-    //double newEventRate = ran->exponentialRv(poissonRatePrior);
+    //double newEventRate = ran->exponentialRv(_poissonRatePrior);
     //setEventRate(newEventRate);
     //double LogPriorRatio = 0.0;
     //double logProposalRatio = 1.0;
@@ -1860,7 +1858,7 @@ double Model::computeLogPrior(void)
     /*
 
     // 1. Event rate
-    logPrior += ran->lnExponentialPdf(poissonRatePrior, getEventRate());
+    logPrior += ran->lnExponentialPdf(_poissonRatePrior, getEventRate());
 
     // 2. Prior on branch rates:
     logPrior += ran->lnExponentialPdf(lambdaPrior, rootEvent->getLambda()) + ran->lnExponentialPdf(muPrior, rootEvent->getMu());
@@ -1907,8 +1905,7 @@ double Model::computeLogPrior(void)
     }
 
     // Here's prior density on the event rate:
-    logPrior += ran->lnExponentialPdf( (1 / (double)
-                                        sttings->getTargetNumberOfEvents()) , getEventRate());
+    logPrior += ran->lnExponentialPdf(sttings->getPoissonRatePrior(), getEventRate());
 
     // Here we cCCOULD also compute the prior probability on the number of events:
     //logPrior += ran->lnPoissonProb(getEventRate(), eventCollection.size());

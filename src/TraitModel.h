@@ -146,16 +146,14 @@ private:
     double lnLikTraits;
 
     double eventLambda; // Poisson rate
-
-    double poissonRatePrior; // exponential  /* keep this in Model */
-
+    
     double _updateBetaScale;
     double _updateBetaShiftScale;
     double _updateNodeStateScale;
     double _scale;
     double _updateEventRateScale;
     double _localGlobalMoveRatio;
-    double _targetNumber;
+    double _poissonRatePrior;
 
     // Other private variables
 
@@ -269,13 +267,13 @@ inline void TraitModel::setAcceptLastUpdate(int x)
 
 inline void TraitModel::setPoissonRatePrior(double x)
 {
-    poissonRatePrior  = x;
+    _poissonRatePrior  = x;
 }
 
 
 inline double TraitModel::getPoissonRatePrior()
 {
-    return poissonRatePrior;
+    return _poissonRatePrior;
 }
 
 

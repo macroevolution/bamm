@@ -55,7 +55,7 @@ Settings::Settings(void)
     _muShift0 = 0.0;
     _updateEventRateScale = 0.0;
     _localGlobalMoveRatio = 0.0;
-    _targetNumber = 0.0;
+    _poissonRatePrior = 0.0;
     _lambdaInitPrior = 0.0;
     _lambdaShiftPrior = 0.0;
     _muInitPrior = 0.0;
@@ -122,7 +122,7 @@ Settings::Settings(void)
     isDefault_muShift0                                  = true;
     isDefault_updateEventRateScale                      = true;
     isDefault_localGlobalMoveRatio                      = true;
-    isDefault_targetNumber                              = true;
+    isDefault_poissonRatePrior                          = true;
     isDefault_lambdaInitPrior                           = true;
     isDefault_lambdaShiftPrior                          = true;
     isDefault_muInitPrior                               = true;
@@ -323,7 +323,7 @@ void Settings::initializeSettingsDefaults_Diversification(void)
     _muShift0                       = 0.0;
     _updateEventRateScale           = 4.0;
     _localGlobalMoveRatio           = 10.0;
-    _targetNumber                   = 1.0;
+    _poissonRatePrior               = 1.0;
     _lambdaInitPrior                = 1.0;
     _lambdaShiftPrior               = 0.5;
     _muInitPrior                    = 1.0;
@@ -389,7 +389,7 @@ void Settings::initializeSettingsDefaults_Traits(void)
 
     _updateEventRateScale           = 2.0;
     _localGlobalMoveRatio           = 10.0;
-    _targetNumber                   = 0.5;
+    _poissonRatePrior               = 1.0;
 //   _MeanSpeciationLengthFraction   = 0.2;
 	_updateEventLocationScale		= 1.0;
     _betaInit           =   0.1;
@@ -495,9 +495,9 @@ void Settings::initializeSettings_Traits()
         } else if (_varName[i] == "localGlobalMoveRatio") {
             _localGlobalMoveRatio = atof(_varValue[i].c_str());
             isDefault_localGlobalMoveRatio = false;
-        } else if (_varName[i] == "targetNumber") {
-            _targetNumber = atof(_varValue[i].c_str());
-            isDefault_targetNumber = false;
+        } else if (_varName[i] == "poissonRatePrior") {
+            _poissonRatePrior = atof(_varValue[i].c_str());
+            isDefault_poissonRatePrior = false;
         } else if (_varName[i] == "betaInitPrior") {
             _betaInitPrior = atof(_varValue[i].c_str());
             isDefault_betaInitPrior = false;
@@ -698,9 +698,9 @@ void Settings::initializeSettings_Diversification()
         } else if (_varName[i] == "localGlobalMoveRatio") {
             _localGlobalMoveRatio = atof(_varValue[i].c_str());
             isDefault_localGlobalMoveRatio = false;
-        } else if (_varName[i] == "targetNumber") {
-            _targetNumber = atof(_varValue[i].c_str());
-            isDefault_targetNumber = false;
+        } else if (_varName[i] == "poissonRatePrior") {
+            _poissonRatePrior = atof(_varValue[i].c_str());
+            isDefault_poissonRatePrior = false;
         } else if (_varName[i] == "lambdaInitPrior") {
             _lambdaInitPrior = atof(_varValue[i].c_str());
             isDefault_lambdaInitPrior = false;
@@ -869,8 +869,8 @@ void Settings::checkAreInitialSettingsValid_Traits(void)
         paramsNotSpecified.push_back("betaShift");
     if (isDefault_localGlobalMoveRatio)
         paramsNotSpecified.push_back("localGlobalMoveRatio");
-    if (isDefault_targetNumber)
-        paramsNotSpecified.push_back("targetNumber");
+    if (isDefault_poissonRatePrior)
+        paramsNotSpecified.push_back("poissonRatePrior");
     if (isDefault_betaInitPrior)
         paramsNotSpecified.push_back("betaInitPrior");
     if (isDefault_betaShiftPrior)
@@ -1012,8 +1012,8 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
         if (!isDefault_localGlobalMoveRatio)
             std::cout << std::right << std::setw(ppw) << "localGlobalMoveRatio" << "\t\t" <<
                  _localGlobalMoveRatio << std::endl;
-        if (!isDefault_targetNumber)
-            std::cout << std::right << std::setw(ppw) << "targetNumber" << "\t\t" << _targetNumber << std::endl;
+        if (!isDefault_poissonRatePrior)
+            std::cout << std::right << std::setw(ppw) << "poissonRatePrior" << "\t\t" << _poissonRatePrior << std::endl;
         if (!isDefault_lambdaInitPrior)
             std::cout << std::right << std::setw(ppw) << "lambdaInitPrior" << "\t\t" << _lambdaInitPrior <<
                  std::endl;
@@ -1122,7 +1122,7 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
              _updateEventRateScale << std::endl;
         std::cout << std::right << std::setw(ppw) << "localGlobalMoveRatio" << "\t\t" <<
              _localGlobalMoveRatio << std::endl;
-        std::cout << std::right << std::setw(ppw) << "targetNumber" << "\t\t" << _targetNumber << std::endl;
+        std::cout << std::right << std::setw(ppw) << "poissonRatePrior" << "\t\t" << _poissonRatePrior << std::endl;
         std::cout << std::right << std::setw(ppw) << "lambdaInitPrior" << "\t\t" << _lambdaInitPrior <<
              std::endl;
         std::cout << std::right << std::setw(ppw) << "lambdaShiftPrior" << "\t\t" << _lambdaShiftPrior
