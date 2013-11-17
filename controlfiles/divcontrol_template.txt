@@ -24,7 +24,7 @@ treefile = mytree.tre
 
 sampleFromPriorOnly = 0                 
 # If TRUE will perform BAMM analysis sampling 
-#		from prior only. (no likelihoods computed)
+# from prior only. (no likelihoods computed)
 
 autotune = 0                            
 # Experimental option for tuning MCMC operators
@@ -56,7 +56,11 @@ globalSamplingFraction = 1.0
 
 # seed = 12345
 # Seed for the random number generator. 
-# If not specified, a seed is obtained from clock time 
+# If not specified, a seed is obtained from clock time
+
+# overwrite = 1
+# If TRUE will overwrite analysis result files (if present).
+# Default is set to FALSE: analyses will stop before overwriting files.
 
 ###################################
 # PRIORS
