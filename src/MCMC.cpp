@@ -282,7 +282,7 @@ void MCMC::writeStateToFile()
 
 void MCMC::writeHeaderToStream(std::ostream& outStream)
 {
-    outStream << "generation,numevents,logprior,llbranches\n";
+    outStream << "generation,numevents,logprior,llbranches,eventRate\n";
 }
 
 
@@ -291,7 +291,8 @@ void MCMC::writeStateToStream(std::ostream& outStream)
     outStream << ModelPtr->getGeneration()      << ","
               << ModelPtr->getNumberOfEvents()  << ","
               << ModelPtr->computeLogPrior()    << ","
-              << ModelPtr->getCurrLnLBranches() << std::endl;
+              << ModelPtr->getCurrLnLBranches() << ","
+			  << ModelPtr->getEventRate() << std::endl;
 }
 
 

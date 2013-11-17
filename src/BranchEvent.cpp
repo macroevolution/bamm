@@ -9,10 +9,10 @@
 #include <stdlib.h>
 
 #include "BranchEvent.h"
-#include "MbRandom.h"
 #include "Node.h"
 #include "Tree.h"
 #include "Utilities.h"
+#include "MbRandom.h"
 
 
 /*
@@ -21,12 +21,14 @@
 
  */
 
+
 BranchEvent::BranchEvent(double speciation, double lamshift, double extinction,
-                         double mushift, Node* x, Tree* tp, MbRandom* rp, double map, double scale)
+                         double mushift, Node* x, Tree* tp,  MbRandom* rp, double map)
 {
     // Speciation and extinction from new event assumed constant in time...
 
-    //std::cout << "Event ctor: lambda_init " << speciation << std::endl;
+    //std::cout << "Event ctor: map " << map << std::endl;
+
 
     _lamInit = speciation;
     _lamShift = lamshift;
@@ -42,8 +44,7 @@ BranchEvent::BranchEvent(double speciation, double lamshift, double extinction,
     nodeptr = x;
     mapTime = map;
     treePtr = tp;
-    ranPtr = rp;
-    epsilon = scale;
+	ranPtr = rp;
 
     oldMapTime = map;
     oldNodePtr = x;
@@ -102,16 +103,13 @@ bool BranchEvent::operator<(const BranchEvent& a) const
 */
 
 
-void BranchEvent::moveEventLocal(void)
+void BranchEvent::moveEventLocal(double stepsize)
 {
 
     oldNodePtr = nodeptr;
     oldMapTime = mapTime;
 
-    double shift = ranPtr->uniformRv(0, epsilon) - 0.5 * epsilon;
-    //std::cout << "shifting event by " << shift << std::endl;
-
-    incrementMapPosition(shift);
+    incrementMapPosition(stepsize);
 
     // shouldn't actually need to update model attributes.
     // if node position shifts, it just brings its current attributes
@@ -121,7 +119,6 @@ void BranchEvent::moveEventLocal(void)
 
 void BranchEvent::incrementMapPosition(double ink)
 {
-
     double mapstart = nodeptr->getMapStart();
     double mapend = nodeptr->getMapEnd();
 

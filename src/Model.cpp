@@ -98,17 +98,7 @@ Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
     _muInit0 = sttings->getMuInit0();
     _muShift0 = sttings->getMuShift0();
 
-    /*
-     Scale parameter for step size is determined dynamically by average waiting time
-     between successive speciation events on tree.
-     A value of _MeanSpeciationLengthFraction = 0.1 means that step sizes will be chosen from
-     a uniform (-x, x) distribution centered on the current location, where
-     x is 0.10 times the mean waiting time (or total tree length / # speciation events
-    */
-
-    _scale = sttings->getMeanSpeciationLengthFraction() *
-             (treePtr->getTreeLength()); // scale for event moves on tree.
-    _scale /= (double)(treePtr->getNumberTips());
+    _scale = sttings->getUpdateEventLocationScale(); // scale for event moves on tree.
 
     _updateEventRateScale = sttings->getUpdateEventRateScale();
     _localGlobalMoveRatio =
@@ -143,8 +133,7 @@ Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
     double startTime = 0;
 
     BranchEvent* x =  new BranchEvent(_lambdaInit0, sttings->getLambdaShift0(),
-                                      _muInit0, sttings->getMuShift0(), treePtr->getRoot(), treePtr, ran, startTime,
-                                      _scale);
+                                      _muInit0, sttings->getMuShift0(), treePtr->getRoot(), treePtr, ran, startTime);
     rootEvent = x;
 
     lastEventModified = x;
@@ -166,8 +155,7 @@ Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
         std::cout << "\nLoading model data from file...." << std::endl;
         initializeModelFromEventDataFile();
     }
-
-
+	
     setCurrLnLBranches(computeLikelihoodBranches());
 
     setCurrLnLTraits(0.0);
@@ -270,7 +258,7 @@ void Model::initializeModelFromEventDataFile(void)
                 //std::cout << "maptimes: " << x->getMapStart() << "\t" << x->getMapEnd() << "\tcurmap: " << newmaptime << std::endl;
                 //std::cout << etime[i] << "\t" << treePtr->getAbsoluteTimeFromMapTime(newmaptime) << std::endl;
                 BranchEvent* newEvent =  new BranchEvent(lam_par1[i], lam_par2[i], mu_par1[i],
-                        mu_par2[i], x, treePtr, ran, newmaptime, _scale);
+                        mu_par2[i], x, treePtr, ran, newmaptime);
                 newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(newEvent);
 
                 eventCollection.insert(newEvent);
@@ -285,7 +273,7 @@ void Model::initializeModelFromEventDataFile(void)
             double deltaT = x->getTime() - etime[i];
             double newmaptime = x->getMapStart() + deltaT;
             BranchEvent* newEvent =  new BranchEvent(lam_par1[i], lam_par2[i], mu_par1[i],
-                    mu_par2[i], x, treePtr, ran, newmaptime, _scale);
+                    mu_par2[i], x, treePtr, ran, newmaptime);
             newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(newEvent);
 
             eventCollection.insert(newEvent);
@@ -387,7 +375,7 @@ void Model::addEventToTree(double x)
     // End calculations:: now create event
 
     BranchEvent* newEvent = new BranchEvent(newLam, newLambdaShift, newMu,
-                                            newMuShift, treePtr->mapEventToTree(x), treePtr, ran, x, _scale);
+                                            newMuShift, treePtr->mapEventToTree(x), treePtr, ran, x);
 
     // add the event to the branch history.
     //  ALWAYS done after event is added to tree.
@@ -487,7 +475,7 @@ void Model::addEventToTree(void)
 #endif
 
     BranchEvent* newEvent = new BranchEvent(newLam, newLambdaShift, newMu,
-                                            newMuShift, treePtr->mapEventToTree(x), treePtr, ran, x, _scale);
+                                            newMuShift, treePtr->mapEventToTree(x), treePtr, ran, x);
 
 
 
@@ -585,7 +573,11 @@ void Model::eventLocalMove(void)
 
         chosenEvent->getEventNode()->getBranchHistory()->popEventOffBranchHistory(
             chosenEvent);
-        chosenEvent->moveEventLocal(); // move event
+		
+		// Get step size for move:
+		double step = ran->uniformRv(0, _scale) - 0.5*_scale;
+		
+        chosenEvent->moveEventLocal(step); // move event
         chosenEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(
             chosenEvent);
 
@@ -866,7 +858,7 @@ void Model::restoreLastDeletedEvent(void)
 
     BranchEvent* newEvent = new BranchEvent((double)0.0, (double)0.0, (double)0.0,
                                             (double)0.0, treePtr->mapEventToTree(lastDeletedEventMapTime), treePtr, ran,
-                                            lastDeletedEventMapTime, _scale);
+                                            lastDeletedEventMapTime);
 
     newEvent->setLamInit(_lastDeletedEventLambdaInit);
     newEvent->setLamShift(_lastDeletedEventLambdaShift);

@@ -17,10 +17,11 @@
 #include "Settings.h"
 #include "TraitMCMC.h"
 #include "TraitModel.h"
+#include "Autotune.h"
 
 void usage () {
     std::cout << std::endl << "Program usage:" << std::endl;
-    std::cout << "./bamm (speciationextinction|trait) -control control_filename" << std::endl<< std::endl;
+    std::cout << "./bamm -control control_filename" << std::endl<< std::endl;
 }
 
 int main (int argc, char* argv[])
@@ -105,7 +106,11 @@ int main (int argc, char* argv[])
             Model myModel(&myRNG, &intree, &mySettings);
             std::cout << "Initializing model but not running MCMC" << std::endl;
 			
-        } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
+        } else if (mySettings.getInitializeModel() && mySettings.getAutotune()){
+            Model myModel(&myRNG, &intree, &mySettings);			
+			Autotune myTuneObject(&myRNG, &myModel, &mySettings);
+		
+		}else if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
             Model myModel(&myRNG, &intree, &mySettings);
             MCMC myMCMC(&myRNG, &myModel, &mySettings);
 

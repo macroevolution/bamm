@@ -140,6 +140,16 @@ public:
     void initializeModelFromEventDataFile();
 
     void debugLHcalculation();
+	
+	
+	// Functions for auto-tuning
+	void setUpdateLambdaInitScale(double x);
+	void setUpdateMuInitScale(double x);
+	void setUpdateLambdaShiftScale(double x);
+	void setMoveSizeScale(double x);
+	void setUpdateEventRateScale(double x);
+ 
+	
 
 private:
 
@@ -315,6 +325,29 @@ inline double Model::getPoissonRatePrior()
 {
     return poissonRatePrior;
 }
+
+
+
+inline void Model::setUpdateLambdaInitScale(double x){
+	_updateLambdaInitScale = x;
+}
+
+inline void Model::setUpdateMuInitScale(double x){
+	_updateMuInitScale = x;
+}
+
+inline void Model::setUpdateLambdaShiftScale(double x){
+	_updateLambdaShiftScale = x;
+}
+
+inline void Model::setMoveSizeScale(double x){
+	_scale = x;
+}
+
+inline void Model::setUpdateEventRateScale(double x){
+	_updateEventRateScale = x;
+}
+
 
 
 #endif

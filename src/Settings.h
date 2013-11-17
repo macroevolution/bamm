@@ -47,13 +47,14 @@ private:
     double _updateMuInitScale;
     double _updateLambdaShiftScale;
     double _updateMuShiftScale;
-
+	double _updateEventLocationScale;
+	
     double _lambdaInit0;
     double _lambdaShift0;
     double _muInit0;
     double _muShift0;
-
-    double _MeanSpeciationLengthFraction;
+	
+//   double _MeanSpeciationLengthFraction;
     double _updateEventRateScale;
     double _localGlobalMoveRatio;
     double _targetNumber;
@@ -168,7 +169,7 @@ private:
     bool isDefault_lambdaShiftPrior;
     bool isDefault_muInitPrior;
     bool isDefault_muShiftPrior;
-    bool isDefault_MeanSpeciationLengthFraction;
+    bool isDefault_updateEventLocationScale;
     bool isDefault_segLength;
     bool isDefault_mcmcOutfile;
     bool isDefault_eventDataOutfile;
@@ -274,8 +275,10 @@ public:
     double getLambdaInit0();
     double getLambdaShift0();
     double getMuInit0();
-    double getMuShift0();
-    double getMeanSpeciationLengthFraction();
+	double getMuShift0();
+	double getUpdateEventLocationScale();
+
+	//    double getMeanSpeciationLengthFraction();
     double getUpdateEventRateScale();
     double getLocalGlobalMoveRatio();
     double getTargetNumberOfEvents();
@@ -292,8 +295,9 @@ public:
 	void setUpdateLambdaInitScale(double x);
 	void setUpdateMuInitScale(double x);
 	void setUpdateLambdaShiftScale(double x);
-	void setMeanSpeciationLengthFraction(double x);
+//	void setMeanSpeciationLengthFraction(double x);
 	void setUpdateEventRateScale(double x);
+	void setUpdateEventLocationScale(double x);
 	
 
     // Class MCMC parameters:
@@ -472,11 +476,6 @@ inline double Settings::getMuShift0()
     return _muShift0;
 }
 
-
-inline double Settings::getMeanSpeciationLengthFraction()
-{
-    return _MeanSpeciationLengthFraction;
-}
 
 
 inline double Settings::getUpdateEventRateScale()
@@ -782,26 +781,41 @@ inline std::string Settings::getModeltype()
 	return _modeltype;
 }
 
-inline void Settings::setUpdateLambdaInitScale(double x){
+inline void Settings::setUpdateLambdaInitScale(double x)
+{
 	_updateLambdaInitScale = x;
 }
 
-inline void Settings::setUpdateMuInitScale(double x){
+inline void Settings::setUpdateMuInitScale(double x)
+{
 	_updateMuInitScale = x;
 }
 
-inline void Settings::setUpdateLambdaShiftScale(double x){
+inline void Settings::setUpdateLambdaShiftScale(double x)
+{
 	_updateLambdaShiftScale = x;
 }
 
-inline void Settings::setMeanSpeciationLengthFraction(double x){
+/* Deprecating
+inline void Settings::setMeanSpeciationLengthFraction(double x)
+ {
 	_MeanSpeciationLengthFraction = x;
 }
+*/ 
+ 
 
 inline void Settings::setUpdateEventRateScale(double x){
 	_updateEventRateScale = x;
 }
 
+inline double Settings::getUpdateEventLocationScale()
+{
+	return _updateEventLocationScale;
+}
 
+inline void Settings::setUpdateEventLocationScale(double x)
+{
+	_updateEventLocationScale = x;
+}
 
 #endif

@@ -1,6 +1,9 @@
 modeltype = trait
 treefile = ../examples/traits/skinkshape/skinks183.tre
 traitfile = ../examples/traits/skinkshape/skinks_shape.txt
+
+# autotune = 0 # Not supported for traits
+
 sampleFromPriorOnly = 0
 runMCMC = 1
 loadEventData = 0
@@ -9,6 +12,8 @@ initializeModel = 1
 updateBetaScale = 1
 updateNodeStateScale = 1
 updateBetaShiftScale = 1
+updateEventLocationScale = 2.0 # New parameter 
+# should have been specified explicitly in older control files.
 
 updateEventRateScale = 4.0
 localGlobalMoveRatio = 5

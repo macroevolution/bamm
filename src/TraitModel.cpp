@@ -78,18 +78,8 @@ TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
 
     // initial values
 
+	_scale = sttings->getUpdateEventLocationScale(); // scale for event moves on tree.
 
-    /*
-     Scale parameter for step size is determined dynamically by average waiting time
-     between successive speciation events on tree.
-     A value of _MeanSpeciationLengthFraction = 0.1 means that step sizes will be chosen from
-     a uniform (-x, x) distribution centered on the current location, where
-     x is 0.10 times the mean waiting time (or total tree length / # speciation events
-     */
-
-    _scale = sttings->getMeanSpeciationLengthFraction() *
-             (treePtr->getTreeLength()); // scale for event moves on tree.
-    _scale /= (double)(treePtr->getNumberTips());
 
     //std::cout << "SCALE: " << _scale << std::endl;
 
@@ -121,8 +111,7 @@ TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
     double startTime = 0;
 
     TraitBranchEvent* x =  new TraitBranchEvent((double)sttings->getBetaInit(),
-            sttings->getBetaShiftInit(), treePtr->getRoot(), treePtr, ran, startTime,
-            _scale);
+            sttings->getBetaShiftInit(), treePtr->getRoot(), treePtr, ran, startTime);
     rootEvent = x;
     lastEventModified = x;
 
@@ -271,7 +260,7 @@ void TraitModel::initializeModelFromEventDataFileTrait(void)
                 double newmaptime = x->getMapStart() + deltaT;
 
                 TraitBranchEvent* newEvent = new TraitBranchEvent(beta_par1[i], beta_par2[i], x,
-                        treePtr, ran, newmaptime, _scale);
+                        treePtr, ran, newmaptime);
                 newEvent->getEventNode()->getTraitBranchHistory()->addEventToBranchHistory(
                     newEvent);
                 eventCollection.insert(newEvent);
@@ -287,7 +276,7 @@ void TraitModel::initializeModelFromEventDataFileTrait(void)
             double newmaptime = x->getMapStart() + deltaT;
 
             TraitBranchEvent* newEvent = new TraitBranchEvent(beta_par1[i], beta_par2[i], x,
-                    treePtr, ran, newmaptime, _scale);
+                    treePtr, ran, newmaptime);
             newEvent->getEventNode()->getTraitBranchHistory()->addEventToBranchHistory(
                 newEvent);
             eventCollection.insert(newEvent);
@@ -337,7 +326,7 @@ void TraitModel::addEventToTree(double x)
     // End calculations:: now create event
 
     TraitBranchEvent* newEvent = new TraitBranchEvent(newbeta, newBetaShift,
-            treePtr->mapEventToTree(x), treePtr, ran, x, _scale);
+            treePtr->mapEventToTree(x), treePtr, ran, x);
 
     // add the event to the branch history.
     //  ALWAYS done after event is added to tree.
@@ -406,7 +395,7 @@ void TraitModel::addEventToTree(void)
                                        newBetaShift);
 
     TraitBranchEvent* newEvent = new TraitBranchEvent(newbeta, newBetaShift,
-            treePtr->mapEventToTree(x), treePtr, ran, x, _scale);
+            treePtr->mapEventToTree(x), treePtr, ran, x);
 
 
 
@@ -452,7 +441,7 @@ void TraitModel::addEventToTreeWithSetBeta(double beta, double bshift)
     // End calculations:: now create event
 
     TraitBranchEvent* newEvent = new TraitBranchEvent(beta, bshift,
-            treePtr->mapEventToTree(x), treePtr, ran, x, _scale);
+            treePtr->mapEventToTree(x), treePtr, ran, x);
 
     newEvent->getEventNode()->getTraitBranchHistory()->addEventToBranchHistory(
         newEvent);
@@ -554,7 +543,13 @@ void TraitModel::eventLocalMove(void)
 
         chosenEvent->getEventNode()->getTraitBranchHistory()->popEventOffBranchHistory(
             chosenEvent);
-        chosenEvent->moveEventLocal(); // move event
+		
+		// Get step size for move:
+		double step = ran->uniformRv(0, _scale) - 0.5*_scale;
+		
+
+		
+        chosenEvent->moveEventLocal(step); // move event
         chosenEvent->getEventNode()->getTraitBranchHistory()->addEventToBranchHistory(
             chosenEvent);
 
@@ -816,13 +811,12 @@ void TraitModel::restoreLastDeletedEvent(void)
 
     // Constructor for traitEvolution model:
 
-    //BranchEvent* newEvent = new BranchEvent(lastDeletedEventBeta, treePtr->mapEventToTree(lastDeletedEventMapTime), treePtr, ran, lastDeletedEventMapTime);
-
+   
     // Use constructor for speciation and extinction
 
     TraitBranchEvent* newEvent = new TraitBranchEvent((double)0.0, (double)0.0,
             treePtr->mapEventToTree(lastDeletedEventMapTime), treePtr, ran,
-            lastDeletedEventMapTime, _scale);
+            lastDeletedEventMapTime);
 
     newEvent->setBetaInit(_lastDeletedEventBetaInit);
     newEvent->setBetaShift(_lastDeletedEventBetaShift);

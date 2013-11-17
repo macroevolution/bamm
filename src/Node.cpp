@@ -505,7 +505,7 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
         }
         //std::cout << "Rate: " <<  rate << std::endl;
         if ((t1 < 0 ) | (t2 < t1)) {
-            std::cout << "error in Node::computeSpeciationRateInterval - times are bad...\n" <<
+            std::cout << "error in Node::computeSpeciationRateIntervalRelTime - times are bad...\n" <<
                  std::endl;
             throw;
         }
@@ -631,7 +631,7 @@ double Node::computeSpeciationRateIntervalAbsoluteTime(double tstart,
         }
         //std::cout << "Rate: " <<  rate << std::endl;
         if ((t1 < 0 ) | (t2 < t1)) {
-            std::cout << "error in Node::computeSpeciationRateInterval - times are bad...\n" <<
+            std::cout << "error in Node::computeSpeciationRateIntervalAbsTime - times are bad...\n" <<
                  std::endl;
             throw;
         }
