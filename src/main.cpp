@@ -23,7 +23,7 @@ void usage () {
     std::cout << std::endl << "Program usage:" << std::endl;
     std::cout << "./bamm -control control_filename" << std::endl<< std::endl;
 }
-
+  
 int main (int argc, char* argv[])
 {
 
@@ -136,13 +136,17 @@ int main (int argc, char* argv[])
         if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
             std::cout << "Initializing model but not running MCMC" << std::endl;
             TraitModel myModel(&myRNG, &intree, &mySettings);
-        }
-		
-        if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
+        }else if (mySettings.getInitializeModel() && mySettings.getRunMCMC() && !mySettings.getAutotune()) {
             std::cout << "Initializing model and MCMC chain" << std::endl;
             TraitModel myModel(&myRNG, &intree, &mySettings);
             TraitMCMC myMCMC(&myRNG, &myModel, &mySettings);
-        }	
+        }else if (mySettings.getInitializeModel() && mySettings.getAutotune()){
+            std::cout << "Autotune option not yet supported for phenotypic (trait) analysis" << std::endl;
+            exit(0);
+        }else{
+            std::cout << "Invalid run settings specified in main\n" << std::endl;
+            exit(0);
+        }
 
 	}else if (mySettings.getModeltype() == "EMPTY_STRING"){
 		std::cout << "You did not specify a modeltype." << std::endl;
