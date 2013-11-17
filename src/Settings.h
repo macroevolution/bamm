@@ -69,7 +69,7 @@ private:
 
     int _minCladeSizeForShift;
 	
-	int _seed;
+	long int _seed;
 	
     // Class MCMC parameters::General
     std::string _mcmcOutfile;
@@ -289,7 +289,7 @@ public:
     double getSegLength();
 
     int getMinCladeSizeForShift();
-    int getSeed();
+    long int getSeed();
 	
 	// Functions to set MCMC operators for autotuning:
 	void setUpdateLambdaInitScale(double x);
@@ -531,7 +531,7 @@ inline int Settings::getMinCladeSizeForShift()
     return _minCladeSizeForShift;
 }
 
-inline int Settings::getSeed()
+inline long int Settings::getSeed()
 {
     return _seed;
 }

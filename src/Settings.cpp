@@ -6,7 +6,6 @@
  *
 */
 
-
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -78,7 +77,13 @@ Settings::Settings(void)
     _muOutfile              =       "BAMM_mu_rates.txt";
     _acceptrateOutfile      =       "BAMM_mcmc_accept.txt";
     _lambdaNodeOutfile      =       "BAMM_nodeLambda.txt";
-
+ // put file prefix here   
+    
+    
+    
+    
+    
+    
     _treeWriteFreq          =       0;
     _eventDataWriteFreq     =       0;
     _mcmcWriteFreq          =       0;
@@ -101,7 +106,7 @@ Settings::Settings(void)
     /*******************************************/
     // Set Boolean indicator variables to track
     //   changes to default parameters:
-    isDefault_modeltype                                    = true;
+    isDefault_modeltype                                 = true;
     isDefault_treefile                                  = true;
     isDefault_runTraitModel                             = true;
     isDefault_runSpeciationExtinctionModel              = true;
@@ -238,18 +243,18 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
         if (s_nocomment.size() > 0) {
             std::vector<std::string> tmpstr;
             
-            // NOw use second getline to split by '=' characters:
+            // Now use second getline to split by '=' characters:
 
             std::istringstream stemp(s_nocomment);
 
-            while (getline(stemp, s2, '=')){
+            while (getline(stemp, s2, '=')) {
                 tmpstr.push_back(s2);        
             }
 
             if (tmpstr.size() == 2) {
                 _varName.push_back(tmpstr[0]);
                 _varValue.push_back(tmpstr[1]);
-            } else{
+            } else {
                 std::cout << "Invalid size of input line in control file" << std::endl;
 				std::cout << " Problematic line includes <<" << s_nocomment << ">>" << std::endl;
 				std::cout << "Terminating run\n" << std::endl;
@@ -258,11 +263,12 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
 
 		}
         
-        if (infile.peek() == EOF)
+        if (infile.peek() == EOF) {
             break;
+        }
     }
     
-    for (std::vector<std::string>::size_type i = 0; i < _varName.size(); i++){
+    for (std::vector<std::string>::size_type i = 0; i < _varName.size(); i++) {
         //std::cout << _varName[i] << std::endl;
         if (_varName[i] == "modeltype") {
             _modeltype = _varValue[i];
@@ -279,7 +285,6 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
     } else if (_modeltype == "trait") {
         initializeSettings_Traits();
     } else {
-    
         throw;
     }
     
@@ -303,9 +308,9 @@ void Settings::initializeSettingsDefaults_Diversification(void)
     // Parameters used in main()
     _treefile = "test_tree.tre";
 
-    _sampleFromPriorOnly = false;
-    _runMCMC = true;
-    _initializeModel = true;
+    _sampleFromPriorOnly            = false;
+    _runMCMC                        = true;
+    _initializeModel                = true;
 
     _useGlobalSamplingProbability   = true;
     _sampleProbsFilename = "skinksprobs.txt";
@@ -328,36 +333,36 @@ void Settings::initializeSettingsDefaults_Diversification(void)
     _lambdaShiftPrior               = 0.5;
     _muInitPrior                    = 1.0;
     _muShiftPrior                   = 0.5; // 0
-    //_MeanSpeciationLengthFraction   = 0.2;
+//  _MeanSpeciationLengthFraction   = 0.2;
     _updateEventLocationScale		= 1.0;
 	_segLength                      = 1.0;
 
     _minCladeSizeForShift           = 1;
 
     // Parameters for implementation of class MCMC:
-    _mcmcOutfile            =       "mcmc_out.txt";
-    _eventDataOutfile       =       "eventdata.txt";
-    _eventDataInfile        =       "EMPTY_STRING";
-    _lambdaOutfile          =       "lambda_rates.txt";
-    _muOutfile              =       "mu_rates.txt";
-    _acceptrateOutfile      =       "mcmc_accept.txt";
-    _lambdaNodeOutfile      =       "nodeLambda.txt";
+    _mcmcOutfile                    = "mcmc_out.txt";
+    _eventDataOutfile               = "eventdata.txt";
+    _eventDataInfile                = "EMPTY_STRING";
+    _lambdaOutfile                  = "lambda_rates.txt";
+    _muOutfile                      = "mu_rates.txt";
+    _acceptrateOutfile              = "mcmc_accept.txt";
+    _lambdaNodeOutfile              = "nodeLambda.txt";
 
 
-    _treeWriteFreq          =       5000;
-    _eventDataWriteFreq     =       5000;
-    _mcmcWriteFreq          =       1000;
-    _acceptWriteFreq        =       1000;
-    _printFreq              =       1000;
-    _NGENS                  =       2000000;
+    _treeWriteFreq                  = 5000;
+    _eventDataWriteFreq             = 5000;
+    _mcmcWriteFreq                  = 1000;
+    _acceptWriteFreq                = 1000;
+    _printFreq                      = 1000;
+    _NGENS                          = 2000000;
 
-    _updateRateEventNumber      =   1.0;
-    _updateRateEventPosition    =   1.0;
-    _updateRateEventRate        =   1.0;
-    _updateRateLambda0          =   10.0;
-    _updateRateLambdaShift      =   10.0;
-    _updateRateMu0              =   10.0;
-    _updateRateMuShift          =   0.0; // 0.0
+    _updateRateEventNumber          = 1.0;
+    _updateRateEventPosition        = 1.0;
+    _updateRateEventRate            = 1.0;
+    _updateRateLambda0              = 10.0;
+    _updateRateLambdaShift          = 10.0;
+    _updateRateMu0                  = 10.0;
+    _updateRateMuShift              = 0.0; // 0.0
 
     _updateRateNumberTimeVariablePartitions = 0.0;
 
@@ -369,7 +374,7 @@ void Settings::initializeSettingsDefaults_Diversification(void)
 
 void Settings::initializeSettingsDefaults_Traits(void)
 {
-    _allParametersSetToDefaults = true;
+    _allParametersSetToDefaults     = true;
 
     _runSpeciationExtinctionModel   = false;
     _runTraitModel                  = true;
@@ -378,9 +383,9 @@ void Settings::initializeSettingsDefaults_Traits(void)
     _treefile = "test_tree.txt";
     _traitfile  = "morph.txt";
 
-    _sampleFromPriorOnly = false;
-    _runMCMC = true;
-    _initializeModel = true;
+    _sampleFromPriorOnly            = false;
+    _runMCMC                        = true;
+    _initializeModel                = true;
 
     // Class Model parameters:
     _updateBetaScale                = 0.25;
@@ -390,40 +395,40 @@ void Settings::initializeSettingsDefaults_Traits(void)
     _updateEventRateScale           = 2.0;
     _localGlobalMoveRatio           = 10.0;
     _poissonRatePrior               = 1.0;
-//   _MeanSpeciationLengthFraction   = 0.2;
+//  _MeanSpeciationLengthFraction   = 0.2;
 	_updateEventLocationScale		= 1.0;
-    _betaInit           =   0.1;
-    _betaShiftInit      =   0.0;
+    _betaInit                       = 0.1;
+    _betaShiftInit                  = 0.0;
 
-    _betaInitPrior      =   1.0;
-    _betaShiftPrior     =   0.1;
+    _betaInitPrior                  = 1.0;
+    _betaShiftPrior                 = 0.1;
 
     // These still have default values:
     _useObservedMinMaxAsTraitPriors = true;
-    _traitPriorMin                  =   0.0;
-    _traitPriorMax                  =   0.0;
+    _traitPriorMin                  = 0.0;
+    _traitPriorMax                  = 0.0;
 
     // Parameters for implementation of class MCMC:
-    _mcmcOutfile            =       "BAMMt_mcmc_out.txt";
-    _eventDataOutfile       =       "BAMMt_eventdata.txt";
-    _betaOutfile            =       "BAMMt_beta_rates.txt";
-    _nodeStateOutfile       =       "BAMMt_nodestates.txt";
-    _acceptrateOutfile      =       "BAMMt_mcmc_accept.txt";
+    _mcmcOutfile                    = "mcmc_out.txt";
+    _eventDataOutfile               = "eventdata.txt";
+    _betaOutfile                    = "BAMMt_beta_rates.txt";
+    _nodeStateOutfile               = "BAMMt_nodestates.txt";
+    _acceptrateOutfile              = "BAMMt_mcmc_accept.txt";
 
-    _treeWriteFreq          =       50000;
-    _eventDataWriteFreq     =       50000;
-    _mcmcWriteFreq          =       1000;
-    _acceptWriteFreq        =       1000;
-    _printFreq              =       10000;
-    _NGENS                  =       10000000;
+    _treeWriteFreq                  = 50000;
+    _eventDataWriteFreq             = 50000;
+    _mcmcWriteFreq                  = 1000;
+    _acceptWriteFreq                = 1000;
+    _printFreq                      = 10000;
+    _NGENS                          = 10000000;
 
-    _updateRateEventNumber      =   1.0;
-    _updateRateEventPosition    =   1.0;
-    _updateRateEventRate        =   1.0;
+    _updateRateEventNumber          = 1.0;
+    _updateRateEventPosition        = 1.0;
+    _updateRateEventRate            = 1.0;
 
-    _updateRateBeta0            =   1.0;
-    _updateRateNodeState        =   25.0;
-    _updateRateBetaShift        =   1.0;
+    _updateRateBeta0                = 1.0;
+    _updateRateNodeState            = 25.0;
+    _updateRateBetaShift            = 1.0;
 
     _updateRateNumberTimeVariablePartitions = 0.0;
 
@@ -436,15 +441,8 @@ void Settings::initializeSettingsDefaults_Traits(void)
 
 void Settings::initializeSettings_Traits()
 {
-
-
-
     _allParametersSetToDefaults = false;
-
     std::vector<std::string> paramsNotFound;
-
-
-
 
     for (std::vector<std::string>::size_type i = 0; i < _varName.size(); i++) {
         //std::cout << std::setw(30) << _varName[i] << std::setw(20) << _varValue[i] << std::endl;
@@ -473,7 +471,6 @@ void Settings::initializeSettings_Traits()
             _updateBetaScale = atof(_varValue[i].c_str());
             isDefault_updateBetaScale = false;
             //std::cout << left << std::setw(ppw) << "updateLambdaInitScale" << "\t" << _updateLambdaInitScale << std::endl;
-
         } else if (_varName[i] == "updateNodeStateScale") {
             _updateNodeStateScale = atof(_varValue[i].c_str());
             isDefault_updateNodeStateScale = false;
@@ -486,10 +483,10 @@ void Settings::initializeSettings_Traits()
         } else if (_varName[i] == "betaShiftInit") {
             _betaShiftInit = atof(_varValue[i].c_str());
             isDefault_betaShift = false;
-        } else if (_varName[i] == "updateEventLocationScale"){
+        } else if (_varName[i] == "updateEventLocationScale") {
 			_updateEventLocationScale = atof(_varValue[i].c_str());
 			isDefault_updateEventLocationScale = false;
-		}else if (_varName[i] == "updateEventRateScale") {
+		} else if (_varName[i] == "updateEventRateScale") {
             _updateEventRateScale = atof(_varValue[i].c_str());
             isDefault_updateEventRateScale = false;
         } else if (_varName[i] == "localGlobalMoveRatio") {
@@ -573,13 +570,13 @@ void Settings::initializeSettings_Traits()
         } else if (_varName[i] == "eventDataInfile") {
             _eventDataInfile = _varValue[i].c_str();
             isDefault_eventDataInfile = false;
-        } else if (_varName[i] == "modeltype"){
+        } else if (_varName[i] == "modeltype") {
             // Do nothing. This is 
             // already handled in initializeSettings() general function.
-        }else if (_varName[i] == "autotune"){
+        } else if (_varName[i] == "autotune") {
 			_autotune = stringToBool(_varValue[i].c_str());
 			isDefault_autotune = false;
-		}else {
+		} else {
             // Parameter not found:
             //      add to list of potentially bad/misspelled params
             //      and print for user.
@@ -594,11 +591,12 @@ void Settings::initializeSettings_Traits()
         std::cout << std::endl << "********************************" << std::endl;
         std::cout << "BAMM error: one or more parameters from control file do not correspond"
              << std::endl;
-        std::cout << "\tto valid model parameters.";
-        std::cout << "Check the following to see if they are ";
-        std::cout << "\tspecified (or spelled) correctly:" << std::endl << std::endl;
-        for (std::vector<std::string>::size_type i = 0; i < paramsNotFound.size(); i++)
+        std::cout << "            to valid model parameters. ";
+        std::cout << "Check the following to see if they are " << std::endl;
+        std::cout << "            specified (or spelled) correctly:" << std::endl << std::endl;
+        for (std::vector<std::string>::size_type i = 0; i < paramsNotFound.size(); i++) {
             std::cout << std::setw(30) << paramsNotFound[i] << std::endl;
+        }
         std::cout << std::endl << "********************************" << std::endl << std::endl;
         std::cout << "Execution of BAMM terminated..." << std::endl;
         exit(1);
@@ -785,13 +783,13 @@ void Settings::initializeSettings_Diversification()
         } else if (_varName[i] == "minCladeSizeForShift") {
             _minCladeSizeForShift = atoi(_varValue[i].c_str());
             isDefault_minCladeSizeForShift = false;
-        } else if (_varName[i] == "modeltype"){
+        } else if (_varName[i] == "modeltype") {
             // Do nothing. This is 
             // already handled in initializeSettings() general function.
-        } else if (_varName[i] == "autotune"){
+        } else if (_varName[i] == "autotune") {
 			_autotune = stringToBool(_varValue[i].c_str());
 			isDefault_autotune = false;
-		}else if (_varName[i] == "seed") {
+		} else if (_varName[i] == "seed") {
             _seed = atoi(_varValue[i].c_str());
             isDefault_seed = false;
         } else {
@@ -809,9 +807,9 @@ void Settings::initializeSettings_Diversification()
         std::cout << std::endl << "********************************" << std::endl;
         std::cout << "BAMM error: one or more parameters from control file do not correspond"
              << std::endl;
-        std::cout << "\tto valid model parameters.";
-        std::cout << "Check the following to see if they are ";
-        std::cout << "\tspecified (or spelled) correctly:" << std::endl << std::endl;
+        std::cout << "            to valid model parameters. ";
+        std::cout << "Check the following to see if they are " << std::endl;
+        std::cout << "            specified (or spelled) correctly:" << std::endl << std::endl;
         for (std::vector<std::string>::size_type i = 0; i < paramsNotFound.size(); i++) {
             std::cout << std::setw(30) << paramsNotFound[i] << std::endl;
         }
@@ -931,19 +929,17 @@ void Settings::checkAreInitialSettingsValid_Traits(void)
              << std::endl << std::endl;
     }
 
-
-
 }
 
 
 bool Settings::stringToBool(const char* x)
 {
     bool bval;
-    if (atoi(x) == 0)
+    if (atoi(x) == 0) {
         bval = false;
-    else if (atoi(x) == 1)
+    } else if (atoi(x) == 1) {
         bval = true;
-    else {
+    } else {
         std::cout << "Invalid boolean when initializing class Settings" << std::endl;
         throw;
     }
@@ -953,7 +949,6 @@ bool Settings::stringToBool(const char* x)
 
 void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefaults)
 {
-
     int ppw = 29;
 
     std::cout << "*****************************************************" << std::endl;
@@ -1178,9 +1173,6 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
 
     std::cout << "*****************************************************" << std::endl;
 
-
-
-
 }
 
 
@@ -1192,7 +1184,7 @@ void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrin
 
     for (std::vector<std::string>::size_type i = 0; i < (std::vector<std::string>::size_type)argc; i++) {
         if (instrings[i] == "-control") {
-            if (instrings.size() == ( i - 1)){
+            if (instrings.size() == ( i - 1)) {
                 std::cout << "Error: no controfile specified" << std::endl;
                 std::cout << "Exiting\n\n" << std::endl;
             }

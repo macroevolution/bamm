@@ -66,7 +66,13 @@ MbRandom::MbRandom(void) {
  * \throws Does not throw an error.
  */
 MbRandom::MbRandom(long int x) {
-    setSeed(x);
+    if (x == -1) { // use clock
+        std::cout << "Using clock to seed random number generator" << std::endl;
+        setSeed();
+    } else {
+        std::cout << "Seeding random number generator with user-provided value: '" << x << "'." << std::endl;
+        setSeed(x);
+    }
     initializedFacTable = false;
     availableNormalRv = false;
 }
