@@ -237,7 +237,7 @@ inline void TraitModel::resetGeneration()
 
 inline int TraitModel::getNumberOfEvents()
 {
-    return eventCollection.size();
+    return (int)eventCollection.size();
 }
 
 

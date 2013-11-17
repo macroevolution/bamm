@@ -27,11 +27,6 @@
 
 double TraitModel::mhColdness = 1.0;
 
-#define DEBUG
-#undef DEBUG
-
-#define OLDWAY
-#undef OLDWAY
 
 TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
 {
@@ -464,7 +459,7 @@ void TraitModel::printEvents(void)
     //  print:  maptime
     //          nodeptr
     //
-    int n_events = eventCollection.size();
+    int n_events = (int)eventCollection.size();
     std::cout << "N_events: " << n_events << std::endl;
     int counter = 1;
     for (std::set<TraitBranchEvent*>::iterator i = eventCollection.begin();
@@ -480,7 +475,7 @@ void TraitModel::printEvents(void)
 TraitBranchEvent* TraitModel::chooseEventAtRandom(void)
 {
 
-    int n_events = eventCollection.size();
+    int n_events = (int)eventCollection.size();
     if (n_events == 0) {
         return NULL;
         //should ultimately throw exception here.
@@ -738,7 +733,7 @@ void TraitModel::deleteRandomEventFromTree(void)
     //printBranchHistories(treePtr->getRoot());
 
     // can only delete event if more than root node present.
-    int n_events = eventCollection.size();
+    int n_events = (int)eventCollection.size();
 
     if (eventCollection.size() > 0) {
         int counter = 0;
@@ -842,7 +837,7 @@ void TraitModel::changeNumberOfEventsMH(void)
 
     double oldLogPrior = computeLogPrior();
     double newLogPrior = 0.0;
-    int currState = eventCollection.size();
+    int currState = (int)eventCollection.size();
     int proposedState = 0;
     bool acceptMove = false;
     double oldLogLikelihood = getCurrLnLTraits();
@@ -1181,7 +1176,7 @@ void TraitModel::updateTimeVariablePartitionsMH(void)
 {
 
     //int n_events = eventCollection.size() + 1;
-    int toUpdate = ran->sampleInteger(0, eventCollection.size());
+    int toUpdate = ran->sampleInteger(0, (int)eventCollection.size());
     TraitBranchEvent* be = rootEvent;
 
     if (toUpdate > 0) {
@@ -1259,7 +1254,7 @@ void TraitModel::updateEventRateMH(void)
 void TraitModel::updateBetaMH(void)
 {
 
-    int toUpdate = ran->sampleInteger(0, eventCollection.size());
+    int toUpdate = ran->sampleInteger(0, (int)eventCollection.size());
 
     TraitBranchEvent* be = rootEvent;
 
@@ -1337,7 +1332,7 @@ void TraitModel::updateBetaMH(void)
 void TraitModel::updateBetaShiftMH(void)
 {
 
-    int toUpdate = ran->sampleInteger(0, eventCollection.size());
+    int toUpdate = ran->sampleInteger(0, (int)eventCollection.size());
 
     TraitBranchEvent* be = rootEvent;
 

@@ -330,7 +330,7 @@ void Tree::clearTempNodeArray(void)
 Node* Tree::getRandomNodeFromTempArray(void)
 {
 
-    int chosen = ranPtr->sampleInteger(0, (_tempNodeSet.size() - 1));
+    int chosen = ranPtr->sampleInteger(0, ((int)_tempNodeSet.size() - 1));
     int myit = 0;
     Node* xnode = (*_tempNodeSet.begin());
 

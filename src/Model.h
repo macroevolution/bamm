@@ -286,7 +286,7 @@ inline void Model::resetGeneration()
 
 inline int Model::getNumberOfEvents()
 {
-    return eventCollection.size();
+    return (int)eventCollection.size();
 }
 
 

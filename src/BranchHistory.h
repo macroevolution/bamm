@@ -109,7 +109,7 @@ inline void BranchHistory::addEventToBranchHistory(BranchEvent* x)
 
 inline int BranchHistory::getNumberOfBranchEvents()
 {
-    return eventsOnBranch.size();
+    return (int)eventsOnBranch.size();
 }
 
 

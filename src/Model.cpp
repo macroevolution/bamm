@@ -500,7 +500,7 @@ void Model::printEvents(void)
     //  print:  maptime
     //          nodeptr
     //
-    int n_events = eventCollection.size();
+    int n_events = (int)eventCollection.size();
     std::cout << "N_events: " << n_events << std::endl;
     int counter = 1;
     for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
@@ -514,7 +514,7 @@ void Model::printEvents(void)
 BranchEvent* Model::chooseEventAtRandom(void)
 {
 
-    int n_events = eventCollection.size();
+    int n_events = (int)eventCollection.size();
     if (n_events == 0) {
         return NULL;
         //should ultimately throw exception here.
@@ -758,7 +758,7 @@ void Model::deleteRandomEventFromTree(void)
     //printBranchHistories(treePtr->getRoot());
 
     // can only delete event if more than root node present.
-    int n_events = eventCollection.size();
+    int n_events = (int)eventCollection.size();
 
     if (eventCollection.size() > 0) {
         int counter = 0;
@@ -890,7 +890,7 @@ void Model::changeNumberOfEventsMH(void)
     // Get old prior density of the data:
     double oldLogPrior = computeLogPrior();
     double newLogPrior = 0.0;
-    int currState = eventCollection.size();
+    int currState = (int)eventCollection.size();
     int proposedState = 0;
     bool acceptMove = false;
 
@@ -1238,7 +1238,7 @@ void Model::updateLambdaInitMH(void)
 {
 
     //int n_events = eventCollection.size() + 1;
-    int toUpdate = ran->sampleInteger(0, eventCollection.size());
+    int toUpdate = ran->sampleInteger(0, (int)eventCollection.size());
     BranchEvent* be = rootEvent;
 
     if (toUpdate > 0) {
@@ -1307,7 +1307,7 @@ void Model::updateLambdaShiftMH(void)
 {
 
     //int n_events = eventCollection.size() + 1;
-    int toUpdate = ran->sampleInteger(0, eventCollection.size());
+    int toUpdate = ran->sampleInteger(0, (int)eventCollection.size());
     BranchEvent* be = rootEvent;
 
     if (toUpdate > 0) {
@@ -1389,7 +1389,7 @@ void Model::updateTimeVariablePartitionsMH(void)
 {
 
     //int n_events = eventCollection.size() + 1;
-    int toUpdate = ran->sampleInteger(0, eventCollection.size());
+    int toUpdate = ran->sampleInteger(0, (int)eventCollection.size());
     BranchEvent* be = rootEvent;
 
     if (toUpdate > 0) {
@@ -1426,7 +1426,7 @@ void Model::updateMuInitMH(void)
 {
 
     //int n_events = eventCollection.size() + 1;
-    int toUpdate = ran->sampleInteger(0, eventCollection.size());
+    int toUpdate = ran->sampleInteger(0, (int)eventCollection.size());
     BranchEvent* be = rootEvent;
 
     if (toUpdate > 0) {
@@ -1498,7 +1498,7 @@ void Model::updateMuShiftMH(void)
 {
 
     //int n_events = eventCollection.size() + 1;
-    int toUpdate = ran->sampleInteger(0, eventCollection.size());
+    int toUpdate = ran->sampleInteger(0, (int)eventCollection.size());
     BranchEvent* be = rootEvent;
 
     if (toUpdate > 0) {

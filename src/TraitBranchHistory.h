@@ -92,7 +92,7 @@ inline void TraitBranchHistory::addEventToBranchHistory(TraitBranchEvent* x)
 
 inline int TraitBranchHistory::getNumberOfBranchEvents()
 {
-    return eventsOnBranch.size();
+    return (int)eventsOnBranch.size();
 }
 
 

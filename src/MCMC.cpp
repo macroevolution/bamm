@@ -212,7 +212,7 @@ int MCMC::pickParameterClassToUpdate(void)
     int parm = 0;
     for (std::vector<double>::size_type i = 0; i < parWts.size(); i++) {
         if (rn <= parWts[i]) {
-            parm = i;
+            parm = (int)i;
             break;
         }
     }

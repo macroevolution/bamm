@@ -26,7 +26,7 @@ TraitBranchHistory::~TraitBranchHistory(void)
 void TraitBranchHistory::printBranchHistory(void)
 {
 
-    int nEvents = eventsOnBranch.size();
+    int nEvents = (int)eventsOnBranch.size();
     std::cout << "nodeEvent: " << nodeEvent << "\tancestorEvent: " << ancestralNodeEvent
          << std::endl;
 
