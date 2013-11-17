@@ -54,6 +54,10 @@ globalSamplingFraction = 1.0
 # this is ignored and BAMM looks for a filename with 
 # species-specific sampling fractions
 
+# seed = 12345
+# Seed for the random number generator. 
+# If not specified, a seed is obtained from clock time 
+
 ###################################
 # PRIORS
 
