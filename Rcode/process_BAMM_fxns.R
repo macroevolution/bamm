@@ -357,7 +357,7 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 	}else if (!is.null(node) & nodetype == 'exclude'){
 		nodeset <- setdiff( ephy$edge[,2],  getDesc(ephy, node)$desc_set);
 	}else{
-		stop('error in getRateTHroughTimeMatrix\n');
+		stop('error in getRateThroughTimeMatrix\n');
 	}
 	
 	bt <- branching.times(ephy);
