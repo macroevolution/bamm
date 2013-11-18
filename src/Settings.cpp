@@ -37,11 +37,11 @@ Settings::Settings(void)
     _runMCMC = false;
     _initializeModel = false;
     _loadEventData = false;
-	_autotune = false;
-	
+    _autotune = false;
+    
     _useGlobalSamplingProbability = true;
     _globalSamplingFraction = 0.0;
-	
+    
     // Class Model parameters:
     _updateLambdaInitScale = 0.0;
     _updateMuInitScale = 0.0;
@@ -59,11 +59,11 @@ Settings::Settings(void)
     _muInitPrior = 0.0;
     _muShiftPrior = 1.0;  // This is only set for convenience for now:
     
-	_updateEventLocationScale = 0.0;
-	//_MeanSpeciationLengthFraction = 0.0;
+    _updateEventLocationScale = 0.0;
+    //_MeanSpeciationLengthFraction = 0.0;
     
-	
-	_segLength = 0.0;
+    
+    _segLength = 0.0;
     _minCladeSizeForShift = 1;
     
     _seed = -1;
@@ -131,12 +131,12 @@ Settings::Settings(void)
     isDefault_lambdaShiftPrior                          = true;
     isDefault_muInitPrior                               = true;
     isDefault_muShiftPrior                              = true;
-    isDefault_updateEventLocationScale					= true;
-	//isDefault_MeanSpeciationLengthFraction              = true;
+    isDefault_updateEventLocationScale                    = true;
+    //isDefault_MeanSpeciationLengthFraction              = true;
     
-	isDefault_segLength                                 = true;
-	
-	
+    isDefault_segLength                                 = true;
+    
+    
     isDefault_mcmcOutfile                               = true;
     isDefault_eventDataOutfile                          = true;
     isDefault_lambdaOutfile                             = true;
@@ -169,8 +169,8 @@ Settings::Settings(void)
     isDefault_seed                                      = true;
     isDefault_overwrite                                 = true;
 
-	isDefault_autotune									= true;
-	
+    isDefault_autotune                                    = true;
+    
     // End block of Booleans
     /*******************************************/
 
@@ -232,7 +232,7 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
     }
     
     std::cout << "Reading control file <<" << controlFilename.c_str() << ">>" << std::endl;
-	
+    
     std::string s1, s2, s_nocomment;
     
     while (infile) {
@@ -243,11 +243,11 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
         
         // What is the int(*)(int) doing????
         s1.erase(std::remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
-		
-		std::istringstream sx(s1);       
-		getline(sx, s_nocomment, '#');
-		
-		// Only add if has size > 0 (gets rid of empty lines)
+        
+        std::istringstream sx(s1);       
+        getline(sx, s_nocomment, '#');
+        
+        // Only add if has size > 0 (gets rid of empty lines)
         if (s_nocomment.size() > 0) {
             std::vector<std::string> tmpstr;
             
@@ -264,11 +264,11 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
                 _varValue.push_back(tmpstr[1]);
             } else {
                 std::cout << "Invalid size of input line in control file" << std::endl;
-				std::cout << " Problematic line includes <<" << s_nocomment << ">>" << std::endl;
-				std::cout << "Terminating run\n" << std::endl;
-                std::exit(0);			
-			}
-		}
+                std::cout << " Problematic line includes <<" << s_nocomment << ">>" << std::endl;
+                std::cout << "Terminating run\n" << std::endl;
+                std::exit(0);            
+            }
+        }
         
         if (infile.peek() == EOF) {
             break;
@@ -340,8 +340,8 @@ void Settings::initializeSettingsDefaults_Diversification(void)
     _muInitPrior                    = 1.0;
     _muShiftPrior                   = 0.5; // 0
 //  _MeanSpeciationLengthFraction   = 0.2;
-    _updateEventLocationScale		= 1.0;
-	_segLength                      = 1.0;
+    _updateEventLocationScale        = 1.0;
+    _segLength                      = 1.0;
 
     _minCladeSizeForShift           = 1;
     
@@ -406,7 +406,7 @@ void Settings::initializeSettingsDefaults_Traits(void)
     _localGlobalMoveRatio           = 10.0;
     _poissonRatePrior               = 1.0;
 //  _MeanSpeciationLengthFraction   = 0.2;
-	_updateEventLocationScale		= 1.0;
+    _updateEventLocationScale        = 1.0;
     _betaInit                       = 0.1;
     _betaShiftInit                  = 0.0;
 
@@ -503,9 +503,9 @@ void Settings::initializeSettings_Traits()
             isDefault_betaShift = false;
         } else if (_varName[i] == "updateEventLocationScale") {
             assertUsingDefault(isDefault_updateEventLocationScale, _varName[i]);
-			_updateEventLocationScale = atof(_varValue[i].c_str());
-			isDefault_updateEventLocationScale = false;
-		} else if (_varName[i] == "updateEventRateScale") {
+            _updateEventLocationScale = atof(_varValue[i].c_str());
+            isDefault_updateEventLocationScale = false;
+        } else if (_varName[i] == "updateEventRateScale") {
             assertUsingDefault(isDefault_updateEventRateScale, _varName[i]);
             _updateEventRateScale = atof(_varValue[i].c_str());
             isDefault_updateEventRateScale = false;
@@ -624,9 +624,9 @@ void Settings::initializeSettings_Traits()
             // already handled in initializeSettings() general function.
         } else if (_varName[i] == "autotune") {
             assertUsingDefault(isDefault_autotune, _varName[i]);
-			_autotune = stringToBool(_varValue[i].c_str());
-			isDefault_autotune = false;
-		} else if (_varName[i] == "seed") {
+            _autotune = stringToBool(_varValue[i].c_str());
+            isDefault_autotune = false;
+        } else if (_varName[i] == "seed") {
             assertUsingDefault(isDefault_seed, _varName[i]);
             _seed = atoi(_varValue[i].c_str());
             isDefault_seed = false;
@@ -671,8 +671,6 @@ void Settings::initializeSettings_Traits()
     //      from the defaults, eg inputfilename etc.
 
     //  Output list of default parameters.
-
-
 }
 
 void Settings::setOutfileNames(std::string prefix)
@@ -897,9 +895,9 @@ void Settings::initializeSettings_Diversification()
             // already handled in initializeSettings() general function.
         } else if (_varName[i] == "autotune") {
             assertUsingDefault(isDefault_autotune, _varName[i]);
-			_autotune = stringToBool(_varValue[i].c_str());
-			isDefault_autotune = false;
-		} else if (_varName[i] == "seed") {
+            _autotune = stringToBool(_varValue[i].c_str());
+            isDefault_autotune = false;
+        } else if (_varName[i] == "seed") {
             assertUsingDefault(isDefault_seed, _varName[i]);
             _seed = atoi(_varValue[i].c_str());
             isDefault_seed = false;
