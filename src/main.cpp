@@ -76,7 +76,7 @@ int main (int argc, char* argv[])
     std::cout << "TESTING uniformRv:" << std::endl;
     for (int i = 0; i < 10000000; i++) {
         terp = myRNG.uniformRv();
-        if (i > 9999975) {
+        if (i > 9999975) { // only print out the last few numbers
             std::cout << i << ": " << terp << std::endl;
         }
     }

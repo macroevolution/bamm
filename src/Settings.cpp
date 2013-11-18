@@ -20,12 +20,10 @@
 
 /*
     Should rewrite this to NOT initialize any variables - just set to 0.
-
  */
 
 Settings::Settings(void)
 {
-
     _allParametersSetToDefaults = false;
     // Parameters used in main()
     _treefile = "EMPTY_STRING";
@@ -66,7 +64,6 @@ Settings::Settings(void)
     
 	
 	_segLength = 0.0;
-
     _minCladeSizeForShift = 1;
     
     _seed = -1;
@@ -74,18 +71,17 @@ Settings::Settings(void)
     
     
     // Parameters for implementation of class MCMC:
+/*
     _mcmcOutfile            =       "BAMM_mcmc_out.txt";
     _eventDataOutfile       =       "BAMM_eventdata.txt";
     _lambdaOutfile          =       "BAMM_lambda_rates.txt";
     _muOutfile              =       "BAMM_mu_rates.txt";
     _acceptrateOutfile      =       "BAMM_mcmc_accept.txt";
     _lambdaNodeOutfile      =       "BAMM_nodeLambda.txt";
- // put file prefix here   
-    
-    
-    
-    
-    
+*/
+    _outname                =        "BAMM";
+    setOutfileNames(_outname);
+ 
     
     _treeWriteFreq          =       0;
     _eventDataWriteFreq     =       0;
@@ -139,12 +135,18 @@ Settings::Settings(void)
 	//isDefault_MeanSpeciationLengthFraction              = true;
     
 	isDefault_segLength                                 = true;
+	
+	
     isDefault_mcmcOutfile                               = true;
     isDefault_eventDataOutfile                          = true;
     isDefault_lambdaOutfile                             = true;
     isDefault_muOutfile                                 = true;
     isDefault_acceptrateOutfile                         = true;
     isDefault_lambdaNodeOutfile                         = true;
+    
+    isDefault_outfileNames                               = true;
+    
+    
     isDefault_treeWriteFreq                             = true;
     isDefault_eventDataWriteFreq                        = true;
     isDefault_mcmcWriteFreq                             = true;
@@ -192,6 +194,8 @@ Settings::Settings(void)
     isDefault_updateBetaScale   = true;
     isDefault_updateNodeStateScale = true;
     isDefault_betaInit          = true;
+    isDefault_betaInitPrior     = true;
+    isDefault_betaShiftPrior    = true;
     isDefault_rootPrior         = true;
     isDefault_traitPriorMin     = true;
     isDefault_traitPriorMax     = true;
@@ -205,8 +209,8 @@ Settings::Settings(void)
 
     _useObservedMinMaxAsTraitPriors = true;
 
-    _betaOutfile        =   "BAMM_beta_rates.txt";
-    _nodeStateOutfile   =   "BAMM_nodestates.txt";
+//    _betaOutfile        =   "BAMM_beta_rates.txt";
+//    _nodeStateOutfile   =   "BAMM_nodestates.txt";
 
 }
 
@@ -240,7 +244,6 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
         // What is the int(*)(int) doing????
         s1.erase(std::remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
 		
-		
 		std::istringstream sx(s1);       
 		getline(sx, s_nocomment, '#');
 		
@@ -265,7 +268,6 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
 				std::cout << "Terminating run\n" << std::endl;
                 std::exit(0);			
 			}
-
 		}
         
         if (infile.peek() == EOF) {
@@ -304,7 +306,6 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
 
 void Settings::initializeSettingsDefaults_Diversification(void)
 {
-
     _allParametersSetToDefaults = true;
 
     _runSpeciationExtinctionModel   = true;
@@ -343,16 +344,20 @@ void Settings::initializeSettingsDefaults_Diversification(void)
 	_segLength                      = 1.0;
 
     _minCladeSizeForShift           = 1;
-
-    // Parameters for implementation of class MCMC:
-    _mcmcOutfile                    = "mcmc_out.txt";
-    _eventDataOutfile               = "eventdata.txt";
+    
     _eventDataInfile                = "EMPTY_STRING";
-    _lambdaOutfile                  = "lambda_rates.txt";
-    _muOutfile                      = "mu_rates.txt";
-    _acceptrateOutfile              = "mcmc_accept.txt";
-    _lambdaNodeOutfile              = "nodeLambda.txt";
-
+    
+    
+// *** All of these file names are already initialized above. ***
+    // Parameters for implementation of class MCMC:
+/*
+    _mcmcOutfile            =       "BAMM_mcmc_out.txt";
+    _eventDataOutfile       =       "BAMM_eventdata.txt";
+    _lambdaOutfile          =       "BAMM_lambda_rates.txt";
+    _muOutfile              =       "BAMM_mu_rates.txt";
+    _acceptrateOutfile      =       "BAMM_mcmc_accept.txt";
+    _lambdaNodeOutfile      =       "BAMM_nodeLambda.txt";
+*/
 
     _treeWriteFreq                  = 5000;
     _eventDataWriteFreq             = 5000;
@@ -412,14 +417,18 @@ void Settings::initializeSettingsDefaults_Traits(void)
     _useObservedMinMaxAsTraitPriors = true;
     _traitPriorMin                  = 0.0;
     _traitPriorMax                  = 0.0;
-
+    
+    
+// *** All of these file names are already initialized above. ***
+/*
     // Parameters for implementation of class MCMC:
     _mcmcOutfile                    = "mcmc_out.txt";
     _eventDataOutfile               = "eventdata.txt";
     _betaOutfile                    = "BAMMt_beta_rates.txt";
     _nodeStateOutfile               = "BAMMt_nodestates.txt";
     _acceptrateOutfile              = "BAMMt_mcmc_accept.txt";
-
+*/
+    
     _treeWriteFreq                  = 50000;
     _eventDataWriteFreq             = 50000;
     _mcmcWriteFreq                  = 1000;
@@ -439,8 +448,6 @@ void Settings::initializeSettingsDefaults_Traits(void)
 
     // Other:
     _initialNumberEvents = 0;
-
-
 }
 
 
@@ -627,13 +634,17 @@ void Settings::initializeSettings_Traits()
             assertUsingDefault(isDefault_overwrite, _varName[i]);
             _overwrite = stringToBool(_varValue[i].c_str());
             isDefault_overwrite = false;
+        } else if (_varName[i] == "outName") {
+            assertUsingDefault(isDefault_outfileNames, _varName[i]);
+            _outname = _varValue[i];
+            setOutfileNames(_outname);
+            isDefault_outfileNames = false;
         } else {
             // Parameter not found:
             //      add to list of potentially bad/misspelled params
             //      and print for user.
             paramsNotFound.push_back(_varName[i]);
         }
-
     }
 
     std::cout << "Read a total of <<" << _varName.size() <<
@@ -651,7 +662,6 @@ void Settings::initializeSettings_Traits()
         std::cout << std::endl << "********************************" << std::endl << std::endl;
         std::cout << "Execution of BAMM terminated..." << std::endl;
         std::exit(1);
-
     }
 
     //  Here we have a print block to output Settings:
@@ -665,6 +675,18 @@ void Settings::initializeSettings_Traits()
 
 }
 
+void Settings::setOutfileNames(std::string prefix)
+{
+    _mcmcOutfile            =       prefix + "_mcmc_out.txt";
+    _eventDataOutfile       =       prefix + "_eventdata.txt";
+    _lambdaOutfile          =       prefix + "_lambda_rates.txt";
+    _muOutfile              =       prefix + "_mu_rates.txt";
+    _acceptrateOutfile      =       prefix + "_mcmc_accept.txt";
+    _lambdaNodeOutfile      =       prefix + "_nodeLambda.txt";
+    _betaOutfile            =       prefix + "_beta_rates.txt";
+    _nodeStateOutfile       =       prefix + "_nodestates.txt";
+}
+
 void Settings::printCurrentSettings_Traits(bool printOnlyChangesToDefaults)
 {
     std::cout << "print settings for trait module not yet supported" << std::endl;
@@ -673,11 +695,8 @@ void Settings::printCurrentSettings_Traits(bool printOnlyChangesToDefaults)
 
 void Settings::initializeSettings_Diversification()
 {
-
     _allParametersSetToDefaults = false;
-
     std::vector<std::string> paramsNotFound;
- 
 
     for (std::vector<std::string>::size_type i = 0; i < _varName.size(); i++) {
         if (_varName[i] == "treefile") {
@@ -888,13 +907,17 @@ void Settings::initializeSettings_Diversification()
             assertUsingDefault(isDefault_overwrite, _varName[i]);
             _overwrite = stringToBool(_varValue[i].c_str());
             isDefault_overwrite = false;
+        } else if (_varName[i] == "outName") {
+            assertUsingDefault(isDefault_outfileNames, _varName[i]);
+            _outname = _varValue[i];
+            setOutfileNames(_outname);
+            isDefault_outfileNames = false;
         } else {
             // Parameter not found:
             //      add to list of potentially bad/misspelled params
             //      and print for user.
             paramsNotFound.push_back(_varName[i]);
         }
-
     }
 
     std::cout << "Read a total of <<" << _varName.size() <<
@@ -921,7 +944,6 @@ void Settings::initializeSettings_Diversification()
     //      from the defaults, eg inputfilename etc.
 
     //  Output list of default parameters.
-
 }
 
 
@@ -937,7 +959,6 @@ void Settings::assertUsingDefault(bool isDefault, const std::string& varName)
 
 void Settings::checkAreInitialSettingsValid_Diversification(void)
 {
-
     std::cout << "currently does not check for valid settings" << std::endl;
     std::cout << " in speciation-extinction BAMM" << std::endl << std::endl;
     std::cout << "This will be fixed in a future release of BAMM" << std::endl << std::endl;
@@ -1029,12 +1050,12 @@ void Settings::checkAreInitialSettingsValid_Traits(void)
     if (paramsNotSpecified.size() > 0) {
         std::cout << "\nPrinting parameters with default settings: " << std::endl << std::endl;
 
-        for (std::vector<std::string>::size_type i = 0; i < paramsNotSpecified.size(); i++)
+        for (std::vector<std::string>::size_type i = 0; i < paramsNotSpecified.size(); i++) {
             std::cout << std::setw(25) << paramsNotSpecified[i] << std::endl;
+        }
         std::cout << "\nSome or all of these may be problematic, potentially resulting in fatal errors "
              << std::endl << std::endl;
     }
-
 }
 
 
@@ -1130,6 +1151,20 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
                  _updateEventLocationScale << std::endl;
         if (!isDefault_segLength)
             std::cout << std::right << std::setw(ppw) << "segLength" << "\t\t" << _segLength << std::endl;
+        
+        
+        if (!isDefault_outfileNames) {
+            std::cout << std::right << std::setw(ppw) << "mcmcOutfile" << "\t\t" << _mcmcOutfile << std::endl;
+            std::cout << std::right << std::setw(ppw) << "lambdaOutfile" << "\t\t" << _lambdaOutfile <<
+                 std::endl;
+            std::cout << std::right << std::setw(ppw) << "muOutfile" << "\t\t" << _muOutfile << std::endl;
+            std::cout << std::right << std::setw(ppw) << "acceptrateOutfile" << "\t\t" <<
+                 _acceptrateOutfile << std::endl;
+            std::cout << std::right << std::setw(ppw) << "lambdaNodeOutfile" << "\t\t" <<
+                 _lambdaNodeOutfile << std::endl;
+        }
+        
+        
         if (!isDefault_mcmcOutfile)
             std::cout << std::right << std::setw(ppw) << "mcmcOutfile" << "\t\t" << _mcmcOutfile << std::endl;
         if (!isDefault_lambdaOutfile)
@@ -1276,21 +1311,16 @@ void Settings::printCurrentSettings_Diversification(bool printOnlyChangesToDefau
              _seed << std::endl;
         std::cout << std::right << std::setw(ppw) << "overwrite" << "\t\t" <<
              _overwrite << std::endl;
-
     }
 
-
     std::cout << std::endl;
-
     std::cout << "*****************************************************" << std::endl;
-
 }
 
 
 
 void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrings)
 {
-
     std::vector<std::string> badFlags;
 
     for (std::vector<std::string>::size_type i = 0; i < (std::vector<std::string>::size_type)argc; i++) {
@@ -1310,7 +1340,6 @@ void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrin
             } else {
                 initializeSettingsDevel(controlfile);
             }
-
         } else {
             if (i != 0) {
                 // If i == 0, we just assume that this is either (i) the path to the executable
@@ -1319,7 +1348,6 @@ void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrin
                 //  not be a valid flag...
                 badFlags.push_back(instrings[i]);
             }
- 
         }
     }
 
@@ -1328,10 +1356,4 @@ void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrin
         std::exit(1);
     }
 }
-
-
-
-
-
-
 

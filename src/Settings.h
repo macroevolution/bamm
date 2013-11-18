@@ -81,6 +81,8 @@ private:
     std::string _acceptrateOutfile;
     std::string _lambdaNodeOutfile;
     std::string _eventDataOutfile;
+    
+    std::string _outname;
 
     int _treeWriteFreq;
     int _mcmcWriteFreq;
@@ -174,12 +176,18 @@ private:
     bool isDefault_muShiftPrior;
     bool isDefault_updateEventLocationScale;
     bool isDefault_segLength;
+    
+    
     bool isDefault_mcmcOutfile;
     bool isDefault_eventDataOutfile;
     bool isDefault_lambdaOutfile;
     bool isDefault_muOutfile;
     bool isDefault_acceptrateOutfile;
     bool isDefault_lambdaNodeOutfile;
+    
+    bool isDefault_outfileNames;
+    
+    
     bool isDefault_treeWriteFreq;
     bool isDefault_eventDataWriteFreq;
     bool isDefault_mcmcWriteFreq;
@@ -232,12 +240,13 @@ public:
 
 	void initializeSettingsDevel(std::string controlFilename);
 	
-	
     void initializeSettingsDefaults_Traits();
     void initializeSettings_Traits();
 
     void initializeSettings_Diversification();
     void initializeSettingsDefaults_Diversification();
+    
+    void setOutfileNames(std::string prefix); 
 
     void checkAreInitialSettingsValid_Diversification();
     void checkAreInitialSettingsValid_Traits();
