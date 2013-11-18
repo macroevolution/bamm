@@ -71,6 +71,18 @@ int main (int argc, char* argv[])
     MbRandom myRNG(mySettings.getSeed());
     std::cout << mySettings.getModeltype() << std::endl;
     
+/*
+    double terp = 0.0;
+    std::cout << "TESTING uniformRv:" << std::endl;
+    for (int i = 0; i < 10000000; i++) {
+        terp = myRNG.uniformRv();
+        if (i > 9999975) {
+            std::cout << i << ": " << terp << std::endl;
+        }
+    }
+    exit(0);
+*/
+    
     if (mySettings.getModeltype() == "speciationextinction") {
         std::cout << "Initializing diversification (speciationextinction) model" << std::endl;
         for (int i = 0; i < 20; i++) {
