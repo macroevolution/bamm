@@ -808,6 +808,7 @@ void TraitModel::deleteRandomEventFromTree(void)
                 //std::cout << "deleted..." << std::endl;
 
                 eventCollection.erase(i);
+                break;
 
                 //std::cout << "erased ... " << std::endl;
 
