@@ -13,6 +13,7 @@
 #include <vector>
 #include <cctype>
 #include <algorithm>
+#include <cstdlib>
 
 #include "Settings.h"
 
@@ -262,7 +263,7 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
                 std::cout << "Invalid size of input line in control file" << std::endl;
 				std::cout << " Problematic line includes <<" << s_nocomment << ">>" << std::endl;
 				std::cout << "Terminating run\n" << std::endl;
-				exit(0);			
+                std::exit(0);			
 			}
 
 		}
@@ -449,12 +450,12 @@ void Settings::initializeSettings_Traits()
     std::vector<std::string> paramsNotFound;
 
     for (std::vector<std::string>::size_type i = 0; i < _varName.size(); i++) {
-        //std::cout << std::setw(30) << _varName[i] << std::setw(20) << _varValue[i] << std::endl;
-
         if (_varName[i] == "treefile") {
+            assertUsingDefault(isDefault_treefile, _varName[i]);
             _treefile = _varValue[i];
             isDefault_treefile = false;
         } else if (_varName[i] == "traitfile") {
+            assertUsingDefault(isDefault_traitfile, _varName[i]);
             _traitfile = _varValue[i];
             isDefault_traitfile = false;
         } else if (_varName[i] == "runSpeciationExtinctionModel") {
@@ -462,132 +463,170 @@ void Settings::initializeSettings_Traits()
         } else if (_varName[i] == "runTraitModel") {
 
         } else if (_varName[i] == "sampleFromPriorOnly") {
+            assertUsingDefault(isDefault_sampleFromPriorOnly, _varName[i]);
             _sampleFromPriorOnly = stringToBool(_varValue[i].c_str());
-
             isDefault_sampleFromPriorOnly = false;
         } else if (_varName[i] == "initializeModel") {
+            assertUsingDefault(isDefault_initializeModel, _varName[i]);
             _initializeModel = stringToBool(_varValue[i].c_str());
             isDefault_initializeModel = false;
         } else if (_varName[i] == "runMCMC") {
+            assertUsingDefault(isDefault_runMCMC, _varName[i]);
             _runMCMC = stringToBool(_varValue[i].c_str());
             isDefault_runMCMC = false;
         } else if (_varName[i] == "updateBetaScale") {
+            assertUsingDefault(isDefault_updateBetaScale, _varName[i]);
             _updateBetaScale = atof(_varValue[i].c_str());
             isDefault_updateBetaScale = false;
-            //std::cout << left << std::setw(ppw) << "updateLambdaInitScale" << "\t" << _updateLambdaInitScale << std::endl;
         } else if (_varName[i] == "updateNodeStateScale") {
+            assertUsingDefault(isDefault_updateNodeStateScale, _varName[i]);
             _updateNodeStateScale = atof(_varValue[i].c_str());
             isDefault_updateNodeStateScale = false;
         } else if (_varName[i] == "updateBetaShiftScale") {
+            assertUsingDefault(isDefault_updateBetaShiftScale, _varName[i]);
             _updateBetaShiftScale = atof(_varValue[i].c_str());
             isDefault_updateBetaShiftScale = false;
         } else if (_varName[i] == "betaInit") {
+            assertUsingDefault(isDefault_betaInit, _varName[i]);
             _betaInit = atof(_varValue[i].c_str());
             isDefault_betaInit = false;
         } else if (_varName[i] == "betaShiftInit") {
+            assertUsingDefault(isDefault_betaShift, _varName[i]);
             _betaShiftInit = atof(_varValue[i].c_str());
             isDefault_betaShift = false;
         } else if (_varName[i] == "updateEventLocationScale") {
+            assertUsingDefault(isDefault_updateEventLocationScale, _varName[i]);
 			_updateEventLocationScale = atof(_varValue[i].c_str());
 			isDefault_updateEventLocationScale = false;
 		} else if (_varName[i] == "updateEventRateScale") {
+            assertUsingDefault(isDefault_updateEventRateScale, _varName[i]);
             _updateEventRateScale = atof(_varValue[i].c_str());
             isDefault_updateEventRateScale = false;
         } else if (_varName[i] == "localGlobalMoveRatio") {
+            assertUsingDefault(isDefault_localGlobalMoveRatio, _varName[i]);
             _localGlobalMoveRatio = atof(_varValue[i].c_str());
             isDefault_localGlobalMoveRatio = false;
         } else if (_varName[i] == "poissonRatePrior") {
+            assertUsingDefault(isDefault_poissonRatePrior, _varName[i]);
             _poissonRatePrior = atof(_varValue[i].c_str());
             isDefault_poissonRatePrior = false;
         } else if (_varName[i] == "betaInitPrior") {
+            assertUsingDefault(isDefault_betaInitPrior, _varName[i]);
             _betaInitPrior = atof(_varValue[i].c_str());
             isDefault_betaInitPrior = false;
         } else if (_varName[i] == "betaShiftPrior") {
+            assertUsingDefault(isDefault_betaShiftPrior, _varName[i]);
             _betaShiftPrior = atof(_varValue[i].c_str());
             isDefault_betaShiftPrior = false;
         } else if (_varName[i] == "useObservedMinMaxAsTraitPriors") {
-            _useObservedMinMaxAsTraitPriors = stringToBool(_varValue[i].c_str());
+            assertUsingDefault
+                (isDefault_useObservedMinMaxAsTraitPriors, _varName[i]);
+            _useObservedMinMaxAsTraitPriors =
+                stringToBool(_varValue[i].c_str());
             isDefault_useObservedMinMaxAsTraitPriors = false;
         } else if (_varName[i] == "traitPriorMin") {
+            assertUsingDefault(isDefault_traitPriorMin, _varName[i]);
             _traitPriorMin = atof(_varValue[i].c_str());
             isDefault_traitPriorMin = false;
         } else if (_varName[i] == "traitPriorMax") {
+            assertUsingDefault(isDefault_traitPriorMax, _varName[i]);
             _traitPriorMax = atof(_varValue[i].c_str());
             isDefault_traitPriorMax = false;
         } else if (_varName[i] == "mcmcOutfile") {
+            assertUsingDefault(isDefault_mcmcOutfile, _varName[i]);
             _mcmcOutfile = _varValue[i];
             isDefault_mcmcOutfile = false;
         } else if (_varName[i] == "eventDataOutfile") {
+            assertUsingDefault(isDefault_eventDataOutfile, _varName[i]);
             _eventDataOutfile = _varValue[i];
             isDefault_eventDataOutfile = false;
         } else if (_varName[i] == "betaOutfile") {
+            assertUsingDefault(isDefault_betaOutfile, _varName[i]);
             _betaOutfile = _varValue[i];
             isDefault_betaOutfile = false;
         } else if (_varName[i] == "nodeStateOutfile") {
+            assertUsingDefault(isDefault_nodeStateOutfile, _varName[i]);
             _nodeStateOutfile = _varValue[i];
             isDefault_nodeStateOutfile = false;
         } else if (_varName[i] == "acceptrateOutfile") {
+            assertUsingDefault(isDefault_acceptrateOutfile, _varName[i]);
             _acceptrateOutfile = _varValue[i];
             isDefault_acceptrateOutfile = false;
         } else if (_varName[i] == "branchRatesWriteFreq") {
+            assertUsingDefault(isDefault_treeWriteFreq, _varName[i]);
             _treeWriteFreq = atoi(_varValue[i].c_str());
             isDefault_treeWriteFreq = false;
         } else if (_varName[i] == "eventDataWriteFreq") {
+            assertUsingDefault(isDefault_eventDataWriteFreq, _varName[i]);
             _eventDataWriteFreq = atoi(_varValue[i].c_str());
             isDefault_eventDataWriteFreq = false;
         } else if (_varName[i] == "mcmcWriteFreq") {
+            assertUsingDefault(isDefault_mcmcWriteFreq, _varName[i]);
             _mcmcWriteFreq = atoi(_varValue[i].c_str());
             isDefault_mcmcWriteFreq = false;
         } else if (_varName[i] == "acceptWriteFreq") {
+            assertUsingDefault(isDefault_acceptWriteFreq, _varName[i]);
             _acceptWriteFreq = atoi(_varValue[i].c_str());
             isDefault_acceptWriteFreq = false;
         } else if (_varName[i] == "printFreq") {
+            assertUsingDefault(isDefault_printFreq, _varName[i]);
             _printFreq = atoi(_varValue[i].c_str());
             isDefault_printFreq = false;
         } else if (_varName[i] == "numberGenerations") {
+            assertUsingDefault(isDefault_NGENS, _varName[i]);
             _NGENS = atoi(_varValue[i].c_str());
             isDefault_NGENS = false;
         } else if (_varName[i] == "updateRateEventNumber") {
+            assertUsingDefault(isDefault_updateRateEventNumber, _varName[i]);
             _updateRateEventNumber  = atof(_varValue[i].c_str());
             isDefault_updateRateEventNumber = false;
         } else if (_varName[i] == "updateRateEventPosition") {
+            assertUsingDefault(isDefault_updateRateEventPosition, _varName[i]);
             _updateRateEventPosition  = atof(_varValue[i].c_str());
             isDefault_updateRateEventPosition = false;
         } else if (_varName[i] == "updateRateEventRate") {
+            assertUsingDefault(isDefault_updateRateEventRate, _varName[i]);
             _updateRateEventRate = atof(_varValue[i].c_str());
             isDefault_updateRateEventRate = false;
         } else if (_varName[i] == "updateRateBeta0") {
+            assertUsingDefault(isDefault_updateRateBeta0, _varName[i]);
             _updateRateBeta0 = atof(_varValue[i].c_str());
             isDefault_updateRateBeta0 = false;
         } else if (_varName[i] == "updateRateBetaShift") {
+            assertUsingDefault(isDefault_updateRateBetaShift, _varName[i]);
             _updateRateBetaShift  = atof(_varValue[i].c_str());
             isDefault_updateRateBetaShift = false;
         } else if (_varName[i] == "updateRateNodeState") {
+            assertUsingDefault(isDefault_updateRateNodeState, _varName[i]);
             _updateRateNodeState = atoi(_varValue[i].c_str());
             isDefault_updateRateNodeState = false;
         } else if (_varName[i] == "initialNumberEvents") {
+            assertUsingDefault(isDefault_initialNumberEvents, _varName[i]);
             _initialNumberEvents  = atoi(_varValue[i].c_str());
             isDefault_initialNumberEvents = false;
         } else if (_varName[i] == "loadEventData" ) {
+            assertUsingDefault(isDefault_loadEventData, _varName[i]);
             _loadEventData = stringToBool(_varValue[i].c_str());
             isDefault_loadEventData = false;
         } else if (_varName[i] == "eventDataInfile") {
+            assertUsingDefault(isDefault_eventDataInfile, _varName[i]);
             _eventDataInfile = _varValue[i].c_str();
             isDefault_eventDataInfile = false;
         } else if (_varName[i] == "modeltype") {
             // Do nothing. This is 
             // already handled in initializeSettings() general function.
         } else if (_varName[i] == "autotune") {
+            assertUsingDefault(isDefault_autotune, _varName[i]);
 			_autotune = stringToBool(_varValue[i].c_str());
 			isDefault_autotune = false;
 		} else if (_varName[i] == "seed") {
+            assertUsingDefault(isDefault_seed, _varName[i]);
             _seed = atoi(_varValue[i].c_str());
             isDefault_seed = false;
         } else if (_varName[i] == "overwrite") {
+            assertUsingDefault(isDefault_overwrite, _varName[i]);
             _overwrite = stringToBool(_varValue[i].c_str());
-            if (_overwrite) {
-                isDefault_overwrite = false;
-            }
+            isDefault_overwrite = false;
         } else {
             // Parameter not found:
             //      add to list of potentially bad/misspelled params
@@ -611,7 +650,7 @@ void Settings::initializeSettings_Traits()
         }
         std::cout << std::endl << "********************************" << std::endl << std::endl;
         std::cout << "Execution of BAMM terminated..." << std::endl;
-        exit(1);
+        std::exit(1);
 
     }
 
@@ -629,7 +668,7 @@ void Settings::initializeSettings_Traits()
 void Settings::printCurrentSettings_Traits(bool printOnlyChangesToDefaults)
 {
     std::cout << "print settings for trait module not yet supported" << std::endl;
-    exit(1);
+    std::exit(1);
 }
 
 void Settings::initializeSettings_Diversification()
@@ -641,9 +680,8 @@ void Settings::initializeSettings_Diversification()
  
 
     for (std::vector<std::string>::size_type i = 0; i < _varName.size(); i++) {
-        //std::cout << std::setw(30) << _varName[i] << std::setw(20) << _varValue[i] << std::endl;
-
         if (_varName[i] == "treefile") {
+            assertUsingDefault(isDefault_treefile, _varName[i]);
             _treefile = _varValue[i];
             isDefault_treefile = false;
         } else if (_varName[i] == "runSpeciationExtinctionModel") {
@@ -651,164 +689,205 @@ void Settings::initializeSettings_Diversification()
         } else if (_varName[i] == "runTraitModel") {
 
         } else if (_varName[i] == "sampleFromPriorOnly") {
+            assertUsingDefault(isDefault_sampleFromPriorOnly, _varName[i]);
             _sampleFromPriorOnly = stringToBool(_varValue[i].c_str());
-
             isDefault_sampleFromPriorOnly = false;
         } else if (_varName[i] == "initializeModel") {
+            assertUsingDefault(isDefault_initializeModel, _varName[i]);
             _initializeModel = stringToBool(_varValue[i].c_str());
             isDefault_initializeModel = false;
         } else if (_varName[i] == "runMCMC") {
+            assertUsingDefault(isDefault_runMCMC, _varName[i]);
             _runMCMC = stringToBool(_varValue[i].c_str());
             isDefault_runMCMC = false;
         } else if (_varName[i] == "useGlobalSamplingProbability") {
+            assertUsingDefault
+                (isDefault_useGlobalSamplingProbability, _varName[i]);
             _useGlobalSamplingProbability = stringToBool(_varValue[i].c_str());
             isDefault_useGlobalSamplingProbability = false;
         } else if (_varName[i] == "sampleProbsFilename") {
+            assertUsingDefault(isDefault_sampleProbsFilename, _varName[i]);
             _sampleProbsFilename = _varValue[i];
             isDefault_sampleProbsFilename = false;
-            //std::cout << left << std::setw(ppw) << "sampleProbsFilename" << "\t" << _sampleProbsFilename << std::endl;
-
         } else if (_varName[i] == "globalSamplingFraction") {
+            assertUsingDefault(isDefault_globalSamplingFraction, _varName[i]);
             _globalSamplingFraction = atof(_varValue[i].c_str());
             isDefault_globalSamplingFraction = false;
-            //std::cout << left << std::setw(ppw) << "globalSamplingFraction" << "\t" << _globalSamplingFraction << std::endl;
-
         } else if (_varName[i] == "updateLambdaInitScale") {
+            assertUsingDefault(isDefault_updateLambdaInitScale, _varName[i]);
             _updateLambdaInitScale = atof(_varValue[i].c_str());
             isDefault_updateLambdaInitScale = false;
-            //std::cout << left << std::setw(ppw) << "updateLambdaInitScale" << "\t" << _updateLambdaInitScale << std::endl;
-
         } else if (_varName[i] == "updateMuInitScale") {
+            assertUsingDefault(isDefault_updateMuInitScale, _varName[i]);
             _updateMuInitScale = atof(_varValue[i].c_str());
             isDefault_updateMuInitScale = false;
         } else if (_varName[i] == "updateLambdaShiftScale") {
+            assertUsingDefault(isDefault_updateLambdaShiftScale, _varName[i]);
             _updateLambdaShiftScale = atof(_varValue[i].c_str());
             isDefault_updateLambdaShiftScale = false;
         } else if (_varName[i] == "updateMuShiftScale") {
+            assertUsingDefault(isDefault_updateMuShiftScale, _varName[i]);
             _updateMuShiftScale = atof(_varValue[i].c_str());
             isDefault_updateMuShiftScale = false;
         } else if (_varName[i] == "lambdaInit0") {
+            assertUsingDefault(isDefault_lambdaInit0, _varName[i]);
             _lambdaInit0 = atof(_varValue[i].c_str());
             isDefault_lambdaInit0 = false;
         } else if (_varName[i] == "lambdaShift0") {
+            assertUsingDefault(isDefault_lambdaShift0, _varName[i]);
             _lambdaShift0 = atof(_varValue[i].c_str());
             isDefault_lambdaShift0 = false;
         } else if (_varName[i] == "muInit0") {
+            assertUsingDefault(isDefault_muInit0, _varName[i]);
             _muInit0 = atof(_varValue[i].c_str());
             isDefault_muInit0 = false;
         } else if (_varName[i] == "muShift0") {
+            assertUsingDefault(isDefault_muShift0, _varName[i]);
             _muShift0 = atof(_varValue[i].c_str());
             isDefault_muShift0 = false;
         } else if (_varName[i] == "updateEventLocationScale") {
+            assertUsingDefault(isDefault_updateEventLocationScale, _varName[i]);
             _updateEventLocationScale = atof(_varValue[i].c_str());
             isDefault_updateEventLocationScale = false;
         } else if (_varName[i] == "updateEventRateScale") {
+            assertUsingDefault(isDefault_updateEventRateScale, _varName[i]);
             _updateEventRateScale = atof(_varValue[i].c_str());
             isDefault_updateEventRateScale = false;
         } else if (_varName[i] == "localGlobalMoveRatio") {
+            assertUsingDefault(isDefault_localGlobalMoveRatio, _varName[i]);
             _localGlobalMoveRatio = atof(_varValue[i].c_str());
             isDefault_localGlobalMoveRatio = false;
         } else if (_varName[i] == "poissonRatePrior") {
+            assertUsingDefault(isDefault_poissonRatePrior, _varName[i]);
             _poissonRatePrior = atof(_varValue[i].c_str());
             isDefault_poissonRatePrior = false;
         } else if (_varName[i] == "lambdaInitPrior") {
+            assertUsingDefault(isDefault_lambdaInitPrior, _varName[i]);
             _lambdaInitPrior = atof(_varValue[i].c_str());
             isDefault_lambdaInitPrior = false;
         } else if (_varName[i] == "lambdaShiftPrior") {
+            assertUsingDefault(isDefault_lambdaShiftPrior, _varName[i]);
             _lambdaShiftPrior = atof(_varValue[i].c_str());
             isDefault_lambdaShiftPrior = false;
         } else if (_varName[i] == "muInitPrior") {
+            assertUsingDefault(isDefault_muInitPrior, _varName[i]);
             _muInitPrior = atof(_varValue[i].c_str());
             isDefault_muInitPrior = false;
         } else if (_varName[i] == "muShiftPrior") {
+            assertUsingDefault(isDefault_muShiftPrior, _varName[i]);
             _muShiftPrior = atof(_varValue[i].c_str());
             isDefault_muShiftPrior = false;
         } else if (_varName[i] == "segLength") {
+            assertUsingDefault(isDefault_segLength, _varName[i]);
             _segLength = atof(_varValue[i].c_str());
             isDefault_segLength = false;
         } else if (_varName[i] == "mcmcOutfile") {
+            assertUsingDefault(isDefault_mcmcOutfile, _varName[i]);
             _mcmcOutfile = _varValue[i];
             isDefault_mcmcOutfile = false;
         } else if (_varName[i] == "eventDataOutfile") {
+            assertUsingDefault(isDefault_eventDataOutfile, _varName[i]);
             _eventDataOutfile = _varValue[i];
             isDefault_eventDataOutfile = false;
         } else if (_varName[i] == "lambdaOutfile") {
+            assertUsingDefault(isDefault_lambdaOutfile, _varName[i]);
             _lambdaOutfile = _varValue[i];
             isDefault_lambdaOutfile = false;
         } else if (_varName[i] == "muOutfile") {
+            assertUsingDefault(isDefault_muOutfile, _varName[i]);
             _muOutfile = _varValue[i];
             isDefault_muOutfile = false;
         } else if (_varName[i] == "acceptrateOutfile") {
+            assertUsingDefault(isDefault_acceptrateOutfile, _varName[i]);
             _acceptrateOutfile = _varValue[i];
             isDefault_acceptrateOutfile = false;
         } else if (_varName[i] == "lambdaNodeOutfile") {
+            assertUsingDefault(isDefault_lambdaNodeOutfile, _varName[i]);
             _lambdaNodeOutfile = _varValue[i];
             isDefault_lambdaNodeOutfile = false;
         } else if (_varName[i] == "branchRatesWriteFreq") {
+            assertUsingDefault(isDefault_treeWriteFreq, _varName[i]);
             _treeWriteFreq = atoi(_varValue[i].c_str());
             isDefault_treeWriteFreq = false;
         } else if (_varName[i] == "eventDataWriteFreq") {
+            assertUsingDefault(isDefault_eventDataWriteFreq, _varName[i]);
             _eventDataWriteFreq = atoi(_varValue[i].c_str());
             isDefault_eventDataWriteFreq = false;
         } else if (_varName[i] == "mcmcWriteFreq") {
+            assertUsingDefault(isDefault_mcmcWriteFreq, _varName[i]);
             _mcmcWriteFreq = atoi(_varValue[i].c_str());
             isDefault_mcmcWriteFreq = false;
         } else if (_varName[i] == "acceptWriteFreq") {
+            assertUsingDefault(isDefault_acceptWriteFreq, _varName[i]);
             _acceptWriteFreq = atoi(_varValue[i].c_str());
             isDefault_acceptWriteFreq = false;
         } else if (_varName[i] == "printFreq") {
+            assertUsingDefault(isDefault_printFreq, _varName[i]);
             _printFreq = atoi(_varValue[i].c_str());
             isDefault_printFreq = false;
         } else if (_varName[i] == "numberGenerations") {
+            assertUsingDefault(isDefault_NGENS, _varName[i]);
             _NGENS = atoi(_varValue[i].c_str());
             isDefault_NGENS = false;
         } else if (_varName[i] == "updateRateEventNumber") {
+            assertUsingDefault(isDefault_updateRateEventNumber, _varName[i]);
             _updateRateEventNumber  = atof(_varValue[i].c_str());
             isDefault_updateRateEventNumber = false;
         } else if (_varName[i] == "updateRateEventPosition") {
+            assertUsingDefault(isDefault_updateRateEventPosition, _varName[i]);
             _updateRateEventPosition  = atof(_varValue[i].c_str());
             isDefault_updateRateEventPosition = false;
         } else if (_varName[i] == "updateRateEventRate") {
+            assertUsingDefault(isDefault_updateRateEventRate, _varName[i]);
             _updateRateEventRate = atof(_varValue[i].c_str());
             isDefault_updateRateEventRate = false;
         } else if (_varName[i] == "updateRateLambda0") {
+            assertUsingDefault(isDefault_updateRateLambda0, _varName[i]);
             _updateRateLambda0  = atof(_varValue[i].c_str());
             isDefault_updateRateLambda0 = false;
         } else if (_varName[i] == "updateRateLambdaShift") {
+            assertUsingDefault(isDefault_updateRateLambdaShift, _varName[i]);
             _updateRateLambdaShift  = atof(_varValue[i].c_str());
             isDefault_updateRateLambdaShift = false;
         } else if (_varName[i] == "updateRateMu0") {
+            assertUsingDefault(isDefault_updateRateMu0, _varName[i]);
             _updateRateMu0  = atof(_varValue[i].c_str());
             isDefault_updateRateMu0 = false;
         } else if (_varName[i] == "updateRateMuShift") {
+            assertUsingDefault(isDefault_updateRateMuShift, _varName[i]);
             _updateRateMuShift  = atof(_varValue[i].c_str());
             isDefault_updateRateMuShift = false;
         } else if (_varName[i] == "initialNumberEvents") {
+            assertUsingDefault(isDefault_initialNumberEvents, _varName[i]);
             _initialNumberEvents  = atoi(_varValue[i].c_str());
             isDefault_initialNumberEvents = false;
         } else if (_varName[i] == "loadEventData" ) {
+            assertUsingDefault(isDefault_loadEventData, _varName[i]);
             _loadEventData = stringToBool(_varValue[i].c_str());
             isDefault_loadEventData = false;
         } else if (_varName[i] == "eventDataInfile") {
+            assertUsingDefault(isDefault_eventDataInfile, _varName[i]);
             _eventDataInfile = _varValue[i].c_str();
             isDefault_eventDataInfile = false;
         } else if (_varName[i] == "minCladeSizeForShift") {
+            assertUsingDefault(isDefault_minCladeSizeForShift, _varName[i]);
             _minCladeSizeForShift = atoi(_varValue[i].c_str());
             isDefault_minCladeSizeForShift = false;
         } else if (_varName[i] == "modeltype") {
             // Do nothing. This is 
             // already handled in initializeSettings() general function.
         } else if (_varName[i] == "autotune") {
+            assertUsingDefault(isDefault_autotune, _varName[i]);
 			_autotune = stringToBool(_varValue[i].c_str());
 			isDefault_autotune = false;
 		} else if (_varName[i] == "seed") {
+            assertUsingDefault(isDefault_seed, _varName[i]);
             _seed = atoi(_varValue[i].c_str());
             isDefault_seed = false;
         } else if (_varName[i] == "overwrite") {
+            assertUsingDefault(isDefault_overwrite, _varName[i]);
             _overwrite = stringToBool(_varValue[i].c_str());
-            if (_overwrite) {
-                isDefault_overwrite = false;
-            }
+            isDefault_overwrite = false;
         } else {
             // Parameter not found:
             //      add to list of potentially bad/misspelled params
@@ -832,7 +911,7 @@ void Settings::initializeSettings_Diversification()
         }
         std::cout << std::endl << "********************************" << std::endl << std::endl;
         std::cout << "Execution of BAMM terminated..." << std::endl;
-        exit(1);
+        std::exit(1);
     }
 
     //  Here we have a print block to output Settings:
@@ -843,6 +922,16 @@ void Settings::initializeSettings_Diversification()
 
     //  Output list of default parameters.
 
+}
+
+
+void Settings::assertUsingDefault(bool isDefault, const std::string& varName)
+{
+    if (!isDefault) {
+        std::cout << "ERROR: Duplicate parameter " << varName << ".\n";
+        std::cout << "Fix by removing duplicate parameter in control file.\n";
+        std::exit(1);
+    }
 }
 
 
@@ -1217,7 +1306,7 @@ void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrin
             if (!instream) {
                 std::cout << "File not found error: cannot locate control file in\n";
                 std::cout <<  "specified directory. Exiting BAMM" << std::endl << std::endl;
-                exit(1);
+                std::exit(1);
             } else {
                 initializeSettingsDevel(controlfile);
             }
@@ -1236,7 +1325,7 @@ void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrin
 
     if (areAllParametersSetToDefaults()) {
         std::cout << "Failed to initialize parameter values\nExiting BAMM" << std::endl;
-        exit(1);
+        std::exit(1);
     }
 }
 

@@ -19,6 +19,8 @@ class Settings
 
 private:
 
+    void assertUsingDefault(bool isDefault, const std::string& varName);
+    
     bool _allParametersSetToDefaults;
 
     bool _runTraitModel;
