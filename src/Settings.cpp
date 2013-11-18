@@ -192,8 +192,10 @@ Settings::Settings(void)
 
     isDefault_traitfile         = true;
     isDefault_updateBetaScale   = true;
+    isDefault_updateBetaShiftScale = true;
     isDefault_updateNodeStateScale = true;
     isDefault_betaInit          = true;
+    isDefault_betaShift         = true;
     isDefault_betaInitPrior     = true;
     isDefault_betaShiftPrior    = true;
     isDefault_rootPrior         = true;
