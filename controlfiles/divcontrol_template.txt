@@ -87,7 +87,7 @@ muInitPrior = 1.0
 ###################################
 # MCMC SIMULATION SETTINGS & OUTPUT OPTIONS
 
-NumberGenerations = 10000000
+numberGenerations = 10000000
 # Generations to perform MCMC simulation.
 
 branchRatesWriteFreq = 20000

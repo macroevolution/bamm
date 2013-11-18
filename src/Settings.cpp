@@ -544,7 +544,7 @@ void Settings::initializeSettings_Traits()
         } else if (_varName[i] == "printFreq") {
             _printFreq = atoi(_varValue[i].c_str());
             isDefault_printFreq = false;
-        } else if (_varName[i] == "NumberGenerations") {
+        } else if (_varName[i] == "numberGenerations") {
             _NGENS = atoi(_varValue[i].c_str());
             isDefault_NGENS = false;
         } else if (_varName[i] == "updateRateEventNumber") {
@@ -759,7 +759,7 @@ void Settings::initializeSettings_Diversification()
         } else if (_varName[i] == "printFreq") {
             _printFreq = atoi(_varValue[i].c_str());
             isDefault_printFreq = false;
-        } else if (_varName[i] == "NumberGenerations") {
+        } else if (_varName[i] == "numberGenerations") {
             _NGENS = atoi(_varValue[i].c_str());
             isDefault_NGENS = false;
         } else if (_varName[i] == "updateRateEventNumber") {
@@ -917,7 +917,7 @@ void Settings::checkAreInitialSettingsValid_Traits(void)
     if (isDefault_printFreq)
         paramsNotSpecified.push_back("printFreq");
     if (isDefault_NGENS)
-        paramsNotSpecified.push_back("NumberGenerations");
+        paramsNotSpecified.push_back("numberGenerations");
     if (isDefault_updateRateEventNumber)
         paramsNotSpecified.push_back("updateRateEventNumber");
     if (isDefault_updateRateEventRate)

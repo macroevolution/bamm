@@ -54,7 +54,7 @@ eventDataWriteFreq = 5000
 
 acceptWriteFreq = 5000
 printFreq = 1000
-NumberGenerations = 10000000
+numberGenerations = 10000000
 updateRateEventNumber = 0.1
 updateRateEventPosition = 1
 updateRateEventRate = 1

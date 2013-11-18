@@ -41,7 +41,7 @@ mcmcWriteFreq = 5000
 acceptWriteFreq = 100000
 eventDataWriteFreq = 10000
 printFreq = 20000
-NumberGenerations = 1000000
+numberGenerations = 1000000
 
 updateRateEventNumber = 1
 updateRateEventPosition = 1
