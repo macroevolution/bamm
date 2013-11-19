@@ -803,15 +803,13 @@ void TraitModel::deleteRandomEventFromTree(void)
                                                    _lastDeletedEventBetaShift);
 
 
+                eventCollection.erase(i);
+
                 // delete from global node set
                 delete (*i);
                 //std::cout << "deleted..." << std::endl;
 
-                eventCollection.erase(i);
-                break;
-
                 //std::cout << "erased ... " << std::endl;
-
 
                 // reset forward history from last event:
                 //BranchEvent* lastEvent = getLastEvent(currNode);
@@ -822,6 +820,7 @@ void TraitModel::deleteRandomEventFromTree(void)
 
                 // is this correctly setting branch histories??
 
+                break;
             }
         }
     }
