@@ -741,11 +741,11 @@ void TraitModel::deleteEventFromTree(TraitBranchEvent* be)
 
         currNode->getTraitBranchHistory()->popEventOffBranchHistory((be));
 
+        eventCollection.erase(be);
+
         // delete from global node set
         delete (be);
         //std::cout << "deleted..." << std::endl;
-
-        eventCollection.erase(be);
 
         forwardSetBranchHistories(newLastEvent);
 
