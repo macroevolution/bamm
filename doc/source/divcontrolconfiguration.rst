@@ -126,7 +126,7 @@ mcmcOutfile
   MCMC parameter output will be written to this file.
 
 eventDataOutfile
-  Event details will be written to this file. 
+  Event details will be written to this file. Raw event data containing all of the results. See BAMMtools for working with this output file.
 
 lambdaOutfile
   Branch-specific speciation rates will be written to this file as newick-formatted trees.
@@ -140,53 +140,62 @@ muOutfile
 acceptrateOutfile
   *Description not yet available.*
 
+MCMC Scaling Operators
+......................
+
 updateLambdaInitScale
-  *Description not yet available.*
-
-updateMuInitScale
-  *Description not yet available.*
-
+  Scale parameter for updating the initial speciation rate for each process.
+  
 updateLambdaShiftScale
-  *Description not yet available.*
-
+  Scale parameter for the exponential change parameter for speciation.
+  
+updateMuInitScale
+  Scale parameter for updating the initial extinction rate for each process.
+  
 updateMuShiftScale
-  *Description not yet available.*
-
-minCladeSizeForShift
+  Scale parameter for the exponential change parameter for extinction.
+  
+updateRateMuShift
   *Description not yet available.*
   
+updateRateNumberTimeVariablePartitions
+  *Description not yet available.*
+
+updateEventLocationScale
+  Scale parameter for updating local moves of events on tree. This defines the width of the sliding window proposal.
+
 updateEventRateScale
-  *Description not yet available.*
-
-localGlobalMoveRatio
-  *Description not yet available.*
-
-Parameter Update Rates
+  Scale parameter for updating the rate parameter of the Poisson process.
+  
+MCMC Move Frequencies
 ......................
 
 updateRateEventNumber
-  Frequency of updating the number of events (shifts) on the tree.
-
+  Relative frequency of MCMC moves that change the number of events.
+  
 updateRateEventPosition
-  Frequency of moving the position of a shift point.
-
+  Relative frequency of MCMC moves that change the location of an event on the tree.
+  
 updateRateEventRate
-  Frequency of updating the rate at which events occur.
+  Relative frequency of MCMC moves that change the rate at which events occur.
+  
+updateRateLambda0
+  Relative frequency of MCMC moves that change the initial speciation rate associated with an event.
+  
+updateRateLambdaShift
+  Relative frequency of MCMC moves that change the exponential shift parameter of a speciation rate associated with an event.
+  
+updateRateMu0
+  Relative frequency of MCMC moves that change the extinction rate for a given event.
+  
+localGlobalMoveRatio
+  Ratio of local to global moves of events.
 
-initialNumberEvents
-  *Description not yet available.*
-
-Speciation/Extinction Model
----------------------------
-
-The following describes configuration options and parameters
-specifically for speciation/extinction analyses.
-
-Starting Parameters
+Initial Parameter Values
 ...................
 
 lambdaInit0
-  Starting initial speciation rate.
+  Initial speciation rate at the root of the tree.
 
 lambdaShift0
   Starting initial rate change parameter for speciation
@@ -194,112 +203,19 @@ lambdaShift0
   A negative value implies decreasing rates through time.
 
 muInit0
-  Starting Initial extinction rate.
+  Initial extinction rate at the root of the tree.
 
 muShift0
-  Starting initial rate change parameter for extinction. Currently not implemented.
+  Starting initial rate change parameter for extinction. Currently not implemented (vaue is 0).
   
 initialNumberEvents
-
-Parameter Update Rates
-......................
-
-updateRateLambda0
-  Frequency in which to update the initial speciation rate for an event.
-
-updateRateLambdaShift
-  Frequency in which to update how speciation rates change through time.
-
-updateRateMu0
-  Frequency in which to update the initial extinction rate.
+  Initial number of non-root processes.
 
 Numerical & Other Parameters
 ......................
 
 minCladeSizeForShift
+  Set the minimum number of descendant tips a branch must have to be the location of a possible rate-change event. A value of 1 allows shifts to occur on any branch.
 
 segLength
-
-Phenotypic Evolution Model
---------------------------
-
-The following describes the configuration options and parameters
-specifically for the phenotypic evolution model in BAMM.
-The parameter "beta" represents the rate of phenotypic evolution
-at any point in time.
-
-General
-.......
-
-traitfile
-  File that names the trait data. Traits must be continuous characters.
-  Each line must have a species name and the corresponding trait,
-  separated by a tab.
-  No header row is permitted.
-  All species in the trait data file must be in the tree and vice versa.
-
-MCMC Tuning
-...........
-
-updateBetaScale
-  Controls the amount by which to change the value of beta
-  at any step in the MCMC sampling.
-
-updateNodeStateScale
-  *Description not yet available.*
-
-updateBetaShiftScale
-  *Description not yet available.*
-
-Starting Parameters
-...................
-
-betaInit
-  Starting initial rate.
-
-betaShiftInit
-   Starting initial rate change parameter for phenotypic evolution.
-  (if 0, then constant-rate).
-  A negative value implies decreasing rates through time.
-
-Priors
-......
-
-betaInitPrior
-  *Description not yet available.*
-
-betaShiftPrior
-  *Description not yet available.*
-
-useObservedMinMaxAsTraitPriors
-  *Description not yet available.*
-
-traitPriorMin
-  *Description not yet available.*
-
-traitPriorMax
-  *Description not yet available.*
-
-Output
-......
-
-betaOutfile
-  The file name in which to write the phenotypic rates as newick-formatted trees where the branches are scaled to the rate of phenotypic evolution.
-
-nodeStateOutfile
-  *Description not yet available.*
-
-Parameter Update Rates
-......................
-
-updateRateBeta0
-  *Description not yet available.*
-
-updateRateBetaShift
-  *Description not yet available.*
-
-updateRateNodeState
-  Relative rate at which to update individual node state values.
-  This value should, in general, be substantially higher
-  than the other parameter values (recommended 25:1 or 50:1)
-  because there are so many internal nodes states that need to be updated.
+  *More information to come...*

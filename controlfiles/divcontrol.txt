@@ -175,24 +175,24 @@ updateRateEventNumber = 0.1
 # Relative frequency of MCMC moves that change the number of events
 
 updateRateEventPosition = 1
-# Relative frequency of moves that change the location of an event on the tree
+# Relative frequency of MCMC moves that change the location of an event on the tree
 
 updateRateEventRate = 1
-# Relative frequency of moves that change the rate at which events occur 
+# Relative frequency of MCMC moves that change the rate at which events occur 
 
 updateRateLambda0 = 1
-# Relative frequency of moves that change the initial speciation rate
+# Relative frequency of MCMC moves that change the initial speciation rate
 # associated with an event
 
 updateRateLambdaShift = 1
-# Relative frequency of moves that change the exponential shift parameter of 
+# Relative frequency of MCMC moves that change the exponential shift parameter of 
 # a speciation rate associated with an event
 
 updateRateMu0 = 1
-# Relative frequency of moves that change the extinction rate for a given event
+# Relative frequency of MCMC moves that change the extinction rate for a given event
 
 localGlobalMoveRatio = 10.0
-# Ratio of local versus global moves of events 
+# Ratio of local to global moves of events 
 
 ###################################
 # INITIAL PARAMETER VALUES

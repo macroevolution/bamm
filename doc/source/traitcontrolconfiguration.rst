@@ -17,8 +17,9 @@ parameter, an equal sign, and the value of the option or parameter::
 The path of the control file (relative to the current directory) is specified
 with the flag ``-control`` when running bamm. For example::
 
-    ./bamm speciationextinction -control divcontrol.txt
+    ./bamm -control traitcontrol.txt
 
+This document refers to options and parameters for the phenotypic analysis in BAMM.
 
 Global Options and Parameters
 -----------------------------
@@ -32,10 +33,6 @@ specified by the user.
 General
 .......
 
-modeltype
-   Should be "speciationextinction" or "trait".
-   Defines which application of BAMM will un.
-
 treefile
   The file name of the input tree (in Newick format). For diversification analyses, this should be ultrametric.
 
@@ -43,17 +40,17 @@ sampleFromPriorOnly
   If true (1), run BAMM by sampling from the prior only
   (ignoring likelihood contribution to posterior).
   If false (0), run the full analysis.
-
+  
+autotune
+  Experimental option for tuning MCMC operators.
+  
 runMCMC
   If true (1), run the MCMC sampler.
   If false (0), just check to see if the data can be loaded correctly.
 
-autotune
-  Experimental option for tuning MCMC operators.
-
 loadEventData
-  If true (1), load event configuration.
-
+  If true (1), load event configuration (see below, eventDataInfile).
+  
 eventDataInfile
   *Description not yet available.*
 
@@ -75,11 +72,20 @@ rootPrior
 poissonRatePrior
   *Description not yet available.*
   
-General MCMC Simulation Settings & Output Options
+betaInitPrior
+  *Description not yet available.*
+  
+betaShiftPrior
+  *Description not yet available.*
+  
+MCMC Simulation Settings & Output Options
 ...........
 
-NumberGenerations
+numberGenerations
   Number of MCMC generations to run.
+
+branchRatesWriteFreq
+  Frequency (in generations) at which branch-specific mean rates are written to file. Can be computed directly from eventdata using BAMMtools functions.
 
 mcmcWriteFreq
   Frequency (in generations) at which MCMC details will be written to the mcmcOutfile.
@@ -88,6 +94,7 @@ eventDataWriteFreq
   Frequency (in generations) at which event details are written to the eventDataOutfile. 
 
 acceptWriteFreq
+  Prints accept frequency.
 
 printFreq
   Frequency (in generations) of printing output to the screen.
@@ -98,17 +105,16 @@ outName
 mcmcOutfile
   MCMC parameter output will be written to this file.
 
-eventDataOutfile
-  Event details will be written to this file. 
+betaOutfile
+  *Description not yet available.*
   
-updateEventRateScale
+acceptrateOutFile
   *Description not yet available.*
 
-localGlobalMoveRatio
-  *Description not yet available.*
+eventDataOutfile
+  Event details will be written to this file. Raw event data containing all of the results. See BAMMtools for working with this output file.
 
-acceptrateOutfile
-  *Description not yet available.*
+
 
 Parameter Update Rates
 ......................
