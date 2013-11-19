@@ -142,6 +142,7 @@ acceptrateOutfile = accept_rate.txt
 # File containing the accept rates
 
 sampleProbsFilename = sample_probs.txt
+# File containing estimated sampling probabilities of constituent clades. See documentation.
 
 ###################################
 # OPERATORS: MCMC_SCALING_OPERATORS
