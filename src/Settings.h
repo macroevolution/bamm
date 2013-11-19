@@ -1,17 +1,12 @@
-/*
- *  Settings.h
- *  BAMM
- *
- *  Created by Dan Rabosky on 6/9/12.
- *  Copyright 2012 DLR. All rights reserved.
- *
-*/
-
-#ifndef Settings_H
-#define Settings_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
 #include <string>
-#include <stdlib.h>
+#include <map>
+
+#include "SettingsParameter.h"
+
+typedef std::map<std::string, SettingsParameter> ParameterMap;
 
 
 class Settings
@@ -19,810 +14,601 @@ class Settings
 
 private:
 
-    bool _allParametersSetToDefaults;
+	void initializeSettingsDevel(std::string controlFilename);
 
-    bool _runTraitModel;
-    bool _runSpeciationExtinctionModel;
+    void initializeGlobalSettings();
+    void initializeSpeciationExtinctionSettings();
+    void initializeTraitSettings();
 
-    bool _sampleFromPriorOnly;
-    bool _runMCMC;
-    bool _initializeModel;
-    bool _loadEventData;
-	
-	bool _autotune;
+    void initializeSettingsWithUserValues();
 
-    // Files:
-    std::string _treefile;
-    std::string _eventDataInfile;
-	
-	std::string _modeltype;
+    void assertNotUserDefined(const SettingsParameter& parameter) const;
+    void addParameter(const std::string& name, const std::string& value,
+        bool mustBeUserDefined = true);
 
-    // Accounting for incomplete sampling:
-    bool   _useGlobalSamplingProbability;
-    std::string _sampleProbsFilename;
-    double _globalSamplingFraction;
+    // TODO: If filename is a path (e.g., output/mcmc_out.txt),
+    // prefix should only be attached to the file name
+    std::string attachPrefix(const std::string& str) const;
 
-    // Parameters relevant to implementation of class Model:
-    double _updateLambdaInitScale;
-    double _updateMuInitScale;
-    double _updateLambdaShiftScale;
-    double _updateMuShiftScale;
-	double _updateEventLocationScale;
-	
-    double _lambdaInit0;
-    double _lambdaShift0;
-    double _muInit0;
-    double _muShift0;
-	
-//   double _MeanSpeciationLengthFraction;
-    double _updateEventRateScale;
-    double _localGlobalMoveRatio;
-    double _poissonRatePrior;
+    void exitWithErrorUndefinedParameter(const std::string& name) const;
 
-    double _lambdaInitPrior;
-    double _lambdaShiftPrior;
-
-    double _muInitPrior;
-    double _muShiftPrior;
-
-    double _segLength; // Parm for splitting branches
-
-    int _minCladeSizeForShift;
-	
-	long int _seed;
-	bool _overwrite;
-	
-    // Class MCMC parameters::General
-    std::string _mcmcOutfile;
-    std::string _lambdaOutfile;
-    std::string _muOutfile;
-    std::string _acceptrateOutfile;
-    std::string _lambdaNodeOutfile;
-    std::string _eventDataOutfile;
-
-    int _treeWriteFreq;
-    int _mcmcWriteFreq;
-    int _eventDataWriteFreq;
-    int _acceptWriteFreq;
-    int _printFreq;
-    int _NGENS;
-
-    // Class MCMC update weights:
-    double _updateRateEventNumber;
-    double _updateRateEventPosition;
-    double _updateRateEventRate;
-    double _updateRateLambda0;
-    double _updateRateLambdaShift;
-    double _updateRateMu0;
-    double _updateRateMuShift;
-
-    // _updateRateNumberTimeVariablePartitions:
-    //    if non-zero, does rjMCMC to move between partitions
-    //    with fixed and variable rates.
-    double _updateRateNumberTimeVariablePartitions;
-
-    // Can fix number of events on tree if _updateRateEventNumber = 0.0
-    int _initialNumberEvents;
-
-    // Troubleshooting time-variable model:
-
-    /* Specific parameters for class TraitModel */
-    std::string _traitfile;
-
-    double _updateBetaScale;
-    double _updateNodeStateScale;
-    double _updateBetaShiftScale;
-
-    double _betaInit;
-    double _betaShiftInit;
-
-    double _rootPrior;
-    double _betaInitPrior;
-    double _betaShiftPrior;
-    double _traitPriorMin;
-    double _traitPriorMax;
-
-    double _updateRateBeta0;
-    double _updateRateBetaShift;
-    double _updateRateNodeState;
-
-    // Output:
-    std::string _betaOutfile;
-    std::string _nodeStateOutfile;
-
-    bool _useObservedMinMaxAsTraitPriors;
-
+    ParameterMap _parameters;
+    
 	// Parameters to create vectors of input variable names 
 	//	and associated values: 
 	//		these read & populated from controlfile
     std::vector<std::string> _varName;
     std::vector<std::string> _varValue;	
 	
-    /* ################################################# */
-    // Boolean parameters to flag whether default values of a parameter
-    // have changed
-	
-	bool isDefault_modeltype;
-	bool isDefault_autotune;
-	bool isDefault_treefile;
-    bool isDefault_sampleFromPriorOnly;
-    bool isDefault_runTraitModel;
-    bool isDefault_runSpeciationExtinctionModel;
-    bool isDefault_runMCMC;
-    bool isDefault_initializeModel;
-    bool isDefault_loadEventData;
-    bool isDefault_eventDataInfile;
-    bool isDefault_sampleProbsFilename;
-    bool isDefault_useGlobalSamplingProbability;
-    bool isDefault_globalSamplingFraction;
-    bool isDefault_updateLambdaInitScale;
-    bool isDefault_updateMuInitScale;
-    bool isDefault_updateLambdaShiftScale;
-    bool isDefault_updateMuShiftScale;
-    bool isDefault_lambdaInit0;
-    bool isDefault_lambdaShift0;
-    bool isDefault_muInit0;
-    bool isDefault_muShift0;
-    bool isDefault_updateEventRateScale;
-    bool isDefault_localGlobalMoveRatio;
-    bool isDefault_poissonRatePrior;
-    bool isDefault_lambdaInitPrior;
-    bool isDefault_lambdaShiftPrior;
-    bool isDefault_muInitPrior;
-    bool isDefault_muShiftPrior;
-    bool isDefault_updateEventLocationScale;
-    bool isDefault_segLength;
-    bool isDefault_mcmcOutfile;
-    bool isDefault_eventDataOutfile;
-    bool isDefault_lambdaOutfile;
-    bool isDefault_muOutfile;
-    bool isDefault_acceptrateOutfile;
-    bool isDefault_lambdaNodeOutfile;
-    bool isDefault_treeWriteFreq;
-    bool isDefault_eventDataWriteFreq;
-    bool isDefault_mcmcWriteFreq;
-    bool isDefault_acceptWriteFreq;
-    bool isDefault_printFreq;
-    bool isDefault_NGENS;
-    bool isDefault_updateRateEventNumber;
-    bool isDefault_updateRateEventPosition;
-    bool isDefault_updateRateEventRate;
-    bool isDefault_updateRateLambda0;
-    bool isDefault_updateRateLambdaShift;
-    bool isDefault_updateRateMu0;
-    bool isDefault_updateRateMuShift;
-    bool isDefault_initialNumberEvents;
-    bool isDefault_updateRateNumberTimeVariablePartitions;
-
-    bool isDefault_minCladeSizeForShift;
-    
-    bool isDefault_seed;
-    bool isDefault_overwrite;
-
-    /* specific to trait evolution */
-    bool isDefault_traitfile;
-
-    bool isDefault_updateBetaScale;
-    bool isDefault_updateNodeStateScale;
-    bool isDefault_updateBetaShiftScale;
-
-    bool isDefault_betaInit;
-    bool isDefault_betaShift;
-    bool isDefault_betaInitPrior;
-    bool isDefault_betaShiftPrior;
-
-    bool isDefault_rootPrior;
-    bool isDefault_traitPriorMin;
-    bool isDefault_traitPriorMax;
-
-    bool isDefault_updateRateBeta0;
-    bool isDefault_updateRateNodeState;
-    bool isDefault_updateRateBetaShift;
-
-    bool isDefault_useObservedMinMaxAsTraitPriors;
-    bool isDefault_betaOutfile;
-    bool isDefault_nodeStateOutfile;
-
 public:
 
-    Settings();
-    ~Settings();
-
-	void initializeSettingsDevel(std::string controlFilename);
-	
-	
-    void initializeSettingsDefaults_Traits();
-    void initializeSettings_Traits();
-
-    void initializeSettings_Diversification();
-    void initializeSettingsDefaults_Diversification();
-
-    void checkAreInitialSettingsValid_Diversification();
-    void checkAreInitialSettingsValid_Traits();
-
-    void printCurrentSettings_Traits(bool printOnlyChangesToDefaults);
-    void printCurrentSettings_Diversification(bool printOnlyChangesToDefaults);
-
-	std::string getModeltype();
-	
-    bool stringToBool(const char* x);
     void parseCommandLineInput(int argc, std::vector<std::string>& instrings);
+    void checkSettingsAreUserDefined() const;
+    void printCurrentSettings() const;
 
-    bool areAllParametersSetToDefaults();
-    bool getRunTraitModel();
-    bool getRunSpeciationExtinctionModel();
-
+	std::string getModeltype() const;
+	
     // Functions to access parameters for MCMC/Model/Other
     // from Class Settings object:
-    bool getUseGlobalSamplingProbability();
-    bool getSampleFromPriorOnly();
-    bool getRunMCMC();
-    bool getInitializeModel();
-	bool getAutotune();
+    bool getUseGlobalSamplingProbability() const;
+    bool getSampleFromPriorOnly() const;
+    bool getRunMCMC() const;
+    bool getInitializeModel() const;
+	bool getAutotune() const;
 
     // Load previous settings?
-    bool   getLoadEventData();
-    std::string getEventDataInfile();
+    bool getLoadEventData() const;
+    std::string getEventDataInfile() const;
 
     // Sampling probabilities:
-    std::string getTreeFilename();
-    std::string getSampleProbsFilename();
-    double getGlobalSamplingFraction();
+    std::string getTreeFilename() const;
+    std::string getSampleProbsFilename() const;
+    double getGlobalSamplingFraction() const;
 
     // Class Model parameters:
-    double getUpdateLambdaInitScale();
-    double getUpdateMuInitScale();
-    double getUpdateLambdaShiftScale();
-    double getUpdateMuShiftScale();
-    double getLambdaInit0();
-    double getLambdaShift0();
-    double getMuInit0();
-	double getMuShift0();
-	double getUpdateEventLocationScale();
+    double getUpdateLambdaInitScale() const;
+    double getUpdateMuInitScale() const;
+    double getUpdateLambdaShiftScale() const;
+    double getUpdateMuShiftScale() const;
+    double getLambdaInit0() const;
+    double getLambdaShift0() const;
+    double getMuInit0() const;
+	double getMuShift0() const;
+	double getUpdateEventLocationScale() const;
 
 	//    double getMeanSpeciationLengthFraction();
-    double getUpdateEventRateScale();
-    double getLocalGlobalMoveRatio();
-    double getPoissonRatePrior();
-    double getLambdaInitPrior();
-    double getLambdaShiftPrior();
-    double getMuInitPrior();
-    double getMuShiftPrior();
-    double getSegLength();
+    double getUpdateEventRateScale() const;
+    double getLocalGlobalMoveRatio() const;
+    double getPoissonRatePrior() const;
+    double getLambdaInitPrior() const;
+    double getLambdaShiftPrior() const;
+    double getMuInitPrior() const;
+    double getMuShiftPrior() const;
+    double getSegLength() const;
 
-    int getMinCladeSizeForShift();
-    long int getSeed();
-    bool getOverwrite();
+    int getMinCladeSizeForShift() const;
+    long int getSeed() const;
+    bool getOverwrite() const;
 	
 	// Functions to set MCMC operators for autotuning:
 	void setUpdateLambdaInitScale(double x);
 	void setUpdateMuInitScale(double x);
 	void setUpdateLambdaShiftScale(double x);
-//	void setMeanSpeciationLengthFraction(double x);
 	void setUpdateEventRateScale(double x);
 	void setUpdateEventLocationScale(double x);
-	
 
     // Class MCMC parameters:
-    std::string getMCMCoutfile();
-    std::string getEventDataOutfile();
-    std::string getLambdaOutfile();
-    std::string getMuOutfile();
-    std::string getAcceptrateOutfile();
-    std::string getLambdaNodeOutfile();
+    std::string getMCMCoutfile() const;
+    std::string getEventDataOutfile() const;
+    std::string getLambdaOutfile() const;
+    std::string getMuOutfile() const;
+    std::string getAcceptrateOutfile() const;
+    std::string getLambdaNodeOutfile() const;
 
-    int getBranchRatesWriteFreq();
-    int getEventDataWriteFreq();
-    int getMCMCwriteFreq();
-    int getAcceptWriteFreq();
-    int getPrintFreq();
-    int getNGENS();
+    int getBranchRatesWriteFreq() const;
+    int getEventDataWriteFreq() const;
+    int getMCMCwriteFreq() const;
+    int getAcceptWriteFreq() const;
+    int getPrintFreq() const;
+    int getNGENS() const;
 
     // Class MCMC parameter update weights:
-    double getUpdateRateEventNumber();
-    double getUpdateRateEventPosition();
-    double getUpdateRateEventRate();
-    double getUpdateRateLambda0();
-    double getUpdateRateLambdaShift();
-    double getUpdateRateMu0();
-    double getUpdateRateMuShift();
-    double getUpdateRateNumberTimeVariablePartitions();
+    double getUpdateRateEventNumber() const;
+    double getUpdateRateEventPosition() const;
+    double getUpdateRateEventRate() const;
+    double getUpdateRateLambda0() const;
+    double getUpdateRateLambdaShift() const;
+    double getUpdateRateMu0() const;
+    double getUpdateRateMuShift() const;
+    double getUpdateRateNumberTimeVariablePartitions() const;
 
     // Other:
-    int getInitialNumberEvents();
+    int getInitialNumberEvents() const;
 
     /* Parameters specific to trait evolution module */
 
-    std::string getTraitFile();
+    std::string getTraitFile() const;
 
-    double getUpdateBetaScale();
-    double getUpdateNodeStateScale();
-    double getUpdateBetaShiftScale();
-    double getBetaInit();
-    double getBetaShiftInit();
-    double getRootPrior();
-    double getBetaInitPrior();
-    double getBetaShiftPrior();
-    double getTraitPriorMin();
-    double getTraitPriorMax();
-    double getUpdateRateBeta0();
-    double getUpdateRateBetaShift();
-    double getUpdateRateNodeState();
-    bool   getUseObservedMinMaxAsTraitPriors();
+    double getUpdateBetaScale() const;
+    double getUpdateNodeStateScale() const;
+    double getUpdateBetaShiftScale() const;
+    double getBetaInit() const;
+    double getBetaShiftInit() const;
+    double getRootPrior() const;
+    double getBetaInitPrior() const;
+    double getBetaShiftPrior() const;
+    double getTraitPriorMin() const;
+    double getTraitPriorMax() const;
+    double getUpdateRateBeta0() const;
+    double getUpdateRateBetaShift() const;
+    double getUpdateRateNodeState() const;
+    bool   getUseObservedMinMaxAsTraitPriors() const;
     void   setTraitPriorMin(double x);
     void   setTraitPriorMax(double x);
-    std::string getBetaOutfile();
-    std::string getNodeStateOutfile();
+    std::string getBetaOutfile() const;
+    std::string getNodeStateOutfile() const;
 };
 
 
-inline bool Settings::areAllParametersSetToDefaults()
+inline bool Settings::getAutotune() const
 {
-    return _allParametersSetToDefaults;
+	return _parameters.at("autotune").value<bool>();
 }
 
 
-inline bool Settings::getRunTraitModel()
+inline bool Settings::getUseGlobalSamplingProbability() const
 {
-    return _runTraitModel;
+    return _parameters.at("useGlobalSamplingProbability").value<bool>();
 }
 
-inline bool Settings::getAutotune()
-{
-	return _autotune;
-}
 
-inline bool Settings::getRunSpeciationExtinctionModel()
+inline bool Settings::getSampleFromPriorOnly() const
 {
-    return _runSpeciationExtinctionModel;
+    return _parameters.at("sampleFromPriorOnly").value<bool>();
 }
 
 
-inline bool Settings::getUseGlobalSamplingProbability()
+inline bool Settings::getRunMCMC() const
 {
-    return _useGlobalSamplingProbability;
+    return _parameters.at("runMCMC").value<bool>();
 }
 
 
-inline bool Settings::getSampleFromPriorOnly()
+inline bool Settings::getInitializeModel() const
 {
-    return _sampleFromPriorOnly;
+    return _parameters.at("initializeModel").value<bool>();
 }
 
 
-inline bool Settings::getRunMCMC()
+inline bool Settings::getLoadEventData() const
 {
-    return _runMCMC;
+    return _parameters.at("loadEventData").value<bool>();
 }
 
 
-inline bool Settings::getInitializeModel()
+inline std::string Settings::getEventDataInfile() const
 {
-    return _initializeModel;
+    return _parameters.at("eventDataInfile").value<std::string>();
 }
 
 
-inline bool Settings::getLoadEventData()
+inline std::string Settings::getTreeFilename() const
 {
-    return  _loadEventData;
+    return _parameters.at("treefile").value<std::string>();
 }
 
 
-inline std::string Settings::getEventDataInfile()
+inline std::string Settings::getSampleProbsFilename() const
 {
-    return  _eventDataInfile;
+    return attachPrefix
+        (_parameters.at("sampleProbsFilename").value<std::string>());
 }
 
 
-inline std::string Settings::getTreeFilename()
+inline double Settings::getGlobalSamplingFraction() const
 {
-    return _treefile;
+    return _parameters.at("globalSamplingFraction").value<double>();
 }
 
 
-inline std::string Settings::getSampleProbsFilename()
+inline double Settings::getUpdateLambdaInitScale() const
 {
-    return _sampleProbsFilename;
+    return _parameters.at("updateLambdaInitScale").value<double>();
 }
 
 
-inline double Settings::getGlobalSamplingFraction()
+inline double Settings::getUpdateMuInitScale() const
 {
-    return _globalSamplingFraction;
+    return _parameters.at("updateMuInitScale").value<double>();
 }
 
 
-inline double Settings::getUpdateLambdaInitScale()
+inline double Settings::getUpdateLambdaShiftScale() const
 {
-    return _updateLambdaInitScale;
+    return _parameters.at("updateLambdaShiftScale").value<double>();
 }
 
 
-inline double Settings::getUpdateMuInitScale()
+inline double Settings::getUpdateMuShiftScale() const
 {
-    return _updateMuInitScale;
+    return _parameters.at("updateMuShiftScale").value<double>();
 }
 
 
-inline double Settings::getUpdateLambdaShiftScale()
+inline double Settings::getLambdaInit0() const
 {
-    return _updateLambdaShiftScale;
+    return _parameters.at("lambdaInit0").value<double>();
 }
 
 
-inline double Settings::getUpdateMuShiftScale()
+inline double Settings::getLambdaShift0() const
 {
-    return _updateMuShiftScale;
+    return _parameters.at("lambdaShift0").value<double>();
 }
 
 
-inline double Settings::getLambdaInit0()
+inline double Settings::getMuInit0() const
 {
-    return _lambdaInit0;
+    return _parameters.at("muInit0").value<double>();
 }
 
 
-inline double Settings::getLambdaShift0()
+inline double Settings::getMuShift0() const
 {
-    return _lambdaShift0;
+    return _parameters.at("muShift0").value<double>();
 }
 
 
-inline double Settings::getMuInit0()
+inline double Settings::getUpdateEventRateScale() const
 {
-    return _muInit0;
+    return _parameters.at("updateEventRateScale").value<double>();
 }
 
 
-inline double Settings::getMuShift0()
+inline double Settings::getLocalGlobalMoveRatio() const
 {
-    return _muShift0;
+    return _parameters.at("localGlobalMoveRatio").value<double>();
 }
 
 
-
-inline double Settings::getUpdateEventRateScale()
+inline double Settings::getPoissonRatePrior() const
 {
-    return _updateEventRateScale;
+    return _parameters.at("poissonRatePrior").value<double>();
 }
 
 
-inline double Settings::getLocalGlobalMoveRatio()
+inline double Settings::getLambdaInitPrior() const
 {
-    return _localGlobalMoveRatio;
+    return _parameters.at("lambdaInitPrior").value<double>();
 }
 
 
-inline double Settings::getPoissonRatePrior()
+inline double Settings::getLambdaShiftPrior() const
 {
-    return _poissonRatePrior;
+    return _parameters.at("lambdaShiftPrior").value<double>();
 }
 
 
-inline double Settings::getLambdaInitPrior()
+inline double Settings::getMuInitPrior() const
 {
-    return _lambdaInitPrior;
+    return _parameters.at("muInitPrior").value<double>();
 }
 
 
-inline double Settings::getLambdaShiftPrior()
+inline double Settings::getMuShiftPrior() const
 {
-    return _lambdaShiftPrior;
+    return _parameters.at("muShiftPrior").value<double>();
 }
 
 
-inline double Settings::getMuInitPrior()
+inline double Settings::getSegLength() const
 {
-    return _muInitPrior;
+    return _parameters.at("segLength").value<double>();
 }
 
 
-inline double Settings::getMuShiftPrior()
+inline int Settings::getMinCladeSizeForShift() const
 {
-    return _muShiftPrior;
+    return _parameters.at("minCladeSizeForShift").value<int>();
 }
 
 
-inline double Settings::getSegLength()
+inline long int Settings::getSeed() const
 {
-    return _segLength;
+    return _parameters.at("seed").value<long int>();
 }
-
 
-inline int Settings::getMinCladeSizeForShift()
-{
-    return _minCladeSizeForShift;
-}
 
-inline long int Settings::getSeed()
+inline bool Settings::getOverwrite() const
 {
-    return _seed;
+    return _parameters.at("overwrite").value<bool>();
 }
 
-inline bool Settings::getOverwrite()
-{
-    return _overwrite;
-}
 
-inline std::string Settings::getMCMCoutfile()
+inline std::string Settings::getMCMCoutfile() const
 {
-    return _mcmcOutfile;
+    return attachPrefix(_parameters.at("mcmcOutfile").value<std::string>());
 }
 
 
-inline std::string Settings::getEventDataOutfile()
+inline std::string Settings::getEventDataOutfile() const
 {
-    return _eventDataOutfile;
+    return attachPrefix
+        (_parameters.at("eventDataOutfile").value<std::string>());
 }
 
 
-inline std::string Settings::getLambdaOutfile()
+inline std::string Settings::getLambdaOutfile() const
 {
-    return _lambdaOutfile;
+    return attachPrefix(_parameters.at("lambdaOutfile").value<std::string>());
 }
 
 
-inline std::string Settings::getMuOutfile()
+inline std::string Settings::getMuOutfile() const
 {
-    return _muOutfile;
+    return attachPrefix(_parameters.at("muOutfile").value<std::string>());
 }
 
 
-inline std::string Settings::getAcceptrateOutfile()
+inline std::string Settings::getAcceptrateOutfile() const
 {
-    return _acceptrateOutfile;
+    return attachPrefix
+        (_parameters.at("acceptrateOutfile").value<std::string>());
 }
 
 
-inline std::string Settings::getLambdaNodeOutfile()
+inline std::string Settings::getLambdaNodeOutfile() const
 {
-    return _lambdaNodeOutfile;
+    return attachPrefix
+        (_parameters.at("lambdaNodeOutfile").value<std::string>());
 }
 
 
-inline int Settings::getBranchRatesWriteFreq()
+inline int Settings::getBranchRatesWriteFreq() const
 {
-    return _treeWriteFreq;
+    return _parameters.at("branchRatesWriteFreq").value<int>();
 }
 
 
-inline int Settings::getEventDataWriteFreq()
+inline int Settings::getEventDataWriteFreq() const
 {
-    return _eventDataWriteFreq;
+    return _parameters.at("eventDataWriteFreq").value<int>();
 }
 
 
-inline int Settings::getMCMCwriteFreq()
+inline int Settings::getMCMCwriteFreq() const
 {
-    return _mcmcWriteFreq;
+    return _parameters.at("mcmcWriteFreq").value<int>();
 }
 
 
-inline int Settings::getAcceptWriteFreq()
+inline int Settings::getAcceptWriteFreq() const
 {
-    return _acceptWriteFreq;
+    return _parameters.at("acceptWriteFreq").value<int>();
 }
 
 
-inline int Settings::getPrintFreq()
+inline int Settings::getPrintFreq() const
 {
-    return _printFreq;
+    return _parameters.at("printFreq").value<int>();
 }
 
 
-inline int Settings::getNGENS()
+inline int Settings::getNGENS() const
 {
-    return _NGENS;
+    return _parameters.at("numberGenerations").value<int>();
 }
 
 
-inline double Settings::getUpdateRateEventNumber()
+inline double Settings::getUpdateRateEventNumber() const
 {
-    return _updateRateEventNumber;
+    return _parameters.at("updateRateEventNumber").value<double>();
 }
 
 
-inline double Settings::getUpdateRateEventPosition()
+inline double Settings::getUpdateRateEventPosition() const
 {
-    return _updateRateEventPosition;
+    return _parameters.at("updateRateEventPosition").value<double>();
 }
 
 
-inline double Settings::getUpdateRateEventRate()
+inline double Settings::getUpdateRateEventRate() const
 {
-    return _updateRateEventRate;
+    return _parameters.at("updateRateEventRate").value<double>();
 }
 
 
-inline double Settings::getUpdateRateLambda0()
+inline double Settings::getUpdateRateLambda0() const
 {
-    return _updateRateLambda0;
+    return _parameters.at("updateRateLambda0").value<double>();
 }
 
 
-inline double Settings::getUpdateRateLambdaShift()
+inline double Settings::getUpdateRateLambdaShift() const
 {
-    return _updateRateLambdaShift;
+    return _parameters.at("updateRateLambdaShift").value<double>();
 }
 
 
-inline double Settings::getUpdateRateMu0()
+inline double Settings::getUpdateRateMu0() const
 {
-    return _updateRateMu0;
+    return _parameters.at("updateRateMu0").value<double>();
 }
 
 
-inline double Settings::getUpdateRateMuShift()
+inline double Settings::getUpdateRateMuShift() const
 {
-    return _updateRateMuShift;
+    return _parameters.at("updateRateMuShift").value<double>();
 }
 
 
-inline double Settings::getUpdateRateNumberTimeVariablePartitions()
+inline double Settings::getUpdateRateNumberTimeVariablePartitions() const
 {
-    return _updateRateNumberTimeVariablePartitions;
+    return _parameters.at("updateRateNumberTimeVariablePartitions").value<double>();
 }
 
 
-inline int Settings::getInitialNumberEvents()
+inline int Settings::getInitialNumberEvents() const
 {
-    return _initialNumberEvents;
+    return _parameters.at("initialNumberEvents").value<int>();
 }
 
 
-inline std::string Settings::getTraitFile()
+inline std::string Settings::getTraitFile() const
 {
-    return _traitfile;
+    return _parameters.at("traitfile").value<std::string>();
 }
 
 
-inline double Settings::getUpdateBetaScale()
+inline double Settings::getUpdateBetaScale() const
 {
-    return _updateBetaScale;
+    return _parameters.at("updateBetaScale").value<double>();
 }
 
 
-inline double Settings::getUpdateNodeStateScale()
+inline double Settings::getUpdateNodeStateScale() const
 {
-    return _updateNodeStateScale;
+    return _parameters.at("updateNodeStateScale").value<double>();
 }
 
 
-inline double Settings::getUpdateBetaShiftScale()
+inline double Settings::getUpdateBetaShiftScale() const
 {
-    return _updateBetaShiftScale;
+    return _parameters.at("updateBetaShiftScale").value<double>();
 }
 
 
-inline double Settings::getBetaInit()
+inline double Settings::getBetaInit() const
 {
-    return _betaInit;
+    return _parameters.at("betaInit").value<double>();
 }
 
 
-inline double Settings::getBetaShiftInit()
+inline double Settings::getBetaShiftInit() const
 {
-    return _betaShiftInit;
+    return _parameters.at("betaShiftInit").value<double>();
 }
 
 
-inline double Settings::getRootPrior()
+inline double Settings::getRootPrior() const
 {
-    return _rootPrior;
+    return _parameters.at("rootPrior").value<double>();
 }
 
 
-inline double Settings::getBetaInitPrior()
+inline double Settings::getBetaInitPrior() const
 {
-    return _betaInitPrior;
+    return _parameters.at("betaInitPrior").value<double>();
 }
 
 
-inline double Settings::getBetaShiftPrior()
+inline double Settings::getBetaShiftPrior() const
 {
-    return _betaShiftPrior;
+    return _parameters.at("betaShiftPrior").value<double>();
 }
 
 
-inline double Settings::getTraitPriorMin()
+inline double Settings::getTraitPriorMin() const
 {
-    return _traitPriorMin;
+    return _parameters.at("traitPriorMin").value<double>();
 }
 
 
-inline double Settings::getTraitPriorMax()
+inline double Settings::getTraitPriorMax() const
 {
-    return _traitPriorMax;
+    return _parameters.at("traitPriorMax").value<double>();
 }
 
 
-inline double Settings::getUpdateRateBeta0()
+inline double Settings::getUpdateRateBeta0() const
 {
-    return _updateRateBeta0;
+    return _parameters.at("updateRateBeta0").value<double>();
 }
 
 
-inline double Settings::getUpdateRateBetaShift()
+inline double Settings::getUpdateRateBetaShift() const
 {
-    return _updateRateBetaShift;
+    return _parameters.at("updateRateBetaShift").value<double>();
 }
 
 
-inline double Settings::getUpdateRateNodeState()
+inline double Settings::getUpdateRateNodeState() const
 {
-    return _updateRateNodeState;
+    return _parameters.at("updateRateNodeState").value<double>();
 }
 
 
-inline bool Settings::getUseObservedMinMaxAsTraitPriors()
+inline bool Settings::getUseObservedMinMaxAsTraitPriors() const
 {
-    return _useObservedMinMaxAsTraitPriors;
+    return _parameters.at("useObservedMinMaxAsTraitPriors").value<bool>();
 }
 
 
 inline void Settings::setTraitPriorMin(double x)
 {
-    _traitPriorMin = x;
+    _parameters.at("traitPriorMin").setValue<double>(x);
 }
 
 
 inline void Settings::setTraitPriorMax(double x)
 {
-    _traitPriorMax = x;
+    _parameters.at("traitPriorMax").setValue<double>(x);
 }
 
 
-inline std::string Settings::getBetaOutfile()
+inline std::string Settings::getBetaOutfile() const
 {
-    return _betaOutfile;
+    return attachPrefix(_parameters.at("betaOutfile").value<std::string>());
 }
 
 
-inline std::string Settings::getNodeStateOutfile()
+inline std::string Settings::getNodeStateOutfile() const
 {
-    return _nodeStateOutfile;
+    return attachPrefix
+        (_parameters.at("nodeStateOutfile").value<std::string>());
 }
 
-inline std::string Settings::getModeltype()
+
+inline std::string Settings::getModeltype() const
 {
-	return _modeltype;
+	return _parameters.at("modeltype").value<std::string>();
 }
+
 
 inline void Settings::setUpdateLambdaInitScale(double x)
 {
-	_updateLambdaInitScale = x;
+	_parameters.at("updateLambdaInitScale").setValue<double>(x);
 }
+
 
 inline void Settings::setUpdateMuInitScale(double x)
 {
-	_updateMuInitScale = x;
+	_parameters.at("updateMuInitScale").setValue<double>(x);
 }
+
 
 inline void Settings::setUpdateLambdaShiftScale(double x)
 {
-	_updateLambdaShiftScale = x;
+	_parameters.at("updateLambdaShiftScale").setValue<double>(x);
 }
 
-/* Deprecating
-inline void Settings::setMeanSpeciationLengthFraction(double x)
- {
-	_MeanSpeciationLengthFraction = x;
-}
-*/ 
- 
 
-inline void Settings::setUpdateEventRateScale(double x){
-	_updateEventRateScale = x;
-}
-
-inline double Settings::getUpdateEventLocationScale()
+inline void Settings::setUpdateEventRateScale(double x)
 {
-	return _updateEventLocationScale;
+	_parameters.at("updateEventRateScale").setValue<double>(x);
 }
+
+
+inline double Settings::getUpdateEventLocationScale() const
+{
+	return _parameters.at("updateEventLocationScale").value<double>();
+}
+
 
 inline void Settings::setUpdateEventLocationScale(double x)
 {
-	_updateEventLocationScale = x;
+	_parameters.at("updateEventLocationScale").setValue<double>(x);
 }
+
 
 #endif

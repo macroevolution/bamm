@@ -20,6 +20,8 @@
 		458C5C0618342E6500E752D3 /* TraitMCMC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 458C5BF518342E6500E752D3 /* TraitMCMC.cpp */; };
 		458C5C0718342E6500E752D3 /* TraitModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 458C5BF718342E6500E752D3 /* TraitModel.cpp */; };
 		458C5C0818342E6500E752D3 /* Tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 458C5BF918342E6500E752D3 /* Tree.cpp */; };
+		458C5C11183BDC3B00E752D3 /* Autotune.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 458C5C0D183BDC3A00E752D3 /* Autotune.cpp */; };
+		458C5C12183BDC3B00E752D3 /* SettingsParameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 458C5C0F183BDC3B00E752D3 /* SettingsParameter.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -62,6 +64,10 @@
 		458C5BF918342E6500E752D3 /* Tree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Tree.cpp; path = ../../src/Tree.cpp; sourceTree = "<group>"; };
 		458C5BFA18342E6500E752D3 /* Tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tree.h; path = ../../src/Tree.h; sourceTree = "<group>"; };
 		458C5BFB18342E6500E752D3 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../src/Utilities.h; sourceTree = "<group>"; };
+		458C5C0D183BDC3A00E752D3 /* Autotune.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Autotune.cpp; path = ../../src/Autotune.cpp; sourceTree = "<group>"; };
+		458C5C0E183BDC3B00E752D3 /* Autotune.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Autotune.h; path = ../../src/Autotune.h; sourceTree = "<group>"; };
+		458C5C0F183BDC3B00E752D3 /* SettingsParameter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SettingsParameter.cpp; path = ../../src/SettingsParameter.cpp; sourceTree = "<group>"; };
+		458C5C10183BDC3B00E752D3 /* SettingsParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsParameter.h; path = ../../src/SettingsParameter.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +100,10 @@
 		458C5BD918342D7B00E752D3 /* bamm */ = {
 			isa = PBXGroup;
 			children = (
+				458C5C0D183BDC3A00E752D3 /* Autotune.cpp */,
+				458C5C0E183BDC3B00E752D3 /* Autotune.h */,
+				458C5C0F183BDC3B00E752D3 /* SettingsParameter.cpp */,
+				458C5C10183BDC3B00E752D3 /* SettingsParameter.h */,
 				458C5BE218342E6500E752D3 /* BranchEvent.cpp */,
 				458C5BE318342E6500E752D3 /* BranchEvent.h */,
 				458C5BE418342E6500E752D3 /* BranchHistory.cpp */,
@@ -187,6 +197,8 @@
 				458C5C0618342E6500E752D3 /* TraitMCMC.cpp in Sources */,
 				458C5C0718342E6500E752D3 /* TraitModel.cpp in Sources */,
 				458C5C0818342E6500E752D3 /* Tree.cpp in Sources */,
+				458C5C11183BDC3B00E752D3 /* Autotune.cpp in Sources */,
+				458C5C12183BDC3B00E752D3 /* SettingsParameter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,6 +283,7 @@
 				458C5BDF18342D7B00E752D3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

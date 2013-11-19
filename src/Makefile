@@ -1,4 +1,4 @@
-OBJS = main.o Autotune.o BranchHistory.o MCMC.o BranchEvent.o Node.o Tree.o Settings.o TraitModel.o TraitMCMC.o MbRandom.o TraitBranchHistory.o TraitBranchEvent.o Model.o
+OBJS = main.o Autotune.o BranchHistory.o MCMC.o BranchEvent.o Node.o Tree.o Settings.o SettingsParameter.o TraitModel.o TraitMCMC.o MbRandom.o TraitBranchHistory.o TraitBranchEvent.o Model.o
 CC = g++
 DEBUG = -g
 CFLAGS = -Wall -c -m64 -O3 -funroll-loops $(DEBUG)
@@ -30,6 +30,9 @@ Tree.o: Tree.cpp Tree.h
 
 Settings.o: Settings.cpp Settings.h
 	$(CC) $(CFLAGS) Settings.cpp
+
+SettingsParameter.o: SettingsParameter.cpp SettingsParameter.h
+	$(CC) $(CFLAGS) SettingsParameter.cpp
 
 TraitModel.o: TraitModel.cpp TraitModel.h TraitBranchEvent.h
 	$(CC) $(CFLAGS) TraitModel.cpp

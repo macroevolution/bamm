@@ -73,6 +73,18 @@ int main (int argc, char* argv[])
     MbRandom myRNG(mySettings.getSeed());
     std::cout << mySettings.getModeltype() << std::endl;
     
+/*
+    double terp = 0.0;
+    std::cout << "TESTING uniformRv:" << std::endl;
+    for (int i = 0; i < 10000000; i++) {
+        terp = myRNG.uniformRv();
+        if (i > 9999975) { // only print out the last few numbers
+            std::cout << i << ": " << terp << std::endl;
+        }
+    }
+    exit(0);
+*/
+    
     if (mySettings.getModeltype() == "speciationextinction") {
         std::cout << "Initializing diversification (speciationextinction) model" << std::endl;
         for (int i = 0; i < 20; i++) {
@@ -81,7 +93,8 @@ int main (int argc, char* argv[])
         
         std::cout << std::endl << std::endl  << "SPECIATION-EXTINCTION BAMM" << std::endl << std::endl;
     
-        mySettings.printCurrentSettings_Diversification(true);
+        mySettings.printCurrentSettings();
+        mySettings.checkSettingsAreUserDefined();
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
         
@@ -118,7 +131,8 @@ int main (int argc, char* argv[])
         }
         std::cout << std::endl << std::endl  << "TRAIT DIVERSIFICATION BAMM" << std::endl << std::endl;
         
-        mySettings.checkAreInitialSettingsValid_Traits();
+        mySettings.printCurrentSettings();
+        mySettings.checkSettingsAreUserDefined();
 
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
