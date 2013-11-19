@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <cstdlib>
 
 #include "MCMC.h"
 #include "Model.h"
@@ -59,7 +60,7 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
         outStream.close();
         std::string filedelete("rm ");
         filedelete.append(mcmcOutfile);
-        system(filedelete.c_str());
+        std::system(filedelete.c_str());
     }
 
     //check if file exists; delete;
@@ -78,7 +79,7 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
         outStream2.close();
         std::string filedelete("rm ");
         filedelete.append(lambdaOutfile);
-        system(filedelete.c_str());
+        std::system(filedelete.c_str());
     }
 
     std::ifstream outStream3(muOutfile.c_str());
@@ -96,7 +97,7 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
         outStream3.close();
         std::string filedelete("rm ");
         filedelete.append(muOutfile);
-        system(filedelete.c_str());
+        std::system(filedelete.c_str());
     }
 
 
@@ -109,7 +110,7 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
         outStream4.close();
         std::string filedelete("rm ");
         filedelete.append(acceptFile);
-        system(filedelete.c_str());
+        std::system(filedelete.c_str());
     }
 */ 
 
@@ -123,7 +124,7 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
         outStream5.close();
         std::string filedelete("rm ");
         filedelete.append(lambdaNodeOutfile);
-        system(filedelete.c_str());
+        std::system(filedelete.c_str());
     }
 */
  
@@ -142,7 +143,7 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
         outStream6.close();
         std::string filedelete("rm ");
         filedelete.append(eventDataFile);
-        system(filedelete.c_str());
+        std::system(filedelete.c_str());
     }
 
 
