@@ -122,7 +122,6 @@ updateRateEventRate
 initialNumberEvents
   *Description not yet available.*
 
-
 Speciation/Extinction Model
 ---------------------------
 
@@ -142,8 +141,35 @@ globalSamplingProbability
 sampleProbsFilename
   Specifies a file with clade-specific corrections for incomplete sampling.
 
-MCMC Tuning
+Priors
+......
+
+lambdaInitPrior
+  Mean of the exponential distribution prior on speciation.
+
+lambdaShiftPrior
+  Prior on the speciation rate change parameter.
+
+muInitPrior
+  Exponential prior on extinction.
+
+muShiftPrior
+  *Description not yet available.*
+
+segLength
+  *Description not yet available.*
+
+General MCMC Simulation Settings & Output Options
 ...........
+
+lambdaOutfile
+  Branch-specific speciation rates will be written to this file as newick-formatted trees.
+
+muOutfile
+  Branch-specific extinction rates will be written to this file as newick-formatted trees.
+
+lambdaNodeOutfile
+  *Description not yet available.*
 
 updateLambdaInitScale
   *Description not yet available.*
@@ -176,36 +202,6 @@ muInit0
 
 muShift0
   Starting initial rate change parameter for extinction. Currently not implemented.
-
-Priors
-......
-
-lambdaInitPrior
-  Mean of the exponential distribution prior on speciation.
-
-lambdaShiftPrior
-  Prior on the speciation rate change parameter.
-
-muInitPrior
-  Exponential prior on extinction.
-
-muShiftPrior
-  *Description not yet available.*
-
-segLength
-  *Description not yet available.*
-
-Output
-......
-
-lambdaOutfile
-  Branch-specific speciation rates will be written to this file as newick-formatted trees.
-
-muOutfile
-  Branch-specific extinction rates will be written to this file as newick-formatted trees.
-
-lambdaNodeOutfile
-  *Description not yet available.*
 
 Parameter Update Rates
 ......................
