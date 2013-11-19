@@ -732,14 +732,13 @@ void Model::deleteEventFromTree(BranchEvent* be)
 
         currNode->getBranchHistory()->popEventOffBranchHistory((be));
 
+        eventCollection.erase(be);
+
         // delete from global node set
         delete (be);
         //std::cout << "deleted..." << std::endl;
 
-        eventCollection.erase(be);
-
         forwardSetBranchHistories(newLastEvent);
-
     }
 
 
@@ -829,11 +828,10 @@ void Model::deleteRandomEventFromTree(void)
 
                 currNode->getBranchHistory()->popEventOffBranchHistory((*i));
 
+                eventCollection.erase(i);
 
                 // delete from global node set
                 delete (*i);
-
-                eventCollection.erase(i);
 
                 forwardSetBranchHistories(newLastEvent);
 
