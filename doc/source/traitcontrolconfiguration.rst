@@ -114,204 +114,74 @@ acceptrateOutFile
 eventDataOutfile
   Event details will be written to this file. Raw event data containing all of the results. See BAMMtools for working with this output file.
 
+nodeStateOutfile
+  *Description not yet available.*
 
-
-Parameter Update Rates
+MCMC Scaling Operators
 ......................
-
-updateRateEventNumber
-  Frequency of updating the number of events (shifts) on the tree.
-
-updateRateEventPosition
-  Frequency of moving the position of a shift point.
-
-updateRateEventRate
-  Frequency of updating the rate at which events occur.
-
-initialNumberEvents
-  *Description not yet available.*
-
-Speciation/Extinction Model
----------------------------
-
-The following describes configuration options and parameters
-specifically for speciation/extinction analyses.
-
-General
-.......
-
-useGlobalSamplingProbability
-  If true (1), will look for a global correction for incomplete sampling (globalSamplingProbability)
-  If false (0), will look for a file that specifies clade-specific corrections for incomplete sampling (sampleProbsFilename).
-  
-globalSamplingProbability
-  Percentage of total number of species sampled in your phylogeny (between 0 and 1).
-
-sampleProbsFilename
-  Specifies a file with clade-specific corrections for incomplete sampling.
-
-Priors
-......
-
-lambdaInitPrior
-  Mean of the exponential distribution prior on speciation.
-
-lambdaShiftPrior
-  Prior on the speciation rate change parameter.
-
-muInitPrior
-  Exponential prior on extinction.
-
-muShiftPrior
-  *Description not yet available.*
-
-General MCMC Simulation Settings & Output Options
-...........
-
-branchRatesWriteFreq
-
-lambdaOutfile
-  Branch-specific speciation rates will be written to this file as newick-formatted trees.
-
-muOutfile
-  Branch-specific extinction rates will be written to this file as newick-formatted trees.
-
-lambdaNodeOutfile
-  *Description not yet available.*
-
-updateLambdaInitScale
-  *Description not yet available.*
-
-updateMuInitScale
-  *Description not yet available.*
-
-updateLambdaShiftScale
-  *Description not yet available.*
-
-updateMuShiftScale
-  *Description not yet available.*
-
-minCladeSizeForShift
-  *Description not yet available.*
-
-Starting Parameters
-...................
-
-lambdaInit0
-  Starting initial speciation rate.
-
-lambdaShift0
-  Starting initial rate change parameter for speciation
-  (if 0, speciation rates will not change through time).
-  A negative value implies decreasing rates through time.
-
-muInit0
-  Starting Initial extinction rate.
-
-muShift0
-  Starting initial rate change parameter for extinction. Currently not implemented.
-  
-initialNumberEvents
-
-Parameter Update Rates
-......................
-
-updateRateLambda0
-  Frequency in which to update the initial speciation rate for an event.
-
-updateRateLambdaShift
-  Frequency in which to update how speciation rates change through time.
-
-updateRateMu0
-  Frequency in which to update the initial extinction rate.
-
-Numerical & Other Parameters
-......................
-
-minCladeSizeForShift
-
-segLength
-
-Phenotypic Evolution Model
---------------------------
-
-The following describes the configuration options and parameters
-specifically for the phenotypic evolution model in BAMM.
-The parameter "beta" represents the rate of phenotypic evolution
-at any point in time.
-
-General
-.......
-
-traitfile
-  File that names the trait data. Traits must be continuous characters.
-  Each line must have a species name and the corresponding trait,
-  separated by a tab.
-  No header row is permitted.
-  All species in the trait data file must be in the tree and vice versa.
-
-MCMC Tuning
-...........
 
 updateBetaScale
-  Controls the amount by which to change the value of beta
-  at any step in the MCMC sampling.
-
-updateNodeStateScale
   *Description not yet available.*
 
 updateBetaShiftScale
   *Description not yet available.*
 
-Starting Parameters
-...................
-
-betaInit
-  Starting initial rate.
-
-betaShiftInit
-   Starting initial rate change parameter for phenotypic evolution.
-  (if 0, then constant-rate).
-  A negative value implies decreasing rates through time.
-
-Priors
-......
-
-betaInitPrior
+updateNodeStateScale
   *Description not yet available.*
 
-betaShiftPrior
-  *Description not yet available.*
+updateEventLocationScale
+  Scale parameter for updating local moves of events on the tree
+  This defines the width of the sliding window proposal.
 
-useObservedMinMaxAsTraitPriors
-  *Description not yet available.*
+updateEventRateScale
+  Scale parameter (proportional shrinking/expanding) for updating
+  the rate parameter of the Poisson process
 
-traitPriorMin
-  *Description not yet available.*
-
-traitPriorMax
-  *Description not yet available.*
-
-Output
-......
-
-betaOutfile
-  The file name in which to write the phenotypic rates as newick-formatted trees where the branches are scaled to the rate of phenotypic evolution.
-
-nodeStateOutfile
-  *Description not yet available.*
-
-Parameter Update Rates
+MCMC Move Frequencies
 ......................
+
+updateRateEventNumber
+  Relative frequency of MCMC moves that change the number of events.
+  
+updateRateEventPosition
+  Relative frequency of MCMC moves that change the location of an event on the tree.
+  
+updateRateEventRate
+  Relative frequency of MCMC moves that change the rate at which events occur.
 
 updateRateBeta0
   *Description not yet available.*
-
+  
 updateRateBetaShift
   *Description not yet available.*
-
+  
 updateRateNodeState
-  Relative rate at which to update individual node state values.
-  This value should, in general, be substantially higher
-  than the other parameter values (recommended 25:1 or 50:1)
-  because there are so many internal nodes states that need to be updated.
+  *Description not yet available.*
+  
+localGlobalMoveRatio
+  Ratio of local to global moves of events.
+
+Initial Parameter Values
+...................
+
+betaInit
+  Initial Brownian motion rate parameter at the base of the tree.
+  
+betaShiftInit
+  Initial rate change parameter for Brownian motion.
+  
+initialNumberEvents
+  Initial number of non-root processes.
+  
+Numerical & Other Parameters
+......................
+
+useObservedMinMaxAsTraitPriors
+  *Description not yet available.*
+  
+traitPriorMin
+  *Description not yet available.*
+  
+traitPriorMax
+  *Description not yet available.*
+

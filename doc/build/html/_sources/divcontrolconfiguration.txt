@@ -157,6 +157,9 @@ updateMuShiftScale
   
 updateRateMuShift
   *Description not yet available.*
+  
+updateRateNumberTimeVariablePartitions
+  *Description not yet available.*
 
 updateEventLocationScale
   Scale parameter for updating local moves of events on tree. This defines the width of the sliding window proposal.
