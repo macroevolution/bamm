@@ -162,7 +162,7 @@ updateRateNumberTimeVariablePartitions = 0.0
  
 updateEventLocationScale = 2.0
 # Scale parameter for updating LOCAL moves of events on the tree
-# This defines the with of the sliding window proposal.
+# This defines the width of the sliding window proposal.
  
 updateEventRateScale = 4.0
 # Scale parameter (proportional shrinking/expanding) for updating
