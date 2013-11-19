@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <cstdlib>
 
 #include "TraitMCMC.h"
 #include "TraitModel.h"
@@ -57,7 +58,7 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
         std::string filedelete("rm ");
         filedelete.append(mcmcOutfile);
 
-        system(filedelete.c_str());
+        std::system(filedelete.c_str());
 
     }
 
@@ -71,7 +72,7 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
         std::string filedelete("rm ");
         filedelete.append(betaOutfile);
 
-        system(filedelete.c_str());
+        std::system(filedelete.c_str());
 
     }
 
@@ -84,7 +85,7 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
         std::string filedelete("rm ");
         filedelete.append(nodeStateOutfile);
 
-        system(filedelete.c_str());
+        std::system(filedelete.c_str());
 
     }
 
@@ -98,7 +99,7 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
         outStream4.close();
         std::string filedelete("rm ");
         filedelete.append(acceptFile);
-        system(filedelete.c_str());
+        std::system(filedelete.c_str());
     }
 */
  
@@ -109,7 +110,7 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
         outStream6.close();
         std::string filedelete("rm ");
         filedelete.append(eventDataFile);
-        system(filedelete.c_str());
+        std::system(filedelete.c_str());
     }
 
 

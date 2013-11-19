@@ -1,12 +1,12 @@
-
 #include <sstream>
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <cstdlib>
 
 #include "Autotune.h"
 
- #include "Model.h"
+#include "Model.h"
 #include "TraitModel.h"
 #include "MbRandom.h"
 #include "Node.h"
@@ -35,7 +35,7 @@ Autotune::Autotune(MbRandom* ran, Model * mymodel, Settings*sp)
         std::string filedelete("rm ");
         filedelete.append(tunefilename);
 		
-        system(filedelete.c_str());
+        std::system(filedelete.c_str());
 		
     }
 
@@ -201,5 +201,4 @@ void Autotune::updateState_Diversification(int parm)
  
     // reset to unmodified value
     ModelPtr->setAcceptLastUpdate(-1);
-	
 }
