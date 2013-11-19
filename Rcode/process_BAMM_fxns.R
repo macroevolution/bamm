@@ -1007,20 +1007,15 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 				polygon(x=maxTime - poly[[i]][,1],y=poly[[i]][,2],col=transparentColor(intervalCol,opacity),border=NA);
 			}
 		}
-		if (useMedian == F){
-			lines(x = maxTime - rmat$time, y = avg, lwd = 3, col = avgCol);
-		}
-		if (useMedian == T){
-			lines(x = maxTime - rmat$time, y = avg, lwd = 3, col = avgCol);
-		}
-		
+		lines(x = maxTime - rmat$time, y = avg, lwd = 3, col = avgCol);
+
 		axis(at=seq(0, maxTime + 0.3*maxTime, by = 5), cex.axis = 1.2, side = 1);
 		axis(at=seq(-0.2, max(rate) + 0.2*max(rate), by=0.1), las=1, cex.axis = 1.2, side = 2);
 		mtext(side = 1, text = 'Time since present', line = 3, cex = 1.3);
 		mtext(side = 2, text = ratelabel, line = 3, cex = 1.3);
 	}
 	if (plot == F){
-		return(list(poly = poly,avg = avg,times = maxTime - rmat$time))
+		return(list(poly = poly,avg = avg,times = rmat$time))
 	}
 }
 
