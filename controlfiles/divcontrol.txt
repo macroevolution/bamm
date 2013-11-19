@@ -56,7 +56,10 @@ globalSamplingFraction = 1.0
 # this is ignored and BAMM looks for a filename with 
 # species-specific sampling fractions
 
-# seed = 1384895535
+sampleProbsFilename = sample_probs.txt
+# File containing species-specific sampling fractions. See documentation.
+
+# seed = 12345
 # Seed for the random number generator. 
 # If not specified (or is -1), a seed is obtained from clock time
 
@@ -88,9 +91,6 @@ lambdaShiftPrior = 0.05
 muInitPrior = 1.0
 # Prior (rate parameter of exponential) on extinction rates  
 
-muShiftPrior = 0.05
-# Prior on extinction shift
- 
 ###################################
 # MCMC SIMULATION SETTINGS & OUTPUT OPTIONS
 
@@ -135,17 +135,8 @@ eventDataOutfile = event_data.txt
 lambdaOutfile = lambda_rates.txt
 # File containing branch-specific mean speciation rates. See documentation.
 
-lambdaNodeOutfile = lambda_note_out.txt
-# File containing node speciation rates.
-
 muOutfile = mu_rates.txt
 # File containing branch-specific mean extinction rates. See documentation.
-
-acceptrateOutfile = accept_rate.txt
-# File containing the accept rates
-
-sampleProbsFilename = sample_probs.txt
-# File containing estimated sampling probabilities of constituent clades. See documentation.
 
 ###################################
 # OPERATORS: MCMC_SCALING_OPERATORS
@@ -159,13 +150,9 @@ updateLambdaShiftScale = 0.1
 updateMuInitScale = 2.0
 # Scale parameter for updating initial extinction rate for each process
 
-updateMuShiftScale = 1.0
-updateRateMuShift = 1.0
-updateRateNumberTimeVariablePartitions = 0.0
- 
 updateEventLocationScale = 2.0
 # Scale parameter for updating LOCAL moves of events on the tree
-# This defines the with of the sliding window proposal.
+# This defines the width of the sliding window proposal.
  
 updateEventRateScale = 4.0
 # Scale parameter (proportional shrinking/expanding) for updating
@@ -178,24 +165,24 @@ updateRateEventNumber = 0.1
 # Relative frequency of MCMC moves that change the number of events
 
 updateRateEventPosition = 1
-# Relative frequency of moves that change the location of an event on the tree
+# Relative frequency of MCMC moves that change the location of an event on the tree
 
 updateRateEventRate = 1
-# Relative frequency of moves that change the rate at which events occur 
+# Relative frequency of MCMC moves that change the rate at which events occur 
 
 updateRateLambda0 = 1
-# Relative frequency of moves that change the initial speciation rate
+# Relative frequency of MCMC moves that change the initial speciation rate
 # associated with an event
 
 updateRateLambdaShift = 1
-# Relative frequency of moves that change the exponential shift parameter of 
+# Relative frequency of MCMC moves that change the exponential shift parameter of 
 # a speciation rate associated with an event
 
 updateRateMu0 = 1
-# Relative frequency of moves that change the extinction rate for a given event
+# Relative frequency of MCMC moves that change the extinction rate for a given event
 
 localGlobalMoveRatio = 10.0
-# Ratio of local versus global moves of events 
+# Ratio of local to global moves of events 
 
 ###################################
 # INITIAL PARAMETER VALUES
@@ -209,9 +196,6 @@ lambdaShift0 = 0
 muInit0 = .005
 # Initial value of extinction (at the root)
 
-muShift0 = 0
-# Initial extinction shift parameter for the root process
- 
 initialNumberEvents = 0
 # Initial number of non-root processes
  

@@ -76,6 +76,8 @@ int main (int argc, char* argv[])
         exit(1);
     }
     
+    std::cout << "Random seed:\t\t" << mySettings.getSeed() << std::endl;
+    
     MbRandom myRNG(mySettings.getSeed());
 
     std::ofstream runInfoFile(mySettings.getRunInfoFilename().c_str());
