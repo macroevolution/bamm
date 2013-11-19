@@ -48,19 +48,22 @@ runMCMC
   If true (1), run the MCMC sampler.
   If false (0), just check to see if the data can be loaded correctly.
 
+autotune
+  Experimental option for tuning MCMC operators.
+
 loadEventData
-  *Description not yet available.*
+  If true (1), load event configuration.
 
 eventDataInfile
   *Description not yet available.*
 
 initializeModel
-  Should always be true (1).
+  If true (1), initializes MCMC. If false (0), will just check parameter file and ensure that data can be read.
 
 NumberGenerations
   Number of MCMC generations to run.
   
-MCMC Tuning
+MCMC Simulation Settings & Output Options
 ...........
 
 MeanSpeciationLengthFraction
