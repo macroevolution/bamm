@@ -1,5 +1,5 @@
 #
-#   BAMM control file for speciation-extinction analysis 
+#   BAMM control file for phenotypic analysis 
 #
 #   General Format: 
 #       - Whitespace (tabs and spaces) is not important
@@ -42,7 +42,7 @@ runMCMC = 1
 loadEventData = 0
 # Load event configuration - see Documentation
 
-eventDataInfile = eventconfig2.txt
+eventDataInfile = my_event_datafile.txt
 # Used only if loadEventData = 1
 
 initializeModel = 1
@@ -57,9 +57,7 @@ overwrite = 0
 ###################################
 # PRIORS
 
-rootPrior = 1.0
-
-poissonRatePrior = 10
+poissonRatePrior = 1
 # The rate parameter of the exponential prior on the rate parameter of the 
 # Poisson process. Smaller values favor greater numbers of distinct evolutionary
 # regimes on tree. 
@@ -68,7 +66,27 @@ poissonRatePrior = 10
 #     poissonRatePrior = 0.1 or even 0.02 for large (5000+ tips)
 
 betaInitPrior = 1
+# Parameter (rate) of the prior (exponential) on the initial 
+#	phenotypic evolutionary rate associated with regimes
+
 betaShiftPrior = 0.05
+# Parameter (std deviation) of the prior (normal) on the rate-change parameter
+#  You cannot adjust the mean of this distribution (fixed at zero, 
+#		which is equal to a constant rate diversification process)
+
+useObservedMinMaxAsTraitPriors = 1
+# If TRUE (1), will put a uniform prior density on the distribution of ancestral
+#	character states, with upper and lower bounds determined by the min and max of 
+#	the observed data.
+
+traitPriorMin = 0
+# User-defined minimum value for the uniform density on the distribution of ancestral
+#	character states. Only used if useObservedMinMaxAsTraitPriors = 0.
+
+traitPriorMax = 0
+# user-defined maximum value for the uniform density on the distribution of ancestral
+#	character states. Only used if useObservedMinMaxAsTraitPriors = 0
+
 
 ###################################
 # MCMC SIMULATION SETTINGS & OUTPUT OPTIONS
@@ -106,9 +124,7 @@ mcmcOutfile = mcmc_out.txt
 # information about MCMC simulation (log-likelihoods etc)
 
 betaOutfile = beta_rates.txt
-
-acceptrateOutfile = accept_rates.txt
-# File containing accept rates
+# File containing branch-specific mean phenotypic rates. See documentation.
 
 eventDataOutfile = event_data.txt
 # The raw event data. ALL of the results are contained in this file,
@@ -116,19 +132,25 @@ eventDataOutfile = event_data.txt
 # marginal distributions etc can be reconstructed from this output. 
 # See R package BAMMtools for working with this output.
 
-nodeStateOutfile = node_state.txt
 
 ###################################
 # OPERATORS: MCMC_SCALING_OPERATORS
 
 updateBetaScale = 1
+# Scale operator for proportional shrinking-expanding move to update initial 
+#	phenotypic rate for rate regimes
+
 updateBetaShiftScale = 1
+# Scale operator for sliding window move to update initial 
+#	phenotypic rate
 
 updateNodeStateScale = 1
+# Scale operator for sliding window move to update 
+#	ancestral states at internal nodes
 
 updateEventLocationScale = 2.0
 # Scale parameter for updating LOCAL moves of events on the tree
-# This defines the with of the sliding window proposal.
+# This defines the width of the sliding window proposal.
 
 updateEventRateScale = 4.0
 # Scale parameter (proportional shrinking/expanding) for updating
@@ -147,27 +169,39 @@ updateRateEventRate = 1
 # Relative frequency of moves that change the rate at which events occur
 
 updateRateBeta0 = 1
-updateRateBetaShift = 1
-updateRateNodeState = 25
+# Relative frequency of moves that change the initial phenotypic rate
+# associated with an event
 
-localGlobalMoveRatio = 5
+updateRateBetaShift = 1
+# Relative frequency of moves that change the exponential shift parameter of 
+# a phenotypic rate associated with an event
+
+updateRateNodeState = 25
+# Relative frequency of moves that update the value of ancestral character states.
+#	You have as many ancestral states as you have internal nodes in your tree, 
+#	so there are a lot of parameters: you should update this much more often
+#	than you update the event-associated parameters.
+
+localGlobalMoveRatio = 10
 # Ratio of local versus global moves of events
 
 ###################################
 # INITIAL PARAMETER VALUES
 
 betaInit = 0.5
+# Initial value of the phenotypic evolutionary process at the root of the tree.
+
 betaShiftInit = 0.0
+# Initial value of the exponential change parameter for the phenotypic evolutionary
+#	process (at the root of the tree). A value of zero implies time-constant rates.
 
 initialNumberEvents = 0
 # Initial number of non-root processes
 
 ###################################
 # NUMERICAL AND OTHER PARAMETERS
+#
+# Presently none.
+#
+#
 
-useObservedMinMaxAsTraitPriors = 1
-
-traitPriorMin = 0
-traitPriorMax = 0
-
-updateRateNumberTimeVariablePartitions = 0.0
