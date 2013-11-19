@@ -800,7 +800,7 @@ getSpeciesRateThroughTime <- function(ephy, start.time, nbreaks=10, ndr=TRUE, sp
 	}
 		
 	tend <- max(branching.times(ephy))*0.999;
-	tstart <- start.time #tend - start.time;
+	tstart <- max(branching.times(ephy)) - tend
 	tseq <- seq(tstart, tend, length.out=nbreaks);
  
 	res <- numeric(nbreaks);
@@ -811,7 +811,7 @@ getSpeciesRateThroughTime <- function(ephy, start.time, nbreaks=10, ndr=TRUE, sp
 	path <- getPathToRoot(ephy, node=index);
 		
 	for (k in 1:length(ephy$eventBranchSegs)){
-			
+
 		ed <- ephy$eventData[[k]];
 			
 		for (z in 1:length(tseq)){
