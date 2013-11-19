@@ -60,43 +60,23 @@ eventDataInfile
 initializeModel
   If true (1), initializes MCMC. If false (0), will just check parameter file and ensure that data can be read.
 
-NumberGenerations
-  Number of MCMC generations to run.
+seed
+  Seed for random number generator. If unspecified or -1, seed is obtained from clock time.
   
-MCMC Simulation Settings & Output Options
-...........
-
-MeanSpeciationLengthFraction
-  *Description not yet available.*
-
-updateEventRateScale
-  *Description not yet available.*
-
-localGlobalMoveRatio
-  *Description not yet available.*
+overwrite
+  If true (1), will overwrite analysis result files if output files already exist with identical filenames. If false (0), analyses will not run if output files already exist with identical filenames.
 
 Priors
 ......
 
-targetNumber
-  Expected number of "events" or rate shifts on the tree,
-  if there is no signal in the data.
-
-Output
-......
-
-mcmcOutfile
-  MCMC parameter output will be written to this file.
-
-acceptrateOutfile
+rootPrior
   *Description not yet available.*
+  
+General MCMC Simulation Settings & Output Options
+...........
 
-eventDataOutfile
-  Event details will be written to this file. 
-
-treeWriteFreq
-  Frequency (in generations) of writing newick-formatted trees where branch lengths are scaled to rate.
-  Use caution when setting a high write frequency, as the file size can grow quickly for large trees.
+NumberGenerations
+  Number of MCMC generations to run.
 
 mcmcWriteFreq
   Frequency (in generations) at which MCMC details will be written to the mcmcOutfile.
@@ -105,10 +85,27 @@ eventDataWriteFreq
   Frequency (in generations) at which event details are written to the eventDataOutfile. 
 
 acceptWriteFreq
-  *Description not yet available.*
 
 printFreq
   Frequency (in generations) of printing output to the screen.
+  
+outName
+  Prefix for output files.
+
+mcmcOutfile
+  MCMC parameter output will be written to this file.
+
+eventDataOutfile
+  Event details will be written to this file. 
+  
+updateEventRateScale
+  *Description not yet available.*
+
+localGlobalMoveRatio
+  *Description not yet available.*
+
+acceptrateOutfile
+  *Description not yet available.*
 
 Parameter Update Rates
 ......................
