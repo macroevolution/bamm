@@ -91,7 +91,8 @@ int main (int argc, char* argv[])
         
         std::cout << std::endl << std::endl  << "SPECIATION-EXTINCTION BAMM" << std::endl << std::endl;
     
-        mySettings.printCurrentSettings_Diversification(true);
+        mySettings.printCurrentSettings();
+        mySettings.checkSettingsAreUserDefined();
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
         
@@ -128,7 +129,7 @@ int main (int argc, char* argv[])
         }
         std::cout << std::endl << std::endl  << "TRAIT DIVERSIFICATION BAMM" << std::endl << std::endl;
         
-        mySettings.checkAreInitialSettingsValid_Traits();
+        mySettings.checkSettingsAreUserDefined();
 
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
