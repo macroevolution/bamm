@@ -1,6 +1,7 @@
 #include "SettingsParameter.h"
 #include <iostream>
 #include <string>
+#include <cstdlib>
 
 
 SettingsParameter::SettingsParameter(const std::string& name,
