@@ -24,6 +24,9 @@ treefile = ../examples/traits/skinkshape/skinks183.tre
 traitfile = ../examples/traits/skinkshape/skinks_shape.txt
 # Location of phenotypic traits
 
+runInfoFilename = run_info.txt
+# File name to output general information about this run
+
 sampleFromPriorOnly = 0
 # If TRUE will perform BAMM analysis sampling 
 # from prior only. (no likelihoods computed)

@@ -44,7 +44,10 @@ public:
 
     void parseCommandLineInput(int argc, std::vector<std::string>& instrings);
     void checkSettingsAreUserDefined() const;
-    void printCurrentSettings() const;
+
+    void printCurrentSettings(std::ostream& out = std::cout) const;
+
+    std::string getRunInfoFilename() const;
 
 	std::string getModeltype() const;
 	
@@ -148,6 +151,12 @@ public:
     std::string getBetaOutfile() const;
     std::string getNodeStateOutfile() const;
 };
+
+
+inline std::string Settings::getRunInfoFilename() const
+{
+    return attachPrefix(_parameters.at("runInfoFilename").value<std::string>());
+}
 
 
 inline bool Settings::getAutotune() const

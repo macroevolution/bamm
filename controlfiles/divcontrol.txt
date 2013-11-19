@@ -21,6 +21,9 @@ modeltype = speciationextinction
 treefile = ../examples/diversification/whales/whaletree.tre
 # Location of phylogenetic tree to be analyzed
 
+runInfoFilename = run_info.txt
+# File name to output general information about this run
+
 sampleFromPriorOnly = 0                 
 # If TRUE will perform BAMM analysis sampling 
 # from prior only. (no likelihoods computed)
@@ -53,7 +56,7 @@ globalSamplingFraction = 1.0
 # this is ignored and BAMM looks for a filename with 
 # species-specific sampling fractions
 
-# seed = 12345
+# seed = 1384895535
 # Seed for the random number generator. 
 # If not specified (or is -1), a seed is obtained from clock time
 
