@@ -129,6 +129,7 @@ int main (int argc, char* argv[])
         }
         std::cout << std::endl << std::endl  << "TRAIT DIVERSIFICATION BAMM" << std::endl << std::endl;
         
+        mySettings.printCurrentSettings();
         mySettings.checkSettingsAreUserDefined();
 
         std::string treefile = mySettings.getTreeFilename();

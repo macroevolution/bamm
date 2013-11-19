@@ -1,53 +1,170 @@
-modeltype = trait
-treefile = ../examples/traits/skinkshape/skinks183.tre
-traitfile = ../examples/traits/skinkshape/skinks_shape.txt
+#
+#   BAMM control file for speciation-extinction analysis 
+#
+#   General Format: 
+#       - Whitespace (tabs and spaces) is not important
+#         and is stripped out when this file is parsed.
+#       - Each parameter is specified as: par_name = par_value
+#         where par_name is the name of the parameter
+#         and par_value is the value you are assigning it.
+#       - Parameter names must be spelled exactly.
+#       - Comments start with # and go to the end of the line
+#       - True/False parameters (e.g., runMCMC) are specified
+#       - with "1" (True) or "0" (False).
 
-# autotune = 0 # Not supported for traits
+###################################
+# GENERAL SETUP AND DATA INPUT
+
+modeltype = trait
+# Specify speciationextinction or trait analysis
+
+treefile = ../examples/traits/skinkshape/skinks183.tre
+# Location of phylogenetic tree to be analyzed
+
+traitfile = ../examples/traits/skinkshape/skinks_shape.txt
+# Location of phenotypic traits
 
 sampleFromPriorOnly = 0
+# If TRUE will perform BAMM analysis sampling 
+# from prior only. (no likelihoods computed)
+
+# autotune = 0 # Not supported for traits
+# Experimental option for tuning MCMC operators
+
 runMCMC = 1
+# perform an MCMC simulation? If runMCMC = 0, the program will 
+# check whether the data file can be read and whether 
+# an initial likelihood can be computed.
+
 loadEventData = 0
+# Load event configuration - see Documentation
+
 eventDataInfile = eventconfig2.txt
+# Used only if loadEventData = 1
+
 initializeModel = 1
-updateBetaScale = 1
-updateNodeStateScale = 1
-updateBetaShiftScale = 1
-updateEventLocationScale = 2.0 # New parameter 
-# should have been specified explicitly in older control files.
+# Initializes (but does not run) the MCMC. If initializeModel = 0, 
+# will just check parameter file and also ensure that data (treefile etc) 
+# can be read.
 
-updateEventRateScale = 4.0
-localGlobalMoveRatio = 5
- 
+###################################
+# PRIORS
 
-betaInit = 0.5
-betaShiftInit = 0.0
+rootPrior = 1.0
 
-poissonRatePrior = 10 # was: targetNumber
+poissonRatePrior = 10
+# The rate parameter of the exponential prior on the rate parameter of the 
+# Poisson process. Smaller values favor greater numbers of distinct evolutionary
+# regimes on tree. 
+# Suggested values: 
+#     poissonRatePrior = 1.0 # for smaller datasets (< 500 tips)
+#     poissonRatePrior = 0.1 or even 0.02 for large (5000+ tips)
+
 betaInitPrior = 1
 betaShiftPrior = 0.05
 
-useObservedMinMaxAsTraitPriors = 1
-traitPriorMin = 0
-traitPriorMax = 0
+###################################
+# MCMC SIMULATION SETTINGS & OUTPUT OPTIONS
 
-mcmcOutfile = bmcmcout.txt
-betaOutfile = bbetarates.txt
-acceptrateOutfile = baccept.txt
-nodeStateOutfile = bnodestate.txt
-eventDataOutfile = beventdata.txt
+numberGenerations = 100000
+# Generations to perform MCMC simulation.
 
-branchRatesWriteFreq = 20000 # was: treeWriteFreq
+branchRatesWriteFreq = 20000
+# Writes file with branch-specific mean rates every
+# branchRatesWriteFreq generations. 
+# These rates should generally be computed directly
+# from the event data (see BAMMtools functions), 
+# but for very large trees, it can be convenient to work
+# with the branch rates.
+
 mcmcWriteFreq = 5000
-acceptWriteFreq = 100000
+# Writes MCMC simulation parameters (log-likelihood, log-prior,
+# number of processes) to file every mcmcWriteFreq generations.
+
 eventDataWriteFreq = 10000
+# Specify frequency to write actual model parameters to file. 
+# These are the main results!
+
+acceptWriteFreq = 100000
+# Prints accept frequency
+
 printFreq = 20000
-numberGenerations = 1000000
+# Prints MCMC status to screen every printFreq generations.
+
+overwrite = 0
+# If TRUE will overwrite analysis result files (if present).
+# Default is set to FALSE: analyses will stop before overwriting files.
+
+outName = BAMM
+# Name of analysis (output files will be prefixed with this)
+
+mcmcOutfile = mcmc_out.txt
+# The name of file for MCMC output. Only includes summar
+# information about MCMC simulation (log-likelihoods etc)
+
+betaOutfile = beta_rates.txt
+
+acceptrateOutfile = accept_rates.txt
+# File containing accept rates
+
+eventDataOutfile = event_data.txt
+# The raw event data. ALL of the results are contained in this file,
+# and all branch-specific speciation rates, shift positions, 
+# marginal distributions etc can be reconstructed from this output. 
+# See R package BAMMtools for working with this output.
+
+nodeStateOutfile = node_state.txt
+
+###################################
+# OPERATORS: MCMC_SCALING_OPERATORS
+
+updateBetaScale = 1
+updateBetaShiftScale = 1
+
+updateNodeStateScale = 1
+
+updateEventLocationScale = 2.0
+# Scale parameter for updating LOCAL moves of events on the tree
+# This defines the with of the sliding window proposal.
+
+updateEventRateScale = 4.0
+# Scale parameter (proportional shrinking/expanding) for updating
+# the rate parameter of the Poisson process
+
+###################################
+# OPERATORS: MCMC_MOVE_FREQUENCIES
 
 updateRateEventNumber = 1
+# Relative frequency of MCMC moves that change the number of events
+
 updateRateEventPosition = 1
+# Relative frequency of moves that change the location of an event on the tree
+
 updateRateEventRate = 1
+# Relative frequency of moves that change the rate at which events occur
+
 updateRateBeta0 = 1
 updateRateBetaShift = 1
 updateRateNodeState = 25
 
+localGlobalMoveRatio = 5
+# Ratio of local versus global moves of events
+
+###################################
+# INITIAL PARAMETER VALUES
+
+betaInit = 0.5
+betaShiftInit = 0.0
+
 initialNumberEvents = 0
+# Initial number of non-root processes
+
+###################################
+# NUMERICAL AND OTHER PARAMETERS
+
+useObservedMinMaxAsTraitPriors = 1
+
+traitPriorMin = 0
+traitPriorMax = 0
+
+updateRateNumberTimeVariablePartitions = 0.0
