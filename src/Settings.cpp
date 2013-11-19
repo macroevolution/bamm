@@ -86,7 +86,7 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
     initializeSettingsWithUserValues();
 }
 
-
+ 
 void Settings::initializeGlobalSettings()
 {
     // General
@@ -112,10 +112,14 @@ void Settings::initializeGlobalSettings()
     addParameter("outName",                      "BAMM", false);
     addParameter("mcmcOutfile",                  "mcmc_out.txt");
     addParameter("eventDataOutfile",             "event_data.txt");
-    addParameter("acceptrateOutfile",            "mcmc_accept.txt");
+
+     // TODO: deprecate acceptrateOutfile
+   
+    addParameter("acceptrateOutfile",            "mcmc_accept.txt", false);
     addParameter("branchRatesWriteFreq",         "0");
     addParameter("mcmcWriteFreq",                "0");
     addParameter("eventDataWriteFreq",           "0");
+    
     addParameter("acceptWriteFreq",              "0");
     addParameter("printFreq",                    "0");
     addParameter("overwrite",                    "0", false);
@@ -125,10 +129,12 @@ void Settings::initializeGlobalSettings()
     addParameter("updateRateEventPosition",      "0.0");
     addParameter("updateRateEventRate",          "0.0");
     addParameter("initialNumberEvents",          "0");
-    addParameter("updateRateNumberTimeVariablePartitions", "0.0");
+ 
+       // TODO: deprecate updateRateNumberTimeVariablePartitions
+    addParameter("updateRateNumberTimeVariablePartitions", "0.0", false);
 
     // Other (TODO: Need to add documentation for these)
-    addParameter("rootPrior",                    "0.0");
+    addParameter("rootPrior",                    "0.0", false);
     addParameter("autotune",                     "0", false);
 }
 
@@ -144,32 +150,32 @@ void Settings::initializeSpeciationExtinctionSettings()
     addParameter("updateLambdaInitScale",        "0.0");
     addParameter("updateMuInitScale",            "0.0");
     addParameter("updateLambdaShiftScale",       "0.0");
-    addParameter("updateMuShiftScale",           "0.0");
-    addParameter("minCladeSizeForShift",         "1");
+    addParameter("updateMuShiftScale",           "0.0", false);
+    addParameter("minCladeSizeForShift",         "1", false);
 
     // Starting parameters
     addParameter("lambdaInit0",                  "0.0");
     addParameter("lambdaShift0",                 "0.0");
     addParameter("muInit0",                      "0.0");
-    addParameter("muShift0",                     "0.0");
+    addParameter("muShift0",                     "0.0", false);
 
     // Priors
     addParameter("lambdaInitPrior",              "0.0");
     addParameter("lambdaShiftPrior",             "0.0");
     addParameter("muInitPrior",                  "0.0");
-    addParameter("muShiftPrior",                 "1.0");
+    addParameter("muShiftPrior",                 "1.0", false);
 	addParameter("segLength",                    "0.0");
 
     // Output
     addParameter("lambdaOutfile",                "lambda_rates.txt");
     addParameter("muOutfile",                    "mu_rates.txt");
-    addParameter("lambdaNodeOutfile",            "node_lambda.txt");
+    addParameter("lambdaNodeOutfile",            "node_lambda.txt", false);
 
     // Parameter update rates
     addParameter("updateRateLambda0",            "0.0");
     addParameter("updateRateLambdaShift",        "0.0");
     addParameter("updateRateMu0",                "0.0");
-    addParameter("updateRateMuShift",            "0.0");
+    addParameter("updateRateMuShift",            "0.0", false);
 }
 
 
@@ -196,7 +202,7 @@ void Settings::initializeTraitSettings()
 
     // Output
     addParameter("betaOutfile",                    "beta_rates.txt");
-    addParameter("nodeStateOutfile",               "nodestates.txt");
+    addParameter("nodeStateOutfile",               "nodestates.txt", false);
 
     // Parameter update rates
     addParameter("updateRateBeta0",                "0.0");

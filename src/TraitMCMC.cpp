@@ -143,19 +143,30 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
 
         }
 
-        if ((i % _eventDataWriteFreq) == 0)
-
-            writeEventDataToFile();
-
-
-        if ((i % _mcmcWriteFreq) == 0)
-            writeStateToFile();
+        if ((i % _eventDataWriteFreq) == 0){
+            writeEventDataToFile();        
+        }
 
 
 
-        if ((i % _printFreq == 0))
+
+        if ((i % _mcmcWriteFreq) == 0){
+            writeStateToFile();      
+        }
+
+        
+
+
+        if ((i % _printFreq == 0)){
+            
             printStateData();
+            ModelPtr->resetMHacceptanceParameters();
+        
+        }
 
+        
+
+        
         //if ((i % _acceptWriteFreq) == 0)
         //  writeParamAcceptRates();
 
@@ -287,7 +298,7 @@ void TraitMCMC::writeStateToFile()
 
 void TraitMCMC::writeHeaderToStream(std::ostream& outStream)
 {
-    outStream << "generation,numevents,logprior,lltraits\n";
+    outStream << "generation,numevents,logprior,lltraits,acceptRate\n";
 }
 
 
@@ -296,7 +307,8 @@ void TraitMCMC::writeStateToStream(std::ostream& outStream)
     outStream << ModelPtr->getGeneration()     << ","
               << ModelPtr->getNumberOfEvents() << ","
               << ModelPtr->computeLogPrior()   << ","
-              << ModelPtr->getCurrLnLTraits()  << std::endl;
+              << ModelPtr->getCurrLnLTraits()  << ","
+              << ModelPtr->getMHacceptanceRate() << std::endl;
 }
 
 

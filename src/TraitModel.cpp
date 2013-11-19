@@ -1881,12 +1881,20 @@ double  TraitModel::getMHacceptanceRate(void)
 
     double arate = (double)acceptCount / ((double)acceptCount +
                                           (double)rejectCount);
-    acceptCount = 0;
-    rejectCount = 0;
+
 
     return arate;
 
 }
+
+void  TraitModel::resetMHacceptanceParameters(void)
+{
+    acceptCount = 0;
+    rejectCount = 0;
+    
+}
+
+
 
 
 TraitBranchEvent* TraitModel::getEventByIndex(int x)
