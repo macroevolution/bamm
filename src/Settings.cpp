@@ -110,6 +110,7 @@ void Settings::initializeGlobalSettings()
 
     // Output
     addParameter("outName",                      "BAMM", false);
+    addParameter("runInfoFilename",              "run_info.txt");
     addParameter("mcmcOutfile",                  "mcmc_out.txt");
     addParameter("eventDataOutfile",             "event_data.txt");
 
@@ -306,20 +307,20 @@ void Settings::exitWithErrorUndefinedParameter(const std::string& name) const
 }
 
 
-void Settings::printCurrentSettings() const
+void Settings::printCurrentSettings(std::ostream& out) const
 {
     int ppw = 29;
 
-    std::cout << "*****************************************************\n";
-    std::cout << "Current parameter settings:\n";
+    out << "*****************************************************\n";
+    out << "Current parameter settings:\n";
 
     ParameterMap::const_iterator it;
     for (it = _parameters.begin(); it != _parameters.end(); ++it) {
-        std::cout << std::right << std::setw(ppw) <<
+        out << std::right << std::setw(ppw) <<
             it->first << "\t\t" << (it->second).value<std::string>() << "\n";
     }
 
-    std::cout << "\n*****************************************************\n";
+    out << "\n*****************************************************\n";
 }
 
 

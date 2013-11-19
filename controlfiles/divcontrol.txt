@@ -21,6 +21,9 @@ modeltype = speciationextinction
 treefile = ../examples/diversification/whales/whaletree.tre
 # Location of phylogenetic tree to be analyzed
 
+runInfoFilename = run_info.txt
+# File name to output general information about this run
+
 sampleFromPriorOnly = 0                 
 # If TRUE will perform BAMM analysis sampling 
 # from prior only. (no likelihoods computed)

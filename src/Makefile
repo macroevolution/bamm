@@ -1,6 +1,7 @@
 OBJS = main.o Autotune.o BranchHistory.o MCMC.o BranchEvent.o Node.o Tree.o Settings.o SettingsParameter.o TraitModel.o TraitMCMC.o MbRandom.o TraitBranchHistory.o TraitBranchEvent.o Model.o
 CC = g++
 DEBUG = -g
+GIT_COMMIT_ID = $(shell git rev-parse HEAD)
 CFLAGS = -Wall -c -m64 -O3 -funroll-loops $(DEBUG)
 LFLAGS = -Wall -m64 $(DEBUG)
 
@@ -8,7 +9,7 @@ bamm: $(OBJS)
 	$(CC) $(LFLAGS) $(OBJS) -o bamm
 
 main.o: main.cpp
-	$(CC) $(CFLAGS) main.cpp
+	$(CC) $(CFLAGS) -DGIT_COMMIT_ID=\"$(GIT_COMMIT_ID)\" main.cpp
 
 Autotune.o: Autotune.cpp MbRandom.h Model.h TraitModel.h Settings.h
 	$(CC) $(CFLAGS) Autotune.cpp

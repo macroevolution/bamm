@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <ctime>
 
 #include "Tree.h"
 #include "MbRandom.h"
@@ -19,6 +20,9 @@
 #include "TraitModel.h"
 #include "Autotune.h"
 
+
+const char* currentTime();
+
 void usage () {
     std::cout << std::endl << "Program usage:" << std::endl;
     std::cout << "./bamm -control control_filename" << std::endl<< std::endl;
@@ -26,6 +30,10 @@ void usage () {
   
 int main (int argc, char* argv[])
 {
+    std::string commandLine(argv[0]);
+    for (int i = 1; i < argc; i++) {
+        commandLine += std::string(" ") + argv[i];
+    }
 
     if (argc == 1) {
         usage();
@@ -71,6 +79,13 @@ int main (int argc, char* argv[])
     std::cout << "Random seed:\t\t" << mySettings.getSeed() << std::endl;
     
     MbRandom myRNG(mySettings.getSeed());
+
+    std::ofstream runInfoFile(mySettings.getRunInfoFilename().c_str());
+    runInfoFile << "command line: " << commandLine << "\n";
+    runInfoFile << "git commit id: " << GIT_COMMIT_ID << "\n";
+    runInfoFile << "random seed: " << myRNG.getSeed() << "\n";
+    runInfoFile << "start time: " << currentTime() << "\n";
+
     std::cout << mySettings.getModeltype() << std::endl;
     
 /*
@@ -94,6 +109,8 @@ int main (int argc, char* argv[])
         std::cout << std::endl << std::endl  << "SPECIATION-EXTINCTION BAMM" << std::endl << std::endl;
     
         mySettings.printCurrentSettings();
+        mySettings.printCurrentSettings(runInfoFile);
+
         mySettings.checkSettingsAreUserDefined();
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
@@ -133,6 +150,8 @@ int main (int argc, char* argv[])
         std::cout << std::endl << std::endl  << "TRAIT DIVERSIFICATION BAMM" << std::endl << std::endl;
         
         mySettings.printCurrentSettings();
+        mySettings.printCurrentSettings(runInfoFile);
+
         mySettings.checkSettingsAreUserDefined();
 
         std::string treefile = mySettings.getTreeFilename();
@@ -169,5 +188,15 @@ int main (int argc, char* argv[])
         std::cout << "Valid options: \n" << "\t\tspeciationextinction\n\t\ttrait\n\n" << std::endl;
     }
 
+    runInfoFile << "end time: " << currentTime();
+    runInfoFile.close();
+
     return 0;
+}
+
+const char* currentTime()
+{
+    time_t curTime;
+    time(&curTime);
+    return std::ctime(&curTime);
 }
