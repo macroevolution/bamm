@@ -130,9 +130,6 @@ void Settings::initializeGlobalSettings()
     addParameter("updateRateEventRate",          "0.0");
     addParameter("initialNumberEvents",          "0");
  
-    // TODO: deprecate updateRateNumberTimeVariablePartitions
-    addParameter("updateRateNumberTimeVariablePartitions", "0.0", false);
-
     // Other (TODO: Need to add documentation for these)
     addParameter("autotune",                     "0", false);
 }

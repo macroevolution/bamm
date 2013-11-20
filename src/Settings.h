@@ -123,7 +123,6 @@ public:
     double getUpdateRateLambdaShift() const;
     double getUpdateRateMu0() const;
     double getUpdateRateMuShift() const;
-    double getUpdateRateNumberTimeVariablePartitions() const;
 
     // Other:
     int getInitialNumberEvents() const;
@@ -447,12 +446,6 @@ inline double Settings::getUpdateRateMu0() const
 inline double Settings::getUpdateRateMuShift() const
 {
     return _parameters.at("updateRateMuShift").value<double>();
-}
-
-
-inline double Settings::getUpdateRateNumberTimeVariablePartitions() const
-{
-    return _parameters.at("updateRateNumberTimeVariablePartitions").value<double>();
 }
 
 

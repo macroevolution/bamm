@@ -128,8 +128,6 @@ void MCMC::setUpdateWeights(void)
     parWts.push_back(sttings->getUpdateRateLambdaShift()); // lambda shift
     parWts.push_back(sttings->getUpdateRateMu0()); //mu0 rate
     parWts.push_back(sttings->getUpdateRateMuShift()); // mu shift
-    parWts.push_back(
-        sttings->getUpdateRateNumberTimeVariablePartitions()); // freq of updates to timevarying/constant
 
     double sumwts = parWts[0];
     for (std::vector<double>::size_type i = 1; i < parWts.size(); i++) {

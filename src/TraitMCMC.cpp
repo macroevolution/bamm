@@ -146,8 +146,6 @@ void TraitMCMC::setUpdateWeights(void)
     parWts.push_back(
         sttings->getUpdateRateNodeState());                        // 5    Node states
 
-    parWts.push_back(
-        sttings->getUpdateRateNumberTimeVariablePartitions());     // 6 freq of updates to timevarying/constant
 
     double sumwts = parWts[0];
     for (std::vector<double>::size_type i = 1; i < parWts.size(); i++) {
