@@ -117,8 +117,9 @@ acceptWriteFreq = 1000
 printFreq = 1000
 # Prints MCMC status to screen every printFreq generations.
 
-outName = BAMM
+# outName = BAMM
 # Name of analysis (output files will be prefixed with this)
+# if commented out, no prefix will be used
 
 mcmcOutfile = mcmc_out.txt
 # The name of file for MCMC output. Only includes summar
