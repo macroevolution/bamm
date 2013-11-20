@@ -1042,12 +1042,12 @@ getSpeciesRateThroughTimeReturnAll <- function(ephy, start.time, nbreaks, ndr, s
 	
 	path <- getPathToRoot(ephy, node=index);
 	
-	resMat<-matrix(NA,nrow=length(ephy$eventBranchSegs),ncol=nbreaks);
+	resMat <- matrix(NA, nrow=length(ephy$eventBranchSegs), ncol=nbreaks);
 	for (k in 1:length(ephy$eventBranchSegs)){
 
 		ed <- ephy$eventData[[k]];
 		
-		resVec <- vector(mode='numeric',length=nbreaks);
+		resVec <- vector(mode='numeric', length=nbreaks);
 		for (z in 1:length(tseq)){
 			isGoodNode <- ephy$eventBranchSegs[[k]][,1] %in% path;
 			isGoodStart <- ephy$eventBranchSegs[[k]][,2] <= tseq[z];
@@ -1063,7 +1063,7 @@ getSpeciesRateThroughTimeReturnAll <- function(ephy, start.time, nbreaks, ndr, s
 				resVec[z] <- exponentialRate(tseq[z]-ed$time[ev], ed$lam1[ev], ed$lam2[ev]);
 			}	
 		}		
-	resMat[k,]<-resVec;
+	resMat[k,] <- resVec;
 	}
 	return(resMat);
 }
@@ -1089,7 +1089,7 @@ getSpeciesRateThroughTimeReturnAll <- function(ephy, start.time, nbreaks, ndr, s
 #	opacity = opacity level for plotting colored confidence intervals
 
 
-plotSpeciesRatesThroughTime <- function(ephy,start.time=max(branching.times(ephy)),useMedian=F,nbreaks=10,ratetype='speciation',species,lowerCI=0.05,upperCI=0.95,smooth=T,spCol,opacity=0.01){
+plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(ephy)), useMedian=F, nbreaks=10, ratetype='speciation', species, lowerCI=0.05, upperCI=0.95, smooth=T, spCol, opacity=0.01,smoothParam=0.20){
 	
 	if (!'bamm-data' %in% class(ephy)){
 		stop("Object ephy must be of class bamm-data\n");
@@ -1101,16 +1101,16 @@ plotSpeciesRatesThroughTime <- function(ephy,start.time=max(branching.times(ephy
 	
 	if (ratetype=='speciation' | ratetype=='trait'){
 		ndr <- F;
-		if (ratetype=='speciation'){ratelabel <- 'Speciation'}
-		if (ratetype=='trait'){ratelabel <- 'BM rate'}
+		if (ratetype == 'speciation'){ratelabel <- 'Speciation'}
+		if (ratetype == 'trait'){ratelabel <- 'BM rate'}
 	}
-	if (ratetype=='netdiv'){
+	if (ratetype == 'netdiv'){
 		ndr <- T;
 		ratelabel <- 'Net diversification';
 	}
 		
-	bySp<-lapply(species,function(x) getSpeciesRateThroughTimeReturnAll(ephy,start.time=start.time, nbreaks=nbreaks,ndr=ndr,species=x));
-	names(bySp)<-species;
+	bySp<-lapply(species,function(x) getSpeciesRateThroughTimeReturnAll(ephy, start.time = start.time, nbreaks = nbreaks, ndr = ndr, species = x));
+	names(bySp) <- species;
 	
 	#calculate average values
 	if (useMedian == T){
@@ -1122,29 +1122,29 @@ plotSpeciesRatesThroughTime <- function(ephy,start.time=max(branching.times(ephy
 	
 	tend <- max(branching.times(ephy))*0.999;
 	tstart <- max(branching.times(ephy)) - tend;
-	tseq <- seq(tstart, tend, length.out=nbreaks);
+	tseq <- seq(tstart, tend, length.out = nbreaks);
 	
 	#calculate confidence intervals
 	if (is.numeric(lowerCI) & is.numeric(upperCI)){
-		intervals<-seq(from=lowerCI,to=upperCI,by=0.01);
+		intervals <- seq(from = lowerCI,to = upperCI,by = 0.01);
 		
 		polySp<-list();
 		for (i in 1:length(bySp)){
-			mm<-apply(bySp[[i]],2,quantile,intervals);
-			poly<-list();
-			q1<-1;
-			q2<-nrow(mm);
+			mm <- apply(bySp[[i]], 2, quantile, intervals);
+			poly <- list();
+			q1 <- 1;
+			q2 <- nrow(mm);
 			repeat{
 				if (q1 >= q2) {break}
-				a<-as.data.frame(cbind(tseq,mm[q1,]));
-				b<-as.data.frame(cbind(tseq,mm[q2,]));
-				b<-b[rev(rownames(b)),];
-				colnames(a)<-colnames(b)<-c('x','y');
-				poly[[q1]]<-rbind(a,b);
-				q1<-q1+1;
-				q2<-q2-1;
+				a <- as.data.frame(cbind(tseq,mm[q1,]));
+				b <- as.data.frame(cbind(tseq,mm[q2,]));
+				b <- b[rev(rownames(b)),];
+				colnames(a) <- colnames(b) <- c('x','y');
+				poly[[q1]] <- rbind(a,b);
+				q1 <- q1+1;
+				q2 <- q2-1;
 			}
-			polySp[[i]]<-poly;
+			polySp[[i]] <- poly;
 		}
 	}
 	
@@ -1172,19 +1172,19 @@ plotSpeciesRatesThroughTime <- function(ephy,start.time=max(branching.times(ephy
 	if (is.numeric(lowerCI) & is.numeric(upperCI)){
 		for (i in 1:length(polySp)){
 			for (j in 1:length(polySp[[i]])){
-				polygon(x=tend-polySp[[i]][[j]][,1],y=polySp[[i]][[j]][,2],col=transparentColor(spCol[i],alpha=opacity),border=NA);
+				polygon(x = tend - polySp[[i]][[j]][,1],y = polySp[[i]][[j]][,2], col = transparentColor(spCol[i],alpha = opacity), border = NA);
 			}
-			lines(x=tend - tseq,y=avgList[[i]],lwd=2,col=spCol[i]);
+			lines(x = tend - tseq,y = avgList[[i]], lwd=2, col = spCol[i]);
 		}
 	}
 	if (!is.numeric(lowerCI) | !is.numeric(upperCI)){
 		for (i in 1:length(avgList)){
-			lines(x=tend - tseq,y=avgList[[i]],lwd=2,col=spCol[i]);
+			lines(x = tend - tseq,y = avgList[[i]],lwd = 2,col = spCol[i]);
 		}
 	}
 	
-	axis(at=seq(0, + 1.3*max(branching.times(ephy)), by = 5), cex.axis = 1, side = 1);
-	axis(at=seq(-0.2, maxRate + 0.2*maxRate, by=0.2), las=1, cex.axis = 1, side = 2);
+	axis(at = seq(0, + 1.3*max(branching.times(ephy)), by = 5), cex.axis = 1, side = 1);
+	axis(at = seq(-0.2, maxRate + 0.2*maxRate, by=0.2), las=1, cex.axis = 1, side = 2);
 	mtext(side = 1, text = 'Time since present', line = 3, cex = 1.1);
 	mtext(side = 2, text = ratelabel, line = 3, cex = 1.1);
 }
