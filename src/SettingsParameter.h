@@ -61,6 +61,13 @@ T SettingsParameter::value() const
 }
 
 
+template <> inline    // Must be inline for linker to work
+std::string SettingsParameter::value<>() const
+{
+    return _value;
+}
+
+
 template <typename T>
 void SettingsParameter::setValue(const T& value)
 {
@@ -72,6 +79,14 @@ void SettingsParameter::setValue(const T& value)
         exitWithErrorWrongType();
 
     _value = valueStream.str();
+    _isUserDefined = true;
+}
+
+
+template <> inline    // Must be inline for linker to work
+void SettingsParameter::setValue<>(const std::string& value)
+{
+    _value = value;
     _isUserDefined = true;
 }
 
