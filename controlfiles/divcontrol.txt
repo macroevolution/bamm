@@ -121,20 +121,20 @@ printFreq = 1000
 # Name of analysis (output files will be prefixed with this)
 # if commented out, no prefix will be used
 
-mcmcOutfile = mcmc_out.txt
+# mcmcOutfile = mcmc_out.txt
 # The name of file for MCMC output. Only includes summar
 # information about MCMC simulation (log-likelihoods etc)
 
-eventDataOutfile = event_data.txt
+# eventDataOutfile = event_data.txt
 # The raw event data. ALL of the results are contained in this file,
 # and all branch-specific speciation rates, shift positions, 
 # marginal distributions etc can be reconstructed from this output. 
 # See R package BAMMtools for working with this output.
 
-lambdaOutfile = lambda_rates.txt
+# lambdaOutfile = lambda_rates.txt
 # File containing branch-specific mean speciation rates. See documentation.
 
-muOutfile = mu_rates.txt
+# muOutfile = mu_rates.txt
 # File containing branch-specific mean extinction rates. See documentation.
 
 ###################################

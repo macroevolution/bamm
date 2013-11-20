@@ -110,9 +110,9 @@ void Settings::initializeGlobalSettings()
 
     // Output
     addParameter("outName",                      "", false);
-    addParameter("runInfoFilename",              "run_info.txt");
-    addParameter("mcmcOutfile",                  "mcmc_out.txt");
-    addParameter("eventDataOutfile",             "event_data.txt");
+    addParameter("runInfoFilename",              "run_info.txt", false);
+    addParameter("mcmcOutfile",                  "mcmc_out.txt", false);
+    addParameter("eventDataOutfile",             "event_data.txt", false);
 
     addParameter("branchRatesWriteFreq",         "0");
     addParameter("mcmcWriteFreq",                "0");
@@ -161,8 +161,8 @@ void Settings::initializeSpeciationExtinctionSettings()
 	addParameter("segLength",                    "0.0");
 
     // Output
-    addParameter("lambdaOutfile",                "lambda_rates.txt");
-    addParameter("muOutfile",                    "mu_rates.txt");
+    addParameter("lambdaOutfile",                "lambda_rates.txt", false);
+    addParameter("muOutfile",                    "mu_rates.txt", false);
 
     // Parameter update rates
     addParameter("updateRateLambda0",            "0.0");
@@ -194,7 +194,7 @@ void Settings::initializeTraitSettings()
     addParameter("traitPriorMax","0.0");
 
     // Output
-    addParameter("betaOutfile",                    "beta_rates.txt");
+    addParameter("betaOutfile",                    "beta_rates.txt", false);
 
     // Parameter update rates
     addParameter("updateRateBeta0",                "0.0");
