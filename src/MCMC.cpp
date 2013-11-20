@@ -38,8 +38,6 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     _printFreq =            sttings->getPrintFreq();
     _NGENS =                sttings->getNGENS();
 
-    _firstLine = true; // Print header for the first line of output
-    
     bool fileOverwrite =     sttings->getOverwrite();
 
     if (!fileOverwrite) {
@@ -55,6 +53,8 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     _acceptOutStream.open(_acceptOutFilename.c_str());
     _lambdaNodeOutStream.open(_lambdaNodeOutFilename.c_str());
     _eventDataOutStream.open(_eventDataOutFilename.c_str());
+
+    writeHeadersToOutputFiles();
 
     setUpdateWeights();
     ModelPtr->resetGeneration();
@@ -209,18 +209,7 @@ void MCMC::updateState(int parm)
 
 void MCMC::writeStateToFile()
 {
-    if (_firstLine) {
-      writeHeaderToStream(_mcmcOutStream);
-      _firstLine = false;
-    } else {
-      writeStateToStream(_mcmcOutStream);
-    }
-}
-
-
-void MCMC::writeHeaderToStream(std::ostream& outStream)
-{
-    outStream << "generation,numevents,logprior,llbranches,eventRate,acceptRate\n";
+    writeStateToStream(_mcmcOutStream);
 }
 
 
@@ -343,4 +332,13 @@ void MCMC::exitWithErrorOutputFileExists()
     std::cout << "Fix by removing or renaming output file(s),\n";
     std::cout << "or set \"overwrite = 1\" in the control file.\n";
     std::exit(1);
+}
+
+
+void MCMC::writeHeadersToOutputFiles()
+{
+    _mcmcOutStream << "generation,numevents,logprior,llbranches," <<
+        "eventRate,acceptRate\n";
+    _eventDataOutStream << "generation,leftchild,rightchild,abstime," <<
+        "lambdainit,lambdashift,muinit,mushift\n";
 }

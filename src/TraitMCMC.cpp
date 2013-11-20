@@ -46,8 +46,6 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     _printFreq =        sttings->getPrintFreq();
     _NGENS =            sttings->getNGENS();
 
-    _firstLine = true;
-
     bool fileOverwrite = sttings->getOverwrite();
 
     if (!fileOverwrite) {
@@ -62,6 +60,8 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     _nodeStateOutStream.open(_nodeStateOutFilename.c_str());
     _acceptOutStream.open(_acceptOutFilename.c_str());
     _eventDataOutStream.open(_eventDataOutFilename.c_str());
+
+    writeHeadersToOutputFiles();
 
     setUpdateWeights();
     ModelPtr->resetGeneration();
@@ -230,12 +230,7 @@ void TraitMCMC::updateState(int parm)
 
 void TraitMCMC::writeStateToFile()
 {
-    if (_firstLine) {
-        writeHeaderToStream(_mcmcOutStream);
-        _firstLine = false;
-    }
-    else
-        writeStateToStream(_mcmcOutStream);
+    writeStateToStream(_mcmcOutStream);
 }
 
 
@@ -346,6 +341,14 @@ bool TraitMCMC::fileExists(const std::string& filename)
 {
     std::ifstream inFile(filename.c_str());
     return inFile.good();
+}
+
+
+void TraitMCMC::writeHeadersToOutputFiles()
+{
+    _mcmcOutStream << "generation,numevents,logprior,lltraits,acceptRate\n";
+    _eventDataOutStream << "generation,leftchild,rightchild,abstime," <<
+        "betainit,betashift\n";
 }
 
 

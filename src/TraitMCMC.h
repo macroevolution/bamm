@@ -48,6 +48,7 @@ private:
 
     bool anyOutputFileExists();
     bool fileExists(const std::string& filename);
+    void writeHeadersToOutputFiles();
     void exitWithErrorOutputFileExists();
 
     MbRandom* ranPtr;
@@ -77,8 +78,6 @@ private:
     int _acceptWriteFreq;
     int _printFreq;
     int _NGENS;
-
-    bool _firstLine;
 };
 
 
