@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>3. Installation &mdash; bamm 1.0 documentation</title>
+    <title>2. Template for Sphinx Commands &mdash; bamm 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 1.0 documentation" href="index.html" />
-    <link rel="next" title="4. Configuration" href="divcontrolconfiguration.html" />
-    <link rel="prev" title="2. Template for Sphinx Commands" href="template.html" /> 
+    <link rel="next" title="3. Installation" href="installation.html" />
+    <link rel="prev" title="1. Introduction" href="introduction.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,10 +35,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="divcontrolconfiguration.html" title="4. Configuration"
+          <a href="installation.html" title="3. Installation"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="template.html" title="2. Template for Sphinx Commands"
+          <a href="introduction.html" title="1. Introduction"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">bamm 1.0 documentation</a> &raquo;</li> 
       </ul>
@@ -46,14 +46,14 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="template.html"
-                        title="previous chapter">2. Template for Sphinx Commands</a></p>
+  <p class="topless"><a href="introduction.html"
+                        title="previous chapter">1. Introduction</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="divcontrolconfiguration.html"
-                        title="next chapter">4. Configuration</a></p>
+  <p class="topless"><a href="installation.html"
+                        title="next chapter">3. Installation</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/installation.txt"
+    <li><a href="_sources/template.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -77,29 +77,22 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="installation">
-<h1>3. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<ol class="arabic">
-<li><p class="first">Download the latest version of BAMM.</p>
-</li>
-<li><p class="first">This file is compressed. To uncompress it, run the following command
-from the directory in which BAMM was downloaded:</p>
-<div class="highlight-python"><pre>tar -xzf bamm-1.0.tar.gz</pre>
+  <div class="section" id="template-for-sphinx-commands">
+<h1>2. Template for Sphinx Commands<a class="headerlink" href="#template-for-sphinx-commands" title="Permalink to this headline">¶</a></h1>
+<p>This template shows how to use several commands available in Sphinx
+for creating pretty documentation, including code, math, and figures.</p>
+<p>The equation for a normal distribution is</p>
+<div class="math">
+<p><img src="_images/math/b91213770468b2506d95ff5d9b53657d9689fb1e.png" alt="f(x) = \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x - \mu)^2}{2\sigma^2}}"/></p>
+</div><p>In R, it can be approximated using the following commands:</p>
+<div class="highlight-python"><pre>&gt; data &lt;- rnorm(100000)
+&gt; hist(data, breaks = 50)</pre>
 </div>
-</li>
-<li><p class="first">This will create the directory bamm-1.0.
-Go into this directory and compile the program as follows:</p>
-<div class="highlight-python"><pre>cd bamm-1.0
-make</pre>
+<p>The figure produced is shown below.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/normal.png"><img alt="_images/normal.png" src="_images/normal.png" style="width: 640px;" /></a>
+<p class="caption">Figure 1: Approximation of the normal distribution</p>
 </div>
-</li>
-<li><p class="first">This will create the directory build.
-Within the build directory is an executable:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">bamm</span>
-</pre></div>
-</div>
-</li>
-</ol>
 </div>
 
 
@@ -115,10 +108,10 @@ Within the build directory is an executable:</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="divcontrolconfiguration.html" title="4. Configuration"
+          <a href="installation.html" title="3. Installation"
              >next</a> |</li>
         <li class="right" >
-          <a href="template.html" title="2. Template for Sphinx Commands"
+          <a href="introduction.html" title="1. Introduction"
              >previous</a> |</li>
         <li><a href="index.html">bamm 1.0 documentation</a> &raquo;</li> 
       </ul>

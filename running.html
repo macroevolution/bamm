@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>3. Installation &mdash; bamm 1.0 documentation</title>
+    <title>5. Running BAMM &mdash; bamm 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 1.0 documentation" href="index.html" />
-    <link rel="next" title="4. Configuration" href="divcontrolconfiguration.html" />
-    <link rel="prev" title="2. Template for Sphinx Commands" href="template.html" /> 
+    <link rel="prev" title="4. Configuration" href="divcontrolconfiguration.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,9 +35,6 @@
              accesskey="I">index</a></li>
         <li class="right" >
           <a href="divcontrolconfiguration.html" title="4. Configuration"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="template.html" title="2. Template for Sphinx Commands"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">bamm 1.0 documentation</a> &raquo;</li> 
       </ul>
@@ -46,14 +42,11 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="template.html"
-                        title="previous chapter">2. Template for Sphinx Commands</a></p>
-  <h4>Next topic</h4>
   <p class="topless"><a href="divcontrolconfiguration.html"
-                        title="next chapter">4. Configuration</a></p>
+                        title="previous chapter">4. Configuration</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/installation.txt"
+    <li><a href="_sources/running.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -77,26 +70,16 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="installation">
-<h1>3. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="running-bamm">
+<h1>5. Running BAMM<a class="headerlink" href="#running-bamm" title="Permalink to this headline">¶</a></h1>
 <ol class="arabic">
-<li><p class="first">Download the latest version of BAMM.</p>
+<li><p class="first">Speciation-extinction analyses require a plain text control file and a Newick-formatted tree. Trait analyses additionally require a file containing tip values associated with the tree.</p>
 </li>
-<li><p class="first">This file is compressed. To uncompress it, run the following command
-from the directory in which BAMM was downloaded:</p>
-<div class="highlight-python"><pre>tar -xzf bamm-1.0.tar.gz</pre>
+<li><p class="first">To run speciation-extinction analyses, run the following command:</p>
+<div class="highlight-python"><pre>./bamm speciationextinction -control controlfile</pre>
 </div>
-</li>
-<li><p class="first">This will create the directory bamm-1.0.
-Go into this directory and compile the program as follows:</p>
-<div class="highlight-python"><pre>cd bamm-1.0
-make</pre>
-</div>
-</li>
-<li><p class="first">This will create the directory build.
-Within the build directory is an executable:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">bamm</span>
-</pre></div>
+<p>Or for phenotypic analyses:</p>
+<div class="highlight-python"><pre>./bamm trait -control controlfile</pre>
 </div>
 </li>
 </ol>
@@ -116,9 +99,6 @@ Within the build directory is an executable:</p>
              >index</a></li>
         <li class="right" >
           <a href="divcontrolconfiguration.html" title="4. Configuration"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="template.html" title="2. Template for Sphinx Commands"
              >previous</a> |</li>
         <li><a href="index.html">bamm 1.0 documentation</a> &raquo;</li> 
       </ul>

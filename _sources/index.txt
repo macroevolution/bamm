@@ -11,8 +11,11 @@ BAMM Documentation
    :numbered:
 
    introduction
+   template
    installation
-   configuration
+   divcontrolconfiguration
+   traitconfiguration
+   running
 
 
 
