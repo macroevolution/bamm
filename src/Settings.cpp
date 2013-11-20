@@ -134,7 +134,6 @@ void Settings::initializeGlobalSettings()
     addParameter("updateRateNumberTimeVariablePartitions", "0.0", false);
 
     // Other (TODO: Need to add documentation for these)
-    addParameter("rootPrior",                    "0.0", false);
     addParameter("autotune",                     "0", false);
 }
 

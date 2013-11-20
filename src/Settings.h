@@ -137,7 +137,6 @@ public:
     double getUpdateBetaShiftScale() const;
     double getBetaInit() const;
     double getBetaShiftInit() const;
-    double getRootPrior() const;
     double getBetaInitPrior() const;
     double getBetaShiftPrior() const;
     double getTraitPriorMin() const;
@@ -496,12 +495,6 @@ inline double Settings::getBetaInit() const
 inline double Settings::getBetaShiftInit() const
 {
     return _parameters.at("betaShiftInit").value<double>();
-}
-
-
-inline double Settings::getRootPrior() const
-{
-    return _parameters.at("rootPrior").value<double>();
 }
 
 
