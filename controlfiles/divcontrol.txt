@@ -70,8 +70,6 @@ overwrite = 0
 ###################################
 # PRIORS
 
-rootPrior = 1.0
-
 poissonRatePrior = 1.0
 # The rate parameter of the exponential prior on the rate parameter of the 
 # Poisson process. Smaller values favor greater numbers of distinct evolutionary
