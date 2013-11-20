@@ -46,6 +46,9 @@ private:
     void writeHeaderToStream(std::ostream& outStream);
     void writeStateToStream(std::ostream& outStream);
 
+    bool fileExists(const std::string& filename);
+    void exitWithErrorOutputFileExists();
+
     MbRandom* ranPtr;
     Model*    ModelPtr;
     Settings* sttings;
@@ -55,12 +58,19 @@ private:
     std::vector<int> acceptCount;
     std::vector<int> rejectCount;
 
-    std::string mcmcOutfile;
-    std::string lambdaOutfile;
-    std::string lambdaNodeOutfile;
-    std::string muOutfile;
-    std::string acceptFile;
-    std::string eventDataFile;
+    std::string _mcmcOutFilename;
+    std::string _lambdaOutFilename;
+    std::string _lambdaNodeOutFilename;
+    std::string _muOutFilename;
+    std::string _acceptOutFilename;
+    std::string _eventDataOutFilename;
+
+    std::ofstream _mcmcOutStream;
+    std::ofstream _lambdaOutStream;
+    std::ofstream _muOutStream;
+    std::ofstream _acceptOutStream;
+    std::ofstream _lambdaNodeOutStream;
+    std::ofstream _eventDataOutStream;
 
     int _treeWriteFreq;
     int _eventDataWriteFreq;

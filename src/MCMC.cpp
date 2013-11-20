@@ -24,12 +24,12 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     //check if file exists; delete;
 
     // MCMC parameters - for now....//
-    mcmcOutfile             =   sttings->getMCMCoutfile();
-    lambdaOutfile           =   sttings->getLambdaOutfile();
-    muOutfile               =   sttings->getMuOutfile();
-    acceptFile              =   sttings->getAcceptrateOutfile();
-    lambdaNodeOutfile       =   sttings->getLambdaNodeOutfile();
-    eventDataFile           =   sttings->getEventDataOutfile();
+    _mcmcOutFilename       = sttings->getMCMCoutfile();
+    _lambdaOutFilename     = sttings->getLambdaOutfile();
+    _muOutFilename         = sttings->getMuOutfile();
+    _acceptOutFilename     = sttings->getAcceptrateOutfile();
+    _lambdaNodeOutFilename = sttings->getLambdaNodeOutfile();
+    _eventDataOutFilename  = sttings->getEventDataOutfile();
 
     _treeWriteFreq =        sttings->getBranchRatesWriteFreq();
     _eventDataWriteFreq =   sttings->getEventDataWriteFreq();
@@ -40,112 +40,22 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
 
     _firstLine = true; // Print header for the first line of output
     
-    bool fileOverwite =     sttings->getOverwrite();
-    
-    
-// TODO: put all of these files checks into a more general function
-    
-    std::ifstream outStream(mcmcOutfile.c_str());
-    if (outStream) {
-        std::cout << "Output file for MCMC data exists: " << std::endl;
-        if (!fileOverwite) {
-            std::cout << std::endl << "Warning: analysis is set to not overwrite files." << std::endl;
-            std::cout << "Either remove or rename file '" << mcmcOutfile << "', or set:" << std::endl;
-            std::cout << "    overwrite = 1" << std::endl;
-            std::cout << "in the control file to turn on file overwriting." << std::endl;
-            std::cout << std::endl << "Exiting." << std::endl;
-            exit(0);
+    bool fileOverwrite =     sttings->getOverwrite();
+
+    if (!fileOverwrite) {
+        if (fileExists(_mcmcOutFilename) || fileExists(_lambdaOutFilename) ||
+            fileExists(_muOutFilename)   || fileExists(_eventDataOutFilename)) {
+            exitWithErrorOutputFileExists();
         }
-        std::cout << std::setw(30) << " overwriting " << mcmcOutfile << std::endl;
-        outStream.close();
-        std::string filedelete("rm ");
-        filedelete.append(mcmcOutfile);
-        std::system(filedelete.c_str());
     }
 
-    //check if file exists; delete;
-    std::ifstream outStream2(lambdaOutfile.c_str());
-    if (outStream2) {
-        std::cout << "Output file for marginal branch (speciation) rates exists: " << std::endl;
-        if (!fileOverwite) {
-            std::cout << std::endl << "Warning: analysis is set to not overwrite files." << std::endl;
-            std::cout << "Either remove or rename file '" << lambdaOutfile << "', or set:" << std::endl;
-            std::cout << "    overwrite = 1" << std::endl;
-            std::cout << "in the control file to turn on file overwriting." << std::endl;
-            std::cout << std::endl << "Exiting." << std::endl;
-            exit(0);
-        }
-        std::cout << std::setw(30) << " overwriting " << lambdaOutfile << std::endl;
-        outStream2.close();
-        std::string filedelete("rm ");
-        filedelete.append(lambdaOutfile);
-        std::system(filedelete.c_str());
-    }
-
-    std::ifstream outStream3(muOutfile.c_str());
-    if (outStream3) {
-        std::cout << "Output file for marginal branch (extinction) rates exists: " << std::endl;
-        if (!fileOverwite) {
-            std::cout << std::endl << "Warning: analysis is set to not overwrite files." << std::endl;
-            std::cout << "Either remove or rename file '" << muOutfile << "', or set:" << std::endl;
-            std::cout << "    overwrite = 1" << std::endl;
-            std::cout << "in the control file to turn on file overwriting." << std::endl;
-            std::cout << std::endl << "Exiting." << std::endl;
-            exit(0);
-        }
-        std::cout << std::setw(30) << " overwriting " << muOutfile << std::endl;
-        outStream3.close();
-        std::string filedelete("rm ");
-        filedelete.append(muOutfile);
-        std::system(filedelete.c_str());
-    }
-
-
-    // Deprecated: no longer write accept rates to file.
-/*
-    std::ifstream outStream4(acceptFile.c_str());
-    if (outStream4) {
-        std::cout << "Output file for acceptrates exists: " << std::endl;
-        std::cout << std::setw(30) << " overwriting " << acceptFile << std::endl;
-        outStream4.close();
-        std::string filedelete("rm ");
-        filedelete.append(acceptFile);
-        std::system(filedelete.c_str());
-    }
-*/ 
-
-    
-    // Deprecated: no longer write node lambda to file.
-/*
-    std::ifstream outStream5(lambdaNodeOutfile.c_str());
-    if (outStream5) {
-        std::cout << "Output file for lambdaNodeData: " << std::endl;
-        std::cout << std::setw(30) << " overwriting " << lambdaNodeOutfile << std::endl;
-        outStream5.close();
-        std::string filedelete("rm ");
-        filedelete.append(lambdaNodeOutfile);
-        std::system(filedelete.c_str());
-    }
-*/
- 
-    std::ifstream outStream6(eventDataFile.c_str());
-    if (outStream6) {
-        std::cout << "Output file for event data: " << std::endl;
-        if (!fileOverwite) {
-            std::cout << std::endl << "Warning: analysis is set to not overwrite files." << std::endl;
-            std::cout << "Either remove or rename file '" << eventDataFile << "', or set:" << std::endl;
-            std::cout << "    overwrite = 1" << std::endl;
-            std::cout << "in the control file to turn on file overwriting." << std::endl;
-            std::cout << std::endl << "Exiting." << std::endl;
-            exit(0);
-        }
-        std::cout << std::setw(30) << " overwriting " << eventDataFile << std::endl;
-        outStream6.close();
-        std::string filedelete("rm ");
-        filedelete.append(eventDataFile);
-        std::system(filedelete.c_str());
-    }
-
+    // Open streams for writing (overwrite)
+    _mcmcOutStream.open(_mcmcOutFilename.c_str());
+    _lambdaOutStream.open(_lambdaOutFilename.c_str());
+    _muOutStream.open(_muOutFilename.c_str());
+    _acceptOutStream.open(_acceptOutFilename.c_str());
+    _lambdaNodeOutStream.open(_lambdaNodeOutFilename.c_str());
+    _eventDataOutStream.open(_eventDataOutFilename.c_str());
 
     setUpdateWeights();
     ModelPtr->resetGeneration();
@@ -201,7 +111,12 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
 
 MCMC::~MCMC(void)
 {
-
+    _mcmcOutStream.close();
+    _lambdaOutStream.close();
+    _muOutStream.close();
+    _acceptOutStream.close();
+    _lambdaNodeOutStream.close();
+    _eventDataOutStream.close();
 }
 
 
@@ -295,15 +210,12 @@ void MCMC::updateState(int parm)
 
 void MCMC::writeStateToFile()
 {
-    // TODO: Move opening to constructor, closing to destructor
-    std::ofstream outStream(mcmcOutfile.c_str(), std::ofstream::app);
     if (_firstLine) {
-      writeHeaderToStream(outStream);
+      writeHeaderToStream(_mcmcOutStream);
       _firstLine = false;
     } else {
-      writeStateToStream(outStream);
+      writeStateToStream(_mcmcOutStream);
     }
-    outStream.close();
 }
 
 
@@ -346,53 +258,43 @@ void MCMC::printStateData(void)
 
 void MCMC::writeBranchSpeciationRatesToFile(void)
 {
-    std::string outname = lambdaOutfile;
     ModelPtr->getTreePtr()->setMeanBranchSpeciation();
     std::stringstream outdata;
     ModelPtr->getTreePtr()->writeMeanBranchSpeciationTree(
         ModelPtr->getTreePtr()->getRoot(), outdata);
     outdata << ";";
-    std::ofstream outStream;
-    outStream.open(outname.c_str(), std::ofstream::app);
-    outStream << outdata.str() << std::endl;
-    outStream.close();
+
+    _lambdaOutStream << outdata.str() << std::endl;
 }
 
 
 void MCMC::writeNodeSpeciationRatesToFile(void)
 {
-    std::string outname = lambdaNodeOutfile;
     ModelPtr->getTreePtr()->setMeanBranchSpeciation();
     std::stringstream outdata;
     ModelPtr->getTreePtr()->writeNodeSpeciationTree(
         ModelPtr->getTreePtr()->getRoot(), outdata);
     outdata << ";";
-    std::ofstream outStream;
-    outStream.open(outname.c_str(), std::ofstream::app);
-    outStream << outdata.str() << std::endl;
-    outStream.close();
+
+    _lambdaNodeOutStream << outdata.str() << std::endl;
 }
 
 
 void MCMC::writeBranchExtinctionRatesToFile(void)
 {
-    std::string outname = muOutfile;
     ModelPtr->getTreePtr()->setMeanBranchExtinction();
     std::stringstream outdata;
     ModelPtr->getTreePtr()->writeMeanBranchExtinctionTree(
         ModelPtr->getTreePtr()->getRoot(), outdata);
     outdata << ";";
-    std::ofstream outStream;
-    outStream.open(outname.c_str(), std::ofstream::app);
-    outStream << outdata.str() << std::endl;
-    outStream.close();
+
+    _muOutStream << outdata.str() << std::endl;
 }
 
 // TODO: Deprecate writeParamAcceptRates (not useful at present)
 void MCMC::writeParamAcceptRates(void)
 {
-    std::ofstream outStream;
-    outStream.open(acceptFile.c_str(), std::ofstream::app);
+    std::ofstream& outStream = _acceptOutStream;
     for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
         double rate = (double)acceptCount[i] / ((double)(acceptCount[i] +
                                                 rejectCount[i]));
@@ -403,7 +305,6 @@ void MCMC::writeParamAcceptRates(void)
             outStream << "\n";
         }
     }
-    outStream.close();
     for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
         acceptCount[i] = 0;
         rejectCount[i] = 0;
@@ -412,11 +313,24 @@ void MCMC::writeParamAcceptRates(void)
 
 void MCMC::writeEventDataToFile(void)
 {
-    std::string outname = eventDataFile;
     std::stringstream eventData;
     ModelPtr->getEventDataString(eventData);
-    std::ofstream outstream;
-    outstream.open(eventDataFile.c_str(), std::ofstream::app);
-    outstream << eventData.str() << std::endl;
-    outstream.close();
+
+    _eventDataOutStream << eventData.str() << std::endl;
+}
+
+
+bool MCMC::fileExists(const std::string& filename)
+{
+    std::ifstream inFile(filename.c_str());
+    return inFile.good();
+}
+
+
+void MCMC::exitWithErrorOutputFileExists()
+{
+    std::cout << "ERROR: Analysis is set to not overwrite files.\n";
+    std::cout << "Fix by removing or renaming output file(s),\n";
+    std::cout << "or set \"overwrite = 1\" in the control file.\n";
+    std::exit(1);
 }
