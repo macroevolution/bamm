@@ -138,7 +138,7 @@ void Settings::initializeSpeciationExtinctionSettings()
     // General
     addParameter("useGlobalSamplingProbability", "1");
     addParameter("globalSamplingFraction",       "0.0");
-    addParameter("sampleProbsFilename",          "sample_probs.txt");
+    addParameter("sampleProbsFilename",          "sample_probs.txt", false);
 
     // MCMC tuning
     addParameter("updateLambdaInitScale",        "0.0");

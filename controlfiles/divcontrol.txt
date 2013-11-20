@@ -56,7 +56,7 @@ globalSamplingFraction = 1.0
 # this is ignored and BAMM looks for a filename with 
 # species-specific sampling fractions
 
-sampleProbsFilename = sample_probs.txt
+# sampleProbsFilename = sample_probs.txt
 # File containing species-specific sampling fractions. See documentation.
 
 # seed = 12345
