@@ -114,8 +114,6 @@ void Settings::initializeGlobalSettings()
     addParameter("mcmcOutfile",                  "mcmc_out.txt");
     addParameter("eventDataOutfile",             "event_data.txt");
 
-    // TODO: deprecate acceptrateOutfile
-    addParameter("acceptrateOutfile",            "mcmc_accept.txt", false);
     addParameter("branchRatesWriteFreq",         "0");
     addParameter("mcmcWriteFreq",                "0");
     addParameter("eventDataWriteFreq",           "0");
@@ -165,7 +163,6 @@ void Settings::initializeSpeciationExtinctionSettings()
     // Output
     addParameter("lambdaOutfile",                "lambda_rates.txt");
     addParameter("muOutfile",                    "mu_rates.txt");
-    addParameter("lambdaNodeOutfile",            "node_lambda.txt", false);
 
     // Parameter update rates
     addParameter("updateRateLambda0",            "0.0");
@@ -198,7 +195,6 @@ void Settings::initializeTraitSettings()
 
     // Output
     addParameter("betaOutfile",                    "beta_rates.txt");
-    addParameter("nodeStateOutfile",               "node_states.txt", false);
 
     // Parameter update rates
     addParameter("updateRateBeta0",                "0.0");
