@@ -31,15 +31,12 @@ public:
     void writeStateToFile(void);
     void printStateData(void);
     void writeBranchBetaRatesToFile(void);
-    void writeNodeStatesToFile(void);
     void writeEventDataToFile(void);
 
     int  pickParameterClassToUpdate(void);
     void updateState(int parm);
 
     void setUpdateWeights(void);
-
-    void writeParamAcceptRates(void);
 
 private:
 
@@ -62,14 +59,10 @@ private:
 
     std::string _mcmcOutFilename;
     std::string _betaOutFilename;
-    std::string _nodeStateOutFilename;
-    std::string _acceptOutFilename;
     std::string _eventDataOutFilename;
 
     std::ofstream _mcmcOutStream;
     std::ofstream _betaOutStream;
-    std::ofstream _nodeStateOutStream;
-    std::ofstream _acceptOutStream;
     std::ofstream _eventDataOutStream;
 
     int _treeWriteFreq;

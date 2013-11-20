@@ -27,8 +27,6 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     _mcmcOutFilename       = sttings->getMCMCoutfile();
     _lambdaOutFilename     = sttings->getLambdaOutfile();
     _muOutFilename         = sttings->getMuOutfile();
-    _acceptOutFilename     = sttings->getAcceptrateOutfile();
-    _lambdaNodeOutFilename = sttings->getLambdaNodeOutfile();
     _eventDataOutFilename  = sttings->getEventDataOutfile();
 
     _treeWriteFreq =        sttings->getBranchRatesWriteFreq();
@@ -50,8 +48,6 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     _mcmcOutStream.open(_mcmcOutFilename.c_str());
     _lambdaOutStream.open(_lambdaOutFilename.c_str());
     _muOutStream.open(_muOutFilename.c_str());
-    _acceptOutStream.open(_acceptOutFilename.c_str());
-    _lambdaNodeOutStream.open(_lambdaNodeOutFilename.c_str());
     _eventDataOutStream.open(_eventDataOutFilename.c_str());
 
     writeHeadersToOutputFiles();
@@ -113,8 +109,6 @@ MCMC::~MCMC(void)
     _mcmcOutStream.close();
     _lambdaOutStream.close();
     _muOutStream.close();
-    _acceptOutStream.close();
-    _lambdaNodeOutStream.close();
     _eventDataOutStream.close();
 }
 
@@ -254,18 +248,6 @@ void MCMC::writeBranchSpeciationRatesToFile(void)
 }
 
 
-void MCMC::writeNodeSpeciationRatesToFile(void)
-{
-    ModelPtr->getTreePtr()->setMeanBranchSpeciation();
-    std::stringstream outdata;
-    ModelPtr->getTreePtr()->writeNodeSpeciationTree(
-        ModelPtr->getTreePtr()->getRoot(), outdata);
-    outdata << ";";
-
-    _lambdaNodeOutStream << outdata.str() << std::endl;
-}
-
-
 void MCMC::writeBranchExtinctionRatesToFile(void)
 {
     ModelPtr->getTreePtr()->setMeanBranchExtinction();
@@ -277,25 +259,6 @@ void MCMC::writeBranchExtinctionRatesToFile(void)
     _muOutStream << outdata.str() << std::endl;
 }
 
-// TODO: Deprecate writeParamAcceptRates (not useful at present)
-void MCMC::writeParamAcceptRates(void)
-{
-    std::ofstream& outStream = _acceptOutStream;
-    for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
-        double rate = (double)acceptCount[i] / ((double)(acceptCount[i] +
-                                                rejectCount[i]));
-        outStream << rate;
-        if (i < (acceptCount.size() - 1)) {
-            outStream << ",";
-        } else {
-            outStream << "\n";
-        }
-    }
-    for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
-        acceptCount[i] = 0;
-        rejectCount[i] = 0;
-    }
-}
 
 void MCMC::writeEventDataToFile(void)
 {
@@ -311,8 +274,6 @@ bool MCMC::anyOutputFileExists()
     return fileExists(_mcmcOutFilename)       ||
            fileExists(_lambdaOutFilename)     ||
            fileExists(_muOutFilename)         ||
-           fileExists(_acceptOutFilename)     ||
-           fileExists(_lambdaNodeOutFilename) ||
            fileExists(_eventDataOutFilename);
 }
 

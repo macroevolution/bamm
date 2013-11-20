@@ -35,8 +35,6 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     // MCMC parameters - for now....//
     _mcmcOutFilename      = sttings->getMCMCoutfile();
     _betaOutFilename      = sttings->getBetaOutfile();
-    _nodeStateOutFilename = sttings->getNodeStateOutfile();
-    _acceptOutFilename    = sttings->getAcceptrateOutfile();
     _eventDataOutFilename = sttings->getEventDataOutfile();
 
     _treeWriteFreq =    sttings->getBranchRatesWriteFreq();
@@ -57,8 +55,6 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     // Open streams for writing (overwrite)
     _mcmcOutStream.open(_mcmcOutFilename.c_str());
     _betaOutStream.open(_betaOutFilename.c_str());
-    _nodeStateOutStream.open(_nodeStateOutFilename.c_str());
-    _acceptOutStream.open(_acceptOutFilename.c_str());
     _eventDataOutStream.open(_eventDataOutFilename.c_str());
 
     writeHeadersToOutputFiles();
@@ -88,7 +84,6 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
         if ((i % _treeWriteFreq) == 0) {
 
             writeBranchBetaRatesToFile();
-            writeNodeStatesToFile();
 
         }
 
@@ -284,38 +279,6 @@ void TraitMCMC::writeBranchBetaRatesToFile(void)
 }
 
 
-void TraitMCMC::writeNodeStatesToFile(void)
-{
-    std::stringstream outdata;
-
-    ModelPtr->getTreePtr()->writeBranchPhenotypes
-        (ModelPtr->getTreePtr()->getRoot(), outdata);
-
-    outdata << ";";
-
-    _nodeStateOutStream << outdata.str() << std::endl;
-}
-
-void TraitMCMC::writeParamAcceptRates(void)
-{
-    std::ofstream& outStream = _acceptOutStream;
-    for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
-        double rate = (double)acceptCount[i] / ((double)(acceptCount[i] +
-                                                rejectCount[i]));
-        outStream << rate;
-        if (i < (acceptCount.size() - 1))
-            outStream << ",";
-        else
-            outStream << "\n";
-
-    }
-
-    for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
-        acceptCount[i] = 0;
-        rejectCount[i] = 0;
-    }
-}
-
 void TraitMCMC::writeEventDataToFile(void)
 {
     std::stringstream eventData;
@@ -329,8 +292,6 @@ bool TraitMCMC::anyOutputFileExists()
 {
     return fileExists(_mcmcOutFilename)      ||
            fileExists(_betaOutFilename)      ||
-           fileExists(_nodeStateOutFilename) ||
-           fileExists(_acceptOutFilename)    ||
            fileExists(_eventDataOutFilename);
 }
 

@@ -31,15 +31,12 @@ public:
     void printStateData();
     void writeBranchSpeciationRatesToFile();
     void writeBranchExtinctionRatesToFile();
-    void writeNodeSpeciationRatesToFile();
     void writeEventDataToFile();
 
     int  pickParameterClassToUpdate();
     void updateState(int parm);
 
     void setUpdateWeights();
-
-    void writeParamAcceptRates();
 
 private:
 
@@ -62,16 +59,12 @@ private:
 
     std::string _mcmcOutFilename;
     std::string _lambdaOutFilename;
-    std::string _lambdaNodeOutFilename;
     std::string _muOutFilename;
-    std::string _acceptOutFilename;
     std::string _eventDataOutFilename;
 
     std::ofstream _mcmcOutStream;
     std::ofstream _lambdaOutStream;
     std::ofstream _muOutStream;
-    std::ofstream _acceptOutStream;
-    std::ofstream _lambdaNodeOutStream;
     std::ofstream _eventDataOutStream;
 
     int _treeWriteFreq;
