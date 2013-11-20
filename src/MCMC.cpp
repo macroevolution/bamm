@@ -43,8 +43,7 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     bool fileOverwrite =     sttings->getOverwrite();
 
     if (!fileOverwrite) {
-        if (fileExists(_mcmcOutFilename) || fileExists(_lambdaOutFilename) ||
-            fileExists(_muOutFilename)   || fileExists(_eventDataOutFilename)) {
+        if (anyOutputFileExists()) {
             exitWithErrorOutputFileExists();
         }
     }
@@ -317,6 +316,17 @@ void MCMC::writeEventDataToFile(void)
     ModelPtr->getEventDataString(eventData);
 
     _eventDataOutStream << eventData.str() << std::endl;
+}
+
+
+bool MCMC::anyOutputFileExists()
+{
+    return fileExists(_mcmcOutFilename)       ||
+           fileExists(_lambdaOutFilename)     ||
+           fileExists(_muOutFilename)         ||
+           fileExists(_acceptOutFilename)     ||
+           fileExists(_lambdaNodeOutFilename) ||
+           fileExists(_eventDataOutFilename);
 }
 
 

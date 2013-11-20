@@ -46,6 +46,7 @@ private:
     void writeHeaderToStream(std::ostream& outStream);
     void writeStateToStream(std::ostream& outStream);
 
+    bool anyOutputFileExists();
     bool fileExists(const std::string& filename);
     void exitWithErrorOutputFileExists();
 

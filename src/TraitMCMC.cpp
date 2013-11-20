@@ -33,11 +33,11 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     //check if file exists; delete;
 
     // MCMC parameters - for now....//
-    mcmcOutfile             =   sttings->getMCMCoutfile();
-    betaOutfile             =   sttings->getBetaOutfile();
-    nodeStateOutfile        =   sttings->getNodeStateOutfile();
-    acceptFile              =   sttings->getAcceptrateOutfile();
-    eventDataFile           =   sttings->getEventDataOutfile();
+    _mcmcOutFilename      = sttings->getMCMCoutfile();
+    _betaOutFilename      = sttings->getBetaOutfile();
+    _nodeStateOutFilename = sttings->getNodeStateOutfile();
+    _acceptOutFilename    = sttings->getAcceptrateOutfile();
+    _eventDataOutFilename = sttings->getEventDataOutfile();
 
     _treeWriteFreq =    sttings->getBranchRatesWriteFreq();
     _mcmcWriteFreq =    sttings->getMCMCwriteFreq();
@@ -48,71 +48,20 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
 
     _firstLine = true;
 
+    bool fileOverwrite = sttings->getOverwrite();
 
-    std::ifstream outStream(mcmcOutfile.c_str());
-    if (outStream) {
-        std::cout << "Output file for MCMC data exists: " << std::endl;
-        std::cout << std::setw(30) << " overwriting " << mcmcOutfile << std::endl;
-        outStream.close();
-
-        std::string filedelete("rm ");
-        filedelete.append(mcmcOutfile);
-
-        std::system(filedelete.c_str());
-
+    if (!fileOverwrite) {
+        if (anyOutputFileExists()) {
+            exitWithErrorOutputFileExists();
+        }
     }
 
-    //check if file exists; delete;
-    std::ifstream outStream2(betaOutfile.c_str());
-    if (outStream2) {
-        std::cout << "Output file for beta exists: " << std::endl;
-        std::cout << std::setw(30) << " overwriting " << betaOutfile << std::endl;
-        outStream2.close();
-
-        std::string filedelete("rm ");
-        filedelete.append(betaOutfile);
-
-        std::system(filedelete.c_str());
-
-    }
-
-    std::ifstream outStream3(nodeStateOutfile.c_str());
-    if (outStream3) {
-        std::cout << "Output file for node states exists: " << std::endl;
-        std::cout << std::setw(30) << " overwriting " << nodeStateOutfile << std::endl;
-        outStream3.close();
-
-        std::string filedelete("rm ");
-        filedelete.append(nodeStateOutfile);
-
-        std::system(filedelete.c_str());
-
-    }
-
-    // Deprecating this:
-    
-/*
-    std::ifstream outStream4(acceptFile.c_str());
-    if (outStream4) {
-        std::cout << "Output file for acceptrates exists: " << std::endl;
-        std::cout << std::setw(30) << " overwriting " << acceptFile << std::endl;
-        outStream4.close();
-        std::string filedelete("rm ");
-        filedelete.append(acceptFile);
-        std::system(filedelete.c_str());
-    }
-*/
- 
-    std::ifstream outStream6(eventDataFile.c_str());
-    if (outStream6) {
-        std::cout << "Output file for event data: " << std::endl;
-        std::cout << std::setw(30) << " overwriting " << eventDataFile << std::endl;
-        outStream6.close();
-        std::string filedelete("rm ");
-        filedelete.append(eventDataFile);
-        std::system(filedelete.c_str());
-    }
-
+    // Open streams for writing (overwrite)
+    _mcmcOutStream.open(_mcmcOutFilename.c_str());
+    _betaOutStream.open(_betaOutFilename.c_str());
+    _nodeStateOutStream.open(_nodeStateOutFilename.c_str());
+    _acceptOutStream.open(_acceptOutFilename.c_str());
+    _eventDataOutStream.open(_eventDataOutFilename.c_str());
 
     setUpdateWeights();
     ModelPtr->resetGeneration();
@@ -281,18 +230,12 @@ void TraitMCMC::updateState(int parm)
 
 void TraitMCMC::writeStateToFile()
 {
-    // TODO: Move opening to constructor, closing to destructor
-    std::ofstream outStream(mcmcOutfile.c_str(), std::ofstream::app);
-
     if (_firstLine) {
-        writeHeaderToStream(outStream);
+        writeHeaderToStream(_mcmcOutStream);
         _firstLine = false;
     }
     else
-        writeStateToStream(outStream);
-
-
-    outStream.close();
+        writeStateToStream(_mcmcOutStream);
 }
 
 
@@ -336,9 +279,6 @@ void TraitMCMC::printStateData(void)
 
 void TraitMCMC::writeBranchBetaRatesToFile(void)
 {
-
-    std::string outname = betaOutfile;
-
     ModelPtr->getTreePtr()->setMeanBranchTraitRates();
 
     std::stringstream outdata;
@@ -347,38 +287,25 @@ void TraitMCMC::writeBranchBetaRatesToFile(void)
 
     outdata << ";";
 
-    std::ofstream outStream;
-    outStream.open(outname.c_str(), std::ofstream::app);
-    outStream << outdata.str() << std::endl;
-    outStream.close();
-
+    _betaOutStream << outdata.str() << std::endl;
 }
 
 
 void TraitMCMC::writeNodeStatesToFile(void)
 {
-
-    std::string outname =  nodeStateOutfile;
-
     std::stringstream outdata;
 
-    ModelPtr->getTreePtr()->writeBranchPhenotypes(ModelPtr->getTreePtr()->getRoot(),
-            outdata);
+    ModelPtr->getTreePtr()->writeBranchPhenotypes
+        (ModelPtr->getTreePtr()->getRoot(), outdata);
 
     outdata << ";";
 
-    std::ofstream outStream;
-    outStream.open(outname.c_str(), std::ofstream::app);
-    outStream << outdata.str() << std::endl;
-    outStream.close();
-
+    _nodeStateOutStream << outdata.str() << std::endl;
 }
 
 void TraitMCMC::writeParamAcceptRates(void)
 {
-
-    std::ofstream outStream;
-    outStream.open(acceptFile.c_str(), std::ofstream::app);
+    std::ofstream& outStream = _acceptOutStream;
     for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
         double rate = (double)acceptCount[i] / ((double)(acceptCount[i] +
                                                 rejectCount[i]));
@@ -389,38 +316,43 @@ void TraitMCMC::writeParamAcceptRates(void)
             outStream << "\n";
 
     }
-    outStream.close();
 
     for (std::vector<int>::size_type i = 0; i < acceptCount.size(); i++) {
         acceptCount[i] = 0;
         rejectCount[i] = 0;
     }
-
 }
 
 void TraitMCMC::writeEventDataToFile(void)
 {
-
-    std::string outname = eventDataFile;
-
     std::stringstream eventData;
     ModelPtr->getEventDataString(eventData);
 
-    std::ofstream outstream;
-    outstream.open(eventDataFile.c_str(), std::ofstream::app);
-    outstream << eventData.str() << std::endl;
-    outstream.close();
-
+    _eventDataOutStream << eventData.str() << std::endl;
 }
 
 
+bool TraitMCMC::anyOutputFileExists()
+{
+    return fileExists(_mcmcOutFilename)      ||
+           fileExists(_betaOutFilename)      ||
+           fileExists(_nodeStateOutFilename) ||
+           fileExists(_acceptOutFilename)    ||
+           fileExists(_eventDataOutFilename);
+}
 
 
+bool TraitMCMC::fileExists(const std::string& filename)
+{
+    std::ifstream inFile(filename.c_str());
+    return inFile.good();
+}
 
 
-
-
-
-
-
-
+void TraitMCMC::exitWithErrorOutputFileExists()
+{
+    std::cout << "ERROR: Analysis is set to not overwrite files.\n";
+    std::cout << "Fix by removing or renaming output file(s),\n";
+    std::cout << "or set \"overwrite = 1\" in the control file.\n";
+    std::exit(1);
+}

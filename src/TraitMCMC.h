@@ -46,6 +46,10 @@ private:
     void writeHeaderToStream(std::ostream& outStream);
     void writeStateToStream(std::ostream& outStream);
 
+    bool anyOutputFileExists();
+    bool fileExists(const std::string& filename);
+    void exitWithErrorOutputFileExists();
+
     MbRandom* ranPtr;
     TraitModel* ModelPtr;
     Settings* sttings;
@@ -55,11 +59,17 @@ private:
     std::vector<int> acceptCount;
     std::vector<int> rejectCount;
 
-    std::string mcmcOutfile;
-    std::string betaOutfile;
-    std::string nodeStateOutfile;
-    std::string acceptFile;
-    std::string eventDataFile;
+    std::string _mcmcOutFilename;
+    std::string _betaOutFilename;
+    std::string _nodeStateOutFilename;
+    std::string _acceptOutFilename;
+    std::string _eventDataOutFilename;
+
+    std::ofstream _mcmcOutStream;
+    std::ofstream _betaOutStream;
+    std::ofstream _nodeStateOutStream;
+    std::ofstream _acceptOutStream;
+    std::ofstream _eventDataOutStream;
 
     int _treeWriteFreq;
     int _mcmcWriteFreq;
