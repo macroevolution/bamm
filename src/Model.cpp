@@ -2068,12 +2068,19 @@ double  Model::getMHacceptanceRate(void)
 
     double arate = (double)acceptCount / ((double)acceptCount +
                                           (double)rejectCount);
-    acceptCount = 0;
-    rejectCount = 0;
 
     return arate;
 
 }
+
+
+void  Model::resetMHacceptanceParameters(void)
+{
+    acceptCount = 0;
+    rejectCount = 0;
+
+}
+
 
 
 BranchEvent* Model::getEventByIndex(int x)

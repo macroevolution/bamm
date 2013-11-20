@@ -128,6 +128,7 @@ int main (int argc, char* argv[])
         
         intree.setCanNodeHoldEventByDescCount(mySettings.getMinCladeSizeForShift());
         intree.setTreeMap(intree.getRoot());
+
         if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
             Model myModel(&myRNG, &intree, &mySettings);
             std::cout << "Initializing model but not running MCMC" << std::endl;

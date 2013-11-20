@@ -184,6 +184,12 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
 
         if ((i % _printFreq == 0)) {
             printStateData();
+        
+            // Resets acceptance rates every time
+            //  state data are printed.
+            //  This could lead to NANs if writeEventDataToFile is called after this.
+            
+            ModelPtr->resetMHacceptanceParameters();
         }
 
         // Deprecating this - no need to write this accept data
@@ -303,17 +309,18 @@ void MCMC::writeStateToFile()
 
 void MCMC::writeHeaderToStream(std::ostream& outStream)
 {
-    outStream << "generation,numevents,logprior,llbranches,eventRate\n";
+    outStream << "generation,numevents,logprior,llbranches,eventRate,acceptRate\n";
 }
 
 
 void MCMC::writeStateToStream(std::ostream& outStream)
 {
-    outStream << ModelPtr->getGeneration()      << ","
-              << ModelPtr->getNumberOfEvents()  << ","
-              << ModelPtr->computeLogPrior()    << ","
-              << ModelPtr->getCurrLnLBranches() << ","
-              << ModelPtr->getEventRate() << std::endl;
+    outStream << ModelPtr->getGeneration()       << ","
+              << ModelPtr->getNumberOfEvents()   << ","
+              << ModelPtr->computeLogPrior()     << ","
+              << ModelPtr->getCurrLnLBranches()  << ","
+              << ModelPtr->getEventRate()        << ","
+              << ModelPtr->getMHacceptanceRate() << "," << std::endl;
 }
 
 
@@ -381,6 +388,7 @@ void MCMC::writeBranchExtinctionRatesToFile(void)
     outStream.close();
 }
 
+// TODO: Deprecate writeParamAcceptRates (not useful at present)
 void MCMC::writeParamAcceptRates(void)
 {
     std::ofstream outStream;

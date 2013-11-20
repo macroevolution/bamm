@@ -86,7 +86,7 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
     initializeSettingsWithUserValues();
 }
 
-
+ 
 void Settings::initializeGlobalSettings()
 {
     // General
@@ -113,10 +113,13 @@ void Settings::initializeGlobalSettings()
     addParameter("runInfoFilename",              "run_info.txt");
     addParameter("mcmcOutfile",                  "mcmc_out.txt");
     addParameter("eventDataOutfile",             "event_data.txt");
+
+    // TODO: deprecate acceptrateOutfile
     addParameter("acceptrateOutfile",            "mcmc_accept.txt", false);
     addParameter("branchRatesWriteFreq",         "0");
     addParameter("mcmcWriteFreq",                "0");
     addParameter("eventDataWriteFreq",           "0");
+    
     addParameter("acceptWriteFreq",              "0");
     addParameter("printFreq",                    "0");
     addParameter("overwrite",                    "0", false);
@@ -126,6 +129,8 @@ void Settings::initializeGlobalSettings()
     addParameter("updateRateEventPosition",      "0.0");
     addParameter("updateRateEventRate",          "0.0");
     addParameter("initialNumberEvents",          "0");
+ 
+    // TODO: deprecate updateRateNumberTimeVariablePartitions
     addParameter("updateRateNumberTimeVariablePartitions", "0.0", false);
 
     // Other (TODO: Need to add documentation for these)
@@ -146,7 +151,7 @@ void Settings::initializeSpeciationExtinctionSettings()
     addParameter("updateMuInitScale",            "0.0");
     addParameter("updateLambdaShiftScale",       "0.0");
     addParameter("updateMuShiftScale",           "0.0", false);
-    addParameter("minCladeSizeForShift",         "1");
+    addParameter("minCladeSizeForShift",         "1", false);
 
     // Starting parameters
     addParameter("lambdaInit0",                  "0.0");
@@ -164,7 +169,7 @@ void Settings::initializeSpeciationExtinctionSettings()
     // Output
     addParameter("lambdaOutfile",                "lambda_rates.txt");
     addParameter("muOutfile",                    "mu_rates.txt");
-    addParameter("lambdaNodeOutfile",            "node_lambda.txt");
+    addParameter("lambdaNodeOutfile",            "node_lambda.txt", false);
 
     // Parameter update rates
     addParameter("updateRateLambda0",            "0.0");

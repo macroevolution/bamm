@@ -118,6 +118,7 @@ public:
 
     // More output: acceptance rates
     double getMHacceptanceRate();
+    void   resetMHacceptanceParameters();
 
     int  getAcceptLastUpdate();
     void setAcceptLastUpdate(int x);
