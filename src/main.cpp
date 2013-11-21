@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <sstream>
 #include <ctime>
+#include <cstdlib>
 
 #include "Tree.h"
 #include "MbRandom.h"
