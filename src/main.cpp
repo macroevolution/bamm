@@ -1,10 +1,3 @@
-
-/*
-
- This version of BAMM does speciation-extinction and trait evolution.
-
-*/
-
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -22,63 +15,54 @@
 
 
 const char* currentTime();
+void exitWithMessageUsage();
+void exitWithErrorUnknownArgument(const std::string& arg);
+void exitWithErrorNoControlFile();
 
-void usage () {
-    std::cout << std::endl << "Program usage:" << std::endl;
-    std::cout << "./bamm -control control_filename" << std::endl<< std::endl;
-}
   
 int main (int argc, char* argv[])
 {
+    if (argc == 1) {
+        exitWithMessageUsage();
+    }
+
+    std::string controlFilename;
+
+    // Process command-line arguments
+    int i = 1;
+    while (i < argc) {
+        std::string arg = std::string(argv[i]);
+        if (arg == "-h" || arg == "--help" || arg == "-help") {
+            exitWithMessageUsage();
+        } else if (arg == "-c" || arg == "--control" || arg == "-control") {
+            if (++i < argc) {
+                controlFilename = std::string(argv[i]);
+            } else {
+                exitWithErrorNoControlFile();
+            }
+        } else {
+            exitWithErrorUnknownArgument(arg);
+        }
+
+        i++;
+    }
+
+    // Load settings from control file
+    Settings mySettings(controlFilename);
+
+    for (int i = 0; i < 20; i++) {
+        std::cout << "#";
+    }
+    std::cout << "\n";
+    
+    MbRandom myRNG(mySettings.getSeed());
+
+    std::cout << "Random seed:\t\t" << myRNG.getSeed() << std::endl;
+
     std::string commandLine(argv[0]);
     for (int i = 1; i < argc; i++) {
         commandLine += std::string(" ") + argv[i];
     }
-
-    if (argc == 1) {
-        usage();
-        exit(0);
-    } else if (argc == 2) {
-        std::string arg = std::string(argv[1]);
-        if (arg == "-h" || arg == "h" || arg == "help" || arg == "-help") {
-            usage();
-            exit(0);
-        } else {
-            std::cout << "Unknown argument '" << arg << "'." << std::endl;
-            usage();
-            exit(0);
-        }
-    }
-    
-//    MbRandom myRNG; // *** don't do this until AFTER reading control file ***
-    Settings mySettings;
-    for (int i = 0; i < 20; i++) {
-        std::cout << "#";
-    }
-    
-    if (argc <= 1) {
-        std::cout << "Removed option to initialized BAMM with default settings" << std::endl;
-        std::cout << "You must specify a controlfilename" << std::endl;
-        throw;
-        
-    } else if (argc > 1) {
-        // IF > 1 things read assume other args:
-
-        std::vector<std::string> instrings;
-        for (int i = 0; i < argc; i++) {
-            instrings.push_back(argv[i]);
-        }
-        
-        mySettings.parseCommandLineInput(argc, instrings);
-    
-    } else {
-        std::cout << "Uninterpretable input. Exiting BAMM." << std::endl;
-        exit(1);
-    }
-    
-    std::cout << "Random seed:\t\t" << mySettings.getSeed() << std::endl;
-    
-    MbRandom myRNG(mySettings.getSeed());
 
     std::ofstream runInfoFile(mySettings.getRunInfoFilename().c_str());
     runInfoFile << "command line: " << commandLine << "\n";
@@ -88,30 +72,19 @@ int main (int argc, char* argv[])
 
     std::cout << mySettings.getModeltype() << std::endl;
     
-/*
-    double terp = 0.0;
-    std::cout << "TESTING uniformRv:" << std::endl;
-    for (int i = 0; i < 10000000; i++) {
-        terp = myRNG.uniformRv();
-        if (i > 9999975) { // only print out the last few numbers
-            std::cout << i << ": " << terp << std::endl;
-        }
-    }
-    exit(0);
-*/
-    
     if (mySettings.getModeltype() == "speciationextinction") {
-        std::cout << "Initializing diversification (speciationextinction) model" << std::endl;
+        std::cout << "Initializing diversification (speciationextinction) " <<
+            "model\n";
+
         for (int i = 0; i < 20; i++) {
             std::cout << "#";
         }
         
-        std::cout << std::endl << std::endl  << "SPECIATION-EXTINCTION BAMM" << std::endl << std::endl;
+        std::cout << "\nSPECIATION-EXTINCTION BAMM\n\n";
     
         mySettings.printCurrentSettings();
         mySettings.printCurrentSettings(runInfoFile);
 
-        mySettings.checkSettingsAreUserDefined();
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
         
@@ -152,8 +125,6 @@ int main (int argc, char* argv[])
         mySettings.printCurrentSettings();
         mySettings.printCurrentSettings(runInfoFile);
 
-        mySettings.checkSettingsAreUserDefined();
-
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
         
@@ -177,15 +148,6 @@ int main (int argc, char* argv[])
             std::cout << "Invalid run settings specified in main\n" << std::endl;
             exit(0);
         }
-
-    } else if (mySettings.getModeltype() == "EMPTY_STRING") {
-        std::cout << "You did not specify a modeltype." << std::endl;
-        std::cout << "You must specify one of the following for parameter modeltype\n\n" << std::endl;
-        std::cout << "\t\tspeciationextinction\n\t\ttrait\n\n" << std::endl << std::endl;
-    } else {
-        std::cout << "Invalid modeltype specification in controlfile" << std::endl;
-        std::cout << "Specified modeltype was <<" << mySettings.getModeltype() << ">> \n" << std::endl;
-        std::cout << "Valid options: \n" << "\t\tspeciationextinction\n\t\ttrait\n\n" << std::endl;
     }
 
     runInfoFile << "end time: " << currentTime();
@@ -199,4 +161,26 @@ const char* currentTime()
     time_t curTime;
     time(&curTime);
     return std::ctime(&curTime);
+}
+
+
+void exitWithMessageUsage()
+{
+    std::cout << "Usage: ./bamm -c control_filename\n";
+    std::exit(0);
+}
+
+
+void exitWithErrorUnknownArgument(const std::string& arg)
+{
+    std::cout << "Unknown argument " << arg << ".\n";
+    std::exit(1);
+}
+
+
+void exitWithErrorNoControlFile()
+{
+    std::cout << "ERROR: No control file specified.\n";
+    std::cout << "Fix by specifying a control file name.\n";
+    std::exit(1);
 }

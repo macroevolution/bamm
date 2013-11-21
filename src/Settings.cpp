@@ -10,33 +10,17 @@
 #include "Settings.h"
 
 
-Settings::Settings(int argc, char* argv[])
+Settings::Settings(const std::string& controlFilename)
 {
-    if (argc == 1) {
-        exitWithMessageUsage();
-    }
-
-    int i = 1;
-    while (i < argc) {
-        std::string arg = std::string(argv[i]);
-        if (arg == "-h" || arg == "--help" || arg == "-help") {
-            exitWithMessageUsage();
-        } else if (arg == "-c" || arg == "--control" || arg == "-control") {
-            if (++i < argc) {
-                readControlFile(std::string(argv[i]));
-            } else {
-                exitWithErrorNoControlFile();
-            }
-        } else {
-            exitWithErrorUnknownArgument(arg);
-        }
-    }
+    readControlFile(controlFilename);
 
     // Get the model type
     std::string modelType;
-    for (std::vector<std::string>::size_type i = 0; i < _varName.size(); i++) {
-        if (_varName[i] == "modeltype") {
-            modelType = _varValue[i];
+    std::vector<UserParameter>::const_iterator it;
+    for (it = _userParameters.begin(); it < _userParameters.end(); ++it) {
+        if (it->first == "modeltype") {
+            modelType = it->second;
+            break;
         }
     }
 
@@ -51,22 +35,9 @@ Settings::Settings(int argc, char* argv[])
         exitWithErrorInvalidModelType();
     }
 
-    // Re-assign parameters based on user values
+    // Re-assign parameters based on user values and validate
     initializeSettingsWithUserValues();
-}
-
-
-void Settings::exitWithMessageUsage() const
-{
-    std::cout << "Usage: ./bamm -c control_filename\n";
-    std::exit(0);
-}
-
-
-void Settings::exitWithErrorUnknownArgument(const std::string& arg) const
-{
-    std::cout << "Unknown argument " << arg << ".\n";
-    std::exit(1);
+    checkAllSettingsAreUserDefined();
 }
 
 
@@ -78,9 +49,9 @@ void Settings::readControlFile(const std::string& controlFilename)
     
     std::cout << "Reading control file <<" << controlFilename << ">>\n";
 
-    std::ifstream controlStream(controlFilename);
+    std::ifstream controlStream(controlFilename.c_str());
     
-    while (controlStream) {
+    while (!controlStream.eof()) {
         std::string line;
         getline(controlStream, line, '\n');
         
@@ -98,7 +69,7 @@ void Settings::readControlFile(const std::string& controlFilename)
             continue;
         }
         
-        // Now use second getline to split by '=' characters:
+        // Use second getline to split by '=' characters
         std::istringstream equalsStringStream(lineWithoutComments);
         std::vector<std::string> tokens;
         std::string token;
@@ -112,21 +83,15 @@ void Settings::readControlFile(const std::string& controlFilename)
         }
 
         // Store parameter and its value
-        _varName.push_back(tokens[0]);
-        _varValue.push_back(tokens[1]);
-        
-        if (infile.peek() == EOF) {
-            break;
-        }
+        _userParameters.push_back(UserParameter(tokens[0], tokens[1]));
     }
 }
 
 
-void Settings::exitWithErrorInvalidLine(const std::string& line) const
+bool Settings::fileExists(const std::string& filename) const
 {
-    std::cout << "ERROR: Invalid input line in control file.\n"
-    std::cout << "Problematic line includes <<" << line << ">>\n";
-    std::exit(1);            
+    std::ifstream inFile(filename.c_str());
+    return inFile.good();
 }
 
  
@@ -249,16 +214,8 @@ void Settings::initializeTraitSettings()
 void Settings::addParameter(const std::string& name, const std::string& value,
     bool mustBeUserDefined)
 {
-    _parameters.insert(std::pair<std::string, SettingsParameter>
-        (name, SettingsParameter(name, value, mustBeUserDefined)));
-}
-
-
-void Settings::exitWithErrorInvalidModelType() const
-{
-    std::cout << "ERROR: Invalid type of analysis.\n";
-    std::cout << "Fix by setting modeltype as speciationextinction or trait\n"
-    std::exit(1);
+    _parameters.insert(Parameter(name,
+        SettingsParameter(name, value, mustBeUserDefined)));
 }
 
 
@@ -266,50 +223,33 @@ void Settings::initializeSettingsWithUserValues()
 {
     std::vector<std::string> paramsNotFound;
 
-    std::vector<std::string>::size_type i;
-    for (i = 0; i < _varName.size(); i++) {
-        ParameterMap::iterator it = _parameters.find(_varName[i]);
-        if (it != _parameters.end()) {
-            assertNotUserDefined(it->second);
-            (it->second).setStringValue(_varValue[i]);
+    std::vector<UserParameter>::const_iterator userParamIt;
+    for (userParamIt = _userParameters.begin();
+        userParamIt != _userParameters.end(); ++userParamIt) {
+
+        // Find the matching parameter to the user-specified parameter
+        ParameterMap::iterator paramIt = _parameters.find((userParamIt->first));
+
+        // If found, set the value of the parameter to the user's
+        if (paramIt != _parameters.end()) {
+            // Parameter should not already be user-defined
+            if ((paramIt->second).isUserDefined()) {
+                exitWithErrorDuplicateParameter(paramIt->first);
+            } else {
+                (paramIt->second).setStringValue(userParamIt->second);
+            }
         } else {
-            // Parameter not found:
-            //      add to list of potentially bad/misspelled params
-            //      and print for user.
-            paramsNotFound.push_back(_varName[i]);
+            paramsNotFound.push_back(userParamIt->first);
         }
     }
 
     attachPrefixToOutputFiles();
 
-    std::cout << "Read a total of <<" << _varName.size() <<
-         ">> parameter settings from control file\n";
+    std::cout << "Read a total of <<" << _userParameters.size() << ">> " <<
+         "parameter settings from control file\n";
 
     if (paramsNotFound.size() > 0) {
-        std::cout << std::endl << "********************************\n";
-        std::cout << "ERROR: one or more parameters from control file\n";
-        std::cout << "do not correspond to valid model parameters.\n";
-        std::cout << "Fix by checking the following to see if they are\n";
-        std::cout << "specified (or spelled) correctly:\n\n";
-
-        std::vector<std::string>::const_iterator it;
-        for (it = paramsNotFound.begin(); it != paramsNotFound.end(); ++it) {
-            std::cout << std::setw(30) << *it << std::endl;
-        }
-
-        std::cout << "\n********************************\n\n";
-        std::cout << "Execution of BAMM terminated...\n";
-        std::exit(1);
-    }
-}
-
-
-void Settings::assertNotUserDefined(const SettingsParameter& parameter) const
-{
-    if (parameter.isUserDefined()) {
-        std::cout << "ERROR: Duplicate parameter " << parameter.name() << ".\n";
-        std::cout << "Fix by removing duplicate parameter in control file.\n";
-        std::exit(1);
+        exitWithErrorParametersNotFound(paramsNotFound);
     }
 }
 
@@ -351,7 +291,7 @@ std::string Settings::attachPrefix
 }
 
 
-void Settings::checkSettingsAreUserDefined() const
+void Settings::checkAllSettingsAreUserDefined() const
 {
     ParameterMap::const_iterator it;
     for (it = _parameters.begin(); it != _parameters.end(); ++it) {
@@ -363,19 +303,11 @@ void Settings::checkSettingsAreUserDefined() const
 }
 
 
-void Settings::exitWithErrorUndefinedParameter(const std::string& name) const
-{
-    std::cout << "ERROR: Parameter " << name << " is undefined.\n";
-    std::cout << "Fix by assigning the parameter a value in the control file\n";
-    std::exit(1);
-}
-
-
 void Settings::printCurrentSettings(std::ostream& out) const
 {
     int ppw = 29;
 
-    out << "*****************************************************\n";
+    out << "\n*****************************************************\n";
     out << "Current parameter settings:\n";
 
     ParameterMap::const_iterator it;
@@ -388,35 +320,58 @@ void Settings::printCurrentSettings(std::ostream& out) const
 }
 
 
-void Settings::parseCommandLineInput(int argc, std::vector<std::string>& instrings)
+void Settings::exitWithErrorNoControlFile() const
 {
-    std::vector<std::string> badFlags;
+    std::cout << "ERROR: Specified control file does not exist.\n";
+    std::cout << "Check that the file is in the specified location.\n";
+    std::exit(1);
+}
 
-    for (std::vector<std::string>::size_type i = 0; i < (std::vector<std::string>::size_type)argc; i++) {
-        if (instrings[i] == "-control") {
-            if (instrings.size() == ( i - 1)) {
-                std::cout << "Error: no controfile specified" << std::endl;
-                std::cout << "Exiting\n\n" << std::endl;
-            }
-            std::string controlfile = instrings[i + 1];
-            std::cout << "\n\nInitializing BAMM using control file <<" << controlfile << ">>" <<
-                 std::endl;
-            std::ifstream instream(controlfile.c_str());
-            if (!instream) {
-                std::cout << "File not found error: cannot locate control file in\n";
-                std::cout <<  "specified directory. Exiting BAMM" << std::endl << std::endl;
-                std::exit(1);
-            } else {
-                initializeSettingsDevel(controlfile);
-            }
-        } else {
-            if (i != 0) {
-                // If i == 0, we just assume that this is either (i) the path to the executable
-                //  or (ii), the commands used to invoke it.
-                //  May depend on system/compiler, but first argument should
-                //  not be a valid flag...
-                badFlags.push_back(instrings[i]);
-            }
-        }
+
+void Settings::exitWithErrorInvalidLine(const std::string& line) const
+{
+    std::cout << "ERROR: Invalid input line in control file.\n";
+    std::cout << "Problematic line includes <<" << line << ">>\n";
+    std::exit(1);            
+}
+
+
+void Settings::exitWithErrorUndefinedParameter(const std::string& name) const
+{
+    std::cout << "ERROR: Parameter " << name << " is undefined.\n";
+    std::cout << "Fix by assigning the parameter a value in the control file\n";
+    std::exit(1);
+}
+
+
+void Settings::exitWithErrorInvalidModelType() const
+{
+    std::cout << "ERROR: Invalid type of analysis.\n";
+    std::cout << "Fix by setting modeltype as speciationextinction or trait\n";
+    std::exit(1);
+}
+
+
+void Settings::exitWithErrorParametersNotFound
+    (const std::vector<std::string>& paramsNotFound) const
+{
+    std::cout << "ERROR: One or more parameters from control file\n";
+    std::cout << "does not correspond to valid model parameters.\n";
+    std::cout << "Fix by checking the following to see if they are\n";
+    std::cout << "specified (or spelled) correctly:\n\n";
+
+    std::vector<std::string>::const_iterator it;
+    for (it = paramsNotFound.begin(); it != paramsNotFound.end(); ++it) {
+        std::cout << std::setw(30) << *it << std::endl;
     }
+
+    std::exit(1);
+}
+
+
+void Settings::exitWithErrorDuplicateParameter(const std::string& param) const
+{
+    std::cout << "ERROR: Duplicate parameter " << param << ".\n";
+    std::cout << "Fix by removing duplicate parameter in control file.\n";
+    std::exit(1);
 }

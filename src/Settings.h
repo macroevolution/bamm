@@ -6,7 +6,10 @@
 
 #include "SettingsParameter.h"
 
+typedef std::pair<std::string, SettingsParameter> Parameter;
 typedef std::map<std::string, SettingsParameter> ParameterMap;
+
+typedef std::pair<std::string, std::string> UserParameter;
 
 
 class Settings
@@ -14,13 +17,14 @@ class Settings
 
 private:
 
-	void initializeSettingsDevel(std::string controlFilename);
+    void readControlFile(const std::string& controlFilename);
 
     void initializeGlobalSettings();
     void initializeSpeciationExtinctionSettings();
     void initializeTraitSettings();
-
     void initializeSettingsWithUserValues();
+
+    void checkAllSettingsAreUserDefined() const;
 
     void assertNotUserDefined(const SettingsParameter& parameter) const;
     void addParameter(const std::string& name, const std::string& value,
@@ -32,22 +36,27 @@ private:
     std::string attachPrefix
         (const std::string& prefix, const std::string& str) const;
 
+    bool fileExists(const std::string& filename) const;
+
+    void exitWithErrorNoControlFile() const;
+    void exitWithErrorInvalidLine(const std::string& line) const;
     void exitWithErrorUndefinedParameter(const std::string& name) const;
+    void exitWithErrorInvalidModelType() const;
+    void exitWithErrorParametersNotFound
+        (const std::vector<std::string>& paramsNotFound) const;
+    void exitWithErrorDuplicateParameter(const std::string& param) const;
 
     static const size_t NumberOfParamsToPrefix = 6;
 
+    // Parameters that settings knows about
     ParameterMap _parameters;
     
-	// Parameters to create vectors of input variable names 
-	//	and associated values: 
-	//		these read & populated from controlfile
-    std::vector<std::string> _varName;
-    std::vector<std::string> _varValue;	
+    // Parameters read from the control file
+    std::vector<UserParameter> _userParameters;
 	
 public:
 
-    void parseCommandLineInput(int argc, std::vector<std::string>& instrings);
-    void checkSettingsAreUserDefined() const;
+    Settings(const std::string& controlFilename);
 
     void printCurrentSettings(std::ostream& out = std::cout) const;
 
