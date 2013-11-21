@@ -229,6 +229,8 @@ void Settings::initializeSettingsWithUserValues()
         }
     }
 
+    attachPrefixToOutputFiles();
+
     std::cout << "Read a total of <<" << _varName.size() <<
          ">> parameter settings from control file\n";
 
@@ -261,6 +263,43 @@ void Settings::assertNotUserDefined(const SettingsParameter& parameter) const
 }
 
 
+void Settings::attachPrefixToOutputFiles()
+{
+    // Get the prefix string value (in outName parameter)
+    ParameterMap::const_iterator it = _parameters.find("outName");
+    std::string prefix;
+    if (it != _parameters.end()) {
+        prefix = (it->second).value<std::string>();
+    }
+
+    // Create an array of the parameters that need to be prefixed
+    std::string paramsToPrefix[NumberOfParamsToPrefix] =
+        { "runInfoFilename",
+          "mcmcOutfile",
+          "eventDataOutfile",
+          "lambdaOutfile",
+          "muOutfile",
+          "betaOutfile" };
+
+    // Attach the prefix to each parameter
+    ParameterMap::iterator paramIt;
+    for (size_t i = 0; i < NumberOfParamsToPrefix; i++) {
+        paramIt = _parameters.find(paramsToPrefix[i]);
+        if (paramIt != _parameters.end()) {
+            const std::string& param = (paramIt->second).value<std::string>();
+            (paramIt->second).setStringValue(attachPrefix(prefix, param));
+        }
+    }
+}
+
+
+std::string Settings::attachPrefix
+  (const std::string& prefix, const std::string& str) const
+{
+    return (prefix != "") ? (prefix + "_" + str) : (str);
+}
+
+
 void Settings::checkSettingsAreUserDefined() const
 {
     ParameterMap::const_iterator it;
@@ -269,23 +308,6 @@ void Settings::checkSettingsAreUserDefined() const
         if (!parameter.isUserDefined() && parameter.mustBeUserDefined()) {
             exitWithErrorUndefinedParameter(parameter.name());
         }
-    }
-}
-
-
-std::string Settings::attachPrefix(const std::string& str) const
-{
-    ParameterMap::const_iterator it = _parameters.find("outName");
-
-    std::string prefix;
-    if (it != _parameters.end()) {
-        prefix = (it->second).value<std::string>();
-    }
-
-    if (prefix == "") {
-        return str;
-    } else {
-        return prefix + "_" + str;
     }
 }
 

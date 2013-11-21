@@ -28,9 +28,13 @@ private:
 
     // TODO: If filename is a path (e.g., output/mcmc_out.txt),
     // prefix should only be attached to the file name
-    std::string attachPrefix(const std::string& str) const;
+    void attachPrefixToOutputFiles();
+    std::string attachPrefix
+        (const std::string& prefix, const std::string& str) const;
 
     void exitWithErrorUndefinedParameter(const std::string& name) const;
+
+    static const size_t NumberOfParamsToPrefix = 6;
 
     ParameterMap _parameters;
     
@@ -105,8 +109,6 @@ public:
     std::string getEventDataOutfile() const;
     std::string getLambdaOutfile() const;
     std::string getMuOutfile() const;
-    std::string getAcceptrateOutfile() const;
-    std::string getLambdaNodeOutfile() const;
 
     int getBranchRatesWriteFreq() const;
     int getEventDataWriteFreq() const;
@@ -147,13 +149,12 @@ public:
     void   setTraitPriorMin(double x);
     void   setTraitPriorMax(double x);
     std::string getBetaOutfile() const;
-    std::string getNodeStateOutfile() const;
 };
 
 
 inline std::string Settings::getRunInfoFilename() const
 {
-    return attachPrefix(_parameters.at("runInfoFilename").value<std::string>());
+    return _parameters.at("runInfoFilename").value<std::string>();
 }
 
 
@@ -207,8 +208,7 @@ inline std::string Settings::getTreeFilename() const
 
 inline std::string Settings::getSampleProbsFilename() const
 {
-    return attachPrefix
-        (_parameters.at("sampleProbsFilename").value<std::string>());
+    return _parameters.at("sampleProbsFilename").value<std::string>();
 }
 
 
@@ -334,40 +334,25 @@ inline bool Settings::getOverwrite() const
 
 inline std::string Settings::getMCMCoutfile() const
 {
-    return attachPrefix(_parameters.at("mcmcOutfile").value<std::string>());
+    return _parameters.at("mcmcOutfile").value<std::string>();
 }
 
 
 inline std::string Settings::getEventDataOutfile() const
 {
-    return attachPrefix
-        (_parameters.at("eventDataOutfile").value<std::string>());
+    return _parameters.at("eventDataOutfile").value<std::string>();
 }
 
 
 inline std::string Settings::getLambdaOutfile() const
 {
-    return attachPrefix(_parameters.at("lambdaOutfile").value<std::string>());
+    return _parameters.at("lambdaOutfile").value<std::string>();
 }
 
 
 inline std::string Settings::getMuOutfile() const
 {
-    return attachPrefix(_parameters.at("muOutfile").value<std::string>());
-}
-
-
-inline std::string Settings::getAcceptrateOutfile() const
-{
-    return attachPrefix
-        (_parameters.at("acceptrateOutfile").value<std::string>());
-}
-
-
-inline std::string Settings::getLambdaNodeOutfile() const
-{
-    return attachPrefix
-        (_parameters.at("lambdaNodeOutfile").value<std::string>());
+    return _parameters.at("muOutfile").value<std::string>();
 }
 
 
@@ -553,14 +538,7 @@ inline void Settings::setTraitPriorMax(double x)
 
 inline std::string Settings::getBetaOutfile() const
 {
-    return attachPrefix(_parameters.at("betaOutfile").value<std::string>());
-}
-
-
-inline std::string Settings::getNodeStateOutfile() const
-{
-    return attachPrefix
-        (_parameters.at("nodeStateOutfile").value<std::string>());
+    return _parameters.at("betaOutfile").value<std::string>();
 }
 
 
