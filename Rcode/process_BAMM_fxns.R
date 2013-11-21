@@ -1008,7 +1008,7 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 		lines(x = maxTime - rmat$time, y = avg, lwd = 3, col = avgCol);
 
 		axis(at=seq(0, maxTime + 0.3*maxTime, by = 5), cex.axis = 1, side = 1);
-		axis(at=seq(-0.2, max(rate) + 0.2*max(rate), by=0.2), las=1, cex.axis = 1, side = 2);
+		axis(at=seq(-0.2, max(rate) + 0.2*max(rate), by=0.1), las=1, cex.axis = 1, side = 2);
 		mtext(side = 1, text = 'Time since present', line = 3, cex = 1.1);
 		mtext(side = 2, text = ratelabel, line = 3, cex = 1.1);
 	}
