@@ -10,61 +10,30 @@
 #include "Settings.h"
 
 
-void Settings::initializeSettingsDevel(std::string controlFilename)
+Settings::Settings(int argc, char* argv[])
 {
-    std::ifstream infile(controlFilename.c_str());
-    if (!infile.good()) {
-        std::cout << "Control filename invalid" << std::endl;
-        std::cout << "Exiting." << std::endl;
-        throw;
+    if (argc == 1) {
+        exitWithMessageUsage();
     }
-    
-    std::cout << "Reading control file <<" << controlFilename.c_str() << ">>" << std::endl;
-    
-    std::string s1, s2, s_nocomment;
-    
-    while (infile) {
-        getline(infile, s1, '\n');
-        
-        // strip whitespace out of tempstring:
-        //      both spaces and tabs:
-        
-        // What is the int(*)(int) doing????
-        s1.erase(std::remove_if(s1.begin(), s1.end(), (int(*)(int))isspace), s1.end());
-        
-        std::istringstream sx(s1);       
-        getline(sx, s_nocomment, '#');
-        
-        // Only add if has size > 0 (gets rid of empty lines)
-        if (s_nocomment.size() > 0) {
-            std::vector<std::string> tmpstr;
-            
-            // Now use second getline to split by '=' characters:
 
-            std::istringstream stemp(s_nocomment);
-
-            while (getline(stemp, s2, '=')) {
-                tmpstr.push_back(s2);        
-            }
-
-            if (tmpstr.size() == 2) {
-                _varName.push_back(tmpstr[0]);
-                _varValue.push_back(tmpstr[1]);
+    int i = 1;
+    while (i < argc) {
+        std::string arg = std::string(argv[i]);
+        if (arg == "-h" || arg == "--help" || arg == "-help") {
+            exitWithMessageUsage();
+        } else if (arg == "-c" || arg == "--control" || arg == "-control") {
+            if (++i < argc) {
+                readControlFile(std::string(argv[i]));
             } else {
-                std::cout << "Invalid size of input line in control file" << std::endl;
-                std::cout << " Problematic line includes <<" << s_nocomment << ">>" << std::endl;
-                std::cout << "Terminating run\n" << std::endl;
-                std::exit(0);            
+                exitWithErrorNoControlFile();
             }
-        }
-        
-        if (infile.peek() == EOF) {
-            break;
+        } else {
+            exitWithErrorUnknownArgument(arg);
         }
     }
 
+    // Get the model type
     std::string modelType;
-    
     for (std::vector<std::string>::size_type i = 0; i < _varName.size(); i++) {
         if (_varName[i] == "modeltype") {
             modelType = _varValue[i];
@@ -72,18 +41,92 @@ void Settings::initializeSettingsDevel(std::string controlFilename)
     }
 
     initializeGlobalSettings();
-    
+
+    // Initialize specific settings for model type
     if (modelType == "speciationextinction") {
         initializeSpeciationExtinctionSettings();
     } else if (modelType == "trait") {
         initializeTraitSettings();
     } else {
-        std::cout << "Invalid type of analysis" << std::endl;
-        std::cout << "Options: speciationextinction or trait" << std::endl;
-        std::exit(1);
+        exitWithErrorInvalidModelType();
     }
 
+    // Re-assign parameters based on user values
     initializeSettingsWithUserValues();
+}
+
+
+void Settings::exitWithMessageUsage() const
+{
+    std::cout << "Usage: ./bamm -c control_filename\n";
+    std::exit(0);
+}
+
+
+void Settings::exitWithErrorUnknownArgument(const std::string& arg) const
+{
+    std::cout << "Unknown argument " << arg << ".\n";
+    std::exit(1);
+}
+
+
+void Settings::readControlFile(const std::string& controlFilename)
+{
+    if (!fileExists(controlFilename)) {
+        exitWithErrorNoControlFile();
+    }
+    
+    std::cout << "Reading control file <<" << controlFilename << ">>\n";
+
+    std::ifstream controlStream(controlFilename);
+    
+    while (controlStream) {
+        std::string line;
+        getline(controlStream, line, '\n');
+        
+        // Strip whitespace
+        line.erase(std::remove_if(line.begin(), line.end(),
+            (int(*)(int))isspace), line.end());
+        
+        // Strip comments
+        std::istringstream lineStringStream(line);       
+        std::string lineWithoutComments;
+        getline(lineStringStream, lineWithoutComments, '#');
+
+        // Skip empty lines
+        if (lineWithoutComments.size() == 0) {
+            continue;
+        }
+        
+        // Now use second getline to split by '=' characters:
+        std::istringstream equalsStringStream(lineWithoutComments);
+        std::vector<std::string> tokens;
+        std::string token;
+        while (getline(equalsStringStream, token, '=')) {
+            tokens.push_back(token);        
+        }
+
+        // Ensure input line is valid (two sides to an equal sign)
+        if (tokens.size() != 2) {
+            exitWithErrorInvalidLine(lineWithoutComments);
+        }
+
+        // Store parameter and its value
+        _varName.push_back(tokens[0]);
+        _varValue.push_back(tokens[1]);
+        
+        if (infile.peek() == EOF) {
+            break;
+        }
+    }
+}
+
+
+void Settings::exitWithErrorInvalidLine(const std::string& line) const
+{
+    std::cout << "ERROR: Invalid input line in control file.\n"
+    std::cout << "Problematic line includes <<" << line << ">>\n";
+    std::exit(1);            
 }
 
  
@@ -208,6 +251,14 @@ void Settings::addParameter(const std::string& name, const std::string& value,
 {
     _parameters.insert(std::pair<std::string, SettingsParameter>
         (name, SettingsParameter(name, value, mustBeUserDefined)));
+}
+
+
+void Settings::exitWithErrorInvalidModelType() const
+{
+    std::cout << "ERROR: Invalid type of analysis.\n";
+    std::cout << "Fix by setting modeltype as speciationextinction or trait\n"
+    std::exit(1);
 }
 
 
