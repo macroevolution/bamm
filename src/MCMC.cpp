@@ -212,7 +212,7 @@ void MCMC::writeStateToStream(std::ostream& outStream)
               << ModelPtr->computeLogPrior()     << ","
               << ModelPtr->getCurrLnLBranches()  << ","
               << ModelPtr->getEventRate()        << ","
-              << ModelPtr->getMHacceptanceRate() << "," << std::endl;
+              << ModelPtr->getMHacceptanceRate() << std::endl;
 }
 
 
