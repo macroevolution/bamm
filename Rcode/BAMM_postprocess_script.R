@@ -40,7 +40,7 @@ source('/Users/danrabosky/DanWork/bamm/devel/testrun/process_BAMM_fxns.R');
 
 modeltree <- read.tree('oz_spheno_mcc216.tre');
 
-bdata <- getEventDataDiversification(modeltree, 'beventdata.txt', burnin=0.25, nsamples=30, verbose=T);
+bdata <- getEventData(modeltree, 'beventdata.txt', burnin=0.25, nsamples=30, verbose=T);
 
 # Once this is processed, we can do all sorts of things with this data object.
 # For example, suppose we want to get the AVERAGE rate of speciation 
