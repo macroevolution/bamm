@@ -36,6 +36,11 @@
  
 	
 computeBayesFactors <- function(postfilename, priorfilename, burnin = 0.1, modelset = 0:5){
+
+	if (length(modelset) < 2){
+		stop('\nInvalid modelset argument. This must be a vector of length > 1');
+	}
+	
 	
 	post <- read.csv(postfilename, header=T);
 	prior <- read.csv(priorfilename, header=T);
@@ -85,6 +90,9 @@ computeBayesFactors <- function(postfilename, priorfilename, burnin = 0.1, model
 	rownames(mm) <- mset;
 	colnames(mm) <- mset;
 	
+	if (length(modelset) < 2){
+		stop('\nError. Invalid model choice - is rank of specified model too high?\n');
+	}
 	
 	for (i in 1:(length(modelset) - 1)){
 		for (j in (i+1):length(modelset)){
