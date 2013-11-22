@@ -2,13 +2,18 @@
 
 library(ape);
 
+source('process_BAMM_fxns.R');
+source('BAMM_TreeSummaryFxns.R');
+
 # This script assumes you have done some analysis of the whale tree
 # and that the event data from that run is stored in 
 #	file beventdata.txt
 
 
+
+
 v <- read.tree('whaletree.tre');
-ed <- getEventData(v, 'beventdata.txt', burnin=0.2, verbose=T, header=F);
+ed <- getEventData(v, 'event_data.txt', burnin=0.2, verbose=T, header=T);
 
 
 
@@ -39,15 +44,18 @@ plot(cum_shifttree, type = 'f', show.tip.label=F);
 # The maximum shift credibility tree.
 
 bestsample <- maximumShiftCredibilityTree(ed);
+ 
+# the number of unique "best shift configurations" in the 
+#	maximum shift credibility set:
+length(bestsample$bestconfigs);
+
+# If only 1 "best config", we will get the nodes and plot it:
+shiftnodes <- getShiftNodesFromIndex(ed, index=bestsample$sampleindex);
+
 
 quartz.options(height=10, width=8);
 plot.phylo(v, cex=0.65);
-
-# Get shift nodes (excluding the root)
-shiftnodes <- bestsample$bestShiftConfig$node;
-# exclude the root
-shiftnodes <- shiftnodes[shiftnodes > (length(v$tip.label)+1)];
-
+ 
 nodelabels(node = shiftnodes, pch=21, cex=2.2, bg ='red', col='black')
 
 #################
