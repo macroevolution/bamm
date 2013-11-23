@@ -10,5 +10,6 @@ as.phylo.bammdata <- function(ephy){
 	newphylo$tip.label <- ephy$tip.label;
 	newphylo$edge.length <- ephy$edge.length;
 	class(newphylo) <- 'phylo';
+	attributes(newphylo)$order = 'cladewise';
 	return(newphylo);
 }
