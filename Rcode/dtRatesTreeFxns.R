@@ -183,12 +183,12 @@ polartree = function(ephy,open_angle=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1
 		{
 			edge.color = rep(edge.color,length(x0)-1);
 		}
-		for(i in 1:nrow(theta))
-		{
-			if(i<=nrow(phy$edge)) nd = phy$edge[i,2]; stc = which(p[,5] == nd)[1];
-			arc(0,0,theta[i,2],theta[i,3],c(rb,rb+phy$end/tH)[i],border=c(edge.color[1],edge.color)[stc],lwd=lwd);
-		}
+		offset = table(p[,5])[as.character(unique(p[,5]))];
+		arc.color = c(edge.color[1],edge.color[match(unique(p[,5]),p[,5])+offset-1]);
+		
+		arc(0,0,theta[,2],theta[,3],c(rb,rb+phy$end/tH),border=arc.color,lwd=lwd);
 		segments(x0,y0,x1,y1,col=c(edge.color[1],edge.color),lwd=lwd,lend=2);
+		
 		if(labels)
 		{
 			for(k in 1:length(phy$tip.label))
@@ -215,13 +215,15 @@ polartree = function(ephy,open_angle=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1
 #	theta1 = initial theta of arc (radians)
 #	theta2 = ending theta of arc (radians)
 #	rad = radius of arc
-arc = function(x,y,theta1,theta2,rad,...)
+arc = function(x,y,theta1,theta2,rad,border,...)
 {
 	step = (theta2-theta1)/100;
 	xv = x+rad*cos(seq(theta1,theta2,step));
 	yv = y+rad*sin(seq(theta1,theta2,step));
-	polygon(c(xv,rev(xv)),c(yv,rev(yv)),...);
+	polygon(c(xv,rev(xv)),c(yv,rev(yv)),border=border,...);
 }
+
+arc = Vectorize(arc);
 
 ##################################
 #	D.Rabosky
