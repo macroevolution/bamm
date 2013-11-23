@@ -140,7 +140,7 @@ polartree = function(ephy,open_angle=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1
 	phy = getStartStopTimes(phy);
 	tH = max(branching.times(phy));
 	open_angle = open_angle*(pi/180);
-	theta_step = (2*pi-open_angle)/phy $Nnode;
+	theta_step = (2*pi-open_angle)/phy$Nnode;
 	
 	theta = matrix(0,nrow(phy$edge),3);
 	for(node in tree.traverse(phy, phy$Nnode+2,'postorder'))
