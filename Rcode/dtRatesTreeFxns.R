@@ -113,7 +113,7 @@ segMap = function(nodes,begin,end,tau)
 #
 #	Returns invisibly: coordinates of the beginning and end of each branch and their theta value
 #
-polartree = function(ephy,open_angle=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1),ylim=c(-1,1),labels=FALSE,show=TRUE,colorize=FALSE)
+polartree = function(ephy,open_angle=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1),ylim=c(-1,1),labels=FALSE,show=TRUE,colorize=FALSE,palette='diverging')
 {
 	
 	phy = as.phylo.bammdata(ephy);
@@ -130,10 +130,21 @@ polartree = function(ephy,open_angle=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1
 		}
 		else
 		{
-			require(gplots);
-			cols = rich.colors(32);
+			if(palette == 'diverging')
+			{
+				cols = colorRampPalette(c('blue','white','red'))(64);
+			}
+			else if(palette == 'temperature')
+			{
+				cols = rich.colors(64);
+			}
+			else
+			{
+				cols = colorRampPalette(c('blue','white','red'))(64);
+				warning('Unsupported palette option. Using palette "diverging"');	
+			}
 			tau = ephy$dtrates$tau;
-			edge.color = cols[1 + 31*ephy$dtrates$rates/max(ephy$dtrates$rates)];
+			edge.color = cols[1 + round(63*ephy$dtrates$rates/max(ephy$dtrates$rates))];
 		}
 	}
 	
