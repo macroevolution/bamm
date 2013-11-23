@@ -102,8 +102,8 @@ segMap = function(nodes,begin,end,tau)
 #	Arguments: 
 #	ephy = bammdata object
 #	open_angle = angle in degrees to prevent overplotting first and last tips 	
-#	root_branch_factor = how much smaller than the tree height should the root branch be?
-#						 Use this if you want an arc connecting the first two branches
+#	rbf = fraction of tree height that the length of root branch should be
+#		  Use >0 if you want an arc connecting the first two branches
 #	lwd = line width
 #	edge.color = edge colors
 #	xlim,ylim = plotting window
@@ -113,7 +113,7 @@ segMap = function(nodes,begin,end,tau)
 #
 #	Returns invisibly: coordinates of the beginning and end of each branch and their theta value
 #
-polartree = function(ephy,open_angle=10,root_branch_factor=1000,lwd=1,edge.color=1,xlim=c(-1,1),ylim=c(-1,1),labels=FALSE,show=TRUE,colorize=FALSE)
+polartree = function(ephy,open_angle=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1),ylim=c(-1,1),labels=FALSE,show=TRUE,colorize=FALSE)
 {
 	
 	phy = as.phylo.bammdata(ephy);
@@ -133,7 +133,7 @@ polartree = function(ephy,open_angle=10,root_branch_factor=1000,lwd=1,edge.color
 			require(gplots);
 			cols = rich.colors(32);
 			tau = ephy$dtrates$tau;
-			edge.color = cols[1 + 31*ephy$dtrates$rates];
+			edge.color = cols[1 + 31*ephy$dtrates$rates/max(ephy$dtrates$rates)];
 		}
 	}
 	
@@ -161,7 +161,7 @@ polartree = function(ephy,open_angle=10,root_branch_factor=1000,lwd=1,edge.color
 			theta[phy$edge[,2] == node,] = c(dth,theta[isChild,1]);
 		}
 	}
-	if(root_branch_factor != 0) rb = tH/root_branch_factor else rb = 0;
+	rb = tH*rb
 	theta = rbind(root,theta);
 	x0 = c(rb,rb+(phy$begin/tH))*cos(theta[,1]);
 	y0 = c(rb,rb+(phy$begin/tH))*sin(theta[,1]);
