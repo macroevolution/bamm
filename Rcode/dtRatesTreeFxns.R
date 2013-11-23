@@ -161,7 +161,7 @@ polartree = function(ephy,open_angle=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1
 			theta[phy$edge[,2] == node,] = c(dth,theta[isChild,1]);
 		}
 	}
-	rb = tH*rb
+	rb = tH*rbf;
 	theta = rbind(root,theta);
 	x0 = c(rb,rb+(phy$begin/tH))*cos(theta[,1]);
 	y0 = c(rb,rb+(phy$begin/tH))*sin(theta[,1]);
