@@ -296,7 +296,7 @@ void MCMC::exitWithErrorOutputFileExists()
 
 void MCMC::writeHeadersToOutputFiles()
 {
-    _mcmcOutStream << "generation,numevents,logprior,llbranches," <<
+    _mcmcOutStream << "generation,N_shifts,logPrior,logLik," <<
         "eventRate,acceptRate\n";
     _eventDataOutStream << "generation,leftchild,rightchild,abstime," <<
         "lambdainit,lambdashift,muinit,mushift\n";
