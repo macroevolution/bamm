@@ -68,7 +68,7 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     std::cout << "MCMC object successfully initialized." << std::endl << std::endl;
     std::cout << "Running MCMC chain for " << _NGENS << " generations." << std::endl << std::endl;
 
-    std::cout << std::setw(10) << "Generation" << std::setw(10) << "lnLik" <<  std::setw(10);
+    std::cout << std::setw(10) << "Generation" << std::setw(10) << "logLik" <<  std::setw(10);
     std::cout << "N_shifts" << std::setw(15) << "LogPrior" << std::setw(15) << "acceptRate" <<
          std::endl;
 
@@ -229,7 +229,7 @@ void TraitMCMC::writeStateToFile()
 
 void TraitMCMC::writeHeaderToStream(std::ostream& outStream)
 {
-    outStream << "generation,numevents,logprior,lltraits,acceptRate\n";
+    outStream << "generation,N_shifts,logPrior,logLik,acceptRate\n";
 }
 
 
@@ -239,6 +239,7 @@ void TraitMCMC::writeStateToStream(std::ostream& outStream)
               << ModelPtr->getNumberOfEvents() << ","
               << ModelPtr->computeLogPrior()   << ","
               << ModelPtr->getCurrLnLTraits()  << ","
+              << ModelPtr->getEventRate()      << ","
               << ModelPtr->getMHacceptanceRate() << std::endl;
 }
 
@@ -305,7 +306,7 @@ bool TraitMCMC::fileExists(const std::string& filename)
 
 void TraitMCMC::writeHeadersToOutputFiles()
 {
-    _mcmcOutStream << "generation,numevents,logprior,lltraits,acceptRate\n";
+    _mcmcOutStream << "generation,N_shifts,logPrior,logLik,eventRate,acceptRate\n";
     _eventDataOutStream << "generation,leftchild,rightchild,abstime," <<
         "betainit,betashift\n";
 }
