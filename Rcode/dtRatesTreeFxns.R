@@ -150,8 +150,8 @@ polartree = function(ephy,vtheta=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1),yl
 	
 	phy = getStartStopTimes(phy);
 	tH = max(branching.times(phy));
-	open_angle = open_angle*(pi/180);
-	theta_step = (2*pi-open_angle)/phy$Nnode;
+	vtheta = vtheta*(pi/180);
+	theta_step = (2*pi-vtheta)/phy$Nnode;
 	
 	theta = matrix(0,nrow(phy$edge),3);
 	for(node in tree.traverse(phy, phy$Nnode+2,'postorder'))
@@ -172,7 +172,8 @@ polartree = function(ephy,vtheta=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1),yl
 			theta[phy$edge[,2] == node,] = c(dth,theta[isChild,1]);
 		}
 	}
-	rb = tH*rbf
+	
+	rb = tH*rbf;
 	theta = rbind(root,theta);
 	x0 = c(rb,rb+(phy$begin/tH))*cos(theta[,1]);
 	y0 = c(rb,rb+(phy$begin/tH))*sin(theta[,1]);
