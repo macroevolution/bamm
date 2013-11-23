@@ -101,9 +101,9 @@ segMap = function(nodes,begin,end,tau)
 #
 #	Arguments: 
 #	ephy = bammdata object
-#	open_angle = angle in degrees to prevent overplotting first and last tips 	
-#	rbf = fraction of tree height that the length of root branch should be
-#		  Use >0 if you want an arc connecting the first two branches
+#	vtheta = angle in degrees to prevent overplotting first and last tips 	
+#	rbf = fraction of tree height that the length the of root branch should be.
+#	      Use this if you want an arc connecting the first two branches
 #	lwd = line width
 #	edge.color = edge colors
 #	xlim,ylim = plotting window
@@ -113,7 +113,7 @@ segMap = function(nodes,begin,end,tau)
 #
 #	Returns invisibly: coordinates of the beginning and end of each branch and their theta value
 #
-polartree = function(ephy,open_angle=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1),ylim=c(-1,1),labels=FALSE,show=TRUE,colorize=FALSE,palette='diverging')
+polartree = function(ephy,vtheta=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1),ylim=c(-1,1),labels=FALSE,show=TRUE,colorize=FALSE,palette='diverging')
 {
 	
 	phy = as.phylo.bammdata(ephy);
@@ -130,18 +130,18 @@ polartree = function(ephy,open_angle=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1
 		}
 		else
 		{
-			if(palette == 'diverging')
-			{
-				cols = colorRampPalette(c('blue','white','red'))(64);
-			}
-			else if(palette == 'temperature')
+			if(palette == 'temperature')
 			{
 				cols = rich.colors(64);
+			}
+			else if(palette == 'diverging')
+			{
+				cols = colorRampPalette(c('blue','white','red'))(64);
 			}
 			else
 			{
 				cols = colorRampPalette(c('blue','white','red'))(64);
-				warning('Unsupported palette option. Using palette "diverging"');	
+				warning('Unsupported palette option. Using palette "diverging"');
 			}
 			tau = ephy$dtrates$tau;
 			edge.color = cols[1 + round(63*ephy$dtrates$rates/max(ephy$dtrates$rates))];
@@ -172,34 +172,45 @@ polartree = function(ephy,open_angle=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1
 			theta[phy$edge[,2] == node,] = c(dth,theta[isChild,1]);
 		}
 	}
-	rb = tH*rbf;
+	rb = tH*rbf
 	theta = rbind(root,theta);
 	x0 = c(rb,rb+(phy$begin/tH))*cos(theta[,1]);
 	y0 = c(rb,rb+(phy$begin/tH))*sin(theta[,1]);
 	x1 = c(rb,rb+(phy$end/tH))*cos(theta[,1]);
 	y1 = c(rb,rb+(phy$end/tH))*sin(theta[,1]);
 	ret = cbind(x0[-1],y0[-1],x1[-1],y1[-1],theta[-1,1]);
+	
 	if(colorize)
 	{
 		p = cbind(x0[-1],y0[-1],x1[-1],y1[-1], phy$edge[,2]);
 		p = apply(p,1,matrify,tau);
 		p = do.call(rbind, p);
 		x0 = c(x0[1],p[,1]);x1=c(x1[1],p[,2]);y0=c(y0[1],p[,3]);y1=c(y1[1],p[,4]);
+		offset = table(p[,5])[as.character(unique(p[,5]))];
+		arc.color = c(edge.color[1],edge.color[match(unique(p[,5]),p[,5])+offset-1]);
+		edge.color = c(edge.color[1],edge.color);
+	}
+	else
+	{
+		if(length(edge.color)==1)
+		{
+			edge.color = rep(edge.color,length(x0));
+			arc.color = edge.color;
+		}
+		else
+		{
+			edge.color = c(edge.color[1],edge.color);
+			arc.color = edge.color;
+		}	
 	}
 	if(show)
 	{
 		plot.new();
 		plot.window(xlim=xlim+c(-rb,rb),ylim=ylim+c(-rb,rb),asp=1);
-		if(length(edge.color)==1)
-		{
-			edge.color = rep(edge.color,length(x0)-1);
-		}
-		offset = table(p[,5])[as.character(unique(p[,5]))];
-		arc.color = c(edge.color[1],edge.color[match(unique(p[,5]),p[,5])+offset-1]);
 		
 		arc(0,0,theta[,2],theta[,3],c(rb,rb+phy$end/tH),border=arc.color,lwd=lwd);
-		segments(x0,y0,x1,y1,col=c(edge.color[1],edge.color),lwd=lwd,lend=2);
-		
+		segments(x0,y0,x1,y1,col=edge.color,lwd=lwd,lend=2);
+
 		if(labels)
 		{
 			for(k in 1:length(phy$tip.label))
@@ -213,6 +224,7 @@ polartree = function(ephy,open_angle=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1
 	colnames(ret) = c('x0','y0','x1','y1','theta');
 	invisible(ret);
 }
+
 
 
 
