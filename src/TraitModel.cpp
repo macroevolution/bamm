@@ -26,6 +26,8 @@
 #include "TraitBranchHistory.h"
 #include "Settings.h"
 #include "Utilities.h"
+#include "Log.h"
+
 
 double TraitModel::mhColdness = 1.0;
 
@@ -37,8 +39,6 @@ TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
 
     _lastLH = 0.0;
 
-    std::cout << std::endl << "Initializing model object...." << std::endl;
-
     // reduce weird autocorrelation of values at start by calling RNG a few times...
     for (int i = 0; i < 100; i++)
         ranptr->uniformRv();
@@ -46,8 +46,6 @@ TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
     ran = ranptr;
     treePtr = tp;
     sttings = sp;
-
-    //std::cout << "model ML: " << treePtr->getTotalMapLength() << std::endl;
 
     treePtr->getTotalMapLength(); // total map length (required to set priors)
 
@@ -80,8 +78,6 @@ TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
 	_scale = sttings->getUpdateEventLocationScale(); // scale for event moves on tree.
 
 
-    //std::cout << "SCALE: " << _scale << std::endl;
-
     _updateEventRateScale = sttings->getUpdateEventRateScale();
     _localGlobalMoveRatio =
         sttings->getLocalGlobalMoveRatio(); // For Poisson process
@@ -92,8 +88,6 @@ TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
     setMinMaxTraitPriors();
 
     eventLambda = 1 / _poissonRatePrior; // event rate, initialized to generate expected number of 1 event
-
-    //std::cout << bl << "\t" << eventLambda << std::endl;
 
     /*  *********************   */
     /* Other parameters & tracking variables*/
@@ -123,9 +117,9 @@ TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
     rootEvent = x;
     lastEventModified = x;
 
-    std::cout << "Root beta: " << x->getBetaInit() << "\t" << sttings->getBetaInit() <<
-         "\tShift: ";
-    std::cout << x->getBetaShift() << std::endl;
+    log() << "\nRoot beta: " << x->getBetaInit() << "\t"
+          << sttings->getBetaInit() << "\tShift: "
+          << x->getBetaShift() << "\n";
 
     // set NodeEvent of root node equal to the rootEvent:
     tp->getRoot()->getTraitBranchHistory()->setNodeEvent(rootEvent);
@@ -133,22 +127,19 @@ TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
     //initializing all branch histories to equal the root event:
     forwardSetBranchHistories(rootEvent);
 
-    //
     treePtr->setMeanBranchTraitRates();
 
     if (sttings->getLoadEventData()) {
-        std::cout << "\nLoading model data from file: " << sttings->getEventDataInfile() <<
-             std::endl;
+        log() << "\nLoading model data from file: "
+              << sttings->getEventDataInfile() << "\n";
         initializeModelFromEventDataFileTrait();
     }
 
-
     setCurrLnLTraits(computeLikelihoodTraits());
 
-    std::cout << "Model object successfully initialized." << std::endl;
-    std::cout << "Initial log-likelihood: " << getCurrLnLTraits() << std::endl << std::endl;
+    log() << "\nInitial log-likelihood: " << getCurrLnLTraits() << "\n";
     if (sttings->getSampleFromPriorOnly())
-        std::cout << "\tNote that you have chosen to sample from prior only." << std::endl;
+        log() << "Note that you have chosen to sample from prior only.\n";
 
     // this parameter only set during model-jumping.
     _logQratioJump = 0.0;
@@ -609,10 +600,6 @@ void TraitModel::eventGlobalMove(void)
         // this is the event preceding the chosen event: histories should be set forward from here..
         TraitBranchEvent* previousEvent =
             chosenEvent->getEventNode()->getTraitBranchHistory()->getLastEvent(chosenEvent);
-
-        //std::cout << "EGM: moving " << chosenEvent << "\tLastEvent: " << previousEvent << std::endl;
-
-        //Node* theEventNode = chosenEvent->getEventNode();
 
         // private variable
         lastEventModified = chosenEvent;
@@ -2090,8 +2077,8 @@ void TraitModel::setMinMaxTraitPriors(void)
     double minprior = tvec[0] - (0.2 * rg);
     double maxprior = tvec[(tvec.size() - 1)] + (0.2 * rg);
 
-    std::cout << "Min and max phenotype limits set using observed data: " << std::endl;
-    std::cout << "\t\tMin: " << minprior << "\tMax: " << maxprior << std::endl;
+    log() << "\nMin and max phenotype limits set using observed data: \n"
+          << "\t\tMin: " << minprior << "\tMax: " << maxprior << "\n";
     sttings->setTraitPriorMin(minprior);
     sttings->setTraitPriorMax(maxprior);
 

@@ -11,6 +11,7 @@
 #include "BranchHistory.h"
 #include "TraitBranchHistory.h"
 #include "MbRandom.h"
+#include "Log.h"
 
 
 //#define DEBUG_TIME_VARIABLE
@@ -32,42 +33,34 @@ Tree::~Tree(void)
 
 Tree::Tree(std::string fname, MbRandom* rnptr)
 {
-    //std::cout << "in constructor..." << std::endl;
-
     ranPtr = rnptr;
-
-    std::string treestring;
 
     std::ifstream treefile(fname.c_str());
 
-    //treefile.open(fname.c_str());
-    std::cout << "Reading tree from file <" << fname << ">" << std::endl;
+    log() << "\nReading tree from file <" << fname << ">.\n";
 
     if (!treefile.good()) {
-        std::cout << "Invalid filename for phylogenetic tree\n" << std::endl;
-        throw;
+        log(Error) << "Invalid file name for phylogenetic tree\n";
+        std::exit(1);
     }
 
+    std::string treestring;
     treefile >> treestring;
-    treefile.close();
 
-    //std::cout << "tree size: " << treestring.size() << std::endl;
+    treefile.close();
 
     setTaxonCountFromNewickString(treestring);
     buildTreeFromNewickString(treestring);
     getDownPassSeq();
 
-    // All of this below is output and can be deleted:
-
     // Output stuff here
-    std::cout << "1 tree read with " << getNumberTips() << " taxa" << std::endl;
+    log() << "Tree contains " << getNumberTips() << " taxa.\n";
 
     // counting tips for trial...
     int sum = 0;
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         sum += (int)(*i)->getIsTip();
     }
-    //std::cout << sum << std::endl;
 
     // initialize treelength:
     treelength = 0.0;
@@ -79,19 +72,10 @@ Tree::Tree(std::string fname, MbRandom* rnptr)
     setBranchingTimes(root);
 
 
-    //Node* tmp = root->getRtDesc();
-    //std::cout << "tmptime: " << tmp->getMapStart() << "\t" << tmp->getMapEnd() << std::endl;
-
-    //std::cout << "roottime: " << root->getMapStart() << "\t" << root->getMapEnd() << std::endl;
-
-    //std::cout << root->getBrlen() << " root brlen" << std::endl;
-
     // Need to set treelength:
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         treelength += (*i)->getBrlen();
     }
-
-    //std::cout << "treelength: " << treelength << std::endl << std::endl;
 
     // Setting internal node set:
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
@@ -104,20 +88,14 @@ Tree::Tree(std::string fname, MbRandom* rnptr)
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         int dcount = getDescTipCount((*i));
         (*i)->setTipDescCount(dcount);
-        // std::cout << (*i)->getLfDesc() << "\t" << (*i)->getRtDesc() << "\t";
-        // std::cout << (*i)->getTipDescCount() << "\tCanHold: " << (*i)->getCanHoldEvent() << "\t" << (*i) << std::endl;
     }
 
-
-    //std::cout << "Number of internal nodes: " << internalNodeSet.size() << std::endl << std::endl;
     int ct = 0;
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         if ((*i)->getCanHoldEvent()) {
             ct++;
         }
     }
-    std::cout << "Tree ctor: event nodes: " << ct << std::endl;
-
 }
 
 
@@ -1102,7 +1080,7 @@ Read file. First column = species name exactly as matching in phylogeny.
 void Tree::getPhenotypes(std::string fname)
 {
     std::ifstream infile(fname.c_str());
-    std::cout << "Reading phenotypes from file <<" << fname.c_str() << ">>" << std::endl;
+    log() << "\nReading phenotypes from file <" << fname.c_str() << ">\n";
     std::vector<std::string> stringvec;
     std::vector<std::string> spnames;
     std::vector<double> traits;
@@ -1127,7 +1105,7 @@ void Tree::getPhenotypes(std::string fname)
 
     infile.close();
 
-    std::cout << "Read a total of " << traits.size() << " species w trait data" << std::endl;
+    log() << "Read " << traits.size() << " species with trait data\n";
 
     // iterate over nodes...
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
@@ -1153,7 +1131,7 @@ void Tree::getPhenotypes(std::string fname)
 void Tree::getPhenotypesMissingLatent(std::string fname)
 {
     std::ifstream infile(fname.c_str());
-    std::cout << "Reading phenotypes from file <<" << fname.c_str() << ">>" << std::endl;
+    log() << "\nReading phenotypes from file <" << fname.c_str() << ">\n";
     std::vector<std::string> stringvec;
     std::vector<std::string> spnames;
     std::vector<double> traits;
@@ -1178,7 +1156,7 @@ void Tree::getPhenotypesMissingLatent(std::string fname)
 
     int missingTerminalCount = 0;
     infile.close();
-    std::cout << "Read a total of " << traits.size() << " species w trait data" << std::endl;
+    log() << "Read " << traits.size() << " species with trait data.\n";
 
     // iterate over nodes...
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
@@ -1198,8 +1176,12 @@ void Tree::getPhenotypesMissingLatent(std::string fname)
         }
     }
 
-    std::cout << "Missing data for < " << missingTerminalCount << " > species." << std::endl;
-    std::cout << "These will be treated as latent variables in analysis" << std::endl << std::endl;
+    if (missingTerminalCount > 0) {
+        log(Warning) << "Missing data for < " << missingTerminalCount
+                     << " > species.\n"
+                     << "These will be treated as latent variables in "
+                     << "analysis\n";
+    }
 
     int count2 = 0;
     int count3 = 0;
@@ -1210,10 +1192,6 @@ void Tree::getPhenotypesMissingLatent(std::string fname)
             count3++;
         }
     }
-    std::cout << "count of FIXED nodes in getPhenotypesMissingLatent: " << count2 <<
-         std::endl;
-    std::cout << "count of VARIABLE nodes in getPhenotypesMissingLatent: " << count3 <<
-         std::endl << std::endl;
 }
 
 
@@ -1293,7 +1271,6 @@ void Tree::initializeSpeciationExtinctionModel(double sampFrac)
         }
         (*myIt)->setEtip(extinctionInit); // Set
     }
-    std::cout << "Speciation/Extinction initial conditions set (global)" << std::endl;
 }
 
 

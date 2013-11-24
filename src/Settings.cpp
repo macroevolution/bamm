@@ -8,6 +8,7 @@
 #include <cstdlib>
 
 #include "Settings.h"
+#include "Log.h"
 
 
 Settings::Settings(const std::string& controlFilename)
@@ -35,9 +36,11 @@ Settings::Settings(const std::string& controlFilename)
         exitWithErrorInvalidModelType();
     }
 
-    // Re-assign parameters based on user values and validate
+    // Re-assign parameters based on user values
     initializeSettingsWithUserValues();
+
     checkAllSettingsAreUserDefined();
+    checkAllOutputFilesAreWriteable();
 }
 
 
@@ -47,8 +50,6 @@ void Settings::readControlFile(const std::string& controlFilename)
         exitWithErrorNoControlFile();
     }
     
-    std::cout << "Reading control file <<" << controlFilename << ">>\n";
-
     std::ifstream controlStream(controlFilename.c_str());
     
     while (!controlStream.eof()) {
@@ -85,13 +86,6 @@ void Settings::readControlFile(const std::string& controlFilename)
         // Store parameter and its value
         _userParameters.push_back(UserParameter(tokens[0], tokens[1]));
     }
-}
-
-
-bool Settings::fileExists(const std::string& filename) const
-{
-    std::ifstream inFile(filename.c_str());
-    return inFile.good();
 }
 
  
@@ -245,9 +239,6 @@ void Settings::initializeSettingsWithUserValues()
 
     attachPrefixToOutputFiles();
 
-    std::cout << "Read a total of <<" << _userParameters.size() << ">> " <<
-         "parameter settings from control file\n";
-
     if (paramsNotFound.size() > 0) {
         exitWithErrorParametersNotFound(paramsNotFound);
     }
@@ -303,51 +294,91 @@ void Settings::checkAllSettingsAreUserDefined() const
 }
 
 
+void Settings::checkAllOutputFilesAreWriteable() const
+{
+    if (!getOverwrite()) {
+        if (anyOutputFileExists()) {
+            exitWithErrorOutputFileExists();
+        }
+    }
+}
+
+
+bool Settings::anyOutputFileExists() const
+{
+    // Global output files
+    if (fileExists(getRunInfoFilename()) ||
+        fileExists(getMCMCoutfile())     ||
+        fileExists(getEventDataOutfile())) {
+        return true;
+    }
+
+    // Speciation/extinction output files
+    if (getModeltype() == "speciationexinction") {
+        if (fileExists(getLambdaOutfile()) || fileExists(getMuOutfile())) {
+            return true;
+        }
+
+    // Trait output files
+    } else if (getModeltype() == "trait") {
+        if (fileExists(getBetaOutfile())) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+bool Settings::fileExists(const std::string& filename) const
+{
+    std::ifstream inFile(filename.c_str());
+    return inFile.good();
+}
+
+
 void Settings::printCurrentSettings(std::ostream& out) const
 {
     int ppw = 29;
 
-    out << "\n*****************************************************\n";
-    out << "Current parameter settings:\n";
+    log(Message, out) << "Current parameter settings:\n";
 
     ParameterMap::const_iterator it;
     for (it = _parameters.begin(); it != _parameters.end(); ++it) {
-        out << std::right << std::setw(ppw) <<
-            it->first << "\t\t" << (it->second).value<std::string>() << "\n";
+        log(Message, out) << std::right << std::setw(ppw) <<
+            it->first << "    " << (it->second).value<std::string>() << "\n";
     }
-
-    out << "\n*****************************************************\n";
 }
 
 
 void Settings::exitWithErrorNoControlFile() const
 {
-    std::cout << "ERROR: Specified control file does not exist.\n";
-    std::cout << "Check that the file is in the specified location.\n";
+    log(Error) << "Specified control file does not exist.\n"
+               << "Check that the file is in the specified location.\n";
     std::exit(1);
 }
 
 
 void Settings::exitWithErrorInvalidLine(const std::string& line) const
 {
-    std::cout << "ERROR: Invalid input line in control file.\n";
-    std::cout << "Problematic line includes <<" << line << ">>\n";
+    log(Error) << "Invalid input line in control file.\n"
+               << "Problematic line includes <<" << line << ">>\n";
     std::exit(1);            
 }
 
 
 void Settings::exitWithErrorUndefinedParameter(const std::string& name) const
 {
-    std::cout << "ERROR: Parameter " << name << " is undefined.\n";
-    std::cout << "Fix by assigning the parameter a value in the control file\n";
+    log(Error) << "Parameter " << name << " is undefined.\n"
+               << "Fix by giving the parameter a value in the control file\n";
     std::exit(1);
 }
 
 
 void Settings::exitWithErrorInvalidModelType() const
 {
-    std::cout << "ERROR: Invalid type of analysis.\n";
-    std::cout << "Fix by setting modeltype as speciationextinction or trait\n";
+    log(Error) << "Invalid type of analysis.\n"
+               << "Fix by setting modeltype as speciationextinction or trait\n";
     std::exit(1);
 }
 
@@ -355,14 +386,14 @@ void Settings::exitWithErrorInvalidModelType() const
 void Settings::exitWithErrorParametersNotFound
     (const std::vector<std::string>& paramsNotFound) const
 {
-    std::cout << "ERROR: One or more parameters from control file\n";
-    std::cout << "does not correspond to valid model parameters.\n";
-    std::cout << "Fix by checking the following to see if they are\n";
-    std::cout << "specified (or spelled) correctly:\n\n";
+    log(Error) << "One or more parameters from control file\n"
+               << "does not correspond to valid model parameters.\n"
+               << "Fix by checking the following to see if they are\n"
+               << "specified (or spelled) correctly:\n\n";
 
     std::vector<std::string>::const_iterator it;
     for (it = paramsNotFound.begin(); it != paramsNotFound.end(); ++it) {
-        std::cout << std::setw(30) << *it << std::endl;
+        log() << std::setw(30) << *it << std::endl;
     }
 
     std::exit(1);
@@ -371,7 +402,16 @@ void Settings::exitWithErrorParametersNotFound
 
 void Settings::exitWithErrorDuplicateParameter(const std::string& param) const
 {
-    std::cout << "ERROR: Duplicate parameter " << param << ".\n";
-    std::cout << "Fix by removing duplicate parameter in control file.\n";
+    log(Error) << "Duplicate parameter " << param << ".\n"
+               << "Fix by removing duplicate parameter in control file.\n";
+    std::exit(1);
+}
+
+
+void Settings::exitWithErrorOutputFileExists() const
+{
+    log(Error) << "Analysis is set to not overwrite files.\n"
+               << "Fix by removing or renaming output file(s),\n"
+               << "or set \"overwrite = 1\" in the control file.\n";
     std::exit(1);
 }

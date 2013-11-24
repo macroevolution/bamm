@@ -15,14 +15,18 @@
 #include "Autotune.h"
 
 
+void printAbout();
 const char* currentTime();
 void exitWithMessageUsage();
 void exitWithErrorUnknownArgument(const std::string& arg);
 void exitWithErrorNoControlFile();
 
+#include "Log.h"
   
 int main (int argc, char* argv[])
 {
+    printAbout();
+
     if (argc == 1) {
         exitWithMessageUsage();
     }
@@ -51,14 +55,7 @@ int main (int argc, char* argv[])
     // Load settings from control file
     Settings mySettings(controlFilename);
 
-    for (int i = 0; i < 20; i++) {
-        std::cout << "#";
-    }
-    std::cout << "\n";
-    
     MbRandom myRNG(mySettings.getSeed());
-
-    std::cout << "Random seed:\t\t" << myRNG.getSeed() << std::endl;
 
     std::string commandLine(argv[0]);
     for (int i = 1; i < argc; i++) {
@@ -66,64 +63,55 @@ int main (int argc, char* argv[])
     }
 
     std::ofstream runInfoFile(mySettings.getRunInfoFilename().c_str());
-    runInfoFile << "command line: " << commandLine << "\n";
-    runInfoFile << "git commit id: " << GIT_COMMIT_ID << "\n";
-    runInfoFile << "random seed: " << myRNG.getSeed() << "\n";
-    runInfoFile << "start time: " << currentTime() << "\n";
+    log(Message, runInfoFile) << "Command line: " << commandLine << "\n";
+    log(Message, runInfoFile) << "Git commit id: " << GIT_COMMIT_ID << "\n";
+    if (mySettings.getSeed() == -1) {
+        log(Message) << "Random seed (clock): " << myRNG.getSeed() << "\n";
+        log(Message, runInfoFile) << "Random seed (clock): " <<
+            myRNG.getSeed() << "\n";
+    } else {
+        log(Message) << "Random seed: " << myRNG.getSeed() << "\n";
+        log(Message, runInfoFile) << "Random seed: " << myRNG.getSeed() << "\n";
+    }
+    log(Message, runInfoFile) << "Start time: " << currentTime() << "\n";
 
-    std::cout << mySettings.getModeltype() << std::endl;
-    
     if (mySettings.getModeltype() == "speciationextinction") {
-        std::cout << "Initializing diversification (speciationextinction) " <<
-            "model\n";
+        log(Message) << "\nModel type: Speciation/Extinction\n";
 
-        for (int i = 0; i < 20; i++) {
-            std::cout << "#";
-        }
-        
-        std::cout << "\nSPECIATION-EXTINCTION BAMM\n\n";
-    
-        mySettings.printCurrentSettings();
         mySettings.printCurrentSettings(runInfoFile);
 
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
         
         if (mySettings.getUseGlobalSamplingProbability()) {
-            std::cout << "Initializing with global sampling probability\n" << std::endl;
-            intree.initializeSpeciationExtinctionModel(mySettings.getGlobalSamplingFraction());
+            intree.initializeSpeciationExtinctionModel
+                (mySettings.getGlobalSamplingFraction());
         } else {
-            std::cout << "Species-specific sampling fractions are not validated yet...\n" <<
-            std::endl;
-            // code should be supported for this but need to check..
-            intree.initializeSpeciationExtinctionModel(mySettings.getSampleProbsFilename());
-            //throw;
+            // TODO: Code should be supported for this but need to check
+            intree.initializeSpeciationExtinctionModel
+                (mySettings.getSampleProbsFilename());
         }
         
-        intree.setCanNodeHoldEventByDescCount(mySettings.getMinCladeSizeForShift());
+        intree.setCanNodeHoldEventByDescCount
+            (mySettings.getMinCladeSizeForShift());
         intree.setTreeMap(intree.getRoot());
 
         if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
             Model myModel(&myRNG, &intree, &mySettings);
-            std::cout << "Initializing model but not running MCMC" << std::endl;
-        } else if (mySettings.getInitializeModel() && mySettings.getAutotune()) {
+        } else if (mySettings.getInitializeModel() && mySettings.getAutotune()){
             Model myModel(&myRNG, &intree, &mySettings);
             Autotune myTuneObject(&myRNG, &myModel, &mySettings);
         } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
             Model myModel(&myRNG, &intree, &mySettings);
             MCMC myMCMC(&myRNG, &myModel, &mySettings);
         } else {
-            std::cout << "Unsupported option in main....\n" << std::endl;
+            log(Error) << "Unsupported option in main.\n";
+            std::exit(1);
         }
         
     } else if (mySettings.getModeltype() == "trait") {
-        std::cout << "Initializing phenotypic evolution (trait) model " << std::endl;
-        for (int i = 0; i < 20; i++) {
-            std::cout << "#";
-        }
-        std::cout << std::endl << std::endl  << "TRAIT DIVERSIFICATION BAMM" << std::endl << std::endl;
+        log(Message) << "\nModel type: Trait\n";
         
-        mySettings.printCurrentSettings();
         mySettings.printCurrentSettings(runInfoFile);
 
         std::string treefile = mySettings.getTreeFilename();
@@ -136,26 +124,48 @@ int main (int argc, char* argv[])
         intree.initializeTraitValues();
         
         if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
-            std::cout << "Initializing model but not running MCMC" << std::endl;
             TraitModel myModel(&myRNG, &intree, &mySettings);
-        } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC() && !mySettings.getAutotune()) {
-            std::cout << "Initializing model and MCMC chain" << std::endl;
+        } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC() &&
+                !mySettings.getAutotune()) {
             TraitModel myModel(&myRNG, &intree, &mySettings);
             TraitMCMC myMCMC(&myRNG, &myModel, &mySettings);
-        } else if (mySettings.getInitializeModel() && mySettings.getAutotune()) {
-            std::cout << "Autotune option not yet supported for phenotypic (trait) analysis" << std::endl;
-            exit(0);
+        } else if (mySettings.getInitializeModel() && mySettings.getAutotune()){
+            log(Error) << "Autotune option not yet supported for phenotypic "
+                "(trait) analysis.\n";
+            std::exit(1);
         } else {
-            std::cout << "Invalid run settings specified in main\n" << std::endl;
-            exit(0);
+            log(Error) << "Invalid run settings specified in main.\n";
+            std::exit(1);
         }
     }
 
-    runInfoFile << "end time: " << currentTime();
+    log(Message, runInfoFile) << "End time: " << currentTime() << "\n";
     runInfoFile.close();
 
     return 0;
 }
+
+
+void printAbout()
+{
+    log(Message) << "\
++--------------------------------------------------------------------------+\n\
+|   BAMM: Bayesian Analysis of Multimodel Mixtures                         |\n\
++--------------------------------------------------------------------------+\n\
+|                                                                          |\n\
+|   Daniel Rabosky <drabosky@umich.edu>                                    |\n\
+|   University of Michigan, Ann Arbor, MI, USA                             |\n\
+|                                                                          |\n\
+|   Authors: Carlos Anderson, Joseph Brown, Michael Grundler,              |\n\
+|            Daniel Rabosky, Jeff Shi, Pascal Title                        |\n\
+|                                                                          |\n\
+|   Copyright (C) 2012-2013 Daniel Rabosky                                 |\n\
+|   See LICENSE for details.                                               |\n\
+|                                                                          |\n\
++--------------------------------------------------------------------------+\n\
+\n";
+}
+
 
 const char* currentTime()
 {

@@ -19,13 +19,11 @@
 #include "Tree.h"
 #include "Settings.h"
 #include "TraitBranchEvent.h"
+#include "Log.h"
 
 
 TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
 {
-
-    std::cout << "Initializing Trait MCMC object..." << std::endl;
-
     ranPtr = ran;
     ModelPtr = mymodel;
     sttings = sp;
@@ -44,14 +42,6 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     _printFreq =        sttings->getPrintFreq();
     _NGENS =            sttings->getNGENS();
 
-    bool fileOverwrite = sttings->getOverwrite();
-
-    if (!fileOverwrite) {
-        if (anyOutputFileExists()) {
-            exitWithErrorOutputFileExists();
-        }
-    }
-
     // Open streams for writing (overwrite)
     _mcmcOutStream.open(_mcmcOutFilename.c_str());
     _betaOutStream.open(_betaOutFilename.c_str());
@@ -65,12 +55,15 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     for (int i = 0; i < sttings->getInitialNumberEvents(); i++)
         ModelPtr->addEventToTree();
 
-    std::cout << "MCMC object successfully initialized." << std::endl << std::endl;
-    std::cout << "Running MCMC chain for " << _NGENS << " generations." << std::endl << std::endl;
+    log() << "\nRunning MCMC chain for " << _NGENS << " generations.\n";
 
-    std::cout << std::setw(10) << "Generation" << std::setw(10) << "logLik" <<  std::setw(10);
-    std::cout << "N_shifts" << std::setw(15) << "LogPrior" << std::setw(15) << "acceptRate" <<
-         std::endl;
+    log() << "\n"
+          << std::setw(15) << "Generation"
+          << std::setw(15) << "LogLikelihood"
+          << std::setw(15) << "NumShifts"    // Why not NumEvents?
+          << std::setw(15) << "LogPrior"
+          << std::setw(15) << "AcceptRate"
+          << "\n";
 
     /*run chain*/
     for (int i = 0; i < _NGENS; i++) {
@@ -150,9 +143,6 @@ void TraitMCMC::setUpdateWeights(void)
 
     for (std::vector<double>::size_type i = 0; i < parWts.size(); i++)
         parWts[i] /= sumwts;
-
-    //for (int i = 0; i < parWts.size(); i++)
-    //  std::cout << parWts[i] << std::endl;
 
     // Define std::vectors to hold accept/reject data:
     for (std::vector<double>::size_type i = 0; i < parWts.size(); i++) {
@@ -253,15 +243,12 @@ void TraitMCMC::writeStateToStream(std::ostream& outStream)
  */
 void TraitMCMC::printStateData(void)
 {
-
-    std::cout << std::setw(10) << ModelPtr->getGeneration() << std::setw(10);
-    std::cout << ModelPtr->getCurrLnLTraits() << std::setw(10);
-    std::cout << ModelPtr->getNumberOfEvents() << std::setw(10);
-    std::cout << ModelPtr->computeLogPrior() << std::setw(15);
-    //  std::cout << "OtherL: " << ModelPtr->computeLikelihoodBranchesByInterval() << std::setw(10);
-    //std::cout << ModelPtr->getEventRate() << std::setw(10);
-    std::cout << "Accp: " << ModelPtr->getMHacceptanceRate() << std::endl;
-
+    log() << std::setw(15) << ModelPtr->getGeneration()
+          << std::setw(15) << ModelPtr->getCurrLnLTraits()
+          << std::setw(15) << ModelPtr->getNumberOfEvents()
+          << std::setw(15) << ModelPtr->computeLogPrior()
+          << std::setw(15) << ModelPtr->getMHacceptanceRate()
+          << "\n";
 }
 
 ////////
@@ -314,8 +301,8 @@ void TraitMCMC::writeHeadersToOutputFiles()
 
 void TraitMCMC::exitWithErrorOutputFileExists()
 {
-    std::cout << "ERROR: Analysis is set to not overwrite files.\n";
-    std::cout << "Fix by removing or renaming output file(s),\n";
-    std::cout << "or set \"overwrite = 1\" in the control file.\n";
+    log(Error) << "Analysis is set to not overwrite files.\n"
+               << "Fix by removing or renaming output file(s),\n"
+               << "or set \"overwrite = 1\" in the control file.\n";
     std::exit(1);
 }

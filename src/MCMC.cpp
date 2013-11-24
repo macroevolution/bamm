@@ -11,12 +11,11 @@
 #include "Tree.h"
 #include "Settings.h"
 #include "BranchEvent.h"
+#include "Log.h"
 
 
 MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
 {
-    std::cout << "Initializing MCMC object..." << std::endl;
-
     ranPtr = ran;
     ModelPtr = mymodel;
     sttings = sp;
@@ -36,15 +35,7 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     _printFreq =            sttings->getPrintFreq();
     _NGENS =                sttings->getNGENS();
 
-    bool fileOverwrite =     sttings->getOverwrite();
-
-    if (!fileOverwrite) {
-        if (anyOutputFileExists()) {
-            exitWithErrorOutputFileExists();
-        }
-    }
-
-    // Open streams for writing (overwrite)
+    // Open streams for writing
     _mcmcOutStream.open(_mcmcOutFilename.c_str());
     _lambdaOutStream.open(_lambdaOutFilename.c_str());
     _muOutStream.open(_muOutFilename.c_str());
@@ -59,12 +50,15 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
         ModelPtr->addEventToTree();
     }
 
-    std::cout << "MCMC object successfully initialized." << std::endl << std::endl;
-    std::cout << "Running MCMC chain for " << _NGENS << " generations." << std::endl << std::endl;
+    log() << "\nRunning MCMC chain for " << _NGENS << " generations.\n";
 
-    std::cout << std::setw(10) << "Generation" << std::setw(10) << "lnLik" <<  std::setw(10);
-    std::cout << "N_shifts" << std::setw(15) << "LogPrior" << std::setw(15) << "acceptRate" <<
-         std::endl;
+    log() << "\n"
+          << std::setw(15) << "Generation"
+          << std::setw(15) << "LogLikelihood"
+          << std::setw(15) << "NumShifts"    // Why not NumEvents?
+          << std::setw(15) << "LogPrior"
+          << std::setw(15) << "AcceptRate"
+          << "\n";
 
     /*run chain*/
     for (int i = 0; i < _NGENS; i++) {
@@ -225,13 +219,12 @@ void MCMC::writeStateToStream(std::ostream& outStream)
 */
 void MCMC::printStateData(void)
 {
-    std::cout << std::setw(10) << ModelPtr->getGeneration() << std::setw(10);
-    std::cout << ModelPtr->getCurrLnLBranches() << std::setw(10);
-    std::cout << ModelPtr->getNumberOfEvents() << std::setw(10);
-    std::cout << ModelPtr->computeLogPrior() << std::setw(15);
-//  std::cout << "OtherL: " << ModelPtr->computeLikelihoodBranchesByInterval() << std::setw(10);
-    //std::cout << ModelPtr->getEventRate() << std::setw(10);
-    std::cout << "Accp: " << ModelPtr->getMHacceptanceRate() << std::endl;
+    log() << std::setw(15) << ModelPtr->getGeneration()
+          << std::setw(15) << ModelPtr->getCurrLnLBranches()
+          << std::setw(15) << ModelPtr->getNumberOfEvents()
+          << std::setw(15) << ModelPtr->computeLogPrior()
+          << std::setw(15) << ModelPtr->getMHacceptanceRate()
+          << "\n";
 }
 
 ////////
@@ -266,31 +259,6 @@ void MCMC::writeEventDataToFile(void)
     ModelPtr->getEventDataString(eventData);
 
     _eventDataOutStream << eventData.str() << std::endl;
-}
-
-
-bool MCMC::anyOutputFileExists()
-{
-    return fileExists(_mcmcOutFilename)       ||
-           fileExists(_lambdaOutFilename)     ||
-           fileExists(_muOutFilename)         ||
-           fileExists(_eventDataOutFilename);
-}
-
-
-bool MCMC::fileExists(const std::string& filename)
-{
-    std::ifstream inFile(filename.c_str());
-    return inFile.good();
-}
-
-
-void MCMC::exitWithErrorOutputFileExists()
-{
-    std::cout << "ERROR: Analysis is set to not overwrite files.\n";
-    std::cout << "Fix by removing or renaming output file(s),\n";
-    std::cout << "or set \"overwrite = 1\" in the control file.\n";
-    std::exit(1);
 }
 
 
