@@ -36,6 +36,7 @@ dtRates = function(ephy,tau)
 		for(j in 1:nrow(eventSegs))
 		{
 			node = eventSegs[j,1];
+			if(j < nrow(eventSegs)) nnode = eventSegs[j+1,1];
 			ev = eventSegs[j,4];
 			Start = eventData[eventData$index == ev,]$time;
 			lam1 = eventData[eventData$index == ev,]$lam1;			
@@ -55,6 +56,27 @@ dtRates = function(ephy,tau)
 						rates[isGoodSeg & isGoodStart & isGoodEnd] + 
 							branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;		
 			}
+			if(node == nnode)
+			{
+				isGoodStart = segs[,2]*tH < eventSegs[j,3];
+				isGoodEnd = segs[,3]*tH > eventSegs[j,3];
+				if(sum(isGoodSeg & isGoodStart & isGoodEnd) == 1)
+				{		
+					relStart = segs[isGoodSeg & isGoodStart & isGoodEnd, 2]*tH - Start;
+					relEnd = eventSegs[j,3] - Start;
+					leftshift = timeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
+					
+					relStart = 0;
+					relEnd = segs[isGoodSeg & isGoodStart & isGoodEnd,3]*tH - eventSegs[j,3];
+					lam1 = eventData[eventData$index==eventSegs[j+1,4],]$lam1;
+					lam2 = eventData[eventData$index==eventSegs[j+1,4],]$lam2;
+					rightshift = timeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
+					
+					shift = (leftshift+rightshift)/(segs[isGoodSeg & isGoodStart & isGoodEnd,3]*tH - segs[isGoodSeg & isGoodStart & isGoodEnd,2]*tH);
+					
+					rates[isGoodSeg & isGoodStart & isGoodEnd] = rates[isGoodSeg & isGoodStart & isGoodEnd] + shift/nsamples;	
+				}
+			}	
 		}
 	}
 	ephy$dtrates = list(tau=tau,rates=rates);
