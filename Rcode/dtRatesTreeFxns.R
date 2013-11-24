@@ -42,8 +42,10 @@ dtRates = function(ephy,tau)
 			lam2 = eventData[eventData$index == ev,]$lam2;
 			
 			isGoodSeg = segs[,1] == node;
-			isGoodStart = segs[,2]*tH >= eventSegs[j,2];
-			isGoodEnd = segs[,3]*tH <= eventSegs[j,3];
+			#isGoodStart = segs[,2]*tH >= eventSegs[j,2];
+			#isGoodEnd = segs[,3]*tH <= eventSegs[j,3];
+			isGoodStart = safeCompare(segs[,2]*tH,eventSegs[j,2],">=",1*10^-decimals(eventSegs[j,2]));
+			isGoodEnd = safeCompare(segs[,3]*tH,eventSegs[j,3],"<=",1*10^-decimals(eventSegs[j,3]));
 			
 			if(sum(isGoodSeg & isGoodStart & isGoodEnd))
 			{
@@ -53,13 +55,14 @@ dtRates = function(ephy,tau)
 						rates[isGoodSeg & isGoodStart & isGoodEnd] + 
 							branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;		
 			}
-			#need to deal with 
-			if(sum(isGoodSeg & (isGoodStart & !isGoodEnd))
+			#ignore the fudge factor? 
+			if(sum(isGoodSeg & isGoodStart & !isGoodEnd))
 			{
-				AB = isGoodSeg & (isGoodStart & !isGoodEnd);
-				relStart = segs[AB, 2]*tH - Start;
-				relEnd = segs[AB, 3]*tH - Start;
-				rates[AB] = rates[AB] + branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;
+				relStart = segs[isGoodSeg & isGoodStart & !isGoodEnd, 2]*tH - Start;
+				relEnd = segs[isGoodSeg & isGoodStart & !isGoodEnd, 3]*tH - Start;
+				rates[isGoodSeg & isGoodStart & !isGoodEnd] = 
+						rates[isGoodSeg & isGoodStart & !isGoodEnd] + 
+							branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;
 			}
 		}
 	}
@@ -337,6 +340,39 @@ as.phylo.bammdata <- function(ephy){
 	newphylo$tip.label <- ephy$tip.label;
 	newphylo$edge.length <- ephy$edge.length;
 	class(newphylo) <- 'phylo';
-	attributes(newphylo)$order <- 'cladewise';
+	attributes(newphylo)$order <- attributes(ephy)$order;
 	return(newphylo);
+}
+##############################################
+#	stuff to help debug
+#
+#
+safeCompare = function(vec,val,FUN,tol=1e-4)
+{
+	if(FUN == ">=")
+	{
+		ret = rep(FALSE,length(vec));
+		ret[(vec-val) >= 0] = TRUE;
+		ret[abs(vec-val) <= tol] = TRUE;
+		return(ret);
+	}
+	if(FUN == "<=")
+	{
+		ret = rep(FALSE,length(vec));
+		ret[(vec-val) <= 0] = TRUE;
+		ret[(vec-val) <= tol] = TRUE;
+		return(ret);
+	}
+}
+
+decimals = function(x)
+{
+	if(x%%1 != 0)
+	{
+		return(nchar(strsplit(as.character(x),".",fixed=TRUE)[[1]][[2]]));
+	}	
+	else
+	{
+		return(10);
+	}
 }
