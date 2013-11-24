@@ -72,7 +72,7 @@ dtRates = function(ephy,tau)
 				leftshift = timeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
 				
 				relStart = 0;
-				relEnd = segs[isGoodNode & isGoodStart & !isGoodEnd,3]*tH;
+				relEnd = segs[isGoodNode & isGoodStart & !isGoodEnd,3]*tH - eventSegs[j,3];
 				lam1 = eventData[eventData$index==eventSegs[j+1,4],]$lam1;
 				lam2 = eventData[eventData$index==eventSegs[j+1,4],]$lam2;
 				rightshift = timeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
