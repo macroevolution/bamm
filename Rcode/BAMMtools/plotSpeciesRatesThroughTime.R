@@ -9,15 +9,13 @@
 #	nbreaks = number of time slices to use
 #	ratetype = 'speciation' or 'netdiv' or 'trait'
 #	species = vector of species names to include
-#	lowerCI = lowest quantile to consider when plotting confidence intervals
-#	upperCI = greatest quantile to consider when plotting confidence intervals
-#		if either upperCI or lowerCI are NULL, then confidence intervals will be ignored.
+# 	intervals if NULL, no intervals will be plotted, otherwise a vector of quantiles must be supplied (these will define shaded polygons)
 #	smooth = boolean, apply loess smoothing to curves
-#	spCol = vector of colors that will be matched to the species vector
+#	spCol = vector of colors that will be matched to the species vector (defaults to random color selection)
 #	opacity = opacity level for plotting colored confidence intervals
 
 
-plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(ephy)), useMedian=F, nbreaks=10, ratetype='speciation', species, lowerCI=0.05, upperCI=0.95, smooth=T, spCol, opacity=0.01,smoothParam=0.20){
+plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(ephy)), useMedian=F, nbreaks=10, ratetype='speciation', species, intervals=seq(from = 0,to = 1,by = 0.01), smooth=F, spCol=sample(colors(),2), opacity=0.01,smoothParam=0.20){
 	
 	if (!'bamm-data' %in% class(ephy)){
 		stop("Object ephy must be of class bamm-data\n");
@@ -53,9 +51,7 @@ plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(eph
 	tseq <- seq(tstart, tend, length.out = nbreaks);
 	
 	#calculate confidence intervals
-	if (is.numeric(lowerCI) & is.numeric(upperCI)){
-		intervals <- seq(from = lowerCI,to = upperCI,by = 0.01);
-		
+	if (!is.null(intervals)){
 		polySp<-list();
 		for (i in 1:length(bySp)){
 			mm <- apply(bySp[[i]], 2, quantile, intervals);
@@ -78,13 +74,16 @@ plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(eph
 	
 	if (smooth == T){
 		if (nbreaks < 30){
-			cat('Too few breaks. Non-smoothed results returned.\n');
+			cat('Insufficient breaks. Non-smoothed results returned.\n');
 		}
 		if (nbreaks >= 30){
 			for (i in 1:length(polySp)){
 				for (j in 1:length(polySp[[i]])){
-					polySp[[i]][[j]][1:nrow(polySp[[i]][[j]])/2,2] <- loess(polySp[[i]][[j]][1:nrow(polySp[[i]][[j]])/2,2] ~ polySp[[i]][[j]][1:nrow(polySp[[i]][[j]])/2,1],span = smoothParam)$fitted;
-					polySp[[i]][[j]][(nrow(polySp[[i]][[j]])/2):nrow(polySp[[i]][[j]]),2] <- loess(polySp[[i]][[j]][(nrow(polySp[[i]][[j]])/2):nrow(polySp[[i]][[j]]),2] ~ polySp[[i]][[j]][(nrow(polySp[[i]][[j]])/2):nrow(polySp[[i]][[j]]),1],span = smoothParam)$fitted;
+					p <- polySp[[i]][[j]]
+					rows <- nrow(p)
+					p[1:rows/2,2] <- loess(p[1:rows/2,2] ~ p[1:rows/2,1],span = smoothParam)$fitted;
+					p[(rows/2):rows,2] <- loess(p[(rows/2):rows,2] ~ p[(rows/2):rows,1],span = smoothParam)$fitted;
+					polySp[[i]][[j]] <- p
 				}
 			}
 			for (i in 1:length(avgList)){
@@ -97,7 +96,7 @@ plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(eph
 	plot.new();
 	plot.window(xlim=c(max(branching.times(ephy)), 0), ylim=c(0 , maxRate));
 
-	if (is.numeric(lowerCI) & is.numeric(upperCI)){
+	if (!is.null(intervals)){
 		for (i in 1:length(polySp)){
 			for (j in 1:length(polySp[[i]])){
 				polygon(x = tend - polySp[[i]][[j]][,1],y = polySp[[i]][[j]][,2], col = transparentColor(spCol[i],alpha = opacity), border = NA);
@@ -105,14 +104,14 @@ plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(eph
 			lines(x = tend - tseq,y = avgList[[i]], lwd=2, col = spCol[i]);
 		}
 	}
-	if (!is.numeric(lowerCI) | !is.numeric(upperCI)){
+	if (is.null(intervals)){
 		for (i in 1:length(avgList)){
 			lines(x = tend - tseq,y = avgList[[i]],lwd = 2,col = spCol[i]);
 		}
 	}
 	
 	axis(at = seq(0, + 1.3*max(branching.times(ephy)), by = 5), cex.axis = 1, side = 1);
-	axis(at = seq(-0.2, maxRate + 0.2*maxRate, by=0.2), las=1, cex.axis = 1, side = 2);
+	axis(at = seq(-0.2, maxRate, by=0.2), las=1, cex.axis = 1, side = 2);
 	mtext(side = 1, text = 'Time since present', line = 3, cex = 1.1);
 	mtext(side = 2, text = ratelabel, line = 3, cex = 1.1);
 }
