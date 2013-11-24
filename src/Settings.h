@@ -25,6 +25,7 @@ private:
     void initializeSettingsWithUserValues();
 
     void checkAllSettingsAreUserDefined() const;
+    void checkAllOutputFilesAreWriteable() const;
 
     void assertNotUserDefined(const SettingsParameter& parameter) const;
     void addParameter(const std::string& name, const std::string& value,
@@ -36,6 +37,7 @@ private:
     std::string attachPrefix
         (const std::string& prefix, const std::string& str) const;
 
+    bool anyOutputFileExists() const;
     bool fileExists(const std::string& filename) const;
 
     void exitWithErrorNoControlFile() const;
@@ -45,6 +47,7 @@ private:
     void exitWithErrorParametersNotFound
         (const std::vector<std::string>& paramsNotFound) const;
     void exitWithErrorDuplicateParameter(const std::string& param) const;
+    void exitWithErrorOutputFileExists() const;
 
     static const size_t NumberOfParamsToPrefix = 6;
 
