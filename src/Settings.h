@@ -108,6 +108,7 @@ public:
     int getMinCladeSizeForShift() const;
     long int getSeed() const;
     bool getOverwrite() const;
+    bool getWriteMeanBranchLengthTrees() const;
 	
 	// Functions to set MCMC operators for autotuning:
 	void setUpdateLambdaInitScale(double x);
@@ -341,6 +342,12 @@ inline long int Settings::getSeed() const
 inline bool Settings::getOverwrite() const
 {
     return _parameters.at("overwrite").value<bool>();
+}
+
+
+inline bool Settings::getWriteMeanBranchLengthTrees() const
+{
+    return _parameters.at("writeMeanBranchLengthTrees").value<bool>();
 }
 
 

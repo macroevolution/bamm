@@ -95,14 +95,6 @@ muInitPrior = 1.0
 numberGenerations = 10000
 # Generations to perform MCMC simulation.
 
-branchRatesWriteFreq = 20000
-# Writes file with branch-specific mean rates every
-# branchRatesWriteFreq generations. 
-# These rates should generally be computed directly
-# from the event data (see BAMMtools functions), 
-# but for very large trees, it can be convenient to work
-# with the branch rates.
-
 mcmcWriteFreq = 1000
 # Writes MCMC simulation parameters (log-likelihood, log-prior,
 # number of processes) to file every mcmcWriteFreq generations.
@@ -130,12 +122,6 @@ printFreq = 1000
 # and all branch-specific speciation rates, shift positions, 
 # marginal distributions etc can be reconstructed from this output. 
 # See R package BAMMtools for working with this output.
-
-# lambdaOutfile = lambda_rates.txt
-# File containing branch-specific mean speciation rates. See documentation.
-
-# muOutfile = mu_rates.txt
-# File containing branch-specific mean extinction rates. See documentation.
 
 ###################################
 # OPERATORS: MCMC_SCALING_OPERATORS

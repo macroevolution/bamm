@@ -35,6 +35,8 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     _betaOutFilename      = sttings->getBetaOutfile();
     _eventDataOutFilename = sttings->getEventDataOutfile();
 
+    _writeMeanBranchLengthTrees = sttings->getWriteMeanBranchLengthTrees();
+
     _treeWriteFreq =    sttings->getBranchRatesWriteFreq();
     _mcmcWriteFreq =    sttings->getMCMCwriteFreq();
     _eventDataWriteFreq = sttings->getEventDataWriteFreq();
@@ -44,8 +46,11 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
 
     // Open streams for writing (overwrite)
     _mcmcOutStream.open(_mcmcOutFilename.c_str());
-    _betaOutStream.open(_betaOutFilename.c_str());
     _eventDataOutStream.open(_eventDataOutFilename.c_str());
+
+    if (_writeMeanBranchLengthTrees) {
+        _betaOutStream.open(_betaOutFilename.c_str());
+    }
 
     writeHeadersToOutputFiles();
 
@@ -74,10 +79,8 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
 
 
 
-        if ((i % _treeWriteFreq) == 0) {
-
+        if (_writeMeanBranchLengthTrees && (i % _treeWriteFreq == 0)) {
             writeBranchBetaRatesToFile();
-
         }
 
         if ((i % _eventDataWriteFreq) == 0){
@@ -114,7 +117,12 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
 
 TraitMCMC::~TraitMCMC(void)
 {
+    _mcmcOutStream.close();
+    _eventDataOutStream.close();
 
+    if (_writeMeanBranchLengthTrees) {
+        _betaOutStream.close();
+    }
 }
 
 

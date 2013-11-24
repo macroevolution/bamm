@@ -67,6 +67,8 @@ private:
     std::ofstream _muOutStream;
     std::ofstream _eventDataOutStream;
 
+    bool _writeMeanBranchLengthTrees;
+
     int _treeWriteFreq;
     int _eventDataWriteFreq;
     int _mcmcWriteFreq;
