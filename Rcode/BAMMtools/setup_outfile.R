@@ -18,6 +18,6 @@ setup_outfile <- function(fname, parnames, parvalues, comments){
 	cat('\n#\tNote: if you received a warning message after a parameter,', file = fname, append=T);	
 	cat('\n#\tthis just means that the auto-tuning could not identify a best target value', file = fname, append=T);	
 	cat('\n#\tfor this scaling operator. You do not need to worry about this.', file = fname, append=T);	
-	cat('\n#\tHowever, if MCMC is performing poorly, you may consider manuually', file = fname, append=T);	
+	cat('\n#\tHowever, if MCMC is performing poorly, you may consider manually', file = fname, append=T);	
 	cat('\n#\tIncreasing or decreasing the value of the parameter', file = fname, append=T);	
 }
