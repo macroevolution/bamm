@@ -322,7 +322,7 @@ tree.traverse = function(phy,node,order='preorder',tips.only=FALSE, internal.onl
 matrify = function(x,tau)
 {
 	bn = sqrt((x[3]-x[1])^2 + (x[4]-x[2])^2);
-	len = bn/tau;
+	len = bn/tau; if(len %% 1 == 0) len = len + 1;
 	
 	j = seq(x[1],x[3],length.out=len);
 	if(length(j) == 1) return(matrix(x[c(1,3,2,4,5)],nrow=1));
