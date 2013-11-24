@@ -54,17 +54,12 @@ dtRates = function(ephy,tau)
 							branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;		
 			}
 			#need to deal with 
-			else	 if(sum(isGoodSeg & (isGoodStart & !isGoodEnd | !isGoodStart & isGoodEnd)))
+			if(sum(isGoodSeg & (isGoodStart & !isGoodEnd))
 			{
-				AB = isGoodSeg & (isGoodStart & !isGoodEnd | !isGoodStart & isGoodEnd);
+				AB = isGoodSeg & (isGoodStart & !isGoodEnd);
 				relStart = segs[AB, 2]*tH - Start;
 				relEnd = segs[AB, 3]*tH - Start;
-				rates[AB] = rates[AB] + 
-							branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;
-			}
-			else
-			{
-				print("Unknown error");
+				rates[AB] = rates[AB] + branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;
 			}
 		}
 	}
@@ -139,11 +134,11 @@ polartree = function(ephy,vtheta=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1),yl
 			}
 			else if(palette == 'diverging')
 			{
-				cols = colorRampPalette(c('blue','white','red'))(64);
+				cols = colorRampPalette(c('blue','white','red'),space='Lab')(64);
 			}
 			else
 			{
-				cols = colorRampPalette(c('blue','white','red'))(64);
+				cols = colorRampPalette(c('blue','white','red'),space='Lab')(64);
 				warning('Unsupported palette option. Using palette "diverging"');
 			}
 			tau = ephy$dtrates$tau;
