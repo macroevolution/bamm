@@ -55,14 +55,32 @@ dtRates = function(ephy,tau)
 						rates[isGoodSeg & isGoodStart & isGoodEnd] + 
 							branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;		
 			}
-			#ignore the fudge factor? 
+			 
 			if(sum(isGoodSeg & isGoodStart & !isGoodEnd))
 			{
+				#relStart = segs[isGoodSeg & isGoodStart & !isGoodEnd, 2]*tH - Start;
+				#relEnd = segs[isGoodSeg & isGoodStart & !isGoodEnd, 3]*tH - Start;
+				#rates[isGoodSeg & isGoodStart & !isGoodEnd] = 
+				#		rates[isGoodSeg & isGoodStart & !isGoodEnd] + 
+				#			branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;
+				
+				#this fix assumes an approximating segment only ever overlaps one shift point.
+				#relies on the strict ordering of ephy$eventBranchSegs
+				
 				relStart = segs[isGoodSeg & isGoodStart & !isGoodEnd, 2]*tH - Start;
-				relEnd = segs[isGoodSeg & isGoodStart & !isGoodEnd, 3]*tH - Start;
+				relEnd = eventSegs[j,3] - Start;
+				leftshift = timeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
+				
+				relStart = 0;
+				relEnd = segs[isGoodNode & isGoodStart & !isGoodEnd,3]*tH;
+				lam1 = eventData[eventData$index==eventSegs[j+1,4],]$lam1;
+				lam2 = eventData[eventData$index==eventSegs[j+1,4],]$lam2;
+				rightshift = timeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
+				
+				shiftrt = (leftshift + rightshift)/(segs[isGoodSeg & isGoodStart & !isGoodEnd, 3]*tH - segs[isGoodSeg & isGoodStart & !isGoodEnd, 2]*tH);
+				
 				rates[isGoodSeg & isGoodStart & !isGoodEnd] = 
-						rates[isGoodSeg & isGoodStart & !isGoodEnd] + 
-							branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;
+						rates[isGoodSeg & isGoodStart & !isGoodEnd] + shiftrt/nsamples;
 			}
 		}
 	}
