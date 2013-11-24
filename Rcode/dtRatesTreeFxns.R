@@ -45,23 +45,26 @@ dtRates = function(ephy,tau)
 			isGoodStart = segs[,2]*tH >= eventSegs[j,2];
 			isGoodEnd = segs[,3]*tH <= eventSegs[j,3];
 			
-			relStart = segs[isGoodSeg & isGoodStart & isGoodEnd, 2]*tH - Start;
-			relEnd = segs[isGoodSeg & isGoodStart & isGoodEnd, 3]*tH - Start;
-			if(length(relStart))
+			if(sum(isGoodSeg & isGoodStart & isGoodEnd))
 			{
-				rates[isGoodSeg & isGoodStart & isGoodEnd] = 
-						rates[isGoodSeg & isGoodStart & isGoodEnd] + 
-							branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;		
-			}
-			else		#straddler, fudge for now
-			{
-				isGoodStart = segs[,2]*tH <= eventSegs[j,3];
-				isGoodEnd = segs[,3]*tH >= eventSegs[j,3];
 				relStart = segs[isGoodSeg & isGoodStart & isGoodEnd, 2]*tH - Start;
 				relEnd = segs[isGoodSeg & isGoodStart & isGoodEnd, 3]*tH - Start;
 				rates[isGoodSeg & isGoodStart & isGoodEnd] = 
 						rates[isGoodSeg & isGoodStart & isGoodEnd] + 
+							branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;		
+			}
+			#need to deal with 
+			else	 if(sum(isGoodSeg & (isGoodStart & !isGoodEnd | !isGoodStart & isGoodEnd)))
+			{
+				AB = isGoodSeg & (isGoodStart & !isGoodEnd | !isGoodStart & isGoodEnd);
+				relStart = segs[AB, 2]*tH - Start;
+				relEnd = segs[AB, 3]*tH - Start;
+				rates[AB] = rates[AB] + 
 							branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;
+			}
+			else
+			{
+				print("Unknown error");
 			}
 		}
 	}
