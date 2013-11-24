@@ -8,7 +8,7 @@
 #					will compute for all branches excluding a given clade, nodetype = 'exclude'
 #		
 
-getCladeRates <- function(ephy, weights='branchlengths', node = NULL, nodetype='include', verbose=F){
+getCladeRates <- function(ephy, node = NULL, nodetype='include', verbose=F){
 	
 	if (!'bamm-data' %in% class(ephy)){
 		stop("Object ephy must be of class bamm-data\n");
@@ -26,7 +26,8 @@ getCladeRates <- function(ephy, weights='branchlengths', node = NULL, nodetype='
 	
 	lambda_vector <- numeric(length(ephy$eventBranchSegs));
 	mu_vector <- numeric(length(ephy$eventBranchSegs));
- 
+ 	
+ 	weights <- 'branchlengths'
 	
 	for (i in 1:length(ephy$eventBranchSegs)){
 		if (verbose){
@@ -58,6 +59,11 @@ getCladeRates <- function(ephy, weights='branchlengths', node = NULL, nodetype='
 	
 	
 	}
-		
-	return(list(lambda = lambda_vector, mu = mu_vector));
+	
+	if (ephy$type == 'diversification'){
+		return(list(lambda = lambda_vector, mu = mu_vector));
+	}
+	if (ephy$type == 'traits'){
+		return(lambda_vector);
+	}
 }
