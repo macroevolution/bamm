@@ -70,7 +70,7 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
         int parmToUpdate = pickParameterClassToUpdate();
         updateState(parmToUpdate); // update state
 
-        if ((i % _treeWriteFreq) == 0 && _writeMeanBranchLengthTrees) {
+        if (_writeMeanBranchLengthTrees && (i % _treeWriteFreq == 0)) {
             writeBranchSpeciationRatesToFile();
             writeBranchExtinctionRatesToFile();
         }

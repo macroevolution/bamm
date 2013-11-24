@@ -79,7 +79,7 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
 
 
 
-        if ((i % _treeWriteFreq) == 0 && _writeMeanBranchLengthTrees) {
+        if (_writeMeanBranchLengthTrees && (i % _treeWriteFreq == 0)) {
             writeBranchBetaRatesToFile();
         }
 

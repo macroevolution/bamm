@@ -116,7 +116,7 @@ void Settings::initializeGlobalSettings()
     addParameter("mcmcOutfile",                  "mcmc_out.txt", false);
     addParameter("eventDataOutfile",             "event_data.txt", false);
 
-    addParameter("branchRatesWriteFreq",         "0");
+    addParameter("branchRatesWriteFreq",         "0", false);
     addParameter("mcmcWriteFreq",                "0");
     addParameter("eventDataWriteFreq",           "0");
     
