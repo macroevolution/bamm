@@ -65,6 +65,8 @@ private:
     std::ofstream _betaOutStream;
     std::ofstream _eventDataOutStream;
 
+    bool _writeMeanBranchLengthTrees;
+
     int _treeWriteFreq;
     int _mcmcWriteFreq;
     int _eventDataWriteFreq;

@@ -124,9 +124,6 @@ printFreq = 20000
 # The name of file for MCMC output. Only includes summar
 # information about MCMC simulation (log-likelihoods etc)
 
-# betaOutfile = beta_rates.txt
-# File containing branch-specific mean phenotypic rates. See documentation.
-
 # eventDataOutfile = event_data.txt
 # The raw event data. ALL of the results are contained in this file,
 # and all branch-specific speciation rates, shift positions, 

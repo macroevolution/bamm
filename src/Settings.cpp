@@ -123,6 +123,7 @@ void Settings::initializeGlobalSettings()
     addParameter("acceptWriteFreq",              "0");
     addParameter("printFreq",                    "0");
     addParameter("overwrite",                    "0", false);
+    addParameter("writeMeanBranchLengthTrees",   "0", false);
 
     // Parameter update rates
     addParameter("updateRateEventNumber",        "0.0");
@@ -313,16 +314,18 @@ bool Settings::anyOutputFileExists() const
         return true;
     }
 
-    // Speciation/extinction output files
-    if (getModeltype() == "speciationexinction") {
-        if (fileExists(getLambdaOutfile()) || fileExists(getMuOutfile())) {
-            return true;
-        }
+    if (getWriteMeanBranchLengthTrees()) {
+        // Speciation/extinction output files
+        if (getModeltype() == "speciationextinction") {
+            if (fileExists(getLambdaOutfile()) || fileExists(getMuOutfile())) {
+                return true;
+            }
 
-    // Trait output files
-    } else if (getModeltype() == "trait") {
-        if (fileExists(getBetaOutfile())) {
-            return true;
+        // Trait output files
+        } else if (getModeltype() == "trait") {
+            if (fileExists(getBetaOutfile())) {
+                return true;
+            }
         }
     }
 

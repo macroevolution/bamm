@@ -28,6 +28,8 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     _muOutFilename         = sttings->getMuOutfile();
     _eventDataOutFilename  = sttings->getEventDataOutfile();
 
+    _writeMeanBranchLengthTrees = sttings->getWriteMeanBranchLengthTrees();
+
     _treeWriteFreq =        sttings->getBranchRatesWriteFreq();
     _eventDataWriteFreq =   sttings->getEventDataWriteFreq();
     _mcmcWriteFreq =        sttings->getMCMCwriteFreq();
@@ -37,9 +39,12 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
 
     // Open streams for writing
     _mcmcOutStream.open(_mcmcOutFilename.c_str());
-    _lambdaOutStream.open(_lambdaOutFilename.c_str());
-    _muOutStream.open(_muOutFilename.c_str());
     _eventDataOutStream.open(_eventDataOutFilename.c_str());
+
+    if (_writeMeanBranchLengthTrees) {
+        _lambdaOutStream.open(_lambdaOutFilename.c_str());
+        _muOutStream.open(_muOutFilename.c_str());
+    }
 
     writeHeadersToOutputFiles();
 
@@ -65,12 +70,9 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
         int parmToUpdate = pickParameterClassToUpdate();
         updateState(parmToUpdate); // update state
 
-        if ((i % _treeWriteFreq) == 0) {
-
+        if ((i % _treeWriteFreq) == 0 && _writeMeanBranchLengthTrees) {
             writeBranchSpeciationRatesToFile();
             writeBranchExtinctionRatesToFile();
-            // Deprecating this: no need to write this
-            //writeNodeSpeciationRatesToFile();
         }
 
         if ((i % _eventDataWriteFreq) == 0) {
@@ -101,9 +103,12 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
 MCMC::~MCMC(void)
 {
     _mcmcOutStream.close();
-    _lambdaOutStream.close();
-    _muOutStream.close();
     _eventDataOutStream.close();
+
+    if (_writeMeanBranchLengthTrees) {
+        _lambdaOutStream.close();
+        _muOutStream.close();
+    }
 }
 
 
