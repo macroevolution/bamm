@@ -21,6 +21,7 @@
 #include "BranchHistory.h"
 #include "Settings.h"
 #include "Utilities.h"
+#include "Log.h"
 
 
 #define NO_DATA
@@ -50,9 +51,6 @@ double Model::mhColdness = 1.0;
 
 Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
 {
-
-    std::cout << std::endl << "Initializing model object...." << std::endl;
-
     // reduce weird autocorrelation of values at start by calling RNG a few times...
     for (int i = 0; i < 100; i++)
         ranptr->uniformRv();
@@ -150,17 +148,16 @@ Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
 
     // 9.14.2012: initialize by previous event histories.
     if (sttings->getLoadEventData()) {
-        std::cout << "\nLoading model data from file...." << std::endl;
+        log() << "\nLoading model data from file.\n";
         initializeModelFromEventDataFile();
     }
 	
     setCurrLnLBranches(computeLikelihoodBranches());
 
     setCurrLnLTraits(0.0);
-    std::cout << "Model object successfully initialized." << std::endl;
-    std::cout << "Initial log-likelihood: " << getCurrLnLBranches() << std::endl << std::endl;
+    log() << "\nInitial log-likelihood: " << getCurrLnLBranches() << "\n";
     if (sttings->getSampleFromPriorOnly())
-        std::cout << "\tNote that you have chosen to sample from prior only." << std::endl;
+        log() << "Note that you have chosen to sample from prior only.\n";
 
     // this parameter only set during model-jumping.
     _logQratioJump = 0.0;
