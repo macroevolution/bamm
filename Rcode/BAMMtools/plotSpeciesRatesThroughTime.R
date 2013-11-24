@@ -35,7 +35,7 @@ plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(eph
 		ratelabel <- 'Net diversification';
 	}
 		
-	bySp<-lapply(species,function(x) getSpeciesRateThroughTimeReturnAll(ephy, start.time = start.time, nbreaks = nbreaks, ndr = ndr, species = x));
+	bySp<-lapply(species,function(x) getSpeciesRateThroughTime(ephy, start.time = start.time, nbreaks = nbreaks, ndr = ndr, species = x,returnAll=T));
 	names(bySp) <- species;
 	
 	#calculate average values
