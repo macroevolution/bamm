@@ -202,7 +202,7 @@ polartree = function(ephy,vtheta=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1),yl
 		p = do.call(rbind, p);
 		x0 = c(x0[1],p[,1]);x1=c(x1[1],p[,2]);y0=c(y0[1],p[,3]);y1=c(y1[1],p[,4]);
 		offset = table(p[,5])[as.character(unique(p[,5]))];
-		arc.color = c(edge.color[1],edge.color[match(unique(p[,5]),p[,5])+offset-1]);
+		arc.color = c(edge.color[1],edge.color[match(unique(p[,5]),p[,5])+offset]);
 		edge.color = c(edge.color[1],edge.color);
 	}
 	else
@@ -223,8 +223,8 @@ polartree = function(ephy,vtheta=10,rbf=0.001,lwd=1,edge.color=1,xlim=c(-1,1),yl
 		plot.new();
 		plot.window(xlim=xlim+c(-rb,rb),ylim=ylim+c(-rb,rb),asp=1);
 		
-		arc(0,0,theta[,2],theta[,3],c(rb,rb+phy$end/tH),border=arc.color,lwd=lwd);
 		segments(x0,y0,x1,y1,col=edge.color,lwd=lwd,lend=2);
+		arc(0,0,theta[,2],theta[,3],c(rb,rb+phy$end/tH),border=arc.color,lwd=lwd);
 
 		if(labels)
 		{
@@ -258,7 +258,7 @@ arc = function(x,y,theta1,theta2,rad,border,...)
 	step = (theta2-theta1)/100;
 	xv = x+rad*cos(seq(theta1,theta2,step));
 	yv = y+rad*sin(seq(theta1,theta2,step));
-	polygon(c(xv,rev(xv)),c(yv,rev(yv)),border=border,...);
+	if(step) polygon(c(xv,rev(xv)),c(yv,rev(yv)),border=border,...);
 }
 
 arc = Vectorize(arc);
