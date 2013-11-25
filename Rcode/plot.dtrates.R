@@ -9,6 +9,8 @@
 #	                    May be 'polar' or 'phylogram'.
 #	           show = TRUE or FALSE. If TRUE the tree will plot.
 #	           labels = TRUE or FALSE. If TRUE the tip labels will plot.
+#	           hrates = TRUE or FALSE. If TRUE a histogram is plotted in a separate
+#	                    device for interpreting the meaning of plotted colors.
 #	           lwd = The line width used for plotting the tree.
 #	           ncolors = The number of color bins for mapping rates to colors.
 #	           palette = A character string. Currently either 'temperature' or
@@ -22,7 +24,7 @@
 #	                 two descendant branches from the root. rbf = 0.001 seems to be 
 #	                 a good first choice
 
-plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, lwd=3, ncolors=64, palette='temperature', ...)
+plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, hrates=TRUE, lwd=3, ncolors=64, palette='temperature', ...)
 {
 	if ('bamm-data' %in% class(ephy)) phy = as.phylo.bammdata(ephy) else phy = ephy;
 	if (class(phy) != 'phylo') stop('Trying to plot a non-tree object');
@@ -90,8 +92,11 @@ plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, lwd=3,
 				text(ret$segs[-1,][phy$edge[,2] <= phy$Nnode+1,3],ret$segs[-1,][phy$edge[,2] <= phy$Nnode+1,4], phy$tip.label, cex=0.5, pos=4, offset = 0.25);
 			}
 		}
-		dev.new(width=3,height=3);
-		histRates(ephy$dtrates$rates,palette,ncolors);
+		if(hrates)
+		{
+			dev.new(width=3,height=3);
+			histRates(ephy$dtrates$rates,palette,ncolors);
+		}
 	}
 	
 	invisible(ret$segs[-1,]);
