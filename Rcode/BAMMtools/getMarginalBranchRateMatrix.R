@@ -46,6 +46,10 @@ getMarginalBranchRateMatrix <- function(ephy, verbose=FALSE){
 	
 	}
 	
-	return(list(lambda_branch_matrix = lammat, mu_branch_matrix = mumat));
-	
+	if (ephy$type == 'diversification'){
+		return(list(lambda_branch_matrix = lammat, mu_branch_matrix = mumat));
+	}
+	if (ephy$type == 'traits'){
+		return(lammat)
+	}
 }
