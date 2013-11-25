@@ -136,7 +136,7 @@ setPolarTreeCoords = function(phy,vtheta,rbf)
 	y1 = c(rb,rb+(phy$end/tH))*sin(theta[,1]);
 	ret = cbind(x0,y0,x1,y1,theta[,1]);
 	rownames(ret) = c(phy$edge[1,1],phy$edge[,2]); colnames(ret) = c('x0','y0','x1','y1','theta');
-	return(list(segs = ret, arcs = theta[,2:3], rb = rb ) );	
+	return(list(segs = ret, arcs = theta[,2:3]) );	
 }
 
 setPhyloTreeCoords = function(phy)
