@@ -4,14 +4,13 @@
 #include <set>
 #include <vector>
 
-#include "Utilities.h"
+#include "BranchEvent.h"
 
 //Forward declarations
 class Tree;
 class Node;
 class MbRandom;
 class Settings;
-class BranchEvent;
 
 double safeExponentiation(double x);
 double proportionalShrink(double x, double scale);
@@ -208,7 +207,8 @@ private:
     int acceptCount;
     int rejectCount;
 
-    std::set<BranchEvent*, comp_history> eventCollection; // does NOT contain root event
+    // Event collection does not contain the root event
+    std::set<BranchEvent*, BranchEventPtrCompare> eventCollection;
     BranchEvent* rootEvent; // branch event at root node; can't be modified
 
     double lastDeletedEventMapTime; // map time of last deleted event

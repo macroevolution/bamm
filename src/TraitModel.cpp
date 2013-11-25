@@ -25,7 +25,6 @@
 #include "Tree.h"
 #include "TraitBranchHistory.h"
 #include "Settings.h"
-#include "Utilities.h"
 #include "Log.h"
 
 
