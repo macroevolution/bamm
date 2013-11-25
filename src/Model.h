@@ -4,6 +4,8 @@
 #include <set>
 #include <vector>
 
+#include "Utilities.h"
+
 //Forward declarations
 class Tree;
 class Node;
@@ -206,7 +208,7 @@ private:
     int acceptCount;
     int rejectCount;
 
-    std::set<BranchEvent*> eventCollection; // does NOT contain root event
+    std::set<BranchEvent*, comp_history> eventCollection; // does NOT contain root event
     BranchEvent* rootEvent; // branch event at root node; can't be modified
 
     double lastDeletedEventMapTime; // map time of last deleted event
