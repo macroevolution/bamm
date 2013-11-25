@@ -90,6 +90,8 @@ plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, lwd=3,
 				text(ret$segs[-1,][phy$edge[,2] <= phy$Nnode+1,3],ret$segs[-1,][phy$edge[,2] <= phy$Nnode+1,4], phy$tip.label, cex=0.5, pos=4, offset = 0.25);
 			}
 		}
+		dev.new(width=3,height=3);
+		histRates(ephy$dtrates$rates,palette,ncolors);
 	}
 	
 	invisible(ret$segs[-1,]);
@@ -171,6 +173,35 @@ setPhyloTreeCoords = function(phy)
 	rownames(xy) = c(phy$edge[1,1],phy$edge[,2]); colnames(xy) = c('x0','y0','x1','y1');
 	return(list (segs = xy, arcs = bar ) );	
 }
+
+histRates = function(rates,palette,NCOLORS)
+{
+	fx = density(rates);
+	if(palette == 'temperature')
+	{
+		rate.colors = rich.colors(NCOLORS);
+	}
+	else if (palette == 'diverging')
+	{
+		rate.colors = colorRampPalette(c('blue','white','red'))(NCOLORS);
+	}
+	qx = quantile(rates,seq(0,1,length.out = NCOLORS+1));
+	plot.new();
+	plot.window(xlim=c(0,max(fx$x)),ylim=c(0,max(fx$y)));
+	for(i in 1:length(fx$x))
+	{
+		index = which(qx > fx$x[i])[1];
+		if(is.na(index)) break;
+		if(index > 1) index = index - 1;
+		bcol = rate.colors[index];
+		segments(fx$x[i],fx$y[i],fx$x[i],0,lend=2,col=bcol);
+	}
+	axis(1,round(seq(0,max(fx$x),length.out=5),2),pos=0,cex.axis=0.75);
+	axis(2,round(seq(0,max(fx$y),length.out=3),2),las=1,pos=0,cex.axis=0.75);
+	mtext('Evolutionary Rate',1,line=2,cex=0.75);
+	mtext('Density',2,line=2.5,cex=0.75);
+}
+
 
 ############################################
 #	dtRate(ephy,tau)
