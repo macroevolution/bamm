@@ -65,8 +65,8 @@ plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(eph
 				b <- b[rev(rownames(b)),];
 				colnames(a) <- colnames(b) <- c('x','y');
 				poly[[q1]] <- rbind(a,b);
-				q1 <- q1+1;
-				q2 <- q2-1;
+				q1 <- q1 + 1;
+				q2 <- q2 - 1;
 			}
 			polySp[[i]] <- poly;
 		}
@@ -79,11 +79,11 @@ plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(eph
 		if (nbreaks >= 30){
 			for (i in 1:length(polySp)){
 				for (j in 1:length(polySp[[i]])){
-					p <- polySp[[i]][[j]]
-					rows <- nrow(p)
+					p <- polySp[[i]][[j]];
+					rows <- nrow(p);
 					p[1:rows/2,2] <- loess(p[1:rows/2,2] ~ p[1:rows/2,1],span = smoothParam)$fitted;
 					p[(rows/2):rows,2] <- loess(p[(rows/2):rows,2] ~ p[(rows/2):rows,1],span = smoothParam)$fitted;
-					polySp[[i]][[j]] <- p
+					polySp[[i]][[j]] <- p;
 				}
 			}
 			for (i in 1:length(avgList)){
