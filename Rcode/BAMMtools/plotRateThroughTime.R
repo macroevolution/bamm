@@ -86,11 +86,11 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 	#apply loess smoothing to intervals
 	if (smooth == T){
 		for (i in 1:length(poly)){
-			p <- poly[[i]]
-			rows <- nrow(p)
+			p <- poly[[i]];
+			rows <- nrow(p);
 			p[1:rows/2,2] <- loess(p[1:rows/2,2] ~ p[1:rows/2,1],span = smoothParam)$fitted;
 			p[(rows/2):rows,2] <- loess(p[(rows/2):rows,2] ~ p[(rows/2):rows,1],span = smoothParam)$fitted;
-			poly[[i]] <- p
+			poly[[i]] <- p;
 		}
 		avg <- loess(avg ~ rmat$time,span = smoothParam)$fitted;
 	}
@@ -114,6 +114,6 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 		mtext(side = 2, text = ratelabel, line = 3, cex = 1.1);
 	}
 	if (plot == F){
-		return(list(poly = poly,avg = avg,times = rmat$time))
+		return(list(poly = poly,avg = avg,times = rmat$time));
 	}
 }

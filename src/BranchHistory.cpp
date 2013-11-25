@@ -41,8 +41,8 @@ void BranchHistory::printBranchHistory(void)
 
     std::cout << "events on branch: " << nEvents << std::endl;
     if (nEvents > 0) {
-        for (std::set<BranchEvent*, comp_history>::iterator i =
-                eventsOnBranch.begin(); i != eventsOnBranch.end(); i++)
+        for (EventSet::iterator i = eventsOnBranch.begin();
+                i != eventsOnBranch.end(); i++)
             std::cout << (*i) << "\t\t" << (*i)->getMapTime() << "\t" <<
                  (*i)->getAbsoluteTime() << std::endl;
     }

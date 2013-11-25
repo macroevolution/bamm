@@ -2,18 +2,14 @@
 #define TRAITBRANCHHISTORY_H
 
 #include <set>
-
 #include "TraitBranchEvent.h"
-#include "Utilities.h"
-
-class TraitBranchEvent;
-class comp_history;
-
-typedef std::set<TraitBranchEvent*, comp_history>::size_type EventSetSizeType;
 
 
 class TraitBranchHistory
 {
+
+    typedef std::set<TraitBranchEvent*, TraitBranchEventPtrCompare> EventSet;
+    typedef EventSet::size_type EventSetSizeType;
 
 private:
 
@@ -23,7 +19,7 @@ private:
     // set of all events on branch. Of length 0 if no events occurred on branch.
     // Also, if no events occur on branch, then entire branch is described by
     // the event referenced at nodeEvent;
-    std::set<TraitBranchEvent*, comp_history>  eventsOnBranch;
+    EventSet eventsOnBranch;
 
     // New parameters, March 24 2012 for burst-speciation model
     double _meanBeta;

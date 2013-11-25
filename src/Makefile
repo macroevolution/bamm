@@ -17,7 +17,7 @@ Autotune.o: Autotune.cpp MbRandom.h Model.h TraitModel.h Settings.h
 Log.o: Log.cpp Log.h
 	$(CC) $(CFLAGS) Log.cpp
 	
-BranchHistory.o: BranchHistory.cpp BranchHistory.h BranchEvent.h Utilities.h
+BranchHistory.o: BranchHistory.cpp BranchHistory.h BranchEvent.h
 	$(CC) $(CFLAGS) BranchHistory.cpp
 
 MCMC.o: MCMC.cpp MCMC.h
@@ -47,7 +47,7 @@ TraitMCMC.o: TraitMCMC.cpp TraitMCMC.h
 MbRandom.o: MbRandom.cpp MbRandom.h
 	$(CC) $(CFLAGS) MbRandom.cpp
 
-TraitBranchHistory.o: TraitBranchHistory.cpp TraitBranchHistory.h TraitBranchEvent.h Utilities.h
+TraitBranchHistory.o: TraitBranchHistory.cpp TraitBranchHistory.h TraitBranchEvent.h
 	$(CC) $(CFLAGS) TraitBranchHistory.cpp
 
 TraitBranchEvent.o: TraitBranchEvent.cpp TraitBranchEvent.h

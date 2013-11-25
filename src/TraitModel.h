@@ -14,12 +14,13 @@
 #include <vector>
 #include <sstream>
 
+#include "TraitBranchEvent.h"
+
 //Forward declarations
 class Tree;
 class Node;
 class MbRandom;
 class Settings;
-class TraitBranchEvent;
 
 double safeExponentiation(double x);
 double proportionalShrink(double x, double scale);
@@ -167,7 +168,8 @@ private:
     int acceptCount;
     int rejectCount;
 
-    std::set<TraitBranchEvent*> eventCollection; // does NOT contain root event
+    // Event collection does not contain the root event
+    std::set<TraitBranchEvent*, TraitBranchEventPtrCompare> eventCollection;
     TraitBranchEvent* rootEvent; //branch event at root node; can't be modified
 
     double lastDeletedEventMapTime; // map time of last deleted event

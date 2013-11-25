@@ -774,7 +774,7 @@ void Tree::buildTreeFromNewickString(std::string ts)
                     } else if (p->getRtDesc() == NULL) {
                         p->setRtDesc(q);
                     } else {
-                        std::cerr << "ERROR: Problem adding a tip to the tree" << std::endl;
+                        log(Error) << "Tree contains at least one polytomy.\n";
                         exit(1);
                     }
                 }

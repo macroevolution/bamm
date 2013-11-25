@@ -4,7 +4,7 @@
 #
 #	Start time: how many time units before present to include
 #	nbreaks: how many time points to compute the rate
-#	ndr: boolean, should net diversification rate be returned
+#	ndr: boolean, should net diversification rate be returned (automatically adjusted if ephy$type = traits)
 #	species: name of a single species
 #	returnAll: boolean, whether or not to return all values from posterior, rather than averaging.
 #
@@ -16,7 +16,11 @@ getSpeciesRateThroughTime <- function(ephy, start.time, nbreaks, ndr, species,re
 	}
 	
 	if (!species %in% ephy$tip.label | length(species) > 1){
-		stop("species must be a single species whose name matches a tip in the phylogeny.")
+		stop("Species must be a single species whose name matches a tip in the phylogeny.")
+	}
+	
+	if (ephy$type == 'traits'){
+		ndr <- FALSE;
 	}
 		
 	tend <- max(branching.times(ephy))*0.999;
