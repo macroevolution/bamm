@@ -1,0 +1,455 @@
+##################################
+#	plot.dtrates(...)
+#
+#	A function to plot dynamic rates through time
+#	onto a phylogeny
+#
+#	Arguments: ephy = a bammdata object.
+#	           method = method used to plot the tree.
+#	                    May be 'polar' or 'phylogram'.
+#	           show = TRUE or FALSE. If TRUE the tree will plot.
+#	           labels = TRUE or FALSE. If TRUE the tip labels will plot.
+#	           lwd = The line width used for plotting the tree.
+#	           ncolors = The number of color bins for mapping rates to colors.
+#	           palette = A character string. Currently either 'temperature' or
+#	                     'diverging'. This will be the scheme for coloring
+#	                     the branches according to rates.
+#	           ... = arguments passed to function used for polar tree plotting.
+#	                 These should be 'vtheta', which specifies the angle in degrees
+#	                 separating the first and last tips, and 'rbf', which specifies
+#	                 the length of the root branch as a fraction of the total tree
+#	                 height.  Values rbf > 0 will allow an arc between the first
+#	                 two descendant branches from the root. rbf = 0.001 seems to be 
+#	                 a good first choice
+
+plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, lwd=3, ncolors=64, palette='temperature', ...)
+{
+	if ('bamm-data' %in% class(ephy)) phy = as.phylo.bammdata(ephy) else phy = ephy;
+	if (class(phy) != 'phylo') stop('Trying to plot a non-tree object');
+	if(!'dtrates' %in% names(ephy))
+	{
+		warning('No rates to plot');
+		plot.phylo(phy,show.tip.label=FALSE);
+		return();
+	}
+	
+	if (method == 'polar')
+	{
+		if(!hasArg(vtheta) & !hasArg(rbf)) stop('vtheta and rbf are needed to plot in polar format');
+		phy = getStartStopTimes(phy);
+		vtheta = list(...)$vtheta; rbf = list(...)$rbf;
+		ret = setPolarTreeCoords(phy,vtheta,rbf);
+		tH = max(branching.times(phy));
+		rb = tH*rbf;
+	}	
+	else if (method == 'phylogram')
+	{
+		ret = setPhyloTreeCoords(phy);
+	}
+	else
+	{
+		stop('Unimplemented method');
+	}
+	x0 = ret$segs[,1];y0=ret$segs[,2];x1=ret$segs[,3];y1=ret$segs[,4];
+	
+	tau = ephy$dtrates$tau;
+	edge.color = colorMap(ephy$dtrates$rates,palette,ncolors);
+	p = cbind(x0[-1],y0[-1],x1[-1],y1[-1],phy$edge[,2]);
+	p = apply(p,1,matrify,tau);
+	p = do.call(rbind, p);
+	x0 = c(x0[1],p[,1]);x1=c(x1[1],p[,2]);y0=c(y0[1],p[,3]);y1=c(y1[1],p[,4]);
+	offset = table(p[,5])[as.character(unique(p[,5]))];
+	arc.color = c(edge.color[1],edge.color[match(unique(p[,5]),p[,5])+offset]);
+	edge.color = c(edge.color[1],edge.color);
+	
+	if (show)
+	{
+		plot.new();
+		
+		if (method == 'polar') 
+		{
+			plot.window(xlim=c(-1,1)+c(-rb,rb),ylim=c(-1,1)+c(-rb,rb),asp=1);
+			segments(x0,y0,x1,y1,col=edge.color,lwd=lwd,lend=2);	
+			arc(0,0,ret$arcs[,1],ret$arcs[,2],c(rb,rb+phy$end/tH),border=arc.color,lwd=lwd);
+			if(labels)
+			{
+				for(k in 1:length(phy$tip.label))
+				{
+					text(ret$segs[-1,][phy$edge[,2]==k,3],ret$segs[-1,][phy$edge[,2]==k,4],phy$tip.label[k],cex=0.5, srt = (180/pi)*ret$arcs[-1,][phy$edge[,2]==k,1],adj=c(0,NA));	
+				}
+			}
+		}
+		if (method == 'phylogram')
+		{
+			plot.window(xlim=c(0,1),ylim=c(0,phy$Nnode*1/(phy$Nnode+1)),asp=1);
+			segments(x0,y0,x1,y1,col=edge.color,lwd=lwd,lend=2);
+			isTip = phy$edge[,2] <= phy$Nnode+1; isTip = c(FALSE,isTip);
+			segments(ret$arcs[!isTip,1],ret$arcs[!isTip,2],ret$arcs[!isTip,3],ret$arcs[!isTip,4],col=arc.color[!isTip],lwd=lwd);
+			if(labels)
+			{
+				text(ret$segs[-1,][phy$edge[,2] <= phy$Nnode+1,3],ret$segs[-1,][phy$edge[,2] <= phy$Nnode+1,4], phy$tip.label, cex=0.5, pos=4, offset = 0.25);
+			}
+		}
+	}
+	
+	invisible(ret$segs[-1,]);
+}
+
+setPolarTreeCoords = function(phy,vtheta,rbf)
+{
+	phy = getStartStopTimes(phy);
+	tH = max(branching.times(phy));
+	vtheta = vtheta*(pi/180);
+	theta_step = (2*pi-vtheta)/phy$Nnode;
+	
+	theta = matrix(0,nrow(phy$edge),3);
+	for (node in tree.traverse(phy, phy$Nnode+2,'postorder'))
+	{
+		if (node <= phy$Nnode+1)
+		{
+			theta[phy$edge[,2]==node,] = (node-1)*theta_step;
+		}
+		else
+		{
+			isChild = phy$edge[,2] %in% phy$edge[phy$edge[,1] == node,2];
+			dth = sum(theta[isChild,1])/2;
+			if (node == phy$Nnode+2)
+			{
+				root = c(dth,theta[isChild,1])
+				next;
+			}
+			theta[phy$edge[,2] == node,] = c(dth,theta[isChild,1]);
+		}
+	}
+	rb = tH*rbf;
+	theta = rbind(root,theta);
+	x0 = c(rb,rb+(phy$begin/tH))*cos(theta[,1]);
+	y0 = c(rb,rb+(phy$begin/tH))*sin(theta[,1]);
+	x1 = c(rb,rb+(phy$end/tH))*cos(theta[,1]);
+	y1 = c(rb,rb+(phy$end/tH))*sin(theta[,1]);
+	ret = cbind(x0,y0,x1,y1,theta[,1]);
+	rownames(ret) = c(phy$edge[1,1],phy$edge[,2]); colnames(ret) = c('x0','y0','x1','y1','theta');
+	return(list(segs = ret, arcs = theta[,2:3], rb = rb ) );	
+}
+
+setPhyloTreeCoords = function(phy)
+{
+	ntips = length(phy$tip.label);
+	tH = max(branching.times(phy));
+	
+	dy = 1/ntips;
+	xy = matrix(0,nrow=nrow(phy$edge),ncol=4);
+	bar = matrix(0,nrow=nrow(phy$edge),ncol=4);
+	for (node in tree.traverse(phy,phy$Nnode+2,'postorder'))
+	{
+		bl = phy$edge.length[phy$edge[,2] == node]/tH;
+		if (node <= phy$Nnode + 1)
+		{
+			xy[phy$edge[,2]==node,3:4] = c(1,(node-1)*dy);
+			xy[phy$edge[,2]==node,1:2] = c(1-bl,(node-1)*dy);
+			bar[phy$edge[,2]==node,] = 0;
+		}
+		else
+		{
+			isChild = phy$edge[,2] %in% phy$edge[phy$edge[,1] == node,2];
+			if (node == phy$Nnode+2)
+			{
+				root = c(xy[isChild,1][1],xy[isChild,4][1],xy[isChild,1][1],xy[isChild,4][2]);
+				next;
+			}
+			xy[phy$edge[,2] == node,4] = sum(xy[isChild,4])/2;
+			xy[phy$edge[,2] == node,2] = sum(xy[isChild,4])/2;	
+			xy[phy$edge[,2] == node,3] = xy[isChild,1][1];
+			xy[phy$edge[,2] == node,1] = xy[isChild,1][1] - bl;
+			
+			bar[phy$edge[,2] == node,c(2,4)] = xy[isChild,4];
+			bar[phy$edge[,2] == node,c(1,3)] = xy[isChild,1];
+		}
+	}
+	xy = rbind(c(xy[1,1],sum(xy[1:2,4])/2,xy[1,1],sum(xy[1:2,4])/2),xy);
+	bar = rbind(root,bar);
+	rownames(xy) = c(phy$edge[1,1],phy$edge[,2]); colnames(xy) = c('x0','y0','x1','y1');
+	return(list (segs = xy, arcs = bar ) );	
+}
+
+############################################
+#	dtRate(ephy,tau)
+#
+#	A function to calculate approximations of
+#	mean instantaneous speciation rates or
+#	phenotypic rates along each branch. Still has 
+#	some bugs, could be sped up, too.
+#
+#	Arguments: ephy = a bammdata object
+#	           tau = fraction of tree height for approximation (e.g. 0.01)
+#
+#	Returns: an ephy object with a list appended containing a vector of branch
+#			 rates and the step size used for calculation.
+dtRates = function(ephy,tau)
+{
+	if(!'bamm-data' %in% class(ephy))
+	{
+		stop('Function requires a bammdata object');
+	}
+	phy = as.phylo.bammdata(ephy);
+	phy = getStartStopTimes(phy);
+	if(attributes(phy)$order != 'cladewise')
+	{
+		phy = reorder(phy,'cladewise');
+	}
+	tH = max(branching.times(phy));
+	
+	segs = segMap(phy$edge[,2],phy$begin/tH,phy$end/tH,tau);
+	rates = numeric(nrow(segs));
+	
+	nsamples = length(ephy$eventBranchSegs);
+	for(k in 1:nsamples)
+	{
+		eventSegs = ephy$eventBranchSegs[[k]];
+		eventData = ephy$eventData[[k]];
+		for(j in 1:nrow(eventSegs))
+		{
+			node = eventSegs[j,1];
+			if(j < nrow(eventSegs)) nnode = eventSegs[j+1,1];
+			ev = eventSegs[j,4];
+			Start = eventData[eventData$index == ev,]$time;
+			lam1 = eventData[eventData$index == ev,]$lam1;			
+			lam2 = eventData[eventData$index == ev,]$lam2;
+			
+			isGoodSeg = segs[,1] == node;
+			#isGoodStart = segs[,2]*tH >= eventSegs[j,2];
+			#isGoodEnd = segs[,3]*tH <= eventSegs[j,3];
+			isGoodStart = safeCompare(segs[,2]*tH,eventSegs[j,2],">=",1*10^-decimals(eventSegs[j,2]));
+			isGoodEnd = safeCompare(segs[,3]*tH,eventSegs[j,3],"<=",1*10^-decimals(eventSegs[j,3]));
+			
+			if(sum(isGoodSeg & isGoodStart & isGoodEnd))
+			{
+				relStart = segs[isGoodSeg & isGoodStart & isGoodEnd, 2]*tH - Start;
+				relEnd = segs[isGoodSeg & isGoodStart & isGoodEnd, 3]*tH - Start;
+				rates[isGoodSeg & isGoodStart & isGoodEnd] = 
+						rates[isGoodSeg & isGoodStart & isGoodEnd] + 
+							branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;		
+			}
+			if(node == nnode)
+			{
+				isGoodStart = segs[,2]*tH < eventSegs[j,3];
+				isGoodEnd = segs[,3]*tH > eventSegs[j,3];
+				if(sum(isGoodSeg & isGoodStart & isGoodEnd) == 1)
+				{		
+					relStart = segs[isGoodSeg & isGoodStart & isGoodEnd, 2]*tH - Start;
+					relEnd = eventSegs[j,3] - Start;
+					leftshift = timeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
+					
+					relStart = 0;
+					relEnd = segs[isGoodSeg & isGoodStart & isGoodEnd,3]*tH - eventSegs[j,3];
+					lam1 = eventData[eventData$index==eventSegs[j+1,4],]$lam1;
+					lam2 = eventData[eventData$index==eventSegs[j+1,4],]$lam2;
+					rightshift = timeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
+					
+					shift = (leftshift+rightshift)/(segs[isGoodSeg & isGoodStart & isGoodEnd,3]*tH - segs[isGoodSeg & isGoodStart & isGoodEnd,2]*tH);
+					
+					rates[isGoodSeg & isGoodStart & isGoodEnd] = rates[isGoodSeg & isGoodStart & isGoodEnd] + shift/nsamples;	
+				}
+			}	
+		}
+	}
+	ephy$dtrates = list(tau=tau,rates=rates);
+	return(ephy);	
+}
+
+######################################
+#	Internal function called by dtRates
+#
+#
+segMap = function(nodes,begin,end,tau)
+{
+	foo = function(x,tau)
+	{
+		ret = seq(x[2],x[3],by=tau);
+		if(length(ret) == 1) return(matrix(x,nrow=1));
+		ret = seq(x[2],x[3],length.out=length(ret));
+		ret = rep(ret,each=2); ret=ret[2:(length(ret)-1)];
+		ret = matrix(ret,ncol=2,byrow=TRUE);
+		return(cbind(matrix(rep(as.integer(x[1]),nrow(ret)),ncol=1), ret));
+	}
+	times = cbind(nodes,begin,end);
+	ret = apply(times,1,foo,tau);
+	return(do.call(rbind,ret));	
+}
+
+safeCompare = function(vec,val,FUN,tol=1e-4)
+{
+	if(FUN == ">=")
+	{
+		ret = rep(FALSE,length(vec));
+		ret[(vec-val) >= 0] = TRUE;
+		ret[abs(vec-val) <= tol] = TRUE;
+		return(ret);
+	}
+	if(FUN == "<=")
+	{
+		ret = rep(FALSE,length(vec));
+		ret[(vec-val) <= 0] = TRUE;
+		ret[(vec-val) <= tol] = TRUE;
+		return(ret);
+	}
+}
+
+decimals = function(x)
+{
+	if(x%%1 != 0)
+	{
+		return(nchar(strsplit(as.character(x),".",fixed=TRUE)[[1]][[2]]));
+	}	
+	else
+	{
+		return(10);
+	}
+}
+
+
+##################################
+#	Internal functions called by plot.dtrates
+#
+#
+#
+
+##################################
+#	x,y = coordinates of center of curvature of arc, e.g. (0,0)
+#	theta1 = initial theta of arc (radians)
+#	theta2 = ending theta of arc (radians)
+#	rad = radius of arc
+arc = function(x,y,theta1,theta2,rad,border,...)
+{
+	step = (theta2-theta1)/100;
+	xv = x+rad*cos(seq(theta1,theta2,step));
+	yv = y+rad*sin(seq(theta1,theta2,step));
+	if(step) polygon(c(xv,rev(xv)),c(yv,rev(yv)),border=border,...);
+}
+
+arc = Vectorize(arc);
+
+##################################
+#	D.Rabosky
+#	get vector of beginning and ending times
+#	for each branch. time 0 at root
+#
+#
+getStartStopTimes = function(phy)
+{
+	bt = branching.times(phy);
+	bt = max(bt) - bt;
+	begin = bt[as.character(phy$edge[,1])];
+	end = begin + phy$edge.length;
+	phy$begin = as.numeric(begin);
+	phy$end = as.numeric(end);
+	return(phy);
+}
+
+##################################
+#	traverse a tree in 'phylo' format from specified node. 
+#	if tips.only = TRUE will return tips only
+#	if internal.only = TRUE will return internal nodes only
+tree.traverse = function(phy,node,order='preorder',tips.only=FALSE, internal.only=FALSE,path=NULL)
+{
+	if(order == 'preorder')
+	{
+		path = c(path,node);
+	}
+	if(length(which(phy$edge[,1] == node)))
+	{
+		for(child in phy$edge[phy$edge[,1] == node,2])
+		{
+			path = tree.traverse(phy,child,path=path,order=order);	
+		}
+	}
+	if(order == 'postorder')
+	{
+		path = c(path,node);
+	}
+	if(tips.only)
+	{
+		return(path[which(path <= length(phy$tip.label))]);	
+	}
+	else if(internal.only)
+	{
+		return(path[which(path > length(phy$tip.label))]);	
+	}
+	else
+	{
+		return(path);
+	}
+}
+
+matrify = function(x,tau)
+{
+	bn = sqrt((x[3]-x[1])^2 + (x[4]-x[2])^2);
+	len = bn/tau;
+	
+	j = seq(x[1],x[3],length.out=len);
+	if(length(j) == 1) return(matrix(x[c(1,3,2,4,5)],nrow=1));
+		
+	k = seq(x[2],x[4],length.out = len);
+	
+	j = rep(j,each=2); j = j[2:(length(j)-1)];
+	j = matrix(j,ncol=2,byrow=TRUE);	
+	k = rep(k,each=2); k = k[2:(length(k)-1)];
+	k = matrix(k,ncol=2,byrow=TRUE);	
+	l = matrix(rep(x[5],nrow(j)),ncol=1);
+	return(cbind(j,k,l));	
+}
+
+colorMap = function(x, palette, NCOLORS)
+{
+	colset = numeric(length(x));
+	if(palette == 'temperature')
+	{
+		colpalette = rich.colors(NCOLORS);
+	}
+	else if(palette == 'diverging')
+	{
+		colpalette = colorRampPalette(c('blue','white','red'),space='Lab')(NCOLORS);	
+	}
+	else
+	{
+		colpalette = rich.colors(NCOLORS);	
+	}
+	
+	bks = quantile(x, seq(0,1,length.out=(NCOLORS+1)));
+	for(i in 2:length(bks))
+	{
+		if(i == 2)
+		{
+			colset[x < bks[2]] = colpalette[1];	
+		}
+		else if(i == length(bks))
+		{
+			colset[x >= bks[length(bks)-1]] = colpalette[length(bks)-1];
+		}
+		else
+		{
+			colset[x >= bks[i-1] & x < bks[i]] = colpalette[i-1];
+		}
+	}
+	return(colset);
+}
+
+#####################################
+#	D.Rabosky
+#
+#
+as.phylo.bammdata <- function(ephy){
+	
+	if (!'bamm-data' %in% class(ephy)){
+		stop("Object ephy must be of class bamm-data\n");
+	}		
+	
+	newphylo <- list();
+	newphylo$edge <- ephy$edge;
+	newphylo$Nnode <- ephy$Nnode;
+	newphylo$tip.label <- ephy$tip.label;
+	newphylo$edge.length <- ephy$edge.length;
+	class(newphylo) <- 'phylo';
+	attributes(newphylo)$order <- attributes(ephy)$order;
+	return(newphylo);
+}
