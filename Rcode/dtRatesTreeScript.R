@@ -1,5 +1,5 @@
 library(ape); library(gplots);
-source('dtRatesTreeFxns.R');
+source('plot.dtrates.R');
 
 phy = read.tree('whaletree.tre');
 fn = 'beventdata.txt';
