@@ -22,6 +22,10 @@
 #							Will only compute Bayes Factors for the set of models
 #							0:K that includes 99.5% of the sampled models. 
 #
+#  constrain			=   if TRUE, will restrict model comparisons only to those
+#							models that have been sampled with appreciable frequency	   
+#
+#
 #   Returns:  matrix w pairwise Bayes Factors
 #	By convention, the model with the higher index is the numerator for the calculation
 #	e.g., M2 / M1 or M1 / M0, but never M0 / M1.
@@ -31,9 +35,10 @@
 #		     where the 1 is added to both numerator and denominator 
 #			 to avoid divide by zero erros 
 #	
- 
+#   Dependency on BAMM MCMC output: if order of output columns 
+#		changes, it will break this function.
 	
-computeBayesFactors <- function(postfilename, priorfilename, burnin = 0.1, modelset = 0:5){
+computeBayesFactors <- function(postfilename, priorfilename, burnin = 0.1, modelset = 0:5, constrain=TRUE){
 
 	if (length(modelset) < 2){
 		stop('\nInvalid modelset argument. This must be a vector of length > 1');
@@ -47,30 +52,32 @@ computeBayesFactors <- function(postfilename, priorfilename, burnin = 0.1, model
 	prior <- prior[floor(burnin*nrow(prior)):nrow(prior), ];
 
 	
-	tpost <- table(post$numevents);
-	tprior <- table(prior$numevents);
+	tpost <- table(post[,2]);
+	tprior <- table(prior[,2]);
 
 	fprobs <- cumsum(tpost) / sum(tpost);
  	max_model <- NA;
  	if (length(fprobs) == 1){
  		max_model <- as.numeric(names(fprobs));
  	}else{
- 		fprobs <- fprobs[fprobs < 0.995]; 		
+ 		fprobs <- fprobs[fprobs < 0.999]; 		
  	 	max_model <- as.numeric(names(fprobs[length(fprobs)]));
 	}
 	
-	if (max_model < max(modelset)){
-		cat('*****************************************\n');
-		cat('You have selected to compute Bayes Factors for models');
-		cat('\n that were sampled very infrequently and for which\n');
-		cat(' the Bayes Factors are likely to be (wildly ) inaccurate.\n');
-		cat(' Consequently, the maximum rank of the models considered\n');
-		cat(' will be constrained to <<< ', max_model, ' >>>\n');
-		cat('*****************************************\n\n');
+	if (constrain){
+		if (max_model < max(modelset)){
+			cat('*****************************************\n');
+			cat('You have selected to compute Bayes Factors for models');
+			cat('\n that were sampled very infrequently and for which\n');
+			cat(' the Bayes Factors are likely to be (wildly ) inaccurate.\n');
+			cat(' Consequently, the maximum rank of the models considered\n');
+			cat(' will be constrained to <<< ', max_model, ' >>>\n');
+			cat('*****************************************\n\n');
 
+		}		
+		modelset <- modelset[modelset <= max_model];		
 	}
 	
-	modelset <- modelset[modelset <= max_model];
 	mset <- as.character(modelset);
 
 	
