@@ -62,6 +62,9 @@ segmat is a matrix where the rows represent branches of a phylogeny
 broken up into many small segments.  each row indexes one such segment.
 columns 2 and 3 give the starting and ending times of that segment and
 column 1 is the node of the phylogeny to which that segement belongs.
+tol is a precision parameter used for comparing starting and ending 
+times of approximating segments and starting and ending times of branches
+or branch segments on the phylogeny.
 ***/
 
 SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol)
