@@ -209,7 +209,7 @@ histRates = function(rates,palette,NCOLORS)
 
 
 ############################################
-#	dtRate(ephy,tau)
+#	dtRates(ephy,tau)
 #
 #	A function to calculate approximations of
 #	mean instantaneous speciation rates or
@@ -221,7 +221,7 @@ histRates = function(rates,palette,NCOLORS)
 #
 #	Returns: an ephy object with a list appended containing a vector of branch
 #			 rates and the step size used for calculation.
-dtRates = function(ephy,tau)
+dtRates = function(ephy, tau)
 {
 	if(!'bamm-data' %in% class(ephy))
 	{
@@ -235,63 +235,93 @@ dtRates = function(ephy,tau)
 	}
 	tH = max(branching.times(phy));
 	
-	segs = segMap(phy$edge[,2],phy$begin/tH,phy$end/tH,tau);
-	rates = numeric(nrow(segs));
+	segmat = segMap(phy$edge[,2],phy$begin/tH,phy$end/tH,tau);
+	segmat[,2] = segmat[,2] * tH;
+	segmat[,3] = segmat[,3] * tH;
 	
-	nsamples = length(ephy$eventBranchSegs);
-	for(k in 1:nsamples)
-	{
-		eventSegs = ephy$eventBranchSegs[[k]];
-		eventData = ephy$eventData[[k]];
-		for(j in 1:nrow(eventSegs))
-		{
-			node = eventSegs[j,1];
-			if(j < nrow(eventSegs)) nnode = eventSegs[j+1,1];
-			ev = eventSegs[j,4];
-			Start = eventData[eventData$index == ev,]$time;
-			lam1 = eventData[eventData$index == ev,]$lam1;			
-			lam2 = eventData[eventData$index == ev,]$lam2;
-			
-			isGoodSeg = segs[,1] == node;
-			#isGoodStart = segs[,2]*tH >= eventSegs[j,2];
-			#isGoodEnd = segs[,3]*tH <= eventSegs[j,3];
-			isGoodStart = safeCompare(segs[,2]*tH,eventSegs[j,2],">=",1*10^-decimals(eventSegs[j,2]));
-			isGoodEnd = safeCompare(segs[,3]*tH,eventSegs[j,3],"<=",1*10^-decimals(eventSegs[j,3]));
-			
-			if(sum(isGoodSeg & isGoodStart & isGoodEnd))
-			{
-				relStart = segs[isGoodSeg & isGoodStart & isGoodEnd, 2]*tH - Start;
-				relEnd = segs[isGoodSeg & isGoodStart & isGoodEnd, 3]*tH - Start;
-				rates[isGoodSeg & isGoodStart & isGoodEnd] = 
-						rates[isGoodSeg & isGoodStart & isGoodEnd] + 
-							branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;		
-			}
-			if(node == nnode)
-			{
-				isGoodStart = segs[,2]*tH < eventSegs[j,3];
-				isGoodEnd = segs[,3]*tH > eventSegs[j,3];
-				if(sum(isGoodSeg & isGoodStart & isGoodEnd) == 1)
-				{		
-					relStart = segs[isGoodSeg & isGoodStart & isGoodEnd, 2]*tH - Start;
-					relEnd = eventSegs[j,3] - Start;
-					leftshift = timeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
-					
-					relStart = 0;
-					relEnd = segs[isGoodSeg & isGoodStart & isGoodEnd,3]*tH - eventSegs[j,3];
-					lam1 = eventData[eventData$index==eventSegs[j+1,4],]$lam1;
-					lam2 = eventData[eventData$index==eventSegs[j+1,4],]$lam2;
-					rightshift = timeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
-					
-					shift = (leftshift+rightshift)/(segs[isGoodSeg & isGoodStart & isGoodEnd,3]*tH - segs[isGoodSeg & isGoodStart & isGoodEnd,2]*tH);
-					
-					rates[isGoodSeg & isGoodStart & isGoodEnd] = rates[isGoodSeg & isGoodStart & isGoodEnd] + shift/nsamples;	
-				}
-			}	
-		}
-	}
-	ephy$dtrates = list(tau=tau,rates=rates);
-	return(ephy);	
+	tol = 1*10^-decimals(ephy$eventBranchSegs[[1]][1,2]);
+	
+	if (storage.mode(segmat) != "double") stop('Exiting');
+	if (storage.mode(tol) != "double") stop('Exiting');
+	if (storage.mode(ephy) != "list") stop('Exiting');
+	
+	dtrates = .Call("dtrates", ephy, segmat, tol);
+	
+	ephy$dtrates = list(tau = tau, rates = dtrates);
+	return(ephy);
 }
+
+# dtRates = function(ephy,tau)
+# {
+	# if(!'bamm-data' %in% class(ephy))
+	# {
+		# stop('Function requires a bammdata object');
+	# }
+	# phy = as.phylo.bammdata(ephy);
+	# phy = getStartStopTimes(phy);
+	# if(attributes(phy)$order != 'cladewise')
+	# {
+		# phy = reorder(phy,'cladewise');
+	# }
+	# tH = max(branching.times(phy));
+	
+	# segs = segMap(phy$edge[,2],phy$begin/tH,phy$end/tH,tau);
+	# rates = numeric(nrow(segs));
+	
+	# nsamples = length(ephy$eventBranchSegs);
+	# for(k in 1:nsamples)
+	# {
+		# eventSegs = ephy$eventBranchSegs[[k]];
+		# eventData = ephy$eventData[[k]];
+		# for(j in 1:nrow(eventSegs))
+		# {
+			# node = eventSegs[j,1];
+			# if(j < nrow(eventSegs)) nnode = eventSegs[j+1,1];
+			# ev = eventSegs[j,4];
+			# Start = eventData[eventData$index == ev,]$time;
+			# lam1 = eventData[eventData$index == ev,]$lam1;			
+			# lam2 = eventData[eventData$index == ev,]$lam2;
+			
+			# isGoodSeg = segs[,1] == node;
+			# #isGoodStart = segs[,2]*tH >= eventSegs[j,2];
+			# #isGoodEnd = segs[,3]*tH <= eventSegs[j,3];
+			# isGoodStart = safeCompare(segs[,2]*tH,eventSegs[j,2],">=",1*10^-decimals(eventSegs[j,2]));
+			# isGoodEnd = safeCompare(segs[,3]*tH,eventSegs[j,3],"<=",1*10^-decimals(eventSegs[j,3]));
+			
+			# if(sum(isGoodSeg & isGoodStart & isGoodEnd))
+			# {
+				# relStart = segs[isGoodSeg & isGoodStart & isGoodEnd, 2]*tH - Start;
+				# relEnd = segs[isGoodSeg & isGoodStart & isGoodEnd, 3]*tH - Start;
+				# rates[isGoodSeg & isGoodStart & isGoodEnd] = 
+						# rates[isGoodSeg & isGoodStart & isGoodEnd] + 
+							# branchMeanRateExponential(relStart,relEnd,lam1,lam2)/nsamples;		
+			# }
+			# if(node == nnode)
+			# {
+				# isGoodStart = segs[,2]*tH < eventSegs[j,3];
+				# isGoodEnd = segs[,3]*tH > eventSegs[j,3];
+				# if(sum(isGoodSeg & isGoodStart & isGoodEnd) == 1)
+				# {		
+					# relStart = segs[isGoodSeg & isGoodStart & isGoodEnd, 2]*tH - Start;
+					# relEnd = eventSegs[j,3] - Start;
+					# leftshift = timeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
+					
+					# relStart = 0;
+					# relEnd = segs[isGoodSeg & isGoodStart & isGoodEnd,3]*tH - eventSegs[j,3];
+					# lam1 = eventData[eventData$index==eventSegs[j+1,4],]$lam1;
+					# lam2 = eventData[eventData$index==eventSegs[j+1,4],]$lam2;
+					# rightshift = timeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
+					
+					# shift = (leftshift+rightshift)/(segs[isGoodSeg & isGoodStart & isGoodEnd,3]*tH - segs[isGoodSeg & isGoodStart & isGoodEnd,2]*tH);
+					
+					# rates[isGoodSeg & isGoodStart & isGoodEnd] = rates[isGoodSeg & isGoodStart & isGoodEnd] + shift/nsamples;	
+				# }
+			# }	
+		# }
+	# }
+	# ephy$dtrates = list(tau=tau,rates=rates);
+	# return(ephy);	
+# }
 
 ######################################
 #	Internal function called by dtRates
