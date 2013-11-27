@@ -1,0 +1,60 @@
+Command line: ./bamm -control divcontrol.txt
+Git commit id: a032dcb67696d74bafde049bef68f48343f3843c
+Random seed (clock): 1385505927
+Start time: Tue Nov 26 17:45:27 2013
+
+Current parameter settings:
+              acceptWriteFreq    5000
+                     autotune    0
+         branchRatesWriteFreq    0
+              eventDataInfile    event_data_in.txt
+             eventDataOutfile    event_data.txt
+           eventDataWriteFreq    5000
+       globalSamplingFraction    1.0
+          initialNumberEvents    0
+              initializeModel    1
+                  lambdaInit0    0.032
+              lambdaInitPrior    1.0
+                lambdaOutfile    lambda_rates.txt
+                 lambdaShift0    0
+             lambdaShiftPrior    0.05
+                loadEventData    0
+         localGlobalMoveRatio    10.0
+                  mcmcOutfile    mcmc_out.txt
+                mcmcWriteFreq    5000
+         minCladeSizeForShift    1
+                    modeltype    speciationextinction
+                      muInit0    .005
+                  muInitPrior    1.0
+                    muOutfile    mu_rates.txt
+                     muShift0    0.0
+                 muShiftPrior    1.0
+            numberGenerations    5000000
+                      outName    
+                    overwrite    1
+             poissonRatePrior    1.0
+                    printFreq    5000
+              runInfoFilename    run_info.txt
+                      runMCMC    1
+          sampleFromPriorOnly    0
+          sampleProbsFilename    sample_probs.txt
+                         seed    -1
+                    segLength    1.0
+                     treefile    ../examples/diversification/whales/whaletree.tre
+     updateEventLocationScale    2.0
+         updateEventRateScale    4.0
+        updateLambdaInitScale    2.0
+       updateLambdaShiftScale    0.1
+            updateMuInitScale    2.0
+           updateMuShiftScale    0.0
+        updateRateEventNumber    0.1
+      updateRateEventPosition    1
+          updateRateEventRate    1
+            updateRateLambda0    1
+        updateRateLambdaShift    1
+                updateRateMu0    1
+            updateRateMuShift    0.0
+ useGlobalSamplingProbability    1
+   writeMeanBranchLengthTrees    0
+End time: Tue Nov 26 17:54:02 2013
+
