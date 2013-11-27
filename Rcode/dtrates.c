@@ -130,7 +130,7 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol)
 				if ( (int) REAL(nodeseg)[l] == node)
 				{
 					//isGoodStart = REAL(segbegin)[l] >= begin;
-					isGoodStart = ( (REAL(segbegin)[l] - begin) >= 0. || abs(REAL(segbegin)[l] - begin) <= eps );
+					isGoodStart = ( (REAL(segbegin)[l] - begin) >= 0. || ( (REAL(segbegin)[l] - begin) < 0. && (REAL(segbegin)[l] - begin) >= -1.*eps) );
 					//isGoodEnd = REAL(segend)[l] <= end;
 					isGoodEnd =  ( (REAL(segend)[l] - end) <= 0. || (REAL(segend)[l] - end) <= eps );
 
