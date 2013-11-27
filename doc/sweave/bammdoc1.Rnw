@@ -533,7 +533,7 @@ Here, we will generate a \code{BAMM-data} object for the cetacean analysis, usin
 %% More filenames before anyone can use this:
 <<bammdata, eval=T>>=
 library(ape)
-whaletree <- read.tree("whaletree.tre")
+whaletree <- read.tree("data/whaletree.tre")
 eventfile <- "data/event_data.txt"
 bammdata <- getEventData(whaletree, eventfile, 
 	burnin=0.25, nsamples=5)
