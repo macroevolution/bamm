@@ -1,9 +1,9 @@
 
 source("BAMMtools.R");
-library("ape");
-library("diversitree");
+require("ape");
+require("diversitree");
 
-whaletree <- read.tree("whaletree.tre")
+whaletree <- read.tree("data/whaletree.tre")
 eventfile <- "data/event_data.txt"
 bammdata <- getEventData(whaletree, eventfile, burnin=0.1, verbose=T)
 
