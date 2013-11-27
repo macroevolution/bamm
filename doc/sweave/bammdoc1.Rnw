@@ -128,7 +128,7 @@ Loading and exploring the MCMC output file:
 
 % read in MCMC_out file from whales analysis
 <<readData1>>=
-x <- read.csv("run_full/mcmc_out.txt", header=T);
+x <- read.csv("data/mcmc_out.txt", header=T);
 head(x)
 @ 
 These parameters are:
@@ -249,7 +249,7 @@ The first step of an analysis is to explore the distribution of models visited d
 
 
 <<>>=
-x <- read.csv("run_full/mcmc_out.txt", header=T)
+x <- read.csv("data/mcmc_out.txt", header=T)
 burn <- floor(0.1 * nrow(x))
 x_postburn <- x[burn:nrow(x), ]
 @
