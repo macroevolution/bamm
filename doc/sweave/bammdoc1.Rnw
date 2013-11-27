@@ -1,0 +1,1025 @@
+
+
+%\documentclass{article}
+
+\documentclass[12pt]{article}
+
+\usepackage{fullpage}
+\usepackage{fancyvrb}
+\usepackage{color}
+\usepackage{natbib}
+ 
+\usepackage{Sweave} % critical, obviously
+\usepackage{verbatim} % necessary to use multiline commenting
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{courier}
+\usepackage[font={small}]{caption}
+
+%\usepackage{exercise}
+
+%\usepackage[utf8x]{inputenc}
+
+ 
+\newcommand{\code}{\texttt}
+\newcommand{\ape}{\textsf{ape}}
+\newcommand{\laser}{\textsf{laser}}
+\newcommand{\MASS}{\textsf{MASS}}
+\newcommand{\diversitree}{\textsf{diversitree}}
+\newcommand{\geiger}{\textsf{geiger}}
+\newcommand{\R}{\textsf{R}}
+\newcommand{\BAMMtools}{\textsf{BAMMtools }}
+
+\newenvironment{ppl}{\fontfamily{ppl}\courier}{}
+ 
+
+\newcounter{exercise}
+\numberwithin{exercise}{section}
+\newcommand{\exnumber}{\addtocounter{exercise}{1} \theexercise \thinspace}
+
+
+
+\author{Dan Rabosky}
+
+\title{Analyzing \code{BAMM} results}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Getting and using \code{BAMMtools}}
+
+
+This section contains general instructions on getting \BAMMtools. In general, you should simply be able to install the package from the \code{CRAN} repository. In \R, try the following:
+
+<<eval=F, echo=T >>=
+install.packages("BAMMtools")
+@ 
+
+You should also be able to obtain the latest versions of the software via the \code{BAMM} github repository. Instructions to follow.
+
+\subsection{Following the example code}
+
+This document has been written in \code{Sweave} and \code{latex}. If you have never followed \code{R} documentation in this style, there are a few things to be aware of. \code{R} code is shown in formatted code chunks, like this:
+
+<<echo=T, eval=F>>=
+print("hello world")
+@
+
+To execute this bit of code, type the commands exactly as they appear after the symbol for the \code{R} prompt (\code{>}). Occasionally, we will have lines of code that are too long to fit on a single line in this document, like this:
+
+<<echo=T, eval=F>>=
+cat("h", "e", "l", "l", "l", "o", 
+	"\t", "w", "o", "r", "l", "d", sep="")
+@
+
+Here, you are to ignore the \code{+} symbol on the second line: it appears solely to tell you (the user) that the line of code you are entering has been split solely to make it fit in this document (and you should thus enter it as a \textbf{single} line in your \code{R} console). In addition, we will occasionally show (in this document) output from entering \code{R} commands. Here's a simple example where we will call a random number generation function (\code{rnorm}) and print five random numbers to the \code{R} console:
+
+<<echo=T, eval=T>>=
+rnorm(5)
+@
+
+The set of 5 numbers that appears after the code snippet (prefaced by \code{[1]}) is similar to the output that you should see if you are following the examples. 
+
+Finally, this document assumes that you have some knowledge of the directory structure on your computer, such that you can specify appropriate \textit{path} names for \code{BAMM} input and output files. In general, to avoid confusion, create a new directory in which to explore the examples. Launch \code{R}, and navigate to this directory. Make sure \textbf{ALL} of the files you wish to analyze (example datasets, \code{BAMM} output files, etc) are located in this directory. Thus, you are always referencing files that are stored within your current working directory. A few quick \code{R} commands:
+
+<<echo=T, eval=F>>=
+getwd()
+@
+
+will show your current working directory. 
+
+<<echo=T, eval=F>>=
+dir()
+@
+
+will list all files within your current working directory. If you are having trouble accessing a datafile, and you don't see it with the \code{dir} function, then (usually) either the file is not where you think it is, or \textit{you} are not where you think you are.
+
+Finally, comments in \code{R} are lines of code that begin with the pound symbol, \#. Comments are lines of code that exist for you, the user, but are not actually executed. Sometimes you may see this within a code snippet, but it is only there for reference:
+
+<<echo=T, eval=F>>=
+# This is a comment.
+@
+
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Notes on the example datasets}
+The dataset used in the following examples is a time-calibrated phylogeny for whales (cetaceans) from Steeman et al., \textit{Syst. Biol} 58:573-585 (2009). 
+%% Ultimately details on re-doing this analysis, including random seed, go here.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Understanding BAMM output}
+
+\code{BAMM} generates two primary types of output files. 
+\begin{itemize}
+\item \textbf{MCMC output files} This file contains standard information associated with the Markov chain Monte Carlo algorithm itself. This includes the log-likelihood of the data, the log prior density of the parameters, and the number of \textit{events} (= distinct macroevolutionary regimes) at a given point in the simulation. This file, by default, will typically be title something like \code{MCMC\_out.txt}, unless you've changed your settings in the control file. If you choose to run BAMM while sampling from the prior only (no likelihoods computed), this file will be generated but will have 0's for the log-likelihoods.
+
+\item \textbf{Macroevolutionary regime data} The core \code{BAMM} results are parameters associated with distinct macroevolutionary rate regimes across a phylogenetic tree. During each stage (or generation) of the MCMC simulation, the Markov chain is characterized by a particular configuration of discrete macroevolutionary rate regimes. Each regime is defined by the occurrence of an \textit{event}, which can also be thought of as a \textit{rate shift} or a change in the fundamental dynamics of the system. Regimes/events are characterized by a set of parameters that define a particular time-varying or time-constant process of speciation, extinction, or trait evolution. All of the data necessary to reconstruct the evolutionary rate configuration across a phylogenetic tree at any point in the MCMC simulation can be reconstructed from knowing the locations of events on the tree and their corresponding rate parameters. The event data, by default, is typically written to a file called \code{event\_data.txt} or equivalent, unless you have changed your default settings. We will explore this further below.
+
+\end{itemize}
+Loading and exploring the MCMC output file:
+
+% read in MCMC_out file from whales analysis
+<<readData1>>=
+x <- read.csv("data/mcmc_out.txt", header=T);
+head(x)
+@ 
+These parameters are:
+\begin{itemize}
+\item \code{generation} is the generation of MCMC sampling
+\item \code{N\_shifts} is the number of non-root macroevolutionary regimes on the tree
+\item \code{logPrior} is the log of the prior density of the parameters
+\item \code{logLik} is the log-likelihood of the data
+\item \code{eventRate} is the rate parameter of the Poisson distribution governing the number of non-root macroevolutionary rate regimes.
+\item \code{acceptRate} is the fraction of proposed states that were accepted since the last time the state was written to file. 
+\end{itemize}
+Now we will look at the primary results file: the \code{event\_data.txt} file. This example is for a speciation-extinction analysis of the \textit{whales} dataset from Steeman \textit{et al.} 2009 (several parameters would be different for a trait evolution analysis, e.g., there would be no speciation \textit{lambda} parameters):
+
+% read in an event data file from whales analysis
+<<echo=T, eval=T>>=
+x <- read.csv("data/event_data.txt", header=T)
+@
+
+And here are the variables (columns) stored in this data table:
+
+<<echo=T, eval=F>>=
+colnames(x)
+@ 
+
+This file contains a set of samples from the posterior. These parameters fully specify the exactly location where each regime begins as well as the evolutionary rate parameters of the regimes. Each rate regime gets its own line, such that a single sample from the posterior in some generation will occupy a number of lines equal to the number of shift regimes. 
+These parameters are:
+
+\begin{itemize}
+
+\item \code{generation} The generation from which the sample was drawn
+
+\item \code{leftchild}, \code{rightchild}, \code{abstime} These parameters specify the exact location of the start of the regime on the tree. \code{rightchild} and \code{leftchild} are random descendants of the right and left branches descended from the node subtending the branch on which the shift event occurs. \code{abstime} is the exact position in absolute time (0 at the root) when the shift event occurred. 
+
+\item \code{lambdainit, lambdashift, muinit, mushift, betainit, betashift}\\ 
+Depending on the specific model, these parameters describe the dynamics of speciation, extinction, or phenotypic evolution through time. 
+ 
+
+\end{itemize}
+
+
+\subsection{Diagnosing MCMC convergence}
+After you've finished a \code{BAMM} run, the first thing you'll want to explore is whether or not your run has "converged." MCMC is a beautiful yet simple algorithm for simulating complex probability distributions, but this simplicity comes at a price: we may \textit{never} truly know whether our results have converged on the true the posterior probability density. Fortunately, there are a number of simple checks we can perform that will at least allow us to reject particularly egregious cases of non-convergence.  
+
+The easiest (and least reliable) way to check for MCMC convergence is to visually inspect the trace of the log-likelihood as a function of the number of generations. Using the analysis of the \code{whaletree.tre} dataset, we see:
+ 
+
+% update datafiles here.
+<<echo=T, eval=T>>=
+x <- read.csv("data/mcmc_out.txt", header=T)
+x <- x[seq(1, nrow(x), length.out=200), ]
+@
+<<echo=TRUE, fig = F, eval=F>>=
+plot(x$logLik ~ x$generation, type = "l", col="red", lwd=1,
+		xlab="Generation", ylab="Log-likelihood")
+@
+
+%%%%%%%%%
+% figure
+
+
+\begin{figure}[b!]
+
+<<echo=F, fig = TRUE, height=4, width=6>>=
+par(mar=c(4,6,1,1))
+plot(x$logLik ~ x$generation, type = "l", col="red", lwd=1,
+		xlab="Generation", ylab="Log-likelihood");
+@
+
+\caption{Trace of the log-likelihood of the cetacean data under the \code{BAMM} model for speciation-extinction dynamics}
+
+\label{figloglik}
+
+\end{figure}
+% end figure
+%%%%%%%%%%%%
+
+Looking at Figure~\ref{figloglik}, we can see a tendency for the log-likelihood to stabilize around ~-265 or so, but you also notice a few period spikes to better values (> -260). This is probably a case where we could have ran the analysis out for a number of additional generations.
+
+A better way to test for convergence is to compute the effective sample sizes associated with the log-likelihood and the number of rate regimes. The \textit{effective size} of a parameter is the estimated number of independent samples that exist once you've controlled for the autocorrelation among successive datapoints. In \R\, we can do this using the \code{coda} library, after first throwing out the first 10\% as burn-in (using \code{x} as our dataframe, as above):
+
+<<readData2>>=
+library(coda)
+@
+
+Now we subset our dataframe to get rid of the first 10\% of samples:
+
+<<echo=TRUE>>=
+burn <- floor(0.10 * nrow(x))
+x_postburn <- x[ burn: nrow(x), ]
+@
+
+And now we use the \code{effectiveSize} function on the parameters of interest:
+
+<<echo=TRUE>>=
+effectiveSize(x_postburn$logLik) 
+effectiveSize(x_postburn$logPrior)
+effectiveSize(x_postburn$N_shifts)
+@
+
+Generally, it would be nice to see these effective sizes above 200 or so. This is a case where we probably should run the MCMC simulation for longer and/or improve the efficiency of the operators used for proposing state changes.
+
+Perhaps the best way to test for convergence is to perform multiple independent \code{BAMM} simulations using different starting parameters. You can then test whether the runs are converging on the same distribution. We will explore this further in \textbf{section~\ref{sec:advancedconvergence}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{What is the best macroevolutionary model?}
+
+
+The first question we generally wish to ask is: how much evidence do we have for multiple evolutionary rate regimes within our data? \code{BAMM} is largely designed to answer precisely this question (despite the caveats discussed earlier regarding the interpretation of rate shifts). This is fundamentally a question of model selection, and the reversible jump MCMC algorithm in \code{BAMM} makes it relatively straightforward to compare models with different numbers of evolutionary rate regimes.
+
+The simplest model in \code{BAMM} is what we will refer to as $M_0$: a model of rank 0, or a model with just a single evolutionary rate regime. This is a model where a single set of evolutionary parameters, starting at the root, can account for the entire pattern of diversification (or trait evolution) across the tree. We will refer to a model $M_X$ as a model with $X$ distinct non-root evolutionary rate regimes, such that - for example - model $M_2$ involves two distinct shifts in evolutionary dynamics. 
+
+The key evidence for heterogeneous among-clade diversification dynamics comes from considering the evidence favoring the simplest model, $M_0$. Note that, because \code{BAMM} allows rates to vary through time within regimes, you may still have very strong evidence for \textit{temporal} rate variation, even if you have little support for clade-specific rate variation.
+
+
+\subsection{How many distinct macroevolutionary regimes?}
+The first step of an analysis is to explore the distribution of models visited during the simulation of the posterior by the reversible jump MCMC sampler. Here, we will read in the raw MCMC output generated during the BAMM run, discard some fraction as burn-in, and look at the relative frequency of models visited:
+
+
+<<>>=
+x <- read.csv("data/mcmc_out.txt", header=T)
+burn <- floor(0.1 * nrow(x))
+x_postburn <- x[burn:nrow(x), ]
+@
+
+
+Now to tabulate the frequency of models:
+
+
+<<>>=
+table(x_postburn$N_shifts)
+@
+
+
+Clearly, we visited models $M_1$ and $M_2$ much more frequently than model $M_0$. This strongly suggests heterogeneous rates among cetacean clades. We can directly compute the posterior probability of a model with just a single evolutionary rate regime ($M_0$), like this:
+
+
+<<echo=T>>=
+post_prob_M0 <- sum(x_postburn$N_shifts == 0) / nrow(x_postburn)
+post_prob_M0
+@
+
+
+This suggests a low posterior probability of a model with just a single evolutionary rate regime. For the whale dataset. In fact, we can compute the posterior probabilities of any particular model $M_X$ as follows:
+
+
+<<echo=T>>=
+table(x_postburn$N_shifts) / nrow(x_postburn)
+@
+
+
+and the ratio of counts or frequencies for any models \code{Y} and \code{Z} is equal to the posterior odds ratio favoring one model over another:
+
+
+<<echo=T>>=
+counts_1 <- sum(x_postburn$N_shifts == 1)
+counts_0 <- sum(x_postburn$N_shifts == 0)
+post_odds_1v0 <- counts_1 / counts_0
+post_odds_1v0
+@
+
+
+This is a substantial amount of evidence in favor of $M_1$ over $M_0$. Here we will use a somewhat more involved approach to make a pretty figure, showing the distribution of macroevolutionary rate regimes:
+
+\begin{figure}[b!]
+<<echo=F, fig = T, height=4, width=6>>=
+tx <- table(x_postburn$N_shifts) / nrow(x_postburn)
+nn <- as.numeric(names(tx))
+plot.new()
+xwid <- 0.4
+par(mar=c(4.5,4.5,1,1))
+plot.window(xlim=c(0, 7), ylim=c(0, 1))
+for (i in 1:length(tx)){
+	xco <- c(i-xwid, i-xwid, i+xwid, i+xwid)
+	yco <- c(0, tx[i], tx[i], 0)
+	polygon(xco, yco, col="coral")
+}
+labelset <- c(NA, "M0", "M1", "M2", "M3", "M4", "M5", "M6")
+axis(1, cex.axis=1,labels=labelset, at=0:7)
+axis(2, las=1, cex.axis=1)
+mtext(side=1, text="Model", cex=1.2, line=3.0)
+mtext(side=2, text="Probability", cex=1.2, line=3.0)
+@
+\caption{Posterior density of models sampled using \code{BAMM} for the cetacean phylogeny. Note that model \code{$M_0$} is a model with a single macroevolutionary rate regime, or 0 \textit{non-root} rate regimes. A model with two rate regimes ($M_1$) performs vastly better than a model with a single rate regime. Model $M_0$ implies an absence of among-clade heterogeneity in diversification dynamics.}
+\label{regimehist}
+\end{figure}
+
+<<echo=T, fig = F, height=4, width=6>>=
+tx <- table(x_postburn$N_shifts) / nrow(x_postburn)
+nn <- as.numeric(names(tx))
+plot.new()
+xwid <- 0.4
+par(mar=c(6,6,1,1))
+plot.window(xlim=c(0, 7), ylim=c(0, 1))
+for (i in 1:length(tx)){
+	xco <- c(i-xwid, i-xwid, i+xwid, i+xwid)
+	yco <- c(0, tx[i], tx[i], 0)
+	polygon(xco, yco, col="coral")
+}
+labelset <- c(NA, "M0", "M1", "M2", "M3", "M4", "M5", "M6")
+axis(1, cex.axis=1,labels=labelset, at=0:7)
+axis(2, las=1, cex.axis=1)
+mtext(side=1, text="Number of rate regimes", cex=1.2, line=3.0)
+mtext(side=2, text="Probability", cex=1.2, line=3.0)
+@
+
+The posterior distribution of the number of macroevolutionary rate regimes is shown in Figure~\ref{regimehist}. In addition, we should consider computing the 95\% credible interval on models. There are several ways this could be done, but a logical choice is to define the \textit{minimum model} as the lowest rank model $M_i$ satisfying the following:
+
+\begin{equation}
+\sum_{i=0}^{\infty}Pr(M_i) \geq 0.025
+\end{equation}
+
+Where $Pr(M_i)$ is the posterior probability of a model with $i+1$ distinct macroevolutionary rate regimes (or $i$ non-root rate regimes). Conversely, the \textit{maximum model} is the maximum rank model $M_i$ satisfying
+
+\begin{equation}
+\sum_{i=0}^{\infty}Pr(M_i) \leq 0.975
+\end{equation}
+
+
+From our MCMC output, we can do the following:
+<<echo=T, eval=T>>=
+# First, create vector of possible models through the 
+#	maximum sampled model:
+modelnames <- 0:max(x_postburn$N_shifts)
+models <- numeric(length(modelnames))
+names(models) <- modelnames;
+post_probs <- table(x_postburn$N_shifts) / nrow(x_postburn)
+models[names(post_probs)] <- post_probs
+# Get the cumulative sum of posterior probabilities:
+models <- cumsum(models)
+@
+
+The cumulative probability of models are plotted in Figure~\ref{modelprobscumulative}.  We can directly extract the 95\% credible set of models as:
+
+<<echo=T, eval=T>>=
+names(models)[models >= 0.025 & models <= 0.975]
+@
+
+Thus, the 95\% credibility set of models as $M_1$ and $M_2$ for this example (also evident in Figure~\ref{modelprobscumulative}). 
+
+%%%% Figure
+\begin{figure}[t!]
+<<echo=F, fig = T, height=4, width=6>>=
+mxmodel <- 7
+modelnames <- 0:(max(x_postburn$N_shifts) * 3)
+models <- numeric(length(modelnames))
+names(models) <- modelnames;
+post_probs <- table(x_postburn$N_shifts) / nrow(x_postburn)
+models[names(post_probs)] <- post_probs
+# Get the cumulative sum of posterior probabilities:
+models <- cumsum(models)
+
+plot.new()
+plot.window(xlim=c(-1, mxmodel), ylim=c(0, 1))
+par(mar=c(5,5,1,1))
+xvec <- 0:mxmodel
+yvec <- numeric(length(xvec))
+names(yvec) <- xvec;
+models <- models[as.numeric(names(models)) <= mxmodel]
+yvec[as.character(names(models))] <- models;
+lines(x=c(-1, 9), y=c(0.025, 0.025), lwd=2, col="gray70")
+lines(x=c(-1, 9), y=c(0.975, 0.975), lwd=2, col="gray70")
+
+lines(x=xvec, y=yvec, lwd=3, col="black")
+points(x=xvec, y=yvec, pch=21, bg="red", cex=1.2)
+
+labelset <- c(NA, "M0", "M1", "M2", "M3", "M4", "M5", "M6", "M7")
+axis(1, cex.axis=1,labels=labelset, at= -1:mxmodel)
+axis(2, las=1, cex.axis=1, at=seq(-0.2, 1.0, by=0.2))
+mtext(side=1, text="Model", cex=1.2, line=3.0)
+mtext(side=2, text="Cumulative probability", cex=1.2, line=3.0)
+text(x=7, y=0.03, pos=3, labels="0.025", font=3, cex=1.2)
+text(x=7, y=0.97, pos=1, labels="0.975", font=3, cex=1.2)
+@
+\caption{Cumulative posterior probability of models of rank $M_0$ to $M_7$. Gray lines are drawn at the upper and lower bounds (0.025 and 0.975) on the 95\% credibility set of models. Only models $M_1$ and $M_2$ fall within the 95\% credible interval. }
+\label{modelprobscumulative}
+\end{figure}
+%%% figure
+
+
+
+\subsection{Estimating Bayes factors}
+We can do many things with the posterior probabilities and odds ratios discussed above. One of the drawbacks to these estimates is that they are dependent on the prior probabilities of the model. However, the calculation of \textbf{Bayes factors} allows us to explicitly compare the relative support for any two models in a manner that is largely independent of the prior. Consider Bayes theorem:
+
+\begin{equation}
+P(M_k|\textbf{D}) =  \frac{P(\textbf{D} | M_k) P(M_k ) }{P(\textbf{D})} 
+\end{equation}
+
+where ${P(\textbf{D})}$ is the probability of the data, and $M_k$ is a model with $k$ non-root processes. $P(M_k|\textbf{D})$ is the posterior probability of model $M_k$, given the data. With \code{BAMM}, the probability of the data $P(\textbf{D})$ is identical across all models. Because $P(\textbf{D})$ is equivalent across all models, we can immediately derive the following expression for the posterior odds ratio between two models $i$ and $j$:
+
+\begin{equation}
+\frac{P(M_i|\textbf{D})}{P(M_j|\textbf{D})} =  \frac{P(\textbf{D} | M_i)}{P(\textbf{D} | M_j)}\frac{P(M_i)}{P(M_j)}
+\end{equation}
+
+The ratio of $P(M_i|\textbf{D})$ to $P(M_j|\textbf{D})$ is the posterior odds ratio for models $i$ and $j$, and $P(M_i)$ over $P(M_j)$ is the prior odds ratio. This leads to the following relationship:
+
+\begin{equation}
+\frac{\mbox{ Posterior odds ratio } }{\mbox{ Prior odds ratio }} =  \frac{P(\textbf{D} | M_i)}{P(\textbf{D} | M_j)}
+\end{equation}
+
+The term on the right-hand side of this equation is the ratio of \textbf{marginal likelihoods} of the data under models $M_j$ and $M_i$ and is also known as the \textbf{Bayes factor} for models $i$ and $j$, or $BF_{i,j}$. In principle, this term is independent of the prior odds on any two models and provides a convenient assessement of the relative evidence favoring model $i$ over model $j$. For most applications, it can be difficult to compute Bayes factors, due to the difficulty in estimating the marginal likelihood of the data under a given model. However, this is straightforward when using reversible jump MCMC. The \textit{posterior odds ratio} emerges immediately from our analysis, and the \textit{prior odds ratio} can be estimated by simply performing a dummy run of \code{BAMM} where we sample from the prior without computing any likelihoods. \code{BAMM} has an option to do this, which is specified in the control file. This parameter is \code{sampleFromPriorOnly}, and will instruct \code{BAMM} to run an MCMC chain where the acceptance probabilities of all moves are determined strictly by the ratio of prior probability densities on proposed/accepted states (as well as the ratio of transition kernels between states). 
+
+To compute the Bayes factor for models, we assume you have an MCMC output file from a \code{BAMM} run where you sampled only from the prior. \BAMMtools provides a handy function for computing pairwise Bayes factors from reversible jump MCMC output. As arguments, you will need to specify the filenames where the regular (full data) and prior-only MCMC output are stored, as well as the percentage of samples to discard as burn-in. Let's load \BAMMtools:
+
+
+<<eval=F>>=
+library("BAMMtools")
+@ 
+
+<<eval=T, echo=F>>=
+source("BAMMtools.R")
+@
+
+
+Now, assume we have files \code{MCMC\_out.txt} for our full \code{BAMM} results, and file \code{MCMC\_prioronly.txt} for a run where we sample only from the prior. We now compute the Bayes factors using the function \code{computeBayesFactors}:
+
+
+%% These filenames will need to change to be system-independent.
+%% - they are in here for convenience at the moment
+<<eval=T>>=
+source("BAMMtools.R")
+postfile <- "data/mcmc_out.txt"
+priorfile <- "data/mcmc_prior_only.txt"
+models <- 0:3
+burnin <- 0.1
+results <- computeBayesFactors(postfile, priorfile, 
+	burnin, models)
+@ 
+
+
+Here, \code{models} is a vector of the models we wish to consider. In this example, we send the function the vector \code{0:3}, which corresponds to models $M_0$, $M_1$, $M_2$, and $M_3$. The \code{results} variable is a pairwise matrix of Bayes factors for the specified models. By default, they are always computed so that the model with the higher rank is the numerator, e.g., $M_2 / M_1$, not $M_1 / M_2$.
+
+
+<<eval=T>>=
+#Printing Bayes factor matrix:
+results
+@  
+
+
+Row and column names give the corresponding model ranks. In general, Bayes factors greater than 5 imply robust support for one model over another. In this example, we have massive support models of rank $1$ or higher over $M_0$ ($BF$ > 30). However, there is very little support for additional complexity beyond a model with a single shift in dynamics. The Bayes factor evidence favoring $M_2$ versus $M_1$ is only 1.02, implying no improvement in fit of a 2-shift model relative to a 1-shift model. $M_3$ fares even worse against $M_1$, although $M_0$ is much worse than all models with at least 1 shift.
+
+What if we try to compute Bayes factors for models that are very rarely sampled? Let's see how many times \code{BAMM} sampled a model with 10 rate shifts:
+
+
+<<eval=T>>=
+sum(x_postburn$N_shifts == 10)  
+@  
+
+
+Clearly, we can't very well compute an accurate Bayes Factor involving a model that is sampled so infrequently, and this is where Bayes Factor estimation is highly inaccurate. By default, \code{computeBayesFactors} restricts the set of possible models compared to the model set that explains 99.5\% of the total probability of the data. If you specify models outside of this range, you will receive a warning message, and the candidate model set will automatically be truncated:
+
+
+<<eval=T>>=
+# Now consider models of rank 0:10
+moremodels <- 0:10
+r2 <- computeBayesFactors(postfile, priorfile, burnin, moremodels)
+r2
+@  
+
+
+In this example, models $M_4$ through $M_{10}$ were excluded, as the resulting Bayes factors would have low accuracy.
+
+\subsection{What to report for publication} 
+
+The user of \code{BAMM} is encouraged to report some or all of the following:
+
+\begin{itemize}
+
+\item The posterior probability of model $M_0$, or a model with just a single macroevolutionary rate regime (this is important to evaluate whether your system is characterized by heterogeneous evolutionary dynamics)
+
+\item The 95\% credible interval on diversification models.  
+
+\item Bayes factor evidence. Clearly, if many models are sampled, it may be awkward to report a large pairwise matrix of Bayes factors. But it would be useful to know the Bayes factor evidence favoring the \textit{minimum model} in the 95\% credibility set, particularly relative to simpler models that were excluded from this set. In the present example, it is useful to know the following: $BF_{1,0}$, $BF_{2,1}$, and $BF_{2,0}$.
+
+\item The Bayes factor evidence favoring a model with just a single evolutionary rate dynamic (model $M_0$).
+
+\end{itemize}
+
+
+\subsection{Perspective: the meaning of rate shifts}
+
+
+As discussed elsewhere in \code{BAMM} documentation, excessive focus on the precise number of macroevolutionary rate regimes can be a distraction. It is useful in many cases to assess the evidence favoring a single rate regime versus a more complex mixture of rate regimes. But it can be misleading to focus on (say) whether 5 or 6 regimes are \textbf{"the"} set of shifts. The user of \code{BAMM} (and all other macroevolutionary analysis methods) must remember that the very notion of a discrete shift is part of a statistical model that we have imposed on the data. There is no reason why the true underlying process of diversification need have occured in this fashion. 
+ 
+ 
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Where are the rate shifts?}
+
+
+In contrast to other methods for macroevolutionary analysis, \code{BAMM} does not estimate a single \textit{best} rate-shift configuration. Rather, the underlying philosophy recognizes that many different combinations of shift events can have roughly similar probabilities of explaining the data.
+
+In the worst case, methods that focus on a single, global "best" shift configuration can be highly misleading. Imagine, for example, phylogeny of two clades \code{(A, B)}, where there is a true probability of 1.0 that one of two events occured: either a rate increase occured on the branch leading to clade \code{A}, with probability 0.51; or a rate decrease occured on the branch leading to clade \code{B}, with probability 0.49. A stepwise $AIC$ approach to finding the global best model might identify a single rate shift, on the branch leading to \code{A}. But this is a very misleading view of our true support for this model, because it is very nearly as likely that nothing happened in the ancestor of this clade. In the \code{BAMM} framework, these models (shift on A, or shift on B) would be sampled in proportion to their posterior probability, providing us with a much more accurate measure of relative support for any given scenario.
+
+The core of all downstream \code{BAMM} analyses is the creation of a \code{BAMM-data} object. This is a complex datatype that is generated in \R\ from the raw event data and the phylogeny that was analyzed. Each sample from the posterior is a \textit{rate shift configuration} and also includes the evolutionary parameters associated with the shifts. A \code{BAMM-data} object takes all of the event data and maps it to the tree, such that one can easily compute branch-specific diversification rates, or rate-through-time curves, and so on. 
+
+Here, we will generate a \code{BAMM-data} object for the cetacean analysis, using the function \code{getEventData}:
+
+
+%% More filenames before anyone can use this:
+<<bammdata, eval=T>>=
+library(ape)
+whaletree <- read.tree("data/whaletree.tre")
+eventfile <- "data/event_data.txt"
+bammdata <- getEventData(whaletree, eventfile, 
+	burnin=0.25, nsamples=5)
+class(bammdata)
+@ 
+
+
+In this example, we are only choosing to analyze 5 samples from the posterior (\code{nsamples = 5}), after discarding the first 25\% as burn-in. In a "for-real" analysis, this should be considerably higher. For large phylogenies, however, this can be extremely time consuming and you may wish to limit yourself to 200 or fewer samples from the posterior.  
+
+The \code{bamm-data} object is complex and includes a number of attributes, which we won't worry much about (see \code{?getEventData}, for more information). It also inherits all the attributes of class \code{phylo}, so all methods that apply to class \code{phylo} objects can also be applied to \code{BAMM}. One important attribute with \code{BAMM-data} objects is the \code{type} of data object:
+
+
+<<bammdata, eval=T>>=
+bammdata$type
+@ 
+
+
+If you have performed a phenotypic evolution analysis, \code{type} will be \code{trait}. 
+One important function for working with a \code{BAMM-data} object is \code{getShiftNodes}. This function will extract the nodes at which a rate shift occurred for a particular sample from the posterior, specified by the parameter \code{index}. In our \code{BAMM-data} object, we only have 5 samples, so we can only access the shift parameters for these 5 samples. To extract the nodes at which shifts occurred for (say) the 2nd sample in the posterior (after discarding burn-in and thinning), you can do:
+
+
+<<>>=
+shifts <- getShiftNodesFromIndex(bammdata, index=2)
+shifts
+@ 
+
+
+And \code{shifts} is now a vector of the \code{ape} format node numbers (excluding the root) where rate shifts occurred. What if we want to plot these in a single figure? We only have 5 samples from the posterior, so we'll plot all 5 distinct shift configurations in a single plot (with different colors for each):
+
+
+<<echo=TRUE, eval=F,fig = F, height=8, width=10>>=
+colorset <- c("blue", "orange", "lightgreen", "red", "turquoise")
+par(mfrow=c(1,5))
+for (i in 1:5){
+
+	shifts <- getShiftNodesFromIndex(bammdata, i)	
+	ec <- rep("black", nrow(whaletree$edge))
+	ec[whaletree$edge[,2] %in%  shifts] <- colorset[i];
+	plot.phylo(whaletree, no.margin=T, show.tip.label=F, edge.color=ec)
+
+	#nodelabels(pch=21, node=shifts, bg=colorset[i], cex=4)	
+}
+@
+
+\begin{figure}[!t]
+<<echo=F, eval=T, fig = TRUE, height=7, width=12>>=
+colorset <- c("blue", "orange", "lightgreen", "red", "turquoise")
+par(mfrow=c(1,5))
+for (i in 1:5){
+	plot.phylo(whaletree, no.margin=T, show.tip.label=F)
+	shifts <- getShiftNodesFromIndex(bammdata, i)
+	nodelabels(pch=21, node=shifts, bg=colorset[i], cex=4)	
+}
+@
+\caption{Five shift configurations sampled from the joint posterior distribution for the cetacean dataset. For each tree, the colored circles denotes the node at the end of a branch on which a shift occurred for the specified sample from the posterior.}
+\label{shiftrees5}
+\end{figure}
+
+
+
+In this example, we are not plotting the locations of shifts on particular branches, but rather the nodes at the end of the branch on which a shift occurred. You should see here that there is some variation in the number and location of shifts among samples in the posterior. If you see a shift on a tip node, this implies that the shift occurred somewhere along the specified terminal branch. To be clear, the \code{BAMM-data} object contains all information about precisely where shifts occur on branches, but it requires a little more work to plot these locations.
+
+\code{BAMM} provides support for three methods of visualizing rate shift configurations:
+\begin{itemize}
+\item \textbf{The \textit{marginal shift probability tree}} 
+\item \textbf{The \textit{cumulative shift probability tree}}
+\item \textbf{The \textit{maximum shift credibility tree}}
+\end{itemize}
+
+Each of these methods for visualizing shifts is designed to convey different types of information about the distribution of potential shift locations in a phylogenetic tree. 
+
+
+\subsection{Marginal shift probability tree}
+The \textbf{marginal shift probability tree} shows the marginal probabilities of rate shifts on all branches in the tree. There are many ways of displaying this information, but the default \BAMMtools function to handle this is
+\\
+\code{marginalShiftProbsTree}. This function returns a copy of your phylogenetic tree, but where the branch lengths have been set to equal the probability that they contain a rate shift event. Because it is the \textit{marginal} shift probability tree, the shift probabilities for any branch are computed independently of those for all other branches. Formally, each branch length $b_i$ in the marginal shift tree is computed as
+ 
+\begin{equation}
+b_i = \frac{\sum_{k = 1}^{S}I_{k,i}}{S}		
+\end{equation}
+
+where $S$ is the number of post-burnin samples from the posterior that have been retained for analysis and $I_{k,i}$ is an indicator variable that takes a value of 1 if at least one shift occurs on branch $i$ in sample $k$ (0 otherwise). A value of 1.0 indicates that at least one shift occured on every sample from the posterior that was examined. We will compute the marginal shift tree for the whales dataset, but now we'll use a much larger set of samples from the posterior to compute the branch-specific shift probabilities by recomputing the \code{BAMM-data} object.
+
+<<echo=T, eval=F>>=
+bammdata <- getEventData(whaletree, eventfile, burnin=0.1)
+@
+
+And now we compute the marginal shift tree:
+
+<<echo=T, eval=F>>=
+msp <- marginalShiftProbsTree(bammdata)
+@
+
+And now to plot the tree, with a scale bar to show the probability of a shift on any given branch:
+
+<<echo=T, eval=F>>=
+plot(msp, show.tip.label=F, no.margin=T);
+add.scale.bar(length=0.5, x= 0.25, y=20, lcol="gray40", 
+	lwd=2, cex=1.5);
+nodelabels(node=141, bg="red", cex=3, pch=21);
+nodelabels(node=140, bg="blue", cex=3, pch=21);
+@
+
+\begin{figure}[t!]
+\includegraphics{mst.pdf}
+\caption{The marginal shift probability tree. Branch lengths are drawn proportional to the marginal probability of that a shift event occurred on the branch. The branch subtending the blue node (shift probability = 0.38) is the Delphinidae (dolphins), and the branch subtending the red node (shift probability 0.56) is the Delphinidae minus the killer whale (\textit{Orcinus orca}).}
+\label{margshifttree}
+\end{figure}
+
+This approach to plotting the marginal shift tree (Figure~\ref{margshifttree}), is just one possible way of visualizing this information. For example, branches could be colored by the marginal shift probability, and this information could be conveyed on the original time-calibrated phylogeny.
+
+\textbf{Disadvantages to the marginal shift tree} The marginal shift tree suffers from two disadvantages. First, because it displays individual branch-specific shift probabilities (see Figure~\ref{margshifttree}, a casual observer might conclude that we have weak evidence for a rate shift, when in fact the evidence for a shift is extremely strong. In the cetacean dataset, no single branch has a shift probability greater than 0.60. However, the probability that a shift occured on at least one of the branches leading to the dolphin clade exceeds 0.97. Visualizing this aspect of shifts is the focus of the next section, the \textbf{cumulative shift probability tree}.
+
+A second disadvantage is the the marginal shift tree is exactly that: a \textit{marginal} shift tree. As such, it entirely ignores the covariances between shifts across the tree. In an extreme example, two branches might each have marginal shift probabilities of 0.5, but a reconstruction of their joint marginal density would show that they never occur together (e.g., every sample from the posterior has a shift on branch $A$ or branch $B$, but never on branches $A$ and $B$ together). 
+
+There is a good analogy to phylogenetics that can be made here. If you have performed a Bayesian phylogenetic analysis, you have probably noticed that you generally cannot draw a single phylogenetic tree that shows all clades that were sampled during the analysis: some clades are incompatible with other clades, and the only way to show them in a single tree is to collapse them to polytomies. For example, consider two topologies $(A,(B,C))$ and $(B,(A,C))$ with equivalent posterior probabilities. It is quite likely that one of these is correct, but the two trees are incompatible. Diversification shifts can be similar, something that we will continue to explore through this documentation. The marginal shift tree is rather like a consensus tree, in which incompatible diversification configurations have been collapsed down to marginal probability estimates on individual branches.
+ 
+
+
+\subsection{Cumulative shift probability tree}
+The \textbf{cumulative shift shift probability tree} shows the probability that a given node has evolutionary rate dynamics that are decoupled from the root process. For a given node $v$ to be decoupled from the "background" evolutionary dynamic, a rate shift must occur somewhere on the path between $v$ and the root node. Branches with a cumulative shift probability of 1.0 imply that every sample in the posterior shows at least one rate shift between the focal branch and the root of the tree, leading to evolutionary dynamics that are decoupled from the background process. In the case of the cetacean data (see above), we expect the cumulative shift probability for all the branches in the dolphin clade to be quite high: even though we have relatively low confidence of the precise branch on which a shift may have occurred, we have high confidence that a shift occurred on one of the ancestral branches leading to the clade. Formally, the cumulative shift probability for branch $b_i$ is computed as:
+
+\begin{equation}
+b_i = \frac{\sum_{k = 1}^{S}\Phi_{k,i}}{N}	
+\end{equation} 
+
+where $\Phi_{k,i}$ is an indicator variable that takes a value of 1 if a shift occurs somewhere on the path between branch $i$ and the root of the tree (0 otherwise). The cumulative shift probability on a particular branch $b_i$ might thus be extremely high even if shifts are unlikely to have occurred on branch $b_i$ itself. Here we will compute the marginal shift probability tree using the \code{cumulativeShiftProbsTree} function from \BAMMtools.
+
+<<echo=T, eval=F>>=
+cst <-cumulativeShiftProbsTree(bammdata)
+@
+
+And to plot (and adding a scale bar to allow interpretation of branch probabilities):
+
+<<echo=T, eval=F>>=
+quartz.options(height=6, width=8, dpi=72);
+# The above line is operating-system specific
+#	You need another graphics command on windows,
+#	or just ignore the line altogether
+plot(cst, show.tip.label=F, no.margin=T);
+nodelabels(node=141, bg="red", cex=3, pch=21);
+nodelabels(node=140, bg="blue", cex=3, pch=21);
+add.scale.bar(length=1.0, x= 5, y=45, lcol="darkgreen", 
+	lwd=3, cex=1.5);
+@
+The cumulative shift probability tree for the cetacean dataset is shown in Figure~\ref{cumshifttree}. 
+
+
+\begin{figure}[t!]
+\includegraphics{cst.pdf}
+\caption{The cumulative shift probability tree. Branch lengths are proportional to the cumulative probability that a rate shift occurred somewhere between the focal branch and the root node. Any lineage with a high cumulative shift probability is inferred to have evolutionary dynamics that are decoupled from the "background" rate across the tree. Here, we have identified exactly the same nodes as in the marginal shift probability tree (Figure~\ref{margshifttree}; blue and red). However, branch lengths in this tree clearly indicate that evolutionary rate dynamics for branches \textit{downstream} of the MRCA of the dolphins (blue node) are decoupled from the background rate dynamics. Branches with low cumulative shift probabilities (e.g, all the lineages in the lower half of the figure) have evolutionary rate dynamics that are mostly identical to the background rate.
+}
+
+\label{cumshifttree}
+\end{figure} 
+
+
+\subsection{Maximum shift credibility tree}
+%\section{Visualizing shifts: maximum shift credibility tree}
+In Bayesian phylogenetic analyses, researchers often report the \textit{maximum clade credibility (MCC) tree} rather than some overall consensus tree. The reason for this is that the the MCC tree is a tree topology that is actually part of the posterior distribution simulated via MCMC. When we construct consensus trees from posterior distributions of topologies, it is possible that the resulting consensus topology may look somewhat unlike any of the individual topologies from the posterior. The MCC tree is the topology that was sampled during simulation of the posterior but which maximizes some \textit{a posteriori} optimality criterion, such as the product of clade probabilities. 
+
+In \code{BAMM}, we are able to compute a parallel tree, which we refer to as the \textit{maximum shift credibility (MSC) tree}. This is the diversification shift configuration that, under the assumptions of the model, we believe is most likely to reflect the true underlying process of diversification. The salient point is that the shift configuration identified as the MSC configuration was indeed sampled during simulation of the posterior. To compute the MSC tree, we find the shift configuration(s) that were sampled by MCMC and that maximimizes the product of branch-specific marginal probabilities. Let $p_i$ denote the marginal probability of a rate shift on the $i'th$ branch. The shift credibility score C for the $k'th$ sample from the posterior is computed as:
+
+\begin{equation}
+C = \prod_{i = 1}^{N}{p_i^{I_{i,k}}}{(1 - p_i)^{1 - I_{i,k}}}
+\end{equation}
+
+where $I_{i,k}$ is an indicator variable taking a value of 1 if a shift occurs on branch $i$ for sample $k$, and 0 if no shift occurs in the sample. 
+
+We will now compute the MSC tree for the cetacean analysis:
+
+<<echo=T, eval=T>>=
+msctree <- maximumShiftCredibilityTree(bammdata)
+@
+
+The function \code{maximumShiftCredibilityTree} returns a vector of \code{scores}, with the log-probability of each sample in the posterior. Because the best shift configuration may have been sampled many times, it also returns a a vector of indices \code{bestconfigs} giving the set of indices to samples in the posterior with identical (maximum) shift credibility scores. Finally, the value \code{sampleindex} gives a single sample from the posterior that can be taken as a representative MSC configuration. Looking at the results for our toy analysis with the cetaceans: 
+
+<<echo=T, eval=T>>=
+msctree
+@
+
+And we can now extract the shift configuration from \code{msctree\$sampleindex} and plot. We'll also add some colors to all the descendant lineages from the best fit shift configuration:
+
+<<echo=TRUE, fig = F, height=13, width=15>>=
+msc_sample <- msctree$sampleindex
+shiftnodes <- getShiftNodesFromIndex(bammdata, msc_sample)
+plot.phylo(whaletree, type = "p", cex=0.8, no.margin=T)
+nodelabels(node=shiftnodes, pch=21, bg="red", cex=2)
+@
+
+\begin{figure}[t!]
+
+<<echo=F, fig = T, height=13, width=15>>=
+msc_sample <- msctree$sampleindex
+shiftnodes <- getShiftNodesFromIndex(bammdata, msc_sample)
+plot.phylo(whaletree, type = "p", cex=0.8, no.margin=T)
+nodelabels(node=shiftnodes, pch=21, bg="red", cex=3)
+@
+\caption{Maximum shift credibility tree for the cetacean dataset.}
+
+\label{msctree}
+\end{figure}
+
+
+In this example, the MSC tree (Figure~\ref{msctree}) shows a shift in the common ancestor of the dolphin clade, excluding the killer whale \textit{Orcinus orca}. Note that this example was based on a small number of samples ($N = 5$) from the posterior distribution. A "for real" analysis would use many more.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Computing clade-specific rates}
+
+
+Users will often want to estimate clade-specific rates of speciation, extinction, or trait evolution. Because \code{BAMM} allows rates to vary through time, it is not necessarily true that a mean clade rate is particularly meaningful: how do you compare rates for two clades if both have undergone a strong temporal deceleration in the rate of speciation, for example? Leaving this question aside for the moment, \code{BAMM} provides tools to easily estimate mean rates for individual clades. Formally, the mean speciation (or other) rate for a clade $z$ is computed as
+
+\begin{equation}
+\hat \lambda_z = \frac{1}{T_z}\sum_{i=1}^{N_z}\int_{t_{i,0}}^{t_{i,1}}\lambda(t)dt
+\end{equation}
+
+where $T_z$ is the total sum of branch lengths in clade $z$, $N_z$ is the number of branches in clade $z$, $t_{i,0}$ is the start time of the $i'th$ branch, and $t_{i,1}$ is the end time of the $i'th$ branch.
+
+For starters, let's compute the mean speciation rate across all whales. This is easy, with our \code{BAMM-data} object that we've already computed:
+
+<<echo=T, eval=T>>=
+rates_all <- getCladeRates(bammdata)
+@
+
+which, for a speciation-extinction analysis, includes the mean rate estimate for each sample in the posterior (for both speciation, $\lambda$, and extinction, $\mu$):
+
+<<echo=T, eval=T>>=
+names(rates_all)
+mean(rates_all$lambda)
+mean(rates_all$mu)
+@
+
+We could use the actual vectors of rates to plot a histogram of the posterior density of rates (we will do this below). 
+\\\\
+Now, what if we just want the rates for the dolphin clade? We can send \code{getMeanRates} the argument \code{node}, which will specify that rates be computed only for the clade descended from the target node. If you don't know the node number, you can get these by just plotting your original tree and then calling ape's \code{nodelabels} function. Or you directly find the MRCA of spanning taxa, like this:
+
+<<echo=T, eval=T>>=
+tax1 <- "Orcinus_orca"
+tax2 <- "Delphinus_delphis"
+tipnode1 <- which(whaletree$tip.label == tax1)
+tipnode2 <- which(whaletree$tip.label == tax2)
+dolphin_node <- getMRCA(whaletree, c(tipnode1, tipnode2))
+@
+
+Now we use \code{getCladeRates}:
+
+<<echo=T, eval=T>>=
+rates_dolphins <- getCladeRates(bammdata, node= dolphin_node)
+mean(rates_dolphins$lambda)
+@
+
+This rate is much higher than that which we estimated for the whole tree. Of course, the whole tree rate \textit{included} the dolphins, so we really should be comparing the dolphin rate to the background rate. This can also be justifed on the grounds that we've already uncovered strong evidence that evolutionary rates in the dolphins are decoupled from the background rate (see preceding sections). We will \textit{exclude} the dolphin clade from the analysis and compute the background rate of speciation. We'll do this using the same function, but we'll pass the argument \code{nodetype}, which will let us exclude all the descendants of a particular node:
+
+<<echo=T, eval=T>>=
+rates_background <- getCladeRates(bammdata, 
+	node= dolphin_node, nodetype="exclude")
+mean(rates_background$lambda)
+@
+
+We won't show the code for plotting the frequency distributions of rates here, but this is straightforward (see online help for \code{BAMM} for examples). The increased speciation rate for the dolphin clade is clearly visible from visual inspection of the posterior densities of speciation rates for dolphins and non-dolphin lineages computed separately (Figure~\ref{dolphinrates}).
+
+\begin{figure}[t!]
+\includegraphics{dolphins_ratedistributions.pdf}
+\caption{Posterior probability density of speciation rates for the dolphin clade (red) in addition to the "background" (white). The background rate is the mean rate for all other cetacean lineages, excluding dolphins.}
+\label{dolphinrates}
+\end{figure}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Estimating rates on individual branches}
+
+
+It is straightforward to use your \code{BAMM-data} object to compute marginal posterior densities of evolutionary rates on every branch of a phylogenetic tree.  
+
+<<echo=T, eval=T>>=
+marginal_rates <- getMarginalBranchRateMatrix(bammdata)
+@
+
+This gives us (for speciation-extinction analyses) a list with two matrices: \code{lambda\_branch\_matrix}, and \code{mu\_branch\_matrix}. These matrices contain the marginal rate estimates for each branch (rows), for each sample in our posterior (columns). The matrix rows are ordered to correspond exactly to the order of the \code{edge.length} component of our phylogeny. Thus, we can compute the mean of this matrix, then swap these vectors in for the \code{edge.length} attribute of our phylogeny, and generate a plottable "rate-tree":
+
+<<echo=T, eval=T>>=
+lam_rates <- rowMeans(marginal_rates$lambda_branch_matrix)
+lambda_tree <- whaletree
+lambda_tree$edge.length <- lam_rates
+@
+
+Now we'll plot the tree, with branch lengths scaled by reconstructed rate. Here we are doing this for speciation rates, but it is easy enough to do the same for rates of extinction or trait evolution. We'll also add the reconstructed shift node(s) from the maximum shift credibility tree with a red circle:
+
+<<echo=T, eval=F, figure=F>>=
+#plot.phylo(lambda_tree, type="f", show.tip.label=F);
+#nodelabels(node=shiftnodes, pch=21, bg="red", cex=2)
+@
+
+<<echo=T, eval=T>>=
+lambda_tree
+@
+ 
+\begin{figure}[t!]
+
+<<echo=F, fig = TRUE, height=6, width=6>>=
+plot.phylo(lambda_tree, type="f", show.tip.label=F);
+nodelabels(node=shiftnodes, pch=21, bg="red", cex=2) 
+@
+
+\caption{Cetacean phylogeny with branch lengths scaled by the estimated rate of speciation on each branch. Branch rates are computed as the mean of the corresponding marginal posterior density.}
+
+\label{lambdaratefig1}
+
+\end{figure}
+ 
+We can visualize branch rates any number of ways in addition to the type of tree shown in Figure~\ref{lambdaratefig1}. An obvious alternative is to plot the time-calibrated phylogeny but to then color individuals branches by their estimated rate (e.g., the mean of the branch-specific marginal rate distribution).
+ 
+%% Here we will add Mike's new rate plotting functions:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Plotting rate-through-time curves}
+
+
+We can also compute rate-through-time trajectories, in order to visualize temporal changes in the dynamics of speciation, extinction, and trait evolution through time. \BAMMtools provides several handy functions for extracting rate-through-time trajectories. The function \code{getRateThroughTimeMatrix} generates a matrix of mean rates through time. Mean rates are computed by draping an imaginary grid over the phylogeny, as shown in Figure~\ref{timepoints}. 
+
+\begin{figure}[b!]
+\includegraphics{timepoints.pdf}
+\caption{To generate a rate-through-time curve, evolutionary rates are computed for each point where a vertical line (the timepoints) intersect a branch. The mean of this vector of rates is the mean rate for the time point. \code{getRateThroughTimeMatrix} will compute rates in this fashion for every sample in the posterior (as included in the \code{BAMM-data} object), and return an $S$ by $k$ matrix, where $S$ is the number of samples in the posterior and $k$ is the number of timepoints (which can be specified by the user).}
+\label{timepoints}
+\end{figure}
+
+As for \code{getCladeRates}, we can compute rate-through-time matrices for individual clades, and we can exclude clades. To exclude clades and compute background rates, we simply specify \code{nodetype = exclude} as an argument to the function. Here's the full rate-through-time matrix:
+
+<<echo=T, eval=T>>=
+rtt.all <- getRateThroughTimeMatrix(bammdata)
+@
+
+which has the following attributes:
+
+<<echo=T, eval=T>>=
+class(rtt.all)
+names(rtt.all)
+@
+
+The \code{times} component of the result is a vector of timepoints at which the rates were computed. We can sweep out the mean rates at our timepoints like this:
+
+<<echo=T, eval=T>>=
+lamvec <- colMeans(rtt.all$lambda)
+@
+
+And we could also sweep out other summary statistics. For example, if you wanted the 5\% and 95\% quantiles on the distribution of estimated rates at any point in time, you can do:
+
+<<echo=T, eval=F>>=
+lam_q90 <- apply(rtt.all$lambda, MARGIN=2, 
+	quantile, c(0.05, 0.95)) 
+@
+
+Here we'll plot the mean speciation rate through time curve for the entire cetacean radiation. We'll compute the mean rates at each time point, then set up a plot highly-customizable plot window, then add our rate-through- time curve:
+
+<<echo=T, eval=F>>=
+lam_rates.all <- colMeans(rtt.all$lambda)
+plot.new()
+par(mar=c(6, 6, 1,1))
+plot.window(xlim=c(0, 36), ylim=c(0, 0.6))
+lines(x=rtt.all$times, y=lam_rates.all, lwd=3, col="black")
+axis(1, at=seq(-5, 35, by=5));
+axis(2, at=seq(-0.1, 0.7, by=0.1), las=1)
+mtext(side=1, text="Time from start of radiation", 
+	line =3.5, cex=1.5)
+mtext(side=2, text="Speciation rate", line =3.5, cex=1.5)
+@
+
+And the resulting plot for all cetaceans is shown in Figure~\ref{allcetaceansRTT}.
+
+\begin{figure}[t!]
+\includegraphics{cetaceanRTT.pdf}
+\caption{Speciation rates through time during the cetacean radiation. Rates at any point in time are computed as described in Figure~\ref{timepoints}}
+\label{allcetaceansRTT}
+\end{figure}
+
+And of course, we could do exactly the same for speciation or for trait evolution. In this case, you can clearly see the rise in speciation rates at approximately 27 million years after the radiation start, driven by the burst of speciation in the dolphin clade. 
+
+Given that we already have strong evidence for diversification rate heterogeneity across this radiation, it's a little inaccurate to show a single rate-through-time curve for the group. It makes much more sense to show a rate for the dolphin clade separate from the background rate. Now, recall that we already identified the MRCA node for the dolphin clade (variable = \code{dolphin\_node}). Now we'll compute rate-through-time matrices for the dolphins and non-dolphins:
+
+<<echo=T, eval=F>>=
+rtt.dolphin <- getRateThroughTimeMatrix(bammdata, 
+			node=dolphin_node)
+rtt.background <- getRateThroughTimeMatrix(bammdata, 
+			node=dolphin_node, nodetype="exclude") 
+@
+
+Now to sweep out the mean speciation rates from each of these objects:
+
+<<echo=T, eval=F>>=
+lam_rates.dolphin <- colMeans(rtt.dolphin$lambda)
+lam_rates.background <- colMeans(rtt.background$lambda)
+@
+
+And finally we'll plot everything together: dolphins in red, background in blue:
+
+<<echo=T, eval=F>>=
+plot.new()
+par(mar=c(6, 6, 1,1))
+plot.window(xlim=c(0, 36), ylim=c(0, 0.6))
+lines(x=rtt.dolphin$times, y=lam_rates.dolphin, 
+	lwd=3, col="red")
+lines(x=rtt.background$times, 
+	y=lam_rates.background, lwd=3, col="blue")
+axis(1, at=seq(-5, 35, by=5));
+axis(2, at=seq(-0.1, 0.7, by=0.1), las=1)
+mtext(side=1, text="Time from start of radiation", 
+	line =3.5, cex=1.5)
+mtext(side=2, text="Speciation rate", line =3.5, cex=1.5)
+@
+
+\begin{figure}[t!]
+\includegraphics{dolphinssplitRTT.pdf}
+\caption{Speciation-through-time curves for the dolphin clade (red) and non-dolphins (blue) computed separately.} 
+\label{dolphinRTT}
+\end{figure}
+
+Figure~\ref{dolphinRTT} portrays a much different picture of rate-through-time dynamics than shown in Figure~\ref{allcetaceansRTT}. There is no evidence for anything interesting going on in the background lineages, other than a gradual temporal slowdown in speciation. But the origin of the dolphin clade is associated with a massive spike in speciation, followed by a pronounced deceleration. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Testing convergence using independent \code{BAMM} runs}
+\label{sec:advancedconvergence}
+
+
+Coming soon.
+
+
+%\section{Additional advanced topics}
+% Not done. 
+
+
+%\section{Advanced convergence diagnostics}
+
+% Not done. 
+%\section{Prior sensitivity}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Tip-specific speciation rates}
+
+
+This is just a placeholder. Not yet done. 
+
+
+\section{Joint shift correlations}
+
+
+This is a placeholder. 
+
+
+\section{Multivariate decomposition of rate dynamics}
+
+
+Coming soon!!! 
+
+ 
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
