@@ -5,7 +5,7 @@ library("diversitree");
 
 whaletree <- read.tree("whaletree.tre")
 eventfile <- "data/event_data.txt"
-bammdata <- getEventData(whaletree, eventfile, burnin=0.1)
+bammdata <- getEventData(whaletree, eventfile, burnin=0.1, verbose=T)
 
 
 
