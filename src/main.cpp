@@ -150,7 +150,7 @@ void printAbout()
 {
     log(Message) << "\
 +--------------------------------------------------------------------------+\n\
-|   BAMM: Bayesian Analysis of Multimodel Mixtures                         |\n\
+|   BAMM: Bayesian Analysis of Macroevolutionary Mixtures                  |\n\
 +--------------------------------------------------------------------------+\n\
 |                                                                          |\n\
 |   Daniel Rabosky <drabosky@umich.edu>                                    |\n\
