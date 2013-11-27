@@ -64,6 +64,6 @@ getCladeRates <- function(ephy, node = NULL, nodetype='include', verbose=F){
 		return(list(lambda = lambda_vector, mu = mu_vector));
 	}
 	if (ephy$type == 'traits'){
-		return(lambda_vector);
+		return(list(beta = lambda_vector));
 	}
 }

@@ -72,9 +72,12 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 	}
 	
 	obj <- list();
-	obj$lambda <- mm;
 	if (ephy$type == 'diversification'){
+		obj$lambda <- mm;
 		obj$mu <- mumat;
+	}
+	if (ephy$type == 'traits'){
+		obj$beta <- mm;
 	}
 	obj$times <- tvec;
 	
