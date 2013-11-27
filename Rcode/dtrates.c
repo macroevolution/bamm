@@ -127,7 +127,7 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol)
 			//need to find which approximating segments match this branch segment
 			//these are passed in strict order so we only need to search top to bottom
 			//and can ignore everything we've been over already
-			for (l = 0; l < nsegs; l++)
+			for (l = place_holder; l < nsegs; l++)
 			{
 				if ( (int) REAL(nodeseg)[l] == node)
 				{
