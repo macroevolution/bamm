@@ -13,9 +13,12 @@
 #	                    device for interpreting the meaning of plotted colors.
 #	           lwd = The line width used for plotting the tree.
 #	           ncolors = The number of color bins for mapping rates to colors.
-#	           palette = A character string. Currently either 'temperature' or
-#	                     'diverging'. This will be the scheme for coloring
-#	                     the branches according to rates.
+#	           pal = A string or vector of strings to specify colors for mapping to rates. 
+#	                 Currently this may be one of the named diverging palette options
+#	                 in the RColorBrewer package documented in description of brewer.pal,
+#	                 a vector of 3 valid named colors, or the string 'temperature'. 
+#	                 The first and last options require RColorBrewer and gplots packages,
+#	                 respectively
 #	           ... = arguments passed to function used for polar tree plotting.
 #	                 These should be 'vtheta', which specifies the angle in degrees
 #	                 separating the first and last tips, and 'rbf', which specifies
@@ -24,7 +27,7 @@
 #	                 two descendant branches from the root. rbf = 0.001 seems to be 
 #	                 a good first choice
 
-plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, hrates=TRUE, lwd=3, ncolors=64, palette='temperature', ...)
+plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, hrates=TRUE, lwd=3, ncolors=64, pal='temperature', ...)
 {
 	if ('bamm-data' %in% class(ephy)) phy = as.phylo.bammdata(ephy) else phy = ephy;
 	if (class(phy) != 'phylo') stop('Trying to plot a non-tree object');
@@ -55,7 +58,7 @@ plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, hrates
 	x0 = ret$segs[,1];y0=ret$segs[,2];x1=ret$segs[,3];y1=ret$segs[,4];
 	
 	tau = ephy$dtrates$tau;
-	edge.color = colorMap(ephy$dtrates$rates,palette,ncolors);
+	edge.color = colorMap(ephy$dtrates$rates,pal,ncolors);
 	p = cbind(x0[-1],y0[-1],x1[-1],y1[-1],phy$edge[,2]);
 	p = apply(p,1,matrify,tau);
 	p = do.call(rbind, p);
@@ -95,7 +98,7 @@ plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, hrates
 		if(hrates)
 		{
 			dev.new(width=3,height=3);
-			histRates(ephy$dtrates$rates,palette,ncolors);
+			histRates(ephy$dtrates$rates,pal,ncolors);
 		}
 	}
 	
@@ -179,16 +182,21 @@ setPhyloTreeCoords = function(phy)
 	return(list (segs = xy, arcs = bar ) );	
 }
 
-histRates = function(rates,palette,NCOLORS)
+histRates = function(rates,pal,NCOLORS)
 {
 	fx = density(rates);
-	if(palette == 'temperature')
+	dpal = c('BrBG','PiYG','PuOr','RdBu','RdGy','RdYlBu','RdYlGn','Spectral');
+	if(pal %in% dpal)
 	{
-		rate.colors = rich.colors(NCOLORS);
+		rate.colors = colorRampPalette(rev(brewer.pal(3,pal)),space='Lab')(NCOLORS);
 	}
-	else if (palette == 'diverging')
+	else if(length(pal) == 3)
 	{
-		rate.colors = colorRampPalette(c('blue','white','red'))(NCOLORS);
+		rate.colors = colorRampPalette(pal,space='Lab')(NCOLORS);	
+	}
+	else if(pal == 'temperature')
+	{
+		rate.colors = rich.colors(NCOLORS);	
 	}
 	qx = quantile(rates,seq(0,1,length.out = NCOLORS+1));
 	plot.new();
@@ -471,18 +479,19 @@ matrify = function(x,tau)
 	return(cbind(j,k,l));	
 }
 
-colorMap = function(x, palette, NCOLORS)
+colorMap = function(x, pal, NCOLORS)
 {
+	dpal = c('BrBG','PiYG','PuOr','RdBu','RdGy','RdYlBu','RdYlGn','Spectral');
 	colset = numeric(length(x));
-	if(palette == 'temperature')
+	if(pal %in% dpal)
 	{
-		colpalette = rich.colors(NCOLORS);
+		colpalette = colorRampPalette(rev(brewer.pal(3,pal)),space='Lab')(NCOLORS);
 	}
-	else if(palette == 'diverging')
+	else if(length(pal) == 3)
 	{
-		colpalette = colorRampPalette(c('blue','white','red'),space='Lab')(NCOLORS);	
+		colpalette = colorRampPalette(pal,space='Lab')(NCOLORS);	
 	}
-	else
+	else if(pal == 'temperature')
 	{
 		colpalette = rich.colors(NCOLORS);	
 	}
