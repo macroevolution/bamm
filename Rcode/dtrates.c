@@ -87,7 +87,7 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol)
 		REAL(rates)[k] = 0.;
 	}
 	
-	int nrow, node, nnode, event, nxtevent, isGoodStart, isGoodEnd;
+	int nrow, node, nnode, event, nxtevent, isGoodStart, isGoodEnd, place_holder;
 	double begin, end, Start, lam1, lam2, relStart, relEnd, rightshift, leftshift, ret;		
 	for (k = 0; k < nsamples; k++)
 	{
@@ -97,7 +97,7 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol)
 		eventData = PROTECT(VECTOR_ELT(getListElement(ephy, "eventData"), k)); nprotect++;
 					
 		nrow = INTEGER(getAttrib(eventSegs, R_DimSymbol))[0];
-		
+		place_holder = 0;
 		for(j = 0; j < nrow; j++) //move down the rows of eventSegs
 		{
 			//eventSegs is 4 column matrix, node is in first column stored as double
@@ -125,6 +125,8 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol)
 			lam2 = REAL(getListElement(eventData, "lam2"))[event-1];
 						
 			//need to find which approximating segments match this branch segment
+			//these are passed in strict order so we only need to search top to bottom
+			//and can ignore everything we've been over already
 			for (l = 0; l < nsegs; l++)
 			{
 				if ( (int) REAL(nodeseg)[l] == node)
@@ -162,12 +164,15 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol)
 							ret = (leftshift+rightshift)/(REAL(segend)[l] - REAL(segbegin)[l]);
 							
 							REAL(rates)[l] += ret/((double) nsamples);
+							place_holder = l; place_holder++;
+							break;
 						}
 					}
 				}
 				else
 				{
-					continue;
+					place_holder = l;
+					break;
 				}
 			}			
 		}

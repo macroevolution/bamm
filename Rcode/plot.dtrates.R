@@ -245,8 +245,14 @@ dtRates = function(ephy, tau)
 	if (storage.mode(tol) != "double") stop('Exiting');
 	if (storage.mode(ephy) != "list") stop('Exiting');
 	
+	index = 1:nrow(segmat)
+	rownames(segmat) = index;
+	segmat = segmat[order(segmat[,1]),];
 	dtrates = .Call("dtrates", ephy, segmat, tol);
-	
+	names(dtrates) = rownames(segmat);
+	dtrates = dtrates[as.character(index)];
+	names(dtrates) = NULL;
+
 	ephy$dtrates = list(tau = tau, rates = dtrates);
 	return(ephy);
 }
