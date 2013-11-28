@@ -12,6 +12,7 @@
 #	           hrates = TRUE or FALSE. If TRUE a histogram is plotted in a separate
 #	                    device for interpreting the meaning of plotted colors.
 #	           lwd = The line width used for plotting the tree.
+#	           cex = Character expansion for plotting tip labels.
 #	           ncolors = The number of color bins for mapping rates to colors.
 #	           pal = A string or vector of strings to specify colors for mapping to rates. 
 #	                 Currently this may be one of the named diverging palette options
@@ -27,7 +28,7 @@
 #	                 two descendant branches from the root. rbf = 0.001 seems to be 
 #	                 a good first choice
 
-plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, hrates=TRUE, lwd=3, ncolors=64, pal='temperature', ...)
+plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, hrates=TRUE, lwd=3, cex=1, ncolors=64, pal='temperature', ...)
 {
 	if ('bamm-data' %in% class(ephy)) phy = as.phylo.bammdata(ephy) else phy = ephy;
 	if (class(phy) != 'phylo') stop('Trying to plot a non-tree object');
@@ -69,30 +70,34 @@ plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, hrates
 	
 	if (show)
 	{
-		plot.new();
+		plot.new(); ofs = 0;
+		if (labels)
+		{
+			ofs = max(nchar(phy$tip.label) * 0.03 * cex);
+		}
 		
 		if (method == 'polar') 
 		{
-			plot.window(xlim=c(-1,1)+c(-rb,rb),ylim=c(-1,1)+c(-rb,rb),asp=1);
+			plot.window(xlim=c(-1,1)+c(-rb,rb)+c(-ofs,ofs),ylim=c(-1,1)+c(-rb,rb)+c(-ofs,ofs),asp=1);
 			segments(x0,y0,x1,y1,col=edge.color,lwd=lwd,lend=2);	
 			arc(0,0,ret$arcs[,1],ret$arcs[,2],c(rb,rb+phy$end/tH),border=arc.color,lwd=lwd);
 			if(labels)
 			{
 				for(k in 1:length(phy$tip.label))
 				{
-					text(ret$segs[-1,][phy$edge[,2]==k,3],ret$segs[-1,][phy$edge[,2]==k,4],phy$tip.label[k],cex=0.5, srt = (180/pi)*ret$arcs[-1,][phy$edge[,2]==k,1],adj=c(0,NA));	
+					text(ret$segs[-1,][phy$edge[,2]==k,3],ret$segs[-1,][phy$edge[,2]==k,4],phy$tip.label[k],cex=cex, srt = (180/pi)*ret$arcs[-1,][phy$edge[,2]==k,1],adj=c(0,NA));	
 				}
 			}
 		}
 		if (method == 'phylogram')
 		{
-			plot.window(xlim=c(0,1),ylim=c(0,phy$Nnode*1/(phy$Nnode+1)),asp=1);
+			plot.window(xlim=c(0,1+ofs),ylim=c(0,phy$Nnode*1/(phy$Nnode+1)),asp=1);
 			segments(x0,y0,x1,y1,col=edge.color,lwd=lwd,lend=2);
 			isTip = phy$edge[,2] <= phy$Nnode+1; isTip = c(FALSE,isTip);
 			segments(ret$arcs[!isTip,1],ret$arcs[!isTip,2],ret$arcs[!isTip,3],ret$arcs[!isTip,4],col=arc.color[!isTip],lwd=lwd);
 			if(labels)
 			{
-				text(ret$segs[-1,][phy$edge[,2] <= phy$Nnode+1,3],ret$segs[-1,][phy$edge[,2] <= phy$Nnode+1,4], phy$tip.label, cex=0.5, pos=4, offset = 0.25);
+				text(ret$segs[-1,][phy$edge[,2] <= phy$Nnode+1,3],ret$segs[-1,][phy$edge[,2] <= phy$Nnode+1,4], phy$tip.label, cex=cex, pos=4, offset = 0.25);
 			}
 		}
 		if(hrates)
