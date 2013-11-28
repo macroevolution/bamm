@@ -53,7 +53,7 @@ getMarginalBranchRateMatrix <- function(obj, verbose=FALSE){
 		}
 	}
 	else if (class(obj[[1]]) == 'phylo'){
-		return(sapply(lambdatrees,with,edge.length))
+		return(sapply(obj,with,edge.length));
 	}
 }
 
