@@ -351,6 +351,8 @@ void Settings::printCurrentSettings(std::ostream& out) const
         log(Message, out) << std::right << std::setw(ppw) <<
             it->first << "    " << (it->second).value<std::string>() << "\n";
     }
+
+    log(Message, out) << std::flush;
 }
 
 
