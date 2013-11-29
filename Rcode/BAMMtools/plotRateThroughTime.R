@@ -18,7 +18,10 @@
 #	nodetype = supplied to getRateThroughTimeMatrix
 #	plot = boolean: if TRUE, a plot will be returned, if FALSE, the data for the plot will be returned. 
 #
-plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'speciation', nBins = 100, smooth = F, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = T){
+#	+ several undocumented args to set plot parameters: mar, cex, xline, yline, etc.
+#	
+
+plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'speciation', nBins = 100, smooth = F, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = T, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1)){
 	
 	if (!'bamm-data' %in% class(ephy)){
 		stop("Object ephy must be of class bamm-data\n");
@@ -98,6 +101,7 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 	#begin plotting
 	if (plot == T){
 		plot.new();
+		par(mar=mar);
 		plot.window(xlim=c(maxTime, 0), ylim=c(0 , max(poly[[1]][,2])));
 	
 		#plot intervals
@@ -108,10 +112,10 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 		}
 		lines(x = maxTime - rmat$time, y = avg, lwd = 3, col = avgCol);
 
-		axis(at=seq(0, 1.3*maxTime, by = 5), cex.axis = 1, side = 1);
-		axis(at=seq(-0.2, 1.2*max(rate), by=0.1), las=1, cex.axis = 1, side = 2);
-		mtext(side = 1, text = 'Time since present', line = 3, cex = 1.1);
-		mtext(side = 2, text = ratelabel, line = 3, cex = 1.1);
+		axis(at=seq(0, 1.3*maxTime, by = 5), cex.axis = cex.axis, side = 1);
+		axis(at=seq(-0.2, 1.2*max(rate), by=0.1), las=1, cex.axis = cex.axis, side = 2);
+		mtext(side = 1, text = 'Time since present', line = xline, cex = cex);
+		mtext(side = 2, text = ratelabel, line = yline, cex = cex);
 	}
 	if (plot == F){
 		return(list(poly = poly,avg = avg,times = rmat$time));
