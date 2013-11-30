@@ -1,6 +1,6 @@
 .. highlight:: none
 
-Configuration
+Configurations & Settings: BAMM for Trait Evolution
 =============
 
 

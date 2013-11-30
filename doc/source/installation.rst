@@ -1,6 +1,10 @@
 Installation
 ============
 
+This page needs a lot of work::
+	
+	** Not really done**
+
 1. Download the latest version of BAMM.
 
 2. This file is compressed. To uncompress it, run the following command

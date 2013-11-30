@@ -11,12 +11,14 @@ BAMM Documentation
    :numbered:
 
    introduction
-   template
-   installation
-   divcontrolconfiguration
-   traitconfiguration
-   running
-
+   bammgraph
+   sometheory
+   installation   
+   quickstart
+   configuration
+   postprocess
+   advanced
+   faq
 
 
 Indices and tables

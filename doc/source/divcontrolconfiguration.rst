@@ -1,6 +1,6 @@
 .. highlight:: none
 
-Configuration
+Parameters & Settings: speciation-extinction BAMM
 =============
 
 

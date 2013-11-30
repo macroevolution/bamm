@@ -1,10 +1,10 @@
 .. highlight:: none
 
-Configuration
+Configurations & Settings
 =============
 
 
-Control File
+The Control File
 ------------
 
 Configuration options and parameters in BAMM are specified in a *control file*,
