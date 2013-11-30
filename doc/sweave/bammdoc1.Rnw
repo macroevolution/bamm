@@ -459,8 +459,7 @@ results <- computeBayesFactors(postfile, priorfile,
 @ 
 
 
-Here, \code{models} is a vector of the models we wish to consider. In this example, we send the function the vector \code{0:3}, which corresponds to models $M_0$, $M_1$, $M_2$, and $M_3$. The \code{results} variable is a pairwise matrix of Bayes factors for the specified models. By default, they are always computed so that the model with the higher rank is the numerator, e.g., $M_2 / M_1$, not $M_1 / M_2$.
-
+Here, \code{models} is a vector of the models we wish to consider. In this example, we send the function the vector \code{0:3}, which corresponds to models $M_0$, $M_1$, $M_2$, and $M_3$. The \code{results} variable is a pairwise matrix of Bayes factors for the specified models. The models are computed such that $M_{i, j}$ has the row $i$ model on the numerator and column model $j$ on the denominator.
 
 <<eval=T>>=
 #Printing Bayes factor matrix:
@@ -478,18 +477,17 @@ sum(x_postburn$N_shifts == 10)
 @  
 
 
-Clearly, we can't very well compute an accurate Bayes Factor involving a model that is sampled so infrequently, and this is where Bayes Factor estimation is highly inaccurate. By default, \code{computeBayesFactors} restricts the set of possible models compared to the model set that explains 99.5\% of the total probability of the data. If you specify models outside of this range, you will receive a warning message, and the candidate model set will automatically be truncated:
-
+Clearly, we can't very well compute an accurate Bayes factor involving a model that is sampled so infrequently, and this is where Bayes factor estimation is highly inaccurate. If you try to compute the Bayes factor between two models that have been sampled less than \code{threshold} times (\code{threshold} is an argument to the function), your Bayes factor matrix will contain a \code{NA} value for that element. For example:
 
 <<eval=T>>=
-# Now consider models of rank 0:10
-moremodels <- 0:10
+# Now consider models of rank 0, 1, 2, 9, and 10:
+moremodels <- c(0:2, 9:10)
 r2 <- computeBayesFactors(postfile, priorfile, burnin, moremodels)
 r2
 @  
 
 
-In this example, models $M_4$ through $M_{10}$ were excluded, as the resulting Bayes factors would have low accuracy.
+In this example, we get \code{NA} values for comparisons between models $M_9$ and $M_{10}$. However, comparisons between these models and other models (e.g., $M_1$) did not lead to \code{NA}'s, because at least one model in the comparison was sampled with some frequency that the posterior odds for the models are less likely to be wildly inaccurate. The worst problems arise when you compute Bayes factors for two models that \textit{were not sampled}. You have no information about their posterior odds (although presumably you can infer that both models are pretty lousy, since they weren't sampled!) and the Bayes factor can be highly misleading as it merely reflect the prior odds. This is something of a special case, but please be aware of it when you explore Bayes factors for your data.
 
 \subsection{What to report for publication} 
 
