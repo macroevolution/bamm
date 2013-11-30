@@ -18,17 +18,20 @@
 #							e.g., 0:2 will compute all pairwise BF between models 
 #							with 0 to 2 process 
 #							(0 is a model with zero non-root processes)
+#							If is.null(modelset), this will assume modelset consists of 
+#							all sampled models
 #	
-#							Will only compute Bayes Factors for the set of models
-#							0:K that includes 99.5% of the sampled models. 
 #
-#  constrain			=   if TRUE, will restrict model comparisons only to those
-#							models that have been sampled with appreciable frequency	   
+#  threshold			=   Will only compute BF for a model comparison where 
+#	 						at least one of the models has been sampled at least
+#							threshold times. This avoids comparisons between two models
+#							that were very rarely or never sampled, which always implies
+#							highly inaccurate posterior probabilities	   
 #
 #
 #   Returns:  matrix w pairwise Bayes Factors
-#	By convention, the model with the higher index is the numerator for the calculation
-#	e.g., M2 / M1 or M1 / M0, but never M0 / M1.
+#			  BF_{i, j} is the Bayes factor between model i (numerator)
+#							and model j (denominator)
 #
 #	By default, odds ratios are computed as 
 #			(prior_odds_M2  + 1   ) / (prior_odds_M1 + 1)
@@ -38,12 +41,9 @@
 #   Dependency on BAMM MCMC output: if order of output columns 
 #		changes, it will break this function.
 	
-computeBayesFactors <- function(postfilename, priorfilename, burnin = 0.1, modelset = 0:5, constrain=TRUE){
+computeBayesFactors <- function(postfilename, priorfilename, burnin = 0.1, modelset = NULL, threshold = 1){
 
-	if (length(modelset) < 2){
-		stop('\nInvalid modelset argument. This must be a vector of length > 1');
-	}
-	
+
 	
 	post <- read.csv(postfilename, header=T);
 	prior <- read.csv(priorfilename, header=T);
@@ -51,31 +51,16 @@ computeBayesFactors <- function(postfilename, priorfilename, burnin = 0.1, model
 	post <- post[floor(burnin*nrow(post)):nrow(post), ];
 	prior <- prior[floor(burnin*nrow(prior)):nrow(prior), ];
 
-	
 	tpost <- table(post[,2]);
 	tprior <- table(prior[,2]);
-
-	fprobs <- cumsum(tpost) / sum(tpost);
- 	max_model <- NA;
- 	if (length(fprobs) == 1){
- 		max_model <- as.numeric(names(fprobs));
- 	}else{
- 		fprobs <- fprobs[fprobs < 0.999]; 		
- 	 	max_model <- as.numeric(names(fprobs[length(fprobs)]));
-	}
 	
-	if (constrain){
-		if (max_model < max(modelset)){
-			cat('*****************************************\n');
-			cat('You have selected to compute Bayes Factors for models');
-			cat('\n that were sampled very infrequently and for which\n');
-			cat(' the Bayes Factors are likely to be (wildly ) inaccurate.\n');
-			cat(' Consequently, the maximum rank of the models considered\n');
-			cat(' will be constrained to <<< ', max_model, ' >>>\n');
-			cat('*****************************************\n\n');
-
-		}		
-		modelset <- modelset[modelset <= max_model];		
+	
+	if (is.null(modelset)){
+		modelset <- unique(post[,2]);
+	}else if (length(modelset) < 2){
+		stop('\nInvalid modelset argument. This must be a vector of length > 1');
+	}else{
+		
 	}
 	
 	mset <- as.character(modelset);
@@ -99,17 +84,38 @@ computeBayesFactors <- function(postfilename, priorfilename, burnin = 0.1, model
 		stop('\nError. Invalid model choice - is rank of specified model too high?\n');
 	}
 	
-	for (i in 1:(length(modelset) - 1)){
-		for (j in (i+1):length(modelset)){
+	for (i in 1:length(modelset)){
+		
+		for (j in 1:length(modelset)){
 					
-			prior_odds <- (priorf[j] + 1) / (priorf[i] + 1);
-			post_odds <- (postf[j] + 1) / (postf[i] + 1);
+			prior_odds <- (priorf[i] + 1) / (priorf[j] + 1);
+			post_odds <- (postf[i] + 1) / (postf[j] + 1);
 			
-			mm[i , j] <- post_odds / prior_odds;
+			ix <- modelset[i];
+			ij <- modelset[j];
+			isGood_i <- sum(post[,2] == ix) >= threshold;
+			isGood_j <- sum(post[,2] == ij) >= threshold;
+		
+			if (isGood_i | isGood_j){
+				mm[i , j] <- post_odds / prior_odds;	
+			}
 			
 		}	
 		
 	}
+
+	
+	# for (i in 1:(length(modelset) - 1)){
+		# for (j in (i+1):length(modelset)){
+					
+			# prior_odds <- (priorf[j] + 1) / (priorf[i] + 1);
+			# post_odds <- (postf[j] + 1) / (postf[i] + 1);
+			
+			# mm[i , j] <- post_odds / prior_odds;
+			
+		# }	
+		
+	# }
 	
 	return(mm);
 	
