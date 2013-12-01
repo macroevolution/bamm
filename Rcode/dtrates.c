@@ -97,7 +97,7 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 		
 		eventSegs = PROTECT(VECTOR_ELT(getListElement(ephy, "eventBranchSegs"), k)); nprotect++;
 		eventData = PROTECT(VECTOR_ELT(getListElement(ephy, "eventData"), k)); nprotect++;
-		}
+		
 				
 		nrow = INTEGER(getAttrib(eventSegs, R_DimSymbol))[0];
 		place_holder = 0;
