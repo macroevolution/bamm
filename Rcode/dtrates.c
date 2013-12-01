@@ -70,10 +70,10 @@ or branch segments on the phylogeny.
 SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 {
 	double eps = REAL(tol)[0];
-	int smp = INTEGER(sample)[0];
 	
 	int k, j, l, nprotect = 0;
-	int nsamples = LENGTH(getListElement(ephy, "eventBranchSegs"));
+	//int nsamples = LENGTH(getListElement(ephy, "eventBranchSegs"));
+	int nsamples = LENGTH(sample);
 	
 	SEXP nodeseg = getMatrixColumn(segmat, 0); nprotect++;	
 	SEXP segbegin = getMatrixColumn(segmat, 1); nprotect++;
@@ -90,21 +90,14 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 	
 	int nrow, node, nnode, event, nxtevent, isGoodStart, isGoodEnd, place_holder;
 	double begin, end, Start, lam1, lam2, relStart, relEnd, rightshift, leftshift, ret;		
-	for (k = 0; k < nsamples; k++)
+	//for (k = 0; k < nsamples; k++)
+	for (k = INTEGER(sample)[0] - 1; k < INTEGER(sample)[nsamples - 1]; k++)
 	{
 		SEXP eventSegs, eventData;
 		
-		if (smp == 0)
-		{
-			eventSegs = PROTECT(VECTOR_ELT(getListElement(ephy, "eventBranchSegs"), k)); nprotect++;
-			eventData = PROTECT(VECTOR_ELT(getListElement(ephy, "eventData"), k)); nprotect++;
+		eventSegs = PROTECT(VECTOR_ELT(getListElement(ephy, "eventBranchSegs"), k)); nprotect++;
+		eventData = PROTECT(VECTOR_ELT(getListElement(ephy, "eventData"), k)); nprotect++;
 		}
-		else
-		{
-			eventSegs = PROTECT(VECTOR_ELT(getListElement(ephy, "eventBranchSegs"), smp - 1)); nprotect++;
-			eventData = PROTECT(VECTOR_ELT(getListElement(ephy, "eventData"), smp - 1)); nprotect++;
-			nsamples = 1;
-		}	
 				
 		nrow = INTEGER(getAttrib(eventSegs, R_DimSymbol))[0];
 		place_holder = 0;
@@ -187,7 +180,6 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 			}			
 		}
 		UNPROTECT(2); nprotect -= 2; //protected eventSegs and eventData, which we no longer need
-		if (smp != 0) break;
 	}
 	UNPROTECT(nprotect);
 	return rates;
