@@ -7,6 +7,13 @@
 #	Arguments: ephy = a bammdata object.
 #	           method = method used to plot the tree.
 #	                    May be 'polar' or 'phylogram'.
+#	           tau = fraction of tree height for approximation (e.g. 0.01).
+#	                 This is the step size used for calculating rate changes 
+#	                 along branches, so 0.01 is a step size equal to 1% of tree height.
+#	           index = index of posterior sample(s). Currently may be NULL or 
+#	                   a vector of integer values.  if NULL the function will use all 
+#	                   posterior samples, otherwise it will use only
+#	                   the samples specified in index.
 #	           show = TRUE or FALSE. If TRUE the tree will plot.
 #	           labels = TRUE or FALSE. If TRUE the tip labels will plot.
 #	           hrates = TRUE or FALSE. If TRUE a histogram is plotted in a separate
@@ -28,16 +35,10 @@
 #	                 two descendant branches from the root. rbf = 0.001 seems to be 
 #	                 a good first choice
 
-plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, hrates=TRUE, lwd=3, cex=1, ncolors=64, pal='temperature', ...)
+plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, show=TRUE, labels=FALSE, hrates=TRUE, lwd=3, cex=1, ncolors=64, pal='temperature', ...)
 {
-	if ('bamm-data' %in% class(ephy)) phy = as.phylo.bammdata(ephy) else phy = ephy;
-	if (class(phy) != 'phylo') stop('Trying to plot a non-tree object');
-	if(!'dtrates' %in% names(ephy))
-	{
-		warning('No rates to plot');
-		plot.phylo(phy,show.tip.label=FALSE);
-		return();
-	}
+	if ('bamm-data' %in% class(ephy)) phy = as.phylo.bammdata(ephy) else stop('Trying to work with a non-bammdata object');
+	ephy = dtRates(ephy, tau, index);
 	
 	if (method == 'polar')
 	{
