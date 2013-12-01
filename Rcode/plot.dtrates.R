@@ -38,7 +38,7 @@
 plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, show=TRUE, labels=FALSE, hrates=TRUE, lwd=3, cex=1, ncolors=64, pal='temperature', ...)
 {
 	if ('bamm-data' %in% class(ephy)) phy = as.phylo.bammdata(ephy) else stop('Trying to work with a non-bammdata object');
-	ephy = dtRates(ephy, tau, index);
+	if (!('dtrates' %in% names(ephy))) ephy = dtRates(ephy, tau, index);
 	
 	if (method == 'polar')
 	{
