@@ -266,7 +266,7 @@ dtRates = function(ephy, tau, ism = NULL)
 	if (storage.mode(ephy) != "list") stop('Exiting');
 	
 	if (is.null(ism)) ism = 0L else ism = as.integer(ism);
-	if (ism > length(ephy$eventBranchSegs) 
+	if (ism > length(ephy$eventBranchSegs) )
 	{
 		warning("Sample index out of range");
 		ism = 0L;
