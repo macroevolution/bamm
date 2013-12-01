@@ -24,5 +24,5 @@ shiftnodes.plot = function(ephy, method, index, cex=1, pch=21, col=1, bg=2)
 		XX = (rb+times/max(branching.times(ephy))) * cos(lastPP$theta[shiftnodes]);
 		YY = (rb+times/max(branching.times(ephy))) * sin(lastPP$theta[shiftnodes]);		
 	}	
-	points(XX,YY,pch=21,cex=cex,col=col,bg=bg);
+	points(XX,YY,pch=pch,cex=cex,col=col,bg=bg);
 }
