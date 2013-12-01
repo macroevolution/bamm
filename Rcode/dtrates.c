@@ -3,7 +3,7 @@
 
 //forward function declarations
 SEXP getListElement(SEXP list, char *str);
-SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol);
+SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample);
 SEXP getMatrixColumn(SEXP matrix, int col);
 double getMeanRateExponential(double t1, double t2, double p1, double p2);
 double getTimeIntegratedBranchRate(double t1, double t2, double p1, double p2);
@@ -67,9 +67,10 @@ times of approximating segments and starting and ending times of branches
 or branch segments on the phylogeny.
 ***/
 
-SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol)
+SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 {
 	double eps = REAL(tol)[0];
+	int smp = INTEGER(sample)[0];
 	
 	int k, j, l, nprotect = 0;
 	int nsamples = LENGTH(getListElement(ephy, "eventBranchSegs"));
@@ -92,10 +93,19 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol)
 	for (k = 0; k < nsamples; k++)
 	{
 		SEXP eventSegs, eventData;
-
-		eventSegs = PROTECT(VECTOR_ELT(getListElement(ephy, "eventBranchSegs"), k)); nprotect++;
-		eventData = PROTECT(VECTOR_ELT(getListElement(ephy, "eventData"), k)); nprotect++;
-					
+		
+		if (smp == 0)
+		{
+			eventSegs = PROTECT(VECTOR_ELT(getListElement(ephy, "eventBranchSegs"), k)); nprotect++;
+			eventData = PROTECT(VECTOR_ELT(getListElement(ephy, "eventData"), k)); nprotect++;
+		}
+		else
+		{
+			eventSegs = PROTECT(VECTOR_ELT(getListElement(ephy, "eventBranchSegs"), smp - 1)); nprotect++;
+			eventData = PROTECT(VECTOR_ELT(getListElement(ephy, "eventData"), smp - 1)); nprotect++;
+			nsamples = 1;
+		}	
+				
 		nrow = INTEGER(getAttrib(eventSegs, R_DimSymbol))[0];
 		place_holder = 0;
 		for(j = 0; j < nrow; j++) //move down the rows of eventSegs
@@ -177,6 +187,7 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol)
 			}			
 		}
 		UNPROTECT(2); nprotect -= 2; //protected eventSegs and eventData, which we no longer need
+		if (smp != 0) break;
 	}
 	UNPROTECT(nprotect);
 	return rates;

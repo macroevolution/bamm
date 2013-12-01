@@ -231,10 +231,14 @@ histRates = function(rates,pal,NCOLORS)
 #
 #	Arguments: ephy = a bammdata object
 #	           tau = fraction of tree height for approximation (e.g. 0.01)
+#	           ism = index of a posterior sample. Currently may be NULL or 
+#	                 a single value.  if NULL the function will use all 
+#	                 posterior samples, otherwise it will use only
+#	                 the specified sample.
 #
 #	Returns: an ephy object with a list appended containing a vector of branch
 #			 rates and the step size used for calculation.
-dtRates = function(ephy, tau)
+dtRates = function(ephy, tau, ism = NULL)
 {
 	if(!'bamm-data' %in% class(ephy))
 	{
@@ -261,10 +265,17 @@ dtRates = function(ephy, tau)
 	if (storage.mode(tol) != "double") stop('Exiting');
 	if (storage.mode(ephy) != "list") stop('Exiting');
 	
+	if (is.null(ism)) ism = 0L else ism = as.integer(ism);
+	if (ism > length(ephy$eventBranchSegs) 
+	{
+		warning("Sample index out of range");
+		ism = 0L;
+	}
+	
 	index = 1:nrow(segmat)
 	rownames(segmat) = index;
 	segmat = segmat[order(segmat[,1]),];
-	dtrates = .Call("dtrates", ephy, segmat, tol);
+	dtrates = .Call("dtrates", ephy, segmat, tol, ism);
 	names(dtrates) = rownames(segmat);
 	dtrates = dtrates[as.character(index)];
 	names(dtrates) = NULL;
