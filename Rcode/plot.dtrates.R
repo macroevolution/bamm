@@ -200,13 +200,13 @@ histRates = function(rates,pal,NCOLORS)
 {
 	fx = density(rates);
 	dpal = c('BrBG','PiYG','PuOr','RdBu','RdGy','RdYlBu','RdYlGn','Spectral');
-	if(pal %in% dpal)
-	{
-		rate.colors = colorRampPalette(rev(brewer.pal(3,pal)),space='Lab')(NCOLORS);
-	}
-	else if(length(pal) == 3)
+	if(length(pal) == 3)
 	{
 		rate.colors = colorRampPalette(pal,space='Lab')(NCOLORS);	
+	}
+	else if(pal %in% dpal)
+	{
+		rate.colors = colorRampPalette(rev(brewer.pal(3,pal)),space='Lab')(NCOLORS);
 	}
 	else if(pal == 'temperature')
 	{
@@ -512,13 +512,13 @@ colorMap = function(x, pal, NCOLORS)
 {
 	dpal = c('BrBG','PiYG','PuOr','RdBu','RdGy','RdYlBu','RdYlGn','Spectral');
 	colset = numeric(length(x));
-	if(pal %in% dpal)
-	{
-		colpalette = colorRampPalette(rev(brewer.pal(3,pal)),space='Lab')(NCOLORS);
-	}
-	else if(length(pal) == 3)
+	if(length(pal) == 3)
 	{
 		colpalette = colorRampPalette(pal,space='Lab')(NCOLORS);	
+	}
+	else if(pal %in% dpal)
+	{
+		colpalette = colorRampPalette(rev(brewer.pal(3,pal)),space='Lab')(NCOLORS);
 	}
 	else if(pal == 'temperature')
 	{
