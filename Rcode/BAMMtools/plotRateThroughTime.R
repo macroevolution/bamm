@@ -3,6 +3,8 @@
 #
 #	plotRateThroughTime <- function(...)
 #
+#	ephy = object of class bamm-data or bamm-ratematrix
+#		if bamm-ratematrix, start.time, end.time, node, nslices, nodetype are not used.
 #	useMedian = boolean, will plot median if TRUE, mean if FALSE.
 #	intervals if NULL, no intervals will be plotted, otherwise a vector of quantiles must be supplied (these will define shaded polygons)
 #	ratetype = 'speciation' or 'extinction' or 'netdiv' or 'trait'
@@ -17,14 +19,16 @@
 #	node = if supplied, the clade descended from this node will be used.
 #	nodetype = supplied to getRateThroughTimeMatrix
 #	plot = boolean: if TRUE, a plot will be returned, if FALSE, the data for the plot will be returned. 
+#	xticks = number of ticks on the x-axis.
+#	yticks = number of ticks on the y-axis.
 #
 #	+ several undocumented args to set plot parameters: mar, cex, xline, yline, etc.
 #	
 
-plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'speciation', nBins = 100, smooth = F, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = T, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1)){
+plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'speciation', nBins = 100, smooth = F, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = T, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5){
 	
-	if (!'bamm-data' %in% class(ephy)){
-		stop("Object ephy must be of class bamm-data\n");
+	if (!'bamm-data' %in% class(ephy) & !'bamm-ratematrix' %in% class(ephy)){
+		stop("ERROR: Object ephy must be of class bamm-data\n or bamm-ratematrix.");
 	}
 	if (!is.logical(useMedian)){
 		stop('ERROR: useMedian must be either TRUE or FALSE.');
@@ -32,9 +36,21 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 	if (class(intervals)!='numeric' & class(intervals)!='NULL'){
 		stop("ERROR: intervals must be either 'NULL' or a vector of quantiles.");
 	}
+	if (!ratetype %in% c('speciation','trait','extinction','netdiv')){
+		stop("ERROR: ratetype must be either 'speciation', 'extinction','netdiv' or 'trait'.");
+	}
+	if (!is.logical(smooth)){
+		stop('ERROR: smooth must be either TRUE or FALSE.');
+	}
 
-	#get rates through binned time
-	rmat <- getRateThroughTimeMatrix(ephy, start.time = start.time, end.time = end.time,node = node, nslices = nBins, nodetype=nodetype);
+	if ('bamm-data' %in% class(ephy)){
+		#get rates through binned time
+		rmat <- getRateThroughTimeMatrix(ephy, start.time = start.time, end.time = end.time,node = node, nslices = nBins, nodetype=nodetype);
+	}
+	if ('bamm-ratematrix' %in% class(ephy)){
+		#use existing rate matrix
+		rmat <- ephy;
+	}
 
 	#set appropriate rates
 	if (ratetype != 'speciation' & ratetype != 'extinction' & ratetype != 'netdiv' & ratetype != 'trait'){
@@ -48,7 +64,6 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 		rate <- rmat$lambda;
 		ratelabel <- 'BM rate';
 	}
-
 	if (ratetype == 'extinction'){
 		rate <- rmat$mu;
 		ratelabel <- 'Extinction';
@@ -112,8 +127,9 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 		}
 		lines(x = maxTime - rmat$time, y = avg, lwd = 3, col = avgCol);
 
-		axis(at=seq(0, 1.3*maxTime, by = 5), cex.axis = cex.axis, side = 1);
-		axis(at=seq(-0.2, 1.2*max(rate), by=0.1), las=1, cex.axis = cex.axis, side = 2);
+		axis(at=round(seq(0, 1.3*maxTime, length.out=xticks+1)), labels = round(seq(0, 1.3*maxTime, length.out=xticks+1)), cex.axis = cex.axis, side = 1);
+		axis(at=c(-0.2,seq(0, 1.2*max(rate), length.out=yticks+1)), labels = c(-0.2,round(seq(0, 1.2*max(rate), length.out=yticks+1),digits=1)), las=1, cex.axis = cex.axis, side = 2);
+
 		mtext(side = 1, text = 'Time since present', line = xline, cex = cex);
 		mtext(side = 2, text = ratelabel, line = yline, cex = cex);
 	}
