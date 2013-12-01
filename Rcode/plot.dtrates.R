@@ -240,6 +240,9 @@ dtRates = function(ephy, tau)
 	{
 		stop('Function requires a bammdata object');
 	}
+	
+	ephy$eventBranchSegs = lapply(ephy$eventBranchSegs, function(x) x[order(x[,1]), ]); 
+	
 	phy = as.phylo.bammdata(ephy);
 	phy = getStartStopTimes(phy);
 	if(attributes(phy)$order != 'cladewise')
