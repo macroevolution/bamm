@@ -1,4 +1,4 @@
-shiftnodes = function(ephy, method, index, cex, col)
+shiftnodes.plot = function(ephy, method, index, cex=1, pch=21, col=1, bg=2)
 {
 	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv);
 	
@@ -24,5 +24,5 @@ shiftnodes = function(ephy, method, index, cex, col)
 		XX = (rb+times/max(branching.times(ephy))) * cos(lastPP$theta[shiftnodes]);
 		YY = (rb+times/max(branching.times(ephy))) * sin(lastPP$theta[shiftnodes]);		
 	}	
-	points(XX,YY,pch=21,cex=cex,bg=col);
+	points(XX,YY,pch=21,cex=cex,col=col,bg=bg);
 }
