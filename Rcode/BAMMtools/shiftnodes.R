@@ -1,5 +1,6 @@
 shiftnodes.plot = function(ephy, method, index, cex=1, pch=21, col=1, bg=2)
 {
+	if (!('bamm-data' %in% class(ephy))) stop("Function requires bammdata object");
 	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv);
 	
 	shiftnodes = getShiftNodesFromIndex(ephy, index);
