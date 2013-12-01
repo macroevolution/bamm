@@ -11,7 +11,7 @@
 #							Uses fraction (e.g, 0.25 = 25% discarded)
 #	type				=	specifies whether eventfilename refers to trait or diversification data
 #	header				=	Boolean to flag whether eventfilename contains a header
-getEventData_New <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=FALSE, assign.type = 'new_way', type = 'diversification', header=TRUE){
+getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=FALSE, assign.type = 'new_way', type = 'diversification', header=TRUE){
 	
 	if (type != 'diversification' & type != 'traits'){
 		stop("Invalid 'type' specification. Should be 'diversification' or 'traits'");
