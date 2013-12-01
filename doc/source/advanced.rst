@@ -51,7 +51,7 @@ Here, we are simply setting the time-variation parameter (lambdaShift) of the BA
 
 BAMM is sufficiently flexible as to allow a number of permutations on these general themes. In addition, the modifications to model setup described here also apply to trait evolution, where you could just as easily constrain a phenotypic analysis to involve only time-invariant Brownian motion processes (similar to the *Auteur* package for R), with the following code::
 	
-	updateRateBetaShift = 1
+	updateRateBetaShift = 0.0
  	
  	betaShiftInit = 0.0
  

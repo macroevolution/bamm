@@ -2,21 +2,25 @@
 Some important theoretical background
 ================================
 
-This section is not done::
-	
-	**stuff needs to be done**
 
 Event-Driven Model for Rate Variation
 -------------------------
 
+**Under construction**
 
 Reversible Jump MCMC
 --------------------------
 
+**Under construction**
 
 Functional Models for Rate Variation
 ----------------------------
 
+**Under construction**
 
+.. _rateshiftstheory:
 The Meaning of *Rate Shifts*
 ------------------------------
+
+**Under construction**
+
