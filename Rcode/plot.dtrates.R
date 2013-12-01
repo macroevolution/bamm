@@ -106,7 +106,15 @@ plot.dtrates = function(ephy, method='phylogram',show=TRUE, labels=FALSE, hrates
 			histRates(ephy$dtrates$rates,pal,ncolors);
 		}
 	}
-	
+	index = order(as.numeric(rownames(ret$segs)));
+	if (method == 'phylogram')
+	{
+		assign("last_plot.phylo", list(Ntip = phy$Nnode+1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index,3], yy = ret$segs[index,4]), envir = .PlotPhyloEnv);
+	}
+	else if (method == 'polar')
+	{
+		assign("last_plot.phylo", list(Ntip = phy$Nnode+1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index,3], yy = ret$segs[index,4], theta = ret$segs[index,5], rb = rb), envir = .PlotPhyloEnv);
+	}
 	invisible(ret$segs[-1,]);
 }
 
