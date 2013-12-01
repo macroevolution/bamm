@@ -231,10 +231,11 @@ histRates = function(rates,pal,NCOLORS)
 #
 #	Arguments: ephy = a bammdata object
 #	           tau = fraction of tree height for approximation (e.g. 0.01)
-#	           ism = index of a posterior sample. Currently may be NULL or 
-#	                 a single value.  if NULL the function will use all 
+#	           ism = index of posterior sample(s). Currently may be NULL or 
+#	                 a vector of integer values.  if NULL the function will use all 
 #	                 posterior samples, otherwise it will use only
-#	                 the specified sample.
+#	                 the samples corresponding to the indices in ism,
+#	                 e.g. 50, e.g. 50:100.
 #
 #	Returns: an ephy object with a list appended containing a vector of branch
 #			 rates and the step size used for calculation.
@@ -265,11 +266,11 @@ dtRates = function(ephy, tau, ism = NULL)
 	if (storage.mode(tol) != "double") stop('Exiting');
 	if (storage.mode(ephy) != "list") stop('Exiting');
 	
-	if (is.null(ism)) ism = 0L else ism = as.integer(ism);
-	if (ism > length(ephy$eventBranchSegs) )
+	if (is.null(ism)) ism = as.integer(1:length(ephy$eventBranchSegs)) else ism = as.integer(ism);
+	if (ism[length(ism)] > length(ephy$eventBranchSegs) )
 	{
 		warning("Sample index out of range");
-		ism = 0L;
+		ism = as.integer(1:length(ephy$eventBranchSegs));
 	}
 	
 	index = 1:nrow(segmat)
