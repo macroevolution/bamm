@@ -47,6 +47,7 @@ Bayes factors
 
    Figure X: Pairwise matrix of Bayes factors for the JEA bird phylogeny (Jetz *et al*, **Nature**, 491:444-448, 2012). Orange/red colors involve decisive comparisons between models (Bayes factor evidence > 100). Color bar on right gives interpretation of colors in units of log(Bayes factor). Models with fewer than 50 processes fare poorly when compared to models with approximately 55 - 65 processes. This suggests the presence of massive diversification rate heterogeneity across the avian phylogeny. R code here (**link**).
 
+
 Maximum shift credibility tree
 -----------------------
 
@@ -57,7 +58,7 @@ Maximum shift credibility tree
    
    Figure X: The *maximum shift credibility configuration* (or *MSC* tree) for the JEA bird phylogeny (6670 tips). The MSC tree displays the joint distribution of rate shift configurations that maximize the marginal probability of the data. This is analogous to the *maximum clade credibility tree* in Bayesian phylogenetic analyses. Tree shows the location of shifts, as well as their marginal probabilities (color and size). It is important to recognize that rate shifts with low marginal probability (e.g., blue nodes) can still be consistent with extremely high *cumulative* shift probabilities (see `Cumulative Shift Probability`_). R code here (**link**).
       
-	
+      
 Cumulative shift probability
 -----------------------------
 .. _cst: 

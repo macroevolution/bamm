@@ -13,22 +13,28 @@ Currently, a note describing the BAMM software and BAMMtools R library is in rev
 	Rabosky and Matute
 
 
+
 BAMM extensions
 ------------
 We are currently testing extensions of BAMM that allow modeling evolutionary dynamics under a much greater range of phenotypic evolutionary scenarios, as well as the incorporation of paleontological data. Bleeding edge releases of BAMM can be obtained from here (**link**).
 
 
-Problems running BAMM & general setup
+Problems running BAMM
 ......
 
 
 I can't get BAMM to run on my system
 ------
+
+**Under construction**
+
 Brief list of possible things to try.
 
 
 I get an error message when I try to run BAMM
 ------
+
+**Under construction**
 
 This section needs to explain common error messages obtained with BAMM. For example,::
 	
@@ -64,6 +70,17 @@ If you compiled BAMM on your system, please send details about the compiler used
 If BAMM actually begins to perform an analysis, then it will also generated a detailed run_info file that contains information about your analysis. Please include this file in your bug description. 
 
 
+Troubleshooting BAMM runs
+.............
+
+This section addresses a few of the most commonly-encountered problems with BAMM.
+
+Resolving convergence problems
+---------------
+
+**Under construction**
+
+
 The model and approximations
 .........
 
@@ -81,6 +98,17 @@ We have conducted extensive performance evaluations where we have simulated data
 It is (vastly) more efficient computationally to work with the exponential change model than the formal diversity-dependent model, and calculations of single likelihoods on phylogenies can be many orders of magnitude faster with the exponential approximation than with the formal diversity-dependent model. The multi-process explorations of macroevolutionary dynamics that are possible with BAMM wouldn't really be feasible without the ability to quickly compute likelihoods. 
  
 As an aside, the user is encouraged to remember that all analytically tractable models of diversity-dependence (e.g., Rabosky & Lovette, *Proc. R. Soc. B.*, 2008; or Etienne *et. al.*, *Proc. R. Soc. B*, 2011) are models that we are imposing on the data: there is no reason why a true diversity-dependent process need follow a linear model.
+ 
+ 
+Other questions
+.................
+
+What about the joint diversification-trait evolution process implemented in the 2013 *Nature Communications* paper?
+--------------------
+ 
+**Under construction** 
+ 
+ 
  
  
  

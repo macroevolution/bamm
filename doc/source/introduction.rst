@@ -19,13 +19,13 @@ Brief Overview of BAMM Functionality
 Allows modeling of rates *through time* and *among clades*
 ....................................
 
-BAMM abandons the simple notion of *rate shifts* involving constant-rate diversification processes. A *rate shift* in the BAMM environment is a shift in the evolutionary dynamics of a system and can involve shifts to new time-varying or diversity-dependent evolutionary rate regimes.
+BAMM abandons the simple notion of *rate shifts* involving constant-rate diversification processes. A rate shift in the BAMM environment is a shift in the evolutionary dynamics of a system and can involve shifts to new time-varying or diversity-dependent evolutionary rate regimes.
 
 
 Detect evolutionary rate heterogeneity
 ..............................
 
-BAMM allows explicit tests of the hypothesis that a single process of diversification can account for a given phylogenetic pattern. The program automatically explores many candidate models of diversification and provides a variety of tools for interpretation. BAMM enables estimation of Bayesian credible intervals on the number of distinct macroevolutionary regimes, calculation of Bayes factors for pairwise evaluation of model fit, and calculation of model posterior probabilities. The user can easily determine the evidence favoring *rate variation* within phylogenies.
+BAMM allows explicit tests of the hypothesis that a single process of diversification can account for a given phylogenetic pattern. The program automatically explores many candidate models of diversification and provides a variety of tools for interpretation. BAMM enables estimation of Bayesian credible intervals on the number of distinct macroevolutionary regimes, calculation of Bayes factors for pairwise evaluation of model fit, and calculation of model posterior probabilities. The user can easily determine the evidence favoring rate variation within phylogenies.
 
 
 
@@ -42,11 +42,11 @@ BAMMtools is a comprehensive R library for the analysis and visualization of mac
 
 Account for *non-random* taxon sampling
 ............................
-Speciation-extinction calculations in BAMM account for incomplete taxon sampling analytically. The program is designed to work with datasets that contain large numbers of missing species, and taxon sampling can be phylogenetically *non-random*. The only requirement is that the user is able to specify how taxon sampling varies across the tree. For example, you can allow individual clades (such as genera or families) in a large phylogenetic tree to have different sampling probabilities. See XXX crossreference XXX for more information.
+Speciation-extinction calculations in BAMM account for incomplete taxon sampling analytically. The program is designed to work with datasets that contain large numbers of missing species, and taxon sampling can be phylogenetically non-random. The only requirement is that the user is able to specify how taxon sampling varies across the tree. For example, you can allow individual clades (such as genera or families) in a large phylogenetic tree to have different sampling probabilities. See XXX crossreference XXX for more information.
 
 Better than stepwise AIC
 ......................
-Many methods for modeling evolutionary dynamics use stepwise AIC-based approaches that are limited to identifying a single *best* model. These approaches are inherently limited, because many distinct combinations of evolutionary shift regimes might have roughly equal probabilities. Rather than identifying a single *best* configuration of rate shifts, BAMM samples rate shift configurations in proportion to their posterior probability.
+Many methods for modeling evolutionary dynamics use stepwise AIC-based approaches that are limited to identifying a single best model. These approaches are inherently limited, because many distinct combinations of evolutionary shift regimes might have roughly equal probabilities. Rather than identifying a single best configuration of rate shifts, BAMM samples rate shift configurations in proportion to their posterior probability.
 
 
 
