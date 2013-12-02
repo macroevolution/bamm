@@ -16,8 +16,9 @@
 #	                   the samples specified in index.
 #	           show = TRUE or FALSE. If TRUE the tree will plot.
 #	           labels = TRUE or FALSE. If TRUE the tip labels will plot.
-#	           hrates = TRUE or FALSE. If TRUE a histogram is plotted in a separate
+#	           hrates = TRUE or FALSE. If TRUE a histogram is plotted in the same
 #	                    device for interpreting the meaning of plotted colors.
+#	                    You will be asked to supply an anchor point for plotting.
 #	           lwd = The line width used for plotting the tree.
 #	           cex = Character expansion for plotting tip labels.
 #	           ncolors = The number of color bins for mapping rates to colors.
@@ -103,7 +104,6 @@ plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, show=TRU
 		}
 		if(hrates)
 		{
-			dev.new(width=3,height=3);
 			histRates(ephy$dtrates$rates,pal,ncolors);
 		}
 	}
@@ -198,6 +198,7 @@ setPhyloTreeCoords = function(phy)
 
 histRates = function(rates,pal,NCOLORS)
 {
+	opar = par(no.readonly = TRUE);
 	fx = density(rates);
 	dpal = c('BrBG','PiYG','PuOr','RdBu','RdGy','RdYlBu','RdYlGn','Spectral');
 	if(length(pal) == 3)
@@ -213,6 +214,13 @@ histRates = function(rates,pal,NCOLORS)
 		rate.colors = rich.colors(NCOLORS);	
 	}
 	qx = quantile(rates,seq(0,1,length.out = NCOLORS+1));
+	cat("Click once where you want the lower left corner of the figure\n");
+	cxy = locator(n=1);
+	xc = (grconvertX(cxy$x,to='ndc'));
+	yc = (grconvertY(cxy$y,to='ndc'));
+	ofs = min(1 - xc, 1 - yc);
+	fig = c(xc,xc+ofs,yc,yc+ofs);
+	par(fig = fig, new=TRUE, xpd=TRUE, mar=c(1.5,1.5,0.25,0));
 	plot.new();
 	plot.window(xlim=c(0,max(fx$x)),ylim=c(0,max(fx$y)));
 	for(i in 1:length(fx$x))
@@ -223,10 +231,11 @@ histRates = function(rates,pal,NCOLORS)
 		bcol = rate.colors[index];
 		segments(fx$x[i],fx$y[i],fx$x[i],0,lend=2,col=bcol);
 	}
-	axis(1,round(seq(0,max(fx$x),length.out=5),2),pos=0,cex.axis=0.75);
-	axis(2,round(seq(0,max(fx$y),length.out=3),2),las=1,pos=0,cex.axis=0.75);
-	mtext('Evolutionary Rate',1,line=2,cex=0.75);
-	mtext('Density',2,line=2.5,cex=0.75);
+	axis(1,round(seq(0,max(fx$x),length.out=5),1),pos=0,cex.axis=0.75,tcl=NA,mgp=c(0,0.25,0));
+	axis(2,round(seq(0,max(fx$y),length.out=3),0),las=1,pos=0,cex.axis=0.75,tcl=NA,mgp=c(0,0.25,0));
+	mtext('Evolutionary Rate',1,line=1,cex=0.75);
+	mtext('Density',2,line=1,cex=0.75);
+	par(opar);
 }
 
 
