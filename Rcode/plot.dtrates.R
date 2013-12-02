@@ -220,7 +220,7 @@ histRates = function(rates,pal,NCOLORS)
 	yc = (grconvertY(cxy$y,to='ndc'));
 	ofs = min(1 - xc, 1 - yc);
 	fig = c(xc,xc+ofs,yc,yc+ofs);
-	par(fig = fig, new=TRUE, xpd=TRUE, mar=c(1.5,1.5,0.25,0));
+	par(fig = fig, new=TRUE, xpd=TRUE, mar=c(1.5,1.5,0.25,0.25));
 	plot.new();
 	plot.window(xlim=c(0,max(fx$x)),ylim=c(0,max(fx$y)));
 	for(i in 1:length(fx$x))
