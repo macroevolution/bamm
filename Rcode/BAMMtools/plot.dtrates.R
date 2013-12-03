@@ -14,6 +14,11 @@
 #	                   a vector of integer values.  if NULL the function will use all 
 #	                   posterior samples, otherwise it will use only
 #	                   the samples specified in index.
+#	           vtheta = specifies the angle in degrees separating the first and last
+#	                    tips to prevent over plotting. Ignored if method = 'phylogram'.
+#	           rbf = specifies the length of the root branch as a fraction of the 
+#	                 total tree height. rbf > 0 will cause an arc to connect the immediate
+#	                 descendants of the root branch. Ignored if method = 'phylogram'. 
 #	           show = TRUE or FALSE. If TRUE the tree will plot.
 #	           labels = TRUE or FALSE. If TRUE the tip labels will plot.
 #	           hrates = TRUE or FALSE. If TRUE a histogram is plotted in the same
@@ -28,15 +33,9 @@
 #	                 a vector of 3 valid named colors, or the string 'temperature'. 
 #	                 The first and last options require RColorBrewer and gplots packages,
 #	                 respectively
-#	           ... = arguments passed to function used for polar tree plotting.
-#	                 These should be 'vtheta', which specifies the angle in degrees
-#	                 separating the first and last tips, and 'rbf', which specifies
-#	                 the length of the root branch as a fraction of the total tree
-#	                 height.  Values rbf > 0 will allow an arc between the first
-#	                 two descendant branches from the root. rbf = 0.001 seems to be 
-#	                 a good first choice
-
-plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, show=TRUE, labels=FALSE, hrates=TRUE, lwd=3, cex=1, ncolors=64, pal='Spectral', ...)
+#	           ... = further arguments passed to par to control plotting, e.g. mar.
+#
+plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5, rbf=0.001, show=TRUE, labels=FALSE, hrates=FALSE, lwd=3, cex=1, ncolors=64, pal='Spectral', ...)
 {
 	if ('bamm-data' %in% class(ephy)) phy = as.phylo.bammdata(ephy) else stop('Trying to work with a non-bammdata object');
 	if (!is.binary.tree(phy)) stop('Function requires fully bifurcating tree.');
@@ -50,9 +49,7 @@ plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, show=TRU
 	
 	if (method == 'polar')
 	{
-		if(!hasArg(vtheta) & !hasArg(rbf)) stop('vtheta and rbf are needed to plot in polar format');
 		phy = getStartStopTimes(phy);
-		vtheta = list(...)$vtheta; rbf = list(...)$rbf;
 		ret = setPolarTreeCoords(phy,vtheta,rbf);
 		tH = max(branching.times(phy));
 		rb = tH*rbf;
@@ -79,6 +76,8 @@ plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, show=TRU
 	
 	if (show)
 	{
+		op = par(no.readonly=TRUE);
+		par(...);
 		plot.new(); ofs = 0;
 		if (labels)
 		{
@@ -123,5 +122,6 @@ plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, show=TRU
 	{
 		assign("last_plot.phylo", list(Ntip = phy$Nnode+1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index,3], yy = ret$segs[index,4], theta = ret$segs[index,5], rb = rb), envir = .PlotPhyloEnv);
 	}
+	par(op);
 	invisible(ret$segs[-1,]);
 }
