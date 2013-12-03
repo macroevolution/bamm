@@ -44,7 +44,9 @@ subsetEventData <- function(ephy, index=NULL){
 	
 	obj$type <- ephy$type;
 	
+
 	class(obj) <- c('phylo', 'bamm-data');
+	attributes(obj)$order = attributes(ephy)$order;	
 	return(obj);
 	
 }
