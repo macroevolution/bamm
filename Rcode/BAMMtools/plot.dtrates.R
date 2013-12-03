@@ -39,6 +39,8 @@
 plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, show=TRUE, labels=FALSE, hrates=TRUE, lwd=3, cex=1, ncolors=64, pal='Spectral', ...)
 {
 	if ('bamm-data' %in% class(ephy)) phy = as.phylo.bammdata(ephy) else stop('Trying to work with a non-bammdata object');
+	if (!is.binary.tree(phy)) stop('Function requires fully bifurcating tree.');
+	if (any(phy$edge.length == 0)) warning('Tree contains zero length branches. Rates for these will be NA and coerced to zero');
 	if (!('dtrates' %in% names(ephy))) ephy = dtRates(ephy, tau, index);
 	if(sum(is.na(ephy$dtrates$rates))) 
 	{
