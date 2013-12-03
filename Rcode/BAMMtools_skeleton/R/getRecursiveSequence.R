@@ -1,10 +1,5 @@
-#############################################################
-#
-#	getRecursiveSequence(....)
-#
-#	Private function, called by getEventDataDiversification
-
-getRecursiveSequence <- function(phy){
+getRecursiveSequence <-
+function(phy){
 		
 	root.node <- length(phy$tip.label) + 1;
 	
