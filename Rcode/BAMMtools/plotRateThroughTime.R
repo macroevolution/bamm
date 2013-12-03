@@ -121,24 +121,24 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 		if (add == F){
 			plot.new();
 			par(mar=mar);
-			if (xlim == 'auto' & ylim == 'auto'){
+			if (unique(xlim == 'auto') & unique(ylim == 'auto')){
 				plot.window(xlim=c(maxTime, 0), ylim=c(0 , max(poly[[1]][,2])));
-				xMin <- 0;
-				xMax <- maxTime;
+				xMin <- maxTime;
+				xMax <- 0;
 				yMin <- 0;
 				yMax <- max(poly[[1]][,2]);
 			}
-			if (xlim != 'auto'){
+			if (unique(xlim != 'auto') & unique(ylim == 'auto')){
 				plot.window(xlim = xlim, ylim=c(0 , max(poly[[1]][,2])));
-				xMin <- xlim[2];
-				xMax <- xlim[1];
+				xMin <- xlim[1];
+				xMax <- xlim[2];
 				yMin <- 0;
 				yMax <- max(poly[[1]][,2]);
 			}
-			if (ylim != 'auto'){
+			if (unique(xlim == 'auto') & unique(ylim != 'auto')){
 				plot.window(xlim=c(maxTime, 0), ylim=ylim);
-				xMin <- 0;
-				xMax <- maxTime;
+				xMin <- maxTime;
+				xMax <- 0;
 				yMin <- ylim[1];
 				yMax <- ylim[2];
 			}
@@ -151,7 +151,7 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 		}
 		lines(x = maxTime - rmat$time, y = avg, lwd = 3, col = avgCol);
 
-		axis(at=c(-1,round(seq(xMin, 1.3*xMax, length.out=xticks+1))), labels = c(-1,round(seq(xMin, 1.3*xMax, length.out=xticks+1))), cex.axis = cex.axis, side = 1);
+		axis(at=c(1.3*xMin,round(seq(xMin,xMax, length.out=xticks+1))), labels = c(1.3*xMin,round(seq(xMin, xMax, length.out=xticks+1))), cex.axis = cex.axis, side = 1);
 		axis(at=c(-0.2,seq(yMin, 1.2*yMax, length.out=yticks+1)), labels = c(-0.2,round(seq(yMin, 1.2*yMax, length.out=yticks+1),digits=1)), las=1, cex.axis = cex.axis, side = 2);
 
 		mtext(side = 1, text = 'Time since present', line = xline, cex = cex);
