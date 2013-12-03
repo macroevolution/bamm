@@ -5,7 +5,7 @@ BAMM graph gallery
 Tree-wide diversification heterogeneity
 -----------------------
 .. _dtpolar: 
-.. figure:: figs/dtrates_polar.pdf
+.. figure:: figs/xPolarRates_whales.png
    :width: 400
    :align: center
 
@@ -23,7 +23,7 @@ Some tree showing phenotypic evolutionary rates::
 Evolutionary rate variation through time 
 -----------------------
 .. _rttwhale: 
-.. figure:: figs/whales_through_time.pdf
+.. figure:: figs/xGrayscaleWhalerates.png
    :width: 700
    :align: center
 
@@ -41,7 +41,7 @@ Bayes factors
 ----------------
 
 .. _pwbffig: 
-.. figure:: figs/BF_pairwise.pdf
+.. figure:: figs/xBayesFactorsJetzPW.png
    :width: 640
    :align: center
 
@@ -52,7 +52,7 @@ Maximum shift credibility tree
 -----------------------
 
 .. _maxcredibility: 
-.. figure:: figs/maxshiftcredibility.pdf
+.. figure:: figs/xMaxCredShiftTree.png
    :width: 700
    :align: center
    
@@ -62,7 +62,7 @@ Maximum shift credibility tree
 Cumulative shift probability
 -----------------------------
 .. _cst: 
-.. figure:: figs/cumulativeST.pdf
+.. figure:: figs/xCumShiftTree.png
    :width: 700
    :align: center
    

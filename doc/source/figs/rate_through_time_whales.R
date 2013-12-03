@@ -10,7 +10,7 @@
 
 eventfname <- '/Users/danrabosky/DanWork/bamm/devel/bamm/doc/sweave/data/event_data.txt';
 whaletree <- read.tree('/Users/danrabosky/DanWork/bamm/devel/bamm/doc/sweave/data/whaletree.tre')
-source('/Users/danrabosky/DanWork/bamm/devel/bamm/doc/sweave/BAMMtools.R')
+source('/Users/danrabosky/DanWork/bamm/devel/bamm/Rcode/Load_BAMMtools.R')
 
 
 ## Process the event data
