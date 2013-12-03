@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>4. Configuration &mdash; bamm 1.0 documentation</title>
+    <title>Parameters &amp; Settings: speciation-extinction BAMM &mdash; bamm 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,9 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 1.0 documentation" href="index.html" />
-    <link rel="next" title="5. Running BAMM" href="running.html" />
-    <link rel="prev" title="3. Installation" href="installation.html" /> 
+    <link rel="top" title="bamm 1.0 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -34,12 +32,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="running.html" title="5. Running BAMM"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="installation.html" title="3. Installation"
-             accesskey="P">previous</a> |</li>
         <li><a href="index.html">bamm 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
@@ -47,28 +39,22 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">4. Configuration</a><ul>
-<li><a class="reference internal" href="#control-file">4.1. Control File</a></li>
-<li><a class="reference internal" href="#general-setup-data-input">4.2. General Setup &amp; Data Input</a><ul>
-<li><a class="reference internal" href="#general">4.2.1. General</a></li>
-<li><a class="reference internal" href="#priors">4.2.2. Priors</a></li>
-<li><a class="reference internal" href="#mcmc-simulation-settings-output-options">4.2.3. MCMC Simulation Settings &amp; Output Options</a></li>
-<li><a class="reference internal" href="#mcmc-scaling-operators">4.2.4. MCMC Scaling Operators</a></li>
-<li><a class="reference internal" href="#mcmc-move-frequencies">4.2.5. MCMC Move Frequencies</a></li>
-<li><a class="reference internal" href="#initial-parameter-values">4.2.6. Initial Parameter Values</a></li>
-<li><a class="reference internal" href="#numerical-other-parameters">4.2.7. Numerical &amp; Other Parameters</a></li>
+<li><a class="reference internal" href="#">Parameters &amp; Settings: speciation-extinction BAMM</a><ul>
+<li><a class="reference internal" href="#control-file">Control File</a></li>
+<li><a class="reference internal" href="#general-setup-data-input">General Setup &amp; Data Input</a><ul>
+<li><a class="reference internal" href="#general">General</a></li>
+<li><a class="reference internal" href="#priors">Priors</a></li>
+<li><a class="reference internal" href="#mcmc-simulation-settings-output-options">MCMC Simulation Settings &amp; Output Options</a></li>
+<li><a class="reference internal" href="#mcmc-scaling-operators">MCMC Scaling Operators</a></li>
+<li><a class="reference internal" href="#mcmc-move-frequencies">MCMC Move Frequencies</a></li>
+<li><a class="reference internal" href="#initial-parameter-values">Initial Parameter Values</a></li>
+<li><a class="reference internal" href="#numerical-other-parameters">Numerical &amp; Other Parameters</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="installation.html"
-                        title="previous chapter">3. Installation</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="running.html"
-                        title="next chapter">5. Running BAMM</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/divcontrolconfiguration.txt"
@@ -95,10 +81,10 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="configuration">
-<h1>4. Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="parameters-settings-speciation-extinction-bamm">
+<h1>Parameters &amp; Settings: speciation-extinction BAMM<a class="headerlink" href="#parameters-settings-speciation-extinction-bamm" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="control-file">
-<h2>4.1. Control File<a class="headerlink" href="#control-file" title="Permalink to this headline">¶</a></h2>
+<h2>Control File<a class="headerlink" href="#control-file" title="Permalink to this headline">¶</a></h2>
 <p>Configuration options and parameters in BAMM are specified in a <em>control file</em>,
 a plain text file in which each line contains the name of the option or
 parameter, an equal sign, and the value of the option or parameter:</p>
@@ -114,14 +100,14 @@ with the flag <tt class="docutils literal"><span class="pre">-control</span></tt
 <p>This document refers to options and parameters for the speciationextinction analysis in BAMM.</p>
 </div>
 <div class="section" id="general-setup-data-input">
-<h2>4.2. General Setup &amp; Data Input<a class="headerlink" href="#general-setup-data-input" title="Permalink to this headline">¶</a></h2>
+<h2>General Setup &amp; Data Input<a class="headerlink" href="#general-setup-data-input" title="Permalink to this headline">¶</a></h2>
 <p>The following describes the configuration options and parameters
 that are required regardless of the specific model used.
 For true or false values, 1 is used for true and 0 is used for false.
 Files will be relative to the current directory unless otherwise
 specified by the user.</p>
 <div class="section" id="general">
-<h3>4.2.1. General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
+<h3>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>modeltype</dt>
 <dd>Should be &#8220;speciationextinction&#8221; for diversity analyses.
@@ -157,7 +143,7 @@ If false (0), will look for a file that specifies clade-specific corrections for
 </dl>
 </div>
 <div class="section" id="priors">
-<h3>4.2.2. Priors<a class="headerlink" href="#priors" title="Permalink to this headline">¶</a></h3>
+<h3>Priors<a class="headerlink" href="#priors" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>rootPrior</dt>
 <dd><em>Description not yet available.</em></dd>
@@ -174,7 +160,7 @@ If false (0), will look for a file that specifies clade-specific corrections for
 </dl>
 </div>
 <div class="section" id="mcmc-simulation-settings-output-options">
-<h3>4.2.3. MCMC Simulation Settings &amp; Output Options<a class="headerlink" href="#mcmc-simulation-settings-output-options" title="Permalink to this headline">¶</a></h3>
+<h3>MCMC Simulation Settings &amp; Output Options<a class="headerlink" href="#mcmc-simulation-settings-output-options" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>numberGenerations</dt>
 <dd>Number of MCMC generations to run.</dd>
@@ -205,7 +191,7 @@ If false (0), will look for a file that specifies clade-specific corrections for
 </dl>
 </div>
 <div class="section" id="mcmc-scaling-operators">
-<h3>4.2.4. MCMC Scaling Operators<a class="headerlink" href="#mcmc-scaling-operators" title="Permalink to this headline">¶</a></h3>
+<h3>MCMC Scaling Operators<a class="headerlink" href="#mcmc-scaling-operators" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>updateLambdaInitScale</dt>
 <dd>Scale parameter for updating the initial speciation rate for each process.</dd>
@@ -224,7 +210,7 @@ If false (0), will look for a file that specifies clade-specific corrections for
 </dl>
 </div>
 <div class="section" id="mcmc-move-frequencies">
-<h3>4.2.5. MCMC Move Frequencies<a class="headerlink" href="#mcmc-move-frequencies" title="Permalink to this headline">¶</a></h3>
+<h3>MCMC Move Frequencies<a class="headerlink" href="#mcmc-move-frequencies" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>updateRateEventNumber</dt>
 <dd>Relative frequency of MCMC moves that change the number of events.</dd>
@@ -243,7 +229,7 @@ If false (0), will look for a file that specifies clade-specific corrections for
 </dl>
 </div>
 <div class="section" id="initial-parameter-values">
-<h3>4.2.6. Initial Parameter Values<a class="headerlink" href="#initial-parameter-values" title="Permalink to this headline">¶</a></h3>
+<h3>Initial Parameter Values<a class="headerlink" href="#initial-parameter-values" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>lambdaInit0</dt>
 <dd>Initial speciation rate at the root of the tree.</dd>
@@ -260,7 +246,7 @@ A negative value implies decreasing rates through time.</dd>
 </dl>
 </div>
 <div class="section" id="numerical-other-parameters">
-<h3>4.2.7. Numerical &amp; Other Parameters<a class="headerlink" href="#numerical-other-parameters" title="Permalink to this headline">¶</a></h3>
+<h3>Numerical &amp; Other Parameters<a class="headerlink" href="#numerical-other-parameters" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>minCladeSizeForShift</dt>
 <dd>Set the minimum number of descendant tips a branch must have to be the location of a possible rate-change event. A value of 1 allows shifts to occur on any branch.</dd>
@@ -283,12 +269,6 @@ A negative value implies decreasing rates through time.</dd>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="running.html" title="5. Running BAMM"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="installation.html" title="3. Installation"
-             >previous</a> |</li>
         <li><a href="index.html">bamm 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>

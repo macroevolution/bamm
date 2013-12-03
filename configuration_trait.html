@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Configurations &amp; Settings &mdash; bamm 1.0 documentation</title>
+    <title>7. Phenotypic Evolution: Configurations &amp; Settings &mdash; bamm 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,7 +23,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 1.0 documentation" href="index.html" /> 
+    <link rel="top" title="bamm 1.0 documentation" href="index.html" />
+    <link rel="next" title="8. Analyzing BAMM output with BAMMtools" href="postprocess.html" />
+    <link rel="prev" title="6. Speciation-Extinction: Configurations &amp; Settings" href="configuration_speciation.html" /> 
   </head>
   <body>
     <div class="related">
@@ -32,6 +34,12 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="postprocess.html" title="8. Analyzing BAMM output with BAMMtools"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="configuration_speciation.html" title="6. Speciation-Extinction: Configurations &amp; Settings"
+             accesskey="P">previous</a> |</li>
         <li><a href="index.html">bamm 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
@@ -39,39 +47,45 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Configurations &amp; Settings</a><ul>
-<li><a class="reference internal" href="#the-control-file">The Control File</a></li>
-<li><a class="reference internal" href="#global-options-and-parameters">Global Options and Parameters</a><ul>
-<li><a class="reference internal" href="#general">General</a></li>
-<li><a class="reference internal" href="#priors">Priors</a></li>
-<li><a class="reference internal" href="#general-mcmc-simulation-settings-output-options">General MCMC Simulation Settings &amp; Output Options</a></li>
-<li><a class="reference internal" href="#parameter-update-rates">Parameter Update Rates</a></li>
+<li><a class="reference internal" href="#">7. Phenotypic Evolution: Configurations &amp; Settings</a><ul>
+<li><a class="reference internal" href="#the-control-file">7.1. The Control File</a></li>
+<li><a class="reference internal" href="#global-options-and-parameters">7.2. Global Options and Parameters</a><ul>
+<li><a class="reference internal" href="#general">7.2.1. General</a></li>
+<li><a class="reference internal" href="#priors">7.2.2. Priors</a></li>
+<li><a class="reference internal" href="#general-mcmc-simulation-settings-output-options">7.2.3. General MCMC Simulation Settings &amp; Output Options</a></li>
+<li><a class="reference internal" href="#parameter-update-rates">7.2.4. Parameter Update Rates</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#speciation-extinction-model">Speciation/Extinction Model</a><ul>
-<li><a class="reference internal" href="#id1">General</a></li>
-<li><a class="reference internal" href="#id2">Priors</a></li>
-<li><a class="reference internal" href="#id3">General MCMC Simulation Settings &amp; Output Options</a></li>
-<li><a class="reference internal" href="#starting-parameters">Starting Parameters</a></li>
-<li><a class="reference internal" href="#id4">Parameter Update Rates</a></li>
+<li><a class="reference internal" href="#speciation-extinction-model">7.3. Speciation/Extinction Model</a><ul>
+<li><a class="reference internal" href="#id1">7.3.1. General</a></li>
+<li><a class="reference internal" href="#id2">7.3.2. Priors</a></li>
+<li><a class="reference internal" href="#id3">7.3.3. General MCMC Simulation Settings &amp; Output Options</a></li>
+<li><a class="reference internal" href="#starting-parameters">7.3.4. Starting Parameters</a></li>
+<li><a class="reference internal" href="#id4">7.3.5. Parameter Update Rates</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#phenotypic-evolution-model">Phenotypic Evolution Model</a><ul>
-<li><a class="reference internal" href="#id5">General</a></li>
-<li><a class="reference internal" href="#mcmc-tuning">MCMC Tuning</a></li>
-<li><a class="reference internal" href="#id6">Starting Parameters</a></li>
-<li><a class="reference internal" href="#id7">Priors</a></li>
-<li><a class="reference internal" href="#output">Output</a></li>
-<li><a class="reference internal" href="#id8">Parameter Update Rates</a></li>
+<li><a class="reference internal" href="#phenotypic-evolution-model">7.4. Phenotypic Evolution Model</a><ul>
+<li><a class="reference internal" href="#id5">7.4.1. General</a></li>
+<li><a class="reference internal" href="#mcmc-tuning">7.4.2. MCMC Tuning</a></li>
+<li><a class="reference internal" href="#id6">7.4.3. Starting Parameters</a></li>
+<li><a class="reference internal" href="#id7">7.4.4. Priors</a></li>
+<li><a class="reference internal" href="#output">7.4.5. Output</a></li>
+<li><a class="reference internal" href="#id8">7.4.6. Parameter Update Rates</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="configuration_speciation.html"
+                        title="previous chapter">6. Speciation-Extinction: Configurations &amp; Settings</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="postprocess.html"
+                        title="next chapter">8. Analyzing BAMM output with BAMMtools</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/configuration.txt"
+    <li><a href="_sources/configuration_trait.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -95,10 +109,10 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="configurations-settings">
-<h1>Configurations &amp; Settings<a class="headerlink" href="#configurations-settings" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="phenotypic-evolution-configurations-settings">
+<h1>7. Phenotypic Evolution: Configurations &amp; Settings<a class="headerlink" href="#phenotypic-evolution-configurations-settings" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="the-control-file">
-<h2>The Control File<a class="headerlink" href="#the-control-file" title="Permalink to this headline">¶</a></h2>
+<h2>7.1. The Control File<a class="headerlink" href="#the-control-file" title="Permalink to this headline">¶</a></h2>
 <p>Configuration options and parameters in BAMM are specified in a <em>control file</em>,
 a plain text file in which each line contains the name of the option or
 parameter, an equal sign, and the value of the option or parameter:</p>
@@ -113,14 +127,14 @@ with the flag <tt class="docutils literal"><span class="pre">-control</span></tt
 </div>
 </div>
 <div class="section" id="global-options-and-parameters">
-<h2>Global Options and Parameters<a class="headerlink" href="#global-options-and-parameters" title="Permalink to this headline">¶</a></h2>
+<h2>7.2. Global Options and Parameters<a class="headerlink" href="#global-options-and-parameters" title="Permalink to this headline">¶</a></h2>
 <p>The following describes the configuration options and parameters
 that are required regardless of the specific model used.
 For true or false values, 1 is used for true and 0 is used for false.
 Files will be relative to the current directory unless otherwise
 specified by the user.</p>
 <div class="section" id="general">
-<h3>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
+<h3>7.2.1. General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>modeltype</dt>
 <dd>Should be &#8220;speciationextinction&#8221; or &#8220;trait&#8221;.
@@ -149,14 +163,14 @@ If false (0), just check to see if the data can be loaded correctly.</dd>
 </dl>
 </div>
 <div class="section" id="priors">
-<h3>Priors<a class="headerlink" href="#priors" title="Permalink to this headline">¶</a></h3>
+<h3>7.2.2. Priors<a class="headerlink" href="#priors" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>rootPrior</dt>
 <dd><em>Description not yet available.</em></dd>
 </dl>
 </div>
 <div class="section" id="general-mcmc-simulation-settings-output-options">
-<h3>General MCMC Simulation Settings &amp; Output Options<a class="headerlink" href="#general-mcmc-simulation-settings-output-options" title="Permalink to this headline">¶</a></h3>
+<h3>7.2.3. General MCMC Simulation Settings &amp; Output Options<a class="headerlink" href="#general-mcmc-simulation-settings-output-options" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>NumberGenerations</dt>
 <dd>Number of MCMC generations to run.</dd>
@@ -184,7 +198,7 @@ If false (0), just check to see if the data can be loaded correctly.</dd>
 </dl>
 </div>
 <div class="section" id="parameter-update-rates">
-<h3>Parameter Update Rates<a class="headerlink" href="#parameter-update-rates" title="Permalink to this headline">¶</a></h3>
+<h3>7.2.4. Parameter Update Rates<a class="headerlink" href="#parameter-update-rates" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>updateRateEventNumber</dt>
 <dd>Frequency of updating the number of events (shifts) on the tree.</dd>
@@ -198,11 +212,11 @@ If false (0), just check to see if the data can be loaded correctly.</dd>
 </div>
 </div>
 <div class="section" id="speciation-extinction-model">
-<h2>Speciation/Extinction Model<a class="headerlink" href="#speciation-extinction-model" title="Permalink to this headline">¶</a></h2>
+<h2>7.3. Speciation/Extinction Model<a class="headerlink" href="#speciation-extinction-model" title="Permalink to this headline">¶</a></h2>
 <p>The following describes configuration options and parameters
 specifically for speciation/extinction analyses.</p>
 <div class="section" id="id1">
-<h3>General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>7.3.1. General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>useGlobalSamplingProbability</dt>
 <dd>If true (1), will look for a global correction for incomplete sampling (globalSamplingProbability)
@@ -214,7 +228,7 @@ If false (0), will look for a file that specifies clade-specific corrections for
 </dl>
 </div>
 <div class="section" id="id2">
-<h3>Priors<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h3>7.3.2. Priors<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>lambdaInitPrior</dt>
 <dd>Mean of the exponential distribution prior on speciation.</dd>
@@ -229,7 +243,7 @@ If false (0), will look for a file that specifies clade-specific corrections for
 </dl>
 </div>
 <div class="section" id="id3">
-<h3>General MCMC Simulation Settings &amp; Output Options<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<h3>7.3.3. General MCMC Simulation Settings &amp; Output Options<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>lambdaOutfile</dt>
 <dd>Branch-specific speciation rates will be written to this file as newick-formatted trees.</dd>
@@ -250,7 +264,7 @@ If false (0), will look for a file that specifies clade-specific corrections for
 </dl>
 </div>
 <div class="section" id="starting-parameters">
-<h3>Starting Parameters<a class="headerlink" href="#starting-parameters" title="Permalink to this headline">¶</a></h3>
+<h3>7.3.4. Starting Parameters<a class="headerlink" href="#starting-parameters" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>lambdaInit0</dt>
 <dd>Starting initial speciation rate.</dd>
@@ -265,7 +279,7 @@ A negative value implies decreasing rates through time.</dd>
 </dl>
 </div>
 <div class="section" id="id4">
-<h3>Parameter Update Rates<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<h3>7.3.5. Parameter Update Rates<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>updateRateLambda0</dt>
 <dd>Frequency in which to update the initial speciation rate for an event.</dd>
@@ -277,13 +291,13 @@ A negative value implies decreasing rates through time.</dd>
 </div>
 </div>
 <div class="section" id="phenotypic-evolution-model">
-<h2>Phenotypic Evolution Model<a class="headerlink" href="#phenotypic-evolution-model" title="Permalink to this headline">¶</a></h2>
+<h2>7.4. Phenotypic Evolution Model<a class="headerlink" href="#phenotypic-evolution-model" title="Permalink to this headline">¶</a></h2>
 <p>The following describes the configuration options and parameters
 specifically for the phenotypic evolution model in BAMM.
 The parameter &#8220;beta&#8221; represents the rate of phenotypic evolution
 at any point in time.</p>
 <div class="section" id="id5">
-<h3>General<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h3>7.4.1. General<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>traitfile</dt>
 <dd>File that names the trait data. Traits must be continuous characters.
@@ -294,7 +308,7 @@ All species in the trait data file must be in the tree and vice versa.</dd>
 </dl>
 </div>
 <div class="section" id="mcmc-tuning">
-<h3>MCMC Tuning<a class="headerlink" href="#mcmc-tuning" title="Permalink to this headline">¶</a></h3>
+<h3>7.4.2. MCMC Tuning<a class="headerlink" href="#mcmc-tuning" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>updateBetaScale</dt>
 <dd>Controls the amount by which to change the value of beta
@@ -306,7 +320,7 @@ at any step in the MCMC sampling.</dd>
 </dl>
 </div>
 <div class="section" id="id6">
-<h3>Starting Parameters<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<h3>7.4.3. Starting Parameters<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>betaInit</dt>
 <dd>Starting initial rate.</dd>
@@ -319,7 +333,7 @@ A negative value implies decreasing rates through time.</p>
 </dl>
 </div>
 <div class="section" id="id7">
-<h3>Priors<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<h3>7.4.4. Priors<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>betaInitPrior</dt>
 <dd><em>Description not yet available.</em></dd>
@@ -334,7 +348,7 @@ A negative value implies decreasing rates through time.</p>
 </dl>
 </div>
 <div class="section" id="output">
-<h3>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h3>
+<h3>7.4.5. Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>betaOutfile</dt>
 <dd>The file name in which to write the phenotypic rates as newick-formatted trees where the branches are scaled to the rate of phenotypic evolution.</dd>
@@ -343,7 +357,7 @@ A negative value implies decreasing rates through time.</p>
 </dl>
 </div>
 <div class="section" id="id8">
-<h3>Parameter Update Rates<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<h3>7.4.6. Parameter Update Rates<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt>updateRateBeta0</dt>
 <dd><em>Description not yet available.</em></dd>
@@ -371,6 +385,12 @@ because there are so many internal nodes states that need to be updated.</dd>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="postprocess.html" title="8. Analyzing BAMM output with BAMMtools"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="configuration_speciation.html" title="6. Speciation-Extinction: Configurations &amp; Settings"
+             >previous</a> |</li>
         <li><a href="index.html">bamm 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>

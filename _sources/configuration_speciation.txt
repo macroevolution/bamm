@@ -1,6 +1,6 @@
 .. highlight:: none
 
-Configurations & Settings
+Speciation-Extinction: Configurations & Settings
 =============
 
 
