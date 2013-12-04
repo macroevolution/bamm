@@ -2,11 +2,13 @@
 #	computeBayesFactors
 #
 #
-#   postfilename		=   MCMC output file from regular BAMM run
+#   postdata		=   MCMC output file from regular BAMM run
 #				 			e.g., with sampleFromPriorOnly = 0
-#			
-#	priorfilename		=	MCMC output file from running BAMM with 
+#							OR a dataframe			
+#
+#	priordata		=	MCMC output file from running BAMM with 
 #                           sampleFromPriorOnly = 1
+#							OR a dataframe
 #
 #
 #	burnin				=	How many samples from posterior to discard
@@ -41,13 +43,25 @@
 #   Dependency on BAMM MCMC output: if order of output columns 
 #		changes, it will break this function.
 	
-computeBayesFactors <- function(postfilename, priorfilename, burnin = 0.1, modelset = NULL, threshold = 1){
+computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NULL, threshold = 1){
 
 
-	
-	post <- read.csv(postfilename, header=T);
-	prior <- read.csv(priorfilename, header=T);
-	
+	if (class(postdata) == 'character'){
+		post <- read.csv(postdata, header=T);
+	}else if (class(postdata) == 'data.frame'){
+		post <- postdata;
+	}else{
+		stop("invalid postdata argument (wrong class) in computeBayesFactors\n");
+	}
+
+	if (class(priordata) == 'character'){
+		prior <- read.csv(priordata, header=T);
+	}else if (class(priordata) == 'data.frame'){
+		prior <- priordata;
+	}else{
+		stop("invalid priordata argument (wrong class) in computeBayesFactors\n");
+	}
+ 
 	post <- post[floor(burnin*nrow(post)):nrow(post), ];
 	prior <- prior[floor(burnin*nrow(prior)):nrow(prior), ];
 
@@ -62,6 +76,8 @@ computeBayesFactors <- function(postfilename, priorfilename, burnin = 0.1, model
 	}else{
 		
 	}
+	
+	modelset <- sort(modelset);
 	
 	mset <- as.character(modelset);
 
@@ -84,6 +100,9 @@ computeBayesFactors <- function(postfilename, priorfilename, burnin = 0.1, model
 		stop('\nError. Invalid model choice - is rank of specified model too high?\n');
 	}
 	
+ 
+	
+	
 	for (i in 1:length(modelset)){
 		
 		for (j in 1:length(modelset)){
@@ -104,18 +123,6 @@ computeBayesFactors <- function(postfilename, priorfilename, burnin = 0.1, model
 		
 	}
 
-	
-	# for (i in 1:(length(modelset) - 1)){
-		# for (j in (i+1):length(modelset)){
-					
-			# prior_odds <- (priorf[j] + 1) / (priorf[i] + 1);
-			# post_odds <- (postf[j] + 1) / (postf[i] + 1);
-			
-			# mm[i , j] <- post_odds / prior_odds;
-			
-		# }	
-		
-	# }
 	
 	return(mm);
 	
