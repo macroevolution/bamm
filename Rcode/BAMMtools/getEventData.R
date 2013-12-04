@@ -2,7 +2,9 @@
 #
 #	getEventData(....)
 #
-#	eventfilename		=	file where event data are stored, in bamm output format
+#	eventdata			=	file where event data are stored, in bamm output format
+#						    OR a dataframe with BAMM event data
+#					        From using read.csv or read.table directly
 #	nsamples			=	number of samples from posterior to include. 
 #							if NULL, includes ALL samples (could take long time to run)
 #	phy					=	The model tree (time calibrated tree analyzed w bamm)
@@ -11,8 +13,9 @@
 #							Uses fraction (e.g, 0.25 = 25% discarded)
 #	type				=	specifies whether eventfilename refers to trait or diversification data
 #	header				=	Boolean to flag whether eventfilename contains a header
-getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=FALSE, assign.type = 'new_way', type = 'diversification', header=TRUE){
-	
+getEventData <- function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE, type = 'diversification', header=TRUE){
+
+
 	if (type != 'diversification' & type != 'traits'){
 		stop("Invalid 'type' specification. Should be 'diversification' or 'traits'");
 	}
@@ -30,11 +33,23 @@ getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=
 	eventBranchSegs <- list();
 	
 	tipLambda 	<- list();
- 
-	cat("Reading event datafile: ", eventfilename, "\n\t\t...........");
- 	x <- read.csv(eventfilename, header=header, stringsAsFactors=FALSE);
- 	uniquegens <- sort(unique(x[,1]));
- 	cat("\nRead a total of ", length(uniquegens), " samples from posterior\n");
+
+	
+	if (class(eventdata) == 'data.frame'){
+		cat("Processing event data from data.frame\n");
+		
+	}else if (class(eventdata) == 'character'){
+		cat("Reading event datafile: ", eventdata, "\n\t\t...........");
+		eventdata <- read.csv(eventdata, header=header, stringsAsFactors=FALSE);
+ 		ug <- sort(unique(eventdata[,1]));
+ 		cat("\nRead a total of ", length(ug), " samples from posterior\n");				
+	}else{
+		err.string <- c('eventdata arg invalid\n\nType is ', class(eventdata), '\n', sep='');
+		stop(err.string);
+	}
+
+ 	uniquegens <- sort(unique(eventdata[,1])); 
+
  	
  	samplestart <- uniquegens[floor(burnin*length(uniquegens))];
  	if(!length(samplestart))
@@ -58,8 +73,7 @@ getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=
  
  	cat('\nSetting recursive sequence on tree...\n');
  	
- 	if (assign.type=='new_way')
- 		phy <- getRecursiveSequence(phy);
+	phy <- getRecursiveSequence(phy);
  	cat('\nDone with recursive sequence\n\n');
  
 	######### Get ancestors for each unique pair of taxa
@@ -67,7 +81,7 @@ getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=
 		cat("Start preprocessing unique MRCA pairs....\n")
 	}	
 		
-	x2 <- x[x$generation %in% goodsamples, ];
+	x2 <- eventdata[eventdata$generation %in% goodsamples, ];
 	
 	x2 <- x2[!is.na(x2$leftchild) & !is.na(x2$rightchild), ];
 	
@@ -112,7 +126,7 @@ getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=
  
  	for (i in 1:length(goodsamples)){
   		
-  		tmpEvents <- x[x[,1] == uniquegens[i], ];
+  		tmpEvents <- eventdata[eventdata[,1] == uniquegens[i], ];
 		
 		if (verbose)
 			cat('Processing event: ', i, '\n');		
@@ -186,25 +200,15 @@ getEventData <- function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=
 		#tphy$statevec <- numeric(nrow(phy$edge));	
 		tphy$statevec <- rep(1, nrow(tphy$edge));
 
-		if (assign.type == 'old_way'){
-			
-			for (k in 1:nrow(dftemp)){
-				tphy <- recursivelySetNodeStates(tphy, node=dftemp$node[k], state=k);
-			}			
-			
-		}else if (assign.type == 'new_way'){
-			if (nrow(dftemp) > 1){
-				for (k in 2:nrow(dftemp)){
+		if (nrow(dftemp) > 1){
+			for (k in 2:nrow(dftemp)){
 					
-					s1 <- which(tphy$downseq == dftemp$node[k]);
-					s2 <- which(tphy$downseq == tphy$lastvisit[dftemp$node[k]]);
-					descSet <- tphy$downseq[s1:s2];
-					isDescendantNode <- tphy$edge[,2] %in% descSet;				
-					tphy$statevec[isDescendantNode] <- k;
-				}
-							
-			}
-
+				s1 <- which(tphy$downseq == dftemp$node[k]);
+				s2 <- which(tphy$downseq == tphy$lastvisit[dftemp$node[k]]);
+				descSet <- tphy$downseq[s1:s2];
+				isDescendantNode <- tphy$edge[,2] %in% descSet;				
+				tphy$statevec[isDescendantNode] <- k;
+			}				
 		}
 
  		tmpEventSegMat <- matrix(0, nrow=(max(phy$edge) + nrow(dftemp) - 2), ncol=4);
