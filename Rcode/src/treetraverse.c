@@ -8,7 +8,7 @@ void tipward(int * anc, int * desc, int * node, int * nnode, int * ndorder);
 void recursivesequence(int * anc, int * desc, int * node, int * ne, int * downseq, int * lastvisit);
 void setpolartreecoords(int * anc, int * desc, int * ndorder, int * ntip, int * rootnd, int * nnode, double * ths, double * theta, double * root);
 void setphylotreecoords(int * anc, int * desc, int * ndorder, double * bl, int * ntip, int * rootnd, int * nnode, double * bar, double * xy, double * root);
-void fetchmrca(int * anc, int * desc, int * ne, int * t1, int * t2, int * ret);
+void fetchmrca(int * anc, int * desc, int * root, int * ne, int * t1, int * t2, int * ret);
 
 static int zzz;
 
@@ -239,7 +239,7 @@ void setphylotreecoords(int * anc, int * desc, int * ndorder, double * bl, int *
 	Free(ci);
 }
 
-void fetchmrca(int * anc, int * desc, int * ne, int * t1, int * t2, int * ret)
+void fetchmrca(int * anc, int * desc, int * root, int * ne, int * t1, int * t2, int * ret)
 {	
 	int i,j;
 
@@ -247,7 +247,7 @@ void fetchmrca(int * anc, int * desc, int * ne, int * t1, int * t2, int * ret)
 	int * path;
 	path = Calloc(*ne, int);
 	
-	while (node != anc[0])
+	while (node != *root)
 	{
 		for (i = 0; i < *ne; i++)
 		{
@@ -262,7 +262,7 @@ void fetchmrca(int * anc, int * desc, int * ne, int * t1, int * t2, int * ret)
 	}
 	
 	node = *t2;
-	while (node != anc[0])
+	while (node != *root)
 	{
 		for (i = 0; i < *ne; i++)
 		{
@@ -289,7 +289,7 @@ void fetchmrca(int * anc, int * desc, int * ne, int * t1, int * t2, int * ret)
 	}
 	else
 	{
-		ret[0] = anc[0];
+		ret[0] = *root;
 	}
 	Free(path);
 }
