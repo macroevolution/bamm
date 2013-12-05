@@ -46,17 +46,19 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 	}
  
 	tvec <- seq(start.time, end.time, length.out= nslices);
-	
+	tol = 1*10^-decimals(ephy$eventBranchSegs[[1]][1,2]);
+		
 	mm <- matrix(NA, nrow=length(ephy$eventBranchSegs), ncol=length(tvec));
 	mumat <- matrix(NA, nrow=length(ephy$eventBranchSegs), ncol=length(tvec));
-	
+		
 	for (i in 1:nrow(mm)){
  	
 		es <- ephy$eventBranchSegs[[i]];
 		events <- ephy$eventData[[i]];
-		
+				
 		for (k in 1:length(tvec)){
-			isGoodTime <- es[,2] <= tvec[k] & es[,3] >= tvec[k];
+			isGoodTime <- safeCompare(es[,2],tvec[k],'<=',tol=tol) & safeCompare(es[,3],tvec[k],'>=',tol=tol)
+			
 			if (is.null(node)){ 
 				isGoodNode <- rep(TRUE, nrow(es));
 			}else{
