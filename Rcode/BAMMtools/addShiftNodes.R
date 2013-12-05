@@ -3,6 +3,9 @@ addShiftNodes = function(ephy, method, index, cex=1, pch=21, col=1, bg=2)
 	if (!('bamm-data' %in% class(ephy))) stop("Function requires bammdata object");
 	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv);
 	
+	op = par(no.readonly = TRUE);
+	par(lastPP$pp);
+	
 	shiftnodes = getShiftNodesFromIndex(ephy, index);
 	isShift = ephy$eventData[[index]]$node %in% shiftnodes;
 	times = ephy$eventData[[index]]$time[isShift];	
@@ -26,4 +29,5 @@ addShiftNodes = function(ephy, method, index, cex=1, pch=21, col=1, bg=2)
 		YY = (rb+times/max(branching.times(ephy))) * sin(lastPP$theta[shiftnodes]);		
 	}	
 	points(XX,YY,pch=pch,cex=cex,col=col,bg=bg);
+	par(op);
 }

@@ -76,8 +76,11 @@ plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5
 	
 	if (show)
 	{
-		op = par(no.readonly=TRUE);
-		par(...);
+		if(length(list(...)))
+		{
+			op = par(no.readonly=TRUE);
+			par(...);
+		}
 		plot.new(); ofs = 0;
 		if (labels)
 		{
@@ -116,12 +119,12 @@ plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5
 	index = order(as.numeric(rownames(ret$segs)));
 	if (method == 'phylogram')
 	{
-		assign("last_plot.phylo", list(Ntip = phy$Nnode+1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index,3], yy = ret$segs[index,4]), envir = .PlotPhyloEnv);
+		assign("last_plot.phylo", list(Ntip = phy$Nnode+1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index,3], yy = ret$segs[index,4], pp = par(no.readonly = TRUE)), envir = .PlotPhyloEnv);
 	}
 	else if (method == 'polar')
 	{
-		assign("last_plot.phylo", list(Ntip = phy$Nnode+1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index,3], yy = ret$segs[index,4], theta = ret$segs[index,5], rb = rb), envir = .PlotPhyloEnv);
+		assign("last_plot.phylo", list(Ntip = phy$Nnode+1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index,3], yy = ret$segs[index,4], theta = ret$segs[index,5], rb = rb, pp = par(no.readonly = TRUE)), envir = .PlotPhyloEnv);
 	}
-	par(op);
+	if(length(list(...))) par(op);
 	invisible(ret$segs[-1,]);
 }
