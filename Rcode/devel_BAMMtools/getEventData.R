@@ -1,4 +1,4 @@
-getEventData = function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=FALSE, type = 'diversification', header=TRUE)
+getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE, type = 'diversification', header=TRUE)
 {	
 	if (type != 'diversification' & type != 'traits')
 	{
@@ -17,12 +17,25 @@ getEventData = function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=F
 	tipStates = list();
 	eventBranchSegs = list();
 	
-	tipLambda 	= list();
+	tipLambda = list();
  
-	cat("Reading event datafile: ", eventfilename, "\n\t\t...........");
- 	x = read.csv(eventfilename, header=header, stringsAsFactors=FALSE);
- 	uniquegens = sort(unique(x[,1]));
- 	cat("\nRead a total of ", length(uniquegens), " samples from posterior\n");
+	if (class(eventdata) == 'data.frame')
+	{
+		cat("Processing event data from data.frame\n");
+		uniquegens = sort(unique(eventdata[,1]));
+	}
+	else if (class(eventdata) == 'character')
+	{
+		cat("Reading event datafile: ", eventdata, "\n\t\t...........");
+		eventdata = read.csv(eventdata, header=header, stringsAsFactors=FALSE);
+ 		uniquegens = sort(unique(eventdata[,1]));
+ 		cat("\nRead a total of ", length(uniquegens), " samples from posterior\n");				
+	}
+	else
+	{
+		err.string = c('eventdata arg invalid\n\nType is ', class(eventdata), '\n', sep='');
+		stop(err.string);
+	}
  	
  	samplestart = uniquegens[floor(burnin*length(uniquegens))];
  	if(!length(samplestart))
@@ -57,7 +70,7 @@ getEventData = function(phy, eventfilename, burnin=0, nsamples = NULL, verbose=F
 		cat("Start preprocessing unique MRCA pairs....\n");
 	}	
 		
-	x2 = x[x$generation %in% goodsamples, ];
+	x2 = eventdata[eventdata$generation %in% goodsamples, ];
 		
 	ff = character(nrow(x2));
 	
