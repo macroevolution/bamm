@@ -40,7 +40,7 @@ SEXP getMatrixColumn(SEXP matrix, int col)
 
 double getMeanRateExponential(double t1, double t2, double p1, double p2)
 {	
-	if (p2 == 0) 
+	if (p2 == 0.) 
 	{
 		return p1;
 	}
@@ -49,7 +49,7 @@ double getMeanRateExponential(double t1, double t2, double p1, double p2)
 
 double getTimeIntegratedBranchRate(double t1, double t2, double p1, double p2)
 {
-	if (p2 == 0) 
+	if (p2 == 0.) 
 	{
 		return (t2 - t1) * p1;
 	}
