@@ -21,11 +21,14 @@
 #	plot = boolean: if TRUE, a plot will be returned, if FALSE, the data for the plot will be returned. 
 #	xticks = number of ticks on the x-axis.
 #	yticks = number of ticks on the y-axis.
+#	xlim = vector of length 2 with min and max times for x axis. X axis is time since present, so if plotting till the present, xlim[2]==0. Can also be 'auto'.
+#	ylim = vector of length 2 with min and max rates for y axis. Can also be 'auto'. 
+#	add = boolean: should rates be added to an existing plot
 #
 #	+ several undocumented args to set plot parameters: mar, cex, xline, yline, etc.
 #	
 
-plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'speciation', nBins = 100, smooth = F, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = T, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5){
+plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'speciation', nBins = 100, smooth = F, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = T, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=F){
 	
 	if (!'bamm-data' %in% class(ephy) & !'bamm-ratematrix' %in% class(ephy)){
 		stop("ERROR: Object ephy must be of class bamm-data\n or bamm-ratematrix.");
@@ -115,10 +118,31 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 
 	#begin plotting
 	if (plot == T){
-		plot.new();
-		par(mar=mar);
-		plot.window(xlim=c(maxTime, 0), ylim=c(0 , max(poly[[1]][,2])));
-	
+		if (add == F){
+			plot.new();
+			par(mar=mar);
+			if (unique(xlim == 'auto') & unique(ylim == 'auto')){
+				plot.window(xlim=c(maxTime, 0), ylim=c(0 , max(poly[[1]][,2])));
+				xMin <- maxTime;
+				xMax <- 0;
+				yMin <- 0;
+				yMax <- max(poly[[1]][,2]);
+			}
+			if (unique(xlim != 'auto') & unique(ylim == 'auto')){
+				plot.window(xlim = xlim, ylim=c(0 , max(poly[[1]][,2])));
+				xMin <- xlim[1];
+				xMax <- xlim[2];
+				yMin <- 0;
+				yMax <- max(poly[[1]][,2]);
+			}
+			if (unique(xlim == 'auto') & unique(ylim != 'auto')){
+				plot.window(xlim=c(maxTime, 0), ylim=ylim);
+				xMin <- maxTime;
+				xMax <- 0;
+				yMin <- ylim[1];
+				yMax <- ylim[2];
+			}
+		}
 		#plot intervals
 		if (!is.null(intervals)){
 			for (i in 1:length(poly)){
@@ -127,8 +151,8 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 		}
 		lines(x = maxTime - rmat$time, y = avg, lwd = 3, col = avgCol);
 
-		axis(at=round(seq(0, 1.3*maxTime, length.out=xticks+1)), labels = round(seq(0, 1.3*maxTime, length.out=xticks+1)), cex.axis = cex.axis, side = 1);
-		axis(at=c(-0.2,seq(0, 1.2*max(rate), length.out=yticks+1)), labels = c(-0.2,round(seq(0, 1.2*max(rate), length.out=yticks+1),digits=1)), las=1, cex.axis = cex.axis, side = 2);
+		axis(at=c(1.3*xMin,round(seq(xMin,xMax, length.out=xticks+1))), labels = c(1.3*xMin,round(seq(xMin, xMax, length.out=xticks+1))), cex.axis = cex.axis, side = 1);
+		axis(at=c(-0.2,seq(yMin, 1.2*yMax, length.out=yticks+1)), labels = c(-0.2,round(seq(yMin, 1.2*yMax, length.out=yticks+1),digits=1)), las=1, cex.axis = cex.axis, side = 2);
 
 		mtext(side = 1, text = 'Time since present', line = xline, cex = cex);
 		mtext(side = 2, text = ratelabel, line = yline, cex = cex);
