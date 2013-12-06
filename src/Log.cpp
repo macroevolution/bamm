@@ -14,7 +14,7 @@ Log& Log::instance()
 std::ostream& Log::outputStream(LogType logType, std::ostream& out)
 {
     if (logType == Message) {
-        startMessage(out);
+        // Do nothing
     } else if (logType == Warning) {
         startWarning(out);
     } else if (logType == Error) {
@@ -22,12 +22,6 @@ std::ostream& Log::outputStream(LogType logType, std::ostream& out)
     }
 
     return out;
-}
-
-
-void Log::startMessage(std::ostream& out)
-{
-    // Do nothing
 }
 
 
