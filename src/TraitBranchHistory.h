@@ -21,9 +21,6 @@ private:
     // the event referenced at nodeEvent;
     EventSet eventsOnBranch;
 
-    // New parameters, March 24 2012 for burst-speciation model
-    double _meanBeta;
-
 public:
 
     TraitBranchHistory();
