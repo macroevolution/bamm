@@ -4,7 +4,8 @@
 //forward function declarations
 SEXP getListElement(SEXP list, char *str);
 SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample);
-SEXP getMatrixColumn(SEXP matrix, int col);
+//SEXP getMatrixColumn(SEXP matrix, int col);
+double getDblMatrixELT(SEXP matrix, int row, int col);
 double getMeanRateExponential(double t1, double t2, double p1, double p2);
 double getTimeIntegratedBranchRate(double t1, double t2, double p1, double p2);
 
@@ -23,6 +24,7 @@ SEXP getListElement(SEXP list, char *str)
 	return elmt;
 }
 
+/***
 SEXP getMatrixColumn(SEXP matrix, int col)
 {
 	int nrow = INTEGER(getAttrib(matrix, R_DimSymbol))[0];
@@ -36,6 +38,13 @@ SEXP getMatrixColumn(SEXP matrix, int col)
 		REAL(ret)[i] = REAL(matrix)[i + nrow * col];
 	}
 	return ret;
+}
+***/
+
+double getDblMatrixELT(SEXP matrix, int row, int col)
+{
+	int nrow = INTEGER(getAttrib(matrix, R_DimSymbol))[0];
+	return REAL(matrix)[row + nrow*col];
 }
 
 double getMeanRateExponential(double t1, double t2, double p1, double p2)
@@ -67,6 +76,8 @@ times of approximating segments and starting and ending times of branches
 or branch segments on the phylogeny.
 ***/
 
+#define segmat(l,k) (getDblMatrixELT(segmat, l, k))
+
 SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 {
 	double eps = REAL(tol)[0];
@@ -75,10 +86,14 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 	//int nsamples = LENGTH(getListElement(ephy, "eventBranchSegs"));
 	int nsamples = LENGTH(sample);
 	
+	/***
 	SEXP nodeseg = getMatrixColumn(segmat, 0); nprotect++;	
 	SEXP segbegin = getMatrixColumn(segmat, 1); nprotect++;
 	SEXP segend = getMatrixColumn(segmat, 2); nprotect++;
 	int nsegs = LENGTH(nodeseg);
+	***/
+	
+	int nsegs = INTEGER(getAttrib(segmat, R_DimSymbol))[0];
 	
 	SEXP rates;
 	PROTECT(rates = allocVector(REALSXP, nsegs)); nprotect++;
@@ -97,7 +112,6 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 		
 		eventSegs = PROTECT(VECTOR_ELT(getListElement(ephy, "eventBranchSegs"), k)); nprotect++;
 		eventData = PROTECT(VECTOR_ELT(getListElement(ephy, "eventData"), k)); nprotect++;
-		
 				
 		nrow = INTEGER(getAttrib(eventSegs, R_DimSymbol))[0];
 		place_holder = 0;
@@ -132,17 +146,17 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 			//and can ignore everything we've been over already
 			for (l = place_holder; l < nsegs; l++)
 			{
-				if ( (int) REAL(nodeseg)[l] == node)
+				if ( (int) segmat(l, 0) == node)
 				{
 					//isGoodStart = REAL(segbegin)[l] >= begin;
-					isGoodStart = ( (REAL(segbegin)[l] - begin) >= 0. || ( (REAL(segbegin)[l] - begin) < 0. && (REAL(segbegin)[l] - begin) >= -1.*eps) );
+					isGoodStart = ( (segmat(l,1) - begin) >= 0. || ( (segmat(l,1) - begin) < 0. && (segmat(l,1) - begin) >= -1.*eps) );
 					//isGoodEnd = REAL(segend)[l] <= end;
-					isGoodEnd =  ( (REAL(segend)[l] - end) <= 0. || ( (REAL(segend)[l] - end) > 0. && (REAL(segend)[l] - end) <= eps) );
+					isGoodEnd =  ( (segmat(l,2) - end) <= 0. || ( (segmat(l,2) - end) > 0. && (segmat(l,2) - end) <= eps) );
 
 					if (isGoodStart && isGoodEnd)
 					{					
-						relStart = REAL(segbegin)[l] - Start;
-						relEnd = REAL(segend)[l] - Start;
+						relStart = segmat(l,1) - Start;
+						relEnd = segmat(l,2) - Start;
 						ret = getMeanRateExponential(relStart,relEnd,lam1,lam2);
 						
 						REAL(rates)[l] += ret/((double) nsamples);
@@ -150,21 +164,21 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 					//check for shift straddle
 					if (node == nnode)
 					{
-						isGoodStart = REAL(segbegin)[l] < end;
-						isGoodEnd = REAL(segend)[l] > end;
+						isGoodStart = segmat(l,1) < end;
+						isGoodEnd = segmat(l,2) > end;
 						if (isGoodStart && isGoodEnd)
 						{	
-							relStart = REAL(segbegin)[l] - Start;
+							relStart = segmat(l,1) - Start;
 							relEnd = end - Start;
 							leftshift = getTimeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
 							
 							relStart = 0.;
-							relEnd = REAL(segend)[l] - end;
+							relEnd = segmat(l,2) - end;
 							lam1 = REAL(getListElement(eventData, "lam1"))[nxtevent-1];
 							lam2 = REAL(getListElement(eventData, "lam2"))[nxtevent-1];
 							rightshift = getTimeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
 							
-							ret = (leftshift+rightshift)/(REAL(segend)[l] - REAL(segbegin)[l]);
+							ret = (leftshift+rightshift)/(segmat(l,2) - segmat(l,1));
 							
 							REAL(rates)[l] += ret/((double) nsamples);
 							place_holder = l; place_holder++;
