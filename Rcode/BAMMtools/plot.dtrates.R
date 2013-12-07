@@ -21,6 +21,7 @@
 #	                 descendants of the root branch. Ignored if method = 'phylogram'. 
 #	           show = TRUE or FALSE. If TRUE the tree will plot.
 #	           labels = TRUE or FALSE. If TRUE the tip labels will plot.
+#	           multi = TRUE or FALSE for multipanel plotting.
 #	           hrates = TRUE or FALSE. If TRUE a histogram is plotted in the same
 #	                    device for interpreting the meaning of plotted colors.
 #	                    You will be asked to supply an anchor point for plotting.
@@ -35,7 +36,7 @@
 #	                 respectively
 #	           ... = further arguments passed to par to control plotting, e.g. mar.
 #
-plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5, rbf=0.001, show=TRUE, labels=FALSE, hrates=FALSE, lwd=3, cex=1, ncolors=64, pal='Spectral', ...)
+plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5, rbf=0.001, show=TRUE, labels=FALSE, multi = FALSE, hrates=FALSE, lwd=3, cex=1, ncolors=64, pal='Spectral', ...)
 {
 	if ('bamm-data' %in% class(ephy)) phy = as.phylo.bammdata(ephy) else stop('Trying to work with a non-bammdata object');
 	if (!is.binary.tree(phy)) stop('Function requires fully bifurcating tree.');
@@ -125,6 +126,7 @@ plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5
 	{
 		assign("last_plot.phylo", list(Ntip = phy$Nnode+1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index,3], yy = ret$segs[index,4], theta = ret$segs[index,5], rb = rb, pp = par(no.readonly = TRUE)), envir = .PlotPhyloEnv);
 	}
-	if(length(list(...))) par(op);
+	if(!multi)
+		if(length(list(...))) par(op);
 	invisible(ret$segs[-1,]);
 }
