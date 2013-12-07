@@ -72,29 +72,13 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
 		
 	x2 = eventdata[eventdata$generation %in% goodsamples, ];
 		
-	ff = character(nrow(x2));
+	uniquePairSet = matrix(NA, nrow=nrow(x2), ncol=2);	
+	uniquePairNode = numeric(nrow(x2));
 	
-	for (i in 1:length(ff))
-	{
-		ff[i] = paste(x2$leftchild[i], x2$rightchild[i], sep='////');
-	}
-	uniquePairSet = matrix(NA, nrow=length(ff), ncol=2);	
-	uniquePairNode = numeric(length(ff));
+	uniquePairSet[,1] = as.integer(match(x2$leftchild, phy$tip.label));
+	uniquePairSet[,2] = as.integer(match(x2$rightchild, phy$tip.label, nomatch = 0L));
+	uniquePairNode = getmrca(phy, uniquePairSet[,1],uniquePairSet[,2]);
 	
-	for (i in 1:length(ff))
-	{	
-		tax = unlist(strsplit(ff[i], '////'));
-		if (sum('NA' %in% tax) == 0)
-		{
-			uniquePairSet[i,1] = as.integer(which(phy$tip.label == tax[1]));
-			uniquePairSet[i,2] = as.integer(which(phy$tip.label == tax[2]));
-			uniquePairNode[i] = getmrca(phy, uniquePairSet[i,1],uniquePairSet[i,2]);			
-		}
-		else
-		{
-			uniquePairNode[i] = as.integer(which(phy$tip.label == tax[1]));
-		}
-	}
 	if (verbose)
 	{
 		cat("Done preprocessing unique MRCA pairs....\n");

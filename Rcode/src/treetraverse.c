@@ -8,7 +8,7 @@ void tipward(int * anc, int * desc, int * node, int * nnode, int * ndorder);
 void recursivesequence(int * anc, int * desc, int * node, int * ne, int * downseq, int * lastvisit);
 void setpolartreecoords(int * anc, int * desc, int * ndorder, int * ntip, int * rootnd, int * nnode, double * ths, double * theta, double * root);
 void setphylotreecoords(int * anc, int * desc, int * ndorder, double * bl, int * ntip, int * rootnd, int * nnode, double * bar, double * xy, double * root);
-void fetchmrca(int * anc, int * desc, int * root, int * ne, int * t1, int * t2, int * ret);
+void fetchmrca(int * anc, int * desc, int * root, int * ne, int * npair, int * t1, int * t2, int * ret);
 
 static int zzz;
 
@@ -239,57 +239,67 @@ void setphylotreecoords(int * anc, int * desc, int * ndorder, double * bl, int *
 	Free(ci);
 }
 
-void fetchmrca(int * anc, int * desc, int * root, int * ne, int * t1, int * t2, int * ret)
+void fetchmrca(int * anc, int * desc, int * root, int * ne, int * npair, int * t1, int * t2, int * ret)
 {	
-	int i,j;
+	int i,j,k;
 
-	int cnt = 0, p = 0, node = *t1, mrca = 0;
+	int cnt, node, mrca;
 	int * path;
-	path = Calloc(*ne, int);
 	
-	while (node != *root)
+	for (k=0; k < *npair; k++)
 	{
-		for (i = 0; i < *ne; i++)
+		if (t2[k] == 0)
 		{
-			if (desc[i] == node)
-			{
-				node = anc[i];
-				path[cnt] = node;
-				cnt++;
-				break;
-			}
+			ret[k] = t1[k];
+			continue;
 		}
-	}
-	
-	node = *t2;
-	while (node != *root)
-	{
-		for (i = 0; i < *ne; i++)
+		path = Calloc(*ne, int);
+		cnt = 0; mrca = 0;
+		node = t1[k];
+		while (node != *root)
 		{
-			if (desc[i] == node)
+			for (i = 0; i < *ne; i++)
 			{
-				node = anc[i];
-				for (j = 0; j < *ne; j++)
+				if (desc[i] == node)
 				{
-					if (node == path[j])
-					{
-						mrca = 1;
-						break;
-					}
+					node = anc[i];
+					path[cnt] = node;
+					cnt++;
+					break;
 				}
 			}
-			if (mrca) break;
 		}
-		if (mrca) break;
-	}
+		
+		node = t2[k];
+		while (node != *root)
+		{
+			for (i = 0; i < *ne; i++)
+			{
+				if (desc[i] == node)
+				{
+					node = anc[i];
+					for (j = 0; j < *ne; j++)
+					{
+						if (node == path[j])
+						{
+							mrca = 1;
+							break;
+						}
+					}
+				}
+				if (mrca == 1) break;
+			}
+			if (mrca == 1) break;
+		}
 	
-	if (mrca)
-	{
-		ret[0] = node;
+		if (mrca == 1)
+		{
+			ret[k] = node;
+		}
+		else
+		{
+			ret[k] = *root;
+		}
+		Free(path);
 	}
-	else
-	{
-		ret[0] = *root;
-	}
-	Free(path);
 }
