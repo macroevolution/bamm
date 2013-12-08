@@ -36,6 +36,11 @@ runMCMC = 1
 # check whether the data file can be read and whether 
 # an initial likelihood can be computed.
 
+simulatePriorShifts = 1
+# Simulate prior distribution of the number of shift events
+#	given the hyperprior on the Poisson rate parameter.
+# This is necessary to compute Bayes factors
+
 loadEventData = 0                       
 # Load event configuration - see Documentation
 
