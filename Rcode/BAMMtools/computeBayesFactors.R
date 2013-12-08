@@ -28,7 +28,9 @@
 #	 						at least one of the models has been sampled at least
 #							threshold times. This avoids comparisons between two models
 #							that were very rarely or never sampled, which always implies
-#							highly inaccurate posterior probabilities	   
+#							highly inaccurate posterior probabilities	
+#	nbprior				=   use negative binomial distribution to 
+#								approximate the full prior distribution   
 #
 #
 #   Returns:  matrix w pairwise Bayes Factors
@@ -42,8 +44,10 @@
 #	
 #   Dependency on BAMM MCMC output: if order of output columns 
 #		changes, it will break this function.
+
+library(MASS);
 	
-computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NULL, threshold = 1){
+computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NULL, threshold = 1, nbprior = TRUE){
 
 
 	if (class(postdata) == 'character'){
@@ -64,10 +68,7 @@ computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NU
  
 	post <- post[floor(burnin*nrow(post)):nrow(post), ];
 	prior <- prior[floor(burnin*nrow(prior)):nrow(prior), ];
-
-	tpost <- table(post[,2]);
-	tprior <- table(prior[,2]);
-	
+ 
 	
 	if (is.null(modelset)){
 		modelset <- unique(post[,2]);
@@ -75,7 +76,32 @@ computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NU
 		stop('\nInvalid modelset argument. This must be a vector of length > 1');
 	}else{
 		
+	}	
+	
+	if (nbprior){
+		resnb <- fitdistr(prior[ ,2], densfun="negative binomial");	
+		
+		subs <- prior[,2];
+		if (length(subs) > 5000){
+			subs <- subs(sample(1:length(subs), size=5000));
+		}
+
+		resnb <- fitNegativeBinomial(subs);
+
+		p1 <- resnb$size;
+		p2 <- resnb$mu;
+
+		tprior <- dnbinom(x=modelset, size=p1, mu=p2);
+		names(tprior) <- as.character(modelset);
+		
+	}else{
+		tprior <- table(prior[,2]);	
 	}
+
+
+
+	tpost <- table(post[,2]);
+	
 	
 	modelset <- sort(modelset);
 	
@@ -107,7 +133,11 @@ computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NU
 		
 		for (j in 1:length(modelset)){
 					
-			prior_odds <- (priorf[i] + 1) / (priorf[j] + 1);
+			if (nbprior){
+				prior_odds <- priorf[i] / priorf[j];				
+			}else{
+				prior_odds <- (priorf[i] + 1) / (priorf[j] + 1);				
+			}
 			post_odds <- (postf[i] + 1) / (postf[j] + 1);
 			
 			ix <- modelset[i];
