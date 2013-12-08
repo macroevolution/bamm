@@ -24,13 +24,18 @@
 #							all sampled models
 #	
 #
-#  threshold			=   Will only compute BF for a model comparison where 
+#  threshpost, threshprior	=   Will only compute BF for a model comparison where 
 #	 						at least one of the models has been sampled at least
-#							threshold times. This avoids comparisons between two models
+#							thresh times. This avoids comparisons between two models
 #							that were very rarely or never sampled, which always implies
-#							highly inaccurate posterior probabilities	
+#							highly inaccurate posterior or prior probabilities	
 #	nbprior				=   use negative binomial distribution to 
 #								approximate the full prior distribution   
+#							This runs into trouble in some cases. When the prior is approximated
+#								with a high level of accuracy, but the posterior odds are poorly estimated
+#								this tends to fail.
+#	strict 		        =   logical. If TRUE, requires that both 
+#							models i and j be sampled at least threshpost or threshprior times.
 #
 #
 #   Returns:  matrix w pairwise Bayes Factors
@@ -44,10 +49,10 @@
 #	
 #   Dependency on BAMM MCMC output: if order of output columns 
 #		changes, it will break this function.
+# 
+#   This function can be very difficult to use.
 
-library(MASS);
-	
-computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NULL, threshold = 1, nbprior = TRUE){
+computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NULL, threshpost = 1, threshprior = 0, nbprior = FALSE, strict=FALSE){
 
 
 	if (class(postdata) == 'character'){
@@ -79,7 +84,6 @@ computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NU
 	}	
 	
 	if (nbprior){
-		resnb <- fitdistr(prior[ ,2], densfun="negative binomial");	
 		
 		subs <- prior[,2];
 		if (length(subs) > 5000){
@@ -142,12 +146,26 @@ computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NU
 			
 			ix <- modelset[i];
 			ij <- modelset[j];
-			isGood_i <- sum(post[,2] == ix) >= threshold;
-			isGood_j <- sum(post[,2] == ij) >= threshold;
+ 
+			
+			if (!strict){
+				isGood1 <- (sum(post[,2] == ix) >= threshpost) | (sum(post[,2] == ij) >= threshpost); 
+				isGood2 <- (sum(prior[,2] == ix) >= threshprior) | (sum(prior[,2] == ij) >= threshprior); 
 		
-			if (isGood_i | isGood_j){
-				mm[i , j] <- post_odds / prior_odds;	
+				if (isGood1 & isGood2){
+					mm[i , j] <- post_odds / prior_odds;	
+				}				
+			}else{
+				# All models must be sampled at least once.
+				isGood1 <- (sum(post[,2] == ix) >= threshpost) & (sum(post[,2] == ij) >= threshpost); 
+				isGood2 <- (sum(prior[,2] == ix) >= threshprior) & (sum(prior[,2] == ij) >= threshprior); 				
+				
+				if (isGood1 & isGood2){
+					mm[i , j] <- post_odds / prior_odds;	
+				}					
 			}
+			
+
 			
 		}	
 		
@@ -157,3 +175,6 @@ computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NU
 	return(mm);
 	
 }
+
+
+
