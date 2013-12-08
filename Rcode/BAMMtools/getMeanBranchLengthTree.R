@@ -19,17 +19,31 @@ getMeanBranchLengthTree <- function(obj,ndr=TRUE){
 	
 	if('bamm-data' %in% class(obj))
 	{
-		v <- list(edge = obj$edge, Nnode = obj$Nnode,tip.label = obj$tip.label, edge.length = obj$edge.length);
-		attributes(v) <- list(names = c("edge","Nnode","tip.label","edge.length"),class="phylo",order="cladewise");
-
-		obj <- getMarginalBranchRateMatrix(obj,verbose=FALSE);
+		#v <- list(edge = obj$edge, Nnode = obj$Nnode,tip.label = obj$tip.label, edge.length = obj$edge.length);
+		#attributes(v) <- list(names = c("edge","Nnode","tip.label","edge.length"),class="phylo",order="cladewise");
+		v <- as.phylo.bammdata(obj);
+		
 		if(ndr)
 		{
-			el  <- rowMeans(obj$lambda) - rowMeans(obj$mu);
+			if(obj$type == 'diversification'){
+				obj <- getMarginalBranchRateMatrix(obj,verbose=FALSE);
+				el  <- rowMeans(obj$lambda_branch_matrix) - rowMeans(obj$mu_branch_matrix);
+			}
+			else if(obj$type == 'traits'){
+				obj <- getMarginalBranchRateMatrix(obj,verbose=FALSE);
+				el  <- rowMeans(obj$beta_branch_matrix);
+			}
 		}
 		else
 		{
-			el  <- rowMeans(obj$lambda);
+			if(obj$type == 'diversification'){
+				obj <- getMarginalBranchRateMatrix(obj,verbose=FALSE);
+				el  <- rowMeans(obj$lambda_branch_matrix);
+			}
+			else if(obj$type == 'traits'){
+				obj <- getMarginalBranchRateMatrix(obj,verbose=FALSE);
+				el  <- rowMeans(obj$beta_branch_matrix);
+			}	
 		}
 		v$edge.length <- el;
 		obj <- list();
