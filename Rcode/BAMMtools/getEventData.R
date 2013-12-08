@@ -126,7 +126,8 @@ getEventData <- function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALS
  
  	for (i in 1:length(goodsamples)){
   		
-  		tmpEvents <- eventdata[eventdata[,1] == uniquegens[i], ];
+  		#tmpEvents <- eventdata[eventdata[,1] == uniquegens[i], ]; ### BAD line.
+		tmpEvents <- eventdata[eventdata[,1] == goodsamples[i], ];
 		
 		if (verbose)
 			cat('Processing event: ', i, '\n');		
