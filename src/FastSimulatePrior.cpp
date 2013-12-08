@@ -27,7 +27,7 @@ FastSimulatePrior::FastSimulatePrior(MbRandom* ranptr, Settings* sp)
         ran->uniformRv();
     }
     
-    
+    _generations = 0;
 
     _eventRate = 1 / sttings->getPoissonRatePrior();
     
