@@ -2,10 +2,11 @@
 #	Internal function called by plot.dtrates(...)
 #	
 #
-mkdtsegs = function(x,tau)
+mkdtsegs = function(x,tau,phy,tH)
 {
-	bn = sqrt((x[3]-x[1])^2 + (x[4]-x[2])^2);
-	len = bn/tau; if (len %% 1 == 0) len = len + 1;
+	#bn = sqrt((x[3]-x[1])^2 + (x[4]-x[2])^2);
+	#len = bn/tau; if (len %% 1 == 0) len = len + 1;
+	len = (phy$end[phy$edge[,2]==x[5]]/tH-phy$begin[phy$edge[,2]==x[5]]/tH)/tau; if (len %% 1 == 0) len = len + 1;
 	
 	j = seq(x[1],x[3],length.out=len);
 	if(length(j) == 1) return(matrix(x[c(1,3,2,4,5)],nrow=1));

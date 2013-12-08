@@ -47,12 +47,11 @@ plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5
 		warning(sprintf("Found %s NA values. Coercing to zero.",sum(is.na(ephy$dtrates$rates))));
 		ephy$dtrates$rates[is.na(ephy$dtrates$rates)] = 0;
 	}
-	
+	tH = max(branching.times(phy));
+	phy$begin = ephy$begin; phy$end = ephy$end;
 	if (method == 'polar')
 	{
-		phy = getStartStopTimes(phy);
 		ret = setPolarTreeCoords(phy,vtheta,rbf);
-		tH = max(branching.times(phy));
 		rb = tH*rbf;
 	}	
 	else if (method == 'phylogram')
@@ -68,7 +67,8 @@ plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5
 	tau = ephy$dtrates$tau;
 	edge.color = colorMap(ephy$dtrates$rates,pal,ncolors);
 	p = cbind(x0[-1],y0[-1],x1[-1],y1[-1],phy$edge[,2]);
-	p = apply(p,1,mkdtsegs,tau);
+	#p = apply(p,1,mkdtsegs,tau);
+	p = apply(p,1,mkdtsegs,tau,phy,tH);
 	p = do.call(rbind, p);
 	x0 = c(x0[1],p[,1]);x1=c(x1[1],p[,2]);y0=c(y0[1],p[,3]);y1=c(y1[1],p[,4]);
 	offset = table(p[,5])[as.character(unique(p[,5]))];
