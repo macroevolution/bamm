@@ -92,7 +92,7 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
  
  	for (i in 1:length(goodsamples))
  	{	
-  		tmpEvents = x2[x2[,1] == uniquegens[i], ];
+  		tmpEvents = x2[x2[,1] == goodsamples[i], ];
 		
 		if (verbose) cat('Processing event: ', i, '\n');		
  
@@ -112,7 +112,7 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
 		tipMu = list();	
 		
  		# Get subtending node for each event:
- 		nodeVec = uniquePairNode[x2[,1] == uniquegens[i]];
+ 		nodeVec = uniquePairNode[x2[,1] == goodsamples[i]];
  		
  		if (sum(nodeVec == 0)  > 0)
  		{
