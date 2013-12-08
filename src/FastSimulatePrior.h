@@ -9,9 +9,17 @@
 #ifndef __bamm__FastSimulatePrior__
 #define __bamm__FastSimulatePrior__
 
-#include <iostream>
+//#include <iostream>
 
-#include <vector>
+//#include <vector>
+
+//#include <stdlib.h>
+//#include <string.h>
+
+#include <stdlib.h>
+#include <string>
+#include <fstream>
+#include <iosfwd>
 
 //Forward declarations
 class Node;
@@ -32,6 +40,10 @@ public:
     double getEventRate(void);
     bool acceptMetropolisHastings(const double lnR);
     
+
+// Output settings:
+//    void writeStateToFile();
+    void writeHeaderToOutputFile();
     
 private:
 
@@ -44,9 +56,18 @@ private:
     double _updateEventRateScale;
     double _poissonRatePrior;
     
+    std::string _outfileName;
+    
     void incrementGeneration(void);
     void setEventRate(double x);
+
+    std::ofstream _fspOutStream;
+    std::ofstream _eventDataOutStream;
     
+    void writeStateTofile();
+    void writeStateToStream(std::ostream& outStream);
+    void exitWithErrorOutputFileExists();
+
 
 };
 

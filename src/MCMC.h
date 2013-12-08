@@ -9,10 +9,11 @@
 #ifndef MCMC_H
 #define MCMC_H
 
+#include <iosfwd>
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include <iosfwd>
+
 
 class MbRandom;
 class Model;

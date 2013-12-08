@@ -8,8 +8,11 @@
 
 #include "FastSimulatePrior.h"
 
-
-#include <cmath>
+#include <sstream>
+#include <fstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
 
 #include "MbRandom.h"
 #include "Settings.h"
@@ -33,13 +36,62 @@ FastSimulatePrior::FastSimulatePrior(MbRandom* ranptr, Settings* sp)
     _poissonRatePrior = sttings->getPoissonRatePrior();
     _numberEvents = 0;
     
+    _outfileName = "shiftPrior_" + sp->getMCMCoutfile();
+    
+
+    // Open streams for writing
+    _fspOutStream.open(_outfileName.c_str());
+ 
+    writeHeaderToOutputFile();
+    
+    std::cout << "\nSimulating prior distribution on shifts....\n" << std::endl;
+    std::cout << "Progress: 0% ";
+    std::cout.flush();
+    
+    int fints = (int)round(sp->getNGENS() / 32);
+    
+    
+    for (int i = 0; i < sp->getNGENS(); i++){
+                
+        updateState();
+    
+        if ((i % sp->getMCMCwriteFreq()) == 0){
+            writeStateTofile();
+        }
+        
+        if ((i % fints) == 0){
+            
+            if (i == (fints*16)){
+                std::cout << " 50% ";
+            }
+            
+            std::cout << "|";
+            std::cout.flush();
+        }
+        
+    }
+    
+    std::cout << " 100% \n\nDone...Results written to file << " << _outfileName.c_str();
+    std::cout << " >>\n" << std::endl;   
+    
 }
 
 FastSimulatePrior::~FastSimulatePrior()
 {
-
+    _fspOutStream.close();
 }
 
+void FastSimulatePrior::writeStateTofile()
+{
+    writeStateToStream(_fspOutStream);
+}
+
+void FastSimulatePrior::writeStateToStream(std::ostream &outStream)
+{
+    outStream   << _generations      << ","
+                << _numberEvents    << ","
+                << _eventRate       << std::endl;
+}
 
 void FastSimulatePrior::updateEventRateMH()
 {
@@ -163,6 +215,10 @@ bool FastSimulatePrior::acceptMetropolisHastings(const double lnR)
 }
 
 
+void FastSimulatePrior::writeHeaderToOutputFile()
+{
+    _fspOutStream << "generation,N_shifts,eventRate" << std::endl;
 
+}
 
 
