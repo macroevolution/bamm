@@ -13,6 +13,7 @@
 #include "TraitMCMC.h"
 #include "TraitModel.h"
 #include "Autotune.h"
+#include "FastSimulatePrior.h"
 
 
 void printAbout();
@@ -64,7 +65,8 @@ int main (int argc, char* argv[])
 
     std::ofstream runInfoFile(mySettings.getRunInfoFilename().c_str());
     log(Message, runInfoFile) << "Command line: " << commandLine << "\n";
-    log(Message, runInfoFile) << "Git commit id: " << GIT_COMMIT_ID << "\n";
+
+    //log(Message, runInfoFile) << "Git commit id: " << GIT_COMMIT_ID << "\n";
     if (mySettings.getSeed() == -1) {
         log(Message) << "Random seed (clock): " << myRNG.getSeed() << "\n";
         log(Message, runInfoFile) << "Random seed (clock): " <<
@@ -75,6 +77,11 @@ int main (int argc, char* argv[])
     }
     log(Message, runInfoFile) << "Start time: " << currentTime() << "\n";
 
+
+    if (mySettings.getSimulatePriorShifts()){
+        FastSimulatePrior fsp(&myRNG, &mySettings);
+    }
+    
     if (mySettings.getModeltype() == "speciationextinction") {
         log(Message) << "\nModel type: Speciation/Extinction\n";
 
@@ -108,6 +115,8 @@ int main (int argc, char* argv[])
             log(Error) << "Unsupported option in main.\n";
             std::exit(1);
         }
+        
+
         
     } else if (mySettings.getModeltype() == "trait") {
         log(Message) << "\nModel type: Trait\n";

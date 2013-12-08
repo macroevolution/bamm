@@ -74,6 +74,8 @@ public:
     bool getRunMCMC() const;
     bool getInitializeModel() const;
 	bool getAutotune() const;
+    
+    bool getSimulatePriorShifts() const;
 
     // Load previous settings?
     bool getLoadEventData() const;
@@ -186,6 +188,11 @@ inline bool Settings::getUseGlobalSamplingProbability() const
 inline bool Settings::getSampleFromPriorOnly() const
 {
     return _parameters.at("sampleFromPriorOnly").value<bool>();
+}
+
+inline bool Settings::getSimulatePriorShifts() const
+{
+    return _parameters.at("simulatePriorShifts").value<bool>();
 }
 
 
