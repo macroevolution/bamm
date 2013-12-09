@@ -1,7 +1,7 @@
 .. highlight:: none
 
 Configurations & Settings: BAMM for Trait Evolution
-=============
+===================================================
 
 
 Control File
@@ -79,7 +79,7 @@ betaShiftPrior
   *Description not yet available.*
   
 MCMC Simulation Settings & Output Options
-...........
+............................................
 
 numberGenerations
   Number of MCMC generations to run.
@@ -162,7 +162,7 @@ localGlobalMoveRatio
   Ratio of local to global moves of events.
 
 Initial Parameter Values
-...................
+......................................
 
 betaInit
   Initial Brownian motion rate parameter at the base of the tree.
@@ -174,7 +174,7 @@ initialNumberEvents
   Initial number of non-root processes.
   
 Numerical & Other Parameters
-......................
+............................................
 
 useObservedMinMaxAsTraitPriors
   *Description not yet available.*

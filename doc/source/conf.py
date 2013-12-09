@@ -221,8 +221,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'bamm.tex', u'bamm Documentation',
-   u'Carlos Anderson, Dan Rabosky', 'manual'),
+  ('documentation', 'bamm.tex', u'BAMM Documentation',
+   u'BAMM Team', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
