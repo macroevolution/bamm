@@ -1,0 +1,13 @@
+{% extends "sphinxdoc/layout.html" %}
+
+{% block rootrellink %}
+<li><a href="{{ pathto('index') }}">Home</a>&nbsp;|</li>
+<li><a href="{{ pathto('download') }}">Download</a>&nbsp;|</li>
+<li><a href="{{ pathto('documentation') }}">Documentation</a></li>
+{% endblock %}
+
+{% block header %}
+<div class="pageheader">
+    <h1>BAMM</h1>
+</div>
+{% endblock %}
