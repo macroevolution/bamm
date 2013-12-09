@@ -17,7 +17,7 @@ histRates = function(rates,pal,NCOLORS)
 	}
 	else if(pal == 'temperature')
 	{
-		rate.colors = rich.colors(NCOLORS);	
+		rate.colors = piratedColors(NCOLORS);	
 	}
 	qx = quantile(rates,seq(0,1,length.out = NCOLORS+1));
 	cat("Click once where you want the lower left corner of the figure\n");
@@ -37,7 +37,7 @@ histRates = function(rates,pal,NCOLORS)
 		bcol = rate.colors[index];
 		segments(fx$x[i],fx$y[i],fx$x[i],0,lend=2,col=bcol);
 	}
-	axis(1,round(seq(0,max(fx$x),length.out=5),1),pos=0,cex.axis=0.75,tcl=NA,mgp=c(0,0.25,0));
+	axis(1,signif(seq(0,max(fx$x),length.out=5),2),pos=0,cex.axis=0.75,tcl=NA,mgp=c(0,0.25,0));
 	axis(2,round(seq(0,max(fx$y),length.out=3),0),las=1,pos=0,cex.axis=0.75,tcl=NA,mgp=c(0,0.25,0));
 	mtext('Evolutionary Rate',1,line=1,cex=0.75);
 	mtext('Density',2,line=1,cex=0.75);
