@@ -6,7 +6,7 @@ BAMM (Bayesian analysis of macroevolutionary mixtures) is a program for modeling
 
 
 .. _whalefig: 
-.. figure:: figs/whalerates1.pdf
+.. figure:: figs/xIntroFig_whalerates.png
    :width: 640
    :align: center
 

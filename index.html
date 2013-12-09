@@ -6,9 +6,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>BAMM Documentation &mdash; bamm 1.0 documentation</title>
+    <title>Welcome &mdash; bamm 1.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -23,40 +23,27 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 1.0 documentation" href="#" />
-    <link rel="next" title="1. Introduction" href="introduction.html" /> 
+    <link rel="top" title="bamm 1.0 documentation" href="#" /> 
   </head>
   <body>
+<div class="pageheader">
+    <h1>BAMM</h1>
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="introduction.html" title="1. Introduction"
-             accesskey="N">next</a> |</li>
-        <li><a href="#">bamm 1.0 documentation</a> &raquo;</li> 
+<li><a href="#">Home</a>&nbsp;|</li>
+<li><a href="download.html">Download</a>&nbsp;|</li>
+<li><a href="documentation.html">Documentation</a></li>
+ 
       </ul>
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">BAMM Documentation</a><ul>
-</ul>
-</li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
-</ul>
-
-  <h4>Next topic</h4>
-  <p class="topless"><a href="introduction.html"
-                        title="next chapter">1. Introduction</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/index.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -78,86 +65,41 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="bamm-documentation">
-<h1>BAMM Documentation<a class="headerlink" href="#bamm-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
+
+<h1>Welcome</h1>
+
+<p>
+BAMM (Bayesian Analysis of Macroevolutionary Mixtures) is a program for
+modeling complex dynamics of speciation, extinction, and trait evolution on
+phylogenetic trees.
+</p>
+
+<p>
+BAMM is oriented entirely towards detecting and quantifying heterogeneity in
+evolutionary rates. It uses reversible jump Markov chain Monte Carlo to
+automatically explore a vast universe of candidate models of lineage
+diversification and trait evolution. It has been described and extended in
+several publications (citations). BAMM is a command line program written in
+C++. Post-run analysis and visualization is performed using the R package
+<b>BAMMtools</b>.
+</p>
+
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#brief-overview-of-bamm-functionality">1.1. Brief Overview of BAMM Functionality</a></li>
+    <li><a href="download.html">Download BAMM</a>
+        for Mac OS X or Windows. Or go to our
+        <a href="https://github.com/macroevolution/bamm">GitHub page</a>
+        to get the source code.</li>
+
+    <li>Explore the <a href="bammgraph.html">Graph Gallery</a>
+        for a sample of analyses produced using BAMM and BAMMtools.</li>
+
+    <li>Quickly start using and analyzing data with BAMM by reading the
+        <a href="quickstart.html">Quick-start Guide to BAMM</a>.</li>
+
+    <li>Go to our <a href="faq.html">Frequently Asked Questions</a>
+        page to see common questions and answers.</li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="bammgraph.html">2. BAMM graph gallery</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="bammgraph.html#tree-wide-diversification-heterogeneity">2.1. Tree-wide diversification heterogeneity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bammgraph.html#phenotypic-evolutionary-rates">2.2. Phenotypic evolutionary rates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bammgraph.html#evolutionary-rate-variation-through-time">2.3. Evolutionary rate variation through time</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bammgraph.html#rate-variation-through-time-color-density-plot">2.4. Rate variation through time: color density plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bammgraph.html#bayes-factors">2.5. Bayes factors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bammgraph.html#maximum-shift-credibility-tree">2.6. Maximum shift credibility tree</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bammgraph.html#cumulative-shift-probability">2.7. Cumulative shift probability</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="sometheory.html">3. Some important theoretical background</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="sometheory.html#event-driven-model-for-rate-variation">3.1. Event-Driven Model for Rate Variation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sometheory.html#reversible-jump-mcmc">3.2. Reversible Jump MCMC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sometheory.html#functional-models-for-rate-variation">3.3. Functional Models for Rate Variation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sometheory.html#the-meaning-of-rate-shifts">3.4. The Meaning of <em>Rate Shifts</em></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">4. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">5. Quick-start guide to BAMM</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#data-files-and-input">5.1. Data files and input</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#setting-up-the-control-file">5.2. Setting up the control file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#running-the-program">5.3. Running the program</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#understanding-bamm-output">5.4. Understanding BAMM output</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="configuration_speciation.html">6. Speciation-Extinction: Configurations &amp; Settings</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="configuration_speciation.html#the-control-file">6.1. The Control File</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration_speciation.html#global-options-and-parameters">6.2. Global Options and Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration_speciation.html#speciation-extinction-model">6.3. Speciation/Extinction Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration_speciation.html#phenotypic-evolution-model">6.4. Phenotypic Evolution Model</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="configuration_trait.html">7. Phenotypic Evolution: Configurations &amp; Settings</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="configuration_trait.html#the-control-file">7.1. The Control File</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration_trait.html#global-options-and-parameters">7.2. Global Options and Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration_trait.html#speciation-extinction-model">7.3. Speciation/Extinction Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration_trait.html#phenotypic-evolution-model">7.4. Phenotypic Evolution Model</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="postprocess.html">8. Analyzing BAMM output with BAMMtools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="postprocess.html#brief">8.1. Brief</a></li>
-<li class="toctree-l2"><a class="reference internal" href="postprocess.html#bamm-output-files">8.2. BAMM output files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="postprocess.html#diagnosing-convergence">8.3. Diagnosing convergence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="postprocess.html#general-bammtools-workflow">8.4. General BAMMtools workflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="postprocess.html#bammtools-workflow-speciation-extinction">8.5. BAMMtools workflow: speciation-extinction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="postprocess.html#bammtools-workflow-phenotypic-evolution">8.6. BAMMtools workflow: phenotypic evolution</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="advanced.html">9. Advanced analysis options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advanced.html#modeling-less-complex-evolutionary-scenarios">9.1. Modeling <em>less complex</em> evolutionary scenarios</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced.html#accounting-for-phylogenetic-uncertainty">9.2. Accounting for phylogenetic uncertainty</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">10. Frequently Asked Questions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#general">10.1. General</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#problems-running-bamm">10.2. Problems running BAMM</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#troubleshooting-bamm-runs">10.3. Troubleshooting BAMM runs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#the-model-and-approximations">10.4. The model and approximations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#other-questions">10.5. Other questions</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
-<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
-<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
-</ul>
-</div>
+
 
 
           </div>
@@ -171,10 +113,10 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="introduction.html" title="1. Introduction"
-             >next</a> |</li>
-        <li><a href="#">bamm 1.0 documentation</a> &raquo;</li> 
+<li><a href="#">Home</a>&nbsp;|</li>
+<li><a href="download.html">Download</a>&nbsp;|</li>
+<li><a href="documentation.html">Documentation</a></li>
+ 
       </ul>
     </div>
     <div class="footer">
