@@ -2,7 +2,7 @@ Processing BAMM output
 ========================
 
 Understanding BAMM output files
-..............
+................................
 
 
 Diagnosing convergence
@@ -10,11 +10,4 @@ Diagnosing convergence
 
 
 BAMMtools for macroevolutionary rate analysis
-.....................
-
-
-
-
-
-
-
+..............................................

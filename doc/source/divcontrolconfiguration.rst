@@ -1,7 +1,7 @@
 .. highlight:: none
 
 Parameters & Settings: speciation-extinction BAMM
-=============
+=================================================
 
 
 Control File
@@ -99,7 +99,7 @@ muShiftPrior
   *Description not yet available.*
 
 MCMC Simulation Settings & Output Options
-...........
+............................................
 
 numberGenerations
   Number of MCMC generations to run.
@@ -189,7 +189,7 @@ localGlobalMoveRatio
   Ratio of local to global moves of events.
 
 Initial Parameter Values
-...................
+.....................................
 
 lambdaInit0
   Initial speciation rate at the root of the tree.
@@ -209,7 +209,7 @@ initialNumberEvents
   Initial number of non-root processes.
 
 Numerical & Other Parameters
-......................
+............................................
 
 minCladeSizeForShift
   Set the minimum number of descendant tips a branch must have to be the location of a possible rate-change event. A value of 1 allows shifts to occur on any branch.

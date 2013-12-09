@@ -59,6 +59,10 @@ cmat <- getColorKey(log(bfmat))
 
 bfmat <- computeBayesFactors('post_mcmc_p50run1.txt', 'prior_mcmc_out.txt', modelset=0:100, constrain=F, burnin=0.25, threshold=0);
 
+
+
+
+
 ##########################
 ###### The figure!
 

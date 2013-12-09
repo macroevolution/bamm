@@ -1,5 +1,5 @@
 Analyzing BAMM output with BAMMtools
-========================
+===============================================
 
 Brief
 ................
@@ -10,7 +10,7 @@ The R package **BAMMtools** contains almost everything you need to analyze and v
 A comprehensive introduction to BAMMtools can be found **here** (**linked ref to BAMMtools latex**). The information below is a brief overview to get you started, but you should refer to the linked pdf documentation for details. 
 
 BAMM output files
-..............
+............................
 
 BAMM generates three primary output files. The first is the *mcmc data file*, which contains several pieces of information about the MCMC simulation that may be useful in diagnosing convergence. The most important pieces of information from this file are the number of shift events, the log-likelihood of the data, and the log-prior probability of the data, for each sample from the posterior. 
 
@@ -44,7 +44,7 @@ In general, we want these to be at least 200 (and 200 is on the low side, but mi
 If you are having trouble with convergence, please see the section on troubleshooting convergence issues (**LINK** to FAQ). 
 
 General BAMMtools workflow
-.....................
+..........................................
 
 The general analyses described in this section apply both to **speciation-extinction** and **phenotypic evolution** studies. As such, they are not treated separately. The primary difference is the name of the parameters (:math:`\lambda` and :math:`\mu` for speciation and extinction, and :math:`\beta` for trait evolution).
 
@@ -74,7 +74,7 @@ Now we will focus on a few simple analyses that you can do with the 'BAMM-data' 
 
 
 Analyzing locations of rate shifts
---------------------------------
+----------------------------------
 Once you have established there there is at least some evidence for heterogeneous evolutionary dynamics in your dataset, the obvious question is: where are these rate shifts? In the BAMM framework, this is a deceptively simple question, because BAMM does not generate a single *best* rate shift configuration. In the BAMM framework, many different shift configurations may be (more-or-less) equally plausible. BAMM samples shift configurations in proportion to their posterior probability. In principle, this means that each sample from your posterior contains a potentially unique configuration of regime shift events. 
 
 A conceptual discussion of the meaning of rate shifts is included in this documentation and it is **strongly recommended** that you :ref:`read this section before continuing<bammtheory>`. Approaches that identify a single best shift configuration (e.g., stepwise AIC, or other approaches that simply maximize the likelihood) are inherently limited by their assumption that the model with the best information theoretic score (AIC etc) is *the* model, given the candidate set of models. However, for most real datasets, the best rate shift configuration is merely one of a large number of possible rate shift configurations that have similar probabilities. The BAMM philosophy is largely oriented around addressing this. 
@@ -158,19 +158,20 @@ And we can also view the rate-through-time dynamics implied by this sample::
   
 
 Estimating clade-specific rates
-------------------------------
+-------------------------------
 
 **Under construction**
 
 
 Branch-specific evolutionary rates
--------------------------------
+----------------------------------
 
 **Under construction**
 
 .. _bammtoolsRTT:
+
 Plotting rate-through-time curves
------------------------------
+---------------------------------
 
 Plotting rate-through-time curve (example **here (link)**) is trivial. BAMM's built-in function *plotRateThroughTime* makes it easy to generate plots of rates through time::
 
@@ -244,18 +245,8 @@ and this will return a pairwise matrix of Bayes factors. It is very important to
 
  
 BAMMtools workflow: speciation-extinction
-.....................
+..........................................
 
 
 BAMMtools workflow: phenotypic evolution
-.....................
-
-
-
-
-
-
-
-
-
-
+..........................................

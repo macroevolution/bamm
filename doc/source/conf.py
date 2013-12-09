@@ -43,14 +43,14 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = 'documentation'
 
 # The name of the default domain.
 primary_domain = 'cpp'
 
 # General information about the project.
 project = u'bamm'
-copyright = u'2013, Carlos Anderson, Dan Rabosky'
+copyright = u'2013 BAMM Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -104,7 +104,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinxdoc'
+html_theme = 'bamm'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -131,7 +131,7 @@ html_theme = 'sphinxdoc'
 #}
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
+html_theme_path = ['_themes']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -172,10 +172,10 @@ html_static_path = ['_static']
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
-#html_additional_pages = {}
+html_additional_pages = {'index': 'index.html'}
 
 # If false, no module index is generated.
-#html_domain_indices = True
+html_domain_indices = False
 
 # If false, no index is generated.
 #html_use_index = True
@@ -221,8 +221,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'bamm.tex', u'bamm Documentation',
-   u'Carlos Anderson, Dan Rabosky', 'manual'),
+  ('documentation', 'bamm.tex', u'BAMM Documentation',
+   u'BAMM Team', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

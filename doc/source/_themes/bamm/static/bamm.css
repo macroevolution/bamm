@@ -1,0 +1,27 @@
+@import url("sphinxdoc.css");
+
+.pageheader {
+    text-align: left;
+    padding: 10px 15px;
+}
+
+.pageheader ul {
+    float: right;
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 30px;
+    margin-right: 10px;
+}
+
+.pageheader li {
+    float: left;
+    margin: 0 0 0 10px;
+}
+
+.pageheader li a {
+    padding: 8px 12px;
+}
+
+.pageheader li a:hover {
+    color: white;
+}

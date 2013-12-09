@@ -1,15 +1,16 @@
 .. highlight:: none
 
 Advanced analysis options
-============================
+=========================
 
 Modeling *less complex* evolutionary scenarios
-------------------------------
+----------------------------------------------
 
 The basic BAMM model is fairly complex, as it allows rate variation through time and among lineages. However, you can easily modify the control file for BAMM to perform several simpler types of analyses.
 
 Constant rate birth-death model
-************************
+*******************************
+
 To perform Bayesian inference on your data under a constant-rate birth-death process, you can simply tell BAMM not to perform any MCMC update moves that are not part of the constant-rate birth-death process. Specifically, you should (i) not add rate regimes to the tree, and (ii) not update the parameter controlling speciation rate variation through time. You can do this by making sure the MCMC move frequencies are set as follows::
 
 	updateRateEventNumber = 0
@@ -19,7 +20,6 @@ To perform Bayesian inference on your data under a constant-rate birth-death pro
 	updateRateLambdaShift = 0
 	updateRateMu0 = 1
  
-
 Pure-birth model
 ************************
 To run a pure-birth only model, with no extinction, you just turn off the extinction update::
@@ -55,10 +55,8 @@ BAMM is sufficiently flexible as to allow a number of permutations on these gene
  	
  	betaShiftInit = 0.0
  
- 
- 
 Accounting for phylogenetic uncertainty
-------------------------------
+----------------------------------------
 
 Some researchers consider it important to account for phylogenetic uncertainty when performing macroevolutionary analyses. At present, there is no direct way of accounting for phylogenetic uncertainty in BAMM itself. It remains unclear whether phylogenetic uncertainty generally matters for the sorts of conclusions obtained with BAMM. My (DLR) personal view is that phylogenetic uncertainty is very much an issue for **some types** of results obtained using BAMM (and other programs), and (usually) not an issue at all for many other types of results. 
 
@@ -69,12 +67,3 @@ Phylogenetic uncertainty will matter if you do in fact care about *specific* asp
 Although BAMM does not directly allow modeling phylogenetic uncertainty, it is straightforward to perform BAMM analyses across distributions of phylogenies taken from a Bayesian analysis. Below, we demonstrate how you can use your bash shell (on the OSX or Linux operating systems) to perform a BAMM analysis across a sample of trees.::
 
 	Add bash script stuff here, maybe a link to ppss as well.
-	
-	
-	
-	
-
-
-
-
- 
