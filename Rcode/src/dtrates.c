@@ -76,7 +76,7 @@ times of approximating segments and starting and ending times of branches
 or branch segments on the phylogeny.
 ***/
 
-#define segmat(l,k) (getDblMatrixELT(segmat, l, k))
+#define segmat(row, col) (getDblMatrixELT(segmat, row, col))
 
 SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 {
@@ -198,3 +198,5 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 	UNPROTECT(nprotect);
 	return rates;
 }
+
+#undef segmat(row, col)

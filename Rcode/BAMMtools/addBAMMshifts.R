@@ -17,7 +17,7 @@ addBAMMshifts = function(ephy, method, index, cex=1, pch=21, col=1, bg=2, multi=
 	{
 		if (max(lastPP$xx) <= 1)
 		{
-			XX = times/max(branching.times(ephy));
+			XX = times/max(branching.times(as.phylo.bammdata(ephy)));
 		}
 		else
 		{
@@ -28,8 +28,8 @@ addBAMMshifts = function(ephy, method, index, cex=1, pch=21, col=1, bg=2, multi=
 	else if (method == 'polar')
 	{
 		rb = lastPP$rb;
-		XX = (rb+times/max(branching.times(ephy))) * cos(lastPP$theta[shiftnodes]);
-		YY = (rb+times/max(branching.times(ephy))) * sin(lastPP$theta[shiftnodes]);		
+		XX = (rb+times/max(branching.times(as.phylo.bammdata(ephy)))) * cos(lastPP$theta[shiftnodes]);
+		YY = (rb+times/max(branching.times(as.phylo.bammdata(ephy)))) * sin(lastPP$theta[shiftnodes]);		
 	}	
 	points(XX,YY,pch=pch,cex=cex,col=col,bg=bg);
 	if (!multi){
