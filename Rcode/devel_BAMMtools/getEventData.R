@@ -1,8 +1,8 @@
 getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE, type = 'diversification', header=TRUE)
 {	
-	if (type != 'diversification' & type != 'traits')
+	if (type != 'diversification' & type != 'trait')
 	{
-		stop("Invalid 'type' specification. Should be 'diversification' or 'traits'");
+		stop("Invalid 'type' specification. Should be 'diversification' or 'trait'");
 	}
 	
 	if (any(is.null(c(phy$begin, phy$end))))
@@ -225,11 +225,11 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
 	}
 	else
 	{
-		phy$type = 'traits';	
+		phy$type = 'trait';	
 	}
  	
 	# Inherits attributes of class phylo
 	# plus adds new class: bamm-data
-	class(phy) = c('phylo', 'bamm-data');
+	class(phy) = 'bammdata';
 	return(phy);
 }

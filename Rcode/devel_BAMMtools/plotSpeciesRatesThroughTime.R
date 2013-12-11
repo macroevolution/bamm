@@ -17,8 +17,8 @@
 
 plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(ephy)), useMedian=F, nbreaks=10, ratetype='speciation', species, intervals=seq(from = 0,to = 1,by = 0.01), smooth=F, spCol=sample(colors(),2), opacity=0.01,smoothParam=0.20){
 	
-	if (!'bamm-data' %in% class(ephy)){
-		stop("Object ephy must be of class bamm-data\n");
+	if ('bammdata' != class(ephy)){
+		stop("Object ephy must be of class bammdata\n");
 	}
 	
 	if (!all(species %in% ephy$tip.label)){

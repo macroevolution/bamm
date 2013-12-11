@@ -19,9 +19,9 @@
 #			 rates and the step size used for calculation.
 dtRates = function(ephy, tau, ism = NULL)
 {
-	if(!'bamm-data' %in% class(ephy))
+	if('bammdata' != class(ephy))
 	{
-		stop('Function requires a bammdata object');
+		stop('Object ephy must be of class bammdata');
 	}
 	
 	ephy$eventBranchSegs = lapply(ephy$eventBranchSegs, function(x) x[order(x[,1]), ]); 

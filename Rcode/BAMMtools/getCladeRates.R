@@ -10,8 +10,8 @@
 
 getCladeRates <- function(ephy, node = NULL, nodetype='include', verbose=F){
 	
-	if (!'bamm-data' %in% class(ephy)){
-		stop("Object ephy must be of class bamm-data\n");
+	if ('bammdata' != class(ephy)){
+		stop("Object ephy must be of class bammdata\n");
 	}	
 	
 	if (is.null(node)){
@@ -21,7 +21,7 @@ getCladeRates <- function(ephy, node = NULL, nodetype='include', verbose=F){
 	}else if (!is.null(node) & nodetype == 'exclude'){
 		nodeset <- setdiff( ephy$edge[,2],  getDesc(ephy, node)$desc_set);
 	}else{
-		stop('error in getRateTHroughTimeMatrix\n');
+		stop('error in getRateThroughTimeMatrix\n');
 	}
 	
 	lambda_vector <- numeric(length(ephy$eventBranchSegs));
@@ -63,7 +63,7 @@ getCladeRates <- function(ephy, node = NULL, nodetype='include', verbose=F){
 	if (ephy$type == 'diversification'){
 		return(list(lambda = lambda_vector, mu = mu_vector));
 	}
-	if (ephy$type == 'traits'){
+	if (ephy$type == 'trait'){
 		return(list(beta = lambda_vector));
 	}
 }

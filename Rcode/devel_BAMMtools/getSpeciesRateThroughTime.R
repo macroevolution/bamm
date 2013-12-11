@@ -11,15 +11,15 @@
 #
 getSpeciesRateThroughTime <- function(ephy, start.time, nbreaks, ndr, species,returnAll = F){
 
-	if (!'bamm-data' %in% class(ephy)){
-		stop("Object ephy must be of class bamm-data\n");
+	if ('bammdata' != class(ephy)){
+		stop("Object ephy must be of class bammdata\n");
 	}
 	
 	if (!species %in% ephy$tip.label | length(species) > 1){
 		stop("Species must be a single species whose name matches a tip in the phylogeny.")
 	}
 	
-	if (ephy$type == 'traits'){
+	if (ephy$type == 'trait'){
 		ndr <- FALSE;
 	}
 		

@@ -13,9 +13,9 @@ mkdtsegs = function(x,tau,phy,tH)
 		
 	k = seq(x[2],x[4],length.out = len);
 	
-	j = rep(j,each=2); j = j[2:(length(j)-1)];
+	j = rep(j,each=2); j = j[-c(1,length(j))];
 	j = matrix(j,ncol=2,byrow=TRUE);	
-	k = rep(k,each=2); k = k[2:(length(k)-1)];
+	k = rep(k,each=2); k = k[-c(1,length(k))];
 	k = matrix(k,ncol=2,byrow=TRUE);	
 	l = matrix(rep(x[5],nrow(j)),ncol=1);
 	return(cbind(j,k,l));	

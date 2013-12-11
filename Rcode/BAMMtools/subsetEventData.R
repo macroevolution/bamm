@@ -5,8 +5,8 @@
 
 subsetEventData <- function(ephy, index=NULL){
 	
-	if (!'bamm-data' %in% class(ephy)){
-		stop("Object ephy must be of class bamm-data\n");
+	if ('bammdata' != class(ephy)){
+		stop("Object ephy must be of class bammdata\n");
 	}
 	
 	nsamples <- length(ephy$eventData);
@@ -45,7 +45,7 @@ subsetEventData <- function(ephy, index=NULL){
 	obj$type <- ephy$type;
 	
 
-	class(obj) <- c('phylo', 'bamm-data');
+	class(obj) <- 'bammdata';
 	attributes(obj)$order = attributes(ephy)$order;	
 	return(obj);
 	

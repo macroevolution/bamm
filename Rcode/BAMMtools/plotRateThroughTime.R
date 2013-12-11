@@ -28,10 +28,10 @@
 #	+ several undocumented args to set plot parameters: mar, cex, xline, yline, etc.
 #	
 
-plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'speciation', nBins = 100, smooth = F, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = T, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=F){
+plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'speciation', nBins = 100, smooth = FALSE, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = TRUE, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=FALSE){
 	
-	if (!'bamm-data' %in% class(ephy) & !'bamm-ratematrix' %in% class(ephy)){
-		stop("ERROR: Object ephy must be of class bamm-data\n or bamm-ratematrix.");
+	if ('bammdata' != class(ephy) & 'bamm-ratematrix' != class(ephy)){
+		stop("ERROR: Object ephy must be of class bammdata or bamm-ratematrix.\n");
 	}
 	if (!is.logical(useMedian)){
 		stop('ERROR: useMedian must be either TRUE or FALSE.');
@@ -46,11 +46,11 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 		stop('ERROR: smooth must be either TRUE or FALSE.');
 	}
 
-	if ('bamm-data' %in% class(ephy)){
+	if ('bammdata' == class(ephy)){
 		#get rates through binned time
 		rmat <- getRateThroughTimeMatrix(ephy, start.time = start.time, end.time = end.time,node = node, nslices = nBins, nodetype=nodetype);
 	}
-	if ('bamm-ratematrix' %in% class(ephy)){
+	if ('bamm-ratematrix' == class(ephy)){
 		#use existing rate matrix
 		rmat <- ephy;
 	}
@@ -97,15 +97,15 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 	}
 
 	#Calculate averaged data line
-	if (useMedian == F){
+	if (useMedian == FALSE){
 		avg <- colMeans(rate);
 	}
-	if (useMedian == T){
+	if (useMedian == TRUE){
 		avg <- unlist(apply(rate,2,median));
 	}
 	
 	#apply loess smoothing to intervals
-	if (smooth == T){
+	if (smooth == TRUE){
 		for (i in 1:length(poly)){
 			p <- poly[[i]];
 			rows <- nrow(p);
@@ -117,8 +117,8 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 	}
 
 	#begin plotting
-	if (plot == T){
-		if (add == F){
+	if (plot == TRUE){
+		if (add == FALSE){
 			plot.new();
 			par(mar=mar);
 			if (unique(xlim == 'auto') & unique(ylim == 'auto')){
@@ -157,7 +157,7 @@ plotRateThroughTime <- function(ephy, useMedian = F, intervals=seq(from = 0,to =
 		mtext(side = 1, text = 'Time since present', line = xline, cex = cex);
 		mtext(side = 2, text = ratelabel, line = yline, cex = cex);
 	}
-	if (plot == F){
+	if (plot == FALSE){
 		return(list(poly = poly,avg = avg,times = rmat$time));
 	}
 }

@@ -32,8 +32,8 @@
 
 maximumShiftCredibilityTree <- function(ephy, maximize = 'product'){
 
-	if (!'bamm-data' %in% class(ephy)){
-		stop("Object ephy must be of class bamm-data\n");
+	if ('bammdata' != class(ephy)){
+		stop("Object ephy must be of class bammdata\n");
 	}			
 	
 	probvec <- numeric(length(ephy$eventData));

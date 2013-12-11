@@ -1,5 +1,5 @@
 ##################################
-#	plot.dtrates(...)
+#	plot.bammdata(...)
 #
 #	A function to plot dynamic rates through time
 #	onto a phylogeny
@@ -36,15 +36,15 @@
 #	                 respectively
 #	           ... = further arguments passed to par to control plotting, e.g. mar.
 #
-plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5, rbf=0.001, show=TRUE, labels=FALSE, multi = FALSE, hrates=FALSE, lwd=3, cex=1, ncolors=64, pal='Spectral', ...)
+plot.bammdata = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5, rbf=0.001, show=TRUE, labels=FALSE, multi=FALSE, hrates=FALSE, lwd=1, cex=1, ncolors=64, pal='Spectral', ...)
 {
-	if ('bamm-data' %in% class(ephy)) phy = as.phylo.bammdata(ephy) else stop('Trying to work with a non-bammdata object');
+	if ('bammdata' == class(ephy)) phy = as.phylo.bammdata(ephy) else stop('Object ephy must be of class bammdata\n');
 	if (!is.binary.tree(phy)) stop('Function requires fully bifurcating tree.');
 	if (any(phy$edge.length == 0)) warning('Tree contains zero length branches. Rates for these will be NA and coerced to zero');
 	if (!('dtrates' %in% names(ephy))) ephy = dtRates(ephy, tau, index);
 	if(sum(is.na(ephy$dtrates$rates))) 
 	{
-		warning(sprintf("Found %s NA values. Coercing to zero.",sum(is.na(ephy$dtrates$rates))));
+		warning(sprintf("Found %d NA values. Coercing to zero.",sum(is.na(ephy$dtrates$rates))));
 		ephy$dtrates$rates[is.na(ephy$dtrates$rates)] = 0;
 	}
 	tH = max(branching.times(phy));

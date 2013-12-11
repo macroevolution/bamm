@@ -1,5 +1,5 @@
 ###############################################
-#	Internal function called by plot.dtrates(...)
+#	Internal function called by plot.bammdata(...)
 #
 #
 setPolarTreeCoords = function(phy,vtheta,rbf)

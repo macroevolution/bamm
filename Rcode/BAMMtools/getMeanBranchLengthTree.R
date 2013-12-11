@@ -17,7 +17,7 @@
 
 getMeanBranchLengthTree <- function(obj,ndr=TRUE){
 	
-	if('bamm-data' %in% class(obj))
+	if('bammdata' == class(obj))
 	{
 		#v <- list(edge = obj$edge, Nnode = obj$Nnode,tip.label = obj$tip.label, edge.length = obj$edge.length);
 		#attributes(v) <- list(names = c("edge","Nnode","tip.label","edge.length"),class="phylo",order="cladewise");
@@ -29,7 +29,7 @@ getMeanBranchLengthTree <- function(obj,ndr=TRUE){
 				obj <- getMarginalBranchRateMatrix(obj,verbose=FALSE);
 				el  <- rowMeans(obj$lambda_branch_matrix) - rowMeans(obj$mu_branch_matrix);
 			}
-			else if(obj$type == 'traits'){
+			else if(obj$type == 'trait'){
 				obj <- getMarginalBranchRateMatrix(obj,verbose=FALSE);
 				el  <- rowMeans(obj$beta_branch_matrix);
 			}
@@ -40,7 +40,7 @@ getMeanBranchLengthTree <- function(obj,ndr=TRUE){
 				obj <- getMarginalBranchRateMatrix(obj,verbose=FALSE);
 				el  <- rowMeans(obj$lambda_branch_matrix);
 			}
-			else if(obj$type == 'traits'){
+			else if(obj$type == 'trait'){
 				obj <- getMarginalBranchRateMatrix(obj,verbose=FALSE);
 				el  <- rowMeans(obj$beta_branch_matrix);
 			}	

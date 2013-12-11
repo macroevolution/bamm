@@ -16,8 +16,8 @@
 
 cumulativeShiftProbsTree <- function(ephy){
 	
-	if (!'bamm-data' %in% class(ephy)){
-		stop("Object ephy must be of class bamm-data\n");
+	if ('bammdata' != class(ephy)){
+		stop("Object ephy must be of class bammdata\n");
 	}	
 			
 	shiftvec <- numeric(length(ephy$edge.length));

@@ -8,11 +8,11 @@
 
 getMarginalBranchRateMatrix <- function(obj, verbose=FALSE){
 	
-	if (!'bamm-data' %in% class(obj) & class(obj[[1]]) != 'phylo'){
-		stop("Object must be of class bamm-data or a list of trees.\n");
+	if ('bammdata' != class(obj) & class(obj[[1]]) != 'phylo'){
+		stop("Object must be of class bammdata or a list of trees.\n");
 	}
 	
-	if ('bamm-data' %in% class(obj)){
+	if ('bammdata' == class(obj)){
 		lammat <- matrix(0, ncol=length(obj$eventBranchSegs), nrow=nrow(obj$edge));
 		mumat <- matrix(0, ncol=length(obj$eventBranchSegs), nrow=nrow(obj$edge));
 		
@@ -48,7 +48,7 @@ getMarginalBranchRateMatrix <- function(obj, verbose=FALSE){
 		if (obj$type == 'diversification'){
 			return(list(lambda_branch_matrix = lammat, mu_branch_matrix = mumat));
 		}
-		if (obj$type == 'traits'){
+		if (obj$type == 'trait'){
 			return(list(beta_branch_matrix = lammat));
 		}
 	}

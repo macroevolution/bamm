@@ -19,7 +19,7 @@
 
 getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslices=100, node=NULL, nodetype = 'include'){
 	
-	if (!'bamm-data' %in% class(ephy)){
+	if ('bammdata' != class(ephy)){
 		stop("Object ephy must be of class bamm-data\n");
 	}
 	
@@ -78,7 +78,7 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 		obj$lambda <- mm;
 		obj$mu <- mumat;
 	}
-	if (ephy$type == 'traits'){
+	if (ephy$type == 'trait'){
 		obj$beta <- mm;
 	}
 	obj$times <- tvec;
@@ -88,7 +88,7 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 		obj$type = 'diversification';
 	}
 	else{
-		obj$type = 'traits';	
+		obj$type = 'trait';	
 	}
 	return(obj);
 }

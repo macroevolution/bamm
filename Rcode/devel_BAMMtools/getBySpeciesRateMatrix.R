@@ -21,7 +21,7 @@ getBySpeciesRateMatrix <- function(ephy, start.time, nbreaks, ndr=TRUE, node=NUL
 		spset <- ephy$tip.label;
 	}
 	
-	if (ephy$type == 'traits'){
+	if (ephy$type == 'trait'){
 		ndr <- FALSE
 	}
 	
