@@ -23,7 +23,7 @@ summary.bammdata = function(ephy, opt="product", display=6)
 	cat("Process number posterior distribution:\n\n");
 	fev = sapply(ephy$eventData, nrow);
 	disp = tabulate(fev); disp = disp/sum(disp);
-	if (length(disp) < display)
+	if (length(disp) <= display)
 	{	
 		cat(signif(disp,2),"\n\n");
 	}
