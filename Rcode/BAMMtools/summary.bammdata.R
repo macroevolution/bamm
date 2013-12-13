@@ -1,4 +1,4 @@
-summary.bammdata = function(ephy, opt="product", display=6)
+summary.bammdata = function(ephy, opt="product", display=10)
 {
 	cat("\nAnalyzed", length(ephy$eventData), "posterior samples\n");
 	shiftsindex = maximumShiftCredibilityTree(ephy,maximize=opt)$sampleindex;
@@ -20,22 +20,25 @@ summary.bammdata = function(ephy, opt="product", display=6)
 		cat("\nMaximum shift credibility tree has 0 shifts\n\n");
 		cat("Optimality type:", opt,"\n\n");
 	}
-	cat("Process number posterior distribution:\n\n");
+	cat("Shift posterior distribution:\n\n");
 	fev = sapply(ephy$eventData, nrow);
 	disp = tabulate(fev); disp = disp/sum(disp);
-	if (length(disp) <= display)
+	disp = data.frame(cbind(seq.int(0,length(disp)-1,1),signif(disp,2)));
+	if (nrow(disp) <= display)
 	{	
-		cat(signif(disp,2),"\n\n");
+		write.table(format(disp,justify="left",width=10), col.names=FALSE, row.names=FALSE, quote=FALSE);	
 	}
 	else
 	{
-		if(length(disp)-display == 1)
+		if(nrow(disp)-display == 1)
 		{
-			cat(disp[1:display],"... omitted 1 value\n\n");
+			write.table(format(disp[1:display,],justify="left",width=10), col.names=FALSE, row.names=FALSE, quote=FALSE);
+			cat("... omitted 1 row\n\n");
 		}
 		else
 		{
-			cat(disp[1:display],"... omitted", length(disp)-display,"values\n\n");
+			write.table(format(disp[1:display,],justify="left",width=10), col.names=FALSE, row.names=FALSE, quote=FALSE);
+			cat("... omitted", nrow(disp)-display,"rows\n\n");
 		}
 	}
 	invisible(list(posterior = tabulate(fev), mscshiftnodes = shiftnodes));
