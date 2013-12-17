@@ -1,12 +1,10 @@
 
-
-
 ### subsetEventData
 
-subsetEventData <- function(ephy, index=NULL){
+subsetEventData <- function(ephy, index=NULL) {
 	
-	if ('bammdata' != class(ephy)){
-		stop("Object ephy must be of class bammdata\n");
+	if ('bammdata' != class(ephy)) {
+		stop("Object ephy must be of class 'bammdata'\n");
 	}
 	
 	nsamples <- length(ephy$eventData);
@@ -14,9 +12,9 @@ subsetEventData <- function(ephy, index=NULL){
 	ss <- which((1:nsamples) %in% index);
 	badsubset <- setdiff(index, 1:nsamples);
 	
-	if (length(badsubset) > 0){
+	if (length(badsubset) > 0) {
 		cat("Bad call to BAMMtools::subsetEventData\n");
-		cat("You have << ", nsamples, " >> samples in your bamm-data object \n");
+		cat("You have << ", nsamples, " >> samples in your 'bammdata' object \n");
 		stop("Attempt to access invalid samples. Check index.")
 	}
 	
@@ -29,7 +27,6 @@ subsetEventData <- function(ephy, index=NULL){
 	obj$end <- ephy$end;
 	obj$downseq <- ephy$downseq;
 	obj$lastvisit <- ephy$lastvisit;
-	
 	
 	obj$numberEvents <- ephy$numberEvents[ss];
 	obj$eventData <- ephy$eventData[ss];	
@@ -44,15 +41,7 @@ subsetEventData <- function(ephy, index=NULL){
 	
 	obj$type <- ephy$type;
 	
-
 	class(obj) <- 'bammdata';
 	attributes(obj)$order = attributes(ephy)$order;	
 	return(obj);
-	
 }
-
-
-
-
-
-

@@ -4,20 +4,20 @@
 #
 #	get matrix of marginal rates on each branch for each sample from posterior
 # 	
-#	This function can handle either a bamm-data object or a multiphylo object (i.e., list of trees)
+#	This function can handle either a 'bammdata' object or a multiphylo object (i.e., list of trees)
 
-getMarginalBranchRateMatrix <- function(obj, verbose=FALSE){
+getMarginalBranchRateMatrix <- function(obj, verbose=FALSE) {
 	
-	if ('bammdata' != class(obj) & class(obj[[1]]) != 'phylo'){
+	if ('bammdata' != class(obj) & class(obj[[1]]) != 'phylo') {
 		stop("Object must be of class bammdata or a list of trees.\n");
 	}
 	
-	if ('bammdata' == class(obj)){
+	if ('bammdata' == class(obj)) {
 		lammat <- matrix(0, ncol=length(obj$eventBranchSegs), nrow=nrow(obj$edge));
 		mumat <- matrix(0, ncol=length(obj$eventBranchSegs), nrow=nrow(obj$edge));
 		
-		for (i in 1:length(obj$eventBranchSegs)){
-			if (verbose){
+		for (i in 1:length(obj$eventBranchSegs)) {
+			if (verbose) {
 				cat('Processing sample ', i, '\n');
 			}
 			esegs <- obj$eventBranchSegs[[i]];
@@ -36,31 +36,20 @@ getMarginalBranchRateMatrix <- function(obj, verbose=FALSE){
 			muint <- timeIntegratedBranchRate(relsegmentstart, relsegmentend, mu1, mu2);
 			seglengths <- esegs[,3] - esegs[,2];	
 					
-			for (k in 1:nrow(obj$edge)){
+			for (k in 1:nrow(obj$edge)) {
 				isRightBranch <- esegs[,1] == obj$edge[k,2];
 				lammat[k, i] <- sum(lamint[isRightBranch]) / sum(seglengths[isRightBranch]);
 				mumat[k, i] <- sum(muint[isRightBranch]) / sum(seglengths[isRightBranch]);
-				
 			}
-		
 		}
 		
-		if (obj$type == 'diversification'){
+		if (obj$type == 'diversification') {
 			return(list(lambda_branch_matrix = lammat, mu_branch_matrix = mumat));
 		}
-		if (obj$type == 'trait'){
+		if (obj$type == 'trait') {
 			return(list(beta_branch_matrix = lammat));
 		}
-	}
-	else if (class(obj[[1]]) == 'phylo'){
-		return(sapply(obj,with,edge.length));
+	} else if (class(obj[[1]]) == 'phylo') {
+		return(sapply(obj, with, edge.length));
 	}
 }
-
-
-
-
-
-
-
-

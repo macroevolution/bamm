@@ -38,24 +38,19 @@
 
 plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, show=TRUE, labels=FALSE, hrates=TRUE, lwd=3, cex=1, ncolors=64, pal='temperature', ...)
 {
-	if ('bamm-data' %in% class(ephy)) phy = as.phylo.bammdata(ephy) else stop('Trying to work with a non-bammdata object');
+	if ('bammdata' %in% class(ephy)) phy = as.phylo.bammdata(ephy) else stop('Trying to work with a non-bammdata object');
 	if (!('dtrates' %in% names(ephy))) ephy = dtRates(ephy, tau, index);
 	
-	if (method == 'polar')
-	{
+	if (method == 'polar') {
 		if(!hasArg(vtheta) & !hasArg(rbf)) stop('vtheta and rbf are needed to plot in polar format');
 		phy = getStartStopTimes(phy);
 		vtheta = list(...)$vtheta; rbf = list(...)$rbf;
 		ret = setPolarTreeCoords(phy,vtheta,rbf);
 		tH = max(branching.times(phy));
 		rb = tH*rbf;
-	}	
-	else if (method == 'phylogram')
-	{
+	} else if (method == 'phylogram') {
 		ret = setPhyloTreeCoords(phy);
-	}
-	else
-	{
+	} else {
 		stop('Unimplemented method');
 	}
 	x0 = ret$segs[,1];y0=ret$segs[,2];x1=ret$segs[,3];y1=ret$segs[,4];
@@ -70,75 +65,58 @@ plot.dtrates = function(ephy, method='phylogram', tau=0.01, index=NULL, show=TRU
 	arc.color = c(edge.color[1],edge.color[match(unique(p[,5]),p[,5])+offset]);
 	edge.color = c(edge.color[1],edge.color);
 	
-	if (show)
-	{
+	if (show) {
 		plot.new(); ofs = 0;
-		if (labels)
-		{
+		if (labels) {
 			ofs = max(nchar(phy$tip.label) * 0.03 * cex);
 		}
 		
-		if (method == 'polar') 
-		{
+		if (method == 'polar')  {
 			plot.window(xlim=c(-1,1)+c(-rb,rb)+c(-ofs,ofs),ylim=c(-1,1)+c(-rb,rb)+c(-ofs,ofs),asp=1);
 			segments(x0,y0,x1,y1,col=edge.color,lwd=lwd,lend=2);	
 			arc(0,0,ret$arcs[,1],ret$arcs[,2],c(rb,rb+phy$end/tH),border=arc.color,lwd=lwd);
-			if(labels)
-			{
-				for(k in 1:length(phy$tip.label))
-				{
+			if (labels) {
+				for (k in 1:length(phy$tip.label)) {
 					text(ret$segs[-1,][phy$edge[,2]==k,3],ret$segs[-1,][phy$edge[,2]==k,4],phy$tip.label[k],cex=cex, srt = (180/pi)*ret$arcs[-1,][phy$edge[,2]==k,1],adj=c(0,NA));	
 				}
 			}
 		}
-		if (method == 'phylogram')
-		{
+		if (method == 'phylogram') {
 			plot.window(xlim=c(0,1+ofs),ylim=c(0,phy$Nnode*1/(phy$Nnode+1)),asp=1);
 			segments(x0,y0,x1,y1,col=edge.color,lwd=lwd,lend=2);
 			isTip = phy$edge[,2] <= phy$Nnode+1; isTip = c(FALSE,isTip);
 			segments(ret$arcs[!isTip,1],ret$arcs[!isTip,2],ret$arcs[!isTip,3],ret$arcs[!isTip,4],col=arc.color[!isTip],lwd=lwd);
-			if(labels)
-			{
+			if (labels) {
 				text(ret$segs[-1,][phy$edge[,2] <= phy$Nnode+1,3],ret$segs[-1,][phy$edge[,2] <= phy$Nnode+1,4], phy$tip.label, cex=cex, pos=4, offset = 0.25);
 			}
 		}
-		if(hrates)
-		{
+		if (hrates) {
 			histRates(ephy$dtrates$rates,pal,ncolors);
 		}
 	}
 	index = order(as.numeric(rownames(ret$segs)));
-	if (method == 'phylogram')
-	{
+	if (method == 'phylogram') {
 		assign("last_plot.phylo", list(Ntip = phy$Nnode+1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index,3], yy = ret$segs[index,4]), envir = .PlotPhyloEnv);
-	}
-	else if (method == 'polar')
-	{
+	} else if (method == 'polar') {
 		assign("last_plot.phylo", list(Ntip = phy$Nnode+1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index,3], yy = ret$segs[index,4], theta = ret$segs[index,5], rb = rb), envir = .PlotPhyloEnv);
 	}
 	invisible(ret$segs[-1,]);
 }
 
-setPolarTreeCoords = function(phy,vtheta,rbf)
-{
+setPolarTreeCoords = function(phy,vtheta,rbf) {
 	phy = getStartStopTimes(phy);
 	tH = max(branching.times(phy));
 	vtheta = vtheta*(pi/180);
 	theta_step = (2*pi-vtheta)/phy$Nnode;
 	
 	theta = matrix(0,nrow(phy$edge),3);
-	for (node in tree.traverse(phy, phy$Nnode+2,'postorder'))
-	{
-		if (node <= phy$Nnode+1)
-		{
+	for (node in tree.traverse(phy, phy$Nnode+2,'postorder')) {
+		if (node <= phy$Nnode+1) {
 			theta[phy$edge[,2]==node,] = (node-1)*theta_step;
-		}
-		else
-		{
+		} else {
 			isChild = phy$edge[,2] %in% phy$edge[phy$edge[,1] == node,2];
 			dth = sum(theta[isChild,1])/2;
-			if (node == phy$Nnode+2)
-			{
+			if (node == phy$Nnode+2) {
 				root = c(dth,theta[isChild,1])
 				next;
 			}
@@ -156,28 +134,22 @@ setPolarTreeCoords = function(phy,vtheta,rbf)
 	return(list(segs = ret, arcs = theta[,2:3]) );	
 }
 
-setPhyloTreeCoords = function(phy)
-{
+setPhyloTreeCoords = function(phy) {
 	ntips = length(phy$tip.label);
 	tH = max(branching.times(phy));
 	
 	dy = 1/ntips;
 	xy = matrix(0,nrow=nrow(phy$edge),ncol=4);
 	bar = matrix(0,nrow=nrow(phy$edge),ncol=4);
-	for (node in tree.traverse(phy,phy$Nnode+2,'postorder'))
-	{
+	for (node in tree.traverse(phy,phy$Nnode+2,'postorder')) {
 		bl = phy$edge.length[phy$edge[,2] == node]/tH;
-		if (node <= phy$Nnode + 1)
-		{
+		if (node <= phy$Nnode + 1) {
 			xy[phy$edge[,2]==node,3:4] = c(1,(node-1)*dy);
 			xy[phy$edge[,2]==node,1:2] = c(1-bl,(node-1)*dy);
 			bar[phy$edge[,2]==node,] = 0;
-		}
-		else
-		{
+		} else {
 			isChild = phy$edge[,2] %in% phy$edge[phy$edge[,1] == node,2];
-			if (node == phy$Nnode+2)
-			{
+			if (node == phy$Nnode+2) {
 				root = c(xy[isChild,1][1],xy[isChild,4][1],xy[isChild,1][1],xy[isChild,4][2]);
 				next;
 			}
@@ -196,21 +168,15 @@ setPhyloTreeCoords = function(phy)
 	return(list (segs = xy, arcs = bar ) );	
 }
 
-histRates = function(rates,pal,NCOLORS)
-{
+histRates = function(rates,pal,NCOLORS) {
 	opar = par(no.readonly = TRUE);
 	fx = density(rates);
 	dpal = c('BrBG','PiYG','PuOr','RdBu','RdGy','RdYlBu','RdYlGn','Spectral');
-	if(length(pal) == 3)
-	{
+	if (length(pal) == 3) {
 		rate.colors = colorRampPalette(pal,space='Lab')(NCOLORS);	
-	}
-	else if(pal %in% dpal)
-	{
+	} else if (pal %in% dpal) {
 		rate.colors = colorRampPalette(rev(brewer.pal(3,pal)),space='Lab')(NCOLORS);
-	}
-	else if(pal == 'temperature')
-	{
+	} else if (pal == 'temperature') {
 		rate.colors = rich.colors(NCOLORS);	
 	}
 	qx = quantile(rates,seq(0,1,length.out = NCOLORS+1));
@@ -223,11 +189,10 @@ histRates = function(rates,pal,NCOLORS)
 	par(fig = fig, new=TRUE, xpd=TRUE, mar=c(1.5,1.5,0.25,0.25));
 	plot.new();
 	plot.window(xlim=c(0,max(fx$x)),ylim=c(0,max(fx$y)));
-	for(i in 1:length(fx$x))
-	{
+	for (i in 1:length(fx$x)) {
 		index = which(qx > fx$x[i])[1];
-		if(is.na(index)) break;
-		if(index > 1) index = index - 1;
+		if (is.na(index)) break;
+		if (index > 1) index = index - 1;
 		bcol = rate.colors[index];
 		segments(fx$x[i],fx$y[i],fx$x[i],0,lend=2,col=bcol);
 	}
@@ -257,10 +222,8 @@ histRates = function(rates,pal,NCOLORS)
 #
 #	Returns: an ephy object with a list appended containing a vector of branch
 #			 rates and the step size used for calculation.
-dtRates = function(ephy, tau, ism = NULL)
-{
-	if(!'bamm-data' %in% class(ephy))
-	{
+dtRates = function(ephy, tau, ism = NULL) {
+	if (!'bammdata' %in% class(ephy)) {
 		stop('Function requires a bammdata object');
 	}
 	
@@ -268,8 +231,7 @@ dtRates = function(ephy, tau, ism = NULL)
 	
 	phy = as.phylo.bammdata(ephy);
 	phy = getStartStopTimes(phy);
-	if(attributes(phy)$order != 'cladewise')
-	{
+	if (attributes(phy)$order != 'cladewise') {
 		phy = reorder(phy,'cladewise');
 	}
 	tH = max(branching.times(phy));
@@ -285,8 +247,7 @@ dtRates = function(ephy, tau, ism = NULL)
 	if (storage.mode(ephy) != "list") stop('Exiting');
 	
 	if (is.null(ism)) ism = as.integer(1:length(ephy$eventBranchSegs)) else ism = as.integer(ism);
-	if (ism[length(ism)] > length(ephy$eventBranchSegs) )
-	{
+	if (ism[length(ism)] > length(ephy$eventBranchSegs)) {
 		warning("Sample index out of range");
 		ism = as.integer(1:length(ephy$eventBranchSegs));
 	}
@@ -305,7 +266,7 @@ dtRates = function(ephy, tau, ism = NULL)
 
 # dtRates = function(ephy,tau)
 # {
-	# if(!'bamm-data' %in% class(ephy))
+	# if(!'bammdata' %in% class(ephy))
 	# {
 		# stop('Function requires a bammdata object');
 	# }
@@ -379,10 +340,8 @@ dtRates = function(ephy, tau, ism = NULL)
 #	Internal function called by dtRates
 #
 #
-segMap = function(nodes,begin,end,tau)
-{
-	foo = function(x,tau)
-	{
+segMap = function(nodes,begin,end,tau) {
+	foo = function(x,tau) {
 		ret = seq(x[2],x[3],by=tau);
 		if(length(ret) == 1) return(matrix(x,nrow=1));
 		ret = seq(x[2],x[3],length.out=length(ret));
@@ -395,17 +354,14 @@ segMap = function(nodes,begin,end,tau)
 	return(do.call(rbind,ret));	
 }
 
-safeCompare = function(vec,val,FUN,tol=1e-4)
-{
-	if(FUN == ">=")
-	{
+safeCompare = function(vec,val,FUN,tol=1e-4) {
+	if (FUN == ">=") {
 		ret = rep(FALSE,length(vec));
 		ret[(vec-val) >= 0] = TRUE;
 		ret[abs(vec-val) <= tol] = TRUE;
 		return(ret);
 	}
-	if(FUN == "<=")
-	{
+	if (FUN == "<=") {
 		ret = rep(FALSE,length(vec));
 		ret[(vec-val) <= 0] = TRUE;
 		ret[(vec-val) <= tol] = TRUE;
@@ -413,14 +369,10 @@ safeCompare = function(vec,val,FUN,tol=1e-4)
 	}
 }
 
-decimals = function(x)
-{
-	if(x%%1 != 0)
-	{
+decimals = function(x) {
+	if (x%%1 != 0) {
 		return(nchar(strsplit(as.character(x),".",fixed=TRUE)[[1]][[2]]));
-	}	
-	else
-	{
+	} else {
 		return(10);
 	}
 }
@@ -437,12 +389,11 @@ decimals = function(x)
 #	theta1 = initial theta of arc (radians)
 #	theta2 = ending theta of arc (radians)
 #	rad = radius of arc
-arc = function(x,y,theta1,theta2,rad,border,...)
-{
+arc = function(x,y,theta1,theta2,rad,border,...) {
 	step = (theta2-theta1)/100;
 	xv = x+rad*cos(seq(theta1,theta2,step));
 	yv = y+rad*sin(seq(theta1,theta2,step));
-	if(step) polygon(c(xv,rev(xv)),c(yv,rev(yv)),border=border,...);
+	if (step) polygon(c(xv,rev(xv)),c(yv,rev(yv)),border=border,...);
 }
 
 arc = Vectorize(arc);
@@ -453,8 +404,7 @@ arc = Vectorize(arc);
 #	for each branch. time 0 at root
 #
 #
-getStartStopTimes = function(phy)
-{
+getStartStopTimes = function(phy) {
 	bt = branching.times(phy);
 	bt = max(bt) - bt;
 	begin = bt[as.character(phy$edge[,1])];
@@ -468,44 +418,33 @@ getStartStopTimes = function(phy)
 #	traverse a tree in 'phylo' format from specified node. 
 #	if tips.only = TRUE will return tips only
 #	if internal.only = TRUE will return internal nodes only
-tree.traverse = function(phy,node,order='preorder',tips.only=FALSE, internal.only=FALSE,path=NULL)
-{
-	if(order == 'preorder')
-	{
+tree.traverse = function(phy,node,order='preorder',tips.only=FALSE, internal.only=FALSE,path=NULL) {
+	if (order == 'preorder') {
 		path = c(path,node);
 	}
-	if(length(which(phy$edge[,1] == node)))
-	{
-		for(child in phy$edge[phy$edge[,1] == node,2])
-		{
+	if (length(which(phy$edge[,1] == node))) {
+		for (child in phy$edge[phy$edge[,1] == node,2]) {
 			path = tree.traverse(phy,child,path=path,order=order);	
 		}
 	}
-	if(order == 'postorder')
-	{
+	if (order == 'postorder') {
 		path = c(path,node);
 	}
-	if(tips.only)
-	{
+	if (tips.only) {
 		return(path[which(path <= length(phy$tip.label))]);	
-	}
-	else if(internal.only)
-	{
+	} else if (internal.only) {
 		return(path[which(path > length(phy$tip.label))]);	
-	}
-	else
-	{
+	} else {
 		return(path);
 	}
 }
 
-matrify = function(x,tau)
-{
+matrify = function(x,tau) {
 	bn = sqrt((x[3]-x[1])^2 + (x[4]-x[2])^2);
 	len = bn/tau; if (len %% 1 == 0) len = len + 1;
 	
 	j = seq(x[1],x[3],length.out=len);
-	if(length(j) == 1) return(matrix(x[c(1,3,2,4,5)],nrow=1));
+	if (length(j) == 1) return(matrix(x[c(1,3,2,4,5)],nrow=1));
 		
 	k = seq(x[2],x[4],length.out = len);
 	
@@ -517,36 +456,24 @@ matrify = function(x,tau)
 	return(cbind(j,k,l));	
 }
 
-colorMap = function(x, pal, NCOLORS)
-{
+colorMap = function(x, pal, NCOLORS) {
 	dpal = c('BrBG','PiYG','PuOr','RdBu','RdGy','RdYlBu','RdYlGn','Spectral');
 	colset = numeric(length(x));
-	if(length(pal) == 3)
-	{
+	if (length(pal) == 3) {
 		colpalette = colorRampPalette(pal,space='Lab')(NCOLORS);	
-	}
-	else if(pal %in% dpal)
-	{
+	} else if(pal %in% dpal) {
 		colpalette = colorRampPalette(rev(brewer.pal(3,pal)),space='Lab')(NCOLORS);
-	}
-	else if(pal == 'temperature')
-	{
+	} else if(pal == 'temperature') {
 		colpalette = rich.colors(NCOLORS);	
 	}
 	
 	bks = quantile(x, seq(0,1,length.out=(NCOLORS+1)));
-	for(i in 2:length(bks))
-	{
-		if(i == 2)
-		{
+	for (i in 2:length(bks)) {
+		if (i == 2) {
 			colset[x < bks[2]] = colpalette[1];	
-		}
-		else if(i == length(bks))
-		{
+		} else if(i == length(bks)) {
 			colset[x >= bks[length(bks)-1]] = colpalette[length(bks)-1];
-		}
-		else
-		{
+		} else {
 			colset[x >= bks[i-1] & x < bks[i]] = colpalette[i-1];
 		}
 	}
@@ -557,10 +484,10 @@ colorMap = function(x, pal, NCOLORS)
 #	D.Rabosky
 #
 #
-as.phylo.bammdata <- function(ephy){
+as.phylo.bammdata <- function(ephy) {
 	
-	if (!'bamm-data' %in% class(ephy)){
-		stop("Object ephy must be of class bamm-data\n");
+	if (!'bammdata' %in% class(ephy)) {
+		stop("Object ephy must be of class 'bammdata'\n");
 	}		
 	
 	newphylo <- list();

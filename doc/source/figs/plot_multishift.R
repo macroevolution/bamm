@@ -1,5 +1,4 @@
 
-
 # load(BAMMtools);
 library(gplots);
 library(RColorBrewer);
@@ -11,16 +10,14 @@ library(RColorBrewer);
 #data(events.cetaceans); # here is the event data
 #data(cetaceans); # here is the whale tree
 
-# Process the event data in a bamm-data object:
+# Process the event data in a 'bammdata' object:
 bammdata <- getEventData(cetaceans, events.cetaceans);
 
-class(bammdata);  # check: should be phylo and bamm-data
-
+class(bammdata);  # check: should be phylo and 'bammdata'
 
 # We will plot the 1st, 30th, and 40th samples from the posterior.
 
 ixx <- rep(c(10, 30, 40), 3);
-
 
 # Set up the plot windows
 par(mar=numeric(4));
@@ -34,26 +31,12 @@ colschemes[1:3] <- 'temperature';
 colschemes[4:6] <- 'Spectral';
 colschemes[7:9] <- list(c('blue', 'gray', 'red'));
 
-
-for (i in 1:length(ixx)){
+for (i in 1:length(ixx)) {
 #for (i in 1:3){
-		
-
+	
 	index <- ixx[i];
 	
 	eventsub <- subsetEventData(bammdata, index=index);
 	plot.dtrates(eventsub, method='polar', pal= colschemes[[i]], multi=T);
 	addBAMMshifts(eventsub, method='polar', index=1, col='white', bg='black', cex=4, multi=T);
-	
 }
-
-
-
-
-
-
-
-
-
-
-
