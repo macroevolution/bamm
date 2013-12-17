@@ -17,19 +17,19 @@
 # returns object of class bamm-ratematrix
 #	 
 
-getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslices=100, node=NULL, nodetype = 'include'){
+getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslices=100, node=NULL, nodetype = 'include') {
 	
-	if ('bammdata' != class(ephy)){
+	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bamm-data\n");
 	}
 	
-	if (is.null(node)){
+	if (is.null(node)) {
 		nodeset <- ephy$edge[,2];
-	}else if (!is.null(node) & nodetype == 'include'){
+	} else if (!is.null(node) & nodetype == 'include') {
 		nodeset <- getDesc(ephy, node)$desc_set;
-	}else if (!is.null(node) & nodetype == 'exclude'){
+	} else if (!is.null(node) & nodetype == 'exclude') {
 		nodeset <- setdiff( ephy$edge[,2],  getDesc(ephy, node)$desc_set);
-	}else{
+	} else {
 		stop('error in getRateThroughTimeMatrix\n');
 	}
 	
@@ -37,11 +37,11 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 		
 	maxpossible <- max(bt[as.character(intersect(nodeset, ephy$edge[,1]))]);
 
-	if (is.null(start.time)){
+	if (is.null(start.time)) {
 		start.time <- max(bt) - maxpossible;
 	}
 	
-	if (is.null(end.time)){
+	if (is.null(end.time)) {
 		end.time <- max(bt);
 	}
  
@@ -51,17 +51,17 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 	mm <- matrix(NA, nrow=length(ephy$eventBranchSegs), ncol=length(tvec));
 	mumat <- matrix(NA, nrow=length(ephy$eventBranchSegs), ncol=length(tvec));
 		
-	for (i in 1:nrow(mm)){
+	for (i in 1:nrow(mm)) {
  	
 		es <- ephy$eventBranchSegs[[i]];
 		events <- ephy$eventData[[i]];
 				
-		for (k in 1:length(tvec)){
+		for (k in 1:length(tvec)) {
 			isGoodTime <- safeCompare(es[,2],tvec[k],'<=',tol=tol) & safeCompare(es[,3],tvec[k],'>=',tol=tol)
 			
-			if (is.null(node)){ 
+			if (is.null(node)) { 
 				isGoodNode <- rep(TRUE, nrow(es));
-			}else{
+			} else {
 				isGoodNode <- es[,1] %in% nodeset;	
 			}
 			estemp <- es[isGoodTime & isGoodNode, ];
@@ -74,20 +74,19 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 	}
 	
 	obj <- list();
-	if (ephy$type == 'diversification'){
+	if (ephy$type == 'diversification') {
 		obj$lambda <- mm;
 		obj$mu <- mumat;
 	}
-	if (ephy$type == 'trait'){
+	if (ephy$type == 'trait') {
 		obj$beta <- mm;
 	}
 	obj$times <- tvec;
 	
 	class(obj) <- 'bamm-ratematrix';
-	if(ephy$type=='diversification'){
+	if (ephy$type=='diversification') {
 		obj$type = 'diversification';
-	}
-	else{
+	} else {
 		obj$type = 'trait';	
 	}
 	return(obj);
