@@ -1,7 +1,7 @@
 #include <R.h>
 
-void postorder_tree_traverse(int * anc, int * desc, int * node, int * nnode, int * order);
-void preorder_tree_traverse(int * anc, int * desc, int * node, int * nnode, int * order);
+void postorder_tree_traverse(int * anc, int * desc, int * node, int * nnode, int * ndorder);
+void preorder_tree_traverse(int * anc, int * desc, int * node, int * nnode, int * ndorder);
 void setrecursivesequence(int * anc, int * desc, int * node, int * ne, int * downseq, int * lastvisit);
 void rootward(int * anc, int * desc, int * node, int * nnode, int * ndorder);
 void tipward(int * anc, int * desc, int * node, int * nnode, int * ndorder);
