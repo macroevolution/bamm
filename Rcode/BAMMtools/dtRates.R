@@ -38,7 +38,7 @@ dtRates = function(ephy, tau, ism = NULL)
 	segmat[,2] = segmat[,2] * tH;
 	segmat[,3] = segmat[,3] * tH;
 	
-	tol = max(1*10^-decimals(ephy$eventBranchSegs[[1]][1,2]),1*10^-decimals(ephy$eventBranchSegs[[1]][1,1]));
+	tol = max(1*10^-decimals(ephy$eventBranchSegs[[1]][1,2]),1*10^-decimals(ephy$eventBranchSegs[[1]][1,3]));
 	
 	if (storage.mode(segmat) != "double") stop('Exiting');
 	if (storage.mode(tol) != "double") stop('Exiting');
