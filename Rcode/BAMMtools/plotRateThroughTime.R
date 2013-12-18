@@ -30,7 +30,7 @@
 
 plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'speciation', nBins = 100, smooth = FALSE, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = TRUE, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=FALSE) {
 	
-	if (!('bammdata' %in% class(ephy)) & !('bamm-ratematrix' %in% class(ephy))) {
+	if (class(ephy) != 'bammdata' & class(ephy) != 'bamm-ratematrix') {
 		stop("ERROR: Object ephy must be of class 'bammdata' or 'bamm-ratematrix'.\n");
 	}
 	if (!is.logical(useMedian)) {
@@ -45,12 +45,15 @@ plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,
 	if (!is.logical(smooth)) {
 		stop('ERROR: smooth must be either TRUE or FALSE.');
 	}
+	if (class(ephy) == 'bamm-ratematrix' & (start.time != NULL | end.time != NULL | node != NULL)) {
+		stop('ERROR: You cannot specify start.time, end.time or node if the rate matrix is being provided. Please either provide the bammdata object instead or specify start.time, end.time or node in the creation of the bamm-ratematrix.')
+	}
 
-	if ('bammdata' %in% class(ephy)) {
+	if (class(ephy) == 'bammdata') {
 		#get rates through binned time
 		rmat <- getRateThroughTimeMatrix(ephy, start.time = start.time, end.time = end.time,node = node, nslices = nBins, nodetype=nodetype);
 	}
-	if ('bamm-ratematrix' %in% class(ephy)) {
+	if (class(ephy) == 'bamm-ratematrix') {
 		#use existing rate matrix
 		rmat <- ephy;
 	}
