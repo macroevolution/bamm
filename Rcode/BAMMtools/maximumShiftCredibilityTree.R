@@ -2,7 +2,7 @@
 #
 #	maximumShiftCredibilityTree(....)
 #
-#	Args: ephy	=	object of class 'bamm-data'
+#	Args: ephy	=	object of class 'bammdata'
 #	
 #
 #	maximize		=	'sum', = sum of branch probabilities for each tree
@@ -11,11 +11,11 @@
 #	Returns: 		- bestconfigs: a list of length equal the number of 
 #						unique shift configurations in the maximum shift
 #						credibility set. Each element is a vector of sample
-#						indices from the BAMM-data object with identical
+#						indices from the 'bammdata' object with identical
 #						shift configurations.
 #					  
 #					- A vector of optimality scores for all other samples 
-#						in posterior from the bamm-data object.
+#						in posterior from the 'bammdata' object.
 #
 #					- sampleindex: a representative index for samples from each 
 #						set of unique shift configurations. The length of this vector
@@ -30,9 +30,9 @@
 #   This is analogous to the maximum clade credibility tree from a 
 #		Bayesian phylogenetic analysis.
 
-maximumShiftCredibilityTree <- function(ephy, maximize = 'product'){
+maximumShiftCredibilityTree <- function(ephy, maximize = 'product') {
 
-	if ('bammdata' != class(ephy)){
+	if ('bammdata' != class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");
 	}			
 	
@@ -41,15 +41,14 @@ maximumShiftCredibilityTree <- function(ephy, maximize = 'product'){
 	mtree <- marginalShiftProbsTree(ephy);
 	px <- mtree$edge.length;
 	
-
-	for (i in 1:length(ephy$eventData)){
+	for (i in 1:length(ephy$eventData)) {
 		hasShift <- ephy$edge[,2] %in% ephy$eventData[[i]]$node;
 		branchprobs <- (hasShift)*px  + (!hasShift)*(1 - px) ;
-		if (maximize == 'product'){
+		if (maximize == 'product') {
 			probvec[i] <- sum(log(branchprobs));
-		}else if (maximize == 'sum'){
+		} else if (maximize == 'sum') {
 			probvec[i] <- sum(branchprobs);
-		}else{
+		} else {
 			stop("Unsupported optimize criterion in maximumShiftCredibilityTree");
 		}
 	}
@@ -60,19 +59,18 @@ maximumShiftCredibilityTree <- function(ephy, maximize = 'product'){
 	bestconfigs <- list();
 		
 	index <- 0;	
-	while (length(best) > 0){
+	while (length(best) > 0) {
 		index <- index + 1;	
 		lv <- logical(length = length(best));
-		for (i in 1:length(best)){
+		for (i in 1:length(best)) {
 			lv[i] <- areEventConfigurationsIdentical(ephy, best[1], best[i]);
 		}
 		bestconfigs[[index]] <- best[lv];
 		best <- best[!lv];
 	}
 	
-	
 	sampleindex <- numeric(length(bestconfigs));
-	for (i in 1:length(bestconfigs)){
+	for (i in 1:length(bestconfigs)) {
 		sampleindex[i] <- bestconfigs[[i]][1];
 	}
 	

@@ -1,6 +1,4 @@
 
-
-
 ##########################################
 #
 #   computeJointMarginalShiftProbs
@@ -10,7 +8,7 @@
 #
 #   args:
 #	
-#          ephy:              BAMM-data object
+#          ephy:              'bammdata' object
 #          threshold:         WIll only consider 
 #                              nodes with marginal shift probabilities
 #                              greater than threshold
@@ -25,14 +23,12 @@
 #                         
 #
 #
-computeJointShiftCorrelations <- function(ephy, threshold=0.05){
+computeJointShiftCorrelations <- function(ephy, threshold=0.05) {
 	
-
-	if ('bammdata' != class(ephy)){
+	if ('bammdata' != class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");
 	}
 	
-
 	#First, restrict only to important nodes:
 	#	those sampled at least with threshold frequency.
 	
@@ -53,16 +49,15 @@ computeJointShiftCorrelations <- function(ephy, threshold=0.05){
 	mm <- matrix(NA, nrow=length(keepnodes), ncol=length(keepnodes));
 
 	# Make 4 matrices:
- 
 	n00 <- matrix(0, nrow=length(keepnodes), ncol=length(keepnodes));
 	n11 <- n00;
 	n01 <- n00;
 	n10 <- n00;
 	
-	for (k in 1:length(ephy$eventData)){
+	for (k in 1:length(ephy$eventData)) {
 		nodes <- ephy$eventData[[k]]$node;
-		for (i in 1:(length(keepnodes)-1)){
-			for (j in (i+1):length(keepnodes)){
+		for (i in 1:(length(keepnodes)-1)) {
+			for (j in (i+1):length(keepnodes)) {
 				
 				x <- keepnodes[i];
 				y <- keepnodes[j];
@@ -78,8 +73,8 @@ computeJointShiftCorrelations <- function(ephy, threshold=0.05){
 	## Compute chi-square probability of each cell:
 	
 	chimat <- matrix(0, nrow=length(keepnodes), ncol=length(keepnodes));
-	for (i in 1:(length(keepnodes)-1)){
-		for (j in (i+1):length(keepnodes)){	
+	for (i in 1:(length(keepnodes)-1)) {
+		for (j in (i+1):length(keepnodes)) {	
 			tmp <- matrix(0, nrow=2, ncol=2);
 			tmp[1,1] <- n00[i,j];
 			tmp[1,2] <- n01[i,j];
@@ -91,8 +86,8 @@ computeJointShiftCorrelations <- function(ephy, threshold=0.05){
 	
 	phimat <- matrix(NA, nrow=length(keepnodes), ncol=length(keepnodes));
 	
-	for (i in 1:length(keepnodes)-1){
-		for (j in (i+1):length(keepnodes)){
+	for (i in 1:length(keepnodes)-1) {
+		for (j in (i+1):length(keepnodes)) {
 			
 			x <- keepnodes[i];
 			y <- keepnodes[j];
@@ -107,7 +102,6 @@ computeJointShiftCorrelations <- function(ephy, threshold=0.05){
 	rownames(phimat) <- keepnodes;
 	colnames(phimat) <- keepnodes;
 
-	
 	chimat <- chimat + t(chimat);
 	rownames(chimat) <- keepnodes;
 	colnames(chimat) <- keepnodes;
@@ -117,8 +111,4 @@ computeJointShiftCorrelations <- function(ephy, threshold=0.05){
 	res$p.value <- chimat;
 	
 	return(res);
-	
 }
-
-
-

@@ -1,6 +1,4 @@
 
-
-
 library(ape);
 
 #########################################################
@@ -30,7 +28,7 @@ effectiveSize(mcmc_res[,4]); # log-likelihood
 
 #########################################################
 #	Summarize the BAMM analyses
-#	First, we will generate an object of class 'bamm-data'
+#	First, we will generate an object of class 'bammdata'
 #	using the event data output file:
 
 source('/Users/danrabosky/DanWork/bamm/devel/testrun/process_BAMM_fxns.R');
@@ -164,7 +162,7 @@ mtext(side=2, text='Rate', line =3, cex=1.4);
 #	extracting means of marginal rate distributions for branches
 
 # Two ways of doing this with BAMM output.
-# The slower way is to pull these out of the bamm-data object
+# The slower way is to pull these out of the 'bammdata' object
 
 ratemat <- getMarginalBranchRateMatrixDiversification(bdata);
 
@@ -190,7 +188,7 @@ lambda_tree <- ladderize(lambda_tree); #make pretty
 
 # Plotting:
 quartz.options(height=10, width=10, dpi=72);
-plot.phylo(lambda_tree, cex=0.3)
+plot.phylo(lambda_tree, cex=0.3);
 
 # What if we want to plot the original tree, but color the branches 
 # based on the reconstructed rates?

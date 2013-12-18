@@ -1,12 +1,10 @@
 getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE, type = 'diversification', header=TRUE)
 {	
-	if (type != 'diversification' & type != 'trait')
-	{
+	if (type != 'diversification' & type != 'trait') {
 		stop("Invalid 'type' specification. Should be 'diversification' or 'trait'");
 	}
 	
-	if (any(is.null(c(phy$begin, phy$end))))
-	{
+	if (any(is.null(c(phy$begin, phy$end)))) {
 		phy = getStartStopTimes(phy);
 	}
 		
@@ -19,37 +17,28 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
 	
 	tipLambda = list();
  
-	if (class(eventdata) == 'data.frame')
-	{
+	if (class(eventdata) == 'data.frame') {
 		cat("Processing event data from data.frame\n");
 		uniquegens = sort(unique(eventdata[,1]));
-	}
-	else if (class(eventdata) == 'character')
-	{
+	} else if (class(eventdata) == 'character') {
 		cat("Reading event datafile: ", eventdata, "\n\t\t...........");
 		eventdata = read.csv(eventdata, header=header, stringsAsFactors=FALSE);
  		uniquegens = sort(unique(eventdata[,1]));
  		cat("\nRead a total of ", length(uniquegens), " samples from posterior\n");				
-	}
-	else
-	{
+	} else {
 		err.string = c('eventdata arg invalid\n\nType is ', class(eventdata), '\n', sep='');
 		stop(err.string);
 	}
  	
  	samplestart = uniquegens[floor(burnin*length(uniquegens))];
- 	if(!length(samplestart))
- 	{
+ 	if (!length(samplestart)) {
  		samplestart = 0;
  	}
  	uniquegens = uniquegens[uniquegens >= samplestart];
  
- 	if (is.null(nsamples))
- 	{
+ 	if (is.null(nsamples)) {
  		nsamples = length(uniquegens);
- 	}
- 	else if (nsamples > length(uniquegens))
- 	{
+ 	} else if (nsamples > length(uniquegens)) {
  		nsamples = length(uniquegens);
  	}
 	
@@ -65,8 +54,7 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
  	cat('\nDone with recursive sequence\n\n');
  
 	######### Get ancestors for each unique pair of taxa
-	if (verbose)
-	{
+	if (verbose) {
 		cat("Start preprocessing unique MRCA pairs....\n");
 	}	
 		
@@ -79,8 +67,7 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
 	uniquePairSet[,2] = as.integer(match(x2$rightchild, phy$tip.label, nomatch = 0L));
 	uniquePairNode = getmrca(phy, uniquePairSet[,1],uniquePairSet[,2]);
 	
-	if (verbose)
-	{
+	if (verbose) {
 		cat("Done preprocessing unique MRCA pairs....\n");
 	}	
 
@@ -90,8 +77,7 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
 	
  	meanTipLambda = numeric(length(phy$tip.label)); 
  
- 	for (i in 1:length(goodsamples))
- 	{	
+ 	for (i in 1:length(goodsamples)) {
   		tmpEvents = x2[x2[,1] == goodsamples[i], ];
 		
 		if (verbose) cat('Processing event: ', i, '\n');		
@@ -99,13 +85,10 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
  		tm = tmpEvents[,4]; # abs time of event
  		lam1 = tmpEvents[,5]; # lambda parameter 1
  		lam2 = tmpEvents[,6]; # lambda parameter 2
- 		if(type == 'diversification')
- 		{	
+ 		if (type == 'diversification') {	
 			mu1 = tmpEvents[, 7]; # mu parameter 1
  			mu2 = tmpEvents[, 8]; #mu parameter 2 
-		}
-		else 
-		{ #for bamm trait data we set the mu columns to zero because those params don't exist	
+		} else { #for bamm trait data we set the mu columns to zero because those params don't exist	
 			mu1 = rep(0, nrow(tmpEvents)); 
  			mu2 = rep(0, nrow(tmpEvents)); 
 		}
@@ -114,8 +97,7 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
  		# Get subtending node for each event:
  		nodeVec = uniquePairNode[x2[,1] == goodsamples[i]];
  		
- 		if (sum(nodeVec == 0)  > 0)
- 		{
+ 		if (sum(nodeVec == 0)  > 0) {
 			stop('Failed to assign event to node\n');
 		}
 		
@@ -128,10 +110,8 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
 		
 		statevec = rep(1, nrow(phy$edge));
 
-		if (nrow(dftemp) > 1)
-		{
-			for (k in 2:nrow(dftemp))
-			{		
+		if (nrow(dftemp) > 1) {
+			for (k in 2:nrow(dftemp)) {
 				s1 = which(phy$downseq == dftemp$node[k]);
 				s2 = which(phy$downseq == phy$lastvisit[dftemp$node[k]]);
 				descSet = phy$downseq[s1:s2];
@@ -154,8 +134,7 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
  		
 		eventnodeset = intersect(non.root, dftemp$node);
 		pos = 1 + sum(is_noEventBranch);
-		for (k in eventnodeset)
-		{		
+		for (k in eventnodeset) {
 			events.on.branch = dftemp[dftemp$node == k, ];
 			events.on.branch = events.on.branch[order(events.on.branch$time), ];
 				
@@ -163,13 +142,10 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
  			start.times = c(phy$begin[fBranch], events.on.branch$time);
 			stop.times = c(events.on.branch$time, phy$end[fBranch]);
 			parent = phy$edge[,1][phy$edge[,2] == k];
-			if (parent == (length(phy$tip.label) + 1))
-			{
+			if (parent == (length(phy$tip.label) + 1)) {
 				# Parent is root:
 				proc.set = c(1, events.on.branch$index);	
-			}
-			else
-			{
+			} else {
 				proc.set = c(statevec[phy$edge[,2] == parent], events.on.branch$index);			
 			}
 				
@@ -219,17 +195,14 @@ getEventData = function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE
 	phy$eventBranchSegs = eventBranchSegs; 	
 	phy$tipMu = tipMu;
 	phy$meanTipMu = meanTipMu;
-	if(type == 'diversification')
-	{	
+	if (type == 'diversification') {
 		phy$type = 'diversification';
-	}
-	else
-	{
+	} else {
 		phy$type = 'trait';	
 	}
  	
 	# Inherits attributes of class phylo
-	# plus adds new class: bamm-data
+	# plus adds new class: 'bammdata'
 	class(phy) = 'bammdata';
 	return(phy);
 }
