@@ -11,15 +11,15 @@
 #	Need to make a corStruct class that works with this
 #		for GLS analyses
 
-getEventCorrelationMatrix <- function(ephy){
+getEventCorrelationMatrix <- function(ephy) {
 
-	if ('bammdata' != class(ephy)){
+	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");
 	}
 	
 	TOL <- 0.0001;
 	corMat <- matrix(0, nrow=length(ephy$tip.label), ncol=length(ephy$tip.label));
-	for (i in 1:length(ephy$tipStates)){
+	for (i in 1:length(ephy$tipStates)) {
 		dd <- dist(ephy$tipStates[[i]]);
 		cmat <- as.matrix(dd);	
 		corMat <- corMat + (cmat < TOL);

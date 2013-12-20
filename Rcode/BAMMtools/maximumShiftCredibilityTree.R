@@ -32,7 +32,7 @@
 
 maximumShiftCredibilityTree <- function(ephy, maximize = 'product') {
 
-	if ('bammdata' != class(ephy)) {
+	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");
 	}			
 	

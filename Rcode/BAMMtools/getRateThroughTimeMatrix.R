@@ -19,7 +19,7 @@
 
 getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslices=100, node=NULL, nodetype = 'include') {
 	
-	if (class(ephy) != 'bammdata') {
+	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class 'bammdata'\n");
 	}
 	
@@ -41,7 +41,6 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 	if (is.null(start.time)) {
 		start.time <- max(bt) - maxpossible;
 	}
-	
 	if (is.null(end.time)) {
 		end.time <- max(bt);
 	}

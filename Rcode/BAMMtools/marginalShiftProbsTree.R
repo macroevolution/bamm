@@ -12,7 +12,7 @@
 
 marginalShiftProbsTree <- function(ephy) {
 	
-	if ('bammdata' != class(ephy)) {
+	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");
 	}
 	

@@ -15,34 +15,31 @@
 #	opacity = opacity level for plotting colored confidence intervals
 
 
-plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(ephy)), useMedian=F, nbreaks=10, ratetype='speciation', species, intervals=seq(from = 0,to = 1,by = 0.01), smooth=F, spCol=sample(colors(),2), opacity=0.01,smoothParam=0.20){
+plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(ephy)), useMedian=F, nbreaks=10, ratetype='speciation', species, intervals=seq(from = 0,to = 1,by = 0.01), smooth=F, spCol=sample(colors(),2), opacity=0.01,smoothParam=0.20) {
 	
-	if ('bammdata' != class(ephy)){
+	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");
 	}
-	
-	if (!all(species %in% ephy$tip.label)){
+	if (!all(species %in% ephy$tip.label)) {
 		stop('Not all species names match those in ephy.');
 	}
-	
-	if (ratetype=='speciation' | ratetype=='trait'){
+	if (ratetype=='speciation' | ratetype=='trait') {
 		ndr <- F;
 		if (ratetype == 'speciation'){ratelabel <- 'Speciation'}
 		if (ratetype == 'trait'){ratelabel <- 'BM rate'}
 	}
-	if (ratetype == 'netdiv'){
+	if (ratetype == 'netdiv') {
 		ndr <- T;
 		ratelabel <- 'Net diversification';
 	}
 		
-	bySp<-lapply(species,function(x) getSpeciesRateThroughTime(ephy, start.time = start.time, nbreaks = nbreaks, ndr = ndr, species = x,returnAll=T));
+	bySp <- lapply(species,function(x) getSpeciesRateThroughTime(ephy, start.time = start.time, nbreaks = nbreaks, ndr = ndr, species = x,returnAll=T));
 	names(bySp) <- species;
 	
 	#calculate average values
-	if (useMedian == T){
+	if (useMedian) {
 		avgList<-lapply(bySp,function(x) apply(x,2,function(x) median(x)));
-	}
-	if (useMedian == F){
+	} else {
 		avgList<-lapply(bySp,function(x) colMeans(x));
 	}
 	
@@ -51,14 +48,14 @@ plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(eph
 	tseq <- seq(tstart, tend, length.out = nbreaks);
 	
 	#calculate confidence intervals
-	if (!is.null(intervals)){
+	if (!is.null(intervals)) {
 		polySp<-list();
-		for (i in 1:length(bySp)){
+		for (i in 1:length(bySp)) {
 			mm <- apply(bySp[[i]], 2, quantile, intervals);
 			poly <- list();
 			q1 <- 1;
 			q2 <- nrow(mm);
-			repeat{
+			repeat {
 				if (q1 >= q2) {break}
 				a <- as.data.frame(cbind(tseq,mm[q1,]));
 				b <- as.data.frame(cbind(tseq,mm[q2,]));
@@ -72,13 +69,13 @@ plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(eph
 		}
 	}
 	
-	if (smooth == T){
-		if (nbreaks < 30){
+	if (smooth) {
+		if (nbreaks < 30) {
 			cat('Insufficient breaks. Non-smoothed results returned.\n');
 		}
-		if (nbreaks >= 30){
+		if (nbreaks >= 30) {
 			for (i in 1:length(polySp)){
-				for (j in 1:length(polySp[[i]])){
+				for (j in 1:length(polySp[[i]])) {
 					p <- polySp[[i]][[j]];
 					rows <- nrow(p);
 					p[1:rows/2,2] <- loess(p[1:rows/2,2] ~ p[1:rows/2,1],span = smoothParam)$fitted;
@@ -86,7 +83,7 @@ plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(eph
 					polySp[[i]][[j]] <- p;
 				}
 			}
-			for (i in 1:length(avgList)){
+			for (i in 1:length(avgList)) {
 				avgList[[i]] <- loess(avgList[[i]] ~ tseq,span = smoothParam)$fitted;
 			}
 		}
@@ -96,16 +93,15 @@ plotSpeciesRatesThroughTime <- function(ephy, start.time=max(branching.times(eph
 	plot.new();
 	plot.window(xlim=c(max(branching.times(ephy)), 0), ylim=c(0 , maxRate));
 
-	if (!is.null(intervals)){
-		for (i in 1:length(polySp)){
-			for (j in 1:length(polySp[[i]])){
+	if (!is.null(intervals)) {
+		for (i in 1:length(polySp)) {
+			for (j in 1:length(polySp[[i]])) {
 				polygon(x = tend - polySp[[i]][[j]][,1],y = polySp[[i]][[j]][,2], col = transparentColor(spCol[i],alpha = opacity), border = NA);
 			}
 			lines(x = tend - tseq,y = avgList[[i]], lwd=2, col = spCol[i]);
 		}
-	}
-	if (is.null(intervals)){
-		for (i in 1:length(avgList)){
+	} else {
+		for (i in 1:length(avgList)) {
 			lines(x = tend - tseq,y = avgList[[i]],lwd = 2,col = spCol[i]);
 		}
 	}

@@ -17,10 +17,8 @@
 #
 #	Returns: an ephy object with a list appended containing a vector of branch
 #			 rates and the step size used for calculation.
-dtRates = function(ephy, tau, ism = NULL)
-{
-	if('bammdata' != class(ephy))
-	{
+dtRates = function(ephy, tau, ism = NULL) {
+	if (!'bammdata' %in% class(ephy)) {
 		stop('Object ephy must be of class bammdata');
 	}
 	
@@ -28,8 +26,7 @@ dtRates = function(ephy, tau, ism = NULL)
 	
 	phy = as.phylo.bammdata(ephy);
 	phy = getStartStopTimes(phy);
-	if(attributes(phy)$order != 'cladewise')
-	{
+	if (attributes(phy)$order != 'cladewise') {
 		phy = reorder(phy,'cladewise');
 	}
 	tH = max(branching.times(phy));
@@ -45,8 +42,7 @@ dtRates = function(ephy, tau, ism = NULL)
 	if (storage.mode(ephy) != "list") stop('Exiting');
 	
 	if (is.null(ism)) ism = as.integer(1:length(ephy$eventBranchSegs)) else ism = as.integer(ism);
-	if (ism[length(ism)] > length(ephy$eventBranchSegs) )
-	{
+	if (ism[length(ism)] > length(ephy$eventBranchSegs)) {
 		warning("Sample index out of range");
 		ism = as.integer(1:length(ephy$eventBranchSegs));
 	}

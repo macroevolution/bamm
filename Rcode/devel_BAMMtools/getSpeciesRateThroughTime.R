@@ -9,17 +9,17 @@
 #	returnAll: boolean, whether or not to return all values from posterior, rather than averaging.
 #
 #
-getSpeciesRateThroughTime <- function(ephy, start.time, nbreaks, ndr, species,returnAll = F){
+getSpeciesRateThroughTime <- function(ephy, start.time, nbreaks, ndr, species,returnAll = FALSE) {
 
-	if ('bammdata' != class(ephy)){
+	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");
 	}
 	
-	if (!species %in% ephy$tip.label | length(species) > 1){
+	if (!species %in% ephy$tip.label | length(species) > 1) {
 		stop("Species must be a single species whose name matches a tip in the phylogeny.")
 	}
 	
-	if (ephy$type == 'trait'){
+	if (ephy$type == 'trait') {
 		ndr <- FALSE;
 	}
 		
@@ -35,32 +35,31 @@ getSpeciesRateThroughTime <- function(ephy, start.time, nbreaks, ndr, species,re
 	
 	resMat <- matrix(NA, nrow=length(ephy$eventBranchSegs), ncol=nbreaks);
 	
-	for (k in 1:length(ephy$eventBranchSegs)){
+	for (k in 1:length(ephy$eventBranchSegs)) {
 
 		ed <- ephy$eventData[[k]];
 		
 		resVec <- vector(mode='numeric', length=nbreaks);
-		for (z in 1:length(tseq)){
+		for (z in 1:length(tseq)) {
 			isGoodNode <- ephy$eventBranchSegs[[k]][,1] %in% path;
 			isGoodStart <- ephy$eventBranchSegs[[k]][,2] <= tseq[z];
 			isGoodEnd <- ephy$eventBranchSegs[[k]][,3] >= tseq[z];
 				
 			ev <- ephy$eventBranchSegs[[k]][,4][isGoodNode & isGoodStart & isGoodEnd];
 				
-			if (ndr){
+			if (ndr) {
 				lam <- exponentialRate(tseq[z]-ed$time[ev], ed$lam1[ev], ed$lam2[ev]);
 				mu <- ed$mu1[ev];
 				resVec[z] <- lam - mu;	
-			}else{
+			} else {
 				resVec[z] <- exponentialRate(tseq[z]-ed$time[ev], ed$lam1[ev], ed$lam2[ev]);
 			}	
 		}		
 	resMat[k,] <- resVec;
 	}
-	if (returnAll == TRUE){
+	if (returnAll) {
 		return(resMat);
-	}
-	if (returnAll == FALSE){
+	} else {
 		return(colMeans(resMat));
 	}
 }

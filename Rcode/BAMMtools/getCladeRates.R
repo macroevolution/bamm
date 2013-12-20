@@ -8,19 +8,19 @@
 #					will compute for all branches excluding a given clade, nodetype = 'exclude'
 #		
 
-getCladeRates <- function(ephy, node = NULL, nodetype='include', verbose=F){
+getCladeRates <- function(ephy, node = NULL, nodetype='include', verbose=FALSE) {
 	
-	if ('bammdata' != class(ephy)){
+	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");
 	}	
 	
-	if (is.null(node)){
+	if (is.null(node)) {
 		nodeset <- ephy$edge[,2];
-	}else if (!is.null(node) & nodetype == 'include'){
+	} else if (!is.null(node) & nodetype == 'include') {
 		nodeset <- getDesc(ephy, node)$desc_set;
-	}else if (!is.null(node) & nodetype == 'exclude'){
+	} else if (!is.null(node) & nodetype == 'exclude') {
 		nodeset <- setdiff( ephy$edge[,2],  getDesc(ephy, node)$desc_set);
-	}else{
+	} else {
 		stop('error in getRateThroughTimeMatrix\n');
 	}
 	
@@ -29,14 +29,12 @@ getCladeRates <- function(ephy, node = NULL, nodetype='include', verbose=F){
  	
  	weights <- 'branchlengths'
 	
-	for (i in 1:length(ephy$eventBranchSegs)){
-		if (verbose){
+	for (i in 1:length(ephy$eventBranchSegs)) {
+		if (verbose) {
 			cat('Processing sample ', i, '\n');
 		}
 		esegs <- ephy$eventBranchSegs[[i]];
-		
 		esegs <- esegs[esegs[,1] %in% nodeset, ];
-	 
 		
 		events <- ephy$eventData[[i]];
 		events <- events[order(events$index), ];			
@@ -55,15 +53,13 @@ getCladeRates <- function(ephy, node = NULL, nodetype='include', verbose=F){
 		museg <- timeIntegratedBranchRate(relsegmentstart, relsegmentend, mu1, mu2) / seglengths;
 	
 		lambda_vector[i] <- sum(lamseg * wts);
-		mu_vector[i] <- sum(museg  * wts);			
-	
-	
+		mu_vector[i] <- sum(museg  * wts);
 	}
 	
-	if (ephy$type == 'diversification'){
+	if (ephy$type == 'diversification') {
 		return(list(lambda = lambda_vector, mu = mu_vector));
 	}
-	if (ephy$type == 'trait'){
+	if (ephy$type == 'trait') {
 		return(list(beta = lambda_vector));
 	}
 }

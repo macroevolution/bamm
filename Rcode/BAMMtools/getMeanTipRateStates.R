@@ -6,16 +6,15 @@
 #	rate parameter depending on the 'type' of ephy).
 #	use.names=TRUE returns a named vector
 
-getMeanTipRateStates <- function(ephy, use.names = FALSE){
+getMeanTipRateStates <- function(ephy, use.names = FALSE) {
 	
-	if ('bammdata' != class(ephy)){
+	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");
 	}
 
-	if (use.names == FALSE){
+	if (!use.names) {
 		return(ephy$meanTipLambda - ephy$meanTipMu);
-	}
-	else{
+	} else {
 		ret <- ephy$meanTipLambda - ephy$meanTipMu;
 		names(ret) <- ephy$tip.label;
 		return(ret);

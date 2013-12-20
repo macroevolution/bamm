@@ -1,4 +1,3 @@
-
 ##########################################
 #
 #   computeJointMarginalShiftProbs
@@ -25,7 +24,7 @@
 #
 computeJointShiftCorrelations <- function(ephy, threshold=0.05) {
 	
-	if ('bammdata' != class(ephy)) {
+	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");
 	}
 	
@@ -40,7 +39,7 @@ computeJointShiftCorrelations <- function(ephy, threshold=0.05) {
 	tx <- tx / length(ephy$eventData);
 	tx <- tx[tx >= threshold];	
 	
-	if (length(tx) == 0){
+	if (length(tx) == 0) {
 		stop("No nodes were sampled frequently enough to meet the specified threshold\n");
 	}
 	
