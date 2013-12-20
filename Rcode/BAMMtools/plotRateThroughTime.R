@@ -30,27 +30,27 @@
 
 plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'auto', nBins = 100, smooth = FALSE, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = TRUE, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=FALSE) {
 	
-	if (class(ephy) != 'bammdata' & class(ephy) != 'bamm-ratematrix') {
+	if (!any(c('bammdata', 'bamm-ratematrix') %in% class(ephy))) {
 		stop("ERROR: Object ephy must be of class 'bammdata' or 'bamm-ratematrix'.\n");
 	}
 	if (!is.logical(useMedian)) {
 		stop('ERROR: useMedian must be either TRUE or FALSE.');
 	}
-	if (class(intervals)!='numeric' & class(intervals)!='NULL') {
+	if (!any(c('numeric', 'NULL') %in% class(intervals))) {
 		stop("ERROR: intervals must be either 'NULL' or a vector of quantiles.");
 	}
 	if (!is.logical(smooth)) {
 		stop('ERROR: smooth must be either TRUE or FALSE.');
 	}
-	if (class(ephy) == 'bamm-ratematrix' & (!is.null(start.time) | !is.null(end.time) | !is.null(node))) {
-		stop('ERROR: You cannot specify start.time, end.time or node if the rate matrix is being provided. Please either provide the bammdata object instead or specify start.time, end.time or node in the creation of the bamm-ratematrix.')
-	}
-
-	if (class(ephy) == 'bammdata') {
+	
+	if ('bammdata' %in% class(ephy)) {
 		#get rates through binned time
 		rmat <- getRateThroughTimeMatrix(ephy, start.time = start.time, end.time = end.time,node = node, nslices = nBins, nodetype=nodetype);
 	}
-	if (class(ephy) == 'bamm-ratematrix') {
+	if ('bamm-ratematrix' %in% class(ephy)) {
+		if (!any(is.null(c(start.time, end.time, node)))) {
+			stop('ERROR: You cannot specify start.time, end.time or node if the rate matrix is being provided. Please either provide the bammdata object instead or specify start.time, end.time or node in the creation of the bamm-ratematrix.')
+	}
 		#use existing rate matrix
 		rmat <- ephy;
 	}
@@ -100,15 +100,14 @@ plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,
 	}
 
 	#Calculate averaged data line
-	if (useMedian == FALSE) {
+	if (!useMedian) {
 		avg <- colMeans(rate);
-	}
-	if (useMedian == TRUE) {
+	} else {
 		avg <- unlist(apply(rate,2,median));
 	}
 	
 	#apply loess smoothing to intervals
-	if (smooth == TRUE) {
+	if (smooth) {
 		for (i in 1:length(poly)) {
 			p <- poly[[i]];
 			rows <- nrow(p);
@@ -120,8 +119,8 @@ plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,
 	}
 
 	#begin plotting
-	if (plot == TRUE) {
-		if (add == FALSE) {
+	if (plot) {
+		if (!add) {
 			plot.new();
 			par(mar=mar);
 			if (unique(xlim == 'auto') & unique(ylim == 'auto')) {
@@ -159,8 +158,7 @@ plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,
 			}
 		}
 		lines(x = maxTime - rmat$time, y = avg, lwd = 3, col = avgCol);
-	}
-	if (plot == FALSE) {
+	} else {
 		return(list(poly = poly,avg = avg,times = rmat$time));
 	}
 }
