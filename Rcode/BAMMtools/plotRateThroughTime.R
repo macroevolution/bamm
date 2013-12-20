@@ -145,6 +145,12 @@ plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,
 				yMin <- ylim[1];
 				yMax <- ylim[2];
 			}
+			axis(at=c(1.3*xMin,round(seq(xMin,xMax, length.out=xticks+1))), labels = c(1.3*xMin,round(seq(xMin, xMax, length.out=xticks+1))), cex.axis = cex.axis, side = 1);
+			axis(at=c(-0.2,seq(yMin, 1.2*yMax, length.out=yticks+1)), labels = c(-0.2,round(seq(yMin, 1.2*yMax, length.out=yticks+1),digits=1)), las=1, cex.axis = cex.axis, side = 2);
+
+			mtext(side = 1, text = 'Time since present', line = xline, cex = cex);
+			mtext(side = 2, text = ratelabel, line = yline, cex = cex);
+
 		}
 		#plot intervals
 		if (!is.null(intervals)) {
@@ -153,12 +159,6 @@ plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,
 			}
 		}
 		lines(x = maxTime - rmat$time, y = avg, lwd = 3, col = avgCol);
-
-		axis(at=c(1.3*xMin,round(seq(xMin,xMax, length.out=xticks+1))), labels = c(1.3*xMin,round(seq(xMin, xMax, length.out=xticks+1))), cex.axis = cex.axis, side = 1);
-		axis(at=c(-0.2,seq(yMin, 1.2*yMax, length.out=yticks+1)), labels = c(-0.2,round(seq(yMin, 1.2*yMax, length.out=yticks+1),digits=1)), las=1, cex.axis = cex.axis, side = 2);
-
-		mtext(side = 1, text = 'Time since present', line = xline, cex = cex);
-		mtext(side = 2, text = ratelabel, line = yline, cex = cex);
 	}
 	if (plot == FALSE) {
 		return(list(poly = poly,avg = avg,times = rmat$time));
