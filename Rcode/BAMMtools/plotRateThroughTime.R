@@ -7,7 +7,7 @@
 #		if bamm-ratematrix, start.time, end.time, node, nslices, nodetype are not used.
 #	useMedian = boolean, will plot median if TRUE, mean if FALSE.
 #	intervals if NULL, no intervals will be plotted, otherwise a vector of quantiles must be supplied (these will define shaded polygons)
-#	ratetype = 'speciation' or 'extinction' or 'netdiv' or 'trait'
+#	ratetype = autodetects diversification vs traits (based on input object 'type'), if 'auto', defaults to speciation (for diversification) or beta (for traits). Can alternatively specify 'netdiv' or 'extinction'. 
 #	nBins = number of time slices used to generate rates through time
 #	smooth = boolean whether or not to apply loess smoothing
 #	smoothParam = loess smoothing parameter, ignored if smooth = F
@@ -28,7 +28,7 @@
 #	+ several undocumented args to set plot parameters: mar, cex, xline, yline, etc.
 #	
 
-plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'speciation', nBins = 100, smooth = FALSE, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = TRUE, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=FALSE) {
+plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'auto', nBins = 100, smooth = FALSE, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = TRUE, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=FALSE) {
 	
 	if (class(ephy) != 'bammdata' & class(ephy) != 'bamm-ratematrix') {
 		stop("ERROR: Object ephy must be of class 'bammdata' or 'bamm-ratematrix'.\n");
@@ -39,13 +39,10 @@ plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,
 	if (class(intervals)!='numeric' & class(intervals)!='NULL') {
 		stop("ERROR: intervals must be either 'NULL' or a vector of quantiles.");
 	}
-	if (!ratetype %in% c('speciation','trait','extinction','netdiv')) {
-		stop("ERROR: ratetype must be either 'speciation', 'extinction','netdiv' or 'trait'.");
-	}
 	if (!is.logical(smooth)) {
 		stop('ERROR: smooth must be either TRUE or FALSE.');
 	}
-	if (class(ephy) == 'bamm-ratematrix' & (start.time != NULL | end.time != NULL | node != NULL)) {
+	if (class(ephy) == 'bamm-ratematrix' & (!is.null(start.time) | !is.null(end.time) | !is.null(node))) {
 		stop('ERROR: You cannot specify start.time, end.time or node if the rate matrix is being provided. Please either provide the bammdata object instead or specify start.time, end.time or node in the creation of the bamm-ratematrix.')
 	}
 
@@ -59,16 +56,19 @@ plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,
 	}
 
 	#set appropriate rates
-	if (ratetype != 'speciation' & ratetype != 'extinction' & ratetype != 'netdiv' & ratetype != 'trait') {
-		stop("ERROR: ratetype must be 'speciation', 'extinction', 'netdiv' or 'trait'.\n");
+	if (ratetype != 'auto' & ratetype != 'extinction' & ratetype != 'netdiv') {
+		stop("ERROR: ratetype must be 'auto', 'extinction', or 'netdiv'.\n");
 	}
-	if (ratetype == 'speciation') {
+	if (ephy$type == 'trait' & ratetype != 'auto') {
+		stop("ERROR: If input object is of type 'trait', ratetype can only be 'auto'.")
+	}
+	if (ratetype == 'auto' & ephy$type == 'diversification') {
 		rate <- rmat$lambda;
 		ratelabel <- 'Speciation';
 	}
-	if (ratetype == 'trait') {
-		rate <- rmat$lambda;
-		ratelabel <- 'BM rate';
+	if (ratetype == 'auto' & ephy$type == 'trait') {
+		rate <- rmat$beta;
+		ratelabel <- 'trait rate';
 	}
 	if (ratetype == 'extinction') {
 		rate <- rmat$mu;
