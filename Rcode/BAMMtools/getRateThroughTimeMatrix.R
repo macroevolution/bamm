@@ -19,7 +19,7 @@
 
 getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslices=100, node=NULL, nodetype = 'include') {
 	
-	if (!'bammdata' %in% class(ephy)) {
+	if (class(ephy) != 'bammdata') {
 		stop("Object ephy must be of class 'bammdata'\n");
 	}
 	
@@ -33,7 +33,7 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 		stop('error in getRateThroughTimeMatrix\n');
 	}
 	
-	bt <- branching.times(ephy);
+	bt <- branching.times(as.phylo.bammdata(ephy));
 		
 	maxpossible <- max(bt[as.character(intersect(nodeset, ephy$edge[,1]))]);
 
