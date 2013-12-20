@@ -26,9 +26,10 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 	if (is.null(node)) {
 		nodeset <- ephy$edge[,2];
 	} else if (!is.null(node) & nodetype == 'include') {
-		nodeset <- getDesc(ephy, node)$desc_set;
+		#nodeset <- getDesc(ephy, node)$desc_set;
+		nodeset <- unlist(sapply(node, function(x) getDesc(ephy, x)$desc_set))
 	} else if (!is.null(node) & nodetype == 'exclude') {
-		nodeset <- setdiff( ephy$edge[,2],  getDesc(ephy, node)$desc_set);
+		nodeset <- setdiff( ephy$edge[,2], unlist(sapply(node, function(x) getDesc(ephy, x)$desc_set)));
 	} else {
 		stop('error in getRateThroughTimeMatrix\n');
 	}
