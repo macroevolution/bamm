@@ -20,7 +20,7 @@ ADD_DEFINITIONS(${CXX_DEBUG_FLAGS}
 SET(GIT_COMMIT_ID "$(shell git rev-parse HEAD)")
 ADD_DEFINITIONS(-DGIT_COMMIT_ID=\"${GIT_COMMIT_ID}\")
 
-ADD_EXECUTABLE(bamm
+SET(BAMM_SRC
     src/Autotune.cpp
     src/BranchEvent.cpp
     src/BranchHistory.cpp
@@ -38,3 +38,5 @@ ADD_EXECUTABLE(bamm
     src/TraitModel.cpp
     src/Tree.cpp
     src/main.cpp)
+
+ADD_EXECUTABLE(bamm ${BAMM_SRC})
