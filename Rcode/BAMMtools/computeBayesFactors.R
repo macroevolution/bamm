@@ -76,7 +76,7 @@ computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NU
  
 	
 	if (is.null(modelset)){
-		modelset <- unique(post[,2]);
+		modelset <- unique(c(post[,2], prior[,2]));
 	}else if (length(modelset) < 2){
 		stop('\nInvalid modelset argument. This must be a vector of length > 1');
 	}else{
@@ -87,7 +87,7 @@ computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NU
 		
 		subs <- prior[,2];
 		if (length(subs) > 5000){
-			subs <- subs(sample(1:length(subs), size=5000));
+			subs <- subs[sample(1:length(subs), size=5000)];
 		}
 
 		resnb <- fitNegativeBinomial(subs);
