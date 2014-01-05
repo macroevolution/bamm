@@ -1,0 +1,12 @@
+dir()
+dir()
+dir()
+load('cetaceans.rda')
+ls()
+cetaceans
+plot(cetaceans)
+library(ape)
+load('cetaceans.rda')
+cetaceans
+plot(cetaceans)
+quit()

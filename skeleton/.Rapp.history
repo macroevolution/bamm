@@ -1,0 +1,10 @@
+?package.skeleton
+dir()
+dir()
+source('Load_BAMMtools.R')
+ls()
+dir()
+package.skeleton(name = "BAMMtools")
+library(geiger)
+?chelonia
+quit()
