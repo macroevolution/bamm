@@ -1,1 +1,6 @@
-exportPattern("^[[:alpha:]]+")
+useDynLib(BAMMtools)
+exportPattern(".+")
+
+S3method(print, bammdata)
+S3method(summary, bammdata)
+S3method(plot, bammdata)

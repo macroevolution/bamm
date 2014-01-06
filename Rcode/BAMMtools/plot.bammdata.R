@@ -36,7 +36,7 @@
 #	                 respectively
 #	           ... = further arguments passed to par to control plotting, e.g. mar.
 #
-plot.bammdata = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5, rbf=0.001, show=TRUE, labels=FALSE, multi=FALSE, hrates=FALSE, lwd=1, cex=1, ncolors=64, pal='Spectral', ...)
+plot.bammdata = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5, rbf=0.001, show=TRUE, labels=FALSE, multi=FALSE, hrates=FALSE, lwd=1, cex=1, ncolors=64, pal='temperature', ...)
 {
 	if ('bammdata' == class(ephy)) phy = as.phylo.bammdata(ephy) else stop('Object ephy must be of class bammdata\n');
 	if (!is.binary.tree(phy)) stop('Function requires fully bifurcating tree.');

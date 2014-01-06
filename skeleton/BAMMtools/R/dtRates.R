@@ -32,7 +32,7 @@ function(ephy, tau, ism = NULL) {
 	index = 1:nrow(segmat)
 	rownames(segmat) = index;
 	segmat = segmat[order(segmat[,1]),];
-	dtrates = .Call("dtrates", ephy, segmat, tol, ism);
+	dtrates = .Call("dtrates", ephy, segmat, tol, ism, PACKAGE="BAMMtools");
 	names(dtrates) = rownames(segmat);
 	dtrates = dtrates[as.character(index)];
 	names(dtrates) = NULL;

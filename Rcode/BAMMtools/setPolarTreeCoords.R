@@ -16,9 +16,9 @@ setPolarTreeCoords = function(phy,vtheta,rbf)
 	vtheta = as.numeric(vtheta*(pi/180));
 	ths = as.numeric((2*pi-vtheta)/phy$Nnode);	
 	
-	ndorder = .C('postorder_tree_traverse', anc, desc, rootnd, nnode, integer(nnode))[[5]];
+	ndorder = .C('postorder_tree_traverse', anc, desc, rootnd, nnode, integer(nnode), PACKAGE="BAMMtools")[[5]];
 	ndorder = as.integer(ndorder);
-	L = .C('setpolartreecoords', anc, desc, ndorder, ntip, rootnd, nnode, ths, numeric(nrow(phy$edge)*3), numeric(3));
+	L = .C('setpolartreecoords', anc, desc, ndorder, ntip, rootnd, nnode, ths, numeric(nrow(phy$edge)*3), numeric(3), PACKAGE="BAMMtools");
 	
 	root = matrix(L[[9]],nrow=1);
 	theta = matrix(L[[8]],nrow=nrow(phy$edge),ncol=3);

@@ -14,10 +14,10 @@ setPhyloTreeCoords = function(phy)
 	nnode = as.integer(dim(phy$edge)[1] + 1);
 	bl = as.numeric(phy$edge.length/tH);
 	
-	ndorder = .C('postorder_tree_traverse', anc, desc, rootnd, nnode, integer(nnode))[[5]];
+	ndorder = .C('postorder_tree_traverse', anc, desc, rootnd, nnode, integer(nnode), PACKAGE="BAMMtools")[[5]];
 	ndorder = as.integer(ndorder);
 	
-	L = .C('setphylotreecoords', anc, desc, ndorder, bl, ntip, rootnd, nnode, numeric(nrow(phy$edge)*4), numeric(nrow(phy$edge)*4), numeric(4));
+	L = .C('setphylotreecoords', anc, desc, ndorder, bl, ntip, rootnd, nnode, numeric(nrow(phy$edge)*4), numeric(nrow(phy$edge)*4), numeric(4), PACKAGE="BAMMtools");
 	
 	root = matrix(L[[10]],nrow=1);
 	xy = matrix(L[[9]],nrow=nrow(phy$edge),ncol=4);
