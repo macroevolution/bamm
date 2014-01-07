@@ -76,7 +76,7 @@ times of approximating segments and starting and ending times of branches
 or branch segments on the phylogeny.
 ***/
 
-#define segmat(row, col) (getDblMatrixELT(segmat, row, col))
+//#define segmat(row, col) (getDblMatrixELT(segmat, row, col))
 
 SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 {
@@ -146,17 +146,17 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 			//and can ignore everything we've been over already
 			for (l = place_holder; l < nsegs; l++)
 			{
-				if ( (int) segmat(l, 0) == node)
+				if ( (int) getDblMatrixELT(segmat, l, 0) == node)
 				{
 					//isGoodStart = REAL(segbegin)[l] >= begin;
-					isGoodStart = ( (segmat(l,1) - begin) >= 0. || ( (segmat(l,1) - begin) < 0. && (segmat(l,1) - begin) >= -1.*eps) );
+					isGoodStart = ( (getDblMatrixELT(segmat, l, 1) - begin) >= 0. || ( (getDblMatrixELT(segmat, l, 1) - begin) < 0. && (getDblMatrixELT(segmat, l, 1) - begin) >= -1.*eps) );
 					//isGoodEnd = REAL(segend)[l] <= end;
-					isGoodEnd =  ( (segmat(l,2) - end) <= 0. || ( (segmat(l,2) - end) > 0. && (segmat(l,2) - end) <= eps) );
+					isGoodEnd =  ( (getDblMatrixELT(segmat, l, 2) - end) <= 0. || ( (getDblMatrixELT(segmat, l, 2) - end) > 0. && (getDblMatrixELT(segmat, l, 2) - end) <= eps) );
 
 					if (isGoodStart && isGoodEnd)
 					{					
-						relStart = segmat(l,1) - Start;
-						relEnd = segmat(l,2) - Start;
+						relStart = getDblMatrixELT(segmat, l, 1) - Start;
+						relEnd = getDblMatrixELT(segmat, l, 2) - Start;
 						ret = getMeanRateExponential(relStart,relEnd,lam1,lam2);
 						
 						REAL(rates)[l] += ret/((double) nsamples);
@@ -164,21 +164,21 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 					//check for shift straddle
 					if (node == nnode)
 					{
-						isGoodStart = segmat(l,1) < end;
-						isGoodEnd = segmat(l,2) > end;
+						isGoodStart = getDblMatrixELT(segmat, l, 1) < end;
+						isGoodEnd = getDblMatrixELT(segmat, l, 2) > end;
 						if (isGoodStart && isGoodEnd)
 						{	
-							relStart = segmat(l,1) - Start;
+							relStart = getDblMatrixELT(segmat, l, 1) - Start;
 							relEnd = end - Start;
 							leftshift = getTimeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
 							
 							relStart = 0.;
-							relEnd = segmat(l,2) - end;
+							relEnd = getDblMatrixELT(segmat, l, 2) - end;
 							lam1 = REAL(getListElement(eventData, "lam1"))[nxtevent-1];
 							lam2 = REAL(getListElement(eventData, "lam2"))[nxtevent-1];
 							rightshift = getTimeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
 							
-							ret = (leftshift+rightshift)/(segmat(l,2) - segmat(l,1));
+							ret = (leftshift+rightshift)/(getDblMatrixELT(segmat, l, 2) - getDblMatrixELT(segmat, l, 1));
 							
 							REAL(rates)[l] += ret/((double) nsamples);
 							place_holder = l; place_holder++;
@@ -199,4 +199,4 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 	return rates;
 }
 
-#undef segmat(row, col)
+//#undef segmat(row, col)
