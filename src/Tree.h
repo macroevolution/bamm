@@ -14,10 +14,19 @@ class TraitBranchHistory;
 class Node;
 
 
+// Branch lengths must be within this value to be considered the same
+#define ULTRAMETRIC_ERROR 1e-4
+
+
 class Tree
 {
 
 private:
+
+    std::vector<double> terminalPathLengthsToRoot();
+    void storeTerminalPathLengthsToRootRecurse
+        (Node* node, std::vector<double>& pathLengths);
+    bool allValuesAreTheSame(std::vector<double>& list);
 
     Node* root;
     std::set<Node*> nodes;
@@ -126,6 +135,8 @@ public:
 
     void writeMeanBranchTraitRateTree(Node* p, std::stringstream& ss);
     void setMeanBranchTraitRates();
+
+    bool isUltrametric();
 
     // Functions for phenotypic evolution:
     void getPhenotypes(std::string fname);

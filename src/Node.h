@@ -129,6 +129,8 @@ public:
     // Get random RIGHT TIP node
     Node* getRandomRightTipNode();
 
+    double pathLengthToRoot();
+
     // Specific for treemap:
     void   setMapStart(double x);
     double getMapStart();

@@ -151,6 +151,20 @@ Node* Node::getRandomRightTipNode(void)
 }
 
 
+double Node::pathLengthToRoot()
+{
+    double length = getBrlen();
+
+    Node* node = this;
+    while (node->getAnc() != NULL) {
+        node = node->getAnc();
+        length += node->getBrlen();
+    }
+
+    return length;
+}
+
+
 /* MARCH 24 2012
  SET SPECIATION & EXTINCTION RATES BY NODE
 

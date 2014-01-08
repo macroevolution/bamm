@@ -1873,3 +1873,57 @@ Node* Tree::getNodeByName(std::string A)
     return x;
 }
 
+
+bool Tree::isUltrametric()
+{
+    std::vector<double> terminalPathLengths = terminalPathLengthsToRoot();
+    return allValuesAreTheSame(terminalPathLengths);
+}
+
+
+std::vector<double> Tree::terminalPathLengthsToRoot()
+{
+    std::vector<double> pathLengths;
+    storeTerminalPathLengthsToRootRecurse(getRoot(), pathLengths);
+    return pathLengths;
+}
+
+
+void Tree::storeTerminalPathLengthsToRootRecurse
+    (Node* node, std::vector<double>& pathLengths)
+{
+    Node* leftNode = node->getLfDesc();
+    Node* rightNode = node->getRtDesc();
+
+    if (leftNode == NULL && rightNode == NULL) {
+        pathLengths.push_back(node->pathLengthToRoot());
+        return;
+    }
+
+    if (leftNode != NULL) {
+        storeTerminalPathLengthsToRootRecurse(leftNode, pathLengths);
+    }
+
+    if (rightNode != NULL) {
+        storeTerminalPathLengthsToRootRecurse(rightNode, pathLengths);
+    }
+}
+
+
+bool Tree::allValuesAreTheSame(std::vector<double>& list)
+{
+    if (list.size() == 0) {
+        return false;
+    }
+
+    double firstNum = list[0];
+
+    std::vector<double>::const_iterator it;
+    for (it = list.begin() + 1; it != list.end(); ++it) {
+        if (std::fabs(*it - firstNum) > ULTRAMETRIC_ERROR) {
+            return false;
+        }
+    }
+
+    return true;
+}
