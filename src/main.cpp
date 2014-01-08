@@ -6,6 +6,7 @@
 #include <cstdlib>
 
 #include "Tree.h"
+#include "Node.h"
 #include "MbRandom.h"
 #include "Model.h"
 #include "MCMC.h"
@@ -18,12 +19,14 @@
 
 void printAbout();
 const char* currentTime();
+void assertBranchLengthsArePositive(Tree& tree);
+void assertBranchLengthsArePositive(Node* node);
 void exitWithMessageUsage();
 void exitWithErrorUnknownArgument(const std::string& arg);
 void exitWithErrorNoControlFile();
 
 #include "Log.h"
-  
+
 int main (int argc, char* argv[])
 {
     printAbout();
@@ -89,6 +92,8 @@ int main (int argc, char* argv[])
 
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
+
+        assertBranchLengthsArePositive(intree);
         
         if (mySettings.getUseGlobalSamplingProbability()) {
             intree.initializeSpeciationExtinctionModel
@@ -125,6 +130,8 @@ int main (int argc, char* argv[])
 
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
+
+        assertBranchLengthsArePositive(intree);
         
         intree.setAllNodesCanHoldEvent();
         intree.setTreeMap(intree.getRoot());
@@ -181,6 +188,28 @@ const char* currentTime()
     time_t curTime;
     time(&curTime);
     return std::ctime(&curTime);
+}
+
+
+void assertBranchLengthsArePositive(Tree& tree)
+{
+    assertBranchLengthsArePositive(tree.getRoot());
+}
+
+
+void assertBranchLengthsArePositive(Node* node)
+{
+    if (node == NULL) {
+        return;
+    }
+
+    if (node->getBrlen() < 0.0) {
+        log(Error) << "Some tree branch lengths are negative.\n";
+        std::exit(1);
+    }
+
+    assertBranchLengthsArePositive(node->getLfDesc());
+    assertBranchLengthsArePositive(node->getRtDesc());
 }
 
 
