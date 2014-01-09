@@ -2,11 +2,13 @@
 \alias{summary.bammdata}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-temp title
+Summary
 %%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Summarizes the number of shifts and their locations in the 
+maximum shift credibility (MSC) tree and the posterior 
+distribution on the number of shifts.
 }
 \usage{
 summary.bammdata(ephy, opt = "product", display = 10)
@@ -14,30 +16,38 @@ summary.bammdata(ephy, opt = "product", display = 10)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{ephy}{
-%%     ~~Describe \code{ephy} here~~
+an object of class \code{bammdata}
 }
   \item{opt}{
-%%     ~~Describe \code{opt} here~~
+a character string indicating the optimality criterion. May
+be "product" or "sum"
 }
   \item{display}{
-%%     ~~Describe \code{display} here~~
+an integer for the number of rows of the posterior to display
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Prints to console the number of posterior samples, the number of 
+shifts in the MSC tree, the locations of those shifts, the optimality
+criterion used for calculating the MSC tree, and the posterior 
+distribution on the number of shifts, which is just the fraction of 
+samples in the posterior having 0,1,2,...n shifts.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+Returns (invisibly) a list with two components:
+\item{posterior}{
+	the number of posterior samples having 0,1,2,...,n shifts
+}
+\item{mscshiftnodes}{
+	the node(s) where a shift occurs in the maximum shift credibility
+	tree
+}
 }
 \references{
 %% ~put references to the literature/web site here ~
 }
 \author{
-%%  ~~who you are~~
+Mike Grundler
 }
 \note{
 %%  ~~further notes~~
@@ -46,60 +56,13 @@ summary.bammdata(ephy, opt = "product", display = 10)
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{maximumShiftCredibilityTree}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (ephy, opt = "product", display = 10) 
-{
-    cat("\nAnalyzed", length(ephy$eventData), "posterior samples\n")
-    shiftsindex = maximumShiftCredibilityTree(ephy, maximize = opt)$sampleindex
-    shiftnodes = getShiftNodesFromIndex(ephy, shiftsindex)
-    if (length(shiftnodes) > 1) {
-        cat("\nMaximum shift credibility tree has", length(shiftnodes), 
-            "shifts\n\n")
-        cat("Shifts occur leading to nodes:", shiftnodes, "\n\n")
-        cat("Optimality type:", opt, "\n\n")
-    }
-    else if (length(shiftnodes) == 1) {
-        cat("\nMaximum shift credibility tree has 1 shift\n\n")
-        cat("Shift occurs leading to node:", shiftnodes, "\n\n")
-        cat("Optimality type:", opt, "\n\n")
-    }
-    else {
-        cat("\nMaximum shift credibility tree has 0 shifts\n\n")
-        cat("Optimality type:", opt, "\n\n")
-    }
-    cat("Shift posterior distribution:\n\n")
-    fev = sapply(ephy$eventData, nrow)
-    disp = tabulate(fev)
-    disp = disp/sum(disp)
-    disp = data.frame(cbind(seq.int(0, length(disp) - 1, 1), 
-        signif(disp, 2)))
-    if (nrow(disp) <= display) {
-        write.table(format(disp, justify = "left", width = 10), 
-            col.names = FALSE, row.names = FALSE, quote = FALSE)
-    }
-    else {
-        if (nrow(disp) - display == 1) {
-            write.table(format(disp[1:display, ], justify = "left", 
-                width = 10), col.names = FALSE, row.names = FALSE, 
-                quote = FALSE)
-            cat("... omitted 1 row\n\n")
-        }
-        else {
-            write.table(format(disp[1:display, ], justify = "left", 
-                width = 10), col.names = FALSE, row.names = FALSE, 
-                quote = FALSE)
-            cat("... omitted", nrow(disp) - display, "rows\n\n")
-        }
-    }
-    invisible(list(posterior = tabulate(fev), mscshiftnodes = shiftnodes))
-  }
+library(BAMMtools)
+data(cetaceans, events.cetaceans)
+ephy = getEventData(cetaceans,events.cetaceans,nsamples=100)
+summary(ephy)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

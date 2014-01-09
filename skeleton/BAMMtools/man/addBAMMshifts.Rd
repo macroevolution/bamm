@@ -5,7 +5,8 @@
 Add BAMM shifts to a plotted tree
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Adds symbols to a plotted tree to mark the location(s) where there is a shift in the
+macroevolutionary dynamics of diversification or trait evolution.
 }
 \usage{
 addBAMMshifts(ephy, method, index, cex = 1, pch = 21, col = 1, bg = 2, multi = FALSE)
@@ -13,28 +14,28 @@ addBAMMshifts(ephy, method, index, cex = 1, pch = 21, col = 1, bg = 2, multi = F
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{ephy}{
-%%     ~~Describe \code{ephy} here~~
+an object of class \code{bammdata}
 }
   \item{method}{
-%%     ~~Describe \code{method} here~~
+a character string indicating the method used in plotting. May be "polar" or "phylogram"
 }
   \item{index}{
-%%     ~~Describe \code{index} here~~
+an integer indicating which posterior sample to use for adding shifts to the plotted tree
 }
   \item{cex}{
-%%     ~~Describe \code{cex} here~~
+a numeric indicating the character expansion of the plotted points
 }
   \item{pch}{
-%%     ~~Describe \code{pch} here~~
+an integer indicating the choice of plotting symbol
 }
   \item{col}{
-%%     ~~Describe \code{col} here~~
+an integer or character string indicating the border color of the plotting symbol
 }
   \item{bg}{
-%%     ~~Describe \code{bg} here~~
+an integer or character string indicating the background color of the plotting symbol
 }
   \item{multi}{
-%%     ~~Describe \code{multi} here~~
+a logical indicating whether the device is configured for multi-panel plotting
 }
 }
 \details{
@@ -51,7 +52,7 @@ addBAMMshifts(ephy, method, index, cex = 1, pch = 21, col = 1, bg = 2, multi = F
 %% ~put references to the literature/web site here ~
 }
 \author{
-%%  ~~who you are~~
+Mike Grundler
 }
 \note{
 %%  ~~further notes~~
@@ -60,48 +61,25 @@ addBAMMshifts(ephy, method, index, cex = 1, pch = 21, col = 1, bg = 2, multi = F
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{getShiftNodesFromIndex}},\code{\link{plot.bammdata}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+	
+library(BAMMtools)
+data(cetaceans, events.cetaceans)
+ephy = getEventData(cetaceans, events.cetaceans, burnin=0.25)
 
-## The function is currently defined as
-function (ephy, method, index, cex = 1, pch = 21, col = 1, bg = 2, 
-    multi = FALSE) 
-{
-    if (!"bammdata" \%in\% class(ephy)) 
-        stop("Object ephy must be of class bammdata")
-    lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv)
-    if (!multi) {
-        op = par(no.readonly = TRUE)
-        par(lastPP$pp)
-    }
-    shiftnodes = getShiftNodesFromIndex(ephy, index)
-    isShift = ephy$eventData[[index]]$node \%in\% shiftnodes
-    times = ephy$eventData[[index]]$time[isShift]
-    if (method == "phylogram") {
-        if (max(lastPP$xx) <= 1) {
-            XX = times/max(branching.times(as.phylo.bammdata(ephy)))
-        }
-        else {
-            XX = times
-        }
-        YY = lastPP$yy[shiftnodes]
-    }
-    else if (method == "polar") {
-        rb = lastPP$rb
-        XX = (rb + times/max(branching.times(as.phylo.bammdata(ephy)))) * 
-            cos(lastPP$theta[shiftnodes])
-        YY = (rb + times/max(branching.times(as.phylo.bammdata(ephy)))) * 
-            sin(lastPP$theta[shiftnodes])
-    }
-    points(XX, YY, pch = pch, cex = cex, col = col, bg = bg)
-    if (!multi) {
-        par(op)
-    }
-  }
+#adding shifts to tree for specific posterior samples
+plot(ephy, method="polar", index=5)
+addBAMMshifts(ephy, "polar", index=5)
+
+#multi-panel plotting and adding shifts
+par(mfrow=c(2,3),mar=c(5,1,1,1))
+samples = sample(1:length(ephy$eventData), 6)
+for (i in 1:6) {
+	plot(ephy, tau=0.001, index=samples[i], multi=TRUE)
+	addBAMMshifts(ephy,method="phylogram",index=samples[i],multi=TRUE)	
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

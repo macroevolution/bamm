@@ -2,208 +2,146 @@
 \alias{plot.bammdata}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-temp title
-%%  ~~function to do ... ~~
+Plotting dynamic rates on a phylogeny
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+\code{plot.bammdata} plots the phylogenetic tree in the \code{bammdata} object.
+In doing so branches are colored according to estimated dynamic rates of speciation 
+or trait evolution.	 
 }
 \usage{
-plot.bammdata(ephy, method = "phylogram", tau = 0.01, index = NULL, vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, hrates = FALSE, lwd = 1, cex = 1, ncolors = 64, pal = "Spectral", ...)
+S3 method for class \code{bammdata}:		
+plot(ephy, method = "phylogram", tau = 0.01, index = NULL, 
+    vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, 
+    hrates = FALSE, lwd = 1, cex = 1, ncolors = 64, pal = "Spectral", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{ephy}{
-%%     ~~Describe \code{ephy} here~~
+an object of class \code{bammdata}.
 }
   \item{method}{
-%%     ~~Describe \code{method} here~~
+a character string indicating the method for plotting the phylogenetic tree. 
+\code{method = "phylogram"} (default) plots the phylogenetic tree using rectangular 
+coordinates. \code{method = "polar"} plots the phylogenetic tree using polar coordinates.
 }
   \item{tau}{
-%%     ~~Describe \code{tau} here~~
+a numeric indicating the step size used in discretizing branches into segments. 
+These segments are used in calculating rate changes along branches. Should be
+given as a fraction of the total tree height, e.g. 0.01 (default). 
 }
   \item{index}{
-%%     ~~Describe \code{index} here~~
+an integer vector indexing which posterior samples to include in the calculation
+of rates. If \code{NULL} (default) all posterior samples in \code{ephy} are used.
 }
   \item{vtheta}{
-%%     ~~Describe \code{vtheta} here~~
+a numeric indicating the angular separation (in degrees) of the first and last
+terminal nodes. Ignored if \code{method = "phylogram"}.
 }
   \item{rbf}{
-%%     ~~Describe \code{rbf} here~~
+a numeric indicating the length of the root branch as a fraction of total tree
+height. Ignored if \code{method = "phylogram"}.
 }
   \item{show}{
-%%     ~~Describe \code{show} here~~
+a logical indicating whether or not to plot the tree. Defaults to \code{TRUE}.
 }
   \item{labels}{
-%%     ~~Describe \code{labels} here~~
+a logical indicating whether or not to plot the tip labels. Defaults to \code{FALSE}.
 }
   \item{multi}{
-%%     ~~Describe \code{multi} here~~
+a logical indicating whether or not the device is configured for a multi-panel plot.
+Defaults to \code{FALSE}.
 }
   \item{hrates}{
-%%     ~~Describe \code{hrates} here~~
+a logical indicating whether or not to plot a density function for interpreting the 
+mapping of evolutionary rates to colors. Defaults to \code{FALSE}.
 }
   \item{lwd}{
-%%     ~~Describe \code{lwd} here~~
+a numeric specifying the line width for branches.
 }
   \item{cex}{
-%%     ~~Describe \code{cex} here~~
+a numeric specifying the character expansion for tip labels.
 }
   \item{ncolors}{
-%%     ~~Describe \code{ncolors} here~~
+an integer specifying the number of colors to be used for the mapping of evolutionary
+rates to colors.
 }
   \item{pal}{
-%%     ~~Describe \code{pal} here~~
+a character string or vector of mode character that describes the color palette.
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+further arguments passed to \code{par}.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Internally \code{plot.bammdata} looks for a list element in \code{ephy} called "dtrates". 
+This is simply a vector holding the rates of each segment on each branch. If "dtrates" is not 
+found \code{plot.bammdata} calls \code{dtRates}, which performs the calculations of rates.
+If you plan to repeatedly call \code{plot.bammdata} on a large tree you can reduce computation
+load by calling \code{dtRates} with \code{ephy} before passing \code{ephy} to \code{plot.bammdata}.
+
+Currently three options exist for specifying the color palette. In each case cool colors represent 
+slow rates of speciation or trait evolution and warm colors represent fast rates. The default setting 
+\code{pal = "temperature"} uses the \code{rich.colors} function from the package ggplots. If the package 
+RColorBrewer is available then any of the named diverging color palettes documented under \code{brewer.pal} 
+may also be used. Finally a vector of three valid named colors (e.g. c("blue","green","red")) may also be 
+used. The first, second, and third colors are mapped to low, intermediate, and fast rates of evolution. 
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+Returns (invisibly) a matrix. Rows correspond to branches. Columns 1-2 are starting (x,y) coordinates 
+of each branch and columns 3-4 are ending (x,y) coordinates of each branch. If \code{method = "polar"} a 
+fifth column gives the angle (in radians) of each branch.
 }
 \references{
-%% ~put references to the literature/web site here ~
+
 }
 \author{
-%%  ~~who you are~~
+Mike Grundler
 }
 \note{
-%%  ~~further notes~~
+If arguments to \code{par} are specified in \code{\dots} the function resets \code{par} variables before
+returning unless \code{multi = TRUE}.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{dtRates}}.	
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+	
+library(BAMMtools)
+data(cetaceans, events.cetaceans)
+ephy = getEventData(cetaceans, events.cetaceans, burnin=0.25)
 
-## The function is currently defined as
-function (ephy, method = "phylogram", tau = 0.01, index = NULL, 
-    vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, 
-    hrates = FALSE, lwd = 1, cex = 1, ncolors = 64, pal = "Spectral", 
-    ...) 
-{
-    if ("bammdata" == class(ephy)) 
-        phy = as.phylo.bammdata(ephy)
-    else stop("Object ephy must be of class bammdata\n")
-    if (!is.binary.tree(phy)) 
-        stop("Function requires fully bifurcating tree.")
-    if (any(phy$edge.length == 0)) 
-        warning("Tree contains zero length branches. Rates for these will be NA and coerced to zero")
-    if (!("dtrates" \%in\% names(ephy))) 
-        ephy = dtRates(ephy, tau, index)
-    if (sum(is.na(ephy$dtrates$rates))) {
-        warning(sprintf("Found \%d NA values. Coercing to zero.", 
-            sum(is.na(ephy$dtrates$rates))))
-        ephy$dtrates$rates[is.na(ephy$dtrates$rates)] = 0
-    }
-    tH = max(branching.times(phy))
-    phy$begin = ephy$begin
-    phy$end = ephy$end
-    if (method == "polar") {
-        ret = setPolarTreeCoords(phy, vtheta, rbf)
-        rb = tH * rbf
-    }
-    else if (method == "phylogram") {
-        ret = setPhyloTreeCoords(phy)
-    }
-    else {
-        stop("Unimplemented method")
-    }
-    x0 = ret$segs[, 1]
-    y0 = ret$segs[, 2]
-    x1 = ret$segs[, 3]
-    y1 = ret$segs[, 4]
-    tau = ephy$dtrates$tau
-    edge.color = colorMap(ephy$dtrates$rates, pal, ncolors)
-    p = cbind(x0[-1], y0[-1], x1[-1], y1[-1], phy$edge[, 2])
-    p = apply(p, 1, mkdtsegs, tau, phy, tH)
-    p = do.call(rbind, p)
-    x0 = c(x0[1], p[, 1])
-    x1 = c(x1[1], p[, 2])
-    y0 = c(y0[1], p[, 3])
-    y1 = c(y1[1], p[, 4])
-    offset = table(p[, 5])[as.character(unique(p[, 5]))]
-    arc.color = c(edge.color[1], edge.color[match(unique(p[, 
-        5]), p[, 5]) + offset])
-    edge.color = c(edge.color[1], edge.color)
-    if (show) {
-        if (length(list(...))) {
-            op = par(no.readonly = TRUE)
-            par(...)
-        }
-        plot.new()
-        ofs = 0
-        if (labels) {
-            ofs = max(nchar(phy$tip.label) * 0.03 * cex)
-        }
-        if (method == "polar") {
-            plot.window(xlim = c(-1, 1) + c(-rb, rb) + c(-ofs, 
-                ofs), ylim = c(-1, 1) + c(-rb, rb) + c(-ofs, 
-                ofs), asp = 1)
-            segments(x0, y0, x1, y1, col = edge.color, lwd = lwd, 
-                lend = 2)
-            arc(0, 0, ret$arcs[, 1], ret$arcs[, 2], c(rb, rb + 
-                phy$end/tH), border = arc.color, lwd = lwd)
-            if (labels) {
-                for (k in 1:length(phy$tip.label)) {
-                  text(ret$segs[-1, ][phy$edge[, 2] == k, 3], 
-                    ret$segs[-1, ][phy$edge[, 2] == k, 4], phy$tip.label[k], 
-                    cex = cex, srt = (180/pi) * ret$arcs[-1, 
-                      ][phy$edge[, 2] == k, 1], adj = c(0, NA))
-                }
-            }
-        }
-        if (method == "phylogram") {
-            plot.window(xlim = c(0, 1 + ofs), ylim = c(0, phy$Nnode * 
-                1/(phy$Nnode + 1)), asp = 1)
-            segments(x0, y0, x1, y1, col = edge.color, lwd = lwd, 
-                lend = 2)
-            isTip = phy$edge[, 2] <= phy$Nnode + 1
-            isTip = c(FALSE, isTip)
-            segments(ret$arcs[!isTip, 1], ret$arcs[!isTip, 2], 
-                ret$arcs[!isTip, 3], ret$arcs[!isTip, 4], col = arc.color[!isTip], 
-                lwd = lwd, lend = 2)
-            if (labels) {
-                text(ret$segs[-1, ][phy$edge[, 2] <= phy$Nnode + 
-                  1, 3], ret$segs[-1, ][phy$edge[, 2] <= phy$Nnode + 
-                  1, 4], phy$tip.label, cex = cex, pos = 4, offset = 0.25)
-            }
-        }
-        if (hrates) {
-            histRates(ephy$dtrates$rates, pal, ncolors)
-        }
-    }
-    index = order(as.numeric(rownames(ret$segs)))
-    if (method == "phylogram") {
-        assign("last_plot.phylo", list(Ntip = phy$Nnode + 1, 
-            Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index, 
-                3], yy = ret$segs[index, 4], pp = par(no.readonly = TRUE)), 
-            envir = .PlotPhyloEnv)
-    }
-    else if (method == "polar") {
-        assign("last_plot.phylo", list(Ntip = phy$Nnode + 1, 
-            Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index, 
-                3], yy = ret$segs[index, 4], theta = ret$segs[index, 
-                5], rb = rb, pp = par(no.readonly = TRUE)), envir = .PlotPhyloEnv)
-    }
-    if (!multi) 
-        if (length(list(...))) 
-            par(op)
-    invisible(ret$segs[-1, ])
-  }
+#adding shifts to tree for specific posterior samples
+plot(ephy, method="polar", index=5)
+addBAMMshifts(ephy, "polar", index=5)
+
+#multi-panel plotting and adding shifts
+par(mfrow=c(2,3),mar=c(5,1,1,1))
+samples = sample(1:length(ephy$eventData), 6)
+for (i in 1:6) {
+	plot(ephy, tau=0.001, index=samples[i], multi=TRUE)
+	addBAMMshifts(ephy,method="phylogram",index=samples[i],multi=TRUE)	
+}
+
+#default behavior will call dtRates on each invocation
+plot(ephy)
+plot(ephy, method="polar")
+
+#now plot.bammdata does not call dtRates
+ephy = dtRates(ephy)
+plot(ephy)
+plot(ephy,method="polar")
+
+#color and line width options
+if (require(RColorBrewer)) {
+	plot(ephy,method="polar",pal="Spectral", lwd=3)
+	plot(ephy,method="polar",pal="RdYlBu", lwd=3)
+}	
+plot(ephy,method="polar",pal=c("blue","green","red"), lwd=3)
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

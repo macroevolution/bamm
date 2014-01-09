@@ -2,11 +2,10 @@
 \alias{getmrca}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-temp
-%%  ~~function to do ... ~~
+Find most recent common ancestor
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Calculates the most recent common ancestors for each pair of tips
 }
 \usage{
 getmrca(phy, t1, t2)
@@ -14,30 +13,28 @@ getmrca(phy, t1, t2)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{phy}{
-%%     ~~Describe \code{phy} here~~
+an object of class \code{phylo}
 }
   \item{t1}{
-%%     ~~Describe \code{t1} here~~
+a vector of mode integer or character corresponding to tips in \code{phy}
 }
   \item{t2}{
-%%     ~~Describe \code{t2} here~~
+a vector of mode integer or character corresponding to tips in \code{phy}
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Finds the most recent common ancestor for each pair of tips where pairs are
+defined as (\code{t1}[1],\code{t2}[1]),(\code{t1}[2],\code{t2}[2]),...,(\code{t1}[i],\code{t2}[i]), ...,(\code{t1}[n],\code{t2}[n])
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A vector with the node number of the common ancestor for each pair of
+tips
 }
 \references{
 %% ~put references to the literature/web site here ~
 }
 \author{
-%%  ~~who you are~~
+Mike Grundler
 }
 \note{
 %%  ~~further notes~~
