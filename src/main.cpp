@@ -19,9 +19,6 @@
 
 void printAbout();
 const char* currentTime();
-void assertBranchLengthsArePositive(Tree& tree);
-void assertBranchLengthsArePositive(Node* node);
-void assertTreeIsUltrametric(Tree& tree);
 void exitWithMessageUsage();
 void exitWithErrorUnknownArgument(const std::string& arg);
 void exitWithErrorNoControlFile();
@@ -94,9 +91,6 @@ int main (int argc, char* argv[])
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
 
-        assertBranchLengthsArePositive(intree);
-        assertTreeIsUltrametric(intree);
-        
         if (mySettings.getUseGlobalSamplingProbability()) {
             intree.initializeSpeciationExtinctionModel
                 (mySettings.getGlobalSamplingFraction());
@@ -133,9 +127,6 @@ int main (int argc, char* argv[])
         std::string treefile = mySettings.getTreeFilename();
         Tree intree(treefile, &myRNG);
 
-        assertBranchLengthsArePositive(intree);
-        assertTreeIsUltrametric(intree);
-        
         intree.setAllNodesCanHoldEvent();
         intree.setTreeMap(intree.getRoot());
 
@@ -191,37 +182,6 @@ const char* currentTime()
     time_t curTime;
     time(&curTime);
     return std::ctime(&curTime);
-}
-
-
-void assertBranchLengthsArePositive(Tree& tree)
-{
-    assertBranchLengthsArePositive(tree.getRoot());
-}
-
-
-void assertBranchLengthsArePositive(Node* node)
-{
-    if (node == NULL) {
-        return;
-    }
-
-    if (node->getBrlen() < 0.0) {
-        log(Error) << "At least one branch length is negative.\n";
-        std::exit(1);
-    }
-
-    assertBranchLengthsArePositive(node->getLfDesc());
-    assertBranchLengthsArePositive(node->getRtDesc());
-}
-
-
-void assertTreeIsUltrametric(Tree& tree)
-{
-    if (!tree.isUltrametric()) {
-        log(Error) << "Tree is not ultrametric.\n";
-        std::exit(1);
-    }
 }
 
 

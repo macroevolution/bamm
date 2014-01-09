@@ -51,6 +51,12 @@ Tree::Tree(std::string fname, MbRandom* rnptr)
 
     setTaxonCountFromNewickString(treestring);
     buildTreeFromNewickString(treestring);
+
+    // Check tree integrity
+    assertTreeIsBifurcating();
+    assertBranchLengthsArePositive();
+    assertTreeIsUltrametric();
+
     getDownPassSeq();
 
     // Output stuff here
@@ -1926,4 +1932,69 @@ bool Tree::allValuesAreTheSame(std::vector<double>& list)
     }
 
     return true;
+}
+
+
+void Tree::assertTreeIsBifurcating()
+{
+    assertTreeIsBifurcatingRecurse(getRoot());
+}
+
+
+void Tree::assertTreeIsBifurcatingRecurse(Node* node)
+{
+    Node* left = node->getLfDesc();
+    Node* right = node->getRtDesc();
+
+    if ((left == NULL && right != NULL) ||
+        (left != NULL && right == NULL)) {
+        log(Error) << "Tree is not bifurcating.\n"
+            << "The node with branch length " << node->getBrlen() << " "
+            << "has only one child node.\n";
+        std::exit(1);
+    }
+
+    if (left != NULL && right != NULL) {
+        assertTreeIsBifurcatingRecurse(left);
+        assertTreeIsBifurcatingRecurse(right);
+    }
+}
+
+
+void Tree::assertBranchLengthsArePositive()
+{
+    Node* root = getRoot();
+
+    if (root->getBrlen() < 0.0) {
+        log(Error) << "Branch length of root node is negative.\n";
+        std::exit(1);
+    }
+
+    assertBranchLengthsArePositiveRecurse(root->getLfDesc());
+    assertBranchLengthsArePositiveRecurse(root->getRtDesc());
+}
+
+
+void Tree::assertBranchLengthsArePositiveRecurse(Node* node)
+{
+    if (node == NULL) {
+        return;
+    }
+
+    if (node->getBrlen() <= 0.0) {
+        log(Error) << "At least one branch length is non-positive.\n";
+        std::exit(1);
+    }
+
+    assertBranchLengthsArePositiveRecurse(node->getLfDesc());
+    assertBranchLengthsArePositiveRecurse(node->getLfDesc());
+}
+
+
+void Tree::assertTreeIsUltrametric()
+{
+    if (!isUltrametric()) {
+        log(Error) << "Tree is not ultrametric.\n";
+        std::exit(1);
+    }
 }
