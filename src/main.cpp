@@ -206,8 +206,8 @@ void assertBranchLengthsArePositive(Node* node)
         return;
     }
 
-    if (node->getBrlen() < 0.0) {
-        log(Error) << "At least one branch length is negative.\n";
+    if (node->getBrlen() <= 0.0) {
+        log(Error) << "At least one branch length is non-positive.\n";
         std::exit(1);
     }
 
