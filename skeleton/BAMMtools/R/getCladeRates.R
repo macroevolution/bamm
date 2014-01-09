@@ -1,5 +1,14 @@
-getCladeRates <-
-function(ephy, node = NULL, nodetype='include', verbose=FALSE) {
+#############################################################
+#
+#	getCladeRates(....)
+#
+#	mean clade-specific rates 
+#		average of all branch-rates, but weighted by branch length
+#		node.type: will compute rates only for clade descended from specified node with 'include'
+#					will compute for all branches excluding a given clade, nodetype = 'exclude'
+#		
+
+getCladeRates <- function(ephy, node = NULL, nodetype='include', verbose=FALSE) {
 	
 	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");

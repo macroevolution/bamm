@@ -1,5 +1,36 @@
-maximumShiftCredibilityTree <-
-function(ephy, maximize = 'product') {
+#############################################################
+#
+#	maximumShiftCredibilityTree(....)
+#
+#	Args: ephy	=	object of class 'bammdata'
+#	
+#
+#	maximize		=	'sum', = sum of branch probabilities for each tree
+#						'product', = product of branch probabilities for each tree
+#	
+#	Returns: 		- bestconfigs: a list of length equal the number of 
+#						unique shift configurations in the maximum shift
+#						credibility set. Each element is a vector of sample
+#						indices from the 'bammdata' object with identical
+#						shift configurations.
+#					  
+#					- A vector of optimality scores for all other samples 
+#						in posterior from the 'bammdata' object.
+#
+#					- sampleindex: a representative index for samples from each 
+#						set of unique shift configurations. The length of this vector
+#						is equal to the length of the bestconfigs list. If this vector was
+#						sampleindex = c(2, 20, 50), this would mean that there are 3 distinct
+#						sets of shift configurations with equal credibility under the optimality 
+#						criterion. More commonly, a single shift configuration will be dominant, and 
+#						although the length of bestconfigs[[1]] may be greater than 1, the sampleindex
+#						vector will contain a single representative event from that set.
+#
+#	See example file.
+#   This is analogous to the maximum clade credibility tree from a 
+#		Bayesian phylogenetic analysis.
+
+maximumShiftCredibilityTree <- function(ephy, maximize = 'product') {
 
 	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");

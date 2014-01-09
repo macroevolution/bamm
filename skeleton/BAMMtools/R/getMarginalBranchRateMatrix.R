@@ -1,5 +1,12 @@
-getMarginalBranchRateMatrix <-
-function(obj, verbose=FALSE) {
+#############################################################
+#
+#	getMarginalBranchRateMatrix(....)
+#
+#	get matrix of marginal rates on each branch for each sample from posterior
+# 	
+#	This function can handle either a 'bammdata' object or a multiphylo object (i.e., list of trees)
+
+getMarginalBranchRateMatrix <- function(obj, verbose=FALSE) {
 	
 	if ('bammdata' != class(obj) & class(obj[[1]]) != 'phylo') {
 		stop("Object must be of class bammdata or a list of trees.\n");

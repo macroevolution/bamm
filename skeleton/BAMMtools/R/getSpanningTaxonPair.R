@@ -1,5 +1,10 @@
-getSpanningTaxonPair <-
-function(phy, taxset){
+#############################################################
+#
+#	getSpanningTaxonPair(....)
+#
+#	returns pair of taxa that span a given taxon set
+
+getSpanningTaxonPair <- function(phy, taxset){
 	
 	if (! sum(taxset %in% phy$tip.label) > 0){
 		cat('Some species in taxset that are not in tree\n');

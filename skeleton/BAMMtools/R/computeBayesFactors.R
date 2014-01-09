@@ -1,5 +1,58 @@
-computeBayesFactors <-
-function(postdata, priordata, burnin = 0.1, modelset = NULL, threshpost = 1, threshprior = 0, nbprior = FALSE, strict=FALSE){
+#############################################################
+#	computeBayesFactors
+#
+#
+#   postdata		=   MCMC output file from regular BAMM run
+#				 			e.g., with sampleFromPriorOnly = 0
+#							OR a dataframe			
+#
+#	priordata		=	MCMC output file from running BAMM with 
+#                           sampleFromPriorOnly = 1
+#							OR a dataframe
+#
+#
+#	burnin				=	How many samples from posterior to discard
+#							Uses fraction (e.g, 0.25 = 25% discarded)
+#							Will also discard this same fraction from the prior.
+#			
+#	modelset			=	Integer set corresponding to models for which
+#							you wish to compute pairwise Bayes Factors
+#							e.g., 0:2 will compute all pairwise BF between models 
+#							with 0 to 2 process 
+#							(0 is a model with zero non-root processes)
+#							If is.null(modelset), this will assume modelset consists of 
+#							all sampled models
+#	
+#
+#  threshpost, threshprior	=   Will only compute BF for a model comparison where 
+#	 						at least one of the models has been sampled at least
+#							thresh times. This avoids comparisons between two models
+#							that were very rarely or never sampled, which always implies
+#							highly inaccurate posterior or prior probabilities	
+#	nbprior				=   use negative binomial distribution to 
+#								approximate the full prior distribution   
+#							This runs into trouble in some cases. When the prior is approximated
+#								with a high level of accuracy, but the posterior odds are poorly estimated
+#								this tends to fail.
+#	strict 		        =   logical. If TRUE, requires that both 
+#							models i and j be sampled at least threshpost or threshprior times.
+#
+#
+#   Returns:  matrix w pairwise Bayes Factors
+#			  BF_{i, j} is the Bayes factor between model i (numerator)
+#							and model j (denominator)
+#
+#	By default, odds ratios are computed as 
+#			(prior_odds_M2  + 1   ) / (prior_odds_M1 + 1)
+#		     where the 1 is added to both numerator and denominator 
+#			 to avoid divide by zero erros 
+#	
+#   Dependency on BAMM MCMC output: if order of output columns 
+#		changes, it will break this function.
+# 
+#   This function can be very difficult to use.
+
+computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NULL, threshpost = 1, threshprior = 0, nbprior = FALSE, strict=FALSE){
 
 
 	if (class(postdata) == 'character'){
@@ -122,3 +175,6 @@ function(postdata, priordata, burnin = 0.1, modelset = NULL, threshpost = 1, thr
 	return(mm);
 	
 }
+
+
+

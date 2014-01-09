@@ -1,5 +1,42 @@
-plot.bammdata <-
-function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5, rbf=0.001, show=TRUE, labels=FALSE, multi=FALSE, hrates=FALSE, lwd=1, cex=1, ncolors=64, pal='temperature', ...)
+##################################
+#	plot.bammdata(...)
+#
+#	A function to plot dynamic rates through time
+#	onto a phylogeny
+#
+#	Arguments: ephy = a bammdata object.
+#	           method = method used to plot the tree.
+#	                    May be 'polar' or 'phylogram'.
+#	           tau = fraction of tree height for approximation (e.g. 0.01).
+#	                 This is the step size used for calculating rate changes 
+#	                 along branches, so 0.01 is a step size equal to 1% of tree height.
+#	           index = index of posterior sample(s). Currently may be NULL or 
+#	                   a vector of integer values.  if NULL the function will use all 
+#	                   posterior samples, otherwise it will use only
+#	                   the samples specified in index.
+#	           vtheta = specifies the angle in degrees separating the first and last
+#	                    tips to prevent over plotting. Ignored if method = 'phylogram'.
+#	           rbf = specifies the length of the root branch as a fraction of the 
+#	                 total tree height. rbf > 0 will cause an arc to connect the immediate
+#	                 descendants of the root branch. Ignored if method = 'phylogram'. 
+#	           show = TRUE or FALSE. If TRUE the tree will plot.
+#	           labels = TRUE or FALSE. If TRUE the tip labels will plot.
+#	           multi = TRUE or FALSE for multipanel plotting.
+#	           hrates = TRUE or FALSE. If TRUE a histogram is plotted in the same
+#	                    device for interpreting the meaning of plotted colors.
+#	                    You will be asked to supply an anchor point for plotting.
+#	           lwd = The line width used for plotting the tree.
+#	           cex = Character expansion for plotting tip labels.
+#	           ncolors = The number of color bins for mapping rates to colors.
+#	           pal = A string or vector of strings to specify colors for mapping to rates. 
+#	                 Currently this may be one of the named diverging palette options
+#	                 in the RColorBrewer package documented in description of brewer.pal,
+#	                 a vector of 3 valid named colors, or the string 'temperature'. 
+#	                 The first and last options require RColorBrewer and gplots packages,
+#	                 respectively
+#	           ... = further arguments passed to par to control plotting, e.g. mar.
+#
+plot.bammdata = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5, rbf=0.001, show=TRUE, labels=FALSE, multi=FALSE, hrates=FALSE, lwd=1, cex=1, ncolors=64, pal='temperature', ...)
 {
 	if ('bammdata' == class(ephy)) phy = as.phylo.bammdata(ephy) else stop('Object ephy must be of class bammdata\n');
 	if (!is.binary.tree(phy)) stop('Function requires fully bifurcating tree.');

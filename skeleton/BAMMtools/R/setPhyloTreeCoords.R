@@ -1,5 +1,8 @@
-setPhyloTreeCoords <-
-function(phy)
+#######################################
+#	Internal function called by plot.bammdata(...)
+#
+#
+setPhyloTreeCoords = function(phy)
 {
 	phy = getStartStopTimes(phy);
 	tH = as.numeric(max(branching.times(phy)));

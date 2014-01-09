@@ -1,5 +1,34 @@
-plotRateThroughTime <-
-function(ephy, useMedian = FALSE, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'auto', nBins = 100, smooth = FALSE, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = TRUE, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=FALSE) {
+
+#############################################################
+#
+#	plotRateThroughTime <- function(...)
+#
+#	ephy = object of class 'bammdata' or 'bamm-ratematrix'
+#		if bamm-ratematrix, start.time, end.time, node, nslices, nodetype are not used.
+#	useMedian = boolean, will plot median if TRUE, mean if FALSE.
+#	intervals if NULL, no intervals will be plotted, otherwise a vector of quantiles must be supplied (these will define shaded polygons)
+#	ratetype = autodetects diversification vs traits (based on input object 'type'), if 'auto', defaults to speciation (for diversification) or beta (for traits). Can alternatively specify 'netdiv' or 'extinction'. 
+#	nBins = number of time slices used to generate rates through time
+#	smooth = boolean whether or not to apply loess smoothing
+#	smoothParam = loess smoothing parameter, ignored if smooth = F
+#	opacity = opacity of color for interval polygons
+#	intervalCol = transparent color for interval polygons
+#	avgCol = color for mean/median line
+#	start.time = start time to be fed to getRateThroughTimeMatrix
+#	end.time = end time to be fed to getRateThroughTimeMatrix
+#	node = if supplied, the clade descended from this node will be used.
+#	nodetype = supplied to getRateThroughTimeMatrix
+#	plot = boolean: if TRUE, a plot will be returned, if FALSE, the data for the plot will be returned. 
+#	xticks = number of ticks on the x-axis.
+#	yticks = number of ticks on the y-axis.
+#	xlim = vector of length 2 with min and max times for x axis. X axis is time since present, so if plotting till the present, xlim[2]==0. Can also be 'auto'.
+#	ylim = vector of length 2 with min and max rates for y axis. Can also be 'auto'. 
+#	add = boolean: should rates be added to an existing plot
+#
+#	+ several undocumented args to set plot parameters: mar, cex, xline, yline, etc.
+#	
+
+plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'auto', nBins = 100, smooth = FALSE, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = TRUE, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=FALSE) {
 	
 	if (!any(c('bammdata', 'bamm-ratematrix') %in% class(ephy))) {
 		stop("ERROR: Object ephy must be of class 'bammdata' or 'bamm-ratematrix'.\n");

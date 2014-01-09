@@ -1,5 +1,5 @@
-piratedColors <-
-function (n, palette = "temperature", alpha = 1, rgb = FALSE, 
+#Author: Arni Magnusson, normally distributed in gplots library
+piratedColors <- function (n, palette = "temperature", alpha = 1, rgb = FALSE, 
     plot = FALSE) 
 {
     if (n <= 0) 
@@ -42,3 +42,4 @@ function (n, palette = "temperature", alpha = 1, rgb = FALSE,
     }
     return(col)
 }
+

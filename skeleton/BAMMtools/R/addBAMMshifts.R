@@ -1,5 +1,4 @@
-addBAMMshifts <-
-function(ephy, method, index, cex=1, pch=21, col=1, bg=2, multi=FALSE) {
+addBAMMshifts = function(ephy, method, index, cex=1, pch=21, col=1, bg=2, multi=FALSE) {
 	if (!'bammdata' %in% class(ephy)) stop("Object ephy must be of class bammdata");
 	lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv);
 	

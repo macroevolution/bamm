@@ -1,5 +1,4 @@
-getSampleCoMat <-
-function(phylist, modeltree){
+getSampleCoMat <- function(phylist, modeltree){
 	
 	comat <- matrix(NA, nrow=length(phylist[[1]]$edge.length), ncol=length(phylist));
 	

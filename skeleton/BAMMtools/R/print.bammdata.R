@@ -1,5 +1,4 @@
-print.bammdata <-
-function(ephy)
+print.bammdata = function(ephy)
 {
 	print.phylo(as.phylo.bammdata(ephy));
 	nsamples = length(ephy$eventData);

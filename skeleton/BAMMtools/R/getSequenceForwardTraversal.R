@@ -1,5 +1,11 @@
-getSequenceForwardTraversal <-
-function(phy, node){
+#############################################################
+#
+#	getSequenceForwardTraversal(....)
+#
+#	Private function, called by getRecursiveSequence
+
+
+getSequenceForwardTraversal <- function(phy, node){
 	
 	if (node <= length(phy$tip.label)){
 		#phy$downseq <- c(phy$downseq, node);

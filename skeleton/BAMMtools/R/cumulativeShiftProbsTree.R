@@ -1,5 +1,20 @@
-cumulativeShiftProbsTree <-
-function(ephy) {
+#############################################################
+#
+#	cumulativeShiftProbsTree(....)
+#
+#	Args: ephy	=	object of class 'bammdata'
+#	
+#	Returns:		a phylogenetic tree, but where each 
+#	             	branch length (edge length) is equal to the
+#					cumulative probability of a shift somewhere 
+#					between the focal branch and the root of the 
+#					tree. The branch length itself does not tell 
+#					you where the shifts occur, but they tell 
+#					you which clades/lineages have diversification
+#					dynamics that are decoupled from the root of the tree 
+#							
+
+cumulativeShiftProbsTree <- function(ephy) {
 	
 	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");

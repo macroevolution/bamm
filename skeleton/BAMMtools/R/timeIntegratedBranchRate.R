@@ -1,11 +1,17 @@
-timeIntegratedBranchRate <-
-function (t1, t2, p1, p2) 
-{
-    args <- lapply(as.list(match.call())[-1L], eval, parent.frame())
-    names <- if (is.null(names(args))) 
-        character(length(args))
-    else names(args)
-    dovec <- names %in% vectorize.args
-    do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]), 
-        SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES))
+#############################################################
+#
+#	timeIntegratedBranchRate(....)
+#		computes the integral of rates on a branch segment with respect to time
+#		Not the average.
+#		Integrates the exponential function p1 * exp(p2 * t)
+#		
+
+timeIntegratedBranchRate <- function(t1, t2, p1, p2){
+	
+	if (p2 == 0){
+		return(p1 * (t2 - t1));
+	}else{
+		(p1/p2)*(exp(p2*t2) - exp(p2*t1));
+	}
 }
+timeIntegratedBranchRate <- Vectorize(timeIntegratedBranchRate);

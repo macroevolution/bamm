@@ -1,5 +1,23 @@
-getRateThroughTimeMatrix <-
-function(ephy, start.time=NULL, end.time=NULL, nslices=100, node=NULL, nodetype = 'include') {
+#############################################################
+#
+#	getRateThroughTimeMatrix(....)
+#	
+#	include or exclude options:
+#	start.time		=	 start time (in units before present)
+#						 if NULL, starts at root
+#	end.time		=	 end time 
+#						 if NULL, ends at present
+#	nslices			=	 number of time cuts
+#	Return
+#	list with components:
+#					$times	= the time vector
+#					$lambda = speciation rate matrix
+#					$mu 	= extinction rate matrix
+# 					$type   = diversification or trait (needs to be extended to trait data)		
+# returns object of class bamm-ratematrix
+#	 
+
+getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslices=100, node=NULL, nodetype = 'include') {
 	
 	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class 'bammdata'\n");

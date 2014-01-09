@@ -1,5 +1,4 @@
-as.phylo.bammdata <-
-function(ephy) {
+as.phylo.bammdata <- function(ephy) {
 	
 	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");

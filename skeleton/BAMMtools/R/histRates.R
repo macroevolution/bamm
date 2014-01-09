@@ -1,5 +1,8 @@
-histRates <-
-function(rates,pal,NCOLORS)
+############################################
+#	Internal function called by plot.dtrates(...)
+#
+#
+histRates = function(rates,pal,NCOLORS)
 {
 	opar = par(no.readonly = TRUE);
 	fx = density(rates);

@@ -1,5 +1,8 @@
-mkdtsegs <-
-function(x,tau,phy,tH)
+######################################
+#	Internal function called by plot.dtrates(...)
+#	
+#
+mkdtsegs = function(x,tau,phy,tH)
 {
 	#bn = sqrt((x[3]-x[1])^2 + (x[4]-x[2])^2);
 	#len = bn/tau; if (len %% 1 == 0) len = len + 1;

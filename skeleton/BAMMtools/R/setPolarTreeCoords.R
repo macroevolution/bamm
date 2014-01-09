@@ -1,5 +1,8 @@
-setPolarTreeCoords <-
-function(phy,vtheta,rbf)
+###############################################
+#	Internal function called by plot.bammdata(...)
+#
+#
+setPolarTreeCoords = function(phy,vtheta,rbf)
 {
 	phy = getStartStopTimes(phy);
 	tH = max(branching.times(phy));
