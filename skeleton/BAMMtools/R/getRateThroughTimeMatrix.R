@@ -67,10 +67,15 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 			}
 			
 			estemp <- es[isGoodTime & isGoodNode, ];
-			tvv <- tvec[k] - events$time[estemp[,4]];
-			rates <- exponentialRate(tvv, events$lam1[estemp[,4]], events$lam2[estemp[,4]]);
+			if (is.vector(estemp)) {
+				index <- estemp[4];
+			} else {
+				index <- estemp[,4];
+			}
+			tvv <- tvec[k] - events$time[index];
+			rates <- exponentialRate(tvv, events$lam1[index], events$lam2[index]);
 			mm[i, k] <- mean(rates);
-			mumat[i,k] <- mean(events$mu1[estemp[,4]]);
+			mumat[i,k] <- mean(events$mu1[index]);
 		}
 		
 	}
