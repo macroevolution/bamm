@@ -196,7 +196,15 @@ const char* currentTime()
 
 void assertBranchLengthsArePositive(Tree& tree)
 {
-    assertBranchLengthsArePositive(tree.getRoot());
+    Node* root = tree.getRoot();
+
+    if (root->getBrlen() < 0.0) {
+        log(Error) << "Branch length of root node is negative.\n";
+        std::exit(1);
+    }
+
+    assertBranchLengthsArePositive(root->getLfDesc());
+    assertBranchLengthsArePositive(root->getRtDesc());
 }
 
 
@@ -206,8 +214,8 @@ void assertBranchLengthsArePositive(Node* node)
         return;
     }
 
-    if (node->getBrlen() < 0.0) {
-        log(Error) << "At least one branch length is negative.\n";
+    if (node->getBrlen() <= 0.0) {
+        log(Error) << "At least one branch length is non-positive.\n";
         std::exit(1);
     }
 
