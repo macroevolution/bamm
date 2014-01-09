@@ -28,6 +28,12 @@ private:
         (Node* node, std::vector<double>& pathLengths);
     bool allValuesAreTheSame(std::vector<double>& list);
 
+    void assertTreeIsBifurcating();
+    void assertTreeIsBifurcatingRecurse(Node* node);
+    void assertBranchLengthsArePositive();
+    void assertBranchLengthsArePositiveRecurse(Node* node);
+    void assertTreeIsUltrametric();
+
     Node* root;
     std::set<Node*> nodes;
     std::vector<Node*> downPassSeq;
