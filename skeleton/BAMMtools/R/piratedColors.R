@@ -1,5 +1,5 @@
 #Author: Arni Magnusson, normally distributed in gplots library
-piratedColors <- function (n, palette = "temperature", alpha = 1, rgb = FALSE, 
+richColors <- function (n, palette = "temperature", alpha = 1, rgb = FALSE, 
     plot = FALSE) 
 {
     if (n <= 0) 

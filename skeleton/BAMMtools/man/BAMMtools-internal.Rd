@@ -1,9 +1,28 @@
 \name{BAMMtools-internal}
-\alias{segMap}
+\alias{arc}
+\alias{areEventConfigurationsIdentical}
+\alias{as.phylo.bammdata}
+\alias{branchMeanRateExponential}
+\alias{colorMap}
 \alias{decimals}
+\alias{exponentialRate}
+\alias{getPathToRoot}
+\alias{getRecursiveSequence}
+\alias{getSampleCoMat}
+\alias{getSequenceForwardTraversal}
+\alias{getStartStopTimes}
+\alias{histRates}
 \alias{inv.logit}
 \alias{logit}
-
+\alias{mkdtsegs}
+\alias{richColors}
+\alias{recursivelySetNodeStates}
+\alias{segMap}
+\alias{timeIntegratedBranchRate}
+\alias{transparentColor}
+\alias{getDesc}
+\alias{getSpanningTaxonPair}
+\alias{print.bammdata}
 
 \title{Internal BAMMtools functions}
 \description{
