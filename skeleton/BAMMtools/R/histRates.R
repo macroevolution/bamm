@@ -17,7 +17,7 @@ histRates = function(rates,pal,NCOLORS)
 	}
 	else if(pal == 'temperature')
 	{
-		rate.colors = piratedColors(NCOLORS);	
+		rate.colors = richColors(NCOLORS);	
 	}
 	qx = quantile(rates,seq(0,1,length.out = NCOLORS+1));
 	cat("Click once where you want the lower left corner of the figure\n");
