@@ -1,7 +1,6 @@
 \name{BAMMtools-internal}
 \alias{segMap}
 \alias{decimals}
-\alias{segMap}
 \alias{inv.logit}
 \alias{logit}
 
