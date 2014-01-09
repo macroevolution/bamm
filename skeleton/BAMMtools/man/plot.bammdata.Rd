@@ -82,7 +82,7 @@ load by calling \code{dtRates} with \code{ephy} before passing \code{ephy} to \c
 
 Currently three options exist for specifying the color palette. In each case cool colors represent 
 slow rates of speciation or trait evolution and warm colors represent fast rates. The default setting 
-\code{pal = "temperature"} uses the \code{rich.colors} function from the package ggplots. If the package 
+\code{pal = "temperature"} uses the \code{rich.colors} function from the package gplots. If the package 
 RColorBrewer is available then any of the named diverging color palettes documented under \code{brewer.pal} 
 may also be used. Finally a vector of three valid named colors (e.g. c("blue","green","red")) may also be 
 used. The first, second, and third colors are mapped to low, intermediate, and fast rates of evolution. 
