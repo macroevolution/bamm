@@ -93,7 +93,7 @@ getEventData <- function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALS
 		
 		tax <- unlist(strsplit(ff[i], '////'));
 		if (sum(is.na(tax)) == 0) {
-			uniquePairSet[i,1] <- which(phy$tip.label == tax[1]);
+			uniquePairSet[i,1] <- which(phy$tip.label == tax[1]);		##  this will choke if your phylogeny has identical tips
 			uniquePairSet[i,2] <- which(phy$tip.label == tax[2]);
 			uniquePairNode[i] <- getMRCA(phy, tip=uniquePairSet[i,]);			
 		}
