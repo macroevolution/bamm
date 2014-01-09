@@ -1,5 +1,11 @@
-getDesc <-
-function(phy, node)
+#############################################################
+#
+#	getDesc(....)
+#
+#	 returns a copy of the tree with a component 'desc_set', which
+#	is a vector of all desc nodes in downpass sequences order
+
+getDesc <- function(phy, node)
 {
 	if (is.null(phy$desc_set)){
 		phy$desc_set <- node;

@@ -1,5 +1,9 @@
-getPathToRoot <-
-function(phy, node){
+#############################################################
+#
+#	getPathToRoot <- function(...)
+#
+#	Internal function, gives node path from some node "node" to root
+getPathToRoot <- function(phy, node){
 	
 	root <- length(phy$tip.label) + 1;
 	nset <- node;

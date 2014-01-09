@@ -1,5 +1,6 @@
-subsetEventData <-
-function(ephy, index=NULL) {
+### subsetEventData
+
+subsetEventData <- function(ephy, index=NULL) {
 	
 	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class 'bammdata'\n");

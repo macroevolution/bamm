@@ -1,0 +1,134 @@
+
+
+
+### constant: 
+
+
+[settings]
+	_lambdaInitMin = 0.0;
+	_lambdaInitMax = 0.1;
+	_relMuInitMin = 0.0;
+	_relMuInitMax = 0.99;
+	_duration = 100.0;
+	_nShifts = 1;
+	_maxNodes = 20000;
+	_tShiftMax = 80;
+	_tShiftMin = 40;	
+
+
+
+
+### expchange1shift
+ 	
+ 	Pure birth sims for 100 time units
+ 	THEN drop exponential change tree 
+ 	onto pure birth tree.
+	
+	_lambdaInitMin = 0.032;
+	_lambdaInitMax = 0.032;
+	_relMuInitMin = 0.0;
+	_relMuInitMax = 0.0;
+	_duration = 100.0;
+ 
+	_nShifts = 1;
+	_maxNodes = 20000;
+	_tShiftMax = 80;
+	_tShiftMin = 40;
+	
+	_lambdaMin = 0.08;
+	_lambdaMax = 0.192;
+	_muMin = 0.0;
+	_maxRelativeMu = 0.75;
+	_maxSubtreeSize = 1000;
+	_minSubtreeSize = 25;
+
+	_nSims = 500;
+	
+	_tvLam1Min = 0.05;	// lam0 min
+	_tvLam1Max = 0.50;	// lam0 max
+	_tvLam2Min = -0.10;	// k min
+	_tvLam2Max =  0.05;	// k max
+	_tvMu1Min = 0.0;	
+	_tvMu1Max = 0.45;
+	_tvMu2Min = 0;
+	_tvMu2Max = 0.0;	
+
+
+### dd_k0
+	All trees pure birth, lambda = 0.032
+
+
+### dd_k1
+### dd_k2
+### dd_k3
+### dd_k4
+
+These parameters are identical for all simulation sets, 
+except that I varied the _nshifts paramter from 1-4.
+
+	_lambdaInitMin = 0.032;
+	_lambdaInitMax = 0.032;
+	_relMuInitMin = 0.0;
+	_relMuInitMax = 0;
+	_duration = 100.0;
+	
+	_rootMin = 90; // MINIMUM age of tree.
+	
+ 
+	_nShifts = 1;
+	_maxNodes = 20000;
+	_tShiftMax = 80;
+	_tShiftMin = 40;
+ 
+	
+	_maxSubtreeSize = 1000;
+	_minSubtreeSize = 25;
+
+	_nSims = 500;
+ 
+	_Kmin = 25;
+	_Kmax = 250;
+	_ddLamMin = 0.05;
+	_ddLamMax = 0.40;
+	_ddMuMin = 0.0;
+	_ddMuMax = 0.05;
+
+
+### dd_k2
+
+
+
+### dd_k3
+
+### dd_k4
+
+
+### dd1shiftbd
+
+	_lambdaInitMin = 0.01;
+	_lambdaInitMax = 0.08;
+	_relMuInitMin = 0.0;
+	_relMuInitMax = 0.75;
+	_duration = 100.0;
+ 
+	_nShifts = 1;
+	_maxNodes = 20000;
+	_tShiftMax = 80;
+	_tShiftMin = 40;
+	_maxSubtreeSize = 1000;
+	_minSubtreeSize = 25;
+
+	_nSims = 500;
+ 
+	_Kmin = 25;
+	_Kmax = 250;
+	_ddLamMin = 0.05;
+	_ddLamMax = 0.40;
+	_ddMuMin = 0.0;
+	_ddMuMax = 0.05;
+
+
+
+
+
+

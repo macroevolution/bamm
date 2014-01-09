@@ -1,5 +1,23 @@
-dtRates <-
-function(ephy, tau, ism = NULL) {
+############################################
+#	dtRates(ephy,tau)
+#
+#	A function to calculate approximations of
+#	mean instantaneous speciation rates or
+#	phenotypic rates along each branch.
+#
+#	Arguments: ephy = a bammdata object
+#	           tau = fraction of tree height for approximation (e.g. 0.01).
+#	                 This is the step size over which rates are calculated along
+#	                 a branch, 0.01 corresponds to a step size of 1% of tree height.
+#	           ism = index of posterior sample(s). Currently may be NULL or 
+#	                 a vector of integer values.  if NULL the function will use all 
+#	                 posterior samples, otherwise it will use only
+#	                 the samples corresponding to the indices in ism,
+#	                 e.g. 50, e.g. 50:100.
+#
+#	Returns: an ephy object with a list appended containing a vector of branch
+#			 rates and the step size used for calculation.
+dtRates = function(ephy, tau, ism = NULL) {
 	if (!'bammdata' %in% class(ephy)) {
 		stop('Object ephy must be of class bammdata');
 	}

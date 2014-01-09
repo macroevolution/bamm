@@ -1,0 +1,25 @@
+All simulated datasets analyzed in Rabosky (2014) PLOS ONE are given here
+
+constant: constant rate simulations 
+
+dd_kx: diversity-dependent model with x shifts, with a pure birth root process
+
+dd1shiftbd: A model with a single diversity-dependent shift from a birth-death root process
+
+expchange1shift: Model with a pure birth root process, and a single time-dependent shift to an exponentially time-varying process.
+
+Within each directory, you find the following:
+
+simtrees.txt: the set of 500 simulated phylogenies analyzed in Rabosky (2014)
+
+lambdaTrees.txt: A set of trees corresponding to the simulated trees, but where the branch lengths are replaced by the mean speciation rate along each branch (e.g, the TRUE speciation rate in the generating model)
+
+muTrees.txt: same as above but for extinction
+
+treedatacppsim.txt: Data file giving exact topological locations of shifts and associated simulation parameters.
+
+
+
+
+
+

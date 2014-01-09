@@ -1,5 +1,16 @@
-marginalShiftProbsTree <-
-function(ephy) {
+#############################################################
+#
+#	marginalShiftProbsTree(....)
+#
+#	Args: ephy	=	object of class 'bammdata'
+#	
+#	Returns:		a phylogenetic tree, but where each 
+#	             	branch length (edge length) is equal to the
+#					marginal probability of shift occuring 
+#					on that particular branch. 
+#							
+
+marginalShiftProbsTree <- function(ephy) {
 	
 	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");

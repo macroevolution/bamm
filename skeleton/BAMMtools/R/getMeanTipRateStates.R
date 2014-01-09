@@ -1,5 +1,12 @@
-getMeanTipRateStates <-
-function(ephy, use.names = FALSE) {
+#############################################################
+#
+#	getMeanTipRateStates(....)
+#
+# returns vector of mean tip states (either net diversification rate or brownian motion
+#	rate parameter depending on the 'type' of ephy).
+#	use.names=TRUE returns a named vector
+
+getMeanTipRateStates <- function(ephy, use.names = FALSE) {
 	
 	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");

@@ -1,5 +1,8 @@
-colorMap <-
-function(x, pal, NCOLORS)
+############################################
+#	Internal function called by plot.dtrates(...)
+#
+#
+colorMap = function(x, pal, NCOLORS)
 {
 	dpal = c('BrBG','PiYG','PuOr','RdBu','RdGy','RdYlBu','RdYlGn','Spectral');
 	colset = numeric(length(x));

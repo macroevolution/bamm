@@ -1,5 +1,8 @@
-decimals <-
-function(x)
+######################################
+#	Internal function called by dtRates(...)
+#
+#
+decimals = function(x)
 {
 	if(x%%1 != 0)
 	{

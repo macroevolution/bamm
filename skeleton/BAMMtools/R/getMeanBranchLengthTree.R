@@ -1,5 +1,21 @@
-getMeanBranchLengthTree <-
-function(obj,ndr=TRUE) {
+#############################################################
+#
+#	getMeanBranchLengthTree(....)
+#
+#	Should be capable of computing this from 2 different types of data:
+#		1. The 'bammdata' object
+#		2. A list of phylogenetic trees,
+#			e.g., as you would get directly as output from BAMM with the 
+#			marginal branch length trees.
+#		Arg: (for now) 
+#			obj	= a list of multiple phylogenetic trees, where each tree
+#						has branch length equal to the mean rate on that branch
+#						OR a 'bammdata' object
+#			ndr = TRUE or FALSE. if TRUE the mean branch length tree will have the
+#				mean net rate on each branch, i.e., lambda - mu. if FALSE the mean
+#				rate will simply be lambda.  For trait data ndr will make no difference  
+
+getMeanBranchLengthTree <- function(obj,ndr=TRUE) {
 	
 	if ('bammdata' == class(obj)) {
 		#v <- list(edge = obj$edge, Nnode = obj$Nnode,tip.label = obj$tip.label, edge.length = obj$edge.length);

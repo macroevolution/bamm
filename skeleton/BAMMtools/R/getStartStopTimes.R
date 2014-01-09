@@ -1,5 +1,11 @@
-getStartStopTimes <-
-function(phy){
+#############################################################
+#
+#	getStartStopTimes(....)
+#
+#	adds begin and end times (absolute time) to each edge of 
+#	phylogenetic tree
+
+getStartStopTimes <- function(phy){
  	bmax <- max(branching.times(phy));
 	bt <- bmax - branching.times(phy);
 	begin <- bt[as.character(phy$edge[,1])];

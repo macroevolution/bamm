@@ -1,5 +1,19 @@
-getEventData <-
-function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE, type = 'diversification', header=TRUE){
+#############################################################
+#
+#	getEventData(....)
+#
+#	eventdata			=	file where event data are stored, in bamm output format
+#						    OR a dataframe with BAMM event data
+#					        From using read.csv or read.table directly
+#	nsamples			=	number of samples from posterior to include. 
+#							if NULL, includes ALL samples (could take long time to run)
+#	phy					=	The model tree (time calibrated tree analyzed w bamm)
+#	verbose				=	Verbose print output for bug tracking
+#	burnin				=	How many samples from posterior to discard
+#							Uses fraction (e.g, 0.25 = 25% discarded)
+#	type				=	specifies whether eventfilename refers to trait or diversification data
+#	header				=	Boolean to flag whether eventfilename contains a header
+getEventData <- function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALSE, type = 'diversification', header=TRUE){
 
 
 	if (type != 'diversification' & type != 'trait') {

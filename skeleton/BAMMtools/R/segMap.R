@@ -1,5 +1,8 @@
-segMap <-
-function(nodes,begin,end,tau)
+######################################
+#	Internal function called by dtRates(...)
+#
+#
+segMap = function(nodes,begin,end,tau)
 {
 	foo = function(x,tau)
 	{

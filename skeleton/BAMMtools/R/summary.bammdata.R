@@ -1,5 +1,4 @@
-summary.bammdata <-
-function(ephy, opt="product", display=10)
+summary.bammdata = function(ephy, opt="product", display=10)
 {
 	cat("\nAnalyzed", length(ephy$eventData), "posterior samples\n");
 	shiftsindex = maximumShiftCredibilityTree(ephy,maximize=opt)$sampleindex;
