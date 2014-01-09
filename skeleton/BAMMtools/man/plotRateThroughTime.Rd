@@ -1,9 +1,7 @@
 \name{plotRateThroughTime}
 \alias{plotRateThroughTime}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Plot rates through time
-%%  ~~function to do ... ~~
 }
 \description{
 Generates a plot of diversification or phenotypic rate through time with confidence intervals.
@@ -15,7 +13,6 @@ avgCol = "red", start.time = NULL, end.time = NULL, node = NULL, nodetype = "inc
 plot = TRUE, cex.axis = 1, cex = 1.3, xline = 3.5, yline = 3.5, mar = c(6, 6, 1, 1), 
 xticks = 5, yticks = 5, xlim = "auto", ylim = "auto", add = FALSE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{ephy}{
 object of class \code{bammdata} or \code{bamm-ratematrix}.
@@ -116,7 +113,6 @@ If \code{plot = FALSE}, then a list is returned with the following components:
 Pascal Title
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 See \code{\link{getEventData}} and \code{\link{getRateThroughTimeMatrix}} to generate input data.
