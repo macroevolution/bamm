@@ -1,11 +1,11 @@
 .. highlight:: none
 
 Phenotypic Evolution: Configurations & Settings
-=============
+=================================================
 
 
 The Control File
-------------
+-----------------------
 
 Configuration options and parameters in BAMM are specified in a *control file*,
 a plain text file in which each line contains the name of the option or
@@ -73,7 +73,7 @@ rootPrior
   *Description not yet available.*
   
 General MCMC Simulation Settings & Output Options
-...........
+.................................................
 
 NumberGenerations
   Number of MCMC generations to run.
@@ -160,7 +160,7 @@ segLength
   *Description not yet available.*
 
 General MCMC Simulation Settings & Output Options
-...........
+.................................................
 
 lambdaOutfile
   Branch-specific speciation rates will be written to this file as newick-formatted trees.
@@ -254,7 +254,7 @@ betaInit
   Starting initial rate.
 
 betaShiftInit
-   Starting initial rate change parameter for phenotypic evolution.
+  Starting initial rate change parameter for phenotypic evolution.
   (if 0, then constant-rate).
   A negative value implies decreasing rates through time.
 

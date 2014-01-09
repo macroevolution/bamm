@@ -1,5 +1,5 @@
 Quick-start guide to BAMM
-============
+=========================
 
 **Under construction**
 
@@ -9,17 +9,17 @@ Data files and input
 --------------------
 
 Speciation-extinction analyses
-************************
+***********************************************
 
 **Under construction**
 
 Incomplete taxon sampling
-************************
+*************************
 
 **Under construction**
 
 Phenotypic evolution analyses
-**************************
+***************************************************
 
 **Under construction**
 
@@ -34,6 +34,6 @@ Running the program
 **Under construction**
 
 Understanding BAMM output
------------------------
+-------------------------
 
 **Under construction**
