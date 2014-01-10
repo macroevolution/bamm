@@ -16,7 +16,7 @@ getEventData(phy, eventdata, burnin = 0, nsamples = NULL, verbose = FALSE, type 
 an object of class \code{phylo}.
 }
   \item{eventdata}{
-a character string with the path to a BAMM event file or an object of class \code{dataframe} with the 
+a character string with the path to a BAMM event file or an object of class \code{data.frame} with the 
 same information.
 }
   \item{burnin}{
@@ -41,12 +41,14 @@ speciation and extinction that vary through time and among lineages. A macroevol
 process of trait evolution comprises rates of phenotypic change that vary through time 
 and among lineages. 
 
-To represent temporally heterogeneity in macroevolutionary rates
-BAMM uses the exponential change function ...
+To represent temporal heterogeneity in macroevolutionary rates
+BAMM models a rate \eqn{R}, e.g. speciation, as a function that changes exponentially
+with time: \deqn{R(t) = R(0)*exp(b*t)}. Here \eqn{R(0)} is the initial rate and \eqn{b}
+is a parameter determining how quickly that rate grows or decays with time. 
 
-To represent among lineage heterogeneity BAMM allows different parts of the tree to
+To represent among-lineage heterogeneity BAMM allows different parts of the tree to
 evolve under independent macroevolutionary processes. The number and configuration of
-processes are estimated using reversible jump MCMC ...
+processes are estimated using reversible jump MCMC.
 
  ... further details ...
 }
@@ -99,12 +101,12 @@ the terminal branch subtending that tip.
 }
 \item{tipMu}{
 A list of numeric vectors. Each element is a single posterior sample.
-For each tip the rate of extinction at the end of that terminal branch
+For each tip the rate of extinction at the end of the terminal branch
 subtending that tip. Meaningless if working with BAMM trait results.
 }
 \item{meanTipLambda}{
 For each tip the mean of the marginal posterior density of the rate of speciation
-or trait evolution at the end of each terminal branch subtending that tip.
+or trait evolution at the end of the terminal branch subtending that tip.
 }
 \item{meanTipMu}{
 For each tip the mean of the marginal posterior density of the rate of extinction
