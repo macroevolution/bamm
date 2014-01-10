@@ -3,7 +3,6 @@
 \alias{areEventConfigurationsIdentical}
 \alias{as.phylo.bammdata}
 \alias{branchMeanRateExponential}
-\alias{colorMap}
 \alias{decimals}
 \alias{exponentialRate}
 \alias{getPathToRoot}
@@ -23,6 +22,8 @@
 \alias{getDesc}
 \alias{getSpanningTaxonPair}
 \alias{print.bammdata}
+\alias{setPhyloTreeCoords}
+\alias{setPolarTreeCoords}
 
 \title{Internal BAMMtools functions}
 \description{

@@ -11,7 +11,8 @@ maximum shift credibility (MSC) tree and the posterior
 distribution on the number of shifts.
 }
 \usage{
-summary.bammdata(ephy, opt = "product", display = 10)
+S3 method for class \code{bammdata}:
+summary(ephy, opt = "product", display = 10)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

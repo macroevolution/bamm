@@ -28,7 +28,7 @@
 #	+ several undocumented args to set plot parameters: mar, cex, xline, yline, etc.
 #	
 
-plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'auto', nBins = 100, smooth = FALSE, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = TRUE, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=FALSE) {
+plotRateThroughTime <- function(ephy, useMedian = TRUE, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'auto', nBins = 100, smooth = FALSE, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = TRUE, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=FALSE) {
 	
 	if (!any(c('bammdata', 'bamm-ratematrix') %in% class(ephy))) {
 		stop("ERROR: Object ephy must be of class 'bammdata' or 'bamm-ratematrix'.\n");
@@ -45,12 +45,12 @@ plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,
 	
 	if ('bammdata' %in% class(ephy)) {
 		#get rates through binned time
-		rmat <- getRateThroughTimeMatrix(ephy, start.time = start.time, end.time = end.time,node = node, nslices = nBins, nodetype=nodetype);
+		rmat <- getRateThroughTimeMatrix(ephy, start.time = start.time, end.time = end.time, node = node, nslices = nBins, nodetype=nodetype);
 	}
 	if ('bamm-ratematrix' %in% class(ephy)) {
 		if (!any(is.null(c(start.time, end.time, node)))) {
 			stop('ERROR: You cannot specify start.time, end.time or node if the rate matrix is being provided. Please either provide the bammdata object instead or specify start.time, end.time or node in the creation of the bamm-ratematrix.')
-	}
+		}
 		#use existing rate matrix
 		rmat <- ephy;
 	}
@@ -124,14 +124,14 @@ plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,
 			plot.new();
 			par(mar=mar);
 			if (unique(xlim == 'auto') & unique(ylim == 'auto')) {
-				plot.window(xlim=c(maxTime, 0), ylim=c(0 , max(poly[[1]][,2])));
+				plot.window(xlim=c(maxTime, 0), ylim=c(0, max(poly[[1]][,2])));
 				xMin <- maxTime;
 				xMax <- 0;
 				yMin <- 0;
 				yMax <- max(poly[[1]][,2]);
 			}
 			if (unique(xlim != 'auto') & unique(ylim == 'auto')) {
-				plot.window(xlim = xlim, ylim=c(0 , max(poly[[1]][,2])));
+				plot.window(xlim = xlim, ylim=c(0, max(poly[[1]][,2])));
 				xMin <- xlim[1];
 				xMax <- xlim[2];
 				yMin <- 0;
@@ -144,7 +144,7 @@ plotRateThroughTime <- function(ephy, useMedian = FALSE, intervals=seq(from = 0,
 				yMin <- ylim[1];
 				yMax <- ylim[2];
 			}
-			axis(at=c(1.3*xMin,round(seq(xMin,xMax, length.out=xticks+1))), labels = c(1.3*xMin,round(seq(xMin, xMax, length.out=xticks+1))), cex.axis = cex.axis, side = 1);
+			axis(at=c(1.3*xMin,seq(xMin,xMax, length.out=xticks+1)), labels = c(1.3*xMin,round(seq(xMin, xMax, length.out=xticks+1),digits=1)), cex.axis = cex.axis, side = 1);
 			axis(at=c(-0.2,seq(yMin, 1.2*yMax, length.out=yticks+1)), labels = c(-0.2,round(seq(yMin, 1.2*yMax, length.out=yticks+1),digits=1)), las=1, cex.axis = cex.axis, side = 2);
 
 			mtext(side = 1, text = 'Time since present', line = xline, cex = cex);

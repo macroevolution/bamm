@@ -2,18 +2,17 @@
 \alias{plot.bammdata}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Plotting dynamic rates on a phylogeny
+Plot rates on a phylogeny
 }
 \description{
-\code{plot.bammdata} plots the phylogenetic tree in the \code{bammdata} object.
-In doing so branches are colored according to estimated dynamic rates of speciation 
-or trait evolution.	 
+\code{plot.bammdata} plots the phylogenetic tree in the \code{bammdata} object and
+colors each branch by a continuously changing rate of speciation or trait evolution.	 
 }
 \usage{
 S3 method for class \code{bammdata}:		
 plot(ephy, method = "phylogram", tau = 0.01, index = NULL, 
     vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, 
-    hrates = FALSE, lwd = 1, cex = 1, ncolors = 64, pal = "Spectral", ...)
+    hrates = FALSE, lwd = 1, cex = 1, ncolors = 64, pal = "temperature", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -64,28 +63,37 @@ a numeric specifying the character expansion for tip labels.
 }
   \item{ncolors}{
 an integer specifying the number of colors to be used for the mapping of evolutionary
-rates to colors.
+rates to colors. Specifying large values for \code{ncolors} will not necessarily result 
+in a smoother-looking color gradient.
 }
   \item{pal}{
-a character string or vector of mode character that describes the color palette.
+a character string or vector of mode character that describes the color palette. See
+Details for explanation of options.
 }
   \item{\dots}{
 further arguments passed to \code{par}.
 }
 }
 \details{
-Internally \code{plot.bammdata} looks for a list element in \code{ephy} called "dtrates". 
+To calculate rates, each branch of the phylogeny is discretized into a number of small segments, 
+and the mean of the marginal posterior density of the rate of speciation or trait evolution is 
+calculated for each such segment. Rates are then mapped to colors such that cool colors represent 
+slow rates of speciation or trait evolution and warm colors represent fast rates. When the tree is
+plotted each of these small segments is plotted so that changes in rates through time and shifts in 
+rates are visible as gradients of color.
+
+Currently three options exist for specifying the color palette. The default setting 
+\code{pal = "temperature"} uses the \code{rich.colors} function written by Arni Magnusson in the package 
+gplots. If the package RColorBrewer is loaded then any of the named diverging color palettes documented 
+under \code{brewer.pal} may also be used. Finally a vector of three valid named colors (e.g. c("blue","green","red")) 
+may also be used. The first, second, and third colors are mapped to low, intermediate, and fast rates 
+of evolution. The last two options result in a more perceptually uniform color scale than the first.
+
+Internally \code{plot.bammdata} looks for an element in \code{ephy} called "dtrates". 
 This is simply a vector holding the rates of each segment on each branch. If "dtrates" is not 
-found \code{plot.bammdata} calls \code{dtRates}, which performs the calculations of rates.
+found \code{plot.bammdata} calls \code{dtRates} to perform the rate calculations.
 If you plan to repeatedly call \code{plot.bammdata} on a large tree you can reduce computation
 load by calling \code{dtRates} with \code{ephy} before passing \code{ephy} to \code{plot.bammdata}.
-
-Currently three options exist for specifying the color palette. In each case cool colors represent 
-slow rates of speciation or trait evolution and warm colors represent fast rates. The default setting 
-\code{pal = "temperature"} uses the \code{rich.colors} function from the package gplots. If the package 
-RColorBrewer is available then any of the named diverging color palettes documented under \code{brewer.pal} 
-may also be used. Finally a vector of three valid named colors (e.g. c("blue","green","red")) may also be 
-used. The first, second, and third colors are mapped to low, intermediate, and fast rates of evolution. 
 }
 \value{
 Returns (invisibly) a matrix. Rows correspond to branches. Columns 1-2 are starting (x,y) coordinates 
@@ -106,7 +114,7 @@ returning unless \code{multi = TRUE}.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{dtRates}}.	
+\code{\link{dtRates}}, \code{\link{colorMap}}, \code{\link{addBAMMshifts}}.	
 }
 \examples{
 	
