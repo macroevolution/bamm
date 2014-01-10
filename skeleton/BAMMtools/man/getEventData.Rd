@@ -42,9 +42,13 @@ process of trait evolution comprises rates of phenotypic change that vary throug
 and among lineages. 
 
 To represent temporal heterogeneity in macroevolutionary rates
+<<<<<<< HEAD
 BAMM models a rate \eqn{R}, e.g. speciation, as a function that changes exponentially
 with time: \deqn{R(t) = R(0)*exp(b*t)}. Here \eqn{R(0)} is the initial rate and \eqn{b}
 is a parameter determining how quickly that rate grows or decays with time. 
+=======
+BAMM uses the exponential change function ...
+>>>>>>> 4f6a7317c4ae57da9c50df0b64c05ebfa1801bf6
 
 To represent among-lineage heterogeneity BAMM allows different parts of the tree to
 evolve under independent macroevolutionary processes. The number and configuration of
