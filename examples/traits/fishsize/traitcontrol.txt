@@ -1,0 +1,202 @@
+#
+#   BAMM control file for phenotypic analysis 
+#
+#   General Format: 
+#       - Whitespace (tabs and spaces) is not important
+#         and is stripped out when this file is parsed.
+#       - Each parameter is specified as: par_name = par_value
+#         where par_name is the name of the parameter
+#         and par_value is the value you are assigning it.
+#       - Parameter names must be spelled exactly.
+#       - Comments start with # and go to the end of the line
+#       - True/False parameters (e.g., runMCMC) are specified
+#       - with "1" (True) or "0" (False).
+
+###################################
+# GENERAL SETUP AND DATA INPUT
+
+modeltype = trait
+# Specify speciationextinction or trait analysis
+
+treefile = fishmorph.txt
+# Location of phylogenetic tree to be analyzed
+
+traitfile = fishtreeFinalPL_Feb8.tre
+# Location of phenotypic traits
+
+runInfoFilename = run_info.txt
+# File name to output general information about this run
+
+sampleFromPriorOnly = 0
+# If TRUE will perform BAMM analysis sampling 
+# from prior only. (no likelihoods computed)
+
+# autotune = 0 # Not supported for traits
+# Experimental option for tuning MCMC operators
+
+runMCMC = 1
+# perform an MCMC simulation? If runMCMC = 0, the program will 
+# check whether the data file can be read and whether 
+# an initial likelihood can be computed.
+
+simulatePriorShifts = 1
+# Simulate prior distribution of the number of shift events
+#	given the hyperprior on the Poisson rate parameter.
+# This is necessary to compute Bayes factors
+
+loadEventData = 0
+# Load event configuration - see Documentation
+
+eventDataInfile = my_event_datafile.txt
+# Used only if loadEventData = 1
+
+initializeModel = 1
+# Initializes (but does not run) the MCMC. If initializeModel = 0, 
+# will just check parameter file and also ensure that data (treefile etc) 
+# can be read.
+
+overwrite = 0
+# If TRUE will overwrite analysis result files (if present).
+# Default is set to FALSE: analyses will stop before overwriting files.
+
+###################################
+# PRIORS
+
+poissonRatePrior = 1
+# The rate parameter of the exponential prior on the rate parameter of the 
+# Poisson process. Smaller values favor greater numbers of distinct evolutionary
+# regimes on tree. 
+# Suggested values: 
+#     poissonRatePrior = 1.0 # for smaller datasets (< 500 tips)
+#     poissonRatePrior = 0.1 or even 0.02 for large (5000+ tips)
+
+betaInitPrior = 1
+# Parameter (rate) of the prior (exponential) on the initial 
+#	phenotypic evolutionary rate associated with regimes
+
+betaShiftPrior = 0.05
+# Parameter (std deviation) of the prior (normal) on the rate-change parameter
+#  You cannot adjust the mean of this distribution (fixed at zero, 
+#		which is equal to a constant rate diversification process)
+
+useObservedMinMaxAsTraitPriors = 1
+# If TRUE (1), will put a uniform prior density on the distribution of ancestral
+#	character states, with upper and lower bounds determined by the min and max of 
+#	the observed data.
+
+traitPriorMin = 0
+# User-defined minimum value for the uniform density on the distribution of ancestral
+#	character states. Only used if useObservedMinMaxAsTraitPriors = 0.
+
+traitPriorMax = 0
+# user-defined maximum value for the uniform density on the distribution of ancestral
+#	character states. Only used if useObservedMinMaxAsTraitPriors = 0
+
+
+###################################
+# MCMC SIMULATION SETTINGS & OUTPUT OPTIONS
+
+numberGenerations = 100000
+# Generations to perform MCMC simulation.
+
+mcmcWriteFreq = 5000
+# Writes MCMC simulation parameters (log-likelihood, log-prior,
+# number of processes) to file every mcmcWriteFreq generations.
+
+eventDataWriteFreq = 10000
+# Specify frequency to write actual model parameters to file. 
+# These are the main results!
+
+acceptWriteFreq = 100000
+# Prints accept frequency
+
+printFreq = 20000
+# Prints MCMC status to screen every printFreq generations.
+
+# outName = BAMM
+# Name of analysis (output files will be prefixed with this);
+# if commented out, no prefix will be used
+
+# mcmcOutfile = mcmc_out.txt
+# The name of file for MCMC output. Only includes summar
+# information about MCMC simulation (log-likelihoods etc)
+
+# eventDataOutfile = event_data.txt
+# The raw event data. ALL of the results are contained in this file,
+# and all branch-specific speciation rates, shift positions, 
+# marginal distributions etc can be reconstructed from this output. 
+# See R package BAMMtools for working with this output.
+
+
+###################################
+# OPERATORS: MCMC_SCALING_OPERATORS
+
+updateBetaScale = 1
+# Scale operator for proportional shrinking-expanding move to update initial 
+#	phenotypic rate for rate regimes
+
+updateBetaShiftScale = 1
+# Scale operator for sliding window move to update initial 
+#	phenotypic rate
+
+updateNodeStateScale = 1
+# Scale operator for sliding window move to update 
+#	ancestral states at internal nodes
+
+updateEventLocationScale = 2.0
+# Scale parameter for updating LOCAL moves of events on the tree
+# This defines the width of the sliding window proposal.
+
+updateEventRateScale = 4.0
+# Scale parameter (proportional shrinking/expanding) for updating
+# the rate parameter of the Poisson process
+
+###################################
+# OPERATORS: MCMC_MOVE_FREQUENCIES
+
+updateRateEventNumber = 1
+# Relative frequency of MCMC moves that change the number of events
+
+updateRateEventPosition = 1
+# Relative frequency of moves that change the location of an event on the tree
+
+updateRateEventRate = 1
+# Relative frequency of moves that change the rate at which events occur
+
+updateRateBeta0 = 1
+# Relative frequency of moves that change the initial phenotypic rate
+# associated with an event
+
+updateRateBetaShift = 1
+# Relative frequency of moves that change the exponential shift parameter of 
+# a phenotypic rate associated with an event
+
+updateRateNodeState = 25
+# Relative frequency of moves that update the value of ancestral character states.
+#	You have as many ancestral states as you have internal nodes in your tree, 
+#	so there are a lot of parameters: you should update this much more often
+#	than you update the event-associated parameters.
+
+localGlobalMoveRatio = 10
+# Ratio of local versus global moves of events
+
+###################################
+# INITIAL PARAMETER VALUES
+
+betaInit = 0.5
+# Initial value of the phenotypic evolutionary process at the root of the tree.
+
+betaShiftInit = 0.0
+# Initial value of the exponential change parameter for the phenotypic evolutionary
+#	process (at the root of the tree). A value of zero implies time-constant rates.
+
+initialNumberEvents = 0
+# Initial number of non-root processes
+
+###################################
+# NUMERICAL AND OTHER PARAMETERS
+#
+# Presently none.
+#
+#
+

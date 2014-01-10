@@ -89,6 +89,11 @@ under \code{brewer.pal} may also be used. Finally a vector of three valid named 
 may also be used. The first, second, and third colors are mapped to low, intermediate, and fast rates 
 of evolution. The last two options result in a more perceptually uniform color scale than the first.
 
+Specifying smaller values for \code{tau} will result in smoother-looking rate changes on the tree, 
+especially when \code{method="phylogram"}. For \code{method="polar"} smaller values of \code{tau} tend
+to make the branches appear ragged in appearance. Note that smaller values of \code{tau} require more
+computation.
+
 Internally \code{plot.bammdata} looks for an element in \code{ephy} called "dtrates". 
 This is simply a vector holding the rates of each segment on each branch. If "dtrates" is not 
 found \code{plot.bammdata} calls \code{dtRates} to perform the rate calculations.
