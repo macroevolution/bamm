@@ -41,10 +41,10 @@ speciation and extinction that vary through time and among lineages. A macroevol
 process of trait evolution comprises rates of phenotypic change that vary through time 
 and among lineages. 
 
-To represent temporally heterogeneity in macroevolutionary rates
+To represent temporal heterogeneity in macroevolutionary rates
 BAMM uses the exponential change function ...
 
-To represent among lineage heterogeneity BAMM allows different parts of the tree to
+To represent among-lineage heterogeneity BAMM allows different parts of the tree to
 evolve under independent macroevolutionary processes. The number and configuration of
 processes are estimated using reversible jump MCMC ...
 
