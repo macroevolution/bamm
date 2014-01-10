@@ -14,28 +14,28 @@ addBAMMshifts(ephy, method, index, cex = 1, pch = 21, col = 1, bg = 2, multi = F
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{ephy}{
-an object of class \code{bammdata}
+an object of class \code{bammdata}.
 }
   \item{method}{
-a character string indicating the method used in plotting. May be "polar" or "phylogram"
+a character string indicating the method used in plotting. May be "polar" or "phylogram".
 }
   \item{index}{
-an integer indicating which posterior sample to use for adding shifts to the plotted tree
+an integer indicating which posterior sample to use for adding shifts to the plotted tree.
 }
   \item{cex}{
-a numeric indicating the character expansion of the plotted points
+a numeric indicating the character expansion of the plotted points.
 }
   \item{pch}{
-an integer indicating the choice of plotting symbol
+an integer indicating the choice of plotting symbol.
 }
   \item{col}{
-an integer or character string indicating the border color of the plotting symbol
+an integer or character string indicating the border color of the plotting symbol.
 }
   \item{bg}{
-an integer or character string indicating the background color of the plotting symbol
+an integer or character string indicating the background color of the plotting symbol.
 }
   \item{multi}{
-a logical indicating whether the device is configured for multi-panel plotting
+a logical indicating whether the device is configured for multi-panel plotting.
 }
 }
 \details{
@@ -61,7 +61,7 @@ Mike Grundler
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{getShiftNodesFromIndex}},\code{\link{plot.bammdata}}
+\code{\link{getShiftNodesFromIndex}}, \code{\link{plot.bammdata}}
 }
 \examples{
 	
