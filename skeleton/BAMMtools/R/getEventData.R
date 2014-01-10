@@ -80,6 +80,8 @@ getEventData <- function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALS
 	
  	meanTipLambda <- numeric(length(phy$tip.label)); 
  
+ 	stoptime <- max(branching.times(phy));
+ 	
  	for (i in 1:length(goodsamples)) {
   		tmpEvents <- x2[x2[,1] == goodsamples[i], ];
 		
@@ -171,8 +173,6 @@ getEventData <- function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALS
 		tipstates <- tipstates[order(phy$edge[phy$edge[,2] <= phy$Nnode+1,2])];
 		
  		### Compute tip rates:
- 
-		stoptime <- max(branching.times(phy));
 		
 		tiplam <- dftemp$lam1[tipstates] * exp(dftemp$lam2[tipstates] * (stoptime - dftemp$time[tipstates]));
 		tipmu <- dftemp$mu1[tipstates];

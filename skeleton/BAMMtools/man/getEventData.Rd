@@ -2,284 +2,146 @@
 \alias{getEventData}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-temp
-%%  ~~function to do ... ~~
+Load BAMM data
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+\code{getEventData} reads BAMM data and creates a \code{bammdata} object.
 }
 \usage{
-getEventData(phy, eventdata, burnin = 0, nsamples = NULL, verbose = FALSE, type = "diversification", header = TRUE)
+getEventData(phy, eventdata, burnin = 0, nsamples = NULL, verbose = FALSE, type = "diversification")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{phy}{
-%%     ~~Describe \code{phy} here~~
+an object of class \code{phylo}.
 }
   \item{eventdata}{
-%%     ~~Describe \code{eventdata} here~~
+a character string with the path to a BAMM event file or an object of class \code{dataframe} with the 
+same information.
 }
   \item{burnin}{
-%%     ~~Describe \code{burnin} here~~
+a numeric indicating the fraction of posterior samples to discard as burn-in.
 }
   \item{nsamples}{
-%%     ~~Describe \code{nsamples} here~~
+an integer indicating the number of posterior samples to load. May be \code{NULL}.
 }
   \item{verbose}{
-%%     ~~Describe \code{verbose} here~~
+a logical. If \code{TRUE} progess is outputted to the console. Defaults to \code{FALSE}.
 }
   \item{type}{
-%%     ~~Describe \code{type} here~~
-}
-  \item{header}{
-%%     ~~Describe \code{header} here~~
+a character string. Either "diversification" or "trait" depending on your BAMM analysis.
 }
 }
+
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+In the BAMM framework, an "event" is a macroevolutionary process of diversification 
+or trait evolution. Every phylogenetic tree contains at least 1 event that begins 
+at the root node. A macroevolutionary process of diversification comprises rates of 
+speciation and extinction that vary through time and among lineages. A macroevolutionary 
+process of trait evolution comprises rates of phenotypic change that vary through time 
+and among lineages. 
+
+To represent temporally heterogeneity in macroevolutionary rates
+BAMM uses the exponential change function ...
+
+To represent among lineage heterogeneity BAMM allows different parts of the tree to
+evolve under independent macroevolutionary processes. The number and configuration of
+processes are estimated using reversible jump MCMC ...
+
+ ... further details ...
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A list with many components:
+\item{edge}{See documentation for class \code{phylo} in package ape.}
+\item{Nnode}{See documentation for class \code{phylo} in package ape.}
+\item{tip.label}{See documentation for class \code{phylo} in package ape.}
+\item{edge.length}{See documentation for class \code{phylo} in package ape.}
+
+\item{begin}{The beginning time of each branch. The root is set to time zero.}
+\item{end}{The ending time of each branch.}
+
+\item{numberEvents}{
+An integer vector with the number of events contained in \code{phy} for each posterior sample.
+}
+\item{eventData}{
+A list of dataframes. Each element is a single posterior sample.
+Each row in a dataframe holds the data for a single event.
+Data associated with an event are: \code{node} - a node number. This identifies 
+the branch where the event originates. \code{time} - this is the absolute time on 
+that branch where the event originates. \code{lam1} - an initial rate of speciation or trait evolution.
+\code{lam2} - a decay/growth parameter. \code{mu1} - an initial rate of extinction.
+\code{mu2} - a decay/growth parameter. \code{index} - a unique integer associated with the event.
+See 'Details'.
+}
+\item{eventVectors}{
+A list of integer vectors. Each element is a single posterior sample.
+For each branch in \code{phy} the index of the event that obtains along that branch.
+Branches are ordered increasing here and elsewhere.
+}
+\item{eventBranchSegs}{
+A list of matrices. Each element is a single posterior sample.
+Each matrix has four columns: \code{Column 1} identifies a node in \code{phy}. 
+\code{Column 2} identifies the beginning time of the branch or segment 
+of the branch that subtends the node in \code{Column 1}. \code{Column 3} identifies the 
+ending time of the branch or segment of the branch that subtends the node in \code{Column 1}. 
+\code{Column 4} identifies the index of the event that obtains along the branch or segment 
+of the branch that subtends the node in \code{Column 1}.
+}
+\item{tipStates}{
+A list of integer vectors. Each element is a single posterior sample.
+For each tip the index of the event that obtains along the branch subtending the tip.
+Tips are ordered increasing here and elsewhere.
+}
+\item{tipLambda}{
+A list of numeric vectors. Each element is a single posterior sample.
+For each tip the rate of speciation or trait evolution at the end of 
+the terminal branch subtending that tip.
+}
+\item{tipMu}{
+A list of numeric vectors. Each element is a single posterior sample.
+For each tip the rate of extinction at the end of that terminal branch
+subtending that tip. Meaningless if working with BAMM trait results.
+}
+\item{meanTipLambda}{
+For each tip the mean of the marginal posterior density of the rate of speciation
+or trait evolution at the end of each terminal branch subtending that tip.
+}
+\item{meanTipMu}{
+For each tip the mean of the marginal posterior density of the rate of extinction
+at the end of the terminal branch subtending that tip. Meaningless if working with BAMM trait results.
+}
+\item{type}{
+A character string. Either "diversification" or "trait" depending on your BAMM analysis.
+}
+\item{downseq}{
+An integer vector holding the nodes of \code{phy}. The order corresponds to the 
+order in which nodes are visited by a pre-order tree traversal.
+}
+\item{lastvisit}{
+An integer vector giving the index of the last node visited by the node in the corresponding
+position in \code{downseq}. \code{downseq} and \code{lastvisit} can be used to quickly retrieve
+the descendants of any node. e.g. if \code{downseq[2]=89} and \code{lastvist[89]=15}, the descendants 
+of node 89 can be found by \code{downseq[2:15]}.
+}
+
 }
 \references{
 %% ~put references to the literature/web site here ~
 }
 \author{
-%%  ~~who you are~~
+Dan Rabosky, Mike Grundler
 }
 \note{
-%%  ~~further notes~~
+Currently the function does not check for duplicate tip labels in \code{phy}, which may cause the function to choke.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{summary.bammdata}}, \code{\link{plot.bammdata}}, \code{\link{dtRates}}.
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-function (phy, eventdata, burnin = 0, nsamples = NULL, verbose = FALSE, 
-    type = "diversification", header = TRUE) 
-{
-    if (type != "diversification" & type != "trait") {
-        stop("Invalid 'type' specification. Should be 'diversification' or 'trait'")
-    }
-    if (any(is.null(c(phy$begin, phy$end)))) {
-        phy <- getStartStopTimes(phy)
-    }
-    bt <- branching.times(phy)
-    eventVectors <- list()
-    eventData <- list()
-    tipStates <- list()
-    eventBranchSegs <- list()
-    tipLambda <- list()
-    if (class(eventdata) == "data.frame") {
-        cat("Processing event data from data.frame\n")
-    }
-    else if (class(eventdata) == "character") {
-        cat("Reading event datafile: ", eventdata, "\n\t\t...........")
-        eventdata <- read.csv(eventdata, header = header, stringsAsFactors = FALSE)
-        ug <- sort(unique(eventdata[, 1]))
-        cat("\nRead a total of ", length(ug), " samples from posterior\n")
-    }
-    else {
-        err.string <- c("eventdata arg invalid\n\nType is ", 
-            class(eventdata), "\n", sep = "")
-        stop(err.string)
-    }
-    uniquegens <- sort(unique(eventdata[, 1]))
-    samplestart <- uniquegens[floor(burnin * length(uniquegens))]
-    if (!length(samplestart)) {
-        samplestart <- 0
-    }
-    uniquegens <- uniquegens[uniquegens >= samplestart]
-    if (is.null(nsamples)) {
-        nsamples <- length(uniquegens)
-    }
-    else if (nsamples > length(uniquegens)) {
-        nsamples <- length(uniquegens)
-    }
-    goodsamples <- uniquegens[seq.int(1, length(uniquegens), 
-        length.out = nsamples)]
-    cat("\nDiscarded as burnin: GENERATIONS < ", goodsamples[1])
-    cat("\nAnalyzing ", length(goodsamples), " samples from posterior\n")
-    numberEvents <- length(goodsamples)
-    cat("\nSetting recursive sequence on tree...\n")
-    phy <- getRecursiveSequence(phy)
-    cat("\nDone with recursive sequence\n\n")
-    if (verbose) {
-        cat("Start preprocessing unique MRCA pairs....\n")
-    }
-    x2 <- eventdata[eventdata$generation \%in\% goodsamples, ]
-    x2 <- x2[!is.na(x2$leftchild) & !is.na(x2$rightchild), ]
-    ff <- character(nrow(x2))
-    for (i in 1:length(ff)) {
-        ff[i] <- paste(x2$leftchild[i], x2$rightchild[i], sep = "////")
-    }
-    ff <- unique(ff)
-    uniquePairSet <- matrix(NA, nrow = length(ff), ncol = 2)
-    uniquePairNode <- numeric(length(ff))
-    for (i in 1:length(ff)) {
-        tax <- unlist(strsplit(ff[i], "////"))
-        if (sum(is.na(tax)) == 0) {
-            uniquePairSet[i, 1] <- which(phy$tip.label == tax[1])
-            uniquePairSet[i, 2] <- which(phy$tip.label == tax[2])
-            uniquePairNode[i] <- getMRCA(phy, tip = uniquePairSet[i, 
-                ])
-        }
-    }
-    if (verbose) {
-        cat("Done preprocessing unique MRCA pairs....\n")
-    }
-    testNodesFunction <- function(x, y) {
-        bb <- FALSE
-        if (sum(x \%in\% y) == 2) {
-            bb <- TRUE
-        }
-        return(bb)
-    }
-    meanTipMu <- numeric(length(phy$tip.label))
-    meanTipLambda <- numeric(length(phy$tip.label))
-    for (i in 1:length(goodsamples)) {
-        tmpEvents <- eventdata[eventdata[, 1] == goodsamples[i], 
-            ]
-        if (verbose) {
-            cat("Processing event: ", i, "\n")
-        }
-        t1 <- tmpEvents[, 2]
-        t2 <- tmpEvents[, 3]
-        tm <- tmpEvents[, 4]
-        lam1 <- tmpEvents[, 5]
-        lam2 <- tmpEvents[, 6]
-        if (type == "diversification") {
-            mu1 <- tmpEvents[, 7]
-            mu2 <- tmpEvents[, 8]
-        }
-        else {
-            mu1 <- rep(0, nrow(tmpEvents))
-            mu2 <- rep(0, nrow(tmpEvents))
-        }
-        tipMu <- list()
-        nodeVec <- numeric(nrow(tmpEvents))
-        for (k in 1:length(nodeVec)) {
-            if (is.na(t2[k])) {
-                nodeVec[k] <- which(phy$tip.label == t1[k])
-            }
-            else {
-                tipnode1 <- which(phy$tip.label == t1[k])
-                tipnode2 <- which(phy$tip.label == t2[k])
-                lv <- apply(uniquePairSet, MARGIN = 1, testNodesFunction, 
-                  y = c(tipnode1, tipnode2))
-                if (sum(lv) == 1) {
-                  nodeVec[k] <- uniquePairNode[lv]
-                }
-                else {
-                  tipnodes <- c(which(phy$tip.label == t1[k]), 
-                    which(phy$tip.label == t2[k]))
-                  nodeVec[k] <- getMRCA(phy, tipnodes)
-                }
-            }
-        }
-        if (sum(nodeVec == 0) > 0) {
-            stop("Failed to assign event to node\n")
-        }
-        dftemp <- data.frame(node = nodeVec, time = tm, lam1 = lam1, 
-            lam2 = lam2, mu1 = mu1, mu2 = mu2, stringsAsFactors = FALSE)
-        dftemp <- dftemp[order(dftemp$time), ]
-        dftemp$index <- 1:nrow(dftemp)
-        rownames(dftemp) <- NULL
-        tphy <- phy
-        tphy$statevec <- rep(1, nrow(tphy$edge))
-        if (nrow(dftemp) > 1) {
-            for (k in 2:nrow(dftemp)) {
-                s1 <- which(tphy$downseq == dftemp$node[k])
-                s2 <- which(tphy$downseq == tphy$lastvisit[dftemp$node[k]])
-                descSet <- tphy$downseq[s1:s2]
-                isDescendantNode <- tphy$edge[, 2] \%in\% descSet
-                tphy$statevec[isDescendantNode] <- k
-            }
-        }
-        tmpEventSegMat <- matrix(0, nrow = (max(phy$edge) + nrow(dftemp) - 
-            2), ncol = 4)
-        non.root <- c(1:length(phy$tip.label), (length(phy$tip.label) + 
-            2):max(phy$edge))
-        pos <- 1
-        is_noEventBranch <- !(phy$edge[, 2] \%in\% dftemp$node)
-        tmpEventSegMat[1:sum(is_noEventBranch), 1] <- phy$edge[, 
-            2][is_noEventBranch]
-        tmpEventSegMat[1:sum(is_noEventBranch), 2] <- tphy$begin[is_noEventBranch]
-        tmpEventSegMat[1:sum(is_noEventBranch), 3] <- tphy$end[is_noEventBranch]
-        tmpEventSegMat[1:sum(is_noEventBranch), 4] <- tphy$statevec[is_noEventBranch]
-        eventnodeset <- intersect(non.root, dftemp$node)
-        pos <- 1 + sum(is_noEventBranch)
-        for (k in eventnodeset) {
-            events.on.branch <- dftemp[dftemp$node == k, ]
-            events.on.branch <- events.on.branch[order(events.on.branch$time), 
-                ]
-            fBranch <- phy$edge[, 2] == k
-            start.times <- c(phy$begin[fBranch], events.on.branch$time)
-            stop.times <- c(events.on.branch$time, phy$end[fBranch])
-            parent <- phy$edge[, 1][phy$edge[, 2] == k]
-            if (parent == (length(phy$tip.label) + 1)) {
-                proc.set <- c(1, events.on.branch$index)
-            }
-            else {
-                proc.set <- c(tphy$statevec[tphy$edge[, 2] == 
-                  parent], events.on.branch$index)
-            }
-            zzindex <- pos:(pos + nrow(events.on.branch))
-            tmpEventSegMat[zzindex, 1] <- rep(k, length(zzindex))
-            tmpEventSegMat[zzindex, 2] <- start.times
-            tmpEventSegMat[zzindex, 3] <- stop.times
-            tmpEventSegMat[zzindex, 4] <- proc.set
-            pos <- pos + 1 + nrow(events.on.branch)
-        }
-        tmpEventSegMat <- tmpEventSegMat[order(tmpEventSegMat[, 
-            1]), ]
-        eventBranchSegs[[i]] <- tmpEventSegMat
-        tipstates <- numeric(length(phy$tip.label))
-        for (k in 1:length(tipstates)) {
-            tipstates[k] <- tphy$statevec[tphy$edge[, 2] == k]
-        }
-        stoptime <- max(branching.times(phy))
-        tiplam <- dftemp$lam1[tipstates] * exp(dftemp$lam2[tipstates] * 
-            (stoptime - dftemp$time[tipstates]))
-        tipmu <- dftemp$mu1[tipstates]
-        meanTipMu <- meanTipMu + tipmu/nsamples
-        meanTipLambda <- meanTipLambda + tiplam/nsamples
-        eventData[[i]] <- dftemp
-        eventVectors[[i]] <- tphy$statevec
-        numberEvents[i] <- nrow(dftemp)
-        tipStates[[i]] <- tipstates
-        tipLambda[[i]] <- tiplam
-        tipMu[[i]] <- tipmu
-    }
-    phy$numberEvents <- numberEvents
-    phy$eventData <- eventData
-    phy$eventVectors <- eventVectors
-    phy$tipStates <- tipStates
-    phy$tipLambda <- tipLambda
-    phy$meanTipLambda <- meanTipLambda
-    phy$eventBranchSegs <- eventBranchSegs
-    phy$tipMu <- tipMu
-    phy$meanTipMu <- meanTipMu
-    if (type == "diversification") {
-        phy$type = "diversification"
-    }
-    else {
-        phy$type = "trait"
-    }
-    class(phy) <- "bammdata"
-    return(phy)
-  }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
