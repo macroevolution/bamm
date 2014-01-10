@@ -4,14 +4,14 @@
 #
 #	Private function, called by getEventDataDiversification
 
-getRecursiveSequence <- function(phy){
-		
-	root.node <- length(phy$tip.label) + 1;
-	
-	phy$downseq <- root.node
-	phy$lastvisit <- numeric(length(unique(phy$edge[,2])));
- 
- 	phy <- getSequenceForwardTraversal(phy, root.node);
-
+getRecursiveSequence = function(phy)
+{
+	rootnd = as.integer(phy$Nnode+2);
+	anc = as.integer(phy$edge[,1]);
+	desc = as.integer(phy$edge[,2]);
+	ne = as.integer(dim(phy$edge)[1]);
+	L = .C('setrecursivesequence', anc, desc, rootnd, ne, integer(ne+1),integer(ne+1));
+	phy$downseq = as.integer(L[[5]]);
+	phy$lastvisit = as.integer(L[[6]]);
 	return(phy);
 }
