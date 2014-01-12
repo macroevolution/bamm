@@ -10,13 +10,6 @@ getEventData <- function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALS
 		
 	bt <- branching.times(phy);
 	
-	eventVectors <- list();
-	eventData <- list();
-	tipStates <- list();
-	eventBranchSegs <- list();
-	
-	tipLambda <- list();
- 
 	if (class(eventdata) == 'data.frame') {
 		cat("Processing event data from data.frame\n");
 		uniquegens <- sort(unique(eventdata[,1]));
@@ -44,6 +37,14 @@ getEventData <- function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALS
  	else if (nsamples > length(uniquegens)) {
  		nsamples <- length(uniquegens);
  	}
+	
+	eventVectors <- vector("list",nsamples);
+	eventData <- vector("list",nsamples);
+	tipStates <- vector("list",nsamples);
+	eventBranchSegs <- vector("list",nsamples);
+	
+	tipLambda <- vector("list",nsamples);
+	tipMu <- vector("list",nsamples);
 	
 	goodsamples <- uniquegens[seq.int(1, length(uniquegens), length.out=nsamples)];
  	 
@@ -97,8 +98,7 @@ getEventData <- function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALS
 		else { #for bamm trait data we set the mu columns to zero because those params don't exist	
 			mu1 <- rep(0, nrow(tmpEvents)); 
  			mu2 <- rep(0, nrow(tmpEvents)); 
-		}
-		tipMu <- list();	
+		}	
 		
  		# Get subtending node for each event:
  		nodeVec <- uniquePairNode[x2[,1] == goodsamples[i]];
