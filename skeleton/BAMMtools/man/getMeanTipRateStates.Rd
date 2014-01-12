@@ -1,70 +1,44 @@
 \name{getMeanTipRateStates}
-\alias{getMeanTipRateStates}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-temp
-%%  ~~function to do ... ~~
+Return mean tip rates
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Return speciation, extinction, net diversification, or Brownian motion trait rates for all tips in the phylogeny.
 }
 \usage{
-getMeanTipRateStates(ephy, use.names = FALSE)
+getMeanTipRateStates(ephy, ratetype, use.names = TRUE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{ephy}{
-%%     ~~Describe \code{ephy} here~~
+an object of class \code{bammdata}.
+}
+  \item{ratetype}{
+the type of rate to return: either \code{speciation}, \code{extinction}, \code{netdiv}, or \code{trait}.
 }
   \item{use.names}{
-%%     ~~Describe \code{use.names} here~~
+boolean: should the returned vector be named with taxon names, defaults to \code{TRUE}.
 }
 }
-\details{
+%%\details{
 %%  ~~ If necessary, more details than the description above ~~
-}
+%%}
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
-\references{
-%% ~put references to the literature/web site here ~
+Returns a vector of tip rates, named if \code{use.names = TRUE}.
 }
 \author{
-%%  ~~who you are~~
+Pascal Title
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+Requires an onject of class \code{bammdata} as obtained with \code{\link{getEventData}}. 
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+library(BAMMtools)
+data(cetaceans, events.cetaceans)
+ephy <- getEventData(cetaceans, events.cetaceans, burnin=0.25)
 
-## The function is currently defined as
-function (ephy, use.names = FALSE) 
-{
-    if (!"bammdata" \%in\% class(ephy)) {
-        stop("Object ephy must be of class bammdata\n")
-    }
-    if (!use.names) {
-        return(ephy$meanTipLambda - ephy$meanTipMu)
-    }
-    else {
-        ret <- ephy$meanTipLambda - ephy$meanTipMu
-        names(ret) <- ephy$tip.label
-        return(ret)
-    }
-  }
+#return a vector of net diversification rates at the tips of the phylogeny.
+getMeanTipRateStates(ephy, ratetype='netdiv')
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
