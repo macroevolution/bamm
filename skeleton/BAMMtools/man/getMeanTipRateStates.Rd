@@ -1,5 +1,5 @@
 \name{getMeanTipRateStates}
-
+\alias{getMeanTipRateStates}
 \title{
 Return mean tip rates
 }
@@ -30,7 +30,7 @@ Returns a vector of tip rates, named if \code{use.names = TRUE}.
 Pascal Title
 }
 \seealso{
-Requires an onject of class \code{bammdata} as obtained with \code{\link{getEventData}}. 
+Requires an object of class \code{bammdata} as obtained with \code{\link{getEventData}}. 
 }
 \examples{
 library(BAMMtools)
