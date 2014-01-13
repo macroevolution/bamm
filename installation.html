@@ -86,28 +86,43 @@
             
   <div class="section" id="installation">
 <h1>4. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>This page needs a lot of work:</p>
-<div class="highlight-python"><pre>** Not really done**</pre>
-</div>
+<p>The following instructions assume you are running <tt class="docutils literal"><span class="pre">bash</span></tt> or a similar
+Unix shell. In Linux and Mac OS X systems, <tt class="docutils literal"><span class="pre">bash</span></tt> is the default shell
+(in Mac OS X, you must first open the Terminal application).
+For Windows users, we recommend you use <a class="reference external" href="http://www.cygwin.com/">Cygwin</a>,
+where <tt class="docutils literal"><span class="pre">bash</span></tt> is also the default shell.</p>
 <ol class="arabic">
-<li><p class="first">Download the latest version of BAMM.</p>
+<li><p class="first"><a class="reference external" href="http://bamm-project.org/download.html">Download</a> the latest available
+version of BAMM.</p>
 </li>
-<li><p class="first">This file is compressed. To uncompress it, run the following command
-from the directory in which BAMM was downloaded:</p>
-<div class="highlight-python"><pre>tar -xzf bamm-1.0.tar.gz</pre>
+<li><p class="first">This file is compressed as a tar.gz file. To uncompress it,
+run the following command from the directory in which BAMM was downloaded
+(the actual version of BAMM may be different):</p>
+<div class="highlight-python"><pre>tar -xzf bamm-1.0.0.tar.gz</pre>
 </div>
+<p>This will create the directory bamm-1.0.0.</p>
 </li>
-<li><p class="first">This will create the directory bamm-1.0.
-Go into this directory and compile the program as follows:</p>
-<div class="highlight-python"><pre>cd bamm-1.0
+<li><p class="first">Verify that you have <a class="reference external" href="http://www.cmake.org">CMake</a> installed:</p>
+<div class="highlight-python"><pre>which cmake</pre>
+</div>
+<p>If the location of the CMake program appears (e.g., <tt class="docutils literal"><span class="pre">/usr/bin/cmake</span></tt>),
+you have CMake installed. You will also need a C++ compiler,
+such as <a class="reference external" href="http://gcc.gnu.org/">GCC</a> or <a class="reference external" href="http://llvm.org/">LLVM</a>.</p>
+</li>
+<li><p class="first">Go into the top level directory and build the program by running <tt class="docutils literal"><span class="pre">make</span></tt>:</p>
+<div class="highlight-python"><pre>cd bamm-1.0.0
 make</pre>
 </div>
+<p>This will create the directory <tt class="docutils literal"><span class="pre">build</span></tt> and automatically run <tt class="docutils literal"><span class="pre">cmake</span></tt>
+to compile BAMM. The executable will be named <tt class="docutils literal"><span class="pre">bamm</span></tt>.</p>
 </li>
-<li><p class="first">This will create the directory build.
-Within the build directory is an executable:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">bamm</span>
-</pre></div>
+<li><p class="first">You can run <tt class="docutils literal"><span class="pre">bamm</span></tt> from this directory, or you may wish to install it
+in a more permanent location. To do this, run:</p>
+<div class="highlight-python"><pre>sudo make install</pre>
 </div>
+<p>You may now run <tt class="docutils literal"><span class="pre">bamm</span></tt> from any directory in your system. See the
+<a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
+to learn how to configure and run BAMM.</p>
 </li>
 </ol>
 </div>
