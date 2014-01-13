@@ -1,24 +1,38 @@
 Installation
 ============
 
-This page needs a lot of work::
-	
-	** Not really done**
+1. `Download <http://bamm-project.org/download.html>`_ the latest available
+   version of BAMM.
 
-1. Download the latest version of BAMM.
+2. This file is compressed as a tar.gz file. To uncompress it,
+   run the following command from the directory in which BAMM was downloaded
+   (the actual version of BAMM may be different)::
 
-2. This file is compressed. To uncompress it, run the following command
-   from the directory in which BAMM was downloaded::
+       tar -xzf bamm-1.0.0.tar.gz
 
-       tar -xzf bamm-1.0.tar.gz
+   This will create the directory bamm-1.0.0.
+   
+3. Verify that you have `CMake <http://www.cmake.org>`_ installed::
 
-3. This will create the directory bamm-1.0.
-   Go into this directory and compile the program as follows::
+       which cmake
 
-       cd bamm-1.0
+   If the location of the CMake program appears (e.g., ``/usr/bin/cmake``),
+   you have CMake installed. You will also need a C++ compiler,
+   such as `GCC <http://gcc.gnu.org/>`_ or `LLVM <http://llvm.org/>`_.
+
+4. Go into the top level directory and build the program by running ``make``::
+
+       cd bamm-1.0.0
        make
 
-4. This will create the directory build. 
-   Within the build directory is an executable::
+   This will create the directory ``build`` and automatically run ``cmake``
+   to compile BAMM. The executable will be named ``bamm``.
 
-       bamm
+5. You can run ``bamm`` from this directory, or you may wish to install it
+   in a more permanent location. To do this, run::
+
+       sudo make install
+
+   You may now run ``bamm`` from any directory in your system. See the
+   `Quick-start guide to BAMM <http://bamm-project.org/quickstart.html>`_
+   to learn how to configure and run BAMM.
