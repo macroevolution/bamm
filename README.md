@@ -3,7 +3,7 @@ bamm
 
 A program for multimodel inference on speciation and trait evolution.
 Please see the project's website
-([http://www.bamm-project.org](http://www.bamm-project.org))
+([http://bamm-project.org](http://bamm-project.org))
 for download options and documentation.
 
 Installation
