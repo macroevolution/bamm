@@ -1,6 +1,12 @@
 Installation
 ============
 
+The following instructions assume you are running ``bash`` or a similar
+Unix shell. In Linux and Mac OS X systems, ``bash`` is the default shell
+(in Mac OS X, you must first open the Terminal application).
+For Windows users, we recommend you use `Cygwin <http://www.cygwin.com/>`_,
+where ``bash`` is also the default shell.
+
 1. `Download <http://bamm-project.org/download.html>`_ the latest available
    version of BAMM.
 
