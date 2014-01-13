@@ -33,6 +33,9 @@ private:
     void assertBranchLengthsArePositive();
     void assertBranchLengthsArePositiveRecurse(Node* node);
     void assertTreeIsUltrametric();
+    void assertTipsHaveUniqueNames();
+    std::vector<std::string> terminalNames();
+    void storeTerminalNamesRecurse(Node* node, std::vector<std::string>& names);
 
     Node* root;
     std::set<Node*> nodes;

@@ -56,6 +56,7 @@ Tree::Tree(std::string fname, MbRandom* rnptr)
     assertTreeIsBifurcating();
     assertBranchLengthsArePositive();
     assertTreeIsUltrametric();
+    assertTipsHaveUniqueNames();
 
     getDownPassSeq();
 
@@ -1996,5 +1997,52 @@ void Tree::assertTreeIsUltrametric()
     if (!isUltrametric()) {
         log(Error) << "Tree is not ultrametric.\n";
         std::exit(1);
+    }
+}
+
+
+void Tree::assertTipsHaveUniqueNames()
+{
+    std::vector<std::string> names = terminalNames();
+
+    // Sort names
+    std::sort(names.begin(), names.end());
+
+    // Find consecutive duplicates
+    std::vector<std::string>::const_iterator it;
+    it = std::adjacent_find(names.begin(), names.end());
+
+    if (it != names.end()) {
+        log(Error) << "Tree contains tips with the same name.\n";
+        std::exit(1);
+    }
+}
+
+
+std::vector<std::string> Tree::terminalNames()
+{
+    std::vector<std::string> names;
+    storeTerminalNamesRecurse(getRoot(), names);
+    return names;
+}
+
+
+void Tree::storeTerminalNamesRecurse
+    (Node* node, std::vector<std::string>& names)
+{
+    Node* leftNode = node->getLfDesc();
+    Node* rightNode = node->getRtDesc();
+
+    if (leftNode == NULL && rightNode == NULL) {
+        names.push_back(node->getName());
+        return;
+    }
+
+    if (leftNode != NULL) {
+        storeTerminalNamesRecurse(leftNode, names);
+    }
+
+    if (rightNode != NULL) {
+        storeTerminalNamesRecurse(rightNode, names);
     }
 }

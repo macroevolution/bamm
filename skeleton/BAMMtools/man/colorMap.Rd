@@ -1,92 +1,50 @@
 \name{colorMap}
 \alias{colorMap}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-temp
-%%  ~~function to do ... ~~
+Map rates to colors
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Maps rates of speciation or trait evolution to color space.
 }
 \usage{
 colorMap(x, pal, NCOLORS)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{
-%%     ~~Describe \code{x} here~~
+	\item{x}{
+a numeric vector of rates of speciation or trait evolution.		
 }
-  \item{pal}{
-%%     ~~Describe \code{pal} here~~
+	\item{pal}{
+a character string or vector of mode character specifying the palette. See 
+documentation of \code{plot.bammdata} for further details.		
 }
-  \item{NCOLORS}{
-%%     ~~Describe \code{NCOLORS} here~~
+	\item{NCOLORS}{
+an integer number of colors used to create the color gradient.		
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Rates of speciation or trait evolution are mapped to colors by first creating
+a color gradient, \code{colpalette}, of \code{NCOLORS} colors. The vector \code{x} 
+of rates is then binned into a vector, \code{breaks}, of \code{NCOLORS+1} percentiles. 
+Values of \code{x} in the interval [\code{breaks[i-1]},\code{breaks[i]}) are assigned 
+to color \code{colpalette[i-1]}.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A vector of \code{length(x)} colors.
 }
 \references{
-%% ~put references to the literature/web site here ~
+	
 }
 \author{
-%%  ~~who you are~~
+	Dan Rabosky, Mike Grundler
 }
 \note{
-%%  ~~further notes~~
+	
 }
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{plot.bammdata}}, \code{\link{dtRates}}.
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (x, pal, NCOLORS) 
-{
-    dpal = c("BrBG", "PiYG", "PuOr", "RdBu", "RdGy", "RdYlBu", 
-        "RdYlGn", "Spectral")
-    colset = numeric(length(x))
-    if (length(pal) == 3) {
-        colpalette = colorRampPalette(pal, space = "Lab")(NCOLORS)
-    }
-    else if (pal \%in\% dpal) {
-        colpalette = colorRampPalette(rev(brewer.pal(3, pal)), 
-            space = "Lab")(NCOLORS)
-    }
-    else if (pal == "temperature") {
-        colpalette = piratedColors(NCOLORS)
-    }
-    bks = quantile(x, seq(0, 1, length.out = (NCOLORS + 1)))
-    for (i in 2:length(bks)) {
-        if (i == 2) {
-            colset[x < bks[2]] = colpalette[1]
-        }
-        else if (i == length(bks)) {
-            colset[x >= bks[length(bks) - 1]] = colpalette[length(bks) - 
-                1]
-        }
-        else {
-            colset[x >= bks[i - 1] & x < bks[i]] = colpalette[i - 
-                1]
-        }
-    }
-    return(colset)
-  }
+	
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ ~kwd2 }

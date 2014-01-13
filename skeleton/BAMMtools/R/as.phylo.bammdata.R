@@ -11,5 +11,8 @@ as.phylo.bammdata <- function(ephy) {
 	newphylo$edge.length <- ephy$edge.length;
 	class(newphylo) <- 'phylo';
 	attributes(newphylo)$order = attributes(ephy)$order;
+	if (attributes(newphylo)$order != "cladewise") {
+		newphylo = reorder(newphylo);
+	}
 	return(newphylo);
 }

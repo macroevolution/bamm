@@ -16,7 +16,7 @@ colorMap = function(x, pal, NCOLORS)
 	}
 	else if(pal == 'temperature')
 	{
-		colpalette = piratedColors(NCOLORS);	
+		colpalette = richColors(NCOLORS);	
 	}
 	
 	bks = quantile(x, seq(0,1,length.out=(NCOLORS+1)));
