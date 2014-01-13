@@ -24,7 +24,7 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 	}
 	
 	if (is.null(node)) {
-		nodeset <- ephy$edge[,2];
+		nodeset <- c(length(ephy$tip.label)+1, ephy$edge[,2]);
 	} else if (!is.null(node) & nodetype == 'include') {
 		#nodeset <- getDesc(ephy, node)$desc_set;
 		nodeset <- unlist(sapply(node, function(x) getDesc(ephy, x)$desc_set))
