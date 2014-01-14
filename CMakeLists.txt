@@ -6,10 +6,10 @@ SET(CXX_DEBUG_FLAGS "-g")
 SET(CXX_WARNING_FLAGS "-Wall -Wextra")
 SET(CXX_OPTIMIZATION_FLAGS "-O3")
 
-# Support Mac OS X 32-bit and 64-bit architectures
-IF(APPLE)
+# Support Mac OS X 32-bit and 64-bit architectures (if using Clang)
+IF(APPLE AND (${CMAKE_CXX_COMPILER_ID} MATCHES Clang))
     SET(CXX_ARCHITECTURE_FLAGS "-arch i386 -arch x86_64")
-ENDIF(APPLE)
+ENDIF(APPLE AND (${CMAKE_CXX_COMPILER_ID} MATCHES Clang))
 
 ADD_DEFINITIONS(${CXX_DEBUG_FLAGS}
                 ${CXX_WARNING_FLAGS}
