@@ -151,7 +151,7 @@ The variable *msc* contains a bit of information, including the marginal shift p
 
 And we can also view the rate-through-time dynamics implied by this sample::
 
-	> plot.bammdata(subdata, index = samp)
+	> plot.bammdata(edata, index = samp)
 
   
 
