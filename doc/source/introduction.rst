@@ -11,7 +11,7 @@ BAMM (Bayesian analysis of macroevolutionary mixtures) is a program for modeling
    :width: 640
    :align: center
 
-   Figure 1: Speciation rates in whales, reconstructed using BAMM. BAMM can estimate the posterior density of evolutionary rates (speciation, extinction, trait evolution) at any point in time along any branch in a phylogenetic tree. Major burst in rates at top of tree corresponds to the origin of the dolphin clade. See the :ref:`bammgraphs` for more examples involving BAMM. Inset histogram shows posterior density of speciation rates and allows color-based interpretation of rates on the whale phylogeny. Figure was generated using the function ### from the *BAMMtools* package in R.   Dataset in this example is taken from M. Steeman *et al.*, *Syst. Biol.* xxx:xxxx, 2009). 
+   Figure 1: Speciation rates in whales, reconstructed using BAMM. BAMM can estimate the posterior density of evolutionary rates (speciation, extinction, trait evolution) at any point in time along any branch in a phylogenetic tree. Major burst in rates at top of tree corresponds to the origin of the dolphin clade. See the :ref:`bammgraphs` for more examples involving BAMM. Inset histogram shows posterior density of speciation rates and allows color-based interpretation of rates on the whale phylogeny. Figure was generated using the plot.bammdata function from the *BAMMtools* package in R.   Dataset in this example is taken from M. Steeman *et al.*, *Syst. Biol.* xxx:xxxx, 2009). 
 
  
 Brief Overview of BAMM Functionality
