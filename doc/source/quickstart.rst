@@ -53,7 +53,7 @@ Understanding BAMM output
 
 The main results from a BAMM run are written to the file specified by the
 ``eventDataOutfile`` parameter in the *control* file.  If the ``outName``
-parameter is also specified in the *control* it will be prefixed to the name
+parameter is also specified in the *control* file it will be prefixed to the name
 in ``eventDataOutfile``. So if ``outName = BAMM`` and ``eventDataOutfile = event_data.txt``
 BAMM results are written to a file named *BAMM_event_data.txt*. 
 
@@ -81,12 +81,12 @@ represents a sample from the Markov chain. The first column is the generation in
 the point the sample was taken. The second column is the number of shifts on the tree at that
 point in the chain. A value of zero means there are no shifts so only a single event, the root
 event, is present on the tree. Columns three and four contain the log prior probability of the
-current model parameters and the log likelihood of the data given the current model parameters.
-Column five contains the current parameter controlling the rate at which shifts occur on
+model parameters and the log likelihood of the data given the model parameters, respectively.
+Column five contains the state of the parameter controlling the rate at which shifts occur on
 the tree. BAMM models rate shifts using a compound Poisson process, so this parameter is
 simply the rate parameter of a poisson distribution (:ref:`bammtheory`). The last column
 is the acceptance rate of the chain, or how frequently proposals to change the state of the
 chain are accepted. Ideally this should be around 0.234.
 
-BAMM also generates a ``run_info`` file that contains the time, random number seed, and model
+BAMM also generates a ``run_info.txt`` file that contains the time, random number seed, and model
 settings when the program was executed. 
