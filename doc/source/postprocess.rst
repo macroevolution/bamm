@@ -1,3 +1,5 @@
+.. _bammtools:
+
 Analyzing BAMM output with BAMMtools
 ===============================================
 
@@ -16,6 +18,7 @@ BAMM generates three primary output files. The first is the *mcmc data file*, wh
 
 The second is the *event data file*, which contains all of the actual model parameters. Each sample from the posterior can be described with complete knowledge of all of the shift events on the tree, including their location and evolutionary rate parameters. The *event data file* is just a long list of all the shift events and associated parameters that were sampled, as well as the MCMC generation in which they were sampled. **You will not directly do anything with this file**. BAMMtools has a function for extracting all the relevant information from the file and for mapping the rate shift configurations to phylogenetic trees. Finally, BAMM will (optionally) generate a second MCMC output file that contains the results of a prior-only simulation. This file can be used to reconstruct the prior distribution of the number of shift events and is important for the estimation of Bayes factors.
 
+.. _convergence:
 
 Diagnosing convergence
 ......................
