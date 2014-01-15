@@ -94,7 +94,7 @@ Once you've loaded BAMMtools in your R session you can take a look at the main r
 	> # fn is character string specifying the path to your event data file, e.g. "event_data.txt"
 	> # mytree is a phylogenetic tree is ape format. see ape documentation for the function read.tree
 	>
-	> edata = getEventData(mytree, fn, burnin = 0.1, type = "diversification")
+	> edata <- getEventData(mytree, fn, burnin = 0.1, type = "diversification")
 	>
 	> # if you are working with BAMM trait data specify type = "trait"
 
@@ -118,7 +118,7 @@ You can also plot a polarized version of the tree::
 
 This calculates the mean of the marginal posterior density of rates of speciation of trait evolution for many different points along each branch and maps those rates to colors such that cool colors represent slow rates and warm colors represent fast rates. If you want to take a look at just a single posterior sample rather than averaging over all posterior samples this is possible::
 
-	> mysample = 1
+	> mysample <- 1
 	> plot(edata, method = "polar", index = mysample)
 
 If this posterior sample happens to contain shifts you can add these to the plotted tree::
