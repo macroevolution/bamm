@@ -51,42 +51,65 @@ If your control file is named ``divcontrol.txt``, run BAMM as follows::
 Understanding BAMM output
 -------------------------
 
-The main results from a BAMM run are written to the file specified by the
-``eventDataOutfile`` parameter in the *control* file.  If the ``outName``
-parameter is also specified in the *control* file it will be prefixed to the name
-in ``eventDataOutfile``. So if ``outName = BAMM`` and ``eventDataOutfile = event_data.txt``
-BAMM results are written to a file named *BAMM_event_data.txt*. 
+The main results from a BAMM run are written to the file specified by ``eventDataOutfile`` in the control file.  If ``outName`` is also specified in the control file it will be prefixed to the name in ``eventDataOutfile``. So if ``outName = BAMM`` and ``eventDataOutfile = event_data.txt`` BAMM results are written to a file named *BAMM_event_data.txt*. 
 
-Depending on the ``modeltype`` specification this is a comma-delimited text file with
-six to eight columns.  Each row in the event data file contains information about an 
-event. The first column will always specify the generation number of the MCMC chain at 
-the point the data were written to the file. Each unique generation number is a sample
-from the posterior distribution of the probability of the model given the likelihood of
-the data and the prior probability of the model parameters. If duplicate generation 
-numbers occur it means that the tree contains more than one event in that posterior
-sample. Columns two and three are names of two taxa. The most recent common ancestor of 
-these taxa locates the branch where the event occurred. If column three is NA it means the 
-event occurred on the branch leading to the taxon in column two. The fourth column 
-indicates the absolute time on the branch where the event occurred. Time zero occurs at 
-the root of the tree. The remaining columns specify the parameters of the event. See
-:ref:`bammtheory` to understand the meaning of these parameters. The companion R package
-BAMMtools has a function that can extract all the relevant information from this file, so
-you do not need to work with it directly. For more information about BAMMtools functionality
-see :ref:`bammtools`.
+Before diving too deeply into the results in this file you should first assess whether or not the Markov chain converged. The information needed to do that is written to the file specified by ``mcmcOutfile`` in the control file. There are several programs available for assessing convergence of Markov chains but an easy one to use is the coda package for R. Assuming you are running R you can install coda by simply typing::
+> install.packages("coda")
 
-Another important file is the ``mcmcOutfile``. This contains details on the state of
-the Markov chain and will be important for :ref:`convergence`. For both diversification
-and trait analysis the ``mcmcOutfile`` is a six column comma-delimited text file. Each row
-represents a sample from the Markov chain. The first column is the generation in the chain at
-the point the sample was taken. The second column is the number of shifts on the tree at that
-point in the chain. A value of zero means there are no shifts so only a single event, the root
-event, is present on the tree. Columns three and four contain the log prior probability of the
-model parameters and the log likelihood of the data given the model parameters, respectively.
-Column five contains the state of the parameter controlling the rate at which shifts occur on
-the tree. BAMM models rate shifts using a compound Poisson process, so this parameter is
-simply the rate parameter of a poisson distribution (:ref:`bammtheory`). The last column
-is the acceptance rate of the chain, or how frequently proposals to change the state of the
-chain are accepted. Ideally this should be around 0.234.
+If that fails you can get the package directly from the website http://cran.r-project.org. Once installed you can use the functions in the coda package by loading it with::
+> library(coda) 
 
-BAMM also generates a ``run_info.txt`` file that contains the time, random number seed, and model
-settings when the program was executed. 
+A quick way to assess convergence is to take a look at the effective sample size of the log likelihood or model parameters. Samples from a Markov chain are autocorrelated and this autocorrelation means samples are not independent. Effective sample size is the sample size after accounting for this non-independence. A low effective sample size means that samples are highly autocorrelated and the chain is not "mixing" well, which is an indication that it is has probably not converged to the posterior distribution you're hoping to sample from. We will calculate the effective sample size of the log likelihood and the number of regime shifts. First read in the MCMC outfile::
+> # this is a comment in R
+> # fn is a character string with the path to your mcmc_outfile text file, e.g. "mcmc_out.txt"
+> mcmc = read.csv(fn)
+
+To take a look at the head of this file do::
+> head(mcmc)
+
+So the number of event shifts is the second column and the log likelihood is the fourth column. Before calculating the effective sample size we should discard the beginning of the chain to reduce autocorrelation from the starting configuration. It can be helpful to plot a trace of the log likelihood for deciding on a good cutoff value for this burn-in period::
+> plot(mcmc[,1], mcmc[,4])
+> # suppose we think ten percent is satisfactory
+>
+> nsamples = nrow(mcmc)
+> postburn = 0.1 * nsamples + 1
+> mcmc = mcmc[postburn:nsamples, ]
+
+We can now calculate effective sample size using the coda function::
+> effectiveSize(mcmc[,2]) 
+> effectiveSize(mcmc[,4])
+
+In general these should be at least 200. Assessing convergence can be complicated and you are encouraged to research other methods.
+
+Once you're satisfied about convergence you are ready to work with the event data file. To work with the data in this file use the utility functions in the BAMMtools for R. This can be downloaded just like in the example above.
+
+Once you've loaded BAMMtools in your R session you can take a look at the main results::
+> # fn is character string specifying the path to your event data file, e.g. "event_data.txt"
+> # mytree is a phylogenetic tree is ape format. see ape documentation for the function read.tree
+>
+> edata = getEventData(mytree, fn, burnin = 0.1, type = "diversification")
+>
+> # if you are working with BAMM trait data specify type = "trait"
+
+Now that the event data is loaded we can take a look at what it contains. For an explanation of the R object that BAMMtools uses to work with the data simply type::
+> ?getEventData
+
+To quickly summarize your data do::
+> summary(edata)
+
+This will tell you how many posterior samples were analyzed as well as the number of shifts in the maximum shift credibility tree and the tipward node(s) (in ape format) of the branch(es) where those shifts occur. It will also print out the posterior distribution of the number of shifts so you can gauge the relative support for models with different numbers of events. Note that a value of zero means there are no shifts and the single root event describes the entire tree.
+
+To visualize how speciation rates or rates of trait evolution vary through time and among lineages simply type::
+> plot(edata)
+
+You can also plot a polarized version of the tree::
+> plot(edata, method = "polar")
+
+This calculates the mean of the marginal posterior density of rates of speciation of trait evolution for many different points along each branch and maps those rates to colors such that cool colors represent slow rates and warm colors represent fast rates. If you want to take a look at just a single posterior sample rather than averaging over all posterior samples this is possible::
+> mysample = 1
+> plot(edata, method = "polar", index = mysample)
+
+If this posterior sample happens to contain shifts you can add these to the plotted tree::
+> addBAMMshifts(edata, method = "polar", index = mysample)
+
+Many more types of analysis and visualization are available and you are encouraged to explore the documentation for BAMMtools.
