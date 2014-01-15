@@ -15,8 +15,7 @@ BAMM Documentation
    sometheory
    installation   
    quickstart
-   configuration_speciation
-   configuration_trait
+   configuration
    postprocess
    advanced
    faq
