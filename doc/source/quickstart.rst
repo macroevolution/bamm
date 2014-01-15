@@ -116,7 +116,7 @@ You can also plot a polarized version of the tree::
 
 	> plot(edata, method = "polar")
 
-This calculates the mean of the marginal posterior density of rates of speciation of trait evolution for many different points along each branch and maps those rates to colors such that cool colors represent slow rates and warm colors represent fast rates. If you want to take a look at just a single posterior sample rather than averaging over all posterior samples this is possible::
+This calculates the mean of the marginal posterior density of rates of speciation or trait evolution for many different points along each branch and maps those rates to colors such that cool colors represent slow rates and warm colors represent fast rates. If you want to take a look at just a single posterior sample rather than averaging over all posterior samples this is possible::
 
 	> mysample <- 1
 	> plot(edata, method = "polar", index = mysample)
