@@ -80,6 +80,16 @@ General
     filenames.
     If ``0``, do not run if output files already exist with identical filenames.
 
+Priors
+......
+
+``poissonRatePrior``
+    The rate parameter of the exponential prior on the rate parameter
+    of the Poisson process. Smaller values favor greater numbers of distinct
+    evolutionary regimes on the tree. Suggested values:
+    ``poissonRatePrior = 1.0`` for smaller datasets (< 500 tips) or
+    ``poissonRatePrior = 0.1`` or even ``0.2`` for large (5000+ tips).
+
 MCMC Simulation
 ...............
 
