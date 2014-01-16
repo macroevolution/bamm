@@ -124,6 +124,10 @@ MCMC Simulation
     can be reconstructed from this output. See :ref:`bammtools`
     for more information on working with this output format.
 
+``updateEventLocationScale``
+    Scale parameter for updating local moves of events on the tree.
+    This defines the width of the sliding window proposal.
+
 ``updateEventRateScale``
     Scale parameter (proportional shrinking/expanding) for updating
     the rate parameter of the Poisson process.
