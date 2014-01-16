@@ -38,7 +38,8 @@ General
 
 ``treefile``
     The file path of the input tree (in Newick format).
-    For speciation/extinction analyses, the tree must be ultrametric and fully bifurcating.
+    For speciation/extinction analyses, the tree must be ultrametric
+    and fully bifurcating.
 
 ``runInfoFilename``
     The path of the file to output general information about the current run.
