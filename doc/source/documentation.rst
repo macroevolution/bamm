@@ -12,8 +12,8 @@ BAMM Documentation
 
    introduction
    bammgraph
-   installation   
    quickstart
+   settingup
    configuration
    postprocess
    advanced
