@@ -12,7 +12,6 @@ BAMM Documentation
 
    introduction
    bammgraph
-   sometheory
    installation   
    quickstart
    configuration
