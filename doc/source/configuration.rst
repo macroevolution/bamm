@@ -151,7 +151,7 @@ useGlobalSamplingProbability
   If false (0), will look for a file that specifies clade-specific corrections for incomplete sampling (sampleProbsFilename).
   
 globalSamplingProbability
-  Percentage of total number of species sampled in your phylogeny (between 0 and 1).
+  Percentage of total number of species sampled in given phylogeny (between 0 and 1).
 
 sampleProbsFilename
   Specifies a file with clade-specific corrections for incomplete sampling.
@@ -169,7 +169,7 @@ muInitPrior
   Exponential prior on extinction.
 
 muShiftPrior
-  *Description not yet available.*
+  Prior on the extinction rate change parameter.
 
 segLength
   *Description not yet available.*
@@ -178,10 +178,10 @@ General MCMC Simulation Settings & Output Options
 ..................................................
 
 lambdaOutfile
-  Branch-specific speciation rates will be written to this file as newick-formatted trees.
+  Branch-specific speciation rates will be written to this file as Newick-formatted trees.
 
 muOutfile
-  Branch-specific extinction rates will be written to this file as newick-formatted trees.
+  Branch-specific extinction rates will be written to this file as Newick-formatted trees.
 
 lambdaNodeOutfile
   *Description not yet available.*
