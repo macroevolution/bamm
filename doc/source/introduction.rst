@@ -5,6 +5,8 @@ Introduction
 
 (General comments about purpose and rationale.)
 
+.. _bammtheory:
+
 Theoretical Background
 ----------------------
 
