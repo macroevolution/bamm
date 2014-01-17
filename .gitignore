@@ -12,6 +12,9 @@
 *.la
 *.a
 
+# Build directories
+build
+
 # Other junk
 .DS_Store
 ._*

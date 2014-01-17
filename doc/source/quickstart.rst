@@ -11,35 +11,31 @@ if your control file is named ``divcontrol.txt``, run the following::
 Data files and input
 --------------------
 
-BAMM comes with example control files (located in the directory examples).
-Use these as templates to quickly get your data analyzed by BAMM.
+BAMM comes with example control files (located in the directory examples). Use these as templates to quickly get your data analyzed by BAMM.
 
-Currently, BAMM can process two types of models:
-speciation-extinction analysis or phenotypic evolution analysis.
-The model type is specified by the parameter ``modeltype`` in the control file.
+Currently, BAMM can process two types of models: speciation-extinction analysis or phenotypic evolution analysis. The model type is specified by the parameter ``modeltype`` in the control file.
 
-Specify the file path of the Newick-formatted tree with ``treefile``.
-All file paths are relative to the directory in which bamm was executed.
+Specify the file path of the Newick-formatted tree with ``treefile``. All file paths are relative to the directory in which bamm was executed.
 
 Speciation-extinction analyses
 ******************************
 
-(To be done.)
+Specify ``modeltype = speciationextinction``.
 
 Incomplete taxon sampling
 *************************
 
-(To be done.)
+For speciation-extinction analyses BAMM can analytically account for incomplete taxon sampling that might otherwise bias results. Two methods are available. A global correction requires specifying ``useGlobalSamplingProbability = 1`` and giving a value for ``globalSamplingProbability`` between 0 and 1, which is the percentage of the total number of species sampled in your phylogeny. Clade-specific corrections can be performed by setting ``useGlobalSamplingProbability = 0`` and specifying a path in ``sampleProbsFilename`` to a file that contains species-specific probabilities of sampling for each species in your phylogeny. This should be a two column tab delimited text file with the species name in column one and the sampling probability in column two.   
 
 Phenotypic evolution analyses
 *****************************
 
-Specify the file path of the trait data in ``traitfile``.
+Specify ``modeltype = trait`` and specify the file path of the trait data in ``traitfile``.
 
 Setting up the control file
 ---------------------------
 
-(To be done.)
+All parameters in the control file have default values. It is unlikely that these will be appropriate in all situations. Several parameters deserve careful consideration. The ``poissonRatePrior`` will determine the expected number of events on your tree. Smaller values will favor a greater number of events and larger values will favor a smaller number of events. The MCMC scaling operators that adjust parameter values may also exert important effects because if they are misspecified they will generate poor proposals that are rarely accepted. Pay attention to the acceptance frequency as the chain runs. Ideally this should be around 0.234 but values up to 0.4 are probably OK. If the acceptance frequency is too low or too high you should consider looking at the MCMC scaling operators and tweaking their values. Also pay attention to how long you will run the chain, specified by ``numberGenerations``, and how frequently you will sample from the chain, specified by ``mcmcWriteFreq`` and ``eventDataWriteFreq``. If you sample very frequently from the chain samples will be more autocorrelated than if you sample less frequently.
 
 Running the program
 -------------------
@@ -51,9 +47,11 @@ If your control file is named ``divcontrol.txt``, run BAMM as follows::
 Understanding BAMM output
 -------------------------
 
-The main results from a BAMM run are written to the file specified by ``eventDataOutfile`` in the control file.  If ``outName`` is also specified in the control file it will be prefixed to the name in ``eventDataOutfile``. So if ``outName = BAMM`` and ``eventDataOutfile = event_data.txt`` BAMM results are written to a file named *BAMM_event_data.txt*. 
+As BAMM runs output is sent to the terminal window, which is written to the file specified in ``mcmcOutfile``. This file will have information about the number of events on the tree, the log likelihood of the model, the acceptance frequency, etc. You can use this output for assessing how well the chain is mixing and whether or not it has converged at the end of a run.
 
-Before diving too deeply into the results in this file you should first assess whether or not the Markov chain converged. The information needed to do that is written to the file specified by ``mcmcOutfile`` in the control file. There are several programs available for assessing convergence of Markov chains but an easy one to use is the coda package for R. Assuming you are running R you can install coda by simply typing::
+The main results from a BAMM run are written to the file specified by ``eventDataOutfile`` in the control file.  If ``outName`` is also specified in the control file it will be prefixed to the name in ``eventDataOutfile``. 
+
+Before diving too deeply into the results in this file you should first assess whether or not the Markov chain converged. Remember that the information needed to do that is written to the file specified by ``mcmcOutfile`` in the control file. There are several programs available for assessing convergence of Markov chains but an easy one to use is the coda package for R. Assuming you are running R you can install coda by simply typing::
 	
 	> install.packages("coda")
 
