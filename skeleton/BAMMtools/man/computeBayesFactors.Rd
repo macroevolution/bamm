@@ -1,171 +1,70 @@
 \name{computeBayesFactors}
 \alias{computeBayesFactors}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-temp
-%%  ~~function to do ... ~~
+computeBayesFactors
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Computes pairwise Bayes factors for a set of macroevolutionary models sampled using \code{BAMM}, using MCMC simulation output.
 }
 \usage{
-computeBayesFactors(postdata, priordata, burnin = 0.1, modelset = NULL, threshpost = 1, threshprior = 0, nbprior = FALSE, strict = FALSE)
+computeBayesFactors(postdata, priordata, burnin = 0.1, modelset = NULL, 
+	threshpost = 1, threshprior = 0, nbprior = FALSE, strict = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{postdata}{
-%%     ~~Describe \code{postdata} here~~
+Filename for the MCMC output file from a \code{BAMM} run. Alternatively, a dataframe containing this information.
 }
   \item{priordata}{
-%%     ~~Describe \code{priordata} here~~
+Filename for the \code{BAMM}-generated output file containing a simulation of shifts under the prior. Alternatively, a dataframe containing this information.
 }
   \item{burnin}{
-%%     ~~Describe \code{burnin} here~~
+What fraction of samples to discard from postdata as burnin?
 }
   \item{modelset}{
-%%     ~~Describe \code{modelset} here~~
+Integer set of models for which you wish to compute Bayes factors. An integer value of k implies a model with k rate shifts.
 }
   \item{threshpost}{
-%%     ~~Describe \code{threshpost} here~~
+Only compute Bayes factors for models sampled at least this many times in the posterior.
 }
   \item{threshprior}{
-%%     ~~Describe \code{threshprior} here~~
+Only compute Bayes factors for models sampled at least this many times during simulation of the prior.
 }
-  \item{nbprior}{
-%%     ~~Describe \code{nbprior} here~~
-}
+
   \item{strict}{
-%%     ~~Describe \code{strict} here~~
+If TRUE, requires that both models i and j be sampled at least \code{threshpost} and \code{threshprior} times. Otherwise, only requires that one of the target models meet this condition to be included in the calculation.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+This function returns a matrix of pairwise Bayes factors, where the Bayes factor is the ratio of marginal likelihoods between two models M_{i} and M_{j}. Numerator models are given as rows, and denominator models as columns. Row names and column names give the number of shifts in the corresponding model. Suppose you have an output matrix with row and column names 0:3 (0, 1, 2, 3). Model 0 is a model with just a single process (starting at the root), and no among-lineage rate heterogeneity. 
+
+If \code{computeBayesFactors} gives a matrix \code{mm}, and \code{mm[2,1]} is 10.0, this implies Bayes factor evidence of 10 in favor of the 2nd row model (a model with 1 process; e.g., \code{rownames(mm)[2]} over the first column model (a model with a single process).
+
+
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A matrix of pairwise Bayes factors between models.
 }
 \references{
-%% ~put references to the literature/web site here ~
+
+
 }
 \author{
-%%  ~~who you are~~
+
+Dan Rabosky
+
 }
 \note{
-%%  ~~further notes~~
-}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+}
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (postdata, priordata, burnin = 0.1, modelset = NULL, 
-    threshpost = 1, threshprior = 0, nbprior = FALSE, strict = FALSE) 
-{
-    if (class(postdata) == "character") {
-        post <- read.csv(postdata, header = T)
-    }
-    else if (class(postdata) == "data.frame") {
-        post <- postdata
-    }
-    else {
-        stop("invalid postdata argument (wrong class) in computeBayesFactors\n")
-    }
-    if (class(priordata) == "character") {
-        prior <- read.csv(priordata, header = T)
-    }
-    else if (class(priordata) == "data.frame") {
-        prior <- priordata
-    }
-    else {
-        stop("invalid priordata argument (wrong class) in computeBayesFactors\n")
-    }
-    post <- post[floor(burnin * nrow(post)):nrow(post), ]
-    prior <- prior[floor(burnin * nrow(prior)):nrow(prior), ]
-    if (is.null(modelset)) {
-        modelset <- unique(c(post[, 2], prior[, 2]))
-    }
-    else if (length(modelset) < 2) {
-        stop("\nInvalid modelset argument. This must be a vector of length > 1")
-    }
-    else {
-    }
-    if (nbprior) {
-        subs <- prior[, 2]
-        if (length(subs) > 5000) {
-            subs <- subs[sample(1:length(subs), size = 5000)]
-        }
-        resnb <- fitNegativeBinomial(subs)
-        p1 <- resnb$size
-        p2 <- resnb$mu
-        tprior <- dnbinom(x = modelset, size = p1, mu = p2)
-        names(tprior) <- as.character(modelset)
-    }
-    else {
-        tprior <- table(prior[, 2])
-    }
-    tpost <- table(post[, 2])
-    modelset <- sort(modelset)
-    mset <- as.character(modelset)
-    postf <- numeric(length(modelset))
-    names(postf) <- mset
-    inboth <- intersect(mset, names(tpost))
-    postf[inboth] <- tpost[inboth]
-    priorf <- numeric(length(modelset))
-    names(priorf) <- mset
-    inboth <- intersect(mset, names(tprior))
-    priorf[inboth] <- tprior[inboth]
-    mm <- matrix(NA, nrow = length(mset), ncol = length(mset))
-    rownames(mm) <- mset
-    colnames(mm) <- mset
-    if (length(modelset) < 2) {
-        stop("\nError. Invalid model choice - is rank of specified model too high?\n")
-    }
-    for (i in 1:length(modelset)) {
-        for (j in 1:length(modelset)) {
-            if (nbprior) {
-                prior_odds <- priorf[i]/priorf[j]
-            }
-            else {
-                prior_odds <- (priorf[i] + 1)/(priorf[j] + 1)
-            }
-            post_odds <- (postf[i] + 1)/(postf[j] + 1)
-            ix <- modelset[i]
-            ij <- modelset[j]
-            if (!strict) {
-                isGood1 <- (sum(post[, 2] == ix) >= threshpost) | 
-                  (sum(post[, 2] == ij) >= threshpost)
-                isGood2 <- (sum(prior[, 2] == ix) >= threshprior) | 
-                  (sum(prior[, 2] == ij) >= threshprior)
-                if (isGood1 & isGood2) {
-                  mm[i, j] <- post_odds/prior_odds
-                }
-            }
-            else {
-                isGood1 <- (sum(post[, 2] == ix) >= threshpost) & 
-                  (sum(post[, 2] == ij) >= threshpost)
-                isGood2 <- (sum(prior[, 2] == ix) >= threshprior) & 
-                  (sum(prior[, 2] == ij) >= threshprior)
-                if (isGood1 & isGood2) {
-                  mm[i, j] <- post_odds/prior_odds
-                }
-            }
-        }
-    }
-    return(mm)
-  }
+data(mcmc.whales)
+data(prior.whales)
+computeBayesFactors(mcmc.whales, prior.whales, burnin=0.1)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
+\keyword{ models }

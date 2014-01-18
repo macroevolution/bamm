@@ -1,8 +1,8 @@
 \name{addBAMMshifts}
 \alias{addBAMMshifts}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-Add BAMM shifts to a plotted tree
+Add BAMM-inferred rate shifts to a phylogeny plot
 }
 \description{
 Adds symbols to a plotted tree to mark the location(s) where there is a shift in the
@@ -11,19 +11,19 @@ macroevolutionary dynamics of diversification or trait evolution.
 \usage{
 addBAMMshifts(ephy, method, index, cex = 1, pch = 21, col = 1, bg = 2, multi = FALSE)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{ephy}{
 an object of class \code{bammdata}.
 }
   \item{method}{
-a character string indicating the method used in plotting. May be "polar" or "phylogram".
+a character string indicating the method used in plotting. Must be "polar" or "phylogram".
 }
   \item{index}{
 an integer indicating which posterior sample to use for adding shifts to the plotted tree.
 }
   \item{cex}{
-a numeric indicating the character expansion of the plotted points.
+a numeric indicating the character expansion ("size") of the plotted points.
 }
   \item{pch}{
 an integer indicating the choice of plotting symbol.
@@ -39,26 +39,23 @@ a logical indicating whether the device is configured for multi-panel plotting.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+
+Any given sample from the posterior distribution sampled using \code{BAMM} contains a potentially unique configuration of rate shifts and associated parameters. There is no single "best" rate shift, but rather a set of shift configurations (and associated parameters) - along with their relative probabilities - sampled with MCMC. This function enables the user to plot the locations of shifts sampled with \code{BAMM} for a given sample from the posterior. 
+
+Of particular relevance is the function \link[BAMMtools]{}
+
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+
 }
 \references{
-%% ~put references to the literature/web site here ~
+
 }
 \author{
 Mike Grundler
 }
 \note{
-%%  ~~further notes~~
 }
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link{getShiftNodesFromIndex}}, \code{\link{plot.bammdata}}
@@ -66,8 +63,8 @@ Mike Grundler
 \examples{
 	
 library(BAMMtools)
-data(cetaceans, events.cetaceans)
-ephy = getEventData(cetaceans, events.cetaceans, burnin=0.25)
+data(whales, events.whales)
+ephy = getEventData(whales, events.whales, burnin=0.25)
 
 #adding shifts to tree for specific posterior samples
 plot(ephy, method="polar", index=5)
@@ -81,7 +78,5 @@ for (i in 1:6) {
 	addBAMMshifts(ephy,method="phylogram",index=samples[i],multi=TRUE)	
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
+\keyword{ graphics }

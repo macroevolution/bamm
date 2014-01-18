@@ -46,5 +46,4 @@ A vector of \code{length(x)} colors.
 \examples{
 	
 }
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
+\keyword{ graphics }

@@ -3,12 +3,11 @@
 \alias{BAMMtools}
 \docType{package}
 \title{
-Package does stuff
-~~ package title ~~
+BAMMtools
 }
 \description{
-More about what it does (maybe more than one line)
-~~ A concise (1-5 lines) description of the package ~~
+An R package for the analysis and visualization of complex macroevolutionary dynamics. Functions in \code{BAMMtools} are oriented entirely around analysis of results obtained using the \code{BAMM} software (\code{www.bamm-project.org}).
+
 }
 \details{
 \tabular{ll}{
@@ -16,28 +15,18 @@ Package: \tab BAMMtools\cr
 Type: \tab Package\cr
 Version: \tab 1.0\cr
 Date: \tab 2014-01-05\cr
-License: \tab What license is it under?\cr
+License: \tab GPL version 2 or greater?\cr
 }
-~~ An overview of how to use the package, including the most important functions ~~
-}
-\author{
-Who wrote it
 
-Maintainer: Who to complain to <yourfault@somewhere.net>
-~~ The author and/or maintainer of the package ~~
+}
+
+\author{
+Dan Rabosky, Mike Grundler, Pascal Title, Joseph Brown, Carlos Anderson, Jeff Shi
+
+Maintainer: Dan Rabosky <dan.rabosky@gmail.com>
 }
 \references{
-~~ Literature or other references for background information ~~
+\url{www.bamm-project.org}
 }
 
-\keyword{ package 
-~~ Optionally other standard keywords, one per line, from file KEYWORDS in the R ~~
-~~ documentation directory ~~
-}
-\seealso{
-~~ Optional links to other man pages, e.g. ~~
-~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
-}
-\examples{
-~~ simple examples of the most important functions ~~
-}
+\keyword{ package }
