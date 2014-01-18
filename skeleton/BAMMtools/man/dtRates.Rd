@@ -2,7 +2,7 @@
 \alias{dtRates}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Calculate rate changes on a phylogeny
+Calculate macroevolutionary rate changes on a phylogeny from \code{BAMM} output
 }
 \description{
 \code{dtRates} calculates the mean of the marginal posterior density 
@@ -61,15 +61,14 @@ Mike Grundler
 If there are zero length branches in the input tree \code{NA}s will result. 
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
+ 
 \seealso{
 \code{\link{plot.bammdata}}
 }
 \examples{
 library(BAMMtools)
-data(cetaceans, events.cetaceans)
-ephy = getEventData(cetaceans, events.cetaceans, burnin=0.25)
+data(whales, events.whales)
+ephy = getEventData(whales, events.whales, burnin=0.25)
 
 #use all posterior samples
 ephy = dtRates(ephy, tau=0.01)
@@ -77,7 +76,5 @@ ephy = dtRates(ephy, tau=0.01)
 #use specified range of posterior samples
 ephy = dtRates(ephy, tau=0.01, ism=50:150)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+ 
+\keyword{ graphics }

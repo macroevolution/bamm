@@ -1,116 +1,68 @@
 \name{getCladeRates}
 \alias{getCladeRates}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-temp
-%%  ~~function to do ... ~~
+Compute clade-specific mean rates
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Computes marginal clade-specific rates of speciation, extinction, or (if relevant) trait evolution from \code{BAMM} output. 
 }
 \usage{
-getCladeRates(ephy, node = NULL, nodetype = "include", verbose = FALSE)
+getCladeRates(ephy, node = NULL, nodetype = "include")
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{ephy}{
-%%     ~~Describe \code{ephy} here~~
+an object of class \code{bammdata}
 }
   \item{node}{
-%%     ~~Describe \code{node} here~~
+If computing rates for a specific portion of tree, the node subtending the relevant subtree
 }
   \item{nodetype}{
-%%     ~~Describe \code{nodetype} here~~
+Either "include" or "exclude". If \code{nodetype = "include"}, the rates returned by the function will be for the subtree defined by \code{node}. If \code{nodetype = "exclude"}, will compute mean rates for the tree after excluding the subtree defined by \code{node}.
 }
   \item{verbose}{
-%%     ~~Describe \code{verbose} here~~
+If \code{TRUE}, will print the sample index as mean rates are computed for each sample from posterior. Potentially useful for extremely large trees.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Computes the time-weighted mean evolutionary rate for a given clade. Conversely, one can compute the rate for a given phylogeny while excluding a clade; this operation will give the "background" rate. It is important to understand several aspects of these mean rates. First, rates in the \code{BAMM} framework are not constant through time. Hence, the function computes the mean time-integrated rates across the subtree. Operationally, this is done by integrating the speciation rate with respect to time along each branch in the subtree. These time-integrated rates are then summed, and the sum is divided by the total sum of branch lengths for the subtree. 
+
+The function computes a rate for each sample in the posterior, and returns a list of rate vectors. Each rate in the corresponding vector is a mean rate for a particular sample from the posterior. Hence, you can think of the return value for this function as an estimate of the marginal distribution of rates for the focal clade. You can compute means, medians, quantiles, etc from these vectors. 
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A list with the following components:
+  \item{lambda}{
+A vector of speciation rates (if applicable), with the i'th rate corresponding to the mean rate from the i'th sample in the posterior
+}
+  \item{mu}{
+A vector of extinction rates (if applicable), with the i'th rate corresponding to the mean rate from the i'th sample in the posterior
+}
+  \item{beta}{
+A vector of phenotypic rates (if applicable), with the i'th rate corresponding to the mean rate from the i'th sample in the posterior
+}
 }
 \references{
-%% ~put references to the literature/web site here ~
+\code{www.bamm-project.org}
 }
 \author{
-%%  ~~who you are~~
+Dan Rabosky
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+ 
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+data(events.whales)
+data(whales)
+ed <- getEventData(whales, events.whales)
+all_rates <- getCladeRates(ed)
 
-## The function is currently defined as
-function (ephy, node = NULL, nodetype = "include", verbose = FALSE) 
-{
-    if (!"bammdata" \%in\% class(ephy)) {
-        stop("Object ephy must be of class bammdata\n")
-    }
-    if (is.null(node)) {
-        nodeset <- ephy$edge[, 2]
-    }
-    else if (!is.null(node) & nodetype == "include") {
-        nodeset <- getDesc(ephy, node)$desc_set
-    }
-    else if (!is.null(node) & nodetype == "exclude") {
-        nodeset <- setdiff(ephy$edge[, 2], getDesc(ephy, node)$desc_set)
-    }
-    else {
-        stop("error in getRateThroughTimeMatrix\n")
-    }
-    lambda_vector <- numeric(length(ephy$eventBranchSegs))
-    mu_vector <- numeric(length(ephy$eventBranchSegs))
-    weights <- "branchlengths"
-    for (i in 1:length(ephy$eventBranchSegs)) {
-        if (verbose) {
-            cat("Processing sample ", i, "\n")
-        }
-        esegs <- ephy$eventBranchSegs[[i]]
-        esegs <- esegs[esegs[, 1] \%in\% nodeset, ]
-        events <- ephy$eventData[[i]]
-        events <- events[order(events$index), ]
-        relsegmentstart <- esegs[, 2] - ephy$eventData[[i]]$time[esegs[, 
-            4]]
-        relsegmentend <- esegs[, 3] - ephy$eventData[[i]]$time[esegs[, 
-            4]]
-        lam1 <- ephy$eventData[[i]]$lam1[esegs[, 4]]
-        lam2 <- ephy$eventData[[i]]$lam2[esegs[, 4]]
-        mu1 <- ephy$eventData[[i]]$mu1[esegs[, 4]]
-        mu2 <- ephy$eventData[[i]]$mu2[esegs[, 4]]
-        seglengths <- esegs[, 3] - esegs[, 2]
-        wts <- seglengths/sum(seglengths)
-        lamseg <- timeIntegratedBranchRate(relsegmentstart, relsegmentend, 
-            lam1, lam2)/seglengths
-        museg <- timeIntegratedBranchRate(relsegmentstart, relsegmentend, 
-            mu1, mu2)/seglengths
-        lambda_vector[i] <- sum(lamseg * wts)
-        mu_vector[i] <- sum(museg * wts)
-    }
-    if (ephy$type == "diversification") {
-        return(list(lambda = lambda_vector, mu = mu_vector))
-    }
-    if (ephy$type == "trait") {
-        return(list(beta = lambda_vector))
-    }
-  }
+mean(all_rates$lambda)
+mean(all_rates$mu)
+# joint density of mean speciation and extinction rates:
+plot(all_rates$mu ~ all_rates$lambda)
+
+# clade specific rates: here for Dolphin subtree:
+dol_rates <- getCladeRates(ed, node=140)
+mean(dol_rates$lambda)
+mean(dol_rates$mu)
+
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+ 
+\keyword{ models }
