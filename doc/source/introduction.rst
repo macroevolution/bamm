@@ -3,35 +3,6 @@
 Introduction
 ============
 
-(General comments about purpose and rationale.)
-
-.. _bammtheory:
-
-Theoretical Background
-----------------------
-
-Event-Driven Model for Rate Variation
-.....................................
-
-(Under construction.)
-
-Reversible Jump MCMC
-....................
-
-(Under construction.)
-
-Functional Models for Rate Variation
-....................................
-
-(Under construction.)
-
-.. _rateshiftstheory:
-
-The Meaning of Rate Shifts
-..........................
-
-(Under construction.)
-
 Bayesian Analysis of Macroevolutionary Mixtures
 -----------------------------------------------
   
@@ -118,3 +89,31 @@ phylogenetic datasets that would be too large to handle with R alone.
    the plot.bammdata function from the *BAMMtools* package in R. Dataset in
    this example is taken from M. Steeman *et al.*, *Syst. Biol.* xxx:xxxx,
    2009). 
+   
+
+.. _bammtheory:
+
+Theoretical Background
+----------------------
+
+Event-Driven Model for Rate Variation
+.....................................
+
+(Under construction.)
+
+Reversible Jump MCMC
+....................
+
+(Under construction.)
+
+Functional Models for Rate Variation
+....................................
+
+(Under construction.)
+
+.. _rateshiftstheory:
+
+The Meaning of Rate Shifts
+..........................
+
+(Under construction.)

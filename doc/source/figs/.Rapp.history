@@ -1,0 +1,119 @@
+library(BAMMtools)
+ed <- getEventData(phy=cetaceans, eventdata = vents.cetaceans, burnin=0.1);
+data(cetaceans);#
+#
+ed <- getEventData(phy=cetaceans, eventdata = vents.cetaceans, burnin=0.1);
+library(BAMMtools);#
+#
+data(cetaceans);#
+#
+ed <- getEventData(phy=cetaceans, eventdata = events.cetaceans, burnin=0.1);
+data(cetaceans);#
+data(events.cetaceans);#
+#
+ed <- getEventData(phy=cetaceans, eventdata = events.cetaceans, burnin=0.1);
+ed
+names(ed)
+plot.bammdata(ed, method='polar', pal='temperature');
+plot.bammdata(ed, method='polar', pal='temperature', lwd=2);
+library(BAMMtools);#
+#
+data(cetaceans);#
+data(events.cetaceans);#
+#
+ed <- getEventData(phy=cetaceans, eventdata = events.cetaceans, burnin=0.1);#
+#
+# This plots the #
+plot.bammdata(ed, method='polar', pal='temperature', lwd=2);
+dir()
+library(BAMMtools);#
+data(events.cetaceans);#
+data(cetaceans);#
+#
+## Process the event data#
+ed <- getEventData(cetaceans, events.cetaceans, burnin=0.25, nsamples=200, verbose=T);
+bmat <- getRateThroughTimeMatrix(ed);#
+bmat.dolphin <- getRateThroughTimeMatrix(ed, node=140, nodetype='include');#
+bmat.background <- getRateThroughTimeMatrix(ed, node=140, nodetype='exclude');
+quartz.options(height=10, width=10);#
+par(mfrow=c(2,2));#
+#
+plotRateThroughTime(bmat, ratetype='speciation', intervalCol='red', avgCol='red', start.time = 0, end.time=35);#
+plotRateThroughTime(bmat, ratetype='speciation', intervalCol='red', avgCol='red', start.time = NULL, end.time=NULL);
+?plotRateThroughTime
+quartz.options(height=10, width=10);#
+par(mfrow=c(2,2));
+plotRateThroughTime(bmat, intervalCol='red', avgCol='red', start.time = 0, end.time=35);
+plotRateThroughTime(bmat, intervalCol='red', avgCol='red');
+plotRateThroughTime(bmat.dolphin, intervalCol='blue', avgCol='blue');
+?plotRateThroughTime
+quartz.options(height=10, width=10);#
+par(mfrow=c(2,2));#
+#
+plotRateThroughTime(bmat, intervalCol='red', avgCol='red', ylim=c(0,1.2));#
+#
+plotRateThroughTime(bmat.dolphin, intervalCol='blue', avgCol='blue', ylim=c(0, 1.2));
+dim(bmat.dolphin)
+class(bmat.dolphin)
+print(bmat.dolphin)
+names(bmat)
+dim(bmat$lambda)
+?getRateThroughTimeMatrix
+bmat.dolphin$lambda[1,]
+bmat.dolphin$lambda[,1]
+quartz.options(height=4, width=10);#
+par(mfrow=c(1,3));#
+#
+plotRateThroughTime(bmat, intervalCol='red', avgCol='red', ylim=c(0,1.2));#
+#
+plotRateThroughTime(bmat.dolphin, intervalCol='blue', avgCol='blue', ylim=c(0, 1.2));#
+#
+plotRateThroughTime(bmat.background, intervalCol='darkgreen', avgCol='darkgreen', ylim=c(0, 1.2));
+quartz.options(height=4, width=10);#
+par(mfrow=c(1,3));#
+#
+plotRateThroughTime(bmat, intervalCol='red', avgCol='red', ylim=c(0,1));#
+#
+plotRateThroughTime(bmat.dolphin, intervalCol='blue', avgCol='blue', ylim=c(0, 1));#
+#
+plotRateThroughTime(bmat.background, intervalCol='darkgreen', avgCol='darkgreen', ylim=c(0, 1));
+quartz.options(height=4, width=10);#
+par(oma=c(1,1,4,1));#
+#
+par(mfrow=c(1,3));#
+#
+plotRateThroughTime(bmat, intervalCol='red', avgCol='red', ylim=c(0,1));#
+mtext(side)#
+#
+plotRateThroughTime(bmat.dolphin, intervalCol='blue', avgCol='blue', ylim=c(0, 1));#
+#
+plotRateThroughTime(bmat.background, intervalCol='darkgreen', avgCol='darkgreen', ylim=c(0, 1));
+mtext(side=3, line=1, "All Cetaceans", cex=2, font=4)
+quartz.options(height=4, width=10);#
+par(oma=c(1,1,4,1));#
+#
+par(mfrow=c(1,3));#
+#
+plotRateThroughTime(bmat, intervalCol='red', avgCol='red', ylim=c(0,1));#
+mtext(side=3, line=1, "All Cetaceans", cex=1, font=4)
+quartz.options(height=4, width=10);#
+par(oma=c(1,1,2,1));#
+#
+par(mfrow=c(1,3));#
+#
+plotRateThroughTime(bmat, intervalCol='red', avgCol='red', ylim=c(0,1));#
+mtext(side=3, line=1, "All Cetaceans", cex=1, font=4)
+quartz.options(height=4, width=10);#
+par(oma=c(1,1,2,1));#
+#
+par(mfrow=c(1,3));#
+#
+plotRateThroughTime(bmat, intervalCol='red', avgCol='red', ylim=c(0,1));#
+mtext(side=3, line=1, "All Cetaceans", cex=1.2, font=4);#
+#
+plotRateThroughTime(bmat.dolphin, intervalCol='blue', avgCol='blue', ylim=c(0, 1));#
+mtext(side=3, line=1, "Dolphins", cex=1.2, font=4);#
+#
+plotRateThroughTime(bmat.background, intervalCol='darkgreen', avgCol='darkgreen', ylim=c(0, 1));#
+mtext(side=3, line=1, "Background (non-dolphin)", cex=1.2, font=4);
+quit()
