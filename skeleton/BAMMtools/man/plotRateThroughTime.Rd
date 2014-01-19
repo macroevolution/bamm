@@ -119,9 +119,9 @@ See \code{\link{getEventData}} and \code{\link{getRateThroughTimeMatrix}} to gen
 }
 \examples{
 library(BAMMtools)
-data(events.cetaceans)
-data(cetaceans)
-ephy <- getEventData(cetaceans,events.cetaceans)
+data(events.whales)
+data(whales)
+ephy <- getEventData(whales,events.whales)
 
 #Simple plot of rates through time with default settings
 plotRateThroughTime(ephy)
