@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5. Quick-start guide to BAMM &mdash; bamm 1.0 documentation</title>
+    <title>3. Quick-start guide to BAMM &mdash; bamm 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 1.0 documentation" href="index.html" />
-    <link rel="next" title="6. Speciation-Extinction: Configurations &amp; Settings" href="configuration_speciation.html" />
-    <link rel="prev" title="4. Installation" href="installation.html" /> 
+    <link rel="next" title="4. Setting Up BAMM" href="settingup.html" />
+    <link rel="prev" title="2. BAMM graph gallery" href="bammgraph.html" /> 
   </head>
   <body>
 <div class="pageheader">
@@ -39,10 +39,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="configuration_speciation.html" title="6. Speciation-Extinction: Configurations &amp; Settings"
+          <a href="settingup.html" title="4. Setting Up BAMM"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="installation.html" title="4. Installation"
+          <a href="bammgraph.html" title="2. BAMM graph gallery"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -54,26 +54,26 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">5. Quick-start guide to BAMM</a><ul>
-<li><a class="reference internal" href="#data-files-and-input">5.1. Data files and input</a><ul>
-<li><a class="reference internal" href="#speciation-extinction-analyses">5.1.1. Speciation-extinction analyses</a></li>
-<li><a class="reference internal" href="#incomplete-taxon-sampling">5.1.2. Incomplete taxon sampling</a></li>
-<li><a class="reference internal" href="#phenotypic-evolution-analyses">5.1.3. Phenotypic evolution analyses</a></li>
+<li><a class="reference internal" href="#">3. Quick-start guide to BAMM</a><ul>
+<li><a class="reference internal" href="#data-files-and-input">3.1. Data files and input</a><ul>
+<li><a class="reference internal" href="#speciation-extinction-analyses">3.1.1. Speciation-extinction analyses</a></li>
+<li><a class="reference internal" href="#incomplete-taxon-sampling">3.1.2. Incomplete taxon sampling</a></li>
+<li><a class="reference internal" href="#phenotypic-evolution-analyses">3.1.3. Phenotypic evolution analyses</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#setting-up-the-control-file">5.2. Setting up the control file</a></li>
-<li><a class="reference internal" href="#running-the-program">5.3. Running the program</a></li>
-<li><a class="reference internal" href="#understanding-bamm-output">5.4. Understanding BAMM output</a></li>
+<li><a class="reference internal" href="#setting-up-the-control-file">3.2. Setting up the control file</a></li>
+<li><a class="reference internal" href="#running-the-program">3.3. Running the program</a></li>
+<li><a class="reference internal" href="#understanding-bamm-output">3.4. Understanding BAMM output</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="installation.html"
-                        title="previous chapter">4. Installation</a></p>
+  <p class="topless"><a href="bammgraph.html"
+                        title="previous chapter">2. BAMM graph gallery</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="configuration_speciation.html"
-                        title="next chapter">6. Speciation-Extinction: Configurations &amp; Settings</a></p>
+  <p class="topless"><a href="settingup.html"
+                        title="next chapter">4. Setting Up BAMM</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/quickstart.txt"
@@ -101,35 +101,100 @@
           <div class="body">
             
   <div class="section" id="quick-start-guide-to-bamm">
-<h1>5. Quick-start guide to BAMM<a class="headerlink" href="#quick-start-guide-to-bamm" title="Permalink to this headline">¶</a></h1>
-<p><strong>Under construction</strong></p>
-<p><strong>this section should be oriented entirely towards getting the BAMM command line program to run, quickly and without excessive detail. (save detail for configurations page)</strong></p>
+<span id="quickstart"></span><h1>3. Quick-start guide to BAMM<a class="headerlink" href="#quick-start-guide-to-bamm" title="Permalink to this headline">¶</a></h1>
+<p>To run <tt class="docutils literal"><span class="pre">bamm</span></tt>, you must always specify a <em>contol</em> file. For example,
+if your control file is named <tt class="docutils literal"><span class="pre">divcontrol.txt</span></tt>, run the following:</p>
+<div class="highlight-python"><pre>bamm -c divcontrol.txt</pre>
+</div>
 <div class="section" id="data-files-and-input">
-<h2>5.1. Data files and input<a class="headerlink" href="#data-files-and-input" title="Permalink to this headline">¶</a></h2>
+<h2>3.1. Data files and input<a class="headerlink" href="#data-files-and-input" title="Permalink to this headline">¶</a></h2>
+<p>BAMM comes with example control files (located in the directory examples). Use these as templates to quickly get your data analyzed by BAMM.</p>
+<p>Currently, BAMM can process two types of models: speciation-extinction analysis or phenotypic evolution analysis. The model type is specified by the parameter <tt class="docutils literal"><span class="pre">modeltype</span></tt> in the control file.</p>
+<p>Specify the file path of the Newick-formatted tree with <tt class="docutils literal"><span class="pre">treefile</span></tt>. All file paths are relative to the directory in which bamm was executed.</p>
 <div class="section" id="speciation-extinction-analyses">
-<h3>5.1.1. Speciation-extinction analyses<a class="headerlink" href="#speciation-extinction-analyses" title="Permalink to this headline">¶</a></h3>
-<p><strong>Under construction</strong></p>
+<h3>3.1.1. Speciation-extinction analyses<a class="headerlink" href="#speciation-extinction-analyses" title="Permalink to this headline">¶</a></h3>
+<p>Specify <tt class="docutils literal"><span class="pre">modeltype</span> <span class="pre">=</span> <span class="pre">speciationextinction</span></tt>.</p>
 </div>
 <div class="section" id="incomplete-taxon-sampling">
-<h3>5.1.2. Incomplete taxon sampling<a class="headerlink" href="#incomplete-taxon-sampling" title="Permalink to this headline">¶</a></h3>
-<p><strong>Under construction</strong></p>
+<h3>3.1.2. Incomplete taxon sampling<a class="headerlink" href="#incomplete-taxon-sampling" title="Permalink to this headline">¶</a></h3>
+<p>For speciation-extinction analyses BAMM can analytically account for incomplete taxon sampling that might otherwise bias results. Two methods are available. A global correction requires specifying <tt class="docutils literal"><span class="pre">useGlobalSamplingProbability</span> <span class="pre">=</span> <span class="pre">1</span></tt> and giving a value for <tt class="docutils literal"><span class="pre">globalSamplingProbability</span></tt> between 0 and 1, which is the percentage of the total number of species sampled in your phylogeny. Clade-specific corrections can be performed by setting <tt class="docutils literal"><span class="pre">useGlobalSamplingProbability</span> <span class="pre">=</span> <span class="pre">0</span></tt> and specifying a path in <tt class="docutils literal"><span class="pre">sampleProbsFilename</span></tt> to a file that contains species-specific probabilities of sampling for each species in your phylogeny. This should be a two column tab delimited text file with the species name in column one and the sampling probability in column two.</p>
 </div>
 <div class="section" id="phenotypic-evolution-analyses">
-<h3>5.1.3. Phenotypic evolution analyses<a class="headerlink" href="#phenotypic-evolution-analyses" title="Permalink to this headline">¶</a></h3>
-<p><strong>Under construction</strong></p>
+<h3>3.1.3. Phenotypic evolution analyses<a class="headerlink" href="#phenotypic-evolution-analyses" title="Permalink to this headline">¶</a></h3>
+<p>Specify <tt class="docutils literal"><span class="pre">modeltype</span> <span class="pre">=</span> <span class="pre">trait</span></tt> and specify the file path of the trait data in <tt class="docutils literal"><span class="pre">traitfile</span></tt>.</p>
 </div>
 </div>
 <div class="section" id="setting-up-the-control-file">
-<h2>5.2. Setting up the control file<a class="headerlink" href="#setting-up-the-control-file" title="Permalink to this headline">¶</a></h2>
-<p><strong>Under construction</strong></p>
+<h2>3.2. Setting up the control file<a class="headerlink" href="#setting-up-the-control-file" title="Permalink to this headline">¶</a></h2>
+<p>All parameters in the control file have default values. It is unlikely that these will be appropriate in all situations. Several parameters deserve careful consideration. The <tt class="docutils literal"><span class="pre">poissonRatePrior</span></tt> will determine the expected number of events on your tree. Smaller values will favor a greater number of events and larger values will favor a smaller number of events. The MCMC scaling operators that adjust parameter values may also exert important effects because if they are misspecified they will generate poor proposals that are rarely accepted. Pay attention to the acceptance frequency as the chain runs. Ideally this should be around 0.234 but values up to 0.4 are probably OK. If the acceptance frequency is too low or too high you should consider looking at the MCMC scaling operators and tweaking their values. Also pay attention to how long you will run the chain, specified by <tt class="docutils literal"><span class="pre">numberGenerations</span></tt>, and how frequently you will sample from the chain, specified by <tt class="docutils literal"><span class="pre">mcmcWriteFreq</span></tt> and <tt class="docutils literal"><span class="pre">eventDataWriteFreq</span></tt>. If you sample very frequently from the chain samples will be more autocorrelated than if you sample less frequently.</p>
 </div>
 <div class="section" id="running-the-program">
-<h2>5.3. Running the program<a class="headerlink" href="#running-the-program" title="Permalink to this headline">¶</a></h2>
-<p><strong>Under construction</strong></p>
+<h2>3.3. Running the program<a class="headerlink" href="#running-the-program" title="Permalink to this headline">¶</a></h2>
+<p>If your control file is named <tt class="docutils literal"><span class="pre">divcontrol.txt</span></tt>, run BAMM as follows:</p>
+<div class="highlight-python"><pre>bamm -c divcontrol.txt</pre>
+</div>
 </div>
 <div class="section" id="understanding-bamm-output">
-<h2>5.4. Understanding BAMM output<a class="headerlink" href="#understanding-bamm-output" title="Permalink to this headline">¶</a></h2>
-<p><strong>Under construction</strong></p>
+<h2>3.4. Understanding BAMM output<a class="headerlink" href="#understanding-bamm-output" title="Permalink to this headline">¶</a></h2>
+<p>As BAMM runs output is sent to the terminal window, which is written to the file specified in <tt class="docutils literal"><span class="pre">mcmcOutfile</span></tt>. This file will have information about the number of events on the tree, the log likelihood of the model, the acceptance frequency, etc. You can use this output for assessing how well the chain is mixing and whether or not it has converged at the end of a run.</p>
+<p>The main results from a BAMM run are written to the file specified by <tt class="docutils literal"><span class="pre">eventDataOutfile</span></tt> in the control file.  If <tt class="docutils literal"><span class="pre">outName</span></tt> is also specified in the control file it will be prefixed to the name in <tt class="docutils literal"><span class="pre">eventDataOutfile</span></tt>.</p>
+<p>Before diving too deeply into the results in this file you should first assess whether or not the Markov chain converged. Remember that the information needed to do that is written to the file specified by <tt class="docutils literal"><span class="pre">mcmcOutfile</span></tt> in the control file. There are several programs available for assessing convergence of Markov chains but an easy one to use is the coda package for R. Assuming you are running R you can install coda by simply typing:</p>
+<div class="highlight-python"><pre>&gt; install.packages("coda")</pre>
+</div>
+<p>If that fails you can get the package directly from the website <a class="reference external" href="http://cran.r-project.org">http://cran.r-project.org</a>. Once installed you can use the functions in the coda package by loading it with:</p>
+<div class="highlight-python"><pre>&gt; library(coda)</pre>
+</div>
+<p>A quick way to assess convergence is to take a look at the effective sample size of the log likelihood or model parameters. Samples from a Markov chain are autocorrelated and this autocorrelation means samples are not independent. Effective sample size is the sample size after accounting for this non-independence. A low effective sample size means that samples are highly autocorrelated and the chain is not &#8220;mixing&#8221; well, which is an indication that it is has probably not converged to the posterior distribution you&#8217;re hoping to sample from. We will calculate the effective sample size of the log likelihood and the number of regime shifts. First read in the MCMC outfile:</p>
+<div class="highlight-python"><pre>&gt; # this is a comment in R
+&gt; # fn is a character string with the path to your mcmc_outfile text file, e.g. "mcmc_out.txt"
+&gt; mcmc &lt;- read.csv(fn)</pre>
+</div>
+<p>To take a look at the head of this file do:</p>
+<div class="highlight-python"><pre>&gt; head(mcmc)</pre>
+</div>
+<p>So the number of event shifts is the second column and the log likelihood is the fourth column. Before calculating the effective sample size we should discard the beginning of the chain to reduce autocorrelation from the starting configuration. It can be helpful to plot a trace of the log likelihood for deciding on a good cutoff value for this burn-in period:</p>
+<div class="highlight-python"><pre>&gt; plot(mcmc[,1], mcmc[,4])
+&gt; # suppose we think ten percent is satisfactory
+&gt;
+&gt; nsamples &lt;- nrow(mcmc)
+&gt; postburn &lt;- 0.1 * nsamples + 1
+&gt; mcmc &lt;- mcmc[postburn:nsamples, ]</pre>
+</div>
+<p>We can now calculate effective sample size using the coda function:</p>
+<div class="highlight-python"><pre>&gt; effectiveSize(mcmc[,2])
+&gt; effectiveSize(mcmc[,4])</pre>
+</div>
+<p>In general these should be at least 200. Assessing convergence can be complicated and you are encouraged to research other methods.</p>
+<p>Once you&#8217;re satisfied about convergence you are ready to work with the event data file. To work with the data in this file use the utility functions in the BAMMtools for R. This can be downloaded just like in the example above.</p>
+<p>Once you&#8217;ve loaded BAMMtools in your R session you can take a look at the main results:</p>
+<div class="highlight-python"><pre>&gt; # fn is character string specifying the path to your event data file, e.g. "event_data.txt"
+&gt; # mytree is a phylogenetic tree is ape format. see ape documentation for the function read.tree
+&gt;
+&gt; edata &lt;- getEventData(mytree, fn, burnin = 0.1, type = "diversification")
+&gt;
+&gt; # if you are working with BAMM trait data specify type = "trait"</pre>
+</div>
+<p>Now that the event data is loaded we can take a look at what it contains. For an explanation of the R object that BAMMtools uses to work with the data simply type:</p>
+<div class="highlight-python"><pre>&gt; ?getEventData</pre>
+</div>
+<p>To quickly summarize your data do:</p>
+<div class="highlight-python"><pre>&gt; summary(edata)</pre>
+</div>
+<p>This will tell you how many posterior samples were analyzed as well as the number of shifts in the maximum shift credibility tree and the tipward node(s) (in ape format) of the branch(es) where those shifts occur. It will also print out the posterior distribution of the number of shifts so you can gauge the relative support for models with different numbers of events. Note that a value of zero means there are no shifts and the single root event describes the entire tree.</p>
+<p>To visualize how speciation rates or rates of trait evolution vary through time and among lineages simply type:</p>
+<div class="highlight-python"><pre>&gt; plot(edata)</pre>
+</div>
+<p>You can also plot a polarized version of the tree:</p>
+<div class="highlight-python"><pre>&gt; plot(edata, method = "polar")</pre>
+</div>
+<p>This calculates the mean of the marginal posterior density of rates of speciation or trait evolution for many different points along each branch and maps those rates to colors such that cool colors represent slow rates and warm colors represent fast rates. If you want to take a look at just a single posterior sample rather than averaging over all posterior samples this is possible:</p>
+<div class="highlight-python"><pre>&gt; mysample &lt;- 1
+&gt; plot(edata, method = "polar", index = mysample)</pre>
+</div>
+<p>If this posterior sample happens to contain shifts you can add these to the plotted tree:</p>
+<div class="highlight-python"><pre>&gt; addBAMMshifts(edata, method = "polar", index = mysample)</pre>
+</div>
+<p>Many more types of analysis and visualization are available and you are encouraged to explore the documentation for BAMMtools.</p>
 </div>
 </div>
 
@@ -146,10 +211,10 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="configuration_speciation.html" title="6. Speciation-Extinction: Configurations &amp; Settings"
+          <a href="settingup.html" title="4. Setting Up BAMM"
              >next</a> |</li>
         <li class="right" >
-          <a href="installation.html" title="4. Installation"
+          <a href="bammgraph.html" title="2. BAMM graph gallery"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>

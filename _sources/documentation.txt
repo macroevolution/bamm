@@ -12,11 +12,9 @@ BAMM Documentation
 
    introduction
    bammgraph
-   sometheory
-   installation   
    quickstart
-   configuration_speciation
-   configuration_trait
+   settingup
+   configuration
    postprocess
    advanced
    faq

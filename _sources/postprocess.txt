@@ -1,3 +1,5 @@
+.. _bammtools:
+
 Analyzing BAMM output with BAMMtools
 ===============================================
 
@@ -16,6 +18,7 @@ BAMM generates three primary output files. The first is the *mcmc data file*, wh
 
 The second is the *event data file*, which contains all of the actual model parameters. Each sample from the posterior can be described with complete knowledge of all of the shift events on the tree, including their location and evolutionary rate parameters. The *event data file* is just a long list of all the shift events and associated parameters that were sampled, as well as the MCMC generation in which they were sampled. **You will not directly do anything with this file**. BAMMtools has a function for extracting all the relevant information from the file and for mapping the rate shift configurations to phylogenetic trees. Finally, BAMM will (optionally) generate a second MCMC output file that contains the results of a prior-only simulation. This file can be used to reconstruct the prior distribution of the number of shift events and is important for the estimation of Bayes factors.
 
+.. _convergence:
 
 Diagnosing convergence
 ......................
@@ -88,7 +91,7 @@ Starting at the beginning, let's re-load our event data file::
 	> # How many samples from the posterior are in edata?
 	> # Here is a quick check:
 	>
-	> length(edata$eventData)
+	> summary(edata)
 	
 This let's us see how many post-burnin samples from the posterior are included in the *edata* object. Each of these samples is associated with a potentially unique shift configuration. Let's visualize just a single rate shift configuration from our *bamm-data* object::
 
@@ -104,20 +107,16 @@ And we can plot these nodes on the tree like this::
 	> plot.phylo(mytree)
 	> nodelabels(node = shiftnodes, pch=21, col="red", cex=1.5)
 	
-This highlights the *downstream node* (e.g., "tipwards", as opposed to "rootwards") at the end of each branch on which a shift occurs in the specified sample. You should be able to repeat this exercise again with a different value for *mysample*, and sooner or later, you should be able to see that different shift configurations will "light up" on your tree. Note that if there are no shifts in a given sample, there are no nodes to plot, which will lead to an error message. Let's actually view the actual configuration of evolutionary rates across our tree, as well as the location where the shifts are inferred to occur. To do this, we will use BAMM's function *plot.dtrates*, which will plot rates at multiple points in time along every branch of the phylogeny, for the specified sample::
+This highlights the *downstream node* (e.g., "tipwards", as opposed to "rootwards") at the end of each branch on which a shift occurs in the specified sample. You should be able to repeat this exercise again with a different value for *mysample*, and sooner or later, you should be able to see that different shift configurations will "light up" on your tree. Note that if there are no shifts in a given sample, there are no nodes to plot, which will lead to an error message. Let's actually view the actual configuration of evolutionary rates across our tree, as well as the location where the shifts are inferred to occur. To do this, we will use BAMM's function ``plot.bammdata``, which will plot rates at multiple points in time along every branch of the phylogeny, for the specified sample. Actually, ``plot.bammdata`` is an S3 method for the class *bammdata* so you really only need to write ``plot``::
 
-	> ##### THIS IS NOT DONE
 	> mysample <- 1
-	> subdata <- subsetEventData(edata, index = mysample)
-	> plot.dtrates(mytree, subdata)
+	> plot.bammdata(edata, method = "phylogram", index=mysample)
 
 Which should generate a nice plot showing rate dynamics. And we can even visualize the actual location of the regime shift events themselves, like this::
 
-	> ##### THIS IS NOT DONE
-	> shiftnodes <- getShiftNodesFromIndex(subdata, index=1)
-	> plotShiftsOnTree(node = shiftnodes, pch=21, col="white", cex=2.5)
+	> addBAMMshifts(edata, method = "phylogram", index = mysample, pch=21, col="white", cex=2.5)
  
-We'll come back to the function *plot.dtrates* when we discuss :ref:`branch-specific rates<bammtoolsRTT>`.
+We'll come back to the function ``plot.bammdata`` when we discuss :ref:`branch-specific rates<bammtoolsRTT>`.
 
 One of the first things to look at is the marginal shift probabilities on individual branches. This is nothing more than the marginal probability that each branch contains a shift event (see :ref:`here<bammtheory>` for why these can be difficult to interpret). The next few lines of code will compute the marginal shift probabilities for each branch, then plot a new phylogenetic tree where the branch lengths are scaled by the probability that they contain a shift event::
 
@@ -152,8 +151,7 @@ The variable *msc* contains a bit of information, including the marginal shift p
 
 And we can also view the rate-through-time dynamics implied by this sample::
 
-	> subdata <- subsetEventData(edata, index = samp)
-	> plot.dtrates(subdata.....)
+	> plot.bammdata(edata, index = samp)
 
   
 
@@ -173,13 +171,13 @@ Branch-specific evolutionary rates
 Plotting rate-through-time curves
 ---------------------------------
 
-Plotting rate-through-time curve (example **here (link)**) is trivial. BAMM's built-in function *plotRateThroughTime* makes it easy to generate plots of rates through time::
+Plotting rate-through-time curve (example **here (link)**) is trivial. BAMM's built-in function ``plotRateThroughTime`` makes it easy to generate plots of rates through time::
 
 	> plotRateThroughTime(edata, ratetype="speciation")
 	
 should produce a plot with density shading on confidence regions for your speciation-through-time curve. See help on this function for more details about tweaking the plot. This function can take awhile to run, because it generates a rate-through-time matrix that includes all samples in the posterior distribution. 
 
-You can also use *plotRateThroughTime* to plot speciation through time curves for just portion of your phylogeny. We can do this by feeding a node number in to *plotRateThroughTime*, and the function will just compute and plot the rates for this subtree. To find a particular node number for your tree, you can plot the tree (using ape), and then plot your node numbers directly on the tree, like this::
+You can also use ``plotRateThroughTime`` to plot speciation through time curves for just portion of your phylogeny. We can do this by feeding a node number in to ``plotRateThroughTime``, and the function will just compute and plot the rates for this subtree. To find a particular node number for your tree, you can plot the tree (using ape), and then plot your node numbers directly on the tree, like this::
 
 	> mytree <- read.tree("example_tree.tre")
 	> plot.phylo(mytree)
@@ -199,7 +197,7 @@ And now the MRCA node::
 
 	> mrca <- getMRCA(mytree, tip = c(tipnode1, tipnode2))
 	
-Now we feed this in to *plotRateThroughTime*::
+Now we feed this in to ``plotRateThroughTime``::
 
 	> plotRateThroughTime(edata, node = mrca, nodetype="include")
 	
@@ -207,7 +205,7 @@ And we can also plot the entire rate through time curve after we **exclude** thi
 
 	> plotRateThroughTime(edata, node = mrca, nodetype = "exclude")
 	
-There are many other options available through *plotRateThroughTime*, so please see the R help on this function::
+There are many other options available through ``plotRateThroughTime``, so please see the R help on this function::
 
 	> ?plotRateThroughTime
 	

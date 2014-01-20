@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>9. Advanced analysis options &mdash; bamm 1.0 documentation</title>
+    <title>7. Advanced analysis options &mdash; bamm 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 1.0 documentation" href="index.html" />
-    <link rel="next" title="10. Frequently Asked Questions" href="faq.html" />
-    <link rel="prev" title="8. Analyzing BAMM output with BAMMtools" href="postprocess.html" /> 
+    <link rel="next" title="8. Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="6. Analyzing BAMM output with BAMMtools" href="postprocess.html" /> 
   </head>
   <body>
 <div class="pageheader">
@@ -39,10 +39,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="faq.html" title="10. Frequently Asked Questions"
+          <a href="faq.html" title="8. Frequently Asked Questions"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="postprocess.html" title="8. Analyzing BAMM output with BAMMtools"
+          <a href="postprocess.html" title="6. Analyzing BAMM output with BAMMtools"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -54,24 +54,24 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">9. Advanced analysis options</a><ul>
-<li><a class="reference internal" href="#modeling-less-complex-evolutionary-scenarios">9.1. Modeling <em>less complex</em> evolutionary scenarios</a><ul>
-<li><a class="reference internal" href="#constant-rate-birth-death-model">9.1.1. Constant rate birth-death model</a></li>
-<li><a class="reference internal" href="#pure-birth-model">9.1.2. Pure-birth model</a></li>
-<li><a class="reference internal" href="#medusa-like-model">9.1.3. MEDUSA-like model</a></li>
+<li><a class="reference internal" href="#">7. Advanced analysis options</a><ul>
+<li><a class="reference internal" href="#modeling-less-complex-evolutionary-scenarios">7.1. Modeling <em>less complex</em> evolutionary scenarios</a><ul>
+<li><a class="reference internal" href="#constant-rate-birth-death-model">7.1.1. Constant rate birth-death model</a></li>
+<li><a class="reference internal" href="#pure-birth-model">7.1.2. Pure-birth model</a></li>
+<li><a class="reference internal" href="#medusa-like-model">7.1.3. MEDUSA-like model</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#accounting-for-phylogenetic-uncertainty">9.2. Accounting for phylogenetic uncertainty</a></li>
+<li><a class="reference internal" href="#accounting-for-phylogenetic-uncertainty">7.2. Accounting for phylogenetic uncertainty</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="postprocess.html"
-                        title="previous chapter">8. Analyzing BAMM output with BAMMtools</a></p>
+                        title="previous chapter">6. Analyzing BAMM output with BAMMtools</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="faq.html"
-                        title="next chapter">10. Frequently Asked Questions</a></p>
+                        title="next chapter">8. Frequently Asked Questions</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/advanced.txt"
@@ -99,12 +99,12 @@
           <div class="body">
             
   <div class="section" id="advanced-analysis-options">
-<h1>9. Advanced analysis options<a class="headerlink" href="#advanced-analysis-options" title="Permalink to this headline">¶</a></h1>
+<h1>7. Advanced analysis options<a class="headerlink" href="#advanced-analysis-options" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="modeling-less-complex-evolutionary-scenarios">
-<h2>9.1. Modeling <em>less complex</em> evolutionary scenarios<a class="headerlink" href="#modeling-less-complex-evolutionary-scenarios" title="Permalink to this headline">¶</a></h2>
+<h2>7.1. Modeling <em>less complex</em> evolutionary scenarios<a class="headerlink" href="#modeling-less-complex-evolutionary-scenarios" title="Permalink to this headline">¶</a></h2>
 <p>The basic BAMM model is fairly complex, as it allows rate variation through time and among lineages. However, you can easily modify the control file for BAMM to perform several simpler types of analyses.</p>
 <div class="section" id="constant-rate-birth-death-model">
-<h3>9.1.1. Constant rate birth-death model<a class="headerlink" href="#constant-rate-birth-death-model" title="Permalink to this headline">¶</a></h3>
+<h3>7.1.1. Constant rate birth-death model<a class="headerlink" href="#constant-rate-birth-death-model" title="Permalink to this headline">¶</a></h3>
 <p>To perform Bayesian inference on your data under a constant-rate birth-death process, you can simply tell BAMM not to perform any MCMC update moves that are not part of the constant-rate birth-death process. Specifically, you should (i) not add rate regimes to the tree, and (ii) not update the parameter controlling speciation rate variation through time. You can do this by making sure the MCMC move frequencies are set as follows:</p>
 <div class="highlight-none"><div class="highlight"><pre>updateRateEventNumber = 0
 updateRateEventPosition = 0
@@ -116,7 +116,7 @@ updateRateMu0 = 1
 </div>
 </div>
 <div class="section" id="pure-birth-model">
-<h3>9.1.2. Pure-birth model<a class="headerlink" href="#pure-birth-model" title="Permalink to this headline">¶</a></h3>
+<h3>7.1.2. Pure-birth model<a class="headerlink" href="#pure-birth-model" title="Permalink to this headline">¶</a></h3>
 <p>To run a pure-birth only model, with no extinction, you just turn off the extinction update:</p>
 <div class="highlight-none"><div class="highlight"><pre>updateRateMu0 = 0
 </pre></div>
@@ -128,7 +128,7 @@ updateRateMu0 = 1
 <p>Note that you cannot account for incomplete sampling under a pure-birth model (modeling incomplete sampling is mathematically identical to allowing a particular type of extinction).</p>
 </div>
 <div class="section" id="medusa-like-model">
-<h3>9.1.3. MEDUSA-like model<a class="headerlink" href="#medusa-like-model" title="Permalink to this headline">¶</a></h3>
+<h3>7.1.3. MEDUSA-like model<a class="headerlink" href="#medusa-like-model" title="Permalink to this headline">¶</a></h3>
 <p>To run a Bayesian MEDUSA-like model, where the rate of speciation and extinction is constant within specific shift regimes, you can set your MCMC move frequencies as follows:</p>
 <div class="highlight-none"><div class="highlight"><pre>updateRateEventNumber = 0.1
 updateRateEventPosition = 1
@@ -152,9 +152,9 @@ betaShiftInit = 0.0
 </div>
 </div>
 <div class="section" id="accounting-for-phylogenetic-uncertainty">
-<h2>9.2. Accounting for phylogenetic uncertainty<a class="headerlink" href="#accounting-for-phylogenetic-uncertainty" title="Permalink to this headline">¶</a></h2>
+<h2>7.2. Accounting for phylogenetic uncertainty<a class="headerlink" href="#accounting-for-phylogenetic-uncertainty" title="Permalink to this headline">¶</a></h2>
 <p>Some researchers consider it important to account for phylogenetic uncertainty when performing macroevolutionary analyses. At present, there is no direct way of accounting for phylogenetic uncertainty in BAMM itself. It remains unclear whether phylogenetic uncertainty generally matters for the sorts of conclusions obtained with BAMM. My (DLR) personal view is that phylogenetic uncertainty is very much an issue for <strong>some types</strong> of results obtained using BAMM (and other programs), and (usually) not an issue at all for many other types of results.</p>
-<p>When does phylogenetic uncertainty <strong>not</strong> matter? For general inference on the overall tempo and mode of diversification, it is quite unlikely that - in general - your focal tree (say, MCC tree from BEAST, or ML tree from RAxML) is unlikely to be <em>so bad</em> that your broad-scale inferences in evolutionary dynamics are inaccurate. One reason for this is the somewhat paradoxical observation that confidence in <em>macroevolutionary conclusions</em> can be negatively correlated with confidence in <em>phylogenetic conclusions</em>. For example, consider a phylogeny showing a pattern of an early burst in lineage diversification, such that most major lineages arose during a brief period of time. You might never be able to resolve the <em>precise</em> order of branching of those lineages, and as such, you will always have a tree that is poorly resolved at the base. However, you might nonetheless be extremely confident that branch lengths are short near the base of the radiation (indeed, this is why you have low confidence in your topology!), and this means that your inferences on speciation rates themselves might be extremely robust. If you consider speciation in whales, as shown <a class="reference internal" href="introduction.html#whalefig"><em>here</em></a> and <a class="reference internal" href="bammgraph.html#rttwhale"><em>here</em></a>, phylogenetic uncertainty isn&#8217;t going to change the big-picture conclusions: there was clearly a massive spike in evolutionary rates in some ancestral lineage leading to, or immediately nested within, the dolphin clade.</p>
+<p>When does phylogenetic uncertainty <strong>not</strong> matter? For general inference on the overall tempo and mode of diversification, it is quite unlikely that - in general - your focal tree (say, MCC tree from BEAST, or ML tree from RAxML) is unlikely to be <em>so bad</em> that your broad-scale inferences in evolutionary dynamics are inaccurate. One reason for this is the somewhat paradoxical observation that confidence in <em>macroevolutionary conclusions</em> can be negatively correlated with confidence in <em>phylogenetic conclusions</em>. For example, consider a phylogeny showing a pattern of an early burst in lineage diversification, such that most major lineages arose during a brief period of time. You might never be able to resolve the <em>precise</em> order of branching of those lineages, and as such, you will always have a tree that is poorly resolved at the base. However, you might nonetheless be extremely confident that branch lengths are short near the base of the radiation (indeed, this is why you have low confidence in your topology!), and this means that your inferences on speciation rates themselves might be extremely robust. If you consider speciation in whales, as shown <em class="xref std std-ref">here</em> and <a class="reference internal" href="bammgraph.html#rttwhale"><em>here</em></a>, phylogenetic uncertainty isn&#8217;t going to change the big-picture conclusions: there was clearly a massive spike in evolutionary rates in some ancestral lineage leading to, or immediately nested within, the dolphin clade.</p>
 <p>Phylogenetic uncertainty will matter if you do in fact care about <em>specific</em> aspects of changes in evolutionary dynamics. If you really care about the <em>precise</em> location of the shift in evolutionary dynamics, then the exact sequence of branching at the base of the dolphin radiation (to continue with the aforementioned example) <strong>will</strong> matter. Please keep in mind, however, that the BAMM model (and all other models), are merely statistical models that have imposed on the data. So, excessively fretting about whether the true shift in evolutionary dynamics occurred on branch <em>A</em> or branch <em>B</em> is somewhat unproductive, because the notion of a discrete shift is itself an assumption of the model we are using for inference.</p>
 <p>Although BAMM does not directly allow modeling phylogenetic uncertainty, it is straightforward to perform BAMM analyses across distributions of phylogenies taken from a Bayesian analysis. Below, we demonstrate how you can use your bash shell (on the OSX or Linux operating systems) to perform a BAMM analysis across a sample of trees.:</p>
 <div class="highlight-none"><div class="highlight"><pre>Add bash script stuff here, maybe a link to ppss as well.
@@ -176,10 +176,10 @@ betaShiftInit = 0.0
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="faq.html" title="10. Frequently Asked Questions"
+          <a href="faq.html" title="8. Frequently Asked Questions"
              >next</a> |</li>
         <li class="right" >
-          <a href="postprocess.html" title="8. Analyzing BAMM output with BAMMtools"
+          <a href="postprocess.html" title="6. Analyzing BAMM output with BAMMtools"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
