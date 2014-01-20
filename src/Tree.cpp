@@ -1331,8 +1331,6 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
         eof = inStream.eof();
         inStream >> sfrac;
 
-        inStream.close();
-
         if (eof) {
             log(Error) << "Sampling probability file is not formatted "
                        << "properly.\nPlease see the documentation.\n";
