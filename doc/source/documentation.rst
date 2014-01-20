@@ -12,9 +12,8 @@ BAMM Documentation
 
    introduction
    bammgraph
-   sometheory
-   installation   
    quickstart
+   settingup
    configuration
    postprocess
    advanced

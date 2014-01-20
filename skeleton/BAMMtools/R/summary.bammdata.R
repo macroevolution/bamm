@@ -1,7 +1,7 @@
 summary.bammdata = function(ephy, opt="product", display=10)
 {
 	cat("\nAnalyzed", length(ephy$eventData), "posterior samples\n");
-	shiftsindex = maximumShiftCredibilityTree(ephy,maximize=opt)$sampleindex;
+	shiftsindex = maximumShiftCredibility(ephy,maximize=opt)$sampleindex;
 	shiftnodes = getShiftNodesFromIndex(ephy, shiftsindex);
 	if (length(shiftnodes) > 1)
 	{

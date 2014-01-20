@@ -1,71 +1,49 @@
 \name{getShiftNodesFromIndex}
 \alias{getShiftNodesFromIndex}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-temp title
-%%  ~~function to do ... ~~
+Identify nodes associated with rate shifts from \code{bammdata} object
 }
+
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Find the node numbers associated with rate shifts for a specified sample from the posterior distribution contained in a \code{bammdata} object.
 }
 \usage{
 getShiftNodesFromIndex(ephy, index)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{ephy}{
-%%     ~~Describe \code{ephy} here~~
+a \code{bammdata} object
 }
   \item{index}{
-%%     ~~Describe \code{index} here~~
+The index value of the posterior sample which you want to identify shift nodes. This is \emph{not} the same as the actual generation number of the MCMC sample. If your \code{bammdata} object contains 100 samples from the posterior distribution, the value of \code{index} must range from 1 to 100.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
-\references{
-%% ~put references to the literature/web site here ~
+A vector of nodes (excluding the root) that define branches on which shifts occurred for the specified sample from the posterior. Will return a numeric of length 0 if no non-root shifts occur in the specified sample.
 }
 \author{
-%%  ~~who you are~~
+Dan Rabosky
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\link{addBAMMshifts}, \link{plot.bammdata}, \link{maximumShiftCredibility}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+data(whales, events.whales)
+ed <- getEventData(whales, events.whales)
 
-## The function is currently defined as
-function (ephy, index) 
-{
-    if (index > length(ephy$eventData)) {
-        cat("Error. Attempting to access non-existent element from 'bammdata' object\n")
-        cat("You have << ", length(ephy$eventData), " >>> samples in your 'bammdata' object\n")
-        cat("Value of index must be no greater than the number of samples\n\n")
-        stop()
-    }
-    root <- length(ephy$tip.label) + 1
-    nodes <- ephy$eventData[[index]]$node
-    nodes <- nodes[nodes != root]
-    return(nodes)
-  }
+# Get the maximum shift credibility configuration:
+msc <- maximumShiftCredibility(ed)
+
+# GEt the nodes at which shifts occurred in the 
+# maximum shift credibility configuration:
+
+getShiftNodesFromIndex(ed, index=msc$sampleindex)
+
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ models }

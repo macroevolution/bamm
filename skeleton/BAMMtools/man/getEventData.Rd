@@ -1,29 +1,26 @@
 \name{getEventData}
 \alias{getEventData}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Load BAMM data
+Create \code{bammdata} object from MCMC output
 }
 \description{
-\code{getEventData} reads BAMM data and creates a \code{bammdata} object.
+\code{getEventData} reads shift configuration data (the "event data" output) from a \code{BAMM} analysis and creates a \code{bammdata} object. The \code{bammdata} object is fundamental for extracting information about macroevolutionary rate variation through time and among lineages.
 }
 \usage{
 getEventData(phy, eventdata, burnin = 0, nsamples = NULL, verbose = FALSE, type = "diversification")
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{phy}{
-an object of class \code{phylo}.
+an object of class \code{phylo} - specifically, the time calibrated tree that was analyzed with \code{BAMM}.
 }
   \item{eventdata}{
-a character string with the path to a BAMM event file or an object of class \code{data.frame} with the 
-same information.
+a character string specifying the path to a \code{BAMM} event-data file. Alternatively, an object of class \code{data.frame} that includes the event data from a \code{BAMM} run.
 }
   \item{burnin}{
 a numeric indicating the fraction of posterior samples to discard as burn-in.
 }
   \item{nsamples}{
-an integer indicating the number of posterior samples to load. May be \code{NULL}.
+an integer indicating the number of posterior samples to include in the \code{bammdata} object. May be \code{NULL}.
 }
   \item{verbose}{
 a logical. If \code{TRUE} progess is outputted to the console. Defaults to \code{FALSE}.
@@ -34,23 +31,17 @@ a character string. Either "diversification" or "trait" depending on your BAMM a
 }
 
 \details{
-In the BAMM framework, an "event" is a macroevolutionary process of diversification 
-or trait evolution. Every phylogenetic tree contains at least 1 event that begins 
-at the root node. A macroevolutionary process of diversification comprises rates of 
-speciation and extinction that vary through time and among lineages. A macroevolutionary 
-process of trait evolution comprises rates of phenotypic change that vary through time 
-and among lineages. 
+In the BAMM framework, an "event" defines a macroevolutionary process of diversification 
+or trait evolution. Every sample from the posterior includes at least one process, defined by such an "event". If given sample includes just a single event, then the dynamics of diversification or trait evolution can be described entirely by a single time-constant or time-varying process that begins at the root of the tree. Any sample from the posterior distribution may include a complex mixture of distinct processes. To represent temporal heterogeneity in macroevolutionary rates, \code{BAMM} models a rate \eqn{R}, e.g. speciation, as a function that changes exponentially with time: 
+\deqn{R(t) = R(0)*exp(b*t)}. 
+Here \eqn{R(0)} is the initial rate and \eqn{b} is a parameter determining how quickly that rate grows or decays with time. 
 
-To represent temporal heterogeneity in macroevolutionary rates
-BAMM models a rate \eqn{R}, e.g. speciation, as a function that changes exponentially
-with time: \deqn{R(t) = R(0)*exp(b*t)}. Here \eqn{R(0)} is the initial rate and \eqn{b}
-is a parameter determining how quickly that rate grows or decays with time. 
+The \code{eventdata} file (or data frame) is a record of events and associated parameters that were sampled with \code{BAMM} during simulation of the posterior with reversible jump MCMC. This complex, information-rich file is processed into a \code{bammdata} object, which serves as the core data object for numerous downstream analyses. From a \code{bammdata} object, you can summarize rate variation through time, among clades, extract locations of rate shifts, summarize clade-specific rates of speciation and extinction, and more.
 
-To represent among-lineage heterogeneity BAMM allows different parts of the tree to
-evolve under independent macroevolutionary processes. The number and configuration of
-processes are estimated using reversible jump MCMC.
-
- ... further details ...
+In general, the user does not need to be concerned with the details of a \code{bammdata} object. The object is used as input by a number of \code{BAMMtools} functions. 
+ 
+The parameter \code{nsamples} can be used to reduce the total amount of data included in the raw eventdata output from a \code{BAMM} run. The final \code{bammdata} object will consist of all data for \code{nsamples} from the posterior. These \code{nsamples} are equally spaced after discarding some \code{burnin} fraction as "burn-in". If \code{nsamples} is set to \code{NULL}, the \code{bammdata} object will include all samples in the posterior after discarding the \code{burnin} fraction.
+ 
 }
 \value{
 A list with many components:
@@ -59,18 +50,18 @@ A list with many components:
 \item{tip.label}{See documentation for class \code{phylo} in package ape.}
 \item{edge.length}{See documentation for class \code{phylo} in package ape.}
 
-\item{begin}{The beginning time of each branch. The root is set to time zero.}
-\item{end}{The ending time of each branch.}
+\item{begin}{The beginning time of each branch in absolute time (the root is set to time zero)}
+\item{end}{The ending time of each branch in absolute time.}
 
 \item{numberEvents}{
-An integer vector with the number of events contained in \code{phy} for each posterior sample.
+An integer vector with the number of events contained in \code{phy} for each posterior sample. The length of this vector is equal to the number of posterior samples in the \code{bammdata} object.
 }
 \item{eventData}{
 A list of dataframes. Each element is a single posterior sample.
 Each row in a dataframe holds the data for a single event.
 Data associated with an event are: \code{node} - a node number. This identifies 
 the branch where the event originates. \code{time} - this is the absolute time on 
-that branch where the event originates. \code{lam1} - an initial rate of speciation or trait evolution.
+that branch where the event originates (with the root at time 0). \code{lam1} - an initial rate of speciation or trait evolution.
 \code{lam2} - a decay/growth parameter. \code{mu1} - an initial rate of extinction.
 \code{mu2} - a decay/growth parameter. \code{index} - a unique integer associated with the event.
 See 'Details'.
@@ -102,7 +93,7 @@ the terminal branch subtending that tip.
 \item{tipMu}{
 A list of numeric vectors. Each element is a single posterior sample.
 For each tip the rate of extinction at the end of the terminal branch
-subtending that tip. Meaningless if working with BAMM trait results.
+subtending that tip. Meaningless if working with \code{BAMM} trait results.
 }
 \item{meanTipLambda}{
 For each tip the mean of the marginal posterior density of the rate of speciation
@@ -128,7 +119,7 @@ of node 89 can be found by \code{downseq[2:15]}.
 
 }
 \references{
-%% ~put references to the literature/web site here ~
+\url{www.bamm-project.org}
 }
 \author{
 Dan Rabosky, Mike Grundler
@@ -137,15 +128,23 @@ Dan Rabosky, Mike Grundler
 Currently the function does not check for duplicate tip labels in \code{phy}, which may cause the function to choke.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link{summary.bammdata}}, \code{\link{plot.bammdata}}, \code{\link{dtRates}}.
 }
 \examples{
+data(primates)
+data(events.primates)
+xx <- getEventData(primates, events.primates, burnin=0.25, type = 'trait')
+
+# compute mean phenotypic rate for primate body size evolution:
+brates <- getCladeRates(xx)
+mean(brates$beta)
+
+# Plot rates:
+plot.bammdata(xx)
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
+\keyword{ graphics }
+\keyword{ models }
+

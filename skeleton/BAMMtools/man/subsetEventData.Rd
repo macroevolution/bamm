@@ -1,94 +1,38 @@
 \name{subsetEventData}
 \alias{subsetEventData}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-temp title
-%%  ~~function to do ... ~~
+Subset a \code{bammdata} object
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Subsets a \code{bammdata} object. Returns a \code{bammdata} object after extracting a specified set of samples from the posterior.
 }
 \usage{
 subsetEventData(ephy, index = NULL)
 }
-%- maybe also 'usage' for other objects documented here.
-\arguments{
+
   \item{ephy}{
-%%     ~~Describe \code{ephy} here~~
+an object of class \code{bammdata}
 }
   \item{index}{
-%%     ~~Describe \code{index} here~~
+A vector of integers corresponding to samples to be extracted from the posterior distribution of shift configurations included in the \code{bammdata} object. 
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+This will result in an error if you attempt to access samples that do not exist in the \code{ephy} data object. For example, if your \code{bammdata} object includes 100 samples from a posterior distribution sampled with \code{BAMM}, you can only attempt to subset with index values 1:100. 
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A \code{bammdata} object, but only containing \code{index} samples from the posterior in the original object.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
+ 
 \author{
-%%  ~~who you are~~
+Dan Rabosky
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+ 
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (ephy, index = NULL) 
-{
-    if (!"bammdata" \%in\% class(ephy)) {
-        stop("Object ephy must be of class 'bammdata'\n")
-    }
-    nsamples <- length(ephy$eventData)
-    ss <- which((1:nsamples) \%in\% index)
-    badsubset <- setdiff(index, 1:nsamples)
-    if (length(badsubset) > 0) {
-        cat("Bad call to BAMMtools::subsetEventData\n")
-        cat("You have << ", nsamples, " >> samples in your 'bammdata' object \n")
-        stop("Attempt to access invalid samples. Check index.")
-    }
-    obj <- list()
-    obj$edge <- ephy$edge
-    obj$Nnode <- ephy$Nnode
-    obj$tip.label <- ephy$tip.label
-    obj$edge.length <- ephy$edge.length
-    obj$begin <- ephy$begin
-    obj$end <- ephy$end
-    obj$downseq <- ephy$downseq
-    obj$lastvisit <- ephy$lastvisit
-    obj$numberEvents <- ephy$numberEvents[ss]
-    obj$eventData <- ephy$eventData[ss]
-    obj$eventVectors <- ephy$eventVectors[ss]
-    obj$tipStates <- ephy$tipStates[ss]
-    obj$tipLambda <- ephy$tipLambda[ss]
-    obj$tipMu <- ephy$tipMu[ss]
-    obj$eventBranchSegs <- ephy$eventBranchSegs[ss]
-    obj$meanTipLambda <- ephy$meanTipLambda
-    obj$meanTipMu <- ephy$meanTipMu
-    obj$type <- ephy$type
-    class(obj) <- "bammdata"
-    attributes(obj)$order = attributes(ephy)$order
-    return(obj)
-  }
+data(whales, events.whales)
+ed <- getEventData(whales, events.whales)
+ed2 <- subsetEventData(ed, index=1)
+plot.bammdata(ed2) 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ manip}

@@ -1,100 +1,55 @@
 \name{getMeanBranchLengthTree}
 \alias{getMeanBranchLengthTree}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-temp
-%%  ~~function to do ... ~~
+Compute phylogeny with branch lengths equal to corresponding macroevolutionary rate estimates
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Takes a \code{bammdata} object and computes a phylogenetic tree where branch lengths are equal the mean of the marginal distributions of rates on each branch. This tree can be plotted to visualize rate variation across a phylogeny. 
 }
 \usage{
-getMeanBranchLengthTree(obj, ndr = TRUE)
+getMeanBranchLengthTree(obj, rate = "speciation")
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{obj}{
-%%     ~~Describe \code{obj} here~~
+  \item{ephy}{
+an object of class \code{bammdata}
 }
-  \item{ndr}{
-%%     ~~Describe \code{ndr} here~~
+  \item{rate}{
+the type of rate-tree to be computed. Options: "speciation" (default), "extinction", "ndr" (net diversification), and "trait"
 }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A list with the following components:
+  \item{phy}{
+A phylogenetic tree, topologically identical to the model tree, but with branch lengths replaced by the mean (marginal) rates on each branch as estimated from the posterior samples in the \code{bammdata} object.
+}
+  \item{mean}{
+The mean rate over all branches
+}
+  \item{median}{
+the median rate over all branches
+}
+
 }
 \references{
-%% ~put references to the literature/web site here ~
+\url{www.bamm-project.org} 
 }
 \author{
-%%  ~~who you are~~
+Dan Rabosky
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\link{plot.bammdata}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (obj, ndr = TRUE) 
-{
-    if ("bammdata" == class(obj)) {
-        v <- as.phylo.bammdata(obj)
-        if (ndr) {
-            if (obj$type == "diversification") {
-                obj <- getMarginalBranchRateMatrix(obj, verbose = FALSE)
-                el <- rowMeans(obj$lambda_branch_matrix) - rowMeans(obj$mu_branch_matrix)
-            }
-            else if (obj$type == "trait") {
-                obj <- getMarginalBranchRateMatrix(obj, verbose = FALSE)
-                el <- rowMeans(obj$beta_branch_matrix)
-            }
-        }
-        else {
-            if (obj$type == "diversification") {
-                obj <- getMarginalBranchRateMatrix(obj, verbose = FALSE)
-                el <- rowMeans(obj$lambda_branch_matrix)
-            }
-            else if (obj$type == "trait") {
-                obj <- getMarginalBranchRateMatrix(obj, verbose = FALSE)
-                el <- rowMeans(obj$beta_branch_matrix)
-            }
-        }
-        v$edge.length <- el
-        obj <- list()
-        obj$phy <- v
-        obj$median <- median(el)
-        obj$mean <- mean(el)
-    }
-    else if (class(obj[[1]]) == "phylo") {
-        el = rowMeans(sapply(obj, with, edge.length))
-        obj <- list()
-        obj$phy <- obj[[1]]
-        obj$median <- median(el)
-        obj$mean <- mean(el)
-    }
-    else {
-        stop("Method not implemented for supplied object class")
-    }
-    return(obj)
-  }
+data(whales)
+data(events.whales)
+ed <- getEventData(whales, events.whales)
+ed2 <- subsetEventData(ed, index = 1:20)
+ratetree <- getMeanBranchLengthTree(ed2, rate='speciation')
+plot(ratetree$phy, show.tip.label=F)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ models}

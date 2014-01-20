@@ -1,5 +1,8 @@
+Setting Up BAMM
+===============
+
 Installation
-============
+------------
 
 The following instructions assume you are running ``bash`` or a similar
 Unix shell. In Linux and Mac OS X systems, ``bash`` is the default shell
@@ -42,3 +45,11 @@ where ``bash`` is also the default shell.
    You may now run ``bamm`` from any directory in your system. See the
    `Quick-start guide to BAMM <http://bamm-project.org/quickstart.html>`_
    to learn how to configure and run BAMM.
+
+Running
+-------
+
+To run ``bamm``, you must always specify a *contol* file. For example,
+if your control file is named ``divcontrol.txt``, run the following::
+
+    bamm -c divcontrol.txt

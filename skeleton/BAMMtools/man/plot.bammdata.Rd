@@ -1,12 +1,12 @@
 \name{plot.bammdata}
 \alias{plot.bammdata}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-Plot rates on a phylogeny
+Plot \code{BAMM}-estimated macroevolutionary rates on a phylogeny
 }
 \description{
-\code{plot.bammdata} plots the phylogenetic tree in the \code{bammdata} object and
-colors each branch by a continuously changing rate of speciation or trait evolution.	 
+\code{plot.bammdata} plots a phylogenetic tree from a \code{bammdata} object and
+colors each branch by the estimated rate of speciation, extinction, or trait evolution. Rates are not assumed to be constant in time, and the function can plot continuously-varying rates along individual branches. 
 }
 \usage{
 S3 method for class \code{bammdata}:		
@@ -124,8 +124,8 @@ returning unless \code{multi = TRUE}.
 \examples{
 	
 library(BAMMtools)
-data(cetaceans, events.cetaceans)
-ephy = getEventData(cetaceans, events.cetaceans, burnin=0.25)
+data(whales, events.whales)
+ephy = getEventData(whales, events.whales, burnin=0.25)
 
 #adding shifts to tree for specific posterior samples
 plot(ephy, method="polar", index=5)

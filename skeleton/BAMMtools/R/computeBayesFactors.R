@@ -28,14 +28,11 @@
 #	 						at least one of the models has been sampled at least
 #							thresh times. This avoids comparisons between two models
 #							that were very rarely or never sampled, which always implies
-#							highly inaccurate posterior or prior probabilities	
-#	nbprior				=   use negative binomial distribution to 
-#								approximate the full prior distribution   
-#							This runs into trouble in some cases. When the prior is approximated
-#								with a high level of accuracy, but the posterior odds are poorly estimated
-#								this tends to fail.
+#							highly inaccurate posterior or prior probabilities	  
+#							This runs into trouble in some cases.  
 #	strict 		        =   logical. If TRUE, requires that both 
-#							models i and j be sampled at least threshpost or threshprior times.
+#							models i and j be sampled 
+#							at least threshpost or threshprior times.
 #
 #
 #   Returns:  matrix w pairwise Bayes Factors
@@ -83,24 +80,9 @@ computeBayesFactors <- function(postdata, priordata, burnin = 0.1, modelset = NU
 		
 	}	
 	
-	if (nbprior){
-		
-		subs <- prior[,2];
-		if (length(subs) > 5000){
-			subs <- subs[sample(1:length(subs), size=5000)];
-		}
 
-		resnb <- fitNegativeBinomial(subs);
+	tprior <- table(prior[,2]);	
 
-		p1 <- resnb$size;
-		p2 <- resnb$mu;
-
-		tprior <- dnbinom(x=modelset, size=p1, mu=p2);
-		names(tprior) <- as.character(modelset);
-		
-	}else{
-		tprior <- table(prior[,2]);	
-	}
 
 
 
