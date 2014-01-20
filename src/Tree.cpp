@@ -1286,33 +1286,62 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
     // Part 1. Read from file
 
     std::ifstream infile(fname.c_str());
-    std::cout << "Reading sampling fractions from file <<" << fname.c_str() << ">>" <<
-         std::endl;
+    std::cout << "Reading sampling fractions from file <<"
+              << fname << ">>\n";
+
     std::vector<std::string> stringvec;
     std::vector<std::string> spnames;
     std::vector<std::string> spfamilies;
     std::vector<double> sfracs;
 
     if (!infile.good()) {
-        std::cout << "Bad Filename" << std::endl;
+        log(Error) << "Bad sampling fraction file name\n";
     }
 
     std::string tempstring;
 
     // First number in file is sampling probability for "backbone" of the tree.
-
     getline(infile, tempstring, '\n');
-    double backboneSampProb = atof(tempstring.c_str());
-    double backboneInitial = 1 - backboneSampProb;
+    double backboneSampProb = std::atof(tempstring.c_str());
+    double backboneInitial = 1.0 - backboneSampProb;
+
+    // std::atof returns 0.0 if the conversion fails
+    if (backboneSampProb == 0.0) {
+        log(Error) << "The first line of the sampling probability file\n"
+                   << "must be the global sampling probability (> 0.0).\n";
+        std::exit(1);
+    }
 
     while (infile) {
-        //std::string tempstring;
-        getline(infile, tempstring, '\t');
-        spnames.push_back(tempstring);
-        getline(infile, tempstring, '\t');
-        spfamilies.push_back(tempstring);
-        getline(infile, tempstring, '\n');
-        sfracs.push_back(atof(tempstring.c_str()));
+        getline(infile, tempstring);
+        std::istringstream inStream(tempstring);
+
+        std::string spname;
+        std::string spfamily;
+        double sfrac = 0.0;
+
+        bool eof = false;
+
+        eof = inStream.eof();
+        inStream >> spname;
+
+        eof = inStream.eof();
+        inStream >> spfamily;
+
+        eof = inStream.eof();
+        inStream >> sfrac;
+
+        inStream.close();
+
+        if (eof) {
+            log(Error) << "Sampling probability file is not formatted "
+                       << "properly.\nPlease see the documentation.\n";
+            std::exit(1);
+        }
+
+        spnames.push_back(spname);
+        spfamilies.push_back(spfamily);
+        sfracs.push_back(sfrac);
 
         if (infile.peek() == EOF) {
             break;
