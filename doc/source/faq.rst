@@ -7,12 +7,9 @@ General
 Citing BAMM
 -----------
 
-Currently, a note describing the BAMM software and BAMMtools R library is in review. For now, you can cite one of several papers that initially described the model and its implementation::
+Coming soon::
 
-	Rabosky et al 
-	
-	Rabosky and Matute
-
+ 
 
 
 BAMM extensions
@@ -106,8 +103,4 @@ As an aside, the user is encouraged to remember that all analytically tractable 
  
 Other questions
 .................
-
-What about the joint diversification-trait evolution process implemented in the 2013 *Nature Communications* paper?
----------------------------------------------------------------------------------------------------------------------------------------------------------
  
-**Under construction** 
