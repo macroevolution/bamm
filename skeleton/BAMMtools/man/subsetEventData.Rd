@@ -10,7 +10,7 @@ Subsets a \code{bammdata} object. Returns a \code{bammdata} object after extract
 \usage{
 subsetEventData(ephy, index = NULL)
 }
-
+\arguments{
   \item{ephy}{
 an object of class \code{bammdata}
 }
