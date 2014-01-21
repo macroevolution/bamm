@@ -61,10 +61,6 @@ Steeman, M. E., M. B. Hebsgaard, R. E. Fordyce, S. W. Y. Ho, D. L. Rabosky, R. N
 
 }
 
-\references{
-
- }
-
 \examples{
  
 }
