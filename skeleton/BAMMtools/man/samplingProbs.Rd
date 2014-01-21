@@ -8,7 +8,7 @@ Creates clade-specific sampling fractions
 If the user would like to specify species sampling on a clade-by-clade basis, a sampling probability table can be provided to BAMM.
 }
 \usage{
-samplingProbs(tree, cladeTable, cladeRichness = NULL, output, writeToDisk = TRUE)
+samplingProbs(tree, cladeTable, cladeRichness = NULL, globalSampling, output, writeToDisk = TRUE)
 }
 
 \arguments{
@@ -20,6 +20,9 @@ a dataframe with one column of species names and a second column of group assign
 }
   \item{cladeRichness}{
 either \code{NULL} or a vector of species counts, named by clade names.
+}
+\item{globalSampling}{
+percent sampling for the backbone of the phylogeny
 }
 \item{output}{
 path + output file name
@@ -34,6 +37,8 @@ along with clade assignment of those species, or it can contain more species tha
 If the table only contains those species in the phylogeny, then a vector \code{cladeRichness} must be provided 
 that contains known clade richness. If the cladeTable contains more than the species in the phylogeny, 
 then cladeRichness should be set to \code{NULL}.
+The \code{globalSampling} value should represent the overall completeness of species sampling in terms of major clades.
+See the BAMM documentation for additional details.
 }
 
 \author{
@@ -65,13 +70,13 @@ richnessVec <- c(cladeA=5, cladeB=4, cladeC=12)
 # Option 1: We have a table of clade assignment for the species in the tree, along with a vector of known clade richness
 spTable
 richnessVec
-samplingProbs(tree, cladeTable = spTable, cladeRichness= richnessVec, writeToDisk=F)
+samplingProbs(tree, cladeTable = spTable, cladeRichness = richnessVec, globalSampling = 1, writeToDisk = F)
 
 # Option 2: We have a table of known species, beyond the sampling in the phylogeny
 spTable <- rbind(spTable, c('Species10','cladeA'),c('Species11','cladeA'),c('Species12','cladeC'),c('Species13','cladeC'),c('Species14','cladeC'))
 spTable
 
-samplingProbs(tree, cladeTable=spTable, cladeRichness = NULL, writeToDisk=F)
+samplingProbs(tree, cladeTable = spTable, cladeRichness = NULL, globalSampling = 0.9, writeToDisk = F)
 
 }
 

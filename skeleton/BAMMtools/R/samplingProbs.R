@@ -6,11 +6,12 @@
 #		cladeTable = a dataframe with 1 column of species names and a second column of group assignment
 #			Must either be a table for all species in tree, or a table of greater species richness, including those species in the tree.
 #		cladeRichness = either NULL or a vector of species counts, named by group names.
+#		globalSampling = percent sampling of the backbone of the phylogeny
 #		output = path + output file name (.txt)
 #		writeToDisk = boolean, should the table be written to disk, defaults to TRUE
 
 
-samplingProbs <- function(tree, cladeTable, cladeRichness = NULL, output, writeToDisk = T) {
+samplingProbs <- function(tree, cladeTable, cladeRichness = NULL, globalSampling, output, writeToDisk = T) {
 	
 	if (length(intersect(tree$tip.label,cladeTable[,1])) != length(tree$tip.label)) {
 		stop("Not all species from tree are in cladeTable.");
@@ -52,8 +53,7 @@ samplingProbs <- function(tree, cladeTable, cladeRichness = NULL, output, writeT
 			probs[i,2] <- clade;
 			probs[i,3] <- length(inTree) / length(cladeTable[cladeTable[,2] == clade,1]);
 		}
-		global <- length(tree$tip.label) / nrow(cladeTable);
-		probs <- rbind(c(global,'','',''),probs);
+		probs <- rbind(c(globalSampling,'','',''),probs);
 	}
 	
 	if (nrow(cladeTable) == length(tree$tip.label) & !is.null(cladeRichness)) {
@@ -65,8 +65,7 @@ samplingProbs <- function(tree, cladeTable, cladeRichness = NULL, output, writeT
 			probs[i,2] <- clade;
 			probs[i,3] <- nrow(cladeTable[cladeTable[,2] == clade,]) / cladeRichness[clade];
 		}
-		global <- length(tree$tip.label) / sum(cladeRichness);
-		probs <- rbind(c(global,'','',''),probs);
+		probs <- rbind(c(globalSampling,'','',''),probs);
 	}
 	if (writeToDisk) {
 		write.table(probs, file=output, quote=F, col.names=F, row.names=F, sep='\t');
