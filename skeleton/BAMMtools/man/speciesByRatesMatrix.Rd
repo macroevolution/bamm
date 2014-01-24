@@ -14,7 +14,7 @@
 		an object of class \code{bammdata}
 	}
 	\item{nslices}{
-		an integer number of time slices. This determines at how many points in time rates are computed for each species
+		an integer number of time slices. This determines at how many points in time rates are computed for each species. Should be a multiple of 10 (e.g. 10, 50, 100)
 	}
 	\item{index}{
 		an integer or vector of mode integer indicating which posterior samples to use in the calculation. If \code{NULL} all samples are used
@@ -36,7 +36,7 @@
 	Mike Grundler
 }
 \seealso{
-	
+	\code{\link{getRateThroughTimeMatrix}}
 }
 \examples{
 	data(whales, events.whales)

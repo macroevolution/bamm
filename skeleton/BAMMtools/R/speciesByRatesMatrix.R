@@ -1,4 +1,4 @@
-speciesByRatesMatrix = function(ephy, nslices, index, spex = "s") {
+speciesByRatesMatrix = function(ephy, nslices, index = NULL, spex = "s") {
 	phy = as.phylo.bammdata(ephy);
 	seq.nod = .Call("seq_root2tip", phy$edge, length(phy$tip.label), phy$Nnode, PACKAGE = "ape");
 	if (nslices > length(phy$tip.label)) {
@@ -40,7 +40,7 @@ speciesByRatesMatrix = function(ephy, nslices, index, spex = "s") {
 				return(m$dtrates$rates[[1]][ids] - m$dtrates$rates[[2]][ids]);
 			}
 		}
-	})
+	});
 	ret = do.call(rbind, ret);
 	rownames(ret) = phy$tip.label;
 	return(ret);	
