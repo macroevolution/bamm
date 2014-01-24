@@ -22,14 +22,21 @@
 	\item{spex}{
 		a character string. "s" (default) calculates speciation rates; "e" calculates extinction rates; "se" calculates diversification rates. Ignored if \code{ephy$type = "trait"}
 	}
+}
+\details{
+	
+}
 \value{
 	A nspecies x nslices matrix
 }
 \references{
-	bamm-project.org
+	\url{bamm-project.org}
 }
 \author{
 	Mike Grundler
+}
+\seealso{
+	
 }
 \examples{
 	data(whales, events.whales)
@@ -40,4 +47,3 @@
 	plot(pca$scores[,1], pca$scores[,2])
 }
 \keyword{ models }
-}
