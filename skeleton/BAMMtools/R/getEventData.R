@@ -92,8 +92,8 @@ getEventData <- function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALS
  		lam1 <- tmpEvents[,5]; # lambda parameter 1
  		lam2 <- tmpEvents[,6]; # lambda parameter 2
  		if (type == 'diversification') {	
-			mu1 <- tmpEvents[, 7]; # mu parameter 1
- 			mu2 <- tmpEvents[, 8]; #mu parameter 2 
+			mu1 <- as.numeric(tmpEvents[, 7]); # mu parameter 1
+ 			mu2 <- as.numeric(tmpEvents[, 8]); #mu parameter 2 
 		} 
 		else { #for bamm trait data we set the mu columns to zero because those params don't exist	
 			mu1 <- rep(0, nrow(tmpEvents)); 

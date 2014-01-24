@@ -41,7 +41,7 @@ A vector of phenotypic rates (if applicable), with the i'th rate corresponding t
 }
 }
 \references{
-\code{www.bamm-project.org}
+\code{bamm-project.org}
 }
 \author{
 Dan Rabosky

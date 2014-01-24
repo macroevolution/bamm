@@ -7,7 +7,7 @@
 #		rad = radius of arc
 arc = function(x,y,theta1,theta2,rad,border,...)
 {
-	steps = (theta2-theta1)/100; noTips = steps > 0;
+	steps = (theta2-theta1)/100; noTips = steps != 0;
 	steps = steps[noTips];
 	theta1 = theta1[noTips];
 	theta2 = theta2[noTips];

@@ -95,7 +95,12 @@ Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
     _muInit0 = sttings->getMuInit0();
     _muShift0 = sttings->getMuShift0();
 
-    _scale = sttings->getUpdateEventLocationScale(); // scale for event moves on tree.
+    // Event location scale is relative to the maximum root-to-tip length
+    _scale = sttings->getUpdateEventLocationScale() *
+        treePtr->maxRootToTipLength();
+
+    std::cout << "max root to tip length: " << treePtr->maxRootToTipLength()
+              << "   _scale: " << _scale << "\n";
 
     _updateEventRateScale = sttings->getUpdateEventRateScale();
     _localGlobalMoveRatio =
