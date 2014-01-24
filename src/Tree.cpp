@@ -1908,6 +1908,13 @@ Node* Tree::getNodeByName(std::string A)
 }
 
 
+double Tree::maxRootToTipLength()
+{
+    std::vector<double> lengths = terminalPathLengthsToRoot();
+    return *std::max_element(lengths.begin(), lengths.end());
+}
+
+
 bool Tree::isUltrametric()
 {
     std::vector<double> terminalPathLengths = terminalPathLengthsToRoot();

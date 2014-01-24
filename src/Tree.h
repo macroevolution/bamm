@@ -191,6 +191,8 @@ public:
     double getTotalMapLength();
     void   setTotalMapLength(double x);
 
+    double maxRootToTipLength();
+
     void setCanNodeBeMapped(int ndesc);
 
     void loadPreviousNodeStates(Tree* ostree);

@@ -74,8 +74,9 @@ TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
 
     // initial values
 
-	_scale = sttings->getUpdateEventLocationScale(); // scale for event moves on tree.
-
+    // Event location scale is relative to the maximum root-to-tip length
+    _scale = sttings->getUpdateEventLocationScale() *
+        treePtr->maxRootToTipLength();
 
     _updateEventRateScale = sttings->getUpdateEventRateScale();
     _localGlobalMoveRatio =
