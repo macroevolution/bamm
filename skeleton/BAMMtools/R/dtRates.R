@@ -18,7 +18,7 @@
 #	Returns: an ephy object with a list appended containing a vector of branch
 #			 rates and the step size used for calculation.
 
-dtRates = function (ephy, tau, ism = NULL) {
+dtRates = function (ephy, tau, ism = NULL, tmat = FALSE) {
     if (!"bammdata" %in% class(ephy)) {
         stop("Object ephy must be of class bammdata");
     }
@@ -58,6 +58,11 @@ dtRates = function (ephy, tau, ism = NULL) {
         names(dtrates) = rownames(segmat);
         dtrates = dtrates[as.character(index)];
         names(dtrates) = NULL;
+    }
+    if (tmat) {
+    	segmat = segmat[as.character(index),];
+    	ephy$dtrates = list(tau = tau, rates = dtrates, tmat = segmat);
+    	return(ephy);
     }
     ephy$dtrates = list(tau = tau, rates = dtrates);
     return(ephy);
