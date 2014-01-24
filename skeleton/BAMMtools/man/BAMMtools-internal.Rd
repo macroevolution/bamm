@@ -13,7 +13,8 @@
 \alias{histRates}
 \alias{inv.logit}
 \alias{logit}
-\alias{mkdtsegs}
+\alias{mkdtsegsPolar}
+\alias{mkdtsegsPhylo}
 \alias{richColors}
 \alias{recursivelySetNodeStates}
 \alias{segMap}

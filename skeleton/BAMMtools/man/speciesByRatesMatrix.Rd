@@ -14,10 +14,10 @@
 		an object of class \code{bammdata}
 	}
 	\item{nslices}{
-		an integer number of time slices. This determines at how many points in time rates are computed for each species. Should be a multiple of 10 (e.g. 10, 50, 100)
+		an integer number of time slices. This determines the number of equally spaced points in time at which rates are computed for each species
 	}
 	\item{index}{
-		an integer or vector of mode integer indicating which posterior samples to use in the calculation. If \code{NULL} all samples are used
+		an integer or vector of mode integer indicating which posterior samples to use in the calculation. If \code{NULL} (default) all samples are used
 	}
 	\item{spex}{
 		a character string. "s" (default) calculates speciation rates; "e" calculates extinction rates; "se" calculates diversification rates. Ignored if \code{ephy$type = "trait"}
@@ -27,7 +27,7 @@
 	
 }
 \value{
-	A nspecies x nslices matrix
+	A nspecies x nslices matrix of rate through time trajectories.
 }
 \references{
 	\url{bamm-project.org}
