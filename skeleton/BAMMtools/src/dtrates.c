@@ -3,20 +3,16 @@
 
 //forward function declarations
 SEXP getListElement(SEXP list, char *str);
-SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample);
-//SEXP getMatrixColumn(SEXP matrix, int col);
+SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample, SEXP type);
 double getDblMatrixELT(SEXP matrix, int row, int col);
 double getMeanRateExponential(double t1, double t2, double p1, double p2);
 double getTimeIntegratedBranchRate(double t1, double t2, double p1, double p2);
 
-SEXP getListElement(SEXP list, char *str)
-{
+SEXP getListElement(SEXP list, char *str) {
 	SEXP elmt = R_NilValue, names = getAttrib(list, R_NamesSymbol);
 	int i;
-	for (i = 0; i < LENGTH(list); i++)
-	{
-		if(strcmp(CHAR(STRING_ELT(names, i)), str) == 0)
-		{
+	for (i = 0; i < LENGTH(list); i++) {
+		if(strcmp(CHAR(STRING_ELT(names, i)), str) == 0) {
 			elmt = VECTOR_ELT(list, i);
 			break;
 		}
@@ -24,42 +20,20 @@ SEXP getListElement(SEXP list, char *str)
 	return elmt;
 }
 
-/***
-SEXP getMatrixColumn(SEXP matrix, int col)
-{
-	int nrow = INTEGER(getAttrib(matrix, R_DimSymbol))[0];
-	
-	SEXP ret;
-	ret = PROTECT(allocVector(REALSXP, nrow));
-	
-	int i;
-	for (i = 0; i < nrow; i++)
-	{
-		REAL(ret)[i] = REAL(matrix)[i + nrow * col];
-	}
-	return ret;
-}
-***/
-
-double getDblMatrixELT(SEXP matrix, int row, int col)
-{
+double getDblMatrixELT(SEXP matrix, int row, int col) {
 	int nrow = INTEGER(getAttrib(matrix, R_DimSymbol))[0];
 	return REAL(matrix)[row + nrow*col];
 }
 
-double getMeanRateExponential(double t1, double t2, double p1, double p2)
-{	
-	if (p2 == 0.) 
-	{
+double getMeanRateExponential(double t1, double t2, double p1, double p2) {	
+	if (p2 == 0.) {
 		return p1;
 	}
 	return (p1/p2)*(exp(t2*p2) - exp(t1*p2))/(t2 - t1);
 }
 
-double getTimeIntegratedBranchRate(double t1, double t2, double p1, double p2)
-{
-	if (p2 == 0.) 
-	{
+double getTimeIntegratedBranchRate(double t1, double t2, double p1, double p2) {
+	if (p2 == 0.) {
 		return (t2 - t1) * p1;
 	}
 	return (p1/p2)*(exp(t2*p2) - exp(t1*p2));
@@ -76,38 +50,30 @@ times of approximating segments and starting and ending times of branches
 or branch segments on the phylogeny.
 ***/
 
-//#define segmat(row, col) (getDblMatrixELT(segmat, row, col))
 
-SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
-{
+SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample, SEXP type) {
 	double eps = REAL(tol)[0];
 	
 	int k, j, l, nprotect = 0;
-	//int nsamples = LENGTH(getListElement(ephy, "eventBranchSegs"));
-	int nsamples = LENGTH(sample);
-	
-	/***
-	SEXP nodeseg = getMatrixColumn(segmat, 0); nprotect++;	
-	SEXP segbegin = getMatrixColumn(segmat, 1); nprotect++;
-	SEXP segend = getMatrixColumn(segmat, 2); nprotect++;
-	int nsegs = LENGTH(nodeseg);
-	***/
-	
+	int nsamples = LENGTH(sample);	
 	int nsegs = INTEGER(getAttrib(segmat, R_DimSymbol))[0];
 	
-	SEXP rates;
+	SEXP rates, erates;
 	PROTECT(rates = allocVector(REALSXP, nsegs)); nprotect++;
-	
-	for(k = 0; k < nsegs; k++)
-	{
+	for(k = 0; k < nsegs; k++) {
 		REAL(rates)[k] = 0.;
+	}
+	if (INTEGER(type)[0] == 0) {
+		PROTECT(erates = allocVector(REALSXP, nsegs)); nprotect++;
+		for(k = 0; k < nsegs; k++) {
+			REAL(erates)[k] = 0.;
+		}	
 	}
 	
 	int nrow, node, nnode, event, nxtevent, isGoodStart, isGoodEnd, place_holder;
-	double begin, end, Start, lam1, lam2, relStart, relEnd, rightshift, leftshift, ret;		
-	//for (k = 0; k < nsamples; k++)
-	for (k = INTEGER(sample)[0] - 1; k < INTEGER(sample)[nsamples - 1]; k++)
-	{
+	double begin, end, Start, lam1, lam2, mu1, mu2, relStart, relEnd, rightshift, leftshift, erightshift, eleftshift, ret;		
+	
+	for (k = INTEGER(sample)[0] - 1; k < INTEGER(sample)[nsamples - 1]; k++) {
 		SEXP eventSegs, eventData;
 		
 		eventSegs = PROTECT(VECTOR_ELT(getListElement(ephy, "eventBranchSegs"), k)); nprotect++;
@@ -115,8 +81,8 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 				
 		nrow = INTEGER(getAttrib(eventSegs, R_DimSymbol))[0];
 		place_holder = 0;
-		for(j = 0; j < nrow; j++) //move down the rows of eventSegs
-		{
+		//move down the rows of eventSegs
+		for(j = 0; j < nrow; j++) {
 			//eventSegs is 4 column matrix, node is in first column stored as double
 			node = (int) REAL(eventSegs)[j + nrow * 0];
 			
@@ -128,8 +94,7 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 			end = REAL(eventSegs)[j + nrow * 2];
 			
 			//find next node to later check for shift point on branch
-			if (j < nrow)
-			{
+			if (j < nrow) {
 				nnode = (int) REAL(eventSegs)[(j+1) + nrow * 0];
 				nxtevent = (int) REAL(eventSegs)[(j+1) + nrow * 3];
 			}
@@ -140,54 +105,64 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 			Start = REAL(getListElement(eventData, "time"))[event-1];
 			lam1 = REAL(getListElement(eventData, "lam1"))[event-1];
 			lam2 = REAL(getListElement(eventData, "lam2"))[event-1];
+			if (INTEGER(type)[0] == 0) {
+			    mu1 = REAL(getListElement(eventData, "mu1"))[event-1];
+			    mu2 = REAL(getListElement(eventData, "mu2"))[event-1];
+			}
 						
 			//need to find which approximating segments match this branch segment
 			//these are passed in strict order so we only need to search top to bottom
 			//and can ignore everything we've been over already
-			for (l = place_holder; l < nsegs; l++)
-			{
-				if ( (int) getDblMatrixELT(segmat, l, 0) == node)
-				{
+			for (l = place_holder; l < nsegs; l++) {
+				if ( (int) getDblMatrixELT(segmat, l, 0) == node) {
 					//isGoodStart = REAL(segbegin)[l] >= begin;
 					isGoodStart = ( (getDblMatrixELT(segmat, l, 1) - begin) >= 0. || ( (getDblMatrixELT(segmat, l, 1) - begin) < 0. && (getDblMatrixELT(segmat, l, 1) - begin) >= -1.*eps) );
 					//isGoodEnd = REAL(segend)[l] <= end;
 					isGoodEnd =  ( (getDblMatrixELT(segmat, l, 2) - end) <= 0. || ( (getDblMatrixELT(segmat, l, 2) - end) > 0. && (getDblMatrixELT(segmat, l, 2) - end) <= eps) );
 
-					if (isGoodStart && isGoodEnd)
-					{					
+					if (isGoodStart && isGoodEnd) {					
 						relStart = getDblMatrixELT(segmat, l, 1) - Start;
 						relEnd = getDblMatrixELT(segmat, l, 2) - Start;
 						ret = getMeanRateExponential(relStart,relEnd,lam1,lam2);
-						
 						REAL(rates)[l] += ret/((double) nsamples);
+						if (INTEGER(type)[0] == 0) {
+							ret = getMeanRateExponential(relStart,relEnd,mu1,mu2);
+							REAL(erates)[l] += ret/((double) nsamples);
+						}
 					}
 					//check for shift straddle
-					if (node == nnode)
-					{
+					if (node == nnode) {
 						isGoodStart = getDblMatrixELT(segmat, l, 1) < end;
 						isGoodEnd = getDblMatrixELT(segmat, l, 2) > end;
-						if (isGoodStart && isGoodEnd)
-						{	
+						if (isGoodStart && isGoodEnd) {	
 							relStart = getDblMatrixELT(segmat, l, 1) - Start;
 							relEnd = end - Start;
 							leftshift = getTimeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
-							
+							if (INTEGER(type)[0] == 0) {
+								eleftshift = getTimeIntegratedBranchRate(relStart,relEnd,mu1,mu2);
+							}
 							relStart = 0.;
 							relEnd = getDblMatrixELT(segmat, l, 2) - end;
 							lam1 = REAL(getListElement(eventData, "lam1"))[nxtevent-1];
 							lam2 = REAL(getListElement(eventData, "lam2"))[nxtevent-1];
+							
 							rightshift = getTimeIntegratedBranchRate(relStart,relEnd,lam1,lam2);
-							
 							ret = (leftshift+rightshift)/(getDblMatrixELT(segmat, l, 2) - getDblMatrixELT(segmat, l, 1));
-							
 							REAL(rates)[l] += ret/((double) nsamples);
+							
+							if (INTEGER(type)[0] == 0) {
+								mu1 = REAL(getListElement(eventData, "mu1"))[nxtevent-1];
+								mu2 = REAL(getListElement(eventData, "mu2"))[nxtevent-1];
+								erightshift = getTimeIntegratedBranchRate(relStart,relEnd,mu1,mu2);
+								ret = (eleftshift+erightshift)/(getDblMatrixELT(segmat, l, 2) - getDblMatrixELT(segmat, l, 1));
+								REAL(erates)[l] += ret/((double) nsamples);
+							}
 							place_holder = l; place_holder++;
 							break;
 						}
 					}
 				}
-				else
-				{
+				else {
 					place_holder = l;
 					break;
 				}
@@ -195,8 +170,14 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample)
 		}
 		UNPROTECT(2); nprotect -= 2; //protected eventSegs and eventData, which we no longer need
 	}
+	if (INTEGER(type)[0] == 0) {
+		SEXP retlist;
+		PROTECT(retlist = allocVector(VECSXP, 2)); nprotect++;
+		SET_VECTOR_ELT(retlist, 0, rates);
+		SET_VECTOR_ELT(retlist, 1, erates);
+		UNPROTECT(nprotect);
+		return retlist;
+	}
 	UNPROTECT(nprotect);
 	return rates;
 }
-
-//#undef segmat(row, col)

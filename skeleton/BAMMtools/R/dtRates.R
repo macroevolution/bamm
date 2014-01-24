@@ -2,7 +2,7 @@
 #	dtRates(ephy,tau)
 #
 #	A function to calculate approximations of
-#	mean instantaneous speciation rates or
+#	mean instantaneous speciation/extinction rates or
 #	phenotypic rates along each branch.
 #
 #	Arguments: ephy = a bammdata object
@@ -17,44 +17,100 @@
 #
 #	Returns: an ephy object with a list appended containing a vector of branch
 #			 rates and the step size used for calculation.
-dtRates = function(ephy, tau, ism = NULL) {
-	if (!'bammdata' %in% class(ephy)) {
-		stop('Object ephy must be of class bammdata');
-	}
-	
-	ephy$eventBranchSegs = lapply(ephy$eventBranchSegs, function(x) x[order(x[,1]), ]); 
-	
-	phy = as.phylo.bammdata(ephy);
-	phy = getStartStopTimes(phy);
-	if (attributes(phy)$order != 'cladewise') {
-		phy = reorder(phy,'cladewise');
-	}
-	tH = max(branching.times(phy));
-	
-	segmat = segMap(phy$edge[,2],phy$begin/tH,phy$end/tH,tau);
-	segmat[,2] = segmat[,2] * tH;
-	segmat[,3] = segmat[,3] * tH;
-	
-	tol = max(1*10^-decimals(ephy$eventBranchSegs[[1]][1,2]),1*10^-decimals(ephy$eventBranchSegs[[1]][1,3]));
-	
-	if (storage.mode(segmat) != "double") stop('Exiting');
-	if (storage.mode(tol) != "double") stop('Exiting');
-	if (storage.mode(ephy) != "list") stop('Exiting');
-	
-	if (is.null(ism)) ism = as.integer(1:length(ephy$eventBranchSegs)) else ism = as.integer(ism);
-	if (ism[length(ism)] > length(ephy$eventBranchSegs)) {
-		warning("Sample index out of range");
-		ism = as.integer(1:length(ephy$eventBranchSegs));
-	}
-	
-	index = 1:nrow(segmat)
-	rownames(segmat) = index;
-	segmat = segmat[order(segmat[,1]),];
-	dtrates = .Call("dtrates", ephy, segmat, tol, ism, PACKAGE="BAMMtools");
-	names(dtrates) = rownames(segmat);
-	dtrates = dtrates[as.character(index)];
-	names(dtrates) = NULL;
 
-	ephy$dtrates = list(tau = tau, rates = dtrates);
-	return(ephy);
+dtRates = function (ephy, tau, ism = NULL) {
+    if (!"bammdata" %in% class(ephy)) {
+        stop("Object ephy must be of class bammdata");
+    }
+    if (attributes(ephy)$order != "cladewise") {
+    	stop("Function requires tree in 'cladewise' order");
+    }
+    ephy$eventBranchSegs = lapply(ephy$eventBranchSegs, function(x) x[order(x[,1]), ]);
+    phy = as.phylo.bammdata(ephy);
+    phy = getStartStopTimes(phy);
+    tH = max(branching.times(phy));
+    segmat = segMap(ephy, tau);
+    tol = max(1 * 10^-decimals(ephy$eventBranchSegs[[1]][1, 2]),1 * 10^-decimals(ephy$eventBranchSegs[[1]][1, 3]));
+    if (storage.mode(segmat) != "double") stop("Exiting");
+    if (storage.mode(tol) != "double") stop("Exiting");
+    if (storage.mode(ephy) != "list") stop("Exiting");
+    if (is.null(ism)) {
+        ism = as.integer(1:length(ephy$eventBranchSegs));
+    }
+    else ism = as.integer(ism);
+    if (ism[length(ism)] > length(ephy$eventBranchSegs)) {
+        warning("Sample index out of range");
+        ism = as.integer(1:length(ephy$eventBranchSegs));
+    }
+    index = 1:nrow(segmat);
+    rownames(segmat) = index;
+    segmat = segmat[order(segmat[, 1]), ];
+    if (ephy$type == "diversification") {
+        dtrates = .Call("dtrates", ephy, segmat, tol, ism, 0L, PACKAGE = "BAMMtools");
+        for (i in 1:2) {
+            names(dtrates[[i]]) = rownames(segmat);
+            dtrates[[i]] = dtrates[[i]][as.character(index)];
+            names(dtrates[[i]]) = NULL;
+        }
+    }
+    else {
+        dtrates = .Call("dtrates", ephy, segmat, tol, ism, 1L, PACKAGE = "BAMMtools");
+        names(dtrates) = rownames(segmat);
+        dtrates = dtrates[as.character(index)];
+        names(dtrates) = NULL;
+    }
+    ephy$dtrates = list(tau = tau, rates = dtrates);
+    return(ephy);
 }
+
+
+# dtRates = function(ephy, tau, ism = NULL) {
+	# if (!'bammdata' %in% class(ephy)) {
+		# stop('Object ephy must be of class bammdata');
+	# }
+	
+	# ephy$eventBranchSegs = lapply(ephy$eventBranchSegs, function(x) x[order(x[,1]), ]); 
+	
+	# phy = as.phylo.bammdata(ephy);
+	# phy = getStartStopTimes(phy);
+	# #if (attributes(phy)$order != 'cladewise') {
+	# #	phy = reorder(phy,'cladewise');
+	# #}
+	# tH = max(branching.times(phy));
+	
+	# segmat = segMap(phy$edge[,2],phy$begin/tH,phy$end/tH,tau);
+	# segmat[,2] = segmat[,2] * tH;
+	# segmat[,3] = segmat[,3] * tH;
+	
+	# tol = max(1*10^-decimals(ephy$eventBranchSegs[[1]][1,2]),1*10^-decimals(ephy$eventBranchSegs[[1]][1,3]));
+	
+	# if (storage.mode(segmat) != "double") stop('Exiting');
+	# if (storage.mode(tol) != "double") stop('Exiting');
+	# if (storage.mode(ephy) != "list") stop('Exiting');
+	
+	# if (is.null(ism)) ism = as.integer(1:length(ephy$eventBranchSegs)) else ism = as.integer(ism);
+	# if (ism[length(ism)] > length(ephy$eventBranchSegs)) {
+		# warning("Sample index out of range");
+		# ism = as.integer(1:length(ephy$eventBranchSegs));
+	# }
+	
+	# index = 1:nrow(segmat)
+	# rownames(segmat) = index;
+	# segmat = segmat[order(segmat[,1]),];
+	# if (ephy$type == "diversification") {
+		# dtrates = .Call("dtrates", ephy, segmat, tol, ism, 0L, PACKAGE="BAMMtools");
+		# for (i in 1:2) {
+			# names(dtrates[[i]]) = rownames(segmat);
+			# dtrates[[i]] = dtrates[[i]][as.character(index)];
+			# names(dtrates[[i]]) = NULL;
+		# }
+	# }
+	# else {
+		# dtrates = .Call("dtrates", ephy, segmat, tol, ism, 1L, PACKAGE="BAMMtools");
+		# names(dtrates) = rownames(segmat);
+		# dtrates = dtrates[as.character(index)];
+		# names(dtrates) = NULL;
+	# }
+	# ephy$dtrates = list(tau = tau, rates = dtrates);
+	# return(ephy);
+# }

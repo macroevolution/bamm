@@ -10,80 +10,67 @@ void setpolartreecoords(int * anc, int * desc, int * ndorder, int * ntip, int * 
 void setphylotreecoords(int * anc, int * desc, int * ndorder, double * bl, int * ntip, int * rootnd, int * nnode, double * bar, double * xy, double * root);
 void fetchmrca(int * anc, int * desc, int * root, int * ne, int * npair, int * t1, int * t2, int * ret);
 
-static int zzz;
+static int zkzkz;
 
-void postorder_tree_traverse(int * anc, int * desc, int * node, int * nnode, int * ndorder)
-{
-	zzz = 0;
+void postorder_tree_traverse(int * anc, int * desc, int * node, int * nnode, int * ndorder) {
+	zkzkz = 0;
 	rootward(anc, desc, node, nnode, ndorder);
 }
 
-void preorder_tree_traverse(int * anc, int * desc, int * node, int * nnode, int * ndorder)
-{
-	zzz = 0;
+void preorder_tree_traverse(int * anc, int * desc, int * node, int * nnode, int * ndorder) {
+	zkzkz = 0;
 	tipward(anc, desc, node, nnode, ndorder);
 }
 
-void setrecursivesequence(int * anc, int * desc, int * node, int * ne, int * downseq, int * lastvisit)
-{
-	zzz = 0;
+void setrecursivesequence(int * anc, int * desc, int * node, int * ne, int * downseq, int * lastvisit) {
+	zkzkz = 0;
 	recursivesequence(anc,desc,node,ne,downseq,lastvisit);
 }
 
-void rootward(int * anc, int * desc, int * node, int * nnode, int * ndorder)
-{
+void rootward(int * anc, int * desc, int * node, int * nnode, int * ndorder) {
 	int i, d = 0;
 	int * children;
 	children = Calloc(2, int);
-	for (i = 0; i < (*nnode-1); i++)
-	{
-		if (anc[i] == *node)
-		{
+	for (i = 0; i < (*nnode-1); i++) {
+		if (anc[i] == *node) {
 			children[d] = desc[i];
 			d++;
 		}
 		if (d == 2) break;
 	}
 	
-	if (children[0] != 0 && children[1] != 0)
-	{
+	if (children[0] != 0 && children[1] != 0) {
 		int * child;
 		child = Calloc(1,int); 
-		for (i = 0; i < 2; i++)
-		{
+		for (i = 0; i < 2; i++) {
 			*child = children[i];
 			rootward(anc, desc, child, nnode, ndorder);
 			//Free(child);
 		}
 		Free(child);
 	}
-	ndorder[zzz] = *node; zzz++;
+	ndorder[zkzkz] = *node; zkzkz++;
 	//Rprintf("%d\n", zzz);
 	Free(children);
 }
 
-void tipward(int * anc, int * desc, int * node, int * nnode, int * ndorder)
-{
-	ndorder[zzz] = *node; zzz++;
+void tipward(int * anc, int * desc, int * node, int * nnode, int * ndorder) {
+	ndorder[zkzkz] = *node; zkzkz++;
 	int i, d = 0;
 	int * children;
 	children = Calloc(2, int);
-	for (i = 0; i < (*nnode-1); i++)
-	{
-		if (anc[i] == *node)
-		{
+	for (i = 0; i < (*nnode-1); i++) {
+		if (anc[i] == *node) {
 			children[d] = desc[i];
 			d++;
 		}
 		if (d == 2) break;
 	}
 	
-	if (children[0] != 0 && children[1] != 0)
-	{
+	if (children[0] != 0 && children[1] != 0) {
 		int * child;
 		child = Calloc(1,int); 
-		for (i = 0; i < 2; i++)
-		{
+		for (i = 0; i < 2; i++) {
 			*child = children[i];
 			tipward(anc, desc, child, nnode, ndorder);
 			//Free(child);
@@ -94,23 +81,19 @@ void tipward(int * anc, int * desc, int * node, int * nnode, int * ndorder)
 	Free(children);
 }
 
-void recursivesequence(int * anc, int * desc, int * node, int * ne, int * downseq, int * lastvisit)
-{
-	downseq[zzz] = *node; zzz++; 
+void recursivesequence(int * anc, int * desc, int * node, int * ne, int * downseq, int * lastvisit) {
+	downseq[zkzkz] = *node; zkzkz++; 
 	int i, d = 0;
 	int * children;
 	children = Calloc(2, int);
-	for (i = 0; i < *ne; i++)
-	{
-		if (anc[i] == *node)
-		{
+	for (i = 0; i < *ne; i++) {
+		if (anc[i] == *node) {
 			children[d] = desc[i];
 			d++;
 		}
 		if (d == 2) break;
 	}
-	if (children[0] != 0 && children[1] != 0)
-	{
+	if (children[0] != 0 && children[1] != 0) {
 		int * child;
 		child = Calloc(1, int);
 		for (i = 0; i < 2; i++)
@@ -125,21 +108,16 @@ void recursivesequence(int * anc, int * desc, int * node, int * ne, int * downse
 	Free(children);	
 }
 
-void setpolartreecoords(int * anc, int * desc, int * ndorder, int * ntip, int * rootnd, int * nnode, double * ths, double * theta, double * root)
-{
+void setpolartreecoords(int * anc, int * desc, int * ndorder, int * ntip, int * rootnd, int * nnode, double * ths, double * theta, double * root) {
 	int i, j, d, ne = *nnode - 1;
 	int * ci;
 	ci = Calloc(2, int);
 	
-	for (i = 0; i < *nnode; i++)
-	{
+	for (i = 0; i < *nnode; i++) {
 		d = 0;
-		if (ndorder[i] <= *ntip)
-		{
-			for (j = 0; j < ne; j++)
-			{
-				if (desc[j] == ndorder[i])
-				{
+		if (ndorder[i] <= *ntip) {
+			for (j = 0; j < ne; j++) {
+				if (desc[j] == ndorder[i]) {
 					theta[j + ne * 0] = (ndorder[i] - 1) * (*ths);
 					theta[j + ne * 1] = (ndorder[i] - 1) * (*ths);
 					theta[j + ne * 2] = (ndorder[i] - 1) * (*ths); 
@@ -147,19 +125,15 @@ void setpolartreecoords(int * anc, int * desc, int * ndorder, int * ntip, int * 
 				}
 			}
 		}
-		else
-		{
-			for (j = 0; j < ne; j++)
-			{
-				if (anc[j] == ndorder[i])
-				{
+		else {
+			for (j = 0; j < ne; j++) {
+				if (anc[j] == ndorder[i]) {
 					ci[d] = j;
 					d++;
 				}
 				if (d == 2) break;
 			}
-			if (ndorder[i] == *rootnd)
-			{
+			if (ndorder[i] == *rootnd) {
 				root[0] = theta[ci[0] + ne * 0]/2. + theta[ci[1] + ne * 0]/2.;
 				root[1] = theta[ci[0] + ne * 0];
 				root[2] = theta[ci[1] + ne * 0];
@@ -174,22 +148,17 @@ void setpolartreecoords(int * anc, int * desc, int * ndorder, int * ntip, int * 
 	Free(ci);
 }
 
-void setphylotreecoords(int * anc, int * desc, int * ndorder, double * bl, int * ntip, int * rootnd, int * nnode, double * bar, double * xy, double * root)
-{
+void setphylotreecoords(int * anc, int * desc, int * ndorder, double * bl, int * ntip, int * rootnd, int * nnode, double * bar, double * xy, double * root) {
 	int i, j, d, ne = *nnode - 1;
 	double dy = 1./(*ntip);
 	int * ci;
 	ci = Calloc(2, int);
 	
-	for (i = 0; i < *nnode; i++)
-	{
+	for (i = 0; i < *nnode; i++) {
 		d = 0;
-		if (ndorder[i] <= *ntip)
-		{
-			for (j = 0; j < ne; j++)
-			{
-				if (desc[j] == ndorder[i])
-				{
+		if (ndorder[i] <= *ntip) {
+			for (j = 0; j < ne; j++) {
+				if (desc[j] == ndorder[i]) {
 					xy[j + ne * 0] = 1. - bl[j];
 					xy[j + ne * 1] = (ndorder[i] - 1) * dy;
 					xy[j + ne * 2] = 1.;
@@ -204,19 +173,15 @@ void setphylotreecoords(int * anc, int * desc, int * ndorder, double * bl, int *
 				}
 			}
 		}
-		else
-		{
-			for (j = 0; j < ne; j++)
-			{
-				if (anc[j] == ndorder[i])
-				{
+		else {
+			for (j = 0; j < ne; j++) {
+				if (anc[j] == ndorder[i]) {
 					ci[d] = j;
 					d++;
 				}
 				if (d == 2) break;
 			}
-			if (ndorder[i] == *rootnd)
-			{
+			if (ndorder[i] == *rootnd) {
 				root[0] = xy[ci[0] + ne * 0];
 				root[1] = xy[ci[0] + ne * 3];
 				root[2] = xy[ci[0] + ne * 0];
@@ -239,29 +204,23 @@ void setphylotreecoords(int * anc, int * desc, int * ndorder, double * bl, int *
 	Free(ci);
 }
 
-void fetchmrca(int * anc, int * desc, int * root, int * ne, int * npair, int * t1, int * t2, int * ret)
-{	
+void fetchmrca(int * anc, int * desc, int * root, int * ne, int * npair, int * t1, int * t2, int * ret) {	
 	int i,j,k;
 
 	int cnt, node, mrca;
 	int * path;
 	
-	for (k=0; k < *npair; k++)
-	{
-		if (t2[k] == 0)
-		{
+	for (k=0; k < *npair; k++) {
+		if (t2[k] == 0) {
 			ret[k] = t1[k];
 			continue;
 		}
 		path = Calloc(*ne, int);
 		cnt = 0; mrca = 0;
 		node = t1[k];
-		while (node != *root)
-		{
-			for (i = 0; i < *ne; i++)
-			{
-				if (desc[i] == node)
-				{
+		while (node != *root) {
+			for (i = 0; i < *ne; i++) {
+				if (desc[i] == node) {
 					node = anc[i];
 					path[cnt] = node;
 					cnt++;
@@ -271,17 +230,12 @@ void fetchmrca(int * anc, int * desc, int * root, int * ne, int * npair, int * t
 		}
 		
 		node = t2[k];
-		while (node != *root)
-		{
-			for (i = 0; i < *ne; i++)
-			{
-				if (desc[i] == node)
-				{
+		while (node != *root) {
+			for (i = 0; i < *ne; i++) {
+				if (desc[i] == node) {
 					node = anc[i];
-					for (j = 0; j < *ne; j++)
-					{
-						if (node == path[j])
-						{
+					for (j = 0; j < *ne; j++) {
+						if (node == path[j]) {
 							mrca = 1;
 							break;
 						}
@@ -292,12 +246,10 @@ void fetchmrca(int * anc, int * desc, int * root, int * ne, int * npair, int * t
 			if (mrca == 1) break;
 		}
 	
-		if (mrca == 1)
-		{
+		if (mrca == 1) {
 			ret[k] = node;
 		}
-		else
-		{
+		else {
 			ret[k] = *root;
 		}
 		Free(path);
