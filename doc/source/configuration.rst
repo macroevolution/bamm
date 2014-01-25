@@ -88,7 +88,7 @@ Priors
     of the Poisson process. Smaller values favor greater numbers of distinct
     evolutionary regimes on the tree. Suggested values:
     ``poissonRatePrior = 1.0`` for smaller datasets (< 500 tips) or
-    ``poissonRatePrior = 0.1`` or even ``0.2`` for large (5000+ tips).
+    ``poissonRatePrior = 0.1`` or even ``0.02`` for large (5000+ tips).
 
 MCMC Simulation
 ...............
@@ -126,7 +126,7 @@ MCMC Simulation
 
 ``updateEventLocationScale``
     Scale parameter for updating local moves of events on the tree.
-    This defines the width of the sliding window proposal.
+    This defines the width of the sliding window proposal in units relative to the total tree depth (crown age) of the phylogeny. If this value is set to 0.01, the uniform distribution from which proposed step sizes are drawn with be ``( -T*updateLocationScale, +T*updateLocationScale )``, where T is the maximum root-to-tip distance.
 
 ``updateEventRateScale``
     Scale parameter (proportional shrinking/expanding) for updating
@@ -162,8 +162,8 @@ General
 .......
 
 ``useGlobalSamplingProbability``
-    If ``1``, look for a global correction for incomplete sampling
-    (globalSamplingProbability).
+    If ``1``, use global correction for incomplete sampling
+    (globalSamplingProbability). If you have complete taxon sampling, simply leave this set at 1 and set ``globalSamplingProbability`` to 1.0.
     If ``0``, look for a file that specifies clade-specific corrections
     for incomplete sampling (``sampleProbsFilename``).
 
@@ -173,14 +173,13 @@ General
 
 ``sampleProbsFilename``
     The path of a file containing clade-specific corrections for
-    incomplete sampling.
+    incomplete sampling. 
 
 Priors
 ......
 
 ``lambdaInitPrior``
-    Prior on the inital lambda (rate parameter of the exponential distribution)
-    for the speciation rate.
+    Prior on the inital speciation rate (lambda) for the general exponential change process.  This is the rate parameter of an exponential distribution. Smaller values impose a flatter prior.
 
 ``lambdaShiftPrior``
     Prior on the the lambda shift parameter (standard deviation of the normal
@@ -195,11 +194,7 @@ Priors
     The "grain" of the likelihood calculations. It approximates the 
     continuous-time change in diversification rates by breaking each branch
     into a constant-rate diversification segments, with each segment equal
-    to ``segLength``. So, a branch of length 10 will have the exponential
-    speciation-rate change approximated by 10 segments if ``segLength = 1.0``.
-    If the value is greater than the branch length (e.g., ``segLength = 100``
-    in this case) BAMM will not break the branch into segments but use the mean 
-    rate across the entire branch.
+    to ``segLength * T``, where T is the root-to-tip distance of the phylogeny (e.g., the crown age). If you have a phylogeny with a crown age of 50 and ``segLength = 0.02``, the grain of the likelihood calculations will be set to ``50 * 0.02 = 1.0``. A branch of length 5 will have the exponential speciation-rate change approximated by 5 segments with this value. If the value is greater than the branch length, BAMM will not break the branch into segments but use the mean rate across the entire branch. In the example above, this would occur for ``segLength > 0.1``, in which case the segment size would be equal to 5.0 and hence would exceed the length of any branches less than or equal to 5 time units in length. You can make ``segLength`` as small as you wish, but there is a direct tradeoff with the speed of the calculations. Further exploration of this is warranted, but we have found that in general, there is little to be gained from making this value smaller than 2% of the total tree depth. 
 
 MCMC Simulation
 ...............
@@ -335,6 +330,4 @@ Parameter Update Rates
     Relative frequency of moves update the value of ancestral character stats.
     You have as many ancestral states as you have internal nodes in your tree,
     so there are a lot of parameters: this value should, in general,
-    be substantially higher than the other parameter values
-    (recommended 25:1 or 50:1) because there are so many internal nodes states
-    that need to be updated.
+    be substantially higher than the other parameter values. We suggest setting this at least 25+ times the frequency with which event parameters are updated, because there are a large number of internal node states. 
