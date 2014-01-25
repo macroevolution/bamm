@@ -24,9 +24,9 @@ tree height) of the segments that each branch will be discretized into
   \item{ism}{
 an integer vector indexing which posterior samples to include
 in the calculation
+}
   \item{tmat}{
   	a logical. If \code{TRUE} the matrix of branch segments is returned
-  }
 }
 }
 \details{

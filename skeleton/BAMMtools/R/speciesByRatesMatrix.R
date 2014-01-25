@@ -1,9 +1,6 @@
 speciesByRatesMatrix = function(ephy, nslices, index = NULL, spex = "s") {
 	phy = as.phylo.bammdata(ephy);
 	seq.nod = .Call("seq_root2tip", phy$edge, length(phy$tip.label), phy$Nnode, PACKAGE = "ape");
-	if (nslices > length(phy$tip.label)) {
-		warning("You are generating more time slice variables than species. Consider choosing a smaller number of slices");
-	}
 	if (nslices <= 100) {
 		tvec = (seq(0, 1, 0.01)+0.005) * max(branching.times(phy));
 		tvec = tvec[seq.int(1,length(tvec),length.out=nslices+1)];
@@ -25,23 +22,23 @@ speciesByRatesMatrix = function(ephy, nslices, index = NULL, spex = "s") {
 	tol = 0.0001*max(branching.times(phy));
 	ret = lapply(seq.nod, function(x) {
 		path = which(m$dtrates$tmat[,1] %in% x);
-		ids = unlist(sapply(tvec[-length(tvec)], function(y) which(m$dtrates$tmat[path,2] <= y & m$dtrates$tmat[path,3] > y)));
+		ids = sapply(tvec[-length(tvec)], function(y) which(m$dtrates$tmat[path,2] <= y & m$dtrates$tmat[path,3] > y));
 		if (ephy$type == "trait") {
-			return(m$dtrates$rates[ids]);
+			m$dtrates$rates[path][ids];
 		}
 		else {
 			if (tolower(spex) == "s") {
-				return(m$dtrates$rates[[1]][ids]);
+				m$dtrates$rates[[1]][path][ids];
 			}
 			else if (tolower(spex) == "e") {
-				return(m$dtrates$rates[[2]][ids]);
+				m$dtrates$rates[[2]][path][ids];
 			}
 			else {
-				return(m$dtrates$rates[[1]][ids] - m$dtrates$rates[[2]][ids]);
+				m$dtrates$rates[[1]][path][ids] - m$dtrates$rates[[2]][path][ids];
 			}
 		}
 	});
 	ret = do.call(rbind, ret);
 	rownames(ret) = phy$tip.label;
-	return(ret);	
+	return(list(times = tvec[-length(tvec)],rates = ret));	
 }
