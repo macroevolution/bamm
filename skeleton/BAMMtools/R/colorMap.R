@@ -2,8 +2,15 @@
 #	Internal function called by plot.bammdata(...)
 #
 #
-colorMap = function(x, pal, NCOLORS, show=FALSE, ...) {
+colorMap = function(x, pal) {
 	dpal = c('BrBG','PRGn','PiYG','PuOr','RdBu','RdGy','RdYlBu','RdYlGn','Spectral');
+	if (exists("colorbreaks", .dtRatesEnv)) {
+		bks = get("colorbreaks", .dtRatesEnv);
+		NCOLORS = length(bks)-1;
+	}
+	else {
+		stop("Could not find 'colorbreaks' in .dtRatesEnv");
+	}
 	if (length(pal) == 3) {
 		colpalette = colorRampPalette(pal,space='Lab')(NCOLORS);	
 	}
@@ -16,11 +23,10 @@ colorMap = function(x, pal, NCOLORS, show=FALSE, ...) {
 	else if (tolower(pal) == "set2") {
 		colpalette = colorRampPalette(c("darkgreen","pink","magenta4"),space='Lab')(NCOLORS);
 	}
-	else if (pal == 'temperature') {
+	else if (tolower(pal) == 'temperature') {
 		colpalette = richColors(NCOLORS);	
 	}
 	kde = density(x);
-	bks = quantile(x, seq(0,1,length.out=(NCOLORS+1)));
 	colset = numeric(length(x));
 	coldens = numeric(length(kde$x));
 	for (i in 2:length(bks)) {
@@ -37,20 +43,7 @@ colorMap = function(x, pal, NCOLORS, show=FALSE, ...) {
         	coldens[kde$x >= bks[i-1] & kde$x < bks[i]] = colpalette[i-1];
         }
     }
-	
-	bks = rep(bks, each=2);
-	bks = bks[-c(1,length(bks))];
-	bks = matrix(bks, ncol=2, byrow=TRUE);
-	bks = data.frame(colpalette,bks,stringsAsFactors=FALSE);
-	colnames(bks) = c("Color","Lb","Hb");
-		
 	coldens = data.frame(kde$x,kde$y,coldens,stringsAsFactors=FALSE);
-	if (show) {
-		plot(coldens[,1],coldens[,2],type="n")
-		for(i in 1:nrow(coldens)) {
-			lines(rep(coldens[i,1],2),c(0,coldens[i,2]), col=coldens[i,3],...);	
-		}
-	}
 	return(list(cols = colset, colsdensity = coldens));
 }
 

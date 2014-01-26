@@ -4,36 +4,36 @@ speciesByRatesMatrix = function(ephy, nslices, index = NULL, spex = "s") {
 	if (nslices <= 100) {
 		tvec = (seq(0, 1, 0.01)+0.005) * max(branching.times(phy));
 		tvec = tvec[seq.int(1,length(tvec),length.out=nslices+1)];
-		m = dtRates(ephy, 0.01, index, tmat = TRUE);
+		m = dtRates(ephy, 0.01, index, tmat = TRUE, assigns = FALSE);
 	}
 	else if (nslices > 100 && nslices <= 500) {
 		tvec = (seq(0, 1, 0.002)+0.001) * max(branching.times(phy));
 		tvec = tvec[seq.int(1,length(tvec),length.out=nslices+1)];
-		m = dtRates(ephy, 0.002, index, tmat = TRUE);
+		m = dtRates(ephy, 0.002, index, tmat = TRUE, assigns = FALSE);
 	}
 	else if (nslices > 500 && nslices <= 1000) {
 		tvec = (seq(0, 1, 0.001)+0.0005) * max(branching.times(phy));
 		tvec = tvec[seq.int(1,length(tvec),length.out=nslices+1)];
-		m = dtRates(ephy, 0.001, index, tmat = TRUE);
+		m = dtRates(ephy, 0.001, index, tmat = TRUE, assigns = FALSE);
 	}
 	else {
 		stop("Max slices (1000) exceeded.  Choose a smaller number of slices");
 	}
 	ret = lapply(seq.nod, function(x) {
-		path = which(m$dtrates$tmat[,1] %in% x);
-		ids = sapply(tvec[-length(tvec)], function(y) which(m$dtrates$tmat[path,2] <= y & m$dtrates$tmat[path,3] > y));
+		path = which(m$tmat[,1] %in% x);
+		ids = sapply(tvec[-length(tvec)], function(y) which(m$tmat[path,2] <= y & m$tmat[path,3] > y));
 		if (ephy$type == "trait") {
-			m$dtrates$rates[path][ids];
+			m$rates[path][ids];
 		}
 		else {
 			if (tolower(spex) == "s") {
-				m$dtrates$rates[[1]][path][ids];
+				m$rates[[1]][path][ids];
 			}
 			else if (tolower(spex) == "e") {
-				m$dtrates$rates[[2]][path][ids];
+				m$rates[[2]][path][ids];
 			}
 			else {
-				m$dtrates$rates[[1]][path][ids] - m$dtrates$rates[[2]][path][ids];
+				m$rates[[1]][path][ids] - m$rates[[2]][path][ids];
 			}
 		}
 	});

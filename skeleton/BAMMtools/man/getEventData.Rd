@@ -113,8 +113,8 @@ order in which nodes are visited by a pre-order tree traversal.
 \item{lastvisit}{
 An integer vector giving the index of the last node visited by the node in the corresponding
 position in \code{downseq}. \code{downseq} and \code{lastvisit} can be used to quickly retrieve
-the descendants of any node. e.g. if \code{downseq[2]=89} and \code{lastvist[89]=15}, the descendants 
-of node 89 can be found by \code{downseq[2:15]}.
+the descendants of any node. e.g. the descendants of node 89 can be found by 
+\code{downseq[which(downseq==89):which(downseq==lastvisit[89])}.
 }
 
 }

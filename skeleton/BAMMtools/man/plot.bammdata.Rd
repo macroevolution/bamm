@@ -10,9 +10,9 @@ colors each branch by the estimated rate of speciation, extinction, or trait evo
 }
 \usage{
 S3 method for class \code{bammdata}:		
-plot(ephy, method = "phylogram", tau = 0.01, spex="s", index = NULL, 
+plot(ephy, method = "phylogram", spex="s", 
     vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, 
-    hrates = FALSE, lwd = 1, cex = 1, ncolors = 64, pal = c("darkgreen","yellow2","red"), ...)
+    legend = FALSE, lwd = 1, cex = 1, pal = "set1", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,19 +24,10 @@ a character string indicating the method for plotting the phylogenetic tree.
 \code{method = "phylogram"} (default) plots the phylogenetic tree using rectangular 
 coordinates. \code{method = "polar"} plots the phylogenetic tree using polar coordinates.
 }
-  \item{tau}{
-a numeric indicating the step size used in discretizing branches into segments. 
-These segments are used in calculating rate changes along branches. Should be
-given as a fraction of the total tree height, e.g. 0.01 (default). 
-}
   \item{spex}{
 a character string indicating what type of macroevolutionary rates should be plotted. "s" (default) indicates
 speciation rates, "e" indicates extinction rates, and any other character, e.g. "se", indicates net diversification
 rates. Ignored if \code{ephy$type = "trait"}.  	
-}
-  \item{index}{
-an integer vector indexing which posterior samples to include in the calculation
-of rates. If \code{NULL} (default) all posterior samples in \code{ephy} are used.
 }
   \item{vtheta}{
 a numeric indicating the angular separation (in degrees) of the first and last
@@ -64,12 +55,7 @@ mapping of evolutionary rates to colors. Defaults to \code{FALSE}.
 a numeric specifying the line width for branches.
 }
   \item{cex}{
-a numeric specifying the character expansion for tip labels.
-}
-  \item{ncolors}{
-an integer specifying the number of colors to be used for the mapping of evolutionary
-rates to colors. Specifying large values for \code{ncolors} will not necessarily result 
-in a smoother-looking color gradient. The default is 64.
+a numeric specifying the size of tip labels.
 }
   \item{pal}{
 a character string or vector of mode character that describes the color palette. See
@@ -82,7 +68,7 @@ further arguments passed to \code{par}.
 \details{
 To calculate rates, each branch of the phylogeny is discretized into a number of small segments, 
 and the mean of the marginal posterior density of the rate of speciation/extinction or trait evolution is 
-calculated for each such segment. Rates are then mapped to colors such that cool colors represent 
+calculated for each such segment. Rates are mapped to colors such that cool colors represent 
 slow rates and warm colors represent fast rates. When the tree is
 plotted each of these small segments is plotted so that changes in rates through time and shifts in 
 rates are visible as gradients of color.
@@ -90,19 +76,15 @@ rates are visible as gradients of color.
 Currently three options exist for specifying the color palette. First, any vector of three valid named colors
 may be used. The first, second, and third colors are mapped to low, intermediate, and fast rates 
 of evolution. This provides lots of flexibility for choosing a color scheme.
-Second, the option \code{pal = "temperature"} uses the \code{rich.colors} function written by Arni Magnusson for the package gplots. If the package RColorBrewer is loaded, any of the named diverging color palettes documented 
+Second, the option \code{pal = "temperature"} uses the \code{rich.colors} function written by Arni Magnusson for the package gplots. Finally, if the package RColorBrewer is loaded, any of the named diverging color palettes documented 
 under \code{brewer.pal} may also be used. Two default choices exist which make use of the first option. Specifying "set1"
 uses a color ramp from green to red that we happen to like. This option is probably not suitable for people with certain forms of colorblindness. Specifying "set2" creates a color ramp from green to magenta that is hopefully better
 for color deficient vision.
 
-
 Specifying smaller values for \code{tau} will result in smoother-looking rate changes on the tree. Note that smaller values of \code{tau} require more computation.  
 
-Internally \code{plot.bammdata} looks for an element in \code{ephy} called "dtrates". 
-This is simply a vector holding the rates of each segment on each branch. If "dtrates" is not 
-found \code{plot.bammdata} calls \code{dtRates} to perform the rate calculations.
-If you plan to repeatedly call \code{plot.bammdata} on a large tree you can reduce computation
-load by calling \code{dtRates} with \code{ephy} before passing \code{ephy} to \code{plot.bammdata}.
+Internally \code{plot.bammdata} checks whether or not rates have been calculated and assigned in the \code{.dtRatesEnv} environment.
+If they have not a new calculation and assignment is made by calling \code{dtRates}. A rates to colors map is also made by calling \code{assignColorBreaks}. If rates have already been calculated but the \code{bammdata} object does not match the one used in this original calculation,a new calculation and assignment of rates is made but the rates to colors mapping is left unchanged. This allows one to plot parts of a tree while preserving the mapping of rates to colors that was made using rates for the entire tree.
 }
 \value{
 Returns (invisibly) a list with two components. 
@@ -129,42 +111,64 @@ returning unless \code{multi = TRUE}.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{dtRates}}, \code{\link{colorMap}}, \code{\link{addBAMMshifts}}.	
+\code{\link{dtRates}}, \code{\link{addBAMMshifts}}, \code{\link{assignColorBreaks}}, \code{\link{subtreeBAMM}}	
 }
 \examples{
 	
 library(BAMMtools)
 data(whales, events.whales)
-ephy = getEventData(whales, events.whales, burnin=0.25)
+ed <- getEventData(whales, events.whales, burnin=0.25)
 
-#adding shifts to tree for specific posterior samples
-plot(ephy, method="polar", index=5)
-addBAMMshifts(ephy, "polar", index=5)
+#the first call to plot.bammdata. No calculations or assignments of rates have been made
+exists("rates", .dtRatesEnv)
+exists("colorbreaks", .dtRatesEnv) 
+plot(ed, lwd = 3, spex="s") #internally calls dtRates(ed, tau = 0.01) and assignColorBreaks(64, "s")
+#Now they have been made relative to the entire tree
+exists("rates", .dtRatesEnv)
+exists("colorbreaks", .dtRatesEnv)
 
-#multi-panel plotting and adding shifts
+#now you can plot subtrees while preserving the original rates to colors map
+#be sure to note that tau should be kept at the same value that was used in the 
+#original calculation for the entire tree, because the rates to colors map is also relative to
+#this value
+sed <- subtreeBAMM(ed, node = 103)
+dtRates(sed, 0.01)
+plot(sed, lwd = 3)
+sed <- subtreeBAMM(ed, node = 140)
+dtRates(sed, 0.01)
+plot(sed, lwd = 3)
+
+#if you want to change the value of tau and the rates to colors map for the entire tree
+dtRates(ed, tau = 0.002)
+assignColorBreaks()
+#now you can re-plot the subtrees using this finer tau partition
+sed <- subtreeBAMM(ed, node = 103)
+dtRates(sed, 0.002)
+plot(sed, lwd = 3)
+sed <- subtreeBAMM(ed, node = 140)
+dtRates(sed, 0.002)
+plot(sed, lwd = 3)
+
+#multi-panel plotting and adding shifts of specific posterior samples
 par(mfrow=c(2,3),mar=c(5,1,1,1))
-samples = sample(1:length(ephy$eventData), 6)
+samples = sample(1:length(ed$eventData), 6)
 for (i in 1:6) {
-	plot(ephy, tau=0.001, index=samples[i], multi=TRUE)
-	addBAMMshifts(ephy,method="phylogram",index=samples[i],multi=TRUE)	
+	dtRates(ed, 0.005, samples[i])
+	assignColorBreaks()
+	plot(ed, multi=TRUE)
+	addBAMMshifts(ed,method="phylogram",index=samples[i],multi=TRUE)	
 }
 
-#default behavior will call dtRates on each invocation
-plot(ephy)
-plot(ephy, method="polar")
-
-#now plot.bammdata does not call dtRates
-ephy = dtRates(ephy)
-plot(ephy)
-plot(ephy,method="polar")
-
-#color and line width options
+#color options
+dtRates(ed,0.01)
+assignColorBreaks()
+plot(ed, pal="set1")
+plot(ed, pal="set2")
+plot(ed, pal=c("midnightblue","lightskyblue","orangered"))
 if (require(RColorBrewer)) {
-	plot(ephy,method="polar",pal="Spectral", lwd=3)
-	plot(ephy,method="polar",pal="RdYlBu", lwd=3)
+	plot(ed,method="polar",pal="Spectral", lwd=3)
+	plot(ed,method="polar",pal="RdYlBu", lwd=3)
 }	
-plot(ephy,method="polar",pal=c("blue","green","red"), lwd=3)
-
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

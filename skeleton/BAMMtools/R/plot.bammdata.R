@@ -1,4 +1,4 @@
-plot.bammdata = function (ephy, method = "phylogram", tau = 0.01, index = NULL, vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, legend = FALSE, spex = "s", lwd = 1, cex = 1, ncolors = 64, pal = "set1", ...) {
+plot.bammdata = function (ephy, method = "phylogram", vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, legend = FALSE, spex = "s", lwd = 1, cex = 1, pal = "set1", ...) {
     if ("bammdata" %in% class(ephy)) {
     	if (attributes(ephy)$order != "cladewise") {
     		stop("Function requires tree in 'cladewise' order");
@@ -12,40 +12,56 @@ plot.bammdata = function (ephy, method = "phylogram", tau = 0.01, index = NULL, 
     if (any(phy$edge.length == 0)) {
         warning("Tree contains zero length branches. Rates for these will be NA and coerced to zero");
     }
-    if (!("dtrates" %in% names(ephy))) {
-        ephy = dtRates(ephy, tau, index);
+    #if (!("dtrates" %in% names(ephy))) {
+    #    ephy = dtRates(ephy, tau, index);
+    #}
+    if (exists("rates", envir = .dtRatesEnv)) {
+    	if (!all.equal(get("callobject", .dtRatesEnv), list(nsamples = length(ephy$eventData), root = min(ephy$edge[,1])))) {
+    		dtRates(ephy, 0.01);
+    	}
+    	dtr = get("rates", envir = .dtRatesEnv);
+    }
+    else {
+    	dtRates(ephy, 0.01);
+    	assignColorBreaks(64, spex);
+    	dtr = get("rates", envir = .dtRatesEnv);
     }
     if (ephy$type == "trait") {
-        if (sum(is.na(ephy$dtrates$rates))) {
-            warning(sprintf("Found %d NA phenotypic rates. Coercing to zero.", sum(is.na(ephy$dtrates$rates))));
-            ephy$dtrates$rates[is.na(ephy$dtrates$rates)] = 0;
+        if (sum(is.na(dtr$rates))) {
+            warning(sprintf("Found %d NA phenotypic rates. Coercing to zero.", sum(is.na(dtr$rates))));
+            dtr$rates[is.na(dtr$rates)] = 0;
         }
-        colorobj = colorMap(ephy$dtrates$rates, pal, ncolors);
+        #colorobj = colorMap(ephy$dtrates$rates, pal, ncolors);
+    	colorobj = colorMap(dtr$rates, pal, ncolors);
     }
     else if (ephy$type == "diversification") {
-        if (sum(is.na(ephy$dtrates$rates[[1]]))) {
-            warning(sprintf("Found %d NA speciation rates. Coercing to zero.", sum(is.na(ephy$dtrates$rates[[1]]))));
-            ephy$dtrates$rates[[1]][is.na(ephy$dtrates$rates[[1]])] = 0;
+        if (sum(is.na(dtr$rates[[1]]))) {
+            warning(sprintf("Found %d NA speciation rates. Coercing to zero.", sum(is.na(dtr$rates[[1]]))));
+            dtr$rates[[1]][is.na(dtr$rates[[1]])] = 0;
         }
-        if (sum(is.na(ephy$dtrates$rates[[2]]))) {
-            warning(sprintf("Found %d NA extinction rates. Coercing to zero.", sum(is.na(ephy$dtrates$rates[[2]]))));
-            ephy$dtrates$rates[[2]][is.na(ephy$dtrates$rates[[2]])] = 0;
+        if (sum(is.na(dtr$rates[[2]]))) {
+            warning(sprintf("Found %d NA extinction rates. Coercing to zero.", sum(is.na(dtr$rates[[2]]))));
+            dtr$rates[[2]][is.na(dtr$rates[[2]])] = 0;
         }
         if (tolower(spex) == "s") {
-        	colorobj = colorMap(ephy$dtrates$rates[[1]], pal, ncolors);
+        	#colorobj = colorMap(ephy$dtrates$rates[[1]], pal, ncolors);
+        	colorobj = colorMap(dtr$rates[[1]], pal);
         }
         else if (tolower(spex) == "e") {
-        	colorobj = colorMap(ephy$dtrates$rates[[2]], pal, ncolors);
+        	#colorobj = colorMap(ephy$dtrates$rates[[2]], pal, ncolors);
+        	colorobj = colorMap(dtr$rates[[2]], pal);
         }
         else {
-        	colorobj = colorMap(ephy$dtrates$rates[[1]] - ephy$dtrates$rates[[2]], pal, ncolors);
+        	#colorobj = colorMap(ephy$dtrates$rates[[1]] - ephy$dtrates$rates[[2]], pal, ncolors);
+        	colorobj = colorMap(dtr$rates[[1]] - dtr$rates[[2]], pal);
         }
     }
     edge.color = colorobj$cols;
     tH = max(branching.times(phy));
     phy$begin = ephy$begin;
     phy$end = ephy$end;
-    tau = ephy$dtrates$tau;
+    #tau = ephy$dtrates$tau;
+    tau = dtr$tau;
     if (method == "polar") {
         ret = setPolarTreeCoords(phy, vtheta, rbf);
         rb = tH * rbf;
