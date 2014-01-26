@@ -91,29 +91,3 @@ phylogenetic datasets that would be too large to handle with R alone.
    2009). 
    
 
-.. _bammtheory:
-
-Theoretical Background
-----------------------
-
-Event-Driven Model for Rate Variation
-.....................................
-
-(Under construction.)
-
-Reversible Jump MCMC
-....................
-
-(Under construction.)
-
-Functional Models for Rate Variation
-....................................
-
-(Under construction.)
-
-.. _rateshiftstheory:
-
-The Meaning of Rate Shifts
-..........................
-
-(Under construction.)
