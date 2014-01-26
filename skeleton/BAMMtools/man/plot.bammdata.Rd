@@ -10,9 +10,9 @@ colors each branch by the estimated rate of speciation, extinction, or trait evo
 }
 \usage{
 S3 method for class \code{bammdata}:		
-plot(ephy, method = "phylogram", tau = 0.01, index = NULL, 
+plot(ephy, method = "phylogram", tau = 0.01, spex="s", index = NULL, 
     vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, 
-    hrates = FALSE, lwd = 1, cex = 1, ncolors = 64, pal = "temperature", ...)
+    hrates = FALSE, lwd = 1, cex = 1, ncolors = 64, pal = c("darkgreen","yellow2","red"), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -28,6 +28,11 @@ coordinates. \code{method = "polar"} plots the phylogenetic tree using polar coo
 a numeric indicating the step size used in discretizing branches into segments. 
 These segments are used in calculating rate changes along branches. Should be
 given as a fraction of the total tree height, e.g. 0.01 (default). 
+}
+  \item{spex}{
+a character string indicating what type of macroevolutionary rates should be plotted. "s" (default) indicates
+speciation rates, "e" indicates extinction rates, and any other character, e.g. "se", indicates net diversification
+rates. Ignored if \code{ephy$type = "trait"}.  	
 }
   \item{index}{
 an integer vector indexing which posterior samples to include in the calculation
@@ -51,7 +56,7 @@ a logical indicating whether or not to plot the tip labels. Defaults to \code{FA
 a logical indicating whether or not the device is configured for a multi-panel plot.
 Defaults to \code{FALSE}.
 }
-  \item{hrates}{
+  \item{legend}{
 a logical indicating whether or not to plot a density function for interpreting the 
 mapping of evolutionary rates to colors. Defaults to \code{FALSE}.
 }
@@ -64,7 +69,7 @@ a numeric specifying the character expansion for tip labels.
   \item{ncolors}{
 an integer specifying the number of colors to be used for the mapping of evolutionary
 rates to colors. Specifying large values for \code{ncolors} will not necessarily result 
-in a smoother-looking color gradient.
+in a smoother-looking color gradient. The default is 64.
 }
   \item{pal}{
 a character string or vector of mode character that describes the color palette. See
@@ -76,23 +81,22 @@ further arguments passed to \code{par}.
 }
 \details{
 To calculate rates, each branch of the phylogeny is discretized into a number of small segments, 
-and the mean of the marginal posterior density of the rate of speciation or trait evolution is 
+and the mean of the marginal posterior density of the rate of speciation/extinction or trait evolution is 
 calculated for each such segment. Rates are then mapped to colors such that cool colors represent 
-slow rates of speciation or trait evolution and warm colors represent fast rates. When the tree is
+slow rates and warm colors represent fast rates. When the tree is
 plotted each of these small segments is plotted so that changes in rates through time and shifts in 
 rates are visible as gradients of color.
 
-Currently three options exist for specifying the color palette. The default setting 
-\code{pal = "temperature"} uses the \code{rich.colors} function written by Arni Magnusson in the package 
-gplots. If the package RColorBrewer is loaded then any of the named diverging color palettes documented 
-under \code{brewer.pal} may also be used. Finally a vector of three valid named colors (e.g. c("blue","green","red")) 
-may also be used. The first, second, and third colors are mapped to low, intermediate, and fast rates 
-of evolution. The last two options result in a more perceptually uniform color scale than the first.
+Currently three options exist for specifying the color palette. First, any vector of three valid named colors
+may be used. The first, second, and third colors are mapped to low, intermediate, and fast rates 
+of evolution. This provides lots of flexibility for choosing a color scheme.
+Second, the option \code{pal = "temperature"} uses the \code{rich.colors} function written by Arni Magnusson for the package gplots. If the package RColorBrewer is loaded, any of the named diverging color palettes documented 
+under \code{brewer.pal} may also be used. Two default choices exist which make use of the first option. Specifying "set1"
+uses a color ramp from green to red that we happen to like. This option is probably not suitable for people with certain forms of colorblindness. Specifying "set2" creates a color ramp from green to magenta that is hopefully better
+for color deficient vision.
 
-Specifying smaller values for \code{tau} will result in smoother-looking rate changes on the tree, 
-especially when \code{method="phylogram"}. For \code{method="polar"} smaller values of \code{tau} tend
-to make the branches appear ragged in appearance. Note that smaller values of \code{tau} require more
-computation.
+
+Specifying smaller values for \code{tau} will result in smoother-looking rate changes on the tree. Note that smaller values of \code{tau} require more computation.  
 
 Internally \code{plot.bammdata} looks for an element in \code{ephy} called "dtrates". 
 This is simply a vector holding the rates of each segment on each branch. If "dtrates" is not 
@@ -101,9 +105,15 @@ If you plan to repeatedly call \code{plot.bammdata} on a large tree you can redu
 load by calling \code{dtRates} with \code{ephy} before passing \code{ephy} to \code{plot.bammdata}.
 }
 \value{
-Returns (invisibly) a matrix. Rows correspond to branches. Columns 1-2 are starting (x,y) coordinates 
+Returns (invisibly) a list with two components. 
+\item{coords}{
+A matrix of plot coordinates. Rows correspond to branches. Columns 1-2 are starting (x,y) coordinates 
 of each branch and columns 3-4 are ending (x,y) coordinates of each branch. If \code{method = "polar"} a 
 fifth column gives the angle (in radians) of each branch.
+}
+\item{color}{
+A matrix of the kernel density estimates (column 2) of evolutionary rates (column 1) and the color (column 3) corresponding to each rate value.
+}
 }
 \references{
 

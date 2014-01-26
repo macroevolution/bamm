@@ -19,7 +19,6 @@ speciesByRatesMatrix = function(ephy, nslices, index = NULL, spex = "s") {
 	else {
 		stop("Max slices (1000) exceeded.  Choose a smaller number of slices");
 	}
-	tol = 0.0001*max(branching.times(phy));
 	ret = lapply(seq.nod, function(x) {
 		path = which(m$dtrates$tmat[,1] %in% x);
 		ids = sapply(tvec[-length(tvec)], function(y) which(m$dtrates$tmat[path,2] <= y & m$dtrates$tmat[path,3] > y));

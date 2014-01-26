@@ -3,6 +3,7 @@
 \alias{areEventConfigurationsIdentical}
 \alias{as.phylo.bammdata}
 \alias{branchMeanRateExponential}
+\alias{colorMap}
 \alias{decimals}
 \alias{exponentialRate}
 \alias{getPathToRoot}
@@ -10,7 +11,7 @@
 \alias{getSampleCoMat}
 \alias{getSequenceForwardTraversal}
 \alias{getStartStopTimes}
-\alias{histRates}
+\alias{rateLegend}
 \alias{inv.logit}
 \alias{logit}
 \alias{mkdtsegsPolar}
