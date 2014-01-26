@@ -16,7 +16,7 @@ plot.bammdata = function (ephy, method = "phylogram", vtheta = 5, rbf = 0.001, s
     #    ephy = dtRates(ephy, tau, index);
     #}
     if (exists("rates", envir = .dtRatesEnv)) {
-    	if (!all.equal(get("callobject", .dtRatesEnv), list(nsamples = length(ephy$eventData), root = min(ephy$edge[,1])))) {
+    	if (mode(all.equal(get("callobject", .dtRatesEnv), list(nsamples = length(ephy$eventData), root = min(ephy$edge[,1])))) == "character") {
     		dtRates(ephy, 0.01);
     	}
     	dtr = get("rates", envir = .dtRatesEnv);

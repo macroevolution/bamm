@@ -84,7 +84,7 @@ for color deficient vision.
 Specifying smaller values for \code{tau} will result in smoother-looking rate changes on the tree. Note that smaller values of \code{tau} require more computation.  
 
 Internally \code{plot.bammdata} checks whether or not rates have been calculated and assigned in the \code{.dtRatesEnv} environment.
-If they have not a new calculation and assignment is made by calling \code{dtRates}. A rates to colors map is also made by calling \code{assignColorBreaks}. If rates have already been calculated but the \code{bammdata} object does not match the one used in this original calculation,a new calculation and assignment of rates is made but the rates to colors mapping is left unchanged. This allows one to plot parts of a tree while preserving the mapping of rates to colors that was made using rates for the entire tree.
+If they have not a new calculation and assignment is made by calling \code{dtRates}. A rates to colors map is also made by calling \code{assignColorBreaks}. If rates have already been calculated but the \code{bammdata} object does not match the one used in this original calculation, a new calculation and assignment of rates is made but the rates to colors mapping is left unchanged. This allows one to plot parts of a tree while preserving the mapping of rates to colors that was made using rates for the entire tree.
 }
 \value{
 Returns (invisibly) a list with two components. 

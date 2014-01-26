@@ -47,13 +47,13 @@ branch with starting and ending times \eqn{t1} and \eqn{t2}, respectively, is:
 }
 
 \value{
-By default \code{dtRates} assigns rates in the .dtRatesEnv. 
+By default \code{dtRates} assigns rates in the \code{.dtRatesEnv} environment. 
 If \code{assigns = FALSE} as list with two or three components:	
 \item{tau}{the parameter value of \code{tau} used in the calculation.}
 \item{rates}{if \code{ephy$type = "trait"}: a numeric vector with the phenotypic rates of each segment on each branch. if \code{ephy$type = "diversification"}: a list with two components. The first component is a numeric vector of speciation rates. The second component is a numeric vector of extinction rates.}
 \item{tmat}{a matrix of the starting and ending times of the segments on each branch. Only if \code{tmat = TRUE}.}
 
-To retrieve any of these compenents when \code{assigns = TRUE} use \code{\link{get}}
+To retrieve any of these components when \code{assigns = TRUE} use \code{\link{get}} with the name of the component and the environment.
 }
 \references{
 \url{bamm-project.org}
@@ -78,7 +78,7 @@ dtRates(ed, tau=0.01)
 
 #retrieve rates
 if(exists("rates", .dtRatesEnv)) {
-	get("rates", .dtRatesEnv)
+	rates <- get("rates", .dtRatesEnv)
 }
 
 #use specified range of posterior samples

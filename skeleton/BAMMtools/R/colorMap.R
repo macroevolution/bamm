@@ -15,6 +15,9 @@ colorMap = function(x, pal) {
 		colpalette = colorRampPalette(pal,space='Lab')(NCOLORS);	
 	}
 	else if (pal %in% dpal) {
+		if (require(RColorBrewer) == FALSE) {
+			stop("You specified a palette the requires the package RColorBrewer, which cannot be loaded");
+		}
 		colpalette = colorRampPalette(rev(brewer.pal(3,pal)),space='Lab')(NCOLORS);
 	}
 	else if (tolower(pal) == "set1") {
@@ -25,6 +28,9 @@ colorMap = function(x, pal) {
 	}
 	else if (tolower(pal) == 'temperature') {
 		colpalette = richColors(NCOLORS);	
+	}
+	else {
+		stop("Unrecognized color palette specification");
 	}
 	kde = density(x);
 	colset = numeric(length(x));
