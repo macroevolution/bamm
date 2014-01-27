@@ -19,7 +19,8 @@
 #          p.value            chi-square pvalue for the null hypothesis that there 
 #                             is no significant association (+ or -) between the frequency
 #                             of association between 2 shift nodes.
-#                         
+#          
+#		   marg.prob          vector of marginal probabilities for relevant nodes
 #
 #
 computeJointShiftCorrelations <- function(ephy, threshold=0.05) {
@@ -108,6 +109,7 @@ computeJointShiftCorrelations <- function(ephy, threshold=0.05) {
 	res <- list();
 	res$phi <- phimat;
 	res$p.value <- chimat;
+	res$marginals <- tx;
 	
 	return(res);
 }
