@@ -41,13 +41,20 @@ maximumShiftCredibility <- function(ephy, maximize = 'product') {
 	mtree <- marginalShiftProbsTree(ephy);
 	px <- mtree$edge.length;
 	
+	ttx <- table(ephy$numberEvents) / length(ephy$numberEvents);
+	
+	
 	for (i in 1:length(ephy$eventData)) {
+		
+		# posterior probabilities here:
+		proc_prob <- ttx[as.character(ephy$numberEvents[i])]; 
+		
 		hasShift <- ephy$edge[,2] %in% ephy$eventData[[i]]$node;
 		branchprobs <- (hasShift)*px  + (!hasShift)*(1 - px) ;
 		if (maximize == 'product') {
-			probvec[i] <- sum(log(branchprobs));
+			probvec[i] <- log(proc_prob) + sum(log(branchprobs));
 		} else if (maximize == 'sum') {
-			probvec[i] <- sum(branchprobs);
+			probvec[i] <- proc_prob * sum(branchprobs);
 		} else {
 			stop("Unsupported optimize criterion in maximumShiftCredibilityTree");
 		}
