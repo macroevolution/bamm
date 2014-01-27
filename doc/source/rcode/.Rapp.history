@@ -1,0 +1,510 @@
+tmptree <- '((A:1,B:1):4,((C:0.5,D:0.5):1.5,(E:1:F:1):1):3;'
+library(ape);
+v <- read.tree(text=tmptree);
+v
+plot(v)
+v
+v$edge
+v$tip.label
+tmptree <- '((A:1,B:1):4,( (C:0.5,D:0.5):1.5,(E:1:F:1):1):3);'
+v <- read.tree(text=tmptree);
+v
+tmptree <- '((A:1,B:1):4,( (C:0.5,D:0.5):4.5);'
+v <- read.tree(text=tmptree);
+v
+plot(v)
+v
+tmptree <- '((A:1,B:1):4,((C:0.5,D:0.5):4.5);'
+v
+v
+plot(v)
+v$edge
+tmptree <- '(A:1,B:1):4,((C:0.5,D:0.5):4.5;'
+v <- read.tree(text=tmptree);
+v
+plot(v)
+tmptree <- '(A:1,B:1):4,(C:0.5,D:0.5):4.5;'
+v <- read.tree(text=tmptree);
+v
+plot(v)
+v$edge
+tmptree <- '((A:1,B:1):4,(C:0.5,D:0.5):4.5);'
+v <- read.tree(text=tmptree);
+v
+plot(v)
+tmptree <- '((A:1,B:1):4,((C:0.5,D:0.5):1.5,(E:1,F:1):1):3);'
+v <- read.tree(text=tmptree);
+plot(v)
+tmptree <- '((A:2,B:2):4,((C:1.5,D:1.5):1.5,(E:2,F:2):1):3);'#
+v <- read.tree(text=tmptree);
+plot(v)
+tmptree <- '((A:2,B:2):4,((C:1.5,D:1.5):1.5,(E:2,F:2):1):3);'#
+#
+v <- read.tree(text=tmptree);
+plot(v, show.tip.label=F)
+nodelabels()
+plot(v, show.tip.label=F)#
+#
+nodelabels()
+a1 <- v$edge[,1][v$edge[,2] == which(v$tip.label == 'A')];
+a1
+a1 <- v$edge[,1][v$edge[,2] == which(v$tip.label == 'A')];#
+a2 <- v$edge[,1][v$edge[,2] == which(v$tip.label == 'D')];#
+a3 <- v$edge[,1][v$edge[,2] == a2];
+a1
+a2
+a3
+library(BAMMtools)
+getDesc(v, a3)
+?getDec
+?getDesc
+getDesc
+v$edge
+plot(v)
+nodelabels()
+d1 <- getDesc(v, node=8)
+d1
+names(d1)
+d1$desc_set
+d2 <- getDesc(v, node=9)$desc_set;
+d1
+d2
+d1 <- getDesc(v, node=8)$desc_set;#
+d2 <- getDesc(v, node=9)$desc_set;
+edgecolor[v$edge[,2] %in% d1] <- 'red';
+edgecolor[v$edge[,2] %in% d2] <- 'blue';
+edgecolor <- rep('black', nrow(v$edge));#
+#
+edgecolor[v$edge[,2] %in% d1] <- 'red';#
+edgecolor[v$edge[,2] %in% d2] <- 'blue';
+edgecolor
+table(edgecolor)
+dim(v$edge)
+edgecolor <- rep('black', nrow(v$edge));#
+#
+edgecolor[v$edge[,1] %in% d1] <- 'red';#
+edgecolor[v$edge[,1] %in% d2] <- 'blue';
+table(edgecolor)
+quartz.options(height=6, width=6);
+plot(v, edge.width=2, edge.color=edgecolor);
+plot.phylo(v, edge.width=2, edge.color=edgecolor, cex=2);
+plot.phylo(v, edge.width=2, edge.color=edgecolor, cex=2, label.offset=0.5);
+plot.phylo(v, edge.width=2, edge.color=edgecolor, cex=2, label.offset=0.1);
+quartz.options(height=6, width=6);#
+plot.phylo(v, edge.width=2, edge.color=edgecolor, cex=2, label.offset=0.15);
+quartz.options(height=4, width=4);#
+plot.phylo(v, edge.width=3, edge.color=edgecolor, cex=2, label.offset=0.15);
+quartz.options(height=4, width=4);#
+par(oma=c(1,1,1,1));#
+plot.phylo(v, edge.width=3, edge.color=edgecolor, cex=2, label.offset=0.15);
+quartz.options(height=5, width=5);#
+par(oma=c(1,1,1,1));#
+plot.phylo(v, edge.width=3, edge.color=edgecolor, cex=2, label.offset=0.15);
+quartz.options(height=5, width=5);#
+par(oma=c(1,1,3,1));#
+plot.phylo(v, edge.width=3, edge.color=edgecolor, cex=2, label.offset=0.15);
+quartz.options(height=6, width=6);#
+par(oma=c(1,1,3,1));#
+plot.phylo(v, edge.width=3, edge.color=edgecolor, cex=2, label.offset=0.15);
+quartz.options(height=6, width=6);#
+par(oma=c(1,1,3,1));#
+plot.phylo(v, edge.width=3, edge.color=edgecolor, cex=2, label.offset=0.15);
+quartz.options(height=5, width=6);#
+par(oma=c(1,1,3,1));#
+plot.phylo(v, edge.width=3, edge.color=edgecolor, cex=2, label.offset=0.15);
+quartz.options(height=6, width=6);#
+par(oma=c(1,1,3,1));#
+plot.phylo(v, edge.width=3, edge.color=edgecolor, cex=2, label.offset=0.15);
+quartz.options(height=6, width=6);#
+par(oma=c(0,0,0,0));#
+plot.phylo(v, edge.width=3, edge.color=edgecolor, cex=2, label.offset=0.15);
+2/9
+6/22
+data(whaletree);
+v <- whaletree;
+library(BAMMtools);#
+data(whaletree);#
+v <- whaletree;
+data(whales);
+whales
+v <- whales;
+v
+data(events.whales);
+ed <- getEventData(v, events.whales, burnin=0.1);
+ed
+summary(ed)
+plot(v)
+nodelabels()
+ed <- getEventData(v, events.whales, burnin=0.1, nsamples=30);
+head(events.whales)
+ed <- getEventData(v, events.whales, burnin=0.1, nsamples=30);
+plot.bammdata(ed, ncolors=1)
+plot.bammdata(ed, ncolors=1, pal='black')
+plot.bammdata(ed, ncolors=1, col='black')
+plot(v, show.tip.label=F)
+addBAMMshifts(ed, index=2)
+addBAMMshifts(ed, method='phylogram', index=2)
+addBAMMshifts(ed, method='phylogram', index=5)
+addBAMMshifts(ed, method='phylogram', index=10)
+addBAMMshifts(ed, method='phylogram', index=15)
+names(ed)
+ed$eventData[[1]]
+i<-1
+ed2$eventData[[i]]
+ed2 <- ed;
+ed2$eventData[[i]]
+ed2$eventData[[i]][ed2$eventdata[[i]]$node %in% c(88, 132, 140, 129), ];
+ed2$eventdata[[i]]$node
+ed2$eventData[[i]][ed2$eventData[[i]]$node %in% c(88, 132, 140, 129), ];
+ed2 <- ed;#
+for (i in 1:length(ed2$eventData)){#
+	ed2$eventData[[i]] <- ed2$eventData[[i]][ed2$eventData[[i]]$node %in% c(88, 132, 140, 129), ];#
+}
+plot(v, show.tip.label=F)
+?addBAMMshifts
+?addBAMMshifts
+?addBAMMshifts
+plot(v, show.tip.label=F)#
+#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', cex=0.5, col='red');#
+}
+plot(v, show.tip.label=F)#
+#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.5, col='red');#
+}
+ed <- getEventData(v, events.whales, burnin=0.1, nsamples=80);
+ed2 <- ed;#
+for (i in 1:length(ed2$eventData)){#
+	ed2$eventData[[i]] <- ed2$eventData[[i]][ed2$eventData[[i]]$node %in% c(88, 132, 140, 129), ];#
+}
+plot(v, show.tip.label=F)
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, col='red');#
+}
+quartz.options(height=8, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+plot(v, show.tip.label=F)
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, col='red');#
+}
+quartz.options(height=8, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+plot(v, show.tip.label=F)#
+#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, col='red', multi=T);#
+}
+quartz.options(height=8, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+plot(v, show.tip.label=F)#
+#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed$eventData)){#
+	addBAMMshifts(ed, method='phylogram', index=i, cex=0.8, col='red', multi=T);#
+}
+quartz.options(height=8, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+plot(v, show.tip.label=F)#
+addBAMMshifts(ed, method='phylogram', index=2, multi=T)
+plot.bammdata(ed, show.tip.label=F, ncolors=1);#
+addBAMMshifts(ed, method='phylogram', index=2, multi=T)
+plot.bammdata(ed, ncolors=1);#
+addBAMMshifts(ed, method='phylogram', index=2, multi=T)
+quartz.options(height=8, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+plot(v, show.tip.label=F)#
+addBAMMshifts(ed, method='phylogram', index=2, multi=T)#
+plot.bammdata(ed, ncolors=1);#
+addBAMMshifts(ed, method='phylogram', index=2, multi=T)
+nodelabels()
+plot(v, show.tip.label=F)
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, col='red', multi=T);#
+}
+ed <- getEventData(v, events.whales, burnin=0.1);
+ed2 <- ed;#
+for (i in 1:length(ed2$eventData)){#
+	ed2$eventData[[i]] <- ed2$eventData[[i]][ed2$eventData[[i]]$node %in% c(88, 132, 140, 129), ];#
+}
+plot(v, show.tip.label=F);#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, col='red', multi=T);#
+}
+plot(v, show.tip.label=F);#
+addBAMMshifts(ed, method='phylogram', index=2, multi=T)
+nodelabels()
+ed <- getEventData(v, events.whales, burnin=0.1, nsamples=30);
+ed2 <- ed;#
+for (i in 1:length(ed2$eventData)){#
+	ed2$eventData[[i]] <- ed2$eventData[[i]][ed2$eventData[[i]]$node %in% c(88, 132, 140, 141, 129), ];#
+}
+plot(v, show.tip.label=F);#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, col='red', multi=T);#
+}
+ed <- getEventData(v, events.whales, burnin=0.1, nsamples=50);#
+ed2 <- ed;#
+for (i in 1:length(ed2$eventData)){#
+	ed2$eventData[[i]] <- ed2$eventData[[i]][ed2$eventData[[i]]$node %in% c(88, 132, 140, 141, 129), ];#
+}
+plot(v, show.tip.label=F);#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, col='red', multi=T);#
+}
+plot(v, show.tip.label=F);#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, col='red', multi=T);#
+}
+plot(v, show.tip.label=F);#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, pch=21, bg='red', multi=T);#
+}
+ed <- getEventData(v, events.whales, burnin=0.1, nsamples=13);#
+ed2 <- ed;#
+for (i in 1:length(ed2$eventData)){#
+	ed2$eventData[[i]] <- ed2$eventData[[i]][ed2$eventData[[i]]$node %in% c(88, 132, 140, 141, 129), ];#
+}
+plot(v, show.tip.label=F);#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, pch=21, bg='red', multi=T);#
+}
+ed <- getEventData(v, events.whales, burnin=0.1, nsamples=17);#
+ed2 <- ed;#
+for (i in 1:length(ed2$eventData)){#
+	ed2$eventData[[i]] <- ed2$eventData[[i]][ed2$eventData[[i]]$node %in% c(88, 132, 140, 141, 129), ];#
+}
+plot(v, show.tip.label=F);#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, pch=21, bg='red', multi=T);#
+}
+ed <- getEventData(v, events.whales, burnin=0.1, nsamples=25);
+plot(v, show.tip.label=F);#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, pch=21, bg='red', multi=T);#
+}
+ed <- getEventData(v, events.whales, burnin=0.3, nsamples=25);
+ed2 <- ed;#
+for (i in 1:length(ed2$eventData)){#
+	ed2$eventData[[i]] <- ed2$eventData[[i]][ed2$eventData[[i]]$node %in% c(88, 132, 140, 141, 129), ];#
+}
+plot(v, show.tip.label=F);#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, pch=21, bg='red', multi=T);#
+}
+ed <- getEventData(v, events.whales, burnin=0.3, nsamples=15);#
+ed2 <- ed;#
+for (i in 1:length(ed2$eventData)){#
+	ed2$eventData[[i]] <- ed2$eventData[[i]][ed2$eventData[[i]]$node %in% c(88, 132, 140, 141, 129), ];#
+}
+plot(v, show.tip.label=F);#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, pch=21, bg='red', multi=T);#
+}
+msc <- maximumShiftCredibility(ed);
+msc
+quartz.options(height=8, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+plot(v, show.tip.label=F);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleIndex, pch=21, bg='blue', cex=2.5, multi=T)
+quartz.options(height=8, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+plot(v, show.tip.label=F);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleIndex, pch=21, bg='blue', cex=2.5, multi=T)
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=2.5, multi=T)
+plot(v, show.tip.label=F);#
+#addBAMMshifts(ed, method='phylogram', index=10)#
+#
+for (i in 1:length(ed2$eventData)){#
+	addBAMMshifts(ed2, method='phylogram', index=i, cex=0.8, pch=21, bg='red', multi=T);#
+}
+data(events.whales);#
+#
+ed <- getEventData(v, events.whales, burnin=0.1, nsamples=15);
+ed2 <- ed;#
+for (i in 1:length(ed2$eventData)){#
+	ed2$eventData[[i]] <- ed2$eventData[[i]][ed2$eventData[[i]]$node %in% c(88, 132, 140, 141, 129), ];#
+}
+msc <- maximumShiftCredibility(ed);#
+#
+quartz.options(height=8, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+plot(v, show.tip.label=F);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=2.5, multi=T)
+msc
+plot(v, show.tip.label=F);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=2.5, multi=T)
+ed$eventData[[5]]
+ed <- getEventData(v, events.whales, burnin=0.1);
+dim(ed)
+msc <- maximumShiftCredibility(ed);
+quartz.options(height=8, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+plot(v, show.tip.label=F);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=2.5, multi=T)
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=1.7, multi=T)
+quartz.options(height=8, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+plot(v, show.tip.label=F);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=1.7, multi=T)
+quartz.options(height=6, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+plot(v, show.tip.label=F);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=1.7, multi=T)
+ee <- rep('black', nrow(v$edge));
+quartz.options(height=6, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+plot(v, show.tip.label=F);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=1.7, multi=T)#
+ee <- rep('black', nrow(v$edge));#
+ee[v$edge[,2] %in% c(132, 140, 129, 141)] <- 'red';#
+#
+plot(v, edge.color=ee);
+plot(v, edge.color=ee, show.tip.label=F);
+plot(v, edge.color=ee, show.tip.label=F, edge.with=1.5);
+plot(v, edge.color=ee, show.tip.label=F, edge.with=2);
+quartz.options(height=6, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+#
+plot(v, show.tip.label=F, edge.with=2);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=1.7, multi=T)#
+ee <- rep('black', nrow(v$edge));#
+ee[v$edge[,2] %in% c(132, 140, 129, 141)] <- 'red';#
+#
+plot(v, edge.color=ee, show.tip.label=F, edge.with=2);
+quartz.options(height=6, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+#
+plot(v, show.tip.label=F, edge.with=2);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='lightblue', cex=1.7, multi=T)#
+ee <- rep('black', nrow(v$edge));#
+ee[v$edge[,2] %in% c(132, 140, 129, 141)] <- 'red';#
+#
+plot(v, edge.color=ee, show.tip.label=F, edge.with=2);
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='lightblue4', cex=1.7, multi=T)
+quartz.options(height=6, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+#
+plot(v, show.tip.label=F, edge.width=2);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='lightblue4', cex=1.7, multi=T)
+quartz.options(height=6, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+#
+plot(v, show.tip.label=F, edge.width=2);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=1.2, multi=T)
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=, multi=T)
+quartz.options(height=6, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+#
+plot(v, show.tip.label=F, edge.width=2);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=, multi=T)
+quartz.options(height=6, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+#
+plot(v, show.tip.label=F, edge.width=1.3);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=, multi=T)
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=1.5, multi=T)
+quartz.options(height=5, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+#
+plot(v, show.tip.label=F, edge.width=1.3);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=1.7, multi=T)
+ee <- rep('black', nrow(v$edge));#
+ee[v$edge[,2] %in% c(132, 140, 129, 141)] <- 'red';#
+#
+plot(v, edge.color=ee, show.tip.label=F, edge.with=1.3);
+quartz.options(height=5, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+#
+plot(v, show.tip.label=F, edge.width=1.3);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=1.7, multi=T)#
+ee <- rep('black', nrow(v$edge));#
+ee[v$edge[,2] %in% c(132, 140, 129, 141)] <- 'red';#
+#
+plot(v, edge.color=ee, show.tip.label=F, edge.width=1.3);
+quartz.options(height=5, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+#
+plot(v, show.tip.label=F, edge.width=1.1);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='blue', cex=1.7, multi=T)#
+ee <- rep('black', nrow(v$edge));#
+ee[v$edge[,2] %in% c(132, 140, 129, 141)] <- 'red';#
+#
+plot(v, edge.color=ee, show.tip.label=F, edge.width=1.1);
+quartz.options(height=5, width=10, dpi=72);#
+par(mfrow=c(1,2));#
+#
+plot(v, show.tip.label=F, edge.width=1.1);#
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='red', cex=1.7, multi=T)#
+ee <- rep('black', nrow(v$edge));#
+ee[v$edge[,2] %in% c(132, 140, 129, 141)] <- 'red';#
+#
+plot(v, edge.color=ee, show.tip.label=F, edge.width=1.1);
+mm <- marginalShiftProbsTree()
+mm <- marginalShiftProbsTree(ed)
+mm
+plot(mm)
+ep <- getEventData(primates, events.primates,burnin=0.1, type ='trait');
+data(primates);#
+data(events.primates);#
+ep <- getEventData(primates, events.primates,burnin=0.1, type ='trait');
+mm <- marginalShiftProbsTree(ep)
+mm
+plot(mm)
+plot(mm, show.tip.label=F)
+summary(ep)
+add.scale.bar(length=1)
+plot(v, edge.color=ee, show.tip.label=F, edge.width=1.1);
+v$tip.label[1:4]
+v$tip.label
+v2 <- drop.tip(v, tip = v$tip.label[8:55]);
+v2
+plot(v2)
+mm <- marginalShiftProbsTree(ed)
+mm
+sort(mm$edge.length)
+plot(mm)
+nodelabels()
+cbind(v$edge, mm$edge.length)
+quartz.options(height=6, width=8)#
+plot(v, show.tip.label=F)
+quartz.options(height=6, width=8)
+plot.bammdata(ed)
+plot.bammdata(ed, pal=c('blue', 'red'))
+library(RColorBrewer)
+quartz.options(height=6, width=8)
+plot.bammdata(ed, pal=c('blue', 'red'))
+library(RColorBrewer)
+?plot.bammdata
+library(RColorBrewer)#
+quartz.options(height=6, width=8)#
+plot.bammdata(ed, pal=list(c('blue', 'gray', 'red')));
+?plot.bammdata

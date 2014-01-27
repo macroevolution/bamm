@@ -1,42 +1,4 @@
-##################################
-#	plot.bammdata(...)
-#
-#	A function to plot dynamic rates through time
-#	onto a phylogeny
-#
-#	Arguments: ephy = a bammdata object.
-#	           method = method used to plot the tree.
-#	                    May be 'polar' or 'phylogram'.
-#	           tau = fraction of tree height for approximation (e.g. 0.01).
-#	                 This is the step size used for calculating rate changes 
-#	                 along branches, so 0.01 is a step size equal to 1% of tree height.
-#	           index = index of posterior sample(s). Currently may be NULL or 
-#	                   a vector of integer values.  if NULL the function will use all 
-#	                   posterior samples, otherwise it will use only
-#	                   the samples specified in index.
-#	           vtheta = specifies the angle in degrees separating the first and last
-#	                    tips to prevent over plotting. Ignored if method = 'phylogram'.
-#	           rbf = specifies the length of the root branch as a fraction of the 
-#	                 total tree height. rbf > 0 will cause an arc to connect the immediate
-#	                 descendants of the root branch. Ignored if method = 'phylogram'. 
-#	           show = TRUE or FALSE. If TRUE the tree will plot.
-#	           labels = TRUE or FALSE. If TRUE the tip labels will plot.
-#	           multi = TRUE or FALSE for multipanel plotting.
-#	           hrates = TRUE or FALSE. If TRUE a histogram is plotted in the same
-#	                    device for interpreting the meaning of plotted colors.
-#	                    You will be asked to supply an anchor point for plotting.
-#	           lwd = The line width used for plotting the tree.
-#	           cex = Character expansion for plotting tip labels.
-#	           ncolors = The number of color bins for mapping rates to colors.
-#	           pal = A string or vector of strings to specify colors for mapping to rates. 
-#	                 Currently this may be one of the named diverging palette options
-#	                 in the RColorBrewer package documented in description of brewer.pal,
-#	                 a vector of 3 valid named colors, or the string 'temperature'. 
-#	                 The first and last options require RColorBrewer and gplots packages,
-#	                 respectively
-#	           ... = further arguments passed to par to control plotting, e.g. mar.
-#
-plot.bammdata = function (ephy, method = "phylogram", tau = 0.01, index = NULL, vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, hrates = FALSE, spex = "s", lwd = 1, cex = 1, ncolors = 64, pal = "temperature", ...) {
+plot.bammdata = function (ephy, method = "phylogram", vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, legend = FALSE, spex = "s", lwd = 1, cex = 1, pal = "set1", ...) {
     if ("bammdata" %in% class(ephy)) {
     	if (attributes(ephy)$order != "cladewise") {
     		stop("Function requires tree in 'cladewise' order");
@@ -50,39 +12,56 @@ plot.bammdata = function (ephy, method = "phylogram", tau = 0.01, index = NULL, 
     if (any(phy$edge.length == 0)) {
         warning("Tree contains zero length branches. Rates for these will be NA and coerced to zero");
     }
-    if (!("dtrates" %in% names(ephy))) {
-        ephy = dtRates(ephy, tau, index);
+    #if (!("dtrates" %in% names(ephy))) {
+    #    ephy = dtRates(ephy, tau, index);
+    #}
+    if (exists("rates", envir = .dtRatesEnv)) {
+    	if (mode(all.equal(get("callobject", .dtRatesEnv), list(nsamples = length(ephy$eventData), root = min(ephy$edge[,1])))) == "character") {
+    		dtRates(ephy, 0.01);
+    	}
+    	dtr = get("rates", envir = .dtRatesEnv);
+    }
+    else {
+    	dtRates(ephy, 0.01);
+    	assignColorBreaks(64, spex);
+    	dtr = get("rates", envir = .dtRatesEnv);
     }
     if (ephy$type == "trait") {
-        if (sum(is.na(ephy$dtrates$rates))) {
-            warning(sprintf("Found %d NA phenotypic rates. Coercing to zero.", sum(is.na(ephy$dtrates$rates))));
-            ephy$dtrates$rates[is.na(ephy$dtrates$rates)] = 0;
+        if (sum(is.na(dtr$rates))) {
+            warning(sprintf("Found %d NA phenotypic rates. Coercing to zero.", sum(is.na(dtr$rates))));
+            dtr$rates[is.na(dtr$rates)] = 0;
         }
-        edge.color = colorMap(ephy$dtrates$rates, pal, ncolors);
+        #colorobj = colorMap(ephy$dtrates$rates, pal, ncolors);
+    	colorobj = colorMap(dtr$rates, pal);
     }
     else if (ephy$type == "diversification") {
-        if (sum(is.na(ephy$dtrates$rates[[1]]))) {
-            warning(sprintf("Found %d NA speciation rates. Coercing to zero.", sum(is.na(ephy$dtrates$rates[[1]]))));
-            ephy$dtrates$rates[[1]][is.na(ephy$dtrates$rates[[1]])] = 0;
+        if (sum(is.na(dtr$rates[[1]]))) {
+            warning(sprintf("Found %d NA speciation rates. Coercing to zero.", sum(is.na(dtr$rates[[1]]))));
+            dtr$rates[[1]][is.na(dtr$rates[[1]])] = 0;
         }
-        if (sum(is.na(ephy$dtrates$rates[[2]]))) {
-            warning(sprintf("Found %d NA extinction rates. Coercing to zero.", sum(is.na(ephy$dtrates$rates[[2]]))));
-            ephy$dtrates$rates[[2]][is.na(ephy$dtrates$rates[[2]])] = 0;
+        if (sum(is.na(dtr$rates[[2]]))) {
+            warning(sprintf("Found %d NA extinction rates. Coercing to zero.", sum(is.na(dtr$rates[[2]]))));
+            dtr$rates[[2]][is.na(dtr$rates[[2]])] = 0;
         }
         if (tolower(spex) == "s") {
-            edge.color = colorMap(ephy$dtrates$rates[[1]], pal, ncolors);
+        	#colorobj = colorMap(ephy$dtrates$rates[[1]], pal, ncolors);
+        	colorobj = colorMap(dtr$rates[[1]], pal);
         }
         else if (tolower(spex) == "e") {
-            edge.color = colorMap(ephy$dtrates$rates[[2]], pal, ncolors);
+        	#colorobj = colorMap(ephy$dtrates$rates[[2]], pal, ncolors);
+        	colorobj = colorMap(dtr$rates[[2]], pal);
         }
         else {
-            edge.color = colorMap(ephy$dtrates$rates[[1]] - ephy$dtrates$rates[[2]], pal, ncolors);
+        	#colorobj = colorMap(ephy$dtrates$rates[[1]] - ephy$dtrates$rates[[2]], pal, ncolors);
+        	colorobj = colorMap(dtr$rates[[1]] - dtr$rates[[2]], pal);
         }
     }
+    edge.color = colorobj$cols;
     tH = max(branching.times(phy));
     phy$begin = ephy$begin;
     phy$end = ephy$end;
-    tau = ephy$dtrates$tau;
+    #tau = ephy$dtrates$tau;
+    tau = dtr$tau;
     if (method == "polar") {
         ret = setPolarTreeCoords(phy, vtheta, rbf);
         rb = tH * rbf;
@@ -132,36 +111,23 @@ plot.bammdata = function (ephy, method = "phylogram", tau = 0.01, index = NULL, 
                 text(ret$segs[-1, ][phy$edge[, 2] <= phy$Nnode + 1, 3], ret$segs[-1, ][phy$edge[, 2] <= phy$Nnode + 1, 4], phy$tip.label, cex = cex, pos = 4, offset = 0.25);
             }
         }
-        if (hrates) {
-            if (ephy$type == "trait") {
-                histRates(ephy$dtrates$rates, pal, ncolors);
-            }
-            else if (ephy$type == "diversification") {
-                if (tolower(spex) == "s") {
-                  edge.color = histRates(ephy$dtrates$rates[[1]], pal, ncolors);
-                }
-                else if (tolower(spex) == "e") {
-                  edge.color = histRates(ephy$dtrates$rates[[2]], pal, ncolors);
-                }
-                else {
-                  edge.color = histRates(ephy$dtrates$rates[[1]] - ephy$dtrates$rates[[2]], pal, ncolors);
-                }
-            }
+        if (legend) {
+            rateLegend(colorobj$colsdensity);
         }
     }
     index = order(as.numeric(rownames(ret$segs)));
     if (method == "phylogram") {
-        assign("last_plot.phylo", list(Ntip = phy$Nnode + 1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index, 3], yy = ret$segs[index, 4], pp = par(no.readonly = TRUE)), envir = .PlotPhyloEnv);
+        assign("last_plot.phylo", list(type = "phylogram", direction = "rightwards", Ntip = phy$Nnode + 1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index, 3], yy = ret$segs[index, 4], pp = par(no.readonly = TRUE)), envir = .PlotPhyloEnv);
     }
     else if (method == "polar") {
-        assign("last_plot.phylo", list(Ntip = phy$Nnode + 1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index, 3], yy = ret$segs[index, 4], theta = ret$segs[index, 5], rb = rb, pp = par(no.readonly = TRUE)), envir = .PlotPhyloEnv);
+        assign("last_plot.phylo", list(type = "fan", Ntip = phy$Nnode + 1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index, 3], yy = ret$segs[index, 4], theta = ret$segs[index, 5], rb = rb, pp = par(no.readonly = TRUE)), envir = .PlotPhyloEnv);
     }
     if (!multi) {
         if (length(list(...))) {
             par(op);
         }
     }
-    invisible(ret$segs[-1, ]);
+    invisible(list(coords = ret$segs[-1, ], color = colorobj$colsdensity));
 }
 
 # plot.bammdata = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5, rbf=0.001, show=TRUE, labels=FALSE, multi=FALSE, hrates=FALSE, spex = "s", lwd=1, cex=1, ncolors=64, pal='temperature', ...) {

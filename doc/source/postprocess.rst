@@ -118,7 +118,7 @@ Which should generate a nice plot showing rate dynamics. And we can even visuali
  
 We'll come back to the function ``plot.bammdata`` when we discuss :ref:`branch-specific rates<bammtoolsRTT>`.
 
-One of the first things to look at is the marginal shift probabilities on individual branches. This is nothing more than the marginal probability that each branch contains a shift event (see :ref:`here<bammtheory>` for why these can be difficult to interpret). The next few lines of code will compute the marginal shift probabilities for each branch, then plot a new phylogenetic tree where the branch lengths are scaled by the probability that they contain a shift event::
+One of the first things to look at is the marginal shift probabilities on individual branches. This is nothing more than the marginal probability that each branch contains a shift event (see :ref:`here<rateshifts>` for why these can be difficult to interpret). The next few lines of code will compute the marginal shift probabilities for each branch, then plot a new phylogenetic tree where the branch lengths are scaled by the probability that they contain a shift event::
 
 	> marg_probs <- marginalShiftProbsTree(edata)
 	> plot.phylo(marg_probs)

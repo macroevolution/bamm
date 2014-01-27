@@ -26,7 +26,7 @@ Dan Rabosky, Mike Grundler, Pascal Title, Joseph Brown, Carlos Anderson, Jeff Sh
 Maintainer: Dan Rabosky <dan.rabosky@gmail.com>
 }
 \references{
-\url{www.bamm-project.org}
+\url{bamm-project.org}
 }
 
 \keyword{ package }

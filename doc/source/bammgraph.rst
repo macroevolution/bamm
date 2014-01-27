@@ -28,9 +28,12 @@ Three evolutionary rate configurations (speciation) sampled by BAMM for the ceta
 Phenotypic evolutionary rates
 -----------------------------
 
-Some tree showing phenotypic evolutionary rates::
+.. _primatesize: 
+.. figure:: figs/xPrimatesBodySize.png
+   :width: 700
+   :align: center
 
-	**Needs to be done.** 
+Rates of body-size evolution across a time-calibrated phylogenetic tree of living primates. Left figure simply shows original time-calibrated tree with colors indicating instantaneous rates of phenotypic evolution. Figure on left is identical to right, but all rate shifts sampled during a BAMM run have been plotted (N = 401 posterior samples accounting for 1484 total rate shifts). Opaque colors have been used to plot shifts on individual branches; hence, branches on which shifts are frequently sampled appear dark. R code for this figure available :download:`here<rcode/primate_bodysize.R>`.
 
 
 Evolutionary rate variation through time 

@@ -120,8 +120,11 @@ Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
     eventLambda = 1 / sttings->getPoissonRatePrior(); // event rate, initialized to generate expected number of _targetNumber events
 
     //Parameter for splitting branch into pieces for numerical computation
-    _segLength = sttings->getSegLength();
-
+    
+    _segLength = sttings->getSegLength() * treePtr->maxRootToTipLength();
+   
+    std::cout << "relative segLength: " << sttings->getSegLength();
+    std::cout << "   _segLength: " << _segLength << "\n";
     /*  *********************   */
     /* Other parameters & tracking variables*/
 
