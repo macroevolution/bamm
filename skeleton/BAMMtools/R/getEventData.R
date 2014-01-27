@@ -92,7 +92,10 @@ getEventData <- function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALS
  		lam1 <- tmpEvents[,5]; # lambda parameter 1
  		lam2 <- tmpEvents[,6]; # lambda parameter 2
  		if (type == 'diversification') {	
-			mu1 <- as.numeric(tmpEvents[, 7]); # mu parameter 1
+			mu1 <- try(as.numeric(tmpEvents[, 7]),silent=TRUE); # mu parameter 1
+			if (inherits(mu1,"try-error")) {
+				stop("Unidentified column in event data file. Maybe try setting argument 'type = trait'");
+			}
  			mu2 <- as.numeric(tmpEvents[, 8]); #mu parameter 2 
 		} 
 		else { #for bamm trait data we set the mu columns to zero because those params don't exist	

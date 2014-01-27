@@ -32,7 +32,7 @@ plot.bammdata = function (ephy, method = "phylogram", vtheta = 5, rbf = 0.001, s
             dtr$rates[is.na(dtr$rates)] = 0;
         }
         #colorobj = colorMap(ephy$dtrates$rates, pal, ncolors);
-    	colorobj = colorMap(dtr$rates, pal, ncolors);
+    	colorobj = colorMap(dtr$rates, pal);
     }
     else if (ephy$type == "diversification") {
         if (sum(is.na(dtr$rates[[1]]))) {
