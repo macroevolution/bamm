@@ -15,7 +15,7 @@ class Node;
 
 
 // Branch lengths must be within this value to be considered the same
-#define ULTRAMETRIC_ERROR 1e-4
+#define ULTRAMETRIC_ERROR 1e-2
 
 
 class Tree
