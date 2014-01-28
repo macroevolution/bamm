@@ -7,7 +7,12 @@ General
 Citing BAMM
 -----------
 
-Coming soon::
+The primary methodological description of the BAMM model and implementation is *in press* in *PLoS ONE*. This should be out in early February 2014. In the meantime, a preprint of the manuscript is available on the arXiv preprint server:
+
+http://arxiv.org/abs/1401.6602
+
+This paper contains a description of the model, the reversible jump MCMC implementation, and a comprehensive performance evaluation. 
+
 
 How much data does it need?
 -----------------------
