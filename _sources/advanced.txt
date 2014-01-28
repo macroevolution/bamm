@@ -3,6 +3,43 @@
 Advanced analysis options
 =========================
 
+.. _incompsampling: 
+Accounting for *non-random* incomplete taxon sampling in diversification studies
+----------------------------------------------
+It is well-known that incomplete taxon sampling can bias analyses of speciation and extinction from phylogenetic trees. If you have an incompletely-sampled tree (e.g., some fraction < 1 of the total extant species richness of your focal taxon), you can easily specify this sampling fraction to generate unbiased estimates of speciation and extinction under the assumption that *species are missing at random from the tree*. In your controlfile, you can specify the percentage of species that have been sampled by setting the ``globalSamplingFraction`` parameter.
+
+But what if your species are not sampled at random? BAMM allows you to incorporate several levels of such non-randomness into your analyses. Consider the following example. Suppose you wish to perform a diversification analysis on a clade consisting of two genera: *fu* and *bar*. In genus *fu*, you have sampled some species A and B, but another 8 species remain unsampled. In a second genus *bar*, you have sampled species C, D, E, and F, and are missing only a single species. You can conclude that you have a fraction 0.2 (2 / 10) of the species in *fu*, and 0.8 of the species in *bar* (4 / 5). Furthermore, since these are the only two genera in your focal tree, you know that the backbone of the phylogeny has a sampling probability of 1.0 (as there are no other genera in clade that includes *fu* and *bar*). We can "paint" the relevant sampling fractions on this tree as follows, using red, blue, and black for the *fu*, *bar*, and backbone sampling fractions, respectively.
+
+
+.. figure:: figs/xIncompSampling.png
+   :width: 200
+   :align: center
+   
+We can account directly for this type of incomplete sampling in BAMM. We need to do two things. First, we tell BAMM that we will not be using a single global sampling probability, but will rather specify clade- or species-specific sampling probabilities. In the control file, you set ``useGlobalSamplingProbability = 0``. You must then specify a filename that gives the relevant sampling fractions using the ``sampleProbsFilename`` argument. The format of this file is a bit peculiar. On the first line of the file, you give the backbone sampling probability (1.0 in the example here). 
+
+Now, you add a separate line for *each sampled species* in your phylogeny (A, B, C, D, E, F in this example). Each line contains, with a tab separator, the following::
+
+	speciesName	cladeName	samplingFraction
+
+For species A, the relevant line would look like this::
+
+	A	fu	0.2
+	
+And the full file, for all species, would look like this::
+	
+	1.0
+	A	fu	0.2
+	B	fu	0.2
+	C	bar	0.8
+	D	bar	0.8
+	E	bar	0.8
+	F	bar	0.8
+
+For many datasets, this is an easy way of using incomplete sampling information. Suppose you are modeling diversification dynamics across all passerine birds. If you have all families of birds, but incomplete sampling within those families, it is straightforward to incorporate this sampling provided you are reasonably comfortable assuming monophyly of families. 
+
+Specifying a backbone sampling fraction can pose some challenges if it is unlikely to equal 1.0. Here's an example where this is not equal to one. Continuing with the example above,suppose that there are several other general totaling 7 species in our focal clade that were not sampled. Provided we are (reasonably) confident that this genus does not reside *within* our genera *fu* and *bar*, this implies that these lineages must have branched off the backbone (black) portion of the phylogeny. One possible correction would be to assume that the 2 sampled backbone lineages are 2 of a total of 9 (including the 7 unsampled taxa from other genera), or 0.22. Another possibility is to just set the backbone fraction equal to the total sampling fraction across the entire clade. In this case, We have sampled a total of 6 species from *fu* and *bar*, which together account for 15 species. There are another 7 species unsampled from other genera. You could set the backbone fraction equal to 6 / (15 + 7) = 0.27. These are not perfect solutions, but we contend that - in general - it is better to use clade-specific sampling fractions if the percentage of sampled taxa varies considerably across your tree.
+
+
 Modeling *less complex* evolutionary scenarios
 ----------------------------------------------
 
@@ -64,6 +101,4 @@ When does phylogenetic uncertainty **not** matter? For general inference on the 
 
 Phylogenetic uncertainty will matter if you do in fact care about *specific* aspects of changes in evolutionary dynamics. If you really care about the *precise* location of the shift in evolutionary dynamics, then the exact sequence of branching at the base of the dolphin radiation (to continue with the aforementioned example) **will** matter. Please keep in mind, however, that the BAMM model (and all other models), are merely statistical models that have imposed on the data. So, excessively fretting about whether the true shift in evolutionary dynamics occurred on branch *A* or branch *B* is somewhat unproductive, because the notion of a discrete shift is itself an assumption of the model we are using for inference.
 
-Although BAMM does not directly allow modeling phylogenetic uncertainty, it is straightforward to perform BAMM analyses across distributions of phylogenies taken from a Bayesian analysis. Below, we demonstrate how you can use your bash shell (on the OSX or Linux operating systems) to perform a BAMM analysis across a sample of trees.::
-
-	Add bash script stuff here, maybe a link to ppss as well.
+Although BAMM does not directly allow modeling phylogenetic uncertainty, it is straightforward to perform BAMM analyses across distributions of phylogenies taken from a Bayesian analysis. We will soon be adding documentation on how you can use your bash shell (on the OSX or Linux operating systems) to perform a BAMM analysis across a sample of trees.

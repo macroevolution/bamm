@@ -18,7 +18,7 @@ BAMM Documentation
    postprocess
    advanced
    faq
-
+   rateshifts
 
 Indices and tables
 ==================

@@ -7,11 +7,11 @@ General
 Citing BAMM
 -----------
 
-Currently, a note describing the BAMM software and BAMMtools R library is in review. For now, you can cite one of several papers that initially described the model and its implementation::
+Coming soon::
 
-	Rabosky et al 
-	
-	Rabosky and Matute
+How much data does it need?
+-----------------------
+**Not much**. There is no general rule here, but if your dataset is large enough to consider doing any other sort of diversification analysis, then it is probably large enough for BAMM. The whale diversification analysis shown in the :ref:`graph gallery<bammgraph>` uses a time-calibrated tree with 89 tips. We've had good success using BAMM on trees that are considerably smaller than this. 
 
 
 
@@ -106,8 +106,4 @@ As an aside, the user is encouraged to remember that all analytically tractable 
  
 Other questions
 .................
-
-What about the joint diversification-trait evolution process implemented in the 2013 *Nature Communications* paper?
----------------------------------------------------------------------------------------------------------------------------------------------------------
  
-**Under construction** 

@@ -188,7 +188,7 @@ If <tt class="docutils literal"><span class="pre">0</span></tt>, do not run if o
 of the Poisson process. Smaller values favor greater numbers of distinct
 evolutionary regimes on the tree. Suggested values:
 <tt class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">1.0</span></tt> for smaller datasets (&lt; 500 tips) or
-<tt class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">0.1</span></tt> or even <tt class="docutils literal"><span class="pre">0.2</span></tt> for large (5000+ tips).</dd>
+<tt class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">0.1</span></tt> or even <tt class="docutils literal"><span class="pre">0.02</span></tt> for large (5000+ tips).</dd>
 </dl>
 </div>
 <div class="section" id="mcmc-simulation">
@@ -219,7 +219,7 @@ can be reconstructed from this output. See <a class="reference internal" href="p
 for more information on working with this output format.</dd>
 <dt><tt class="docutils literal"><span class="pre">updateEventLocationScale</span></tt></dt>
 <dd>Scale parameter for updating local moves of events on the tree.
-This defines the width of the sliding window proposal.</dd>
+This defines the width of the sliding window proposal in units relative to the total tree depth (crown age) of the phylogeny. If this value is set to 0.01, the uniform distribution from which proposed step sizes are drawn with be <tt class="docutils literal"><span class="pre">(</span> <span class="pre">-T*updateLocationScale,</span> <span class="pre">+T*updateLocationScale</span> <span class="pre">)</span></tt>, where T is the maximum root-to-tip distance.</dd>
 <dt><tt class="docutils literal"><span class="pre">updateEventRateScale</span></tt></dt>
 <dd>Scale parameter (proportional shrinking/expanding) for updating
 the rate parameter of the Poisson process.</dd>
@@ -250,8 +250,8 @@ that are specific to speciation/extinction analyses in BAMM.</p>
 <h3>5.3.1. General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">useGlobalSamplingProbability</span></tt></dt>
-<dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, look for a global correction for incomplete sampling
-(globalSamplingProbability).
+<dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, use global correction for incomplete sampling
+(globalSamplingProbability). If you have complete taxon sampling, simply leave this set at 1 and set <tt class="docutils literal"><span class="pre">globalSamplingProbability</span></tt> to 1.0.
 If <tt class="docutils literal"><span class="pre">0</span></tt>, look for a file that specifies clade-specific corrections
 for incomplete sampling (<tt class="docutils literal"><span class="pre">sampleProbsFilename</span></tt>).</dd>
 <dt><tt class="docutils literal"><span class="pre">globalSamplingProbability</span></tt></dt>
@@ -266,8 +266,7 @@ incomplete sampling.</dd>
 <h3>5.3.2. Priors<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">lambdaInitPrior</span></tt></dt>
-<dd>Prior on the inital lambda (rate parameter of the exponential distribution)
-for the speciation rate.</dd>
+<dd>Prior on the inital speciation rate (lambda) for the general exponential change process.  This is the rate parameter of an exponential distribution. Smaller values impose a flatter prior.</dd>
 <dt><tt class="docutils literal"><span class="pre">lambdaShiftPrior</span></tt></dt>
 <dd>Prior on the the lambda shift parameter (standard deviation of the normal
 distribution) for the speciation rate. The mean of the distribution
@@ -279,11 +278,7 @@ distribution).</dd>
 <dd>The &#8220;grain&#8221; of the likelihood calculations. It approximates the
 continuous-time change in diversification rates by breaking each branch
 into a constant-rate diversification segments, with each segment equal
-to <tt class="docutils literal"><span class="pre">segLength</span></tt>. So, a branch of length 10 will have the exponential
-speciation-rate change approximated by 10 segments if <tt class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">1.0</span></tt>.
-If the value is greater than the branch length (e.g., <tt class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">100</span></tt>
-in this case) BAMM will not break the branch into segments but use the mean
-rate across the entire branch.</dd>
+to <tt class="docutils literal"><span class="pre">segLength</span> <span class="pre">*</span> <span class="pre">T</span></tt>, where T is the root-to-tip distance of the phylogeny (e.g., the crown age). If you have a phylogeny with a crown age of 50 and <tt class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">0.02</span></tt>, the grain of the likelihood calculations will be set to <tt class="docutils literal"><span class="pre">50</span> <span class="pre">*</span> <span class="pre">0.02</span> <span class="pre">=</span> <span class="pre">1.0</span></tt>. A branch of length 5 will have the exponential speciation-rate change approximated by 5 segments with this value. If the value is greater than the branch length, BAMM will not break the branch into segments but use the mean rate across the entire branch. In the example above, this would occur for <tt class="docutils literal"><span class="pre">segLength</span> <span class="pre">&gt;</span> <span class="pre">0.1</span></tt>, in which case the segment size would be equal to 5.0 and hence would exceed the length of any branches less than or equal to 5 time units in length. You can make <tt class="docutils literal"><span class="pre">segLength</span></tt> as small as you wish, but there is a direct tradeoff with the speed of the calculations. Further exploration of this is warranted, but we have found that in general, there is little to be gained from making this value smaller than 2% of the total tree depth.</dd>
 </dl>
 </div>
 <div class="section" id="id3">
@@ -409,9 +404,7 @@ of a phenotypic rate associated with an event.</dd>
 <dd>Relative frequency of moves update the value of ancestral character stats.
 You have as many ancestral states as you have internal nodes in your tree,
 so there are a lot of parameters: this value should, in general,
-be substantially higher than the other parameter values
-(recommended 25:1 or 50:1) because there are so many internal nodes states
-that need to be updated.</dd>
+be substantially higher than the other parameter values. We suggest setting this at least 25+ times the frequency with which event parameters are updated, because there are a large number of internal node states.</dd>
 </dl>
 </div>
 </div>

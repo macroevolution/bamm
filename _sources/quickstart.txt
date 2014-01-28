@@ -25,7 +25,9 @@ Specify ``modeltype = speciationextinction``.
 Incomplete taxon sampling
 *************************
 
-For speciation-extinction analyses BAMM can analytically account for incomplete taxon sampling that might otherwise bias results. Two methods are available. A global correction requires specifying ``useGlobalSamplingProbability = 1`` and giving a value for ``globalSamplingProbability`` between 0 and 1, which is the percentage of the total number of species sampled in your phylogeny. Clade-specific corrections can be performed by setting ``useGlobalSamplingProbability = 0`` and specifying a path in ``sampleProbsFilename`` to a file that contains species-specific probabilities of sampling for each species in your phylogeny. This should be a two column tab delimited text file with the species name in column one and the sampling probability in column two.   
+For speciation-extinction analyses BAMM can analytically account for incomplete taxon sampling that might otherwise bias results. Two methods are available. A global correction requires specifying ``useGlobalSamplingProbability = 1`` and giving a value for ``globalSamplingProbability`` between 0 and 1, which is the percentage of the total number of species sampled in your phylogeny. 
+
+Alternatively, BAMM can correct for non-random taxon sampling by incorporating clade-specific sampling fractions. Clade-specific corrections can be performed by setting ``useGlobalSamplingProbability = 0`` and specifying a path in ``sampleProbsFilename`` to a file that contains species-specific probabilities of sampling for each species in your phylogeny. An explanation of how to account for non-random taxon sampling is found  :ref:`here<incompsampling>`.
 
 Phenotypic evolution analyses
 *****************************

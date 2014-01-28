@@ -55,13 +55,14 @@
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">7. Advanced analysis options</a><ul>
-<li><a class="reference internal" href="#modeling-less-complex-evolutionary-scenarios">7.1. Modeling <em>less complex</em> evolutionary scenarios</a><ul>
-<li><a class="reference internal" href="#constant-rate-birth-death-model">7.1.1. Constant rate birth-death model</a></li>
-<li><a class="reference internal" href="#pure-birth-model">7.1.2. Pure-birth model</a></li>
-<li><a class="reference internal" href="#medusa-like-model">7.1.3. MEDUSA-like model</a></li>
+<li><a class="reference internal" href="#accounting-for-non-random-incomplete-taxon-sampling-in-diversification-studies">7.1. Accounting for <em>non-random</em> incomplete taxon sampling in diversification studies</a></li>
+<li><a class="reference internal" href="#modeling-less-complex-evolutionary-scenarios">7.2. Modeling <em>less complex</em> evolutionary scenarios</a><ul>
+<li><a class="reference internal" href="#constant-rate-birth-death-model">7.2.1. Constant rate birth-death model</a></li>
+<li><a class="reference internal" href="#pure-birth-model">7.2.2. Pure-birth model</a></li>
+<li><a class="reference internal" href="#medusa-like-model">7.2.3. MEDUSA-like model</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#accounting-for-phylogenetic-uncertainty">7.2. Accounting for phylogenetic uncertainty</a></li>
+<li><a class="reference internal" href="#accounting-for-phylogenetic-uncertainty">7.3. Accounting for phylogenetic uncertainty</a></li>
 </ul>
 </li>
 </ul>
@@ -100,11 +101,40 @@
             
   <div class="section" id="advanced-analysis-options">
 <h1>7. Advanced analysis options<a class="headerlink" href="#advanced-analysis-options" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="accounting-for-non-random-incomplete-taxon-sampling-in-diversification-studies">
+<h2>7.1. Accounting for <em>non-random</em> incomplete taxon sampling in diversification studies<a class="headerlink" href="#accounting-for-non-random-incomplete-taxon-sampling-in-diversification-studies" title="Permalink to this headline">¶</a></h2>
+<p>It is well-known that incomplete taxon sampling can bias analyses of speciation and extinction from phylogenetic trees. If you have an incompletely-sampled tree (e.g., some fraction &lt; 1 of the total extant species richness of your focal taxon), you can easily specify this sampling fraction to generate unbiased estimates of speciation and extinction under the assumption that <em>species are missing at random from the tree</em>. In your controlfile, you can specify the percentage of species that have been sampled by setting the <tt class="docutils literal"><span class="pre">globalSamplingFraction</span></tt> parameter.</p>
+<p>But what if your species are not sampled at random? BAMM allows you to incorporate several levels of such non-randomness into your analyses. Consider the following example. Suppose you wish to perform a diversification analysis on a clade consisting of two genera: <em>fu</em> and <em>bar</em>. In genus <em>fu</em>, you have sampled some species A and B, but another 8 species remain unsampled. In a second genus <em>bar</em>, you have sampled species C, D, E, and F, and are missing only a single species. You can conclude that you have a fraction 0.2 (2 / 10) of the species in <em>fu</em>, and 0.8 of the species in <em>bar</em> (4 / 5). Furthermore, since these are the only two genera in your focal tree, you know that the backbone of the phylogeny has a sampling probability of 1.0 (as there are no other genera in clade that includes <em>fu</em> and <em>bar</em>). We can &#8220;paint&#8221; the relevant sampling fractions on this tree as follows, using red, blue, and black for the <em>fu</em>, <em>bar</em>, and backbone sampling fractions, respectively.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="_images/xIncompSampling.png"><img alt="_images/xIncompSampling.png" src="_images/xIncompSampling.png" style="width: 200px;" /></a>
+</div>
+<p>We can account directly for this type of incomplete sampling in BAMM. We need to do two things. First, we tell BAMM that we will not be using a single global sampling probability, but will rather specify clade- or species-specific sampling probabilities. In the control file, you set <tt class="docutils literal"><span class="pre">useGlobalSamplingProbability</span> <span class="pre">=</span> <span class="pre">0</span></tt>. You must then specify a filename that gives the relevant sampling fractions using the <tt class="docutils literal"><span class="pre">sampleProbsFilename</span></tt> argument. The format of this file is a bit peculiar. On the first line of the file, you give the backbone sampling probability (1.0 in the example here).</p>
+<p>Now, you add a separate line for <em>each sampled species</em> in your phylogeny (A, B, C, D, E, F in this example). Each line contains, with a tab separator, the following:</p>
+<div class="highlight-none"><div class="highlight"><pre>speciesName     cladeName       samplingFraction
+</pre></div>
+</div>
+<p>For species A, the relevant line would look like this:</p>
+<div class="highlight-none"><div class="highlight"><pre>A       fu      0.2
+</pre></div>
+</div>
+<p>And the full file, for all species, would look like this:</p>
+<div class="highlight-none"><div class="highlight"><pre>1.0
+A       fu      0.2
+B       fu      0.2
+C       bar     0.8
+D       bar     0.8
+E       bar     0.8
+F       bar     0.8
+</pre></div>
+</div>
+<p>For many datasets, this is an easy way of using incomplete sampling information. Suppose you are modeling diversification dynamics across all passerine birds. If you have all families of birds, but incomplete sampling within those families, it is straightforward to incorporate this sampling provided you are reasonably comfortable assuming monophyly of families.</p>
+<p>Specifying a backbone sampling fraction can pose some challenges if it is unlikely to equal 1.0. Here&#8217;s an example where this is not equal to one. Continuing with the example above,suppose that there are several other general totaling 7 species in our focal clade that were not sampled. Provided we are (reasonably) confident that this genus does not reside <em>within</em> our genera <em>fu</em> and <em>bar</em>, this implies that these lineages must have branched off the backbone (black) portion of the phylogeny. One possible correction would be to assume that the 2 sampled backbone lineages are 2 of a total of 9 (including the 7 unsampled taxa from other genera), or 0.22. Another possibility is to just set the backbone fraction equal to the total sampling fraction across the entire clade. In this case, We have sampled a total of 6 species from <em>fu</em> and <em>bar</em>, which together account for 15 species. There are another 7 species unsampled from other genera. You could set the backbone fraction equal to 6 / (15 + 7) = 0.27. These are not perfect solutions, but we contend that - in general - it is better to use clade-specific sampling fractions if the percentage of sampled taxa varies considerably across your tree.</p>
+</div>
 <div class="section" id="modeling-less-complex-evolutionary-scenarios">
-<h2>7.1. Modeling <em>less complex</em> evolutionary scenarios<a class="headerlink" href="#modeling-less-complex-evolutionary-scenarios" title="Permalink to this headline">¶</a></h2>
+<h2>7.2. Modeling <em>less complex</em> evolutionary scenarios<a class="headerlink" href="#modeling-less-complex-evolutionary-scenarios" title="Permalink to this headline">¶</a></h2>
 <p>The basic BAMM model is fairly complex, as it allows rate variation through time and among lineages. However, you can easily modify the control file for BAMM to perform several simpler types of analyses.</p>
 <div class="section" id="constant-rate-birth-death-model">
-<h3>7.1.1. Constant rate birth-death model<a class="headerlink" href="#constant-rate-birth-death-model" title="Permalink to this headline">¶</a></h3>
+<h3>7.2.1. Constant rate birth-death model<a class="headerlink" href="#constant-rate-birth-death-model" title="Permalink to this headline">¶</a></h3>
 <p>To perform Bayesian inference on your data under a constant-rate birth-death process, you can simply tell BAMM not to perform any MCMC update moves that are not part of the constant-rate birth-death process. Specifically, you should (i) not add rate regimes to the tree, and (ii) not update the parameter controlling speciation rate variation through time. You can do this by making sure the MCMC move frequencies are set as follows:</p>
 <div class="highlight-none"><div class="highlight"><pre>updateRateEventNumber = 0
 updateRateEventPosition = 0
@@ -116,7 +146,7 @@ updateRateMu0 = 1
 </div>
 </div>
 <div class="section" id="pure-birth-model">
-<h3>7.1.2. Pure-birth model<a class="headerlink" href="#pure-birth-model" title="Permalink to this headline">¶</a></h3>
+<h3>7.2.2. Pure-birth model<a class="headerlink" href="#pure-birth-model" title="Permalink to this headline">¶</a></h3>
 <p>To run a pure-birth only model, with no extinction, you just turn off the extinction update:</p>
 <div class="highlight-none"><div class="highlight"><pre>updateRateMu0 = 0
 </pre></div>
@@ -128,7 +158,7 @@ updateRateMu0 = 1
 <p>Note that you cannot account for incomplete sampling under a pure-birth model (modeling incomplete sampling is mathematically identical to allowing a particular type of extinction).</p>
 </div>
 <div class="section" id="medusa-like-model">
-<h3>7.1.3. MEDUSA-like model<a class="headerlink" href="#medusa-like-model" title="Permalink to this headline">¶</a></h3>
+<h3>7.2.3. MEDUSA-like model<a class="headerlink" href="#medusa-like-model" title="Permalink to this headline">¶</a></h3>
 <p>To run a Bayesian MEDUSA-like model, where the rate of speciation and extinction is constant within specific shift regimes, you can set your MCMC move frequencies as follows:</p>
 <div class="highlight-none"><div class="highlight"><pre>updateRateEventNumber = 0.1
 updateRateEventPosition = 1
@@ -152,14 +182,11 @@ betaShiftInit = 0.0
 </div>
 </div>
 <div class="section" id="accounting-for-phylogenetic-uncertainty">
-<h2>7.2. Accounting for phylogenetic uncertainty<a class="headerlink" href="#accounting-for-phylogenetic-uncertainty" title="Permalink to this headline">¶</a></h2>
+<h2>7.3. Accounting for phylogenetic uncertainty<a class="headerlink" href="#accounting-for-phylogenetic-uncertainty" title="Permalink to this headline">¶</a></h2>
 <p>Some researchers consider it important to account for phylogenetic uncertainty when performing macroevolutionary analyses. At present, there is no direct way of accounting for phylogenetic uncertainty in BAMM itself. It remains unclear whether phylogenetic uncertainty generally matters for the sorts of conclusions obtained with BAMM. My (DLR) personal view is that phylogenetic uncertainty is very much an issue for <strong>some types</strong> of results obtained using BAMM (and other programs), and (usually) not an issue at all for many other types of results.</p>
 <p>When does phylogenetic uncertainty <strong>not</strong> matter? For general inference on the overall tempo and mode of diversification, it is quite unlikely that - in general - your focal tree (say, MCC tree from BEAST, or ML tree from RAxML) is unlikely to be <em>so bad</em> that your broad-scale inferences in evolutionary dynamics are inaccurate. One reason for this is the somewhat paradoxical observation that confidence in <em>macroevolutionary conclusions</em> can be negatively correlated with confidence in <em>phylogenetic conclusions</em>. For example, consider a phylogeny showing a pattern of an early burst in lineage diversification, such that most major lineages arose during a brief period of time. You might never be able to resolve the <em>precise</em> order of branching of those lineages, and as such, you will always have a tree that is poorly resolved at the base. However, you might nonetheless be extremely confident that branch lengths are short near the base of the radiation (indeed, this is why you have low confidence in your topology!), and this means that your inferences on speciation rates themselves might be extremely robust. If you consider speciation in whales, as shown <em class="xref std std-ref">here</em> and <a class="reference internal" href="bammgraph.html#rttwhale"><em>here</em></a>, phylogenetic uncertainty isn&#8217;t going to change the big-picture conclusions: there was clearly a massive spike in evolutionary rates in some ancestral lineage leading to, or immediately nested within, the dolphin clade.</p>
 <p>Phylogenetic uncertainty will matter if you do in fact care about <em>specific</em> aspects of changes in evolutionary dynamics. If you really care about the <em>precise</em> location of the shift in evolutionary dynamics, then the exact sequence of branching at the base of the dolphin radiation (to continue with the aforementioned example) <strong>will</strong> matter. Please keep in mind, however, that the BAMM model (and all other models), are merely statistical models that have imposed on the data. So, excessively fretting about whether the true shift in evolutionary dynamics occurred on branch <em>A</em> or branch <em>B</em> is somewhat unproductive, because the notion of a discrete shift is itself an assumption of the model we are using for inference.</p>
-<p>Although BAMM does not directly allow modeling phylogenetic uncertainty, it is straightforward to perform BAMM analyses across distributions of phylogenies taken from a Bayesian analysis. Below, we demonstrate how you can use your bash shell (on the OSX or Linux operating systems) to perform a BAMM analysis across a sample of trees.:</p>
-<div class="highlight-none"><div class="highlight"><pre>Add bash script stuff here, maybe a link to ppss as well.
-</pre></div>
-</div>
+<p>Although BAMM does not directly allow modeling phylogenetic uncertainty, it is straightforward to perform BAMM analyses across distributions of phylogenies taken from a Bayesian analysis. We will soon be adding documentation on how you can use your bash shell (on the OSX or Linux operating systems) to perform a BAMM analysis across a sample of trees.</p>
 </div>
 </div>
 
