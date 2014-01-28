@@ -7,13 +7,17 @@ General
 Citing BAMM
 -----------
 
-Coming soon::
+The primary methodological description of the BAMM model and implementation is *in press* in *PLoS ONE*. This should be out in early February 2014. In the meantime, a preprint of the manuscript is available on the arXiv preprint server:
+
+http://arxiv.org/abs/1401.6602
+
+This paper contains a description of the model, the reversible jump MCMC implementation, and a comprehensive performance evaluation. 
+
 
 How much data does it need?
 -----------------------
 **Not much**. There is no general rule here, but if your dataset is large enough to consider doing any other sort of diversification analysis, then it is probably large enough for BAMM. The whale diversification analysis shown in the :ref:`graph gallery<bammgraph>` uses a time-calibrated tree with 89 tips. We've had good success using BAMM on trees that are considerably smaller than this. 
 
- 
 
 
 BAMM extensions
