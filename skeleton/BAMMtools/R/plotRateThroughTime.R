@@ -56,6 +56,9 @@ plotRateThroughTime <- function(ephy, useMedian = TRUE, intervals=seq(from = 0,t
 	}
 
 	#set appropriate rates
+	if (ratetype == 'speciation') {
+		ratetype <- 'auto';
+	}
 	if (ratetype != 'auto' & ratetype != 'extinction' & ratetype != 'netdiv') {
 		stop("ERROR: ratetype must be 'auto', 'extinction', or 'netdiv'.\n");
 	}
@@ -144,8 +147,8 @@ plotRateThroughTime <- function(ephy, useMedian = TRUE, intervals=seq(from = 0,t
 				yMin <- ylim[1];
 				yMax <- ylim[2];
 			}
-			axis(at=c(1.3*xMin,seq(xMin,xMax, length.out=xticks+1)), labels = c(1.3*xMin,round(seq(xMin, xMax, length.out=xticks+1),digits=1)), cex.axis = cex.axis, side = 1);
-			axis(at=c(-0.2,seq(yMin, 1.2*yMax, length.out=yticks+1)), labels = c(-0.2,round(seq(yMin, 1.2*yMax, length.out=yticks+1),digits=1)), las=1, cex.axis = cex.axis, side = 2);
+			axis(at=c(1.3*xMin,seq(xMin,xMax, length.out=xticks+1)), labels = c(1.3*xMin,signif(seq(xMin, xMax, length.out=xticks+1),digits=2)), cex.axis = cex.axis, side = 1);
+			axis(at=c(-0.2,seq(yMin, 1.2*yMax, length.out=yticks+1)), labels = c(-0.2,signif(seq(yMin, 1.2*yMax, length.out=yticks+1),digits=2)), las=1, cex.axis = cex.axis, side = 2);
 
 			mtext(side = 1, text = 'Time since present', line = xline, cex = cex);
 			mtext(side = 2, text = ratelabel, line = yline, cex = cex);

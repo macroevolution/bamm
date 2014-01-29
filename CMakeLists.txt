@@ -30,6 +30,7 @@ SET(BAMM_SRC
     src/MbRandom.cpp
     src/Model.cpp
     src/Node.cpp
+    src/Prior.cpp
     src/Settings.cpp
     src/SettingsParameter.cpp
     src/TraitBranchEvent.cpp

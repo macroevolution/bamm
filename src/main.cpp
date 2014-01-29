@@ -17,6 +17,9 @@
 #include "FastSimulatePrior.h"
 
 
+#include "Prior.h"
+
+
 void printAbout();
 const char* currentTime();
 void exitWithMessageUsage();
@@ -59,6 +62,8 @@ int main (int argc, char* argv[])
 
     MbRandom myRNG(mySettings.getSeed());
 
+    Prior myPrior(&myRNG, &mySettings);
+    
     std::string commandLine(argv[0]);
     for (int i = 1; i < argc; i++) {
         commandLine += std::string(" ") + argv[i];
@@ -105,12 +110,12 @@ int main (int argc, char* argv[])
         intree.setTreeMap(intree.getRoot());
 
         if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
-            Model myModel(&myRNG, &intree, &mySettings);
+            Model myModel(&myRNG, &intree, &mySettings, &myPrior);
         } else if (mySettings.getInitializeModel() && mySettings.getAutotune()){
-            Model myModel(&myRNG, &intree, &mySettings);
+            Model myModel(&myRNG, &intree, &mySettings, &myPrior);
             Autotune myTuneObject(&myRNG, &myModel, &mySettings);
         } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
-            Model myModel(&myRNG, &intree, &mySettings);
+            Model myModel(&myRNG, &intree, &mySettings, &myPrior);
             MCMC myMCMC(&myRNG, &myModel, &mySettings);
         } else {
             log(Error) << "Unsupported option in main.\n";
