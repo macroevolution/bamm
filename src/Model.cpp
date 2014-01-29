@@ -22,6 +22,7 @@
 #include "Settings.h"
 #include "Log.h"
 
+#include "Prior.h"
 
 #define NO_DATA
 #undef NO_DATA
@@ -48,7 +49,7 @@
 
 double Model::mhColdness = 1.0;
 
-Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
+Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr)
 {
     // reduce weird autocorrelation of values at start by calling RNG a few times...
     for (int i = 0; i < 100; i++)
@@ -58,6 +59,13 @@ Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp)
     treePtr = tp;
     sttings = sp;
 
+    cprior = pr;
+    
+    
+    
+    // Initialize prior object here
+    
+    
 
 
     treePtr->getTotalMapLength(); // total map length (required to set priors)
@@ -1267,9 +1275,11 @@ void Model::updateLambdaInitMH(void)
 
 #endif
 
-    double logPriorRatio = ran->lnExponentialPdf(_lambdaInitPrior,
-                           be->getLamInit()) - ran->lnExponentialPdf(_lambdaInitPrior, oldRate);
-
+        
+    double logPriorRatio = cprior->lambdaInitPrior(be->getLamInit());
+    logPriorRatio -= cprior->lambdaInitPrior(oldRate);
+    
+    
     double LogProposalRatio = log(cterm);
 
     double likeRatio = PropLnLik - getCurrLnLBranches();
@@ -1337,12 +1347,16 @@ void Model::updateLambdaShiftMH(void)
 
 #endif
 
-
+    double  logPriorRatio = cprior->lambdaShiftPrior(newLambdaShift);
+    logPriorRatio -= cprior->lambdaShiftPrior(oldLambdaShift);
+    
+/*
     double  logPriorRatio = ran->lnNormalPdf((double)0.0,
                             sttings->getLambdaShiftPrior(), newLambdaShift);
     logPriorRatio -= ran->lnNormalPdf((double)0.0, sttings->getLambdaShiftPrior(),
                                       oldLambdaShift);
-
+*/
+    
     double LogProposalRatio = 0.0;
 
     double likeRatio = PropLnLik - getCurrLnLBranches();
@@ -1455,10 +1469,8 @@ void Model::updateMuInitMH(void)
 
 #endif
 
-    double logPriorRatio = ran->lnExponentialPdf(_muInitPrior,
-                           be->getMuInit()) - ran->lnExponentialPdf(_muInitPrior, oldRate);
-
-
+    double logPriorRatio = cprior->muInitPrior(be->getMuInit());
+    logPriorRatio -= cprior->muInitPrior(oldRate);
 
     double LogProposalRatio = log(cterm);
 
@@ -1528,12 +1540,11 @@ void Model::updateMuShiftMH(void)
 
 #endif
 
-
-    double  logPriorRatio = ran->lnNormalPdf((double)0.0,
-                            sttings->getMuShiftPrior(), newMuShift);
-    logPriorRatio -= ran->lnNormalPdf((double)0.0, sttings->getMuShiftPrior(),
-                                      oldMuShift);
-
+    
+    double logPriorRatio = cprior->muShiftPrior(newMuShift);
+    logPriorRatio -= cprior->muShiftPrior(oldMuShift);
+    
+    
 
     double LogProposalRatio = 0.0;
 
@@ -1593,8 +1604,11 @@ void Model::updateEventRateMH(void)
     double cterm = exp( _updateEventRateScale * (ran->uniformRv() - 0.5) );
     setEventRate(cterm * oldEventRate);
 
-    double LogPriorRatio = ran->lnExponentialPdf(_poissonRatePrior,
-                           getEventRate()) - ran->lnExponentialPdf(_poissonRatePrior, oldEventRate);
+    
+    double logPriorRatio = cprior->poissonRatePrior(getEventRate());
+    logPriorRatio -= cprior->poissonRatePrior(oldEventRate);
+    
+
     double logProposalRatio = log(cterm);
 
 
@@ -1605,7 +1619,7 @@ void Model::updateEventRateMH(void)
     //double LogPriorRatio = 0.0;
     //double logProposalRatio = 1.0;
 
-    double logHR = LogPriorRatio + logProposalRatio;
+    double logHR = logPriorRatio + logProposalRatio;
     const bool acceptMove = acceptMetropolisHastings(logHR);
 
 
@@ -1853,66 +1867,31 @@ double Model::computeLikelihoodBranchesByInterval(void)
 double Model::computeLogPrior(void)
 {
 
-
-
     double logPrior = 0.0;
 
-    /*
-
-    // 1. Event rate
-    logPrior += ran->lnExponentialPdf(_poissonRatePrior, getEventRate());
-
-    // 2. Prior on branch rates:
-    logPrior += ran->lnExponentialPdf(lambdaPrior, rootEvent->getLambda()) + ran->lnExponentialPdf(muPrior, rootEvent->getMu());
-    for (std::set<BranchEvent*>::iterator i = eventCollection.begin(); i != eventCollection.end(); i++){
-        logPrior += ran->lnExponentialPdf(lambdaPrior, (*i)->getLambda()) + ran->lnExponentialPdf(muPrior, (*i)->getMu());
-    }
-
-    */
-
-
-    logPrior += ran->lnExponentialPdf(sttings->getLambdaInitPrior(),
-                                      rootEvent->getLamInit());
-
-    logPrior += ran->lnNormalPdf((double)0.0, sttings->getLambdaShiftPrior(),
-                                 rootEvent->getLamShift());
-
-    logPrior += ran->lnExponentialPdf(sttings->getMuInitPrior(),
-                                      rootEvent->getMuInit());
-
-    logPrior += ran->lnNormalPdf((double)0.0, sttings->getMuShiftPrior(),
-                                 rootEvent->getMuShift());
-
+    logPrior += cprior->lambdaInitPrior(rootEvent->getLamInit());
+    logPrior += cprior->lambdaShiftPrior(rootEvent->getLamShift());
+    logPrior += cprior->muInitPrior(rootEvent->getMuInit());
+    logPrior += cprior->muShiftPrior(rootEvent->getMuShift());
+    
     int ctr = 0;
-
 
     for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
             i != eventCollection.end(); i++) {
 
-        //std::cout << *i << "\t" << ctr << "\tLamInit: " << (*i)->getLamInit() << "\t"  << logPrior << std::endl;
-
-        logPrior += ran->lnExponentialPdf(sttings->getLambdaInitPrior(),
-                                          (*i)->getLamInit());
-
-        logPrior += ran->lnNormalPdf((double)0.0, sttings->getLambdaShiftPrior(),
-                                     (*i)->getLamShift());
-
-        logPrior += ran->lnExponentialPdf(sttings->getMuInitPrior(), (*i)->getMuInit());
-
-        logPrior += ran->lnNormalPdf((double)0.0, sttings->getMuShiftPrior(),
-                                     (*i)->getMuShift());
-
+        logPrior += cprior->lambdaInitPrior((*i)->getLamInit());
+        logPrior += cprior->lambdaShiftPrior((*i)->getLamShift());
+        logPrior += cprior->muInitPrior((*i)->getMuInit());
+        logPrior += cprior->muShiftPrior((*i)->getMuShift());
+        
         ctr++;
 
     }
 
     // Here's prior density on the event rate:
-    logPrior += ran->lnExponentialPdf(sttings->getPoissonRatePrior(), getEventRate());
-
-    // Here we cCCOULD also compute the prior probability on the number of events:
-    //logPrior += ran->lnPoissonProb(getEventRate(), eventCollection.size());
-    // But this is already incorporated, because the move probabilities explicitly use this
-
+    
+    logPrior += cprior->poissonRatePrior(getEventRate());
+    
     return logPrior;
 
 }
