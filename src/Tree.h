@@ -29,6 +29,7 @@ private:
         (Node* node, std::vector<double>& pathLengths);
     bool allValuesAreTheSame(std::vector<double>& list);
 
+    void assertTreeRootBranchLengthIsZero();
     void assertTreeIsBifurcating();
     void assertTreeIsBifurcatingRecurse(Node* node);
     void assertBranchLengthsArePositive();

@@ -54,6 +54,7 @@ Tree::Tree(std::string fname, MbRandom* rnptr)
     buildTreeFromNewickString(treestring);
 
     // Check tree integrity
+    assertTreeRootBranchLengthIsZero();
     assertTreeIsBifurcating();
     assertBranchLengthsArePositive();
     assertTreeIsUltrametric();
@@ -1948,6 +1949,19 @@ void Tree::storeTerminalPathLengthsToRootRecurse
 
     if (rightNode != NULL) {
         storeTerminalPathLengthsToRootRecurse(rightNode, pathLengths);
+    }
+}
+
+
+void Tree::assertTreeRootBranchLengthIsZero()
+{
+    Node* root = getRoot();
+
+    if (root->getBrlen() != 0.0) {
+        log(Warning) << "Root has non-zero branch length. "
+            << "Automatically setting it to zero.\n"
+            << "Please make sure this is what you really want.\n\n";
+        root->setBrlen(0.0);
     }
 }
 
