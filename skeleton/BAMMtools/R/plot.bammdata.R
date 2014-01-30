@@ -112,7 +112,7 @@ plot.bammdata = function (ephy, method = "phylogram", vtheta = 5, rbf = 0.001, s
             }
         }
         if (legend) {
-            rateLegend(colorobj$colsdensity);
+            rateLegend(colorobj$colsdensity, type=spex);
         }
     }
     index = order(as.numeric(rownames(ret$segs)));
