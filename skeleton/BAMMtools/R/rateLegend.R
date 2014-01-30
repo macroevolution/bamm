@@ -2,7 +2,7 @@
 #	Internal function called by plot.bammdata(...)
 #
 #
-rateLegend = function(colobj) {
+rateLegend = function(colobj, type="s") {
 	opar = par(no.readonly = TRUE);
     cat("Click once where you want the lower left corner of the figure\n");
     cxy = locator(n = 1);
@@ -14,10 +14,18 @@ rateLegend = function(colobj) {
     plot.new();
     x = colobj[,1];
     y = colobj[,2];
-    plot.window(xlim = c(min(0, min(x)), max(x)), ylim = c(0, max(y)));
-    segments(x, y, x, 0, lend = 2, col = colobj[,3]);
-    axis(1, signif(seq(min(0, min(x)), max(x), length.out = 5), 2), xaxs = "i", cex.axis = 0.75, tcl = NA, mgp = c(0, 0.25, 0));
-    axis(2, round(seq(0, max(y), length.out = 3), 0), las = 1, yaxs = "i", cex.axis = 0.75, tcl = NA, mgp = c(0, 0.25, 0));
+    if (type == "s" || type == "e") {
+	    plot.window(xlim = c(0, max(x)), ylim = c(0, max(y)));
+    	segments(x[x>0], y[x>0], x[x>0], 0, lend = 2, col = colobj[,3]);
+    	axis(1, signif(seq(0, max(x), length.out = 5), 2), xaxs = "i", cex.axis = 0.75, tcl = NA, mgp = c(0, 0.25, 0));
+    	axis(2, round(seq(0, max(y), length.out = 3), 0), las = 1, yaxs = "i", cex.axis = 0.75, tcl = NA, mgp = c(0, 0.25, 0));
+    }
+    else {
+    	plot.window(xlim = c(min(0,min(x)), max(x)), ylim = c(0, max(y)));
+    	segments(x, y, x, 0, lend = 2, col = colobj[,3]);
+    	axis(1, signif(seq(min(0,min(x)), max(x), length.out = 5), 2), xaxs = "i", cex.axis = 0.75, tcl = NA, mgp = c(0, 0.25, 0));
+    	axis(2, round(seq(0, max(y), length.out = 3), 0), las = 1, yaxs = "i", cex.axis = 0.75, tcl = NA, mgp = c(0, 0.25, 0));
+    }
     mtext("Evolutionary Rate", 1, line = 1, cex = 0.75);
     mtext("Density", 2, line = 1, cex = 0.75);
     par(opar);

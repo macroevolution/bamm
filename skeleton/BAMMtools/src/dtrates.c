@@ -29,14 +29,24 @@ double getMeanRateExponential(double t1, double t2, double p1, double p2) {
 	if (p2 == 0.) {
 		return p1;
 	}
-	return (p1/p2)*(exp(t2*p2) - exp(t1*p2))/(t2 - t1);
+	else if (p2 < 0) {
+		return (p1/p2)*(exp(t2*p2) - exp(t1*p2))/(t2 - t1);
+	}
+	else {
+		return (p1/p2)*(2.*p2*(t2-t1) + exp(-t2*p2) - exp(-t1*p2))/(t2 - t1);
+	}
 }
 
 double getTimeIntegratedBranchRate(double t1, double t2, double p1, double p2) {
 	if (p2 == 0.) {
 		return (t2 - t1) * p1;
 	}
-	return (p1/p2)*(exp(t2*p2) - exp(t1*p2));
+	else if (p2 < 0) {
+		return (p1/p2)*(exp(t2*p2) - exp(t1*p2));
+	}
+	else {
+		return (p1/p2)*(2.*p2*(t2-t1) + exp(-t2*p2) - exp(-t1*p2));
+	}
 }
 
 /***
