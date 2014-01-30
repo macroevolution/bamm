@@ -12,6 +12,7 @@
 #include "TraitBranchHistory.h"
 #include "MbRandom.h"
 #include "Log.h"
+#include "Stat.h"
 
 
 //#define DEBUG_TIME_VARIABLE
@@ -1918,7 +1919,7 @@ double Tree::maxRootToTipLength()
 bool Tree::isUltrametric()
 {
     std::vector<double> terminalPathLengths = terminalPathLengthsToRoot();
-    return allValuesAreTheSame(terminalPathLengths);
+    return Stat::variance(terminalPathLengths) < ULTRAMETRIC_TOLERANCE;
 }
 
 
@@ -1948,25 +1949,6 @@ void Tree::storeTerminalPathLengthsToRootRecurse
     if (rightNode != NULL) {
         storeTerminalPathLengthsToRootRecurse(rightNode, pathLengths);
     }
-}
-
-
-bool Tree::allValuesAreTheSame(std::vector<double>& list)
-{
-    if (list.size() == 0) {
-        return false;
-    }
-
-    double firstNum = list[0];
-
-    std::vector<double>::const_iterator it;
-    for (it = list.begin() + 1; it != list.end(); ++it) {
-        if (std::fabs(*it - firstNum) > ULTRAMETRIC_ERROR) {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 
