@@ -33,6 +33,7 @@ SET(BAMM_SRC
     src/Prior.cpp
     src/Settings.cpp
     src/SettingsParameter.cpp
+    src/Stat.cpp
     src/TraitBranchEvent.cpp
     src/TraitBranchHistory.cpp
     src/TraitMCMC.cpp

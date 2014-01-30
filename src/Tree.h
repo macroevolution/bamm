@@ -14,8 +14,9 @@ class TraitBranchHistory;
 class Node;
 
 
-// Branch lengths must be within this value to be considered the same
-#define ULTRAMETRIC_ERROR 1e-2
+// The variance of the root-to-tip lengths must be less than
+// this value for the tree to be considered ultrametric
+#define ULTRAMETRIC_TOLERANCE 1e-6
 
 
 class Tree
