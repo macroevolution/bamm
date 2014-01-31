@@ -360,26 +360,20 @@ void Model::addEventToTree(double x)
     // New way:
     // Sample lambda, lambdaInit, mu, muInit parameters from appropriate prior distributions
 
-    double newLam = ran->exponentialRv(_lambdaInitPrior) ;
-    double newLambdaShift =  ran->normalRv(0.0, _lambdaShiftPrior);
-    double newMu = ran->exponentialRv(_muInitPrior);
-
-    double newMuShift = 0.0;
-
-    // This line would randomly generate a new muShift parameter
-    //      but for now we set this to zero
-    //double newMuShift = ran->normalRv(0.0, _muShiftPrior);
-
+    double newLam = cprior->generateLambdaInitFromPrior();
+    double newLambdaShift = cprior->generateLambdaShiftFromPrior();
+    double newMu = cprior->generateMuInitFromPrior();
+    double newMuShift = cprior->generateMuShiftFromPrior();
+ 
     // This block computes the jump density for the
     //  addition of new parameters.
 
     _logQratioJump = 0.0; // Set to zero to clear previous values...
-    _logQratioJump = ran->lnExponentialPdf(_lambdaInitPrior, newLam);
-    _logQratioJump += ran->lnExponentialPdf(_muInitPrior, newMu);
-    _logQratioJump += ran->lnNormalPdf((double)0.0, _lambdaShiftPrior,
-                                       newLambdaShift);
-    _logQratioJump += ran->lnNormalPdf((double)0.0, _muShiftPrior, newMuShift);
-
+    _logQratioJump = cprior->lambdaInitPrior(newLam);
+    _logQratioJump += cprior->lambdaShiftPrior(newLambdaShift);
+    _logQratioJump += cprior->muInitPrior(newMu);
+    _logQratioJump += cprior->muShiftPrior(newMuShift);
+    
 #endif
 
     // End calculations:: now create event
@@ -733,15 +727,12 @@ void Model::deleteEventFromTree(BranchEvent* be)
 
 
         _logQratioJump = 0.0; // Set to zero to clear previous values...
-        _logQratioJump = ran->lnExponentialPdf(_lambdaInitPrior,
-                                               _lastDeletedEventLambdaInit);
-        _logQratioJump += ran->lnExponentialPdf(_muInitPrior, _lastDeletedEventMuInit);
-        _logQratioJump += ran->lnNormalPdf((double)0.0, _lambdaShiftPrior,
-                                           _lastDeletedEventLambdaShift);
-        _logQratioJump += ran->lnNormalPdf((double)0.0, _muShiftPrior,
-                                           _lastDeletedEventMuShift);
-
-
+        
+        _logQratioJump = cprior->lambdaInitPrior(_lastDeletedEventLambdaInit);
+        _logQratioJump += cprior->lambdaShiftPrior(_lastDeletedEventLambdaShift);
+        _logQratioJump += cprior->muInitPrior(_lastDeletedEventMuInit);
+        _logQratioJump += cprior->muShiftPrior(_lastDeletedEventMuShift);
+    
         currNode->getBranchHistory()->popEventOffBranchHistory((be));
 
         eventCollection.erase(be);
@@ -809,6 +800,8 @@ void Model::deleteRandomEventFromTree(void)
                 double newMuShift = newLastEvent->getMuShift();
 
                 _logQratioJump = 0.0; // Set to zero to clear previous values...
+               
+                
                 _logQratioJump = ran->lnExponentialPdf((1 / newLam),
                                                        _lastDeletedEventLambdaInit);
                 _logQratioJump += ran->lnExponentialPdf((1 / newMu), _lastDeletedEventMuInit);
@@ -824,15 +817,11 @@ void Model::deleteRandomEventFromTree(void)
                 // This block computes the jump density for the
                 //  deletion of new parameters.
 
-
                 _logQratioJump = 0.0; // Set to zero to clear previous values...
-                _logQratioJump = ran->lnExponentialPdf(_lambdaInitPrior,
-                                                       _lastDeletedEventLambdaInit);
-                _logQratioJump += ran->lnExponentialPdf(_muInitPrior, _lastDeletedEventMuInit);
-                _logQratioJump += ran->lnNormalPdf((double)0.0, _lambdaShiftPrior,
-                                                   _lastDeletedEventLambdaShift);
-                _logQratioJump += ran->lnNormalPdf((double)0.0, _muShiftPrior,
-                                                   _lastDeletedEventMuShift);
+                _logQratioJump = cprior->lambdaInitPrior(_lastDeletedEventLambdaInit);
+                _logQratioJump += cprior->lambdaShiftPrior(_lastDeletedEventLambdaShift);
+                _logQratioJump += cprior->muInitPrior(_lastDeletedEventMuInit);
+                _logQratioJump += cprior->muShiftPrior(_lastDeletedEventMuShift);
 
 #endif
 

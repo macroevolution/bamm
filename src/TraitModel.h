@@ -21,6 +21,7 @@ class Tree;
 class Node;
 class MbRandom;
 class Settings;
+class Prior;
 
 double safeExponentiation(double x);
 double proportionalShrink(double x, double scale);
@@ -33,7 +34,7 @@ public:
 
     static double mhColdness;
 
-    TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp);
+    TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr);
     ~TraitModel();
 
     // Full likelihood will be lnLikTraits + lnLikBranches
@@ -164,6 +165,7 @@ private:
     MbRandom* ran;
     Tree* treePtr;
     Settings* sttings;
+    Prior* cprior;
 
     int acceptCount;
     int rejectCount;

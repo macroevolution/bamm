@@ -6,6 +6,7 @@
 //#define NEGATIVE_SHIFT_PARAM
 #undef NEGATIVE_SHIFT_PARAM
 
+#undef DEBUG  // This is a problem.
 
 
 #include "TraitModel.h"
@@ -26,14 +27,14 @@
 #include "TraitBranchHistory.h"
 #include "Settings.h"
 #include "Log.h"
-
+#include "Prior.h"
 
 double TraitModel::mhColdness = 1.0;
 
 
 
 
-TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
+TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* Pr)
 {
 
     _lastLH = 0.0;
@@ -45,7 +46,9 @@ TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
     ran = ranptr;
     treePtr = tp;
     sttings = sp;
-
+    cprior = Pr;
+    
+    
     treePtr->getTotalMapLength(); // total map length (required to set priors)
 
     // Set parameter values for model object, including priors etc.
@@ -303,9 +306,10 @@ void TraitModel::addEventToTree(double x)
 
 
     // Sample beta and beta shift from prior:
-    double newbeta = ran->exponentialRv(sttings->getBetaInitPrior());
-    double newBetaShift = ran->normalRv(0.0, sttings->getBetaShiftPrior());
 
+    double newbeta = cprior->generateBetaInitFromPrior();
+    double newBetaShift = cprior->generateBetaShiftFromPrior();
+    
     
 #ifdef NEGATIVE_SHIFT_PARAM
     
@@ -320,11 +324,14 @@ void TraitModel::addEventToTree(double x)
     
     
     _logQratioJump = 0.0;
-    _logQratioJump += ran->lnExponentialPdf(sttings->getBetaInitPrior(), newbeta);
+    
+    _logQratioJump += cprior->betaInitPrior(newbeta);
+    _logQratioJump += dens_term + cprior->betaShiftPrior(newBetaShift);
+    
+    //_logQratioJump += dens_term + ran->lnExponentialPdf(sttings->getBetaInitPrior(), newbeta);
     
     // Add log(2) [see dens_term above] because this is truncated normal distribution constrained to negative values
-    _logQratioJump += dens_term + ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
-                                       newBetaShift);
+    //_logQratioJump += dens_term + ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),newBetaShift);
 
     // End calculations:: now create event
 
@@ -363,16 +370,18 @@ void TraitModel::addEventToTree(double x)
 
 void TraitModel::addEventToTree(void)
 {
-
+    
     double aa = treePtr->getRoot()->getMapStart();
     double bb = treePtr->getTotalMapLength();
     double x = ran->uniformRv(aa, bb);
-
+    
     
     /*      ********************* */
     // Sample beta and beta shift from prior:
-    double newbeta = ran->exponentialRv(sttings->getBetaInitPrior());
-    double newBetaShift = ran->normalRv(0.0, sttings->getBetaShiftPrior());
+    
+    double newbeta = cprior->generateBetaInitFromPrior();
+    double newBetaShift = cprior->generateBetaShiftFromPrior();
+    
     
 #ifdef NEGATIVE_SHIFT_PARAM
     
@@ -386,36 +395,35 @@ void TraitModel::addEventToTree(void)
 #endif
     
     
-
-// End calculations:: now create event
-
+    
+    // End calculations:: now create event
+    
     _logQratioJump = 0.0;
-    _logQratioJump += ran->lnExponentialPdf(sttings->getBetaInitPrior(), newbeta);
-    _logQratioJump += dens_term + ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
-                                       newBetaShift);
-
+    
+    _logQratioJump = cprior->betaInitPrior(newbeta);
+    _logQratioJump += dens_term + cprior->betaShiftPrior(newBetaShift);
+    
     TraitBranchEvent* newEvent = new TraitBranchEvent(newbeta, newBetaShift,
-            treePtr->mapEventToTree(x), treePtr, ran, x);
-
-
-
+                                                      treePtr->mapEventToTree(x), treePtr, ran, x);
+    
+    
+    
     newEvent->getEventNode()->getTraitBranchHistory()->addEventToBranchHistory(
-        newEvent);
-
+                                                                               newEvent);
+    
     eventCollection.insert(newEvent);
-
+    
     // Event is now inserted into branch history:
     //  however, branch histories must be updated.
-
+    
     forwardSetBranchHistories(newEvent);
     treePtr->setMeanBranchTraitRates();
-
+    
     // Addition June17 2012
     lastEventModified = newEvent;
-
-
+    
+    
 }
-
 
 
 // This function for adding event with beta...
@@ -683,121 +691,117 @@ int TraitModel::countEventsInBranchHistory(Node* p)
 
 void TraitModel::deleteEventFromTree(TraitBranchEvent* be)
 {
-
-
+    
+    
     if (be == rootEvent) {
         std::cout << "Can't delete root event" << std::endl;
         exit(1);
     } else {
         // erase from branch history:
         Node* currNode = (be)->getEventNode();
-
+        
         //get event downstream of i
         TraitBranchEvent* newLastEvent =
-            currNode->getTraitBranchHistory()->getLastEvent(be);
-
+        currNode->getTraitBranchHistory()->getLastEvent(be);
+        
         lastDeletedEventMapTime = (be)->getMapTime();
-
+        
         _lastDeletedEventBetaInit = (be)->getBetaInit();
         _lastDeletedEventBetaShift = (be)->getBetaShift();
-
+        
         /************************/
         _logQratioJump = 0.0;
-        _logQratioJump += ran->lnExponentialPdf(sttings->getBetaInitPrior(),
-                                                _lastDeletedEventBetaInit);
-        _logQratioJump += ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
-                                           _lastDeletedEventBetaShift);
-
+        
+        _logQratioJump = cprior->betaInitPrior(_lastDeletedEventBetaInit);
+        _logQratioJump += cprior->betaShiftPrior(_lastDeletedEventBetaShift);
+        
         currNode->getTraitBranchHistory()->popEventOffBranchHistory((be));
-
+        
         eventCollection.erase(be);
-
+        
         // delete from global node set
         delete (be);
         //std::cout << "deleted..." << std::endl;
-
+        
         forwardSetBranchHistories(newLastEvent);
-
+        
     }
-
-
+    
+    
     treePtr->setMeanBranchTraitRates();
-
-
+    
+    
 }
+
 
 
 
 
 void TraitModel::deleteRandomEventFromTree(void)
 {
-
-
+    
+    
     //std::cout << std::endl << std::endl << "START Delete: " << std::endl;
     //printBranchHistories(treePtr->getRoot());
-
+    
     // can only delete event if more than root node present.
     int n_events = (int)eventCollection.size();
-
+    
     if (eventCollection.size() > 0) {
         int counter = 0;
         double xx = ran->uniformRv();
         int chosen = (int)(xx * (double)n_events);
-
+        
         for (std::set<TraitBranchEvent*>::iterator i = eventCollection.begin();
-                i != eventCollection.end(); i++) {
+             i != eventCollection.end(); i++) {
             if (counter++ == chosen) {
-
+                
                 // erase from branch history:
                 Node* currNode = (*i)->getEventNode();
-
+                
                 //get event downstream of i
                 TraitBranchEvent* newLastEvent =
-                    currNode->getTraitBranchHistory()->getLastEvent((*i));
-
+                currNode->getTraitBranchHistory()->getLastEvent((*i));
+                
                 lastDeletedEventMapTime = (*i)->getMapTime();
                 //lastDeletedEventBeta = (*i)->getBeta();
-
+                
                 _lastDeletedEventBetaInit = (*i)->getBetaInit();
                 _lastDeletedEventBetaShift = (*i)->getBetaShift();
-
-
+                
+                
                 currNode->getTraitBranchHistory()->popEventOffBranchHistory((*i));
-
+                
                 /************************/
                 _logQratioJump = 0.0;
-                _logQratioJump += ran->lnExponentialPdf(sttings->getBetaInitPrior(),
-                                                        _lastDeletedEventBetaInit);
-                _logQratioJump += ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
-                                                   _lastDeletedEventBetaShift);
-
-
+                
+                _logQratioJump += cprior->betaInitPrior(_lastDeletedEventBetaInit);
+                _logQratioJump += cprior->betaShiftPrior(_lastDeletedEventBetaShift);
+                
                 eventCollection.erase(i);
-
+                
                 // delete from global node set
                 delete (*i);
                 //std::cout << "deleted..." << std::endl;
-
+                
                 //std::cout << "erased ... " << std::endl;
-
+                
                 // reset forward history from last event:
                 //BranchEvent* lastEvent = getLastEvent(currNode);
                 //forwardSetBranchHistories(lastEvent);
                 forwardSetBranchHistories(newLastEvent);
-
+                
                 //std::cout << "forward set..." << std::endl;
-
+                
                 // is this correctly setting branch histories??
-
+                
                 break;
             }
         }
     }
     treePtr->setMeanBranchTraitRates();
-
+    
 }
-
-
 
 void TraitModel::restoreLastDeletedEvent(void)
 {
@@ -1222,22 +1226,23 @@ void TraitModel::updateTimeVariablePartitionsMH(void)
  */
 void TraitModel::updateEventRateMH(void)
 {
-
+    
     //std::cout << "Entering update event rate" << std::endl;
-
+    
     double oldEventRate = getEventRate();
     double cterm = exp( _updateEventRateScale * (ran->uniformRv() - 0.5) );
     setEventRate(cterm * oldEventRate);
-
-
-    double LogPriorRatio = ran->lnExponentialPdf(_poissonRatePrior,
-                           getEventRate()) - ran->lnExponentialPdf(_poissonRatePrior, oldEventRate);
+    
+    
+    double LogPriorRatio = cprior->poissonRatePrior(getEventRate());
+    LogPriorRatio -= cprior->poissonRatePrior(oldEventRate);
+    
     double logProposalRatio = log(cterm);
     double logHR = LogPriorRatio + logProposalRatio;
     const bool acceptMove = acceptMetropolisHastings(logHR);
-
+    
     //std::cout << "ER " << oldEventRate << "\t" << cterm*oldEventRate << std::endl;
-
+    
     if (acceptMove == true) {
         // continue
         acceptCount++;
@@ -1247,7 +1252,7 @@ void TraitModel::updateEventRateMH(void)
         rejectCount++;
         acceptLast = 0;
     }
-
+    
     incrementGeneration();
     //std::cout << "Leaving UpdateEventRate" << std::endl;
 }
@@ -1256,156 +1261,152 @@ void TraitModel::updateEventRateMH(void)
 
 void TraitModel::updateBetaMH(void)
 {
-
+    
     int toUpdate = ran->sampleInteger(0, (int)eventCollection.size());
-
+    
     TraitBranchEvent* be = rootEvent;
-
-
+    
+    
     if (toUpdate > 0) {
         std::set<TraitBranchEvent*>::iterator myIt = eventCollection.begin();
         for (int i = 1; i < toUpdate; i++)
             myIt++;
-
+        
         be = (*myIt);
     }
-
-
+    
+    
     double oldRate = be->getBetaInit();
     double cterm = exp( _updateBetaScale * (ran->uniformRv() - 0.5) );
     be->setBetaInit(cterm * oldRate);
     treePtr->setMeanBranchTraitRates();
-
-
-
-
-
+    
+    
+    
+    
+    
 #ifdef NO_DATA
     double PropLnLik = 0;
 #else
-
+    
     double PropLnLik = computeLikelihoodTraits();
-
+    
 #endif
-
-    double LogPriorRatio = ran->lnExponentialPdf(sttings->getBetaInitPrior(),
-                           be->getBetaInit());
-    LogPriorRatio -= ran->lnExponentialPdf(sttings->getBetaInitPrior(), oldRate);
-
+    
+    double LogPriorRatio = cprior->betaInitPrior(be->getBetaInit());
+    LogPriorRatio -= cprior->betaInitPrior(oldRate);
+    
+    
     double LogProposalRatio = log(cterm);
-
+    
     double likeRatio = PropLnLik - getCurrLnLTraits();
-
+    
     double logHR = likeRatio + LogPriorRatio + LogProposalRatio;
-
+    
     const bool acceptMove = acceptMetropolisHastings(logHR);
-
-//  std::cout << getGeneration() << "\tL1: " << startLH << "\tL2: " << getCurrLnLTraits() << std::endl;
-
-
+    
+    //  std::cout << getGeneration() << "\tL1: " << startLH << "\tL2: " << getCurrLnLTraits() << std::endl;
+    
+    
     if (acceptMove == true) {
         //std::cout << "accept: " << oldRate << "\t" << be->getBetaInit() << std::endl;
         setCurrLnLTraits(PropLnLik);
         acceptCount++;
         acceptLast = 1;
-
+        
     } else {
-
+        
         // revert to previous state
         _lastLH = PropLnLik;
-
-
+        
+        
         be->setBetaInit(oldRate);
         treePtr->setMeanBranchTraitRates();
         acceptLast = 0;
         rejectCount++;
-
+        
     }
-
+    
     /*if (!acceptMove){
-        std::cout << std::endl;
-        std::cout << startLL << "\tCurr: " << getCurrLnLTraits() << "\tcalc: " << computeLikelihoodTraits() << std::endl;
-    }*/
-
+     std::cout << std::endl;
+     std::cout << startLL << "\tCurr: " << getCurrLnLTraits() << "\tcalc: " << computeLikelihoodTraits() << std::endl;
+     }*/
+    
     incrementGeneration();
-
+    
 }
 
 
 void TraitModel::updateBetaShiftMH(void)
 {
-
+    
     int toUpdate = ran->sampleInteger(0, (int)eventCollection.size());
-
+    
     TraitBranchEvent* be = rootEvent;
-
-
+    
+    
     if (toUpdate > 0) {
         std::set<TraitBranchEvent*>::iterator myIt = eventCollection.begin();
         for (int i = 1; i < toUpdate; i++)
             myIt++;
-
+        
         be = (*myIt);
     }
-
+    
     double oldShift = be->getBetaShift();
     double newShift = oldShift + ran->normalRv((double)0.0, _updateBetaShiftScale);
- 
-    // Convert to negative via reflection:
-    // ******* Is this really always proposing a negative shift parameter (jan 30 2014)? **********//
+    
+
+#ifdef NEGATIVE_SHIFT_PARAM
     
     newShift = -fabs(newShift);
- 
+    
+#endif
+    
     be->setBetaShift(newShift);
     treePtr->setMeanBranchTraitRates();
-
+    
 #ifdef NO_DATA
     double PropLnLik = 0;
 #else
     double PropLnLik = computeLikelihoodTraits();
-
-#endif
-
-    // Normal prior on shift parameter:
-    // We ignore the log(2) term which cancels out.
     
-    double LogPriorRatio = ran->lnNormalPdf((double)0.0,
-                                            sttings->getBetaShiftPrior(), newShift);
-    LogPriorRatio -= ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
-                                      oldShift);
-
-
+#endif
+    
+    double LogPriorRatio = cprior->betaShiftPrior(newShift);
+    LogPriorRatio -= cprior->betaShiftPrior(oldShift);
+    
+    
     double LogProposalRatio = 0.0;
-
+    
     double likeRatio = PropLnLik - getCurrLnLTraits();
-
+    
     double logHR = likeRatio + LogPriorRatio + LogProposalRatio;
-
+    
     const bool acceptMove = acceptMetropolisHastings(logHR);
-
+    
     if (acceptMove == true) {
-
+        
         setCurrLnLTraits(PropLnLik);
         acceptCount++;
         acceptLast = 1;
-
+        
     } else {
-
+        
         // revert to previous state
         be->setBetaShift(oldShift);
         treePtr->setMeanBranchTraitRates();
         acceptLast = 0;
         rejectCount++;
-
+        
     }
-
-
-
+    
+    
+    
     incrementGeneration();
-
-
+    
+    
 }
-
 
 void TraitModel::updateNodeStateMH(void)
 {
@@ -1656,43 +1657,42 @@ double TraitModel::computeTriadLikelihoodTraits(Node* x)
 
 
 
+
 double TraitModel::computeLogPrior(void)
 {
-
-
-
+    
+    
+    
     
 #ifdef NEGATIVE_SHIFT_PARAM
-
+    
     double dens_term = log(2.0);
     
 #else
     double dens_term = 0.0;
-
+    
 #endif
     
     
     double logPrior = 0.0;
-    logPrior += ran->lnExponentialPdf(sttings->getBetaInitPrior(),
-                                      rootEvent->getBetaInit());
-    logPrior += dens_term + ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
-                                 rootEvent->getBetaShift());
+    
+    logPrior += cprior->betaInitPrior(rootEvent->getBetaInit());
+    logPrior += dens_term + cprior->betaShiftPrior(rootEvent->getBetaShift());
+    
     for (std::set<TraitBranchEvent*>::iterator i = eventCollection.begin();
-            i != eventCollection.end(); i++) {
-        logPrior += ran->lnExponentialPdf(sttings->getBetaInitPrior(),
-                                          (*i)->getBetaInit());
-
-        // Add log(2) to make truncated normal density but only if NEGATIVE_SHIFT_PARAM
-        logPrior += dens_term + ran->lnNormalPdf((double)0.0, sttings->getBetaShiftPrior(),
-                                     (*i)->getBetaShift());
+         i != eventCollection.end(); i++) {
+        
+        logPrior += cprior->betaInitPrior((*i)->getBetaInit());
+        logPrior += dens_term + cprior->betaShiftPrior((*i)->getBetaShift());
+        
     }
-
+    
     // and prior on number of events:
-
-    logPrior += ran->lnExponentialPdf(_poissonRatePrior , getEventRate());
-
+    
+    logPrior += cprior->poissonRatePrior(getEventRate());
+    
     return logPrior;
-
+    
 }
 
 

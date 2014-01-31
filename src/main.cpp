@@ -139,10 +139,10 @@ int main (int argc, char* argv[])
         intree.initializeTraitValues();
         
         if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
-            TraitModel myModel(&myRNG, &intree, &mySettings);
+            TraitModel myModel(&myRNG, &intree, &mySettings, &myPrior);
         } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC() &&
                 !mySettings.getAutotune()) {
-            TraitModel myModel(&myRNG, &intree, &mySettings);
+            TraitModel myModel(&myRNG, &intree, &mySettings, &myPrior);
             TraitMCMC myMCMC(&myRNG, &myModel, &mySettings);
         } else if (mySettings.getInitializeModel() && mySettings.getAutotune()){
             log(Error) << "Autotune option not yet supported for phenotypic "
