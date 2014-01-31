@@ -177,7 +177,8 @@ getEventData <- function(phy, eventdata, burnin=0, nsamples = NULL, verbose=FALS
 		
  		### Compute tip rates:
 		
-		tiplam <- dftemp$lam1[tipstates] * exp(dftemp$lam2[tipstates] * (stoptime - dftemp$time[tipstates]));
+		#tiplam <- dftemp$lam1[tipstates] * exp(dftemp$lam2[tipstates] * (stoptime - dftemp$time[tipstates]));
+		tiplam <- exponentialRate(stoptime - dftemp$time[tipstates], dftemp$lam1[tipstates], dftemp$lam2[tipstates]);
 		tipmu <- dftemp$mu1[tipstates];
 		
 		meanTipMu <- meanTipMu + tipmu/nsamples;
