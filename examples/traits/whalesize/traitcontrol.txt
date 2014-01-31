@@ -143,7 +143,7 @@ updateNodeStateScale = 1
 # Scale operator for sliding window move to update 
 #	ancestral states at internal nodes
 
-updateEventLocationScale = 2.0
+updateEventLocationScale = 0.05
 # Scale parameter for updating LOCAL moves of events on the tree
 # This defines the width of the sliding window proposal.
 
