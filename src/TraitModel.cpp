@@ -26,6 +26,7 @@
 #include "TraitBranchHistory.h"
 #include "Settings.h"
 #include "Log.h"
+#include "Stat.h"
 
 
 double TraitModel::mhColdness = 1.0;
@@ -70,7 +71,11 @@ TraitModel::TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp)
 
     _updateBetaScale = sttings->getUpdateBetaScale();
     _updateBetaShiftScale = sttings->getUpdateBetaShiftScale();
-    _updateNodeStateScale = sttings->getUpdateNodeStateScale();
+
+    // Node state scale is relative to the standard deviation
+    // of the trait values (located in the tree terminal nodes)
+    double std_dev_traits = Stat::standard_deviation(treePtr->traitValues());
+    _updateNodeStateScale = sttings->getUpdateNodeStateScale() * std_dev_traits;
 
     // initial values
 
@@ -1420,8 +1425,8 @@ void TraitModel::updateNodeStateMH(void)
 #endif
 
     double oldstate = xnode->getTraitValue();
-    double newstate = oldstate + ran->uniformRv((-1.0 *
-                      sttings->getUpdateNodeStateScale()), sttings->getUpdateNodeStateScale());
+    double newstate = oldstate +
+        ran->uniformRv(-1.0 * _updateNodeStateScale, _updateNodeStateScale);
     xnode->setTraitValue(newstate);
 
 #ifdef NO_DATA
