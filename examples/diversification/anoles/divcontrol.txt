@@ -140,7 +140,7 @@ updateLambdaShiftScale = 0.1
 updateMuInitScale = 2.0
 # Scale parameter for updating initial extinction rate for each process
 
-updateEventLocationScale = 2.0
+updateEventLocationScale = 0.05
 # Scale parameter for updating LOCAL moves of events on the tree
 # This defines the width of the sliding window proposal.
  

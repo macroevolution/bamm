@@ -2042,3 +2042,46 @@ void Tree::storeTerminalNamesRecurse
         storeTerminalNamesRecurse(rightNode, names);
     }
 }
+
+
+// TODO: Use this function in the functions above
+std::vector<Node*> Tree::terminalNodes()
+{
+    std::vector<Node*> nodes;
+    storeTerminalNodesRecurse(getRoot(), nodes);
+    return nodes;
+}
+
+
+void Tree::storeTerminalNodesRecurse(Node* node, std::vector<Node*>& nodes)
+{
+    Node* leftNode = node->getLfDesc();
+    Node* rightNode = node->getRtDesc();
+
+    if (leftNode == NULL && rightNode == NULL) {
+        nodes.push_back(node);
+        return;
+    }
+
+    if (leftNode != NULL) {
+        storeTerminalNodesRecurse(leftNode, nodes);
+    }
+
+    if (rightNode != NULL) {
+        storeTerminalNodesRecurse(rightNode, nodes);
+    }
+}
+
+
+std::vector<double> Tree::traitValues()
+{
+    const std::vector<Node*>& nodes = terminalNodes();
+    std::vector<double> values;
+
+    std::vector<Node*>::const_iterator it;
+    for (it = nodes.begin(); it != nodes.end(); ++it) {
+        values.push_back((*it)->getTraitValue());
+    }
+
+    return values;
+}

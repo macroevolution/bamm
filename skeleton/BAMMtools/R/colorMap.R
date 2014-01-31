@@ -2,15 +2,9 @@
 #	Internal function called by plot.bammdata(...)
 #
 #
-colorMap = function(x, pal) {
+colorMap = function(x, pal, breaks) {
 	dpal = c('BrBG','PRGn','PiYG','PuOr','RdBu','RdGy','RdYlBu','RdYlGn','Spectral');
-	if (exists("colorbreaks", .dtRatesEnv)) {
-		bks = get("colorbreaks", .dtRatesEnv);
-		NCOLORS = length(bks)-1;
-	}
-	else {
-		stop("Could not find 'colorbreaks' in .dtRatesEnv");
-	}
+	NCOLORS = length(breaks)-1;
 	if (length(pal) == 3) {
 		colpalette = colorRampPalette(pal,space='Lab')(NCOLORS);	
 	}
@@ -32,21 +26,21 @@ colorMap = function(x, pal) {
 	else {
 		stop("Unrecognized color palette specification");
 	}
-	kde = density(x);
+	kde = density(x, from=min(x), to=max(x));
 	colset = numeric(length(x));
 	coldens = numeric(length(kde$x));
-	for (i in 2:length(bks)) {
+	for (i in 2:length(breaks)) {
         if (i == 2) {
-            colset[x < bks[2]] = colpalette[1];
-            coldens[kde$x < bks[2]] = colpalette[1];
+            colset[x < breaks[2]] = colpalette[1];
+            coldens[kde$x < breaks[2]] = colpalette[1];
         }
-        else if (i == length(bks)) {
-            colset[x >= bks[length(bks)-1]] = colpalette[length(bks)-1];
-            coldens[kde$x >= bks[length(bks)-1]] = colpalette[length(bks)-1];
+        else if (i == length(breaks)) {
+            colset[x >= breaks[length(breaks)-1]] = colpalette[length(breaks)-1];
+            coldens[kde$x >= breaks[length(breaks)-1]] = colpalette[length(breaks)-1];
         }
         else {
-            colset[x >= bks[i-1] & x < bks[i]] = colpalette[i-1];
-        	coldens[kde$x >= bks[i-1] & kde$x < bks[i]] = colpalette[i-1];
+            colset[x >= breaks[i-1] & x < breaks[i]] = colpalette[i-1];
+        	coldens[kde$x >= breaks[i-1] & kde$x < breaks[i]] = colpalette[i-1];
         }
     }
 	coldens = data.frame(kde$x,kde$y,coldens,stringsAsFactors=FALSE);

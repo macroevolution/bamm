@@ -143,7 +143,8 @@ subtreeBAMM<-function(ephy,tips=NULL,node=NULL)
       if(length(l)>1){
         l<-which(eventData$time==max(eventData$time[l]))
       }
-      eventData$lam1[l]<-eventData$lam1[l]*exp((0-eventData$time[l])*eventData$lam2[l])
+      #eventData$lam1[l]<-eventData$lam1[l]*exp((0-eventData$time[l])*eventData$lam2[l])
+      eventData$lam1[l]<-exponentialRate(0-eventData$time[l], eventData$lam1[l], eventData$lam2[l])
       eventData$time[l]<-0;
     }
     eventData<-eventData[eventData$time>=0,]

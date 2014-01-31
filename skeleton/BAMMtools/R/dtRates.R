@@ -18,7 +18,7 @@
 #	Returns: an ephy object with a list appended containing a vector of branch
 #			 rates and the step size used for calculation.
 
-dtRates = function (ephy, tau, ism = NULL, tmat = FALSE, assigns = TRUE) {
+dtRates = function (ephy, tau, ism = NULL, tmat = FALSE) {
     if (!"bammdata" %in% class(ephy)) {
         stop("Object ephy must be of class bammdata");
     }
@@ -62,26 +62,13 @@ dtRates = function (ephy, tau, ism = NULL, tmat = FALSE, assigns = TRUE) {
     else {
     	stop("Unrecognized model type");
     }
-    if (assigns) {
-	    if (tmat) {
-    		segmat = segmat[as.character(index),];
-    		assign("tmat", value = segmat, envir = .dtRatesEnv);
-    		#ephy$dtrates = list(tau = tau, rates = dtrates, tmat = segmat);
-    		#return(ephy);
-    	}
-    	assign("rates", value = list(tau=tau, rates=dtrates, index=ism), envir = .dtRatesEnv);
-    	assign("call", match.call(), envir = .dtRatesEnv);
-    	assign("callobject", list(nsamples = length(ephy$eventData), root = min(ephy$edge[,1])), envir = .dtRatesEnv);
-    	#ephy$dtrates = list(tau = tau, rates = dtrates);
-    	#return(ephy);
+	if (tmat) {
+		segmat = segmat[as.character(index),];
+		ephy$dtrates = list(tau = tau, rates = dtrates, tmat = segmat);
+		return(ephy);
 	}
-	else {
-		if (tmat) {
-			segmat = segmat[as.character(index),];
-			return(list(tau = tau, rates = dtrates, tmat = segmat));
-		}
-		return(list(tau = tau, rates = dtrates));
-	}
+	ephy$dtrates = list(tau = tau, rates = dtrates);
+	return(ephy);
 }
 
 

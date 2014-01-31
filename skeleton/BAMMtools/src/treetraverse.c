@@ -50,7 +50,7 @@ void rootward(int * anc, int * desc, int * node, int * nnode, int * ndorder) {
 		Free(child);
 	}
 	ndorder[zkzkz] = *node; zkzkz++;
-	//Rprintf("%d\n", zzz);
+	//Rprintf("%d\n", zkzkz);
 	Free(children);
 }
 
@@ -77,7 +77,7 @@ void tipward(int * anc, int * desc, int * node, int * nnode, int * ndorder) {
 		}
 		Free(child);
 	}
-	//Rprintf("%d\n", zzz);
+	//Rprintf("%d\n", zkzkz);
 	Free(children);
 }
 

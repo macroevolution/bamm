@@ -1,5 +1,12 @@
 #include "Stat.h"
 #include <vector>
+#include <cmath>
+
+
+double Stat::standard_deviation(const std::vector<double>& values)
+{
+    return std::sqrt(variance(values));
+}
 
 
 // Algorithm taken from the Naive algorithm in Wikipedia:

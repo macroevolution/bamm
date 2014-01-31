@@ -1,67 +1,57 @@
-plot.bammdata = function (ephy, method = "phylogram", vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, legend = FALSE, spex = "s", lwd = 1, cex = 1, pal = "set1", ...) {
+plot.bammdata = function (ephy, method = "phylogram", vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, legend = FALSE, spex = "s", lwd = 1, cex = 1, pal = "set1", colorbreaks = NULL, ...) {
     if ("bammdata" %in% class(ephy)) {
     	if (attributes(ephy)$order != "cladewise") {
     		stop("Function requires tree in 'cladewise' order");
     	}
         phy = as.phylo.bammdata(ephy);
     }
-    else stop("Object ephy must be of class bammdata\n");
+    else stop("Object ephy must be of class bammdata");
     if (!is.binary.tree(phy)) {
-        stop("Function requires fully bifurcating tree.");
+        stop("Function requires fully bifurcating tree");
     }
     if (any(phy$edge.length == 0)) {
         warning("Tree contains zero length branches. Rates for these will be NA and coerced to zero");
     }
-    #if (!("dtrates" %in% names(ephy))) {
-    #    ephy = dtRates(ephy, tau, index);
-    #}
-    if (exists("rates", envir = .dtRatesEnv)) {
-    	if (mode(all.equal(get("callobject", .dtRatesEnv), list(nsamples = length(ephy$eventData), root = min(ephy$edge[,1])))) == "character") {
-    		dtRates(ephy, 0.01);
-    	}
-    	dtr = get("rates", envir = .dtRatesEnv);
+    if (!("dtrates" %in% names(ephy))) {
+        ephy = dtRates(ephy, 0.01);
     }
-    else {
-    	dtRates(ephy, 0.01);
-    	assignColorBreaks(64, spex);
-    	dtr = get("rates", envir = .dtRatesEnv);
+    if (is.null(colorbreaks)) {
+    	colorbreaks = assignColorBreaks(ephy$dtrates$rates, 64, spex);
     }
     if (ephy$type == "trait") {
-        if (sum(is.na(dtr$rates))) {
-            warning(sprintf("Found %d NA phenotypic rates. Coercing to zero.", sum(is.na(dtr$rates))));
-            dtr$rates[is.na(dtr$rates)] = 0;
+        if (sum(is.na(ephy$dtrates$rates))) {
+            warning(sprintf("Found %d NA phenotypic rates. Coercing to zero.", sum(is.na(ephy$dtrates$rates))));
+            ephy$dtrates$rates[is.na(ephy$dtrates$rates)] = 0;
         }
-        #colorobj = colorMap(ephy$dtrates$rates, pal, ncolors);
-    	colorobj = colorMap(dtr$rates, pal);
+    	colorobj = colorMap(ephy$dtrates$rates, pal, colorbreaks);
     }
     else if (ephy$type == "diversification") {
-        if (sum(is.na(dtr$rates[[1]]))) {
-            warning(sprintf("Found %d NA speciation rates. Coercing to zero.", sum(is.na(dtr$rates[[1]]))));
-            dtr$rates[[1]][is.na(dtr$rates[[1]])] = 0;
+        if (sum(is.na(ephy$dtrates$rates[[1]]))) {
+            warning(sprintf("Found %d NA speciation rates. Coercing to zero.", sum(is.na(ephy$dtrates$rates[[1]]))));
+            ephy$dtrates$rates[[1]][is.na(ephy$dtrates$rates[[1]])] = 0;
         }
-        if (sum(is.na(dtr$rates[[2]]))) {
-            warning(sprintf("Found %d NA extinction rates. Coercing to zero.", sum(is.na(dtr$rates[[2]]))));
-            dtr$rates[[2]][is.na(dtr$rates[[2]])] = 0;
+        if (sum(is.na(ephy$dtrates$rates[[2]]))) {
+            warning(sprintf("Found %d NA extinction rates. Coercing to zero.", sum(is.na(ephy$dtrates$rates[[2]]))));
+            ephy$dtrates$rates[[2]][is.na(ephy$dtrates$rates[[2]])] = 0;
         }
         if (tolower(spex) == "s") {
-        	#colorobj = colorMap(ephy$dtrates$rates[[1]], pal, ncolors);
-        	colorobj = colorMap(dtr$rates[[1]], pal);
+        	colorobj = colorMap(ephy$dtrates$rates[[1]], pal, colorbreaks);
         }
         else if (tolower(spex) == "e") {
-        	#colorobj = colorMap(ephy$dtrates$rates[[2]], pal, ncolors);
-        	colorobj = colorMap(dtr$rates[[2]], pal);
+        	colorobj = colorMap(ephy$dtrates$rates[[2]], pal, colorbreaks);
         }
         else {
-        	#colorobj = colorMap(ephy$dtrates$rates[[1]] - ephy$dtrates$rates[[2]], pal, ncolors);
-        	colorobj = colorMap(dtr$rates[[1]] - dtr$rates[[2]], pal);
+        	colorobj = colorMap(ephy$dtrates$rates[[1]] - ephy$dtrates$rates[[2]], pal, colorbreaks);
         }
+    }
+    else {
+    	stop("Unrecognized/corrupt bammdata class. Type does not equal 'trait' or 'diversification'");	
     }
     edge.color = colorobj$cols;
     tH = max(branching.times(phy));
     phy$begin = ephy$begin;
     phy$end = ephy$end;
-    #tau = ephy$dtrates$tau;
-    tau = dtr$tau;
+    tau = ephy$dtrates$tau;
     if (method == "polar") {
         ret = setPolarTreeCoords(phy, vtheta, rbf);
         rb = tH * rbf;
@@ -112,7 +102,7 @@ plot.bammdata = function (ephy, method = "phylogram", vtheta = 5, rbf = 0.001, s
             }
         }
         if (legend) {
-            rateLegend(colorobj$colsdensity, type=spex);
+            rateLegend(colorobj$colsdensity);
         }
     }
     index = order(as.numeric(rownames(ret$segs)));

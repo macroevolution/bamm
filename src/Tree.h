@@ -38,6 +38,8 @@ private:
     std::vector<std::string> terminalNames();
     void storeTerminalNamesRecurse(Node* node, std::vector<std::string>& names);
 
+    void storeTerminalNodesRecurse(Node* node, std::vector<Node*>& nodes);
+
     Node* root;
     std::set<Node*> nodes;
     std::vector<Node*> downPassSeq;
@@ -217,6 +219,9 @@ public:
     void printCanHoldEventByNode();
 
     void echoMeanBranchTraitRates();
+
+    std::vector<Node*> terminalNodes();
+    std::vector<double> traitValues();
 };
 
 inline double Tree::getTreeLength()
