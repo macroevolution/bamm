@@ -133,7 +133,7 @@ ed <- dtRates(ed, tau = 0.01)
 plot(ed, lwd = 3, spex = "s")
 
 #now plot.bammdata calls neither dtRates nor assignColorBreaks
-colorbreaks <- assignColorBreaks(ed$dtRates)
+colorbreaks <- assignColorBreaks(ed$dtrates$rates)
 plot(ed, lwd = 3, colorbreaks = colorbreaks)
 
 #now you can plot subtrees while preserving the original rates to colors map by passing the colorbreaks object as an argument
