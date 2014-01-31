@@ -1,10 +1,10 @@
 
 
-// Undefining this macro constrains analysis to NEGATIVE values
+// defining this macro constrains analysis to NEGATIVE values
 // for the beta shift parameter
 
-#define NEGATIVE_SHIFT_PARAM
-//#undef NEGATIVE_SHIFT_PARAM
+//#define NEGATIVE_SHIFT_PARAM
+#undef NEGATIVE_SHIFT_PARAM
 
 
 
@@ -368,24 +368,6 @@ void TraitModel::addEventToTree(void)
     double bb = treePtr->getTotalMapLength();
     double x = ran->uniformRv(aa, bb);
 
-#ifdef OLDWAY
-    
-    std::cout << "Problem in TraitModel::addEventToTree(void)" << std::endl;
-    std::cout << "Should not get to this part of code - deprecated" << std::endl;
-    exit(0);
-    
-    // For now, the rates of speciation and extinction are set to whatever they should be based
-    // on the ancestralNodeEvent
-    Node* xnode = treePtr->mapEventToTree(x);
-    double atime = treePtr->getAbsoluteTimeFromMapTime(x);
-    TraitBranchHistory* bh = xnode->getTraitBranchHistory();
-    TraitBranchEvent* be = bh->getAncestralNodeEvent();
-
-    double elapsed = atime - be->getAbsoluteTime();
-    double newbeta = be->getBetaInit() * exp( elapsed * be->getBetaShift());
-    double newBetaShift = be->getBetaShift();
- 
-#endif 
     
     /*      ********************* */
     // Sample beta and beta shift from prior:
@@ -816,7 +798,6 @@ void TraitModel::deleteRandomEventFromTree(void)
 }
 
 
-// Valid, March 23
 
 void TraitModel::restoreLastDeletedEvent(void)
 {
@@ -1371,6 +1352,8 @@ void TraitModel::updateBetaShiftMH(void)
     double newShift = oldShift + ran->normalRv((double)0.0, _updateBetaShiftScale);
  
     // Convert to negative via reflection:
+    // ******* Is this really always proposing a negative shift parameter (jan 30 2014)? **********//
+    
     newShift = -fabs(newShift);
  
     be->setBetaShift(newShift);

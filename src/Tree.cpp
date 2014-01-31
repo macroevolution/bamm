@@ -54,7 +54,6 @@ Tree::Tree(std::string fname, MbRandom* rnptr)
     buildTreeFromNewickString(treestring);
 
     // Check tree integrity
-    assertTreeRootBranchLengthIsZero();
     assertTreeIsBifurcating();
     assertBranchLengthsArePositive();
     assertTreeIsUltrametric();
@@ -1648,12 +1647,8 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
             double zpar = bh->getAncestralNodeEvent()->getBetaShift();
             double beta0 = bh->getAncestralNodeEvent()->getBetaInit();
 
-            if (zpar == 0) {
-                rate = beta0;
-            } else {
-                rate = (beta0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-                rate /= x->getBrlen();
-            }
+            rate = x->integrateExponentialRateFunction(beta0, zpar, t1, t2);
+            rate /= x->getBrlen();
             
         } else {
 
@@ -1669,18 +1664,7 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
             double zpar = bh->getAncestralNodeEvent()->getBetaShift();
             double beta0 = bh->getAncestralNodeEvent()->getBetaInit();
 
-            if (zpar == 0) {
-                rate = beta0 * (t2 - t1);
-            }else {
-                //rate = frac * ((lam0/zpar) * ( exp(zpar*t2) - exp( zpar * t1)) / (t2-t1));
-                // This can be simplified. All we have to do is sum the integrals over different
-                //  rate-portions of the branch, then divide the result by the branch length
-                rate = ((beta0 / zpar) * ( exp(zpar * t2) - exp( zpar * t1)));
-            }
-
-            //std::cout << x << "\t" << "1st event on branch: " << std::endl;
-            //std::cout << "T1: " << t1 <<  "\tT2: " << t2 << std::endl;
-            //std::cout << "rate pars: b0\t" << beta0 << "\tzpar:\t" << zpar << std::endl;
+            rate = x->integrateExponentialRateFunction(beta0, zpar, t1, t2);
             
             for (int k = 1; k < n_events; k++) {
 
@@ -1691,13 +1675,10 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
                 zpar = bh->getEventByIndexPosition((k - 1))->getBetaShift();
                 beta0 = bh->getEventByIndexPosition((k - 1))->getBetaInit();
 
-                if (zpar == 0) {
-                    rate += beta0 * (t2 - t1);
-                } else {
-                    rate += (beta0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-                }
-                //std::cout << k-1 <<  "\tt1: " <<  t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck<<std::endl;
+                rate += x->integrateExponentialRateFunction(beta0, zpar, t1, t2);
+            
                 tcheck += (t2 - t1);
+            
             }
 
             //t1 = t2;
@@ -1707,17 +1688,11 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
 
             zpar = bh->getNodeEvent()->getBetaShift();
             beta0 = bh->getNodeEvent()->getBetaInit();
-            if (zpar == 0) {
-                rate += beta0 * (t2 - t1);
-            } else {
-                rate += (beta0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-            }
+            
+            rate += x->integrateExponentialRateFunction(beta0, zpar, t1, t2);
+    
             tcheck += (t2 - t1);
 
-            //std::cout << x << "\t2nd event on branch: " << std::endl;
-            //std::cout << "T1: " << t1 <<  "\tT2: " << t2 << std::endl;
-            //std::cout << "rate pars: b0\t" << beta0 << "\tzpar:\t" << zpar << std::endl;
-            //std::cout << "Branch length: " << x->getBrlen() << std::endl << std::endl;
 
             // The overall mean rate across the branch:
             rate /= (x->getBrlen());
@@ -1734,9 +1709,13 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
 
     // compute speciation rate at the focal node:
     double reltime = x->getTime() - bh->getNodeEvent()->getAbsoluteTime();
-    double curBeta = bh->getNodeEvent()->getBetaInit() * exp((
-                         reltime * bh->getNodeEvent()->getBetaShift()));
 
+
+    double init = bh->getNodeEvent()->getBetaInit();
+    double zz = bh->getNodeEvent()->getBetaShift();
+    
+    double curBeta = x->getExponentialRate(init, zz, reltime);
+    
 #ifdef DEBUG_TIME_VARIABLE
 
     // Try setting node speciation rates equal to mean rate on descendant branches, to see if the
@@ -1949,19 +1928,6 @@ void Tree::storeTerminalPathLengthsToRootRecurse
 
     if (rightNode != NULL) {
         storeTerminalPathLengthsToRootRecurse(rightNode, pathLengths);
-    }
-}
-
-
-void Tree::assertTreeRootBranchLengthIsZero()
-{
-    Node* root = getRoot();
-
-    if (root->getBrlen() != 0.0) {
-        log(Warning) << "Root has non-zero branch length. "
-            << "Automatically setting it to zero.\n"
-            << "Please make sure this is what you really want.\n\n";
-        root->setBrlen(0.0);
     }
 }
 
