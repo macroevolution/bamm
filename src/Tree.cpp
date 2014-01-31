@@ -292,12 +292,7 @@ void Tree::tempNodeSetPassDown(Node* p)
 
 void Tree::clearTempNodeArray(void)
 {
-    //std::cout << "Size before: " << _tempNodeSet.size() << std::endl;
-    for (std::set<Node*>::iterator i = _tempNodeSet.begin();
-            i != _tempNodeSet.end(); i++) {
-        _tempNodeSet.erase(i);
-    }
-    //std::cout << "Size after: " << _tempNodeSet.size() << std::endl;
+    _tempNodeSet.clear();
 }
 
 
