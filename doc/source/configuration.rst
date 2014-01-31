@@ -126,7 +126,12 @@ MCMC Simulation
 
 ``updateEventLocationScale``
     Scale parameter for updating local moves of events on the tree.
-    This defines the width of the sliding window proposal in units relative to the total tree depth (crown age) of the phylogeny. If this value is set to 0.01, the uniform distribution from which proposed step sizes are drawn with be ``( -T*updateLocationScale, +T*updateLocationScale )``, where T is the maximum root-to-tip distance.
+    This defines the width of the sliding window proposal in units relative
+    to the total tree depth (crown age) of the phylogeny. For example,
+    if this value is set to 0.01, the uniform distribution from which proposed
+    step sizes are drawn from will be
+    ``( -T * updateLocationScale, +T * updateLocationScale )``,
+    where T is the maximum root-to-tip distance.
 
 ``updateEventRateScale``
     Scale parameter (proportional shrinking/expanding) for updating
@@ -271,7 +276,8 @@ MCMC Tuning
 
 ``updateNodeStateScale``
     Scale operator for sliding window move to update ancestral states
-    at internal nodes.
+    at internal nodes. This defines the width of the sliding window proposal
+    in units relative to the standard deviation of the trait values.
 
 ``updateBetaShiftScale``
     Scale operator for sliding window move to update initial phenotypic rate.
