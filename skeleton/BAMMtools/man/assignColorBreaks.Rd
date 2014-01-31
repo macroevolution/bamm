@@ -7,9 +7,12 @@
 	Maps macroevolutionary rates to a set of \code{NCOLORS}.
 }
 \usage{
-	assignColorBreaks(NCOLORS, spex)
+	assignColorBreaks(rates, NCOLORS, spex)
 }
 \arguments{
+	\item{rates}{
+		a numeric vector of phentypic rates or a list of numeric vectors of speciation and extinction rates.
+	}
 	\item{NCOLORS}{
 		an integer number of colors to use for the mapping. Larger numbers do not 
 		necessarily result in smoother looking color ramps. The default is 64 and 
@@ -26,14 +29,23 @@
 	mapped to a color determined by the \code{pal} argument in \code{plot.bammdata}.
 }
 \value{
-	A "colorbreaks" object is assigned in the \code{.dtRatesEnv} environment 
-}
-\note{
-	It does not make sense to call this function if \code{dtRates} has not been called and an error will
-	result. The rates to colors map is relative to the set of posterior samples and nodes in \code{bammdata} object and the value of \code{tau} when \code{dtRates} was called.
+	A numeric vector of rate percentiles. 
 }
 \author{
 	Mike Grundler
+}
+\examples{
+	library(BAMMtools)
+	data(whales, events.whales)
+	ed <- getEventData(whales,events.whales,0.2)
+	
+	ed <- dtRates(ed, 0.01)
+	colors <- assignColorBreaks(ed$dtrates$rates, type="s") #speciation rates
+	#colors <- assignColorBreaks(ed$dtrates$rates[[1]]) #this also works for speciation rates
+	plot(ed, colorbreaks = colors)
+	colors <- assignColorBreaks(ed$dtrates$rates, type="se") #diversification rates
+	#colors <- assignColorBreaks(ed$dtrates$rates[[1]] - ed$dtrates$rates[[2]]) #this also works for diversification rates
+	plot(ed, colorbreaks = colors)
 }
 \seealso{
 	\code{\link{plot.bammdata}}

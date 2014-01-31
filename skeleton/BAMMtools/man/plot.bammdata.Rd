@@ -12,7 +12,7 @@ colors each branch by the estimated rate of speciation, extinction, or trait evo
 S3 method for class \code{bammdata}:		
 plot(ephy, method = "phylogram", spex="s", 
     vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, 
-    legend = FALSE, lwd = 1, cex = 1, pal = "set1", ...)
+    legend = FALSE, lwd = 1, cex = 1, pal = "set1", colorbreaks = NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -61,6 +61,10 @@ a numeric specifying the size of tip labels.
 a character string or vector of mode character that describes the color palette. See
 Details for explanation of options.
 }
+  \item{colorbreaks}{
+a numeric vector of percentiles delimiting the bins for mapping rates to colors. If \code{NULL} (default) bins
+are calculated from the rates that are passed with the \code{bammdata} object.  	
+}
   \item{\dots}{
 further arguments passed to \code{par}.
 }
@@ -83,8 +87,10 @@ for color deficient vision.
 
 Specifying smaller values for \code{tau} will result in smoother-looking rate changes on the tree. Note that smaller values of \code{tau} require more computation.  
 
-Internally \code{plot.bammdata} checks whether or not rates have been calculated and assigned in the \code{.dtRatesEnv} environment.
-If they have not a new calculation and assignment is made by calling \code{dtRates}. A rates to colors map is also made by calling \code{assignColorBreaks}. If rates have already been calculated but the \code{bammdata} object does not match the one used in this original calculation, a new calculation and assignment of rates is made but the rates to colors mapping is left unchanged. This allows one to plot parts of a tree while preserving the mapping of rates to colors that was made using rates for the entire tree.
+Internally \code{plot.bammdata} checks whether or not rates have been calculated by looking for a component named
+"dtrates" in the \code{bammdata} object. If rates have not been calculated \code{plot.bammdata} calls \code{dtRates} with \code{tau = 0.01}. If the \code{colorbreaks} argument is \code{NULL} a map of rates to colors is also made by calling \code{assignColorBreaks} with \code{NCOLORS = 64}. A user supplied \code{colorbreaks} argument can be passed as well. This allows one to plot parts of a tree while preserving the map of rates to colors that was made using rates for the entire tree.
+
+If \code{plot.bammdata} is called repeatedly with the same \code{bammdata} object computation can be reduced by first calling \code{dtRates} in the global environment.
 }
 \value{
 Returns (invisibly) a list with two components. 
@@ -120,48 +126,47 @@ data(whales, events.whales)
 ed <- getEventData(whales, events.whales, burnin=0.25)
 
 #the first call to plot.bammdata. No calculations or assignments of rates have been made
-exists("rates", .dtRatesEnv)
-exists("colorbreaks", .dtRatesEnv) 
-plot(ed, lwd = 3, spex="s") #internally calls dtRates(ed, tau = 0.01) and assignColorBreaks(64, "s")
-#Now they have been made relative to the entire tree
-exists("rates", .dtRatesEnv)
-exists("colorbreaks", .dtRatesEnv)
+plot(ed, lwd = 3, spex = "s") #internally calls dtRates and assignColorBreaks
 
-#now you can plot subtrees while preserving the original rates to colors map
-#be sure to note that tau should be kept at the same value that was used in the 
-#original calculation for the entire tree, because the rates to colors map is also relative to
-#this value
+#now plot.bammdata no longer calls dtRates
+ed <- dtRates(ed, tau = 0.01)
+plot(ed, lwd = 3, spex = "s")
+
+#now plot.bammdata calls neither dtRates nor assignColorBreaks
+colorbreaks <- assignColorBreaks(ed$dtRates)
+plot(ed, lwd = 3, colorbreaks = colorbreaks)
+
+#now you can plot subtrees while preserving the original rates to colors map by passing the colorbreaks object as an argument
 sed <- subtreeBAMM(ed, node = 103)
-dtRates(sed, 0.01)
-plot(sed, lwd = 3)
+plot(sed, lwd = 3, colorbreaks = colorbreaks)
 sed <- subtreeBAMM(ed, node = 140)
-dtRates(sed, 0.01)
+plot(sed, lwd = 3, colorbreaks = colorbreaks)
+#note how if we do not pass colorbreaks the map is no longer relative to the rest of the tree and the plot is quite
+#distinct from the original
 plot(sed, lwd = 3)
 
 #if you want to change the value of tau and the rates to colors map for the entire tree
-dtRates(ed, tau = 0.002)
-assignColorBreaks()
+ed <- dtRates(ed, tau = 0.002)
+colorbreaks <- assignColorBreaks(ed$dtrates$rates)
 #now you can re-plot the subtrees using this finer tau partition
 sed <- subtreeBAMM(ed, node = 103)
-dtRates(sed, 0.002)
-plot(sed, lwd = 3)
+sed <- dtRates(sed, 0.002)
+plot(sed, lwd = 3, colorbreaks = colorbreaks)
 sed <- subtreeBAMM(ed, node = 140)
-dtRates(sed, 0.002)
-plot(sed, lwd = 3)
+sed <- dtRates(sed, 0.002)
+plot(sed, lwd = 3, colorbreaks = colorbreaks)
 
 #multi-panel plotting and adding shifts of specific posterior samples
 par(mfrow=c(2,3),mar=c(5,1,1,1))
 samples = sample(1:length(ed$eventData), 6)
 for (i in 1:6) {
-	dtRates(ed, 0.005, samples[i])
-	assignColorBreaks()
+	ed <- dtRates(ed, 0.005, samples[i])
 	plot(ed, multi=TRUE)
 	addBAMMshifts(ed,method="phylogram",index=samples[i],multi=TRUE)	
 }
 
 #color options
-dtRates(ed,0.01)
-assignColorBreaks()
+ed <- dtRates(ed,0.01)
 plot(ed, pal="set1")
 plot(ed, pal="set2")
 plot(ed, pal=c("midnightblue","lightskyblue","orangered"))
