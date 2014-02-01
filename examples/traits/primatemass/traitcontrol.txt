@@ -31,9 +31,6 @@ sampleFromPriorOnly = 0
 # If TRUE will perform BAMM analysis sampling 
 # from prior only. (no likelihoods computed)
 
-# autotune = 0 # Not supported for traits
-# Experimental option for tuning MCMC operators
-
 runMCMC = 1
 # perform an MCMC simulation? If runMCMC = 0, the program will 
 # check whether the data file can be read and whether 
