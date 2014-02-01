@@ -104,9 +104,6 @@ eventDataWriteFreq = 10000
 # Specify frequency to write actual model parameters to file. 
 # These are the main results!
 
-acceptWriteFreq = 100000
-# Prints accept frequency
-
 printFreq = 20000
 # Prints MCMC status to screen every printFreq generations.
 

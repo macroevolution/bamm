@@ -400,12 +400,6 @@ inline int Settings::getMCMCwriteFreq() const
 }
 
 
-inline int Settings::getAcceptWriteFreq() const
-{
-    return _parameters.at("acceptWriteFreq").value<int>();
-}
-
-
 inline int Settings::getPrintFreq() const
 {
     return _parameters.at("printFreq").value<int>();

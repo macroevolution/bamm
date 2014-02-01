@@ -121,7 +121,6 @@ void Settings::initializeGlobalSettings()
     addParameter("mcmcWriteFreq",                "0");
     addParameter("eventDataWriteFreq",           "0");
     
-    addParameter("acceptWriteFreq",              "0", false);
     addParameter("printFreq",                    "0");
     addParameter("overwrite",                    "0", false);
     addParameter("writeMeanBranchLengthTrees",   "0", false);
