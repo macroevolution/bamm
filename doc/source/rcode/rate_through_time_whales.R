@@ -6,15 +6,13 @@
 #	and specifying all the components individually 
 #	(e.g., axis labels, margins, legends, plot window, etc)
 
-
-
-eventfname <- '/Users/danrabosky/DanWork/bamm/devel/bamm/doc/sweave/data/event_data.txt';
-whaletree <- read.tree('/Users/danrabosky/DanWork/bamm/devel/bamm/doc/sweave/data/whaletree.tre')
-source('/Users/danrabosky/DanWork/bamm/devel/bamm/Rcode/Load_BAMMtools.R')
+library(BAMMtools);
+data(whales);
+data(events.whales);
 
 
 ## Process the event data
-ed <- getEventData(whaletree, eventfname, burnin=0.25, nsamples=200, verbose=T);
+ed <- getEventData(whales, events.whales, burnin=0.25, nsamples=200);
 
 ## Generate the rate through time matrices
 ##		Do for ALL lineages, and for dolphins only, 

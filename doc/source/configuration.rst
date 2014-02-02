@@ -1,4 +1,5 @@
 .. highlight:: none
+..	_configuration:
 
 Configuration
 =============
@@ -50,7 +51,7 @@ General
     If ``0``, run the full analysis.
 
 ``autotune``
-    Experimental option for tuning MCMC operators.
+    Experimental option for tuning MCMC operators. Not recommended.
 
 ``runMCMC``
     If ``1``, run the MCMC sampler.
@@ -59,21 +60,21 @@ General
 ``simulatePriorShifts``
     If ``1``, simulate prior distribution of the number of shift events,
     given the hyperprior on the Poisson rate parameter.
-    This is necessary to compute the Bayes factor.
+    This is necessary to compute Bayes factors for pairwise model comparisons.
 
 ``loadEventData``
-    If ``1``, load the event data from a file.
+    If ``1``, start the MCMC simulation using event data from a previous run. Not currently documented.
 
 ``eventDataInfile``
     The file path of the event data (used only if ``loadEventData = 1``).
 
 ``initializeModel``
-    If ``1``, initializes MCMC.
-    If ``0``, just check parameter file and ensure that data can be read.
+    If ``1``, initializes MCMC simulation (but will only run full simulation if ``runMCMC = 1``).
+    If ``0``, just checks parameter file and ensure that data can be read.
 
 ``seed``
-    Seed for the random number generator.
-    If ``-1``, the seed is obtained from the clock time.
+    Seed for the random number generator. 
+    If ``-1`` or if not specified, the seed is obtained from the clock time.
 
 ``overwrite``
     If ``1``, overwrite output files if they already exist with identical
@@ -103,9 +104,6 @@ MCMC Simulation
 ``eventDataWriteFreq``
     Frequency (in generations) at which to print event details
     to ``eventDataOutfile``.
-
-``acceptWriteFreq``
-    Frequency (in generations) at which to print accept rate to the screen.
 
 ``printFreq``
     Frequency (in generations) at which to print output to the screen.
@@ -169,8 +167,8 @@ General
 ``useGlobalSamplingProbability``
     If ``1``, use global correction for incomplete sampling
     (globalSamplingProbability). If you have complete taxon sampling, simply leave this set at 1 and set ``globalSamplingProbability`` to 1.0.
-    If ``0``, look for a file that specifies clade-specific corrections
-    for incomplete sampling (``sampleProbsFilename``).
+    If ``0``, BAMM will look for a file that specifies clade-specific corrections
+    for incomplete sampling (``sampleProbsFilename``). See :ref:`here<incompsampling>` for more information.
 
 ``globalSamplingProbability``
     Percentage of total number of species sampled in the phylogeny
@@ -187,12 +185,12 @@ Priors
     Prior on the inital speciation rate (lambda) for the general exponential change process.  This is the rate parameter of an exponential distribution. Smaller values impose a flatter prior.
 
 ``lambdaShiftPrior``
-    Prior on the the lambda shift parameter (standard deviation of the normal
+    Prior on the the lambda shift parameter (standard deviation of a normal
     distribution) for the speciation rate. The mean of the distribution
     is fixed at zero, which is equal to a constant rate diversification process.
 
 ``muInitPrior``
-    Prior on the extinction rate (rate paramater of the exponential
+    Prior on the extinction rate (rate parameter of an exponential
     distribution).
 
 ``segLength``
@@ -216,7 +214,7 @@ MCMC Simulation
 ``minCladeSizeForShift``
     Allows you to constrain the location of possible rate-change events
     to occur only on branches with at least this many descendant tips.
-    A value of ``1`` allows shifts to occur on all branches.
+    A value of ``1`` allows shifts to occur on all branches. 
 
 Starting Parameters
 ...................
@@ -277,7 +275,7 @@ MCMC Tuning
 ``updateNodeStateScale``
     Scale operator for sliding window move to update ancestral states
     at internal nodes. This defines the width of the sliding window proposal
-    in units relative to the standard deviation of the trait values.
+    in units relative to the standard deviation of the raw trait values. 
 
 ``updateBetaShiftScale``
     Scale operator for sliding window move to update initial phenotypic rate.
