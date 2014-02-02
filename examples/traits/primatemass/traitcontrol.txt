@@ -21,7 +21,7 @@ modeltype = trait
 treefile = primates.tre
 # Location of phylogenetic tree to be analyzed
 
-traitfile = primate_mass.txt
+traitfile = primates_logmass.txt
 # Location of phenotypic traits
 
 runInfoFilename = run_info.txt
@@ -41,10 +41,10 @@ simulatePriorShifts = 1
 #	given the hyperprior on the Poisson rate parameter.
 # This is necessary to compute Bayes factors
 
-loadEventData = 0
+# loadEventData = 0
 # Load event configuration - see Documentation
 
-eventDataInfile = my_event_datafile.txt
+# eventDataInfile = my_event_datafile.txt
 # Used only if loadEventData = 1
 
 initializeModel = 1
