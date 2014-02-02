@@ -45,10 +45,14 @@ Tree::Tree(std::string fname, MbRandom* rnptr)
         std::exit(1);
     }
 
+    // Read entire file into tree string (except new line character)
+    std::stringstream buffer;
+    buffer << treefile.rdbuf();
     std::string treestring;
-    treefile >> treestring;
-
+    getline(buffer, treestring);
     treefile.close();
+
+    removeWhiteSpace(treestring);
 
     setTaxonCountFromNewickString(treestring);
     buildTreeFromNewickString(treestring);
@@ -104,6 +108,12 @@ Tree::Tree(std::string fname, MbRandom* rnptr)
             ct++;
         }
     }
+}
+
+
+void Tree::removeWhiteSpace(std::string& str)
+{
+    str.erase(remove(str.begin(), str.end(), ' '), str.end());
 }
 
 

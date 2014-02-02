@@ -40,6 +40,8 @@ private:
 
     void storeTerminalNodesRecurse(Node* node, std::vector<Node*>& nodes);
 
+    void removeWhiteSpace(std::string& str);
+
     Node* root;
     std::set<Node*> nodes;
     std::vector<Node*> downPassSeq;
@@ -223,6 +225,7 @@ public:
     std::vector<Node*> terminalNodes();
     std::vector<double> traitValues();
 };
+
 
 inline double Tree::getTreeLength()
 {
