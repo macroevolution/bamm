@@ -4,10 +4,10 @@
 
 library(BAMMtools);
 
-data(cetaceans);
-data(events.cetaceans);
+data(whales);
+data(events.whales);
 
-ed <- getEventData(phy=cetaceans, eventdata = events.cetaceans, burnin=0.1);
+ed <- getEventData(phy=whales, eventdata = events.whales, burnin=0.1);
 
 # This plots the 
 plot.bammdata(ed, method='polar', pal='temperature', lwd=2);

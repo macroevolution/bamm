@@ -1,8 +1,21 @@
 
-# library('BAMMtools');
+library('BAMMtools');
 
-# ed <- getEventData(....);
-# birdtree <- read.tree(....);
+
+# These data files are not available for download, 
+# but you can follow the syntax here to see 
+# how to perform a similar analysis on your dataset:
+
+# here we specify the path to the event data file
+eventdatafile <- '/Users/danrabosky/DanWork/bamm/analyses/jetzp50/eventdata_p50.txt';
+
+# Here is the path to the phylogeny:
+birdtree <- read.tree('/Users/danrabosky/DanWork/bamm/analyses/jetzp50/hackett_mcc.tre');
+
+
+
+
+ed <- getEventData(birdtree, eventdatafile, burnin=0.1, nsamples=100);
 
 # Compute the marginal shift probabilities on branches
 marg_tree <- marginalShiftProbsTree(ed);
@@ -13,7 +26,7 @@ cst <- cumulativeShiftProbsTree(ed);
 # Compute the maximum shift credibility configuration:
 # This is the joint distribution of shift events that maximizes the 
 #	marginal probability of the data.
-msc <- maximumShiftCredibilityTree(ed);
+msc <- maximumShiftCredibility(ed);
 
 # get the relevant rate shift nodes from the 
 #	maximum shift credibility configuration
@@ -31,7 +44,6 @@ pal <- rich.colors(10);
 cexmin <- 2;
 cexmax <- 6;
 
-size <- cexmin + probvec*(cexmax - cexmin);
 
  
 # Get marginal probabilities associated with each node in the the 
@@ -41,6 +53,7 @@ probvec <- numeric(length(nodes));
 for (i in 1:length(nodes)){
 	probvec[i] <- marg_tree$edge.length[marg_tree$edge[,2] == nodes[i] ];
 }
+size <- cexmin + probvec*(cexmax - cexmin);
 
 
 ## Get colors for nodes based on marginal shift probs
@@ -72,7 +85,9 @@ quartz.options(height=5, width=17);
 plot.new();
 layout(lmat);
 
-plot.phylo(ed, show.tip.label=F, edge.width=0.8, edge.color='gray40', no.margin=T, type = 'p', direction='upwards');
+
+plot.phylo(as.phylo.bammdata(ed), show.tip.label=F, edge.width=0.8, edge.color='gray40', no.margin=T, type = 'p', direction='upwards');
+
 nodelabels(node=nodes, cex=size, pch=21, bg=colvec);
 
 plot.new();
@@ -100,7 +115,7 @@ quartz.options(height=5, width=17);
 plot.new();
 layout(lmat);
  
-plot.phylo(ed, show.tip.label=F, edge.width=0.8, edge.color=edgecol, no.margin=T, type = 'p', direction='upwards');
+plot.phylo(as.phylo.bammdata(ed), show.tip.label=F, edge.width=0.8, edge.color=edgecol, no.margin=T, type = 'p', direction='upwards');
 nodelabels(node=nodes, cex=size, pch=21, bg=colvec);
  
 plot.new();

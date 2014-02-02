@@ -22,7 +22,7 @@ Individual rate-shift configurations sampled by BAMM
    :width: 500
    :align: center
 
-Three evolutionary rate configurations (speciation) sampled by BAMM for the cetacean phylogeny, under three different color schemes (warm colors = fast rates). Columns show the 10\ :sup:`th`, 20\ :sup:`th`, and 30\ :sup:`th` samples from the posterior distribution included as an example in BAMMtools (see the **events.cetaceans** dataset). Black circles denote the position of the macroevolutionary regime shifts present in each sample. Every sample from the posterior contains a potentially unique configuration of shift locations, which are sampled in proportion to their posterior probability. The trees shown in this figure differ from the preceding figure, which shows the mean marginal rates over all samples in the posterior. Note the consistent spike and subsequent deceleration in rates that occurs after shift events. R code for this figure available :download:`here<rcode/plot_multishift.R>`.
+Three evolutionary rate configurations (speciation) sampled by BAMM for the cetacean phylogeny, under three different color schemes (warm colors = fast rates). Columns show the 10\ :sup:`th`, 20\ :sup:`th`, and 30\ :sup:`th` samples from the posterior distribution included as an example in BAMMtools (see the **events.whales** dataset). Black circles denote the position of the macroevolutionary regime shifts present in each sample. Every sample from the posterior contains a potentially unique configuration of shift locations, which are sampled in proportion to their posterior probability. The trees shown in this figure differ from the preceding figure, which shows the mean marginal rates over all samples in the posterior. Note the consistent spike and subsequent deceleration in rates that occurs after shift events. R code for this figure available :download:`here<rcode/plot_multishift.R>`.
 
 
 Phenotypic evolutionary rates
@@ -30,7 +30,7 @@ Phenotypic evolutionary rates
 
 .. _primatesize: 
 .. figure:: figs/xPrimatesBodySize.png
-   :width: 700
+   :width: 550
    :align: center
 
 Rates of body-size evolution across a time-calibrated phylogenetic tree of living primates. Left figure simply shows original time-calibrated tree with colors indicating instantaneous rates of phenotypic evolution. Figure on left is identical to right, but all rate shifts sampled during a BAMM run have been plotted (N = 401 posterior samples accounting for 1484 total rate shifts). Opaque colors have been used to plot shifts on individual branches; hence, branches on which shifts are frequently sampled appear dark. R code for this figure available :download:`here<rcode/primate_bodysize.R>`.

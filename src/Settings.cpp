@@ -96,8 +96,8 @@ void Settings::initializeGlobalSettings()
     addParameter("treefile",                     "tree.txt");
     addParameter("sampleFromPriorOnly",          "0", false);
     addParameter("runMCMC",                      "0");
-    addParameter("loadEventData",                "0");
-    addParameter("eventDataInfile",              "event_data_in.txt");
+    addParameter("loadEventData",                "0", false);
+    addParameter("eventDataInfile",              "event_data_in.txt", false);
     addParameter("initializeModel",              "0");
     addParameter("simulatePriorShifts",       "1", false);
     addParameter("numberGenerations",            "0");

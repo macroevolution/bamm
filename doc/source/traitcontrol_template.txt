@@ -18,10 +18,10 @@
 modeltype = trait
 # Specify speciationextinction or trait analysis
 
-treefile = primates.tre
+treefile = %%%%
 # Location of phylogenetic tree to be analyzed
 
-traitfile = primates_logmass.txt
+traitfile = %%%%
 # Location of phenotypic traits
 
 runInfoFilename = run_info.txt

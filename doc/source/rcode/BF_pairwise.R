@@ -1,8 +1,8 @@
 library('colorspace');
+
+
 library(gplots);
-
-source('/Users/danrabosky/DanWork/bamm/devel/bamm/doc/sweave/BAMMtools.R');
-
+library(BAMMtools);
 
 getColorKey <- function(x, ncols = 16, units=2){
 	
@@ -54,11 +54,16 @@ getColorBar <- function(ncols = 16, units=2){
 }
 
 
+# These data files are not available for download, 
+# but you can follow the syntax here to see 
+# how to perform a similar analysis on your dataset:
+
+postfile <- '/Users/danrabosky/DanWork/bamm/analyses/jetzp50/post_mcmc_p50run1.txt';
+prefile <- '/Users/danrabosky/DanWork/bamm/analyses/jetzp50/prior_mcmc_out.txt';
+
+bfmat <- computeBayesFactors(postfile, prefile, modelset=0:100, burnin=0.25, threshpost=1, threshprior=0);
 
 cmat <- getColorKey(log(bfmat))
-
-bfmat <- computeBayesFactors('post_mcmc_p50run1.txt', 'prior_mcmc_out.txt', modelset=0:100, constrain=F, burnin=0.25, threshold=0);
-
 
 
 

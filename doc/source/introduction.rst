@@ -51,7 +51,7 @@ analyzing and visualizing BAMM output. Examples of BAMMtools functionality
 includes: visualization of distinct evolutionary regimes on phylogenetic trees,
 calculation of Bayes factors, plotting evolutionary rates through time,
 estimating clade-specific average rates, and visualizing rate variation along
-the branches of individual phylogenetic trees (as shown in the figure).
+the branches of individual phylogenetic trees (as shown in :ref:`in this figure<whaleratesintro>`).
 
 **Accounts for non-random taxon sampling.**
 Speciation-extinction calculations in BAMM account for incomplete taxon
@@ -60,21 +60,21 @@ contain large numbers of missing species, and taxon sampling can be
 phylogenetically non-random. The only requirement is that the user is able to
 specify how taxon sampling varies across the tree. For example, you can allow
 individual clades (such as genera or families) in a large phylogenetic tree to
-have different sampling probabilities. See XXX crossreference XXX for more
-information.
+have different sampling probabilities. Please read :ref:`this section<incompsampling>` for more information on incomplete sampling.
 
-**It is better than stepwise AIC.**
+**It is much better than stepwise AIC.**
 Many methods for modeling evolutionary dynamics use stepwise AIC-based
 approaches that are limited to identifying a single best model. These
 approaches are inherently limited, because many distinct combinations of
 evolutionary shift regimes might have roughly equal probabilities. Rather than
 identifying a single best configuration of rate shifts, BAMM samples rate shift
-configurations in proportion to their posterior probability.
+configurations in proportion to their posterior probability. Please :ref:`read our detailed explanation <rateshifts>` of several fundamental problems associated with stepwise AIC and other methods that identify a single "best" rate shift configuration.
 
 **It is fast.**
 BAMM's underlying C++ core allows rapid modeling of evolutionary dynamics in
 phylogenetic datasets that would be too large to handle with R alone.
 
+.. _whaleratesintro: 
 .. figure:: figs/xIntroFig_whalerates.png
    :width: 640
    :align: center
@@ -86,8 +86,8 @@ phylogenetic datasets that would be too large to handle with R alone.
    clade. See the :ref:`bammgraphs` for more examples involving BAMM. Inset
    histogram shows posterior density of speciation rates and allows color-based
    interpretation of rates on the whale phylogeny.  Figure was generated using
-   the plot.bammdata function from the *BAMMtools* package in R. Dataset in
-   this example is taken from M. Steeman *et al.*, *Syst. Biol.* xxx:xxxx,
+   the ``plot.bammdata(...)`` function from the **BAMMtools** package in R. Dataset in
+   this example is taken from M. Steeman *et al.*, *Syst. Biol.* 58:573-585,
    2009). 
    
 

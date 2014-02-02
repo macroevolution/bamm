@@ -6,8 +6,13 @@ Advanced analysis options
 .. _incompsampling: 
 Accounting for *non-random* incomplete taxon sampling in diversification studies
 ----------------------------------------------
-It is well-known that incomplete taxon sampling can bias analyses of speciation and extinction from phylogenetic trees. If you have an incompletely-sampled tree (e.g., some fraction < 1 of the total extant species richness of your focal taxon), you can easily specify this sampling fraction to generate unbiased estimates of speciation and extinction under the assumption that *species are missing at random from the tree*. In your controlfile, you can specify the percentage of species that have been sampled by setting the ``globalSamplingFraction`` parameter.
+It is well-known that incomplete taxon sampling can bias analyses of speciation and extinction from phylogenetic trees. If you have an incompletely-sampled tree (e.g., some fraction < 1 of the total extant species richness of your focal taxon), you can easily specify this sampling fraction to generate unbiased estimates of speciation and extinction under the assumption that *species are missing at random from the tree*. In your controlfile, you can specify the percentage of species that have been sampled by setting the ``globalSamplingFraction`` parameter. Specifically, you should have the following settings in your control file::
 
+	useGlobalSamplingProbability = 1
+	globalSamplingFraction = XYZ
+	
+where XYZ is the percentage of **total** taxa in your clade that are included in your phylogeny (e.g, if your clade has 100 species and your tree has 73, you should set ``XYZ = 0.73``). 
+	
 But what if your species are not sampled at random? BAMM allows you to incorporate several levels of such non-randomness into your analyses. Consider the following example. Suppose you wish to perform a diversification analysis on a clade consisting of two genera: *fu* and *bar*. In genus *fu*, you have sampled some species A and B, but another 8 species remain unsampled. In a second genus *bar*, you have sampled species C, D, E, and F, and are missing only a single species. You can conclude that you have a fraction 0.2 (2 / 10) of the species in *fu*, and 0.8 of the species in *bar* (4 / 5). Furthermore, since these are the only two genera in your focal tree, you know that the backbone of the phylogeny has a sampling probability of 1.0 (as there are no other genera in clade that includes *fu* and *bar*). We can "paint" the relevant sampling fractions on this tree as follows, using red, blue, and black for the *fu*, *bar*, and backbone sampling fractions, respectively.
 
 
@@ -102,3 +107,47 @@ When does phylogenetic uncertainty **not** matter? For general inference on the 
 Phylogenetic uncertainty will matter if you do in fact care about *specific* aspects of changes in evolutionary dynamics. If you really care about the *precise* location of the shift in evolutionary dynamics, then the exact sequence of branching at the base of the dolphin radiation (to continue with the aforementioned example) **will** matter. Please keep in mind, however, that the BAMM model (and all other models), are merely statistical models that have imposed on the data. So, excessively fretting about whether the true shift in evolutionary dynamics occurred on branch *A* or branch *B* is somewhat unproductive, because the notion of a discrete shift is itself an assumption of the model we are using for inference.
 
 Although BAMM does not directly allow modeling phylogenetic uncertainty, it is straightforward to perform BAMM analyses across distributions of phylogenies taken from a Bayesian analysis. We will soon be adding documentation on how you can use your bash shell (on the OSX or Linux operating systems) to perform a BAMM analysis across a sample of trees.
+
+
+Understanding the event data file
+----------------------------------------
+
+.. _eventdatafile:
+
+The event data file is the core of a BAMM analysis. Many advanced analyses can be done with this output. Each sample from the posterior under BAMM's model of rate shift variation consists of:
+
+* Locations of evolutionary rate regimes for the focal sample
+
+* Evolutionary rate parameters associated with each regime.
+
+If you open the ``even_data.txt`` file with a text editor (or reading into R as a csv data table), you will see this header row (for a speciation-extinction analysis):
+
+``generation,leftchild,rightchild,abstime,lambdainit,lambdashift,muinit,mushift``
+
+For a trait analysis, it will look like:
+
+``generation,leftchild,rightchild,abstime,betainit,betashift``
+
+Each row of the event data file is a *macroevolutionary rate process*. Each sample from the posterior must have at least one process. Even if there is no evidence for a *rate shift* on the phylogeny, you must still have a set of rate parameters that begin at the root of the tree. The data recorded for each process (row) is as follows:
+
+``generation``
+	The generation of the MCMC simulation from which the process was sampled. If there are more than processes on the tree for a given generation, there will be multiple rows for that generation.
+	
+``leftchild`` and ``rightchild``
+	Each process is associated with a particular branch or node on the tree, by definition. ``leftchild`` and ``rightchild`` are random descendants from the right and left branches from the node at the end (tipwards) of the branch on which the process begins. Knowledge of these descendants enables precise reconstruction of the topological location of a shift. For example, if you have the tree ((A,B),(C,D)), the root process (beginning at the root) could be specified by ``leftchild = A`` and ``rightchild = D``. These taxa *span* the clade defined by the node/branch in question. 
+	
+``abstime``
+	Position in absolute time when a particular process begins, assuming time 0 at the root of the tree. Thus, the root process will always be characterized by a value of 0 here.
+	
+``lambdainit,lambdashift,muinit,mushift`` or ``betainit,betashift``
+	Evolutionary rate parameters for the exponential change model 
+
+
+
+
+
+
+
+
+
+
