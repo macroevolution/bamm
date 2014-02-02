@@ -1374,8 +1374,13 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
                 }
                 //std::cout << spfamilies[k] << std::endl;
             }
-            if ((*i)->getEinit() == -1)
-                std::cout << ((*i)->getName()) << std::endl;
+
+            if ((*i)->getEinit() == -1) {
+                log(Warning) << "The species " << (*i)->getName() << " "
+                    << "has an E_init value of -1.\n"
+                    << "Check that this species is spelled correctly "
+                    << "in the sampling file.\n";
+            }
         } else {
             // Node is internal
             if ((*i)->getLfDesc()->getCladeName() == (*i)->getRtDesc()->getCladeName()) {
@@ -1389,10 +1394,10 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
                 (*i)->setEtip(backboneInitial);
             }
         }
-        //std::cout << "here?" << std::endl;
+        
         if ((*i)->getCladeName() == "") {
-            std::cout << "unset clade names \n" << std::endl;
-            throw;
+            log(Error) << "There are unset clade names.\n";
+            std::exit(1);
         }
     }
 
