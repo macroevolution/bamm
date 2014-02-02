@@ -1825,9 +1825,10 @@ Node* Tree::getNodeMRCA(std::string A, std::string B)
     }
 
     if (!Agood | !Bgood) {
-        std::cout << "invalid nodes sent to Tree::getNodeMRCA(...)" << std::endl;
-        std::cout << "\nEXITING WITH ERROR\n" << std::endl;
-        exit(0);
+        log(Error) << "Invalid nodes " << A << " and " << B
+            << " sent to Tree::getNodeMRCA(...)\n";
+        //exit(1);
+        throw;
     }
 
     passUpFillTempNodeArray(nodeA);

@@ -198,47 +198,24 @@ void TraitModel::initializeModelFromEventDataFileTrait(void)
 
     std::string tempstring;
 
-    int index = 0;
-
     while (infile) {
-
-        std::string tempstring;
-        //getline(infile, tempstring, '\t');
-        getline(infile, tempstring);
-
-        std::cout << index << std::setw(10) << tempstring.c_str() << "\n";
-
+        getline(infile, tempstring, '\t');
         species1.push_back(tempstring);
 
-        //getline(infile, tempstring, '\t');
-        getline(infile, tempstring);
-
-        std::cout << index << std::setw(10) << tempstring.c_str() << "\n";
+        getline(infile, tempstring, '\t');
         species2.push_back(tempstring);
 
-        //getline(infile, tempstring, '\t');
-        getline(infile, tempstring);
-
-        std::cout << index << std::setw(10) << tempstring.c_str() << "\n";
+        getline(infile, tempstring, '\t');
         etime.push_back(atof(tempstring.c_str()));
 
-        //getline(infile, tempstring, '\t');
-        getline(infile, tempstring);
-
-        std::cout << index << std::setw(10) << tempstring.c_str() << "\n";
+        getline(infile, tempstring, '\t');
         beta_par1.push_back(atof(tempstring.c_str()));
 
-        //getline(infile, tempstring, '\t');
         getline(infile, tempstring);
-
-        std::cout << index << std::setw(10) << tempstring.c_str() << "\n";
         beta_par2.push_back(atof(tempstring.c_str()));
-
-        index++;
 
         if (infile.peek() == EOF)
             break;
-
     }
 
     infile.close();
