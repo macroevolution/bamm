@@ -281,12 +281,5 @@ This is a simple guide to some of the analyses discussed above (and many more ar
 * Compute marginal shift probabilities for branches with ``marginalShiftProbsTree``
 * Compute the *maximum shift credibility (MSC) configuration* with ``maximumShiftCredibility``
 * Plot the MSC configuration with ``addBAMMshifts`` and ``plot.bammdata(...)``.
-* Plot rates through time with ``plotRateThroughTime(...)
+* Plot rates through time with ``plotRateThroughTime(...)``
 * Compute clade-specific marginal distributions of rates with ``getCladeRates(...)`` 
-
-
-
- 
-
-
-

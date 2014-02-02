@@ -96,6 +96,7 @@ Incomplete taxon sampling
 For speciation-extinction analyses BAMM can analytically account for incomplete taxon sampling that might otherwise bias results. You can even correct for *non-random* taxon sampling. An explanation of how to account for both random and non-random taxon sampling is found  :ref:`here<incompsampling>`.
 
 .. _phenotypicquick:
+
 Phenotypic evolution
 --------------------------
 
