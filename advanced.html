@@ -63,6 +63,7 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#accounting-for-phylogenetic-uncertainty">7.3. Accounting for phylogenetic uncertainty</a></li>
+<li><a class="reference internal" href="#understanding-the-event-data-file">7.4. Understanding the event data file</a></li>
 </ul>
 </li>
 </ul>
@@ -103,7 +104,12 @@
 <h1>7. Advanced analysis options<a class="headerlink" href="#advanced-analysis-options" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="accounting-for-non-random-incomplete-taxon-sampling-in-diversification-studies">
 <h2>7.1. Accounting for <em>non-random</em> incomplete taxon sampling in diversification studies<a class="headerlink" href="#accounting-for-non-random-incomplete-taxon-sampling-in-diversification-studies" title="Permalink to this headline">¶</a></h2>
-<p>It is well-known that incomplete taxon sampling can bias analyses of speciation and extinction from phylogenetic trees. If you have an incompletely-sampled tree (e.g., some fraction &lt; 1 of the total extant species richness of your focal taxon), you can easily specify this sampling fraction to generate unbiased estimates of speciation and extinction under the assumption that <em>species are missing at random from the tree</em>. In your controlfile, you can specify the percentage of species that have been sampled by setting the <tt class="docutils literal"><span class="pre">globalSamplingFraction</span></tt> parameter.</p>
+<p>It is well-known that incomplete taxon sampling can bias analyses of speciation and extinction from phylogenetic trees. If you have an incompletely-sampled tree (e.g., some fraction &lt; 1 of the total extant species richness of your focal taxon), you can easily specify this sampling fraction to generate unbiased estimates of speciation and extinction under the assumption that <em>species are missing at random from the tree</em>. In your controlfile, you can specify the percentage of species that have been sampled by setting the <tt class="docutils literal"><span class="pre">globalSamplingFraction</span></tt> parameter. Specifically, you should have the following settings in your control file:</p>
+<div class="highlight-none"><div class="highlight"><pre>useGlobalSamplingProbability = 1
+globalSamplingFraction = XYZ
+</pre></div>
+</div>
+<p>where XYZ is the percentage of <strong>total</strong> taxa in your clade that are included in your phylogeny (e.g, if your clade has 100 species and your tree has 73, you should set <tt class="docutils literal"><span class="pre">XYZ</span> <span class="pre">=</span> <span class="pre">0.73</span></tt>).</p>
 <p>But what if your species are not sampled at random? BAMM allows you to incorporate several levels of such non-randomness into your analyses. Consider the following example. Suppose you wish to perform a diversification analysis on a clade consisting of two genera: <em>fu</em> and <em>bar</em>. In genus <em>fu</em>, you have sampled some species A and B, but another 8 species remain unsampled. In a second genus <em>bar</em>, you have sampled species C, D, E, and F, and are missing only a single species. You can conclude that you have a fraction 0.2 (2 / 10) of the species in <em>fu</em>, and 0.8 of the species in <em>bar</em> (4 / 5). Furthermore, since these are the only two genera in your focal tree, you know that the backbone of the phylogeny has a sampling probability of 1.0 (as there are no other genera in clade that includes <em>fu</em> and <em>bar</em>). We can &#8220;paint&#8221; the relevant sampling fractions on this tree as follows, using red, blue, and black for the <em>fu</em>, <em>bar</em>, and backbone sampling fractions, respectively.</p>
 <div class="figure align-center">
 <a class="reference internal image-reference" href="_images/xIncompSampling.png"><img alt="_images/xIncompSampling.png" src="_images/xIncompSampling.png" style="width: 200px;" /></a>
@@ -187,6 +193,29 @@ betaShiftInit = 0.0
 <p>When does phylogenetic uncertainty <strong>not</strong> matter? For general inference on the overall tempo and mode of diversification, it is quite unlikely that - in general - your focal tree (say, MCC tree from BEAST, or ML tree from RAxML) is unlikely to be <em>so bad</em> that your broad-scale inferences in evolutionary dynamics are inaccurate. One reason for this is the somewhat paradoxical observation that confidence in <em>macroevolutionary conclusions</em> can be negatively correlated with confidence in <em>phylogenetic conclusions</em>. For example, consider a phylogeny showing a pattern of an early burst in lineage diversification, such that most major lineages arose during a brief period of time. You might never be able to resolve the <em>precise</em> order of branching of those lineages, and as such, you will always have a tree that is poorly resolved at the base. However, you might nonetheless be extremely confident that branch lengths are short near the base of the radiation (indeed, this is why you have low confidence in your topology!), and this means that your inferences on speciation rates themselves might be extremely robust. If you consider speciation in whales, as shown <em class="xref std std-ref">here</em> and <a class="reference internal" href="bammgraph.html#rttwhale"><em>here</em></a>, phylogenetic uncertainty isn&#8217;t going to change the big-picture conclusions: there was clearly a massive spike in evolutionary rates in some ancestral lineage leading to, or immediately nested within, the dolphin clade.</p>
 <p>Phylogenetic uncertainty will matter if you do in fact care about <em>specific</em> aspects of changes in evolutionary dynamics. If you really care about the <em>precise</em> location of the shift in evolutionary dynamics, then the exact sequence of branching at the base of the dolphin radiation (to continue with the aforementioned example) <strong>will</strong> matter. Please keep in mind, however, that the BAMM model (and all other models), are merely statistical models that have imposed on the data. So, excessively fretting about whether the true shift in evolutionary dynamics occurred on branch <em>A</em> or branch <em>B</em> is somewhat unproductive, because the notion of a discrete shift is itself an assumption of the model we are using for inference.</p>
 <p>Although BAMM does not directly allow modeling phylogenetic uncertainty, it is straightforward to perform BAMM analyses across distributions of phylogenies taken from a Bayesian analysis. We will soon be adding documentation on how you can use your bash shell (on the OSX or Linux operating systems) to perform a BAMM analysis across a sample of trees.</p>
+</div>
+<div class="section" id="understanding-the-event-data-file">
+<h2>7.4. Understanding the event data file<a class="headerlink" href="#understanding-the-event-data-file" title="Permalink to this headline">¶</a></h2>
+<p id="eventdatafile">The event data file is the core of a BAMM analysis. Many advanced analyses can be done with this output. Each sample from the posterior under BAMM&#8217;s model of rate shift variation consists of:</p>
+<ul class="simple">
+<li>Locations of evolutionary rate regimes for the focal sample</li>
+<li>Evolutionary rate parameters associated with each regime.</li>
+</ul>
+<p>If you open the <tt class="docutils literal"><span class="pre">even_data.txt</span></tt> file with a text editor (or reading into R as a csv data table), you will see this header row (for a speciation-extinction analysis):</p>
+<p><tt class="docutils literal"><span class="pre">generation,leftchild,rightchild,abstime,lambdainit,lambdashift,muinit,mushift</span></tt></p>
+<p>For a trait analysis, it will look like:</p>
+<p><tt class="docutils literal"><span class="pre">generation,leftchild,rightchild,abstime,betainit,betashift</span></tt></p>
+<p>Each row of the event data file is a <em>macroevolutionary rate process</em>. Each sample from the posterior must have at least one process. Even if there is no evidence for a <em>rate shift</em> on the phylogeny, you must still have a set of rate parameters that begin at the root of the tree. The data recorded for each process (row) is as follows:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">generation</span></tt></dt>
+<dd>The generation of the MCMC simulation from which the process was sampled. If there are more than processes on the tree for a given generation, there will be multiple rows for that generation.</dd>
+<dt><tt class="docutils literal"><span class="pre">leftchild</span></tt> and <tt class="docutils literal"><span class="pre">rightchild</span></tt></dt>
+<dd>Each process is associated with a particular branch or node on the tree, by definition. <tt class="docutils literal"><span class="pre">leftchild</span></tt> and <tt class="docutils literal"><span class="pre">rightchild</span></tt> are random descendants from the right and left branches from the node at the end (tipwards) of the branch on which the process begins. Knowledge of these descendants enables precise reconstruction of the topological location of a shift. For example, if you have the tree ((A,B),(C,D)), the root process (beginning at the root) could be specified by <tt class="docutils literal"><span class="pre">leftchild</span> <span class="pre">=</span> <span class="pre">A</span></tt> and <tt class="docutils literal"><span class="pre">rightchild</span> <span class="pre">=</span> <span class="pre">D</span></tt>. These taxa <em>span</em> the clade defined by the node/branch in question.</dd>
+<dt><tt class="docutils literal"><span class="pre">abstime</span></tt></dt>
+<dd>Position in absolute time when a particular process begins, assuming time 0 at the root of the tree. Thus, the root process will always be characterized by a value of 0 here.</dd>
+<dt><tt class="docutils literal"><span class="pre">lambdainit,lambdashift,muinit,mushift</span></tt> or <tt class="docutils literal"><span class="pre">betainit,betashift</span></tt></dt>
+<dd>Evolutionary rate parameters for the exponential change model</dd>
+</dl>
 </div>
 </div>
 

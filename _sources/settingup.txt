@@ -1,3 +1,5 @@
+.. _bammsetup:
+
 Setting Up BAMM
 ===============
 
