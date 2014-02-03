@@ -3,14 +3,41 @@
 Setting Up BAMM
 ===============
 
-Installation
-------------
-
 The following instructions assume you are running ``bash`` or a similar
 Unix shell. In Linux and Mac OS X systems, ``bash`` is the default shell
 (in Mac OS X, you must first open the Terminal application).
 For Windows users, we recommend you use `Cygwin <http://www.cygwin.com/>`_,
 where ``bash`` is also the default shell.
+
+Installation From Binary
+------------------------
+
+Mac OS X
+........
+
+1. `Download <http://bamm-project.org/download.html>`_ the Mac OS X
+   tar.gz file containing a binary file of BAMM.
+
+2. This file is compressed as a tar.gz file. To uncompress it,
+   run the following command from the directory in which BAMM was downloaded
+   (the actual version of BAMM may be different)::
+
+       tar -xzf bamm-1.0.0-MacOSX.tar.gz
+
+   This will uncompress the single file ``bamm`` into the current directory.
+
+3. You may copy the file ``bamm`` to any directory in your system.
+   See below for instructions on how to run BAMM.
+
+Windows
+.......
+
+Binary file for Windows will be available soon.
+   
+Installation From Source
+------------------------
+
+Use this option to compile and install BAMM from its source files.
 
 1. `Download <http://bamm-project.org/download.html>`_ the latest available
    version of BAMM.
@@ -55,3 +82,8 @@ To run ``bamm``, you must always specify a *contol* file. For example,
 if your control file is named ``divcontrol.txt``, run the following::
 
     bamm -c divcontrol.txt
+
+Note that if ``bamm`` is not installed in a common location, you may need
+to run ``bamm`` from the directory in which it exists as follows::
+
+    ./bamm -c divcontrol.txt
