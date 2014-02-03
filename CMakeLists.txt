@@ -8,7 +8,7 @@ SET(CXX_OPTIMIZATION_FLAGS "-O3")
 
 # Support Mac OS X 10.5 and greater architectures (if using Clang)
 IF(APPLE AND (${CMAKE_CXX_COMPILER_ID} MATCHES Clang))
-    SET(CXX_ARCHITECTURE_FLAGS "-mmacosx-version-min=10.5")
+    SET(CXX_ARCHITECTURE_FLAGS "-arch i386 -arch x86_64")
 ENDIF(APPLE AND (${CMAKE_CXX_COMPILER_ID} MATCHES Clang))
 
 # Statically link C++ libraries for Windows
@@ -87,6 +87,6 @@ ENDIF(APPLE)
 SET(CPACK_SOURCE_PACKAGE_FILE_NAME
     ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION})
 SET(CPACK_SOURCE_GENERATOR TGZ)
-SET(CPACK_SOURCE_IGNORE_FILES build Rcode skeleton doc)
+SET(CPACK_SOURCE_IGNORE_FILES .git build Rcode examples problems setup skeleton doc)
 
 INCLUDE(CPack)
