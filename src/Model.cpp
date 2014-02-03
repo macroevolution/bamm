@@ -13,6 +13,7 @@
 #include <cmath>
 #include <fstream>
 #include <limits>
+#include <string>
 
 #include "Model.h"
 #include "MbRandom.h"
