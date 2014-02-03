@@ -33,7 +33,6 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
     _treeWriteFreq =        sttings->getBranchRatesWriteFreq();
     _eventDataWriteFreq =   sttings->getEventDataWriteFreq();
     _mcmcWriteFreq =        sttings->getMCMCwriteFreq();
-    _acceptWriteFreq =      sttings->getAcceptWriteFreq();
     _printFreq =            sttings->getPrintFreq();
     _NGENS =                sttings->getNGENS();
 
@@ -92,10 +91,6 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
             
             ModelPtr->resetMHacceptanceParameters();
         }
-
-        // Deprecating this - no need to write this accept data
-        //if ((i % _acceptWriteFreq) == 0)
-        //    writeParamAcceptRates();
     }
 }
 

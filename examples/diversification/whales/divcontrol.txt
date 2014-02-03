@@ -28,9 +28,6 @@ sampleFromPriorOnly = 0
 # If TRUE will perform BAMM analysis sampling 
 # from prior only. (no likelihoods computed)
 
-autotune = 0                            
-# Experimental option for tuning MCMC operators
-          
 runMCMC = 1                             
 # perform an MCMC simulation? If runMCMC = 0, the program will 
 # check whether the data file can be read and whether 
@@ -108,9 +105,6 @@ eventDataWriteFreq = 5000
 # Specify frequency to write actual model parameters to file. 
 # These are the main results!
 
-acceptWriteFreq = 1000
-# Prints accept frequency
-
 printFreq = 1000
 # Prints MCMC status to screen every printFreq generations.
 
@@ -140,7 +134,7 @@ updateLambdaShiftScale = 0.1
 updateMuInitScale = 2.0
 # Scale parameter for updating initial extinction rate for each process
 
-updateEventLocationScale = 2.0
+updateEventLocationScale = 0.05
 # Scale parameter for updating LOCAL moves of events on the tree
 # This defines the width of the sliding window proposal.
  

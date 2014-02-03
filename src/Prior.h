@@ -1,13 +1,9 @@
-//
-//  Prior.h
-//  bamm
-//
-//  Created by Dan Rabosky on 1/28/14.
-//  Copyright (c) 2014 Dan Rabosky. All rights reserved.
-//
+//  Returns either:
+//      Log-prior densities for parameter
+//      A random deviate from the prior distribution for a parameter
 
-#ifndef __bamm__Prior__
-#define __bamm__Prior__
+#ifndef PRIOR_H
+#define PRIOR_H
 
 #include <iostream>
 
@@ -17,7 +13,6 @@ class MbRandom;
 
 class Prior
 {
-    
 public:
     
     Prior(MbRandom* ran, Settings* sp);
@@ -29,34 +24,34 @@ public:
     the same distribution.
  
     I have not implemented any of the generateFromPrior fxns
- 
- */
-    
+*/
     
     double lambdaShiftPrior(double);
-    double generateLambdaShiftFromPrior(void); // not done
+    double generateLambdaShiftFromPrior(); // not done
     
     double lambdaInitPrior(double);
-    double generateLambdaInitFromPrior(void); // not done
+    double generateLambdaInitFromPrior(); // not done
     
     double muShiftPrior(double);
-    double generateMuShiftFromPrior(void); // not done
+    double generateMuShiftFromPrior(); // not done
     
     double muInitPrior(double);
-    double generateMuInitFromPrior(double); // not done
+    double generateMuInitFromPrior(); // not done
     
     double poissonRatePrior(double);
-    double generatePoissonRateFromPrior(double);
+    double generatePoissonRateFromPrior();
+    
+    double betaInitPrior(double);
+    double generateBetaInitFromPrior();
+    
+    double betaShiftPrior(double);
+    double generateBetaShiftFromPrior();
     
 private:
     
     MbRandom *ranPtr;
     Settings *sttings;
-    
-    
-
 };
 
 
-
-#endif /* defined(__bamm__Prior__) */
+#endif

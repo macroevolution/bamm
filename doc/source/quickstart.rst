@@ -3,126 +3,171 @@
 Quick-start guide to BAMM
 =========================
 
-To run ``bamm``, you must always specify a *contol* file. For example,
-if your control file is named ``divcontrol.txt``, run the following::
+This section assumes you have a compiled version of **BAMM** in a directory on your computer (see :ref:`this section<bammsetup>` for installation). This is a **quick-start** guide: we will provide guidance for some general parameter settings that should get BAMM running on your dataset, but you should explore the :ref:`configurations and settings<configuration>` page in more detail to optimize performance.
 
-    bamm -c divcontrol.txt
+BAMM can be used to model speciation-extinction rates and phenotypic evolutionary rates across phylogenetic trees. To run a speciation-extinciont analysis on your dataset, you need the following (easiest if all in the same directory): 
 
-Data files and input
---------------------
+* A time-calibrated phylogenetic tree
+* A *control* file
+* The BAMM program
 
-BAMM comes with example control files (located in the directory examples). Use these as templates to quickly get your data analyzed by BAMM.
+To use BAMM to analyze phenotypic evolution, you also need a file containing your phenotypic (trait) data. 
 
-Currently, BAMM can process two types of models: speciation-extinction analysis or phenotypic evolution analysis. The model type is specified by the parameter ``modeltype`` in the control file.
+Your phylogenetic tree must be **ultrametric**, it must be **fully bifurcating** (no polytomies), and all branch lengths must be **greater than 0**. BAMM checks for these things, but it's also good to do a quick check in R using the *ape* package. You can do this as follows::
 
-Specify the file path of the Newick-formatted tree with ``treefile``. All file paths are relative to the directory in which bamm was executed.
+	library(ape)
+	v <- read.tree("myPhylogeny.tre")
+	is.ultrametric(v)
+	is.binary.tree(v)
+	# Now to check min branch length:
+	min(v$edge.length)
 
+If all of those checks are good, we can move on.
+
+Control file
+----------------
+
+To run ``bamm``, you must always specify a *control file*. The control file contains all of the settings necessary to run the program on your dataset, including the name(s) of the input files you seek to analyze. The easiest way to run BAMM is to place the control file, and all files to be analyzed (e.g., the phylogeny) in the same directory as the **BAMM** application. If your control file is named ``myControlFile.txt``, you would run BAMM as follows (on the OSX operating system)::
+
+    .\bamm -control myControlFile.txt
+
+On Windows machines, you would ...
+
+**NOT DONE** %% Needs Windows explanation 
+
+BAMM comes with example control files (located in the directory ``examples/`` ). Use these as a template for setting up your own analyses. The control file is simply a text file with a set of parameter names, followed by the "equals" sign (=), followed by the parameter value. Anything on a line of the control file to the right of a pound sign (#) will be ignored by the program (e.g., it is considered a *comment*). Part of your control file might look like this::
+
+	# This line is a comment. It will not be read by BAMM
+	modeltype = speciationextinction        
+	treefile = myPhylogeny.tre                                 
+	runInfoFilename = run_info.txt
+	# This line is also a comment and not read
+	runMCMC = 1                           
+	useGlobalSamplingProbability = 1        
+	globalSamplingFraction = 0.81            
+	seed = 12345
+	poissonRatePrior = 1.0 # Another comment here
+
+There are many possible settings that can be tweaked in BAMM. The next two sections give you a simple recipe for running the program on your data, depending on whether you are analyzing speciation-extinction rates or phenotypic evolutionary rates. **There is no guarantee that these settings will work for your dataset**.
+
+.. _speciationextinctionquick:
 Speciation-extinction analyses
-******************************
+--------------------------
+You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file linked :download:`here (divcontrol_template.txt)<divcontrol_template.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data. Here's an example :download:`phylogenetic tree of whales<examples/whaletree.txt>` that is used elsewhere in this documentation.
 
-Specify ``modeltype = speciationextinction``.
+If you open the template file, you'll see that there are extensive comments. For each parameter in the BAMM control file, we've included a brief description on the line following the parameter. For example: ::
+
+	modeltype = speciationextinction        
+	# Specify speciationextinction or trait analysis
+   
+This tells us what parameter `modeltype` does. It specifies the type of analysis (here, a speciation-extinction analysis). If we wanted to do a phenotypic evolutionary analysis, we would have set `modeltype = trait`.
+
+There are only a handful of parameters in the template file that you need to set explicitly in order to run BAMM. These are currently defined with the following symbol: `%%%%`. For example, you see the following immediately after `modeltype`::
+
+	treefile = %%%%
+	# Location of phylogenetic tree to be analyzed
+	
+This is where you specify the name of your phylogenetic tree. For example, ``treefile = mytree.tre``. The other parameters we will force you to define explicitly have to do with output. This parameter block looks like this in the template::
+
+	numberGenerations = %%%%
+
+	mcmcWriteFreq = %%%%
+
+	eventDataWriteFreq = %%%%
+	
+	printFreq = %%%%
+
+``numberGenerations`` is the number of simulation steps you want in your MCMC analysis. ``printfreq`` is the frequency that BAMM will write some simple information to the screen so you can track the progress of the run. ``mcmcWriteFreq`` and ``eventDataWriteFreq`` tells BAMM how often to write the two basic types of output to file. BAMM generates two types of output. The first is a file containing basic attributes of the MCMC chain as you sample it at particular timepoints. This includes: the log-likelihood of the data under the current parameters, the number of diversification shifts in the current state, the log-prior density of the current parameters, and a moving-window average of the acceptance rate for the MCMC simulation. The second type of output is the *event data*. This is the real stuff of interest. It all parameters associated with the macroevolutionary rate regimes and is used for all the subsequent analyses of evolutionary rates. 
+
+You can set these parameters to whatever you want. However, please remember that you will be working with the *event data file* in R, which is a bit limited on memory. As a rough guide, we suggest choosing a value for ``eventDataWriteFreq`` that gives at least 1000 samples from the posterior, but we also don't see much advantage to having more than 5000. 
+
+That's all you need to know. For starters, you should try a simple run with settings like this::
+
+	numberGenerations = 5000
+	mcmcWriteFreq = 1000
+	eventDataWriteFreq = 1000
+	printFreq = 100
+	
+You'll want to increase all of these once you are sure the program is correctly loading your data etc, but it's a good first check. 
 
 Incomplete taxon sampling
 *************************
 
-For speciation-extinction analyses BAMM can analytically account for incomplete taxon sampling that might otherwise bias results. Two methods are available. A global correction requires specifying ``useGlobalSamplingProbability = 1`` and giving a value for ``globalSamplingProbability`` between 0 and 1, which is the percentage of the total number of species sampled in your phylogeny. 
+For speciation-extinction analyses BAMM can analytically account for incomplete taxon sampling that might otherwise bias results. You can even correct for *non-random* taxon sampling. An explanation of how to account for both random and non-random taxon sampling is found  :ref:`here<incompsampling>`.
 
-Alternatively, BAMM can correct for non-random taxon sampling by incorporating clade-specific sampling fractions. Clade-specific corrections can be performed by setting ``useGlobalSamplingProbability = 0`` and specifying a path in ``sampleProbsFilename`` to a file that contains species-specific probabilities of sampling for each species in your phylogeny. An explanation of how to account for non-random taxon sampling is found  :ref:`here<incompsampling>`.
+.. _phenotypicquick:
 
-Phenotypic evolution analyses
-*****************************
+Phenotypic evolution
+--------------------------
 
-Specify ``modeltype = trait`` and specify the file path of the trait data in ``traitfile``.
+This section is quite redundant with the preceding section on **speciation-extinction**, with a few differences.
 
-Setting up the control file
----------------------------
+You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file linked :download:`here (traitcontrol_template.txt)<traitcontrol_template.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data.
 
-All parameters in the control file have default values. It is unlikely that these will be appropriate in all situations. Several parameters deserve careful consideration. The ``poissonRatePrior`` will determine the expected number of events on your tree. Smaller values will favor a greater number of events and larger values will favor a smaller number of events. The MCMC scaling operators that adjust parameter values may also exert important effects because if they are misspecified they will generate poor proposals that are rarely accepted. Pay attention to the acceptance frequency as the chain runs. Ideally this should be around 0.234 but values up to 0.4 are probably OK. If the acceptance frequency is too low or too high you should consider looking at the MCMC scaling operators and tweaking their values. Also pay attention to how long you will run the chain, specified by ``numberGenerations``, and how frequently you will sample from the chain, specified by ``mcmcWriteFreq`` and ``eventDataWriteFreq``. If you sample very frequently from the chain samples will be more autocorrelated than if you sample less frequently.
+If you open the template file, you'll see that there are extensive comments. For each parameter in the BAMM control file, we've included a brief description on the line following the parameter. For example: ::
 
-Running the program
--------------------
+	modeltype = trait        
+	# Specify speciationextinction or trait analysis
+   
+This tells us what parameter `modeltype` does. It specifies the type of analysis (here, a phenotypic evolution analysis). If we wanted to do a speciation-extinction analysis, we would have set `modeltype = speciationextinction`.
 
-If your control file is named ``divcontrol.txt``, run BAMM as follows::
+There are only a handful of parameters in the template file that you need to set explicitly in order to run BAMM. These are currently defined with the following symbol: `%%%%`. For example, you see the following immediately after `modeltype`::
 
-    bamm -c divcontrol.txt
-
-Understanding BAMM output
--------------------------
-
-As BAMM runs output is sent to the terminal window, which is written to the file specified in ``mcmcOutfile``. This file will have information about the number of events on the tree, the log likelihood of the model, the acceptance frequency, etc. You can use this output for assessing how well the chain is mixing and whether or not it has converged at the end of a run.
-
-The main results from a BAMM run are written to the file specified by ``eventDataOutfile`` in the control file.  If ``outName`` is also specified in the control file it will be prefixed to the name in ``eventDataOutfile``. 
-
-Before diving too deeply into the results in this file you should first assess whether or not the Markov chain converged. Remember that the information needed to do that is written to the file specified by ``mcmcOutfile`` in the control file. There are several programs available for assessing convergence of Markov chains but an easy one to use is the coda package for R. Assuming you are running R you can install coda by simply typing::
+	treefile = %%%%
+	# Location of phylogenetic tree to be analyzed	
 	
-	> install.packages("coda")
+This is where you specify the name of your phylogenetic tree. For example, ``treefile = mytree.tre``. Since we are analyzing phenotypes, we also need to specify the location of the trait data, which we do here::
 
-If that fails you can get the package directly from the website http://cran.r-project.org. Once installed you can use the functions in the coda package by loading it with::
+	traitfile = %%%%
+
+The trait file should consist of a 2 column text file, with species name followed by a tab, followed by the relevant trait value. Here is an :download:`example file<examples/primates_logmass.txt>` of log-transformed primate body masses, and :download:`here<examples/primatetree.txt>` is the corresponding Newick format tree. You should be able to plug these into the control file and get BAMM to run.
+
+The other parameters we will force you to define explicitly have to do with output. This parameter block looks like this in the template::
+
+	numberGenerations = %%%%
+
+	mcmcWriteFreq = %%%%
+
+	eventDataWriteFreq = %%%%
 	
-	> library(coda) 
+	printFreq = %%%%
 
-A quick way to assess convergence is to take a look at the effective sample size of the log likelihood or model parameters. Samples from a Markov chain are autocorrelated and this autocorrelation means samples are not independent. Effective sample size is the sample size after accounting for this non-independence. A low effective sample size means that samples are highly autocorrelated and the chain is not "mixing" well, which is an indication that it is has probably not converged to the posterior distribution you're hoping to sample from. We will calculate the effective sample size of the log likelihood and the number of regime shifts. First read in the MCMC outfile::
+``numberGenerations`` is the number of simulation steps you want in your MCMC analysis. ``printfreq`` is the frequency that BAMM will write some simple information to the screen so you can track the progress of the run. ``mcmcWriteFreq`` and ``eventDataWriteFreq`` tells BAMM how often to write the two basic types of output to file. BAMM generates two types of output. The first is a file containing basic attributes of the MCMC chain as you sample it at particular timepoints. This includes: the log-likelihood of the data under the current parameters, the number of diversification shifts in the current state, the log-prior density of the current parameters, and a moving-window average of the acceptance rate for the MCMC simulation. The second type of output is the *event data*. This is the real stuff of interest. It all parameters associated with the macroevolutionary rate regimes and is used for all the subsequent analyses of evolutionary rates. 
+
+You can set these parameters to whatever you want. However, please remember that you will be working with the *event data file* in R, which is a bit limited on memory. As a rough guide, we suggest choosing a value for ``eventDataWriteFreq`` that gives at least 1000 samples from the posterior, but we also don't see much advantage to having more than 5000. 
+
+That's all you need to know. For starters, you should try a simple run with settings like this::
+
+	numberGenerations = 5000
+	mcmcWriteFreq = 1000
+	eventDataWriteFreq = 1000
+	printFreq = 100
 	
-	> # this is a comment in R
-	> # fn is a character string with the path to your mcmc_outfile text file, e.g. "mcmc_out.txt"
-	> mcmc <- read.csv(fn)
+You'll want to increase all of these once you are sure the program is correctly loading your data etc, but it's a good first check. 
 
-To take a look at the head of this file do::
-	
-	> head(mcmc)
 
-So the number of event shifts is the second column and the log likelihood is the fourth column. Before calculating the effective sample size we should discard the beginning of the chain to reduce autocorrelation from the starting configuration. It can be helpful to plot a trace of the log likelihood for deciding on a good cutoff value for this burn-in period::
-	
-	> plot(mcmc[,1], mcmc[,4])
-	> # suppose we think ten percent is satisfactory
-	>
-	> nsamples <- nrow(mcmc)
-	> postburn <- 0.1 * nsamples + 1
-	> mcmc <- mcmc[postburn:nsamples, ]
+BAMM output: brief
+----------------
 
-We can now calculate effective sample size using the coda function::
-	
-	> effectiveSize(mcmc[,2]) 
-	> effectiveSize(mcmc[,4])
+BAMM generates multiple types of output files. These (usually) include:
 
-In general these should be at least 200. Assessing convergence can be complicated and you are encouraged to research other methods.
+* The ``runInfo`` file, containing a summary of your parameters/settings
+* An ``mcmc_out.txt`` or equivalent file, containing raw MCMC information useful in diagnosing convergence
+* An ``event_data.txt`` file or equivalent, containing all of evolutionary rate parameters and their topological mappings
+* A ``prior.txt`` file or equivalent, giving the prior expectation on the number of shift events (this is optional and can be turned off).
 
-Once you're satisfied about convergence you are ready to work with the event data file. To work with the data in this file use the utility functions in the BAMMtools for R. This can be downloaded just like in the example above.
+In general, the post-BAMM workflow consists of:
 
-Once you've loaded BAMMtools in your R session you can take a look at the main results::
+#. Reading your MCMC file into R and testing whether your run appears to have converged. We advocate doing this using the ``coda`` package for R, which enables you to compute the *effective sample size* of your log-likelihoods and numbers of rate shifts sampled during the MCMC simulation.
 
-	> # fn is character string specifying the path to your event data file, e.g. "event_data.txt"
-	> # mytree is a phylogenetic tree is ape format. see ape documentation for the function read.tree
-	>
-	> edata <- getEventData(mytree, fn, burnin = 0.1, type = "diversification")
-	>
-	> # if you are working with BAMM trait data specify type = "trait"
+#. Summarizing your posterior distribution on the number of rate shift events
 
-Now that the event data is loaded we can take a look at what it contains. For an explanation of the R object that BAMMtools uses to work with the data simply type::
+#. Loading your ``event_data.txt`` file or equivalent into R using the **BAMMtools** package
 
-	> ?getEventData
+#. Many potential downstream analyses, including summarizing mean evolutionary rates for clades, analyses of rate shift distributions, plotting model-averaged rate-through-time curves, and so on.
 
-To quickly summarize your data do::
+A more detailed description of BAMMtools workflows for postprocessing BAMM output :ref:`can be found here<bammtools>`.
 
-	> summary(edata)
 
-This will tell you how many posterior samples were analyzed as well as the number of shifts in the maximum shift credibility tree and the tipward node(s) (in ape format) of the branch(es) where those shifts occur. It will also print out the posterior distribution of the number of shifts so you can gauge the relative support for models with different numbers of events. Note that a value of zero means there are no shifts and the single root event describes the entire tree.
 
-To visualize how speciation rates or rates of trait evolution vary through time and among lineages simply type::
 
-	> plot(edata)
-
-You can also plot a polarized version of the tree::
-
-	> plot(edata, method = "polar")
-
-This calculates the mean of the marginal posterior density of rates of speciation or trait evolution for many different points along each branch and maps those rates to colors such that cool colors represent slow rates and warm colors represent fast rates. If you want to take a look at just a single posterior sample rather than averaging over all posterior samples this is possible::
-
-	> mysample <- 1
-	> plot(edata, method = "polar", index = mysample)
-
-If this posterior sample happens to contain shifts you can add these to the plotted tree::
-
-	> addBAMMshifts(edata, method = "polar", index = mysample)
-
-Many more types of analysis and visualization are available and you are encouraged to explore the documentation for BAMMtools.

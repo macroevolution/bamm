@@ -40,7 +40,6 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
     _treeWriteFreq =    sttings->getBranchRatesWriteFreq();
     _mcmcWriteFreq =    sttings->getMCMCwriteFreq();
     _eventDataWriteFreq = sttings->getEventDataWriteFreq();
-    _acceptWriteFreq =  sttings->getAcceptWriteFreq();
     _printFreq =        sttings->getPrintFreq();
     _NGENS =            sttings->getNGENS();
 
@@ -103,13 +102,6 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
             ModelPtr->resetMHacceptanceParameters();
         
         }
-
-        
-
-        
-        //if ((i % _acceptWriteFreq) == 0)
-        //  writeParamAcceptRates();
-
     }
 
 }

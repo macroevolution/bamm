@@ -86,6 +86,8 @@ This section addresses a few of the most commonly-encountered problems with BAMM
 Resolving convergence problems
 ------------------------------
 
+.. _fixbammconvergence:
+
 **Under construction**
 
 

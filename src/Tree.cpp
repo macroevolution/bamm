@@ -45,10 +45,14 @@ Tree::Tree(std::string fname, MbRandom* rnptr)
         std::exit(1);
     }
 
+    // Read entire file into tree string (except new line character)
+    std::stringstream buffer;
+    buffer << treefile.rdbuf();
     std::string treestring;
-    treefile >> treestring;
-
+    getline(buffer, treestring);
     treefile.close();
+
+    removeWhiteSpace(treestring);
 
     setTaxonCountFromNewickString(treestring);
     buildTreeFromNewickString(treestring);
@@ -104,6 +108,12 @@ Tree::Tree(std::string fname, MbRandom* rnptr)
             ct++;
         }
     }
+}
+
+
+void Tree::removeWhiteSpace(std::string& str)
+{
+    str.erase(remove(str.begin(), str.end(), ' '), str.end());
 }
 
 
@@ -292,12 +302,7 @@ void Tree::tempNodeSetPassDown(Node* p)
 
 void Tree::clearTempNodeArray(void)
 {
-    //std::cout << "Size before: " << _tempNodeSet.size() << std::endl;
-    for (std::set<Node*>::iterator i = _tempNodeSet.begin();
-            i != _tempNodeSet.end(); i++) {
-        _tempNodeSet.erase(i);
-    }
-    //std::cout << "Size after: " << _tempNodeSet.size() << std::endl;
+    _tempNodeSet.clear();
 }
 
 
@@ -1369,8 +1374,13 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
                 }
                 //std::cout << spfamilies[k] << std::endl;
             }
-            if ((*i)->getEinit() == -1)
-                std::cout << ((*i)->getName()) << std::endl;
+
+            if ((*i)->getEinit() == -1) {
+                log(Warning) << "The species " << (*i)->getName() << " "
+                    << "has an E_init value of -1.\n"
+                    << "Check that this species is spelled correctly "
+                    << "in the sampling file.\n";
+            }
         } else {
             // Node is internal
             if ((*i)->getLfDesc()->getCladeName() == (*i)->getRtDesc()->getCladeName()) {
@@ -1384,10 +1394,10 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
                 (*i)->setEtip(backboneInitial);
             }
         }
-        //std::cout << "here?" << std::endl;
+        
         if ((*i)->getCladeName() == "") {
-            std::cout << "unset clade names \n" << std::endl;
-            throw;
+            log(Error) << "There are unset clade names.\n";
+            std::exit(1);
         }
     }
 
@@ -1647,12 +1657,8 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
             double zpar = bh->getAncestralNodeEvent()->getBetaShift();
             double beta0 = bh->getAncestralNodeEvent()->getBetaInit();
 
-            if (zpar == 0) {
-                rate = beta0;
-            } else {
-                rate = (beta0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-                rate /= x->getBrlen();
-            }
+            rate = x->integrateExponentialRateFunction(beta0, zpar, t1, t2);
+            rate /= x->getBrlen();
             
         } else {
 
@@ -1668,18 +1674,7 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
             double zpar = bh->getAncestralNodeEvent()->getBetaShift();
             double beta0 = bh->getAncestralNodeEvent()->getBetaInit();
 
-            if (zpar == 0) {
-                rate = beta0 * (t2 - t1);
-            }else {
-                //rate = frac * ((lam0/zpar) * ( exp(zpar*t2) - exp( zpar * t1)) / (t2-t1));
-                // This can be simplified. All we have to do is sum the integrals over different
-                //  rate-portions of the branch, then divide the result by the branch length
-                rate = ((beta0 / zpar) * ( exp(zpar * t2) - exp( zpar * t1)));
-            }
-
-            //std::cout << x << "\t" << "1st event on branch: " << std::endl;
-            //std::cout << "T1: " << t1 <<  "\tT2: " << t2 << std::endl;
-            //std::cout << "rate pars: b0\t" << beta0 << "\tzpar:\t" << zpar << std::endl;
+            rate = x->integrateExponentialRateFunction(beta0, zpar, t1, t2);
             
             for (int k = 1; k < n_events; k++) {
 
@@ -1690,13 +1685,10 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
                 zpar = bh->getEventByIndexPosition((k - 1))->getBetaShift();
                 beta0 = bh->getEventByIndexPosition((k - 1))->getBetaInit();
 
-                if (zpar == 0) {
-                    rate += beta0 * (t2 - t1);
-                } else {
-                    rate += (beta0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-                }
-                //std::cout << k-1 <<  "\tt1: " <<  t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck<<std::endl;
+                rate += x->integrateExponentialRateFunction(beta0, zpar, t1, t2);
+            
                 tcheck += (t2 - t1);
+            
             }
 
             //t1 = t2;
@@ -1706,17 +1698,11 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
 
             zpar = bh->getNodeEvent()->getBetaShift();
             beta0 = bh->getNodeEvent()->getBetaInit();
-            if (zpar == 0) {
-                rate += beta0 * (t2 - t1);
-            } else {
-                rate += (beta0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-            }
+            
+            rate += x->integrateExponentialRateFunction(beta0, zpar, t1, t2);
+    
             tcheck += (t2 - t1);
 
-            //std::cout << x << "\t2nd event on branch: " << std::endl;
-            //std::cout << "T1: " << t1 <<  "\tT2: " << t2 << std::endl;
-            //std::cout << "rate pars: b0\t" << beta0 << "\tzpar:\t" << zpar << std::endl;
-            //std::cout << "Branch length: " << x->getBrlen() << std::endl << std::endl;
 
             // The overall mean rate across the branch:
             rate /= (x->getBrlen());
@@ -1733,9 +1719,13 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
 
     // compute speciation rate at the focal node:
     double reltime = x->getTime() - bh->getNodeEvent()->getAbsoluteTime();
-    double curBeta = bh->getNodeEvent()->getBetaInit() * exp((
-                         reltime * bh->getNodeEvent()->getBetaShift()));
 
+
+    double init = bh->getNodeEvent()->getBetaInit();
+    double zz = bh->getNodeEvent()->getBetaShift();
+    
+    double curBeta = x->getExponentialRate(init, zz, reltime);
+    
 #ifdef DEBUG_TIME_VARIABLE
 
     // Try setting node speciation rates equal to mean rate on descendant branches, to see if the
@@ -1850,9 +1840,10 @@ Node* Tree::getNodeMRCA(std::string A, std::string B)
     }
 
     if (!Agood | !Bgood) {
-        std::cout << "invalid nodes sent to Tree::getNodeMRCA(...)" << std::endl;
-        std::cout << "\nEXITING WITH ERROR\n" << std::endl;
-        exit(0);
+        log(Error) << "Invalid nodes " << A << " and " << B
+            << " sent to Tree::getNodeMRCA(...)\n";
+        //exit(1);
+        throw;
     }
 
     passUpFillTempNodeArray(nodeA);
@@ -2061,4 +2052,47 @@ void Tree::storeTerminalNamesRecurse
     if (rightNode != NULL) {
         storeTerminalNamesRecurse(rightNode, names);
     }
+}
+
+
+// TODO: Use this function in the functions above
+std::vector<Node*> Tree::terminalNodes()
+{
+    std::vector<Node*> nodes;
+    storeTerminalNodesRecurse(getRoot(), nodes);
+    return nodes;
+}
+
+
+void Tree::storeTerminalNodesRecurse(Node* node, std::vector<Node*>& nodes)
+{
+    Node* leftNode = node->getLfDesc();
+    Node* rightNode = node->getRtDesc();
+
+    if (leftNode == NULL && rightNode == NULL) {
+        nodes.push_back(node);
+        return;
+    }
+
+    if (leftNode != NULL) {
+        storeTerminalNodesRecurse(leftNode, nodes);
+    }
+
+    if (rightNode != NULL) {
+        storeTerminalNodesRecurse(rightNode, nodes);
+    }
+}
+
+
+std::vector<double> Tree::traitValues()
+{
+    const std::vector<Node*>& nodes = terminalNodes();
+    std::vector<double> values;
+
+    std::vector<Node*>::const_iterator it;
+    for (it = nodes.begin(); it != nodes.end(); ++it) {
+        values.push_back((*it)->getTraitValue());
+    }
+
+    return values;
 }

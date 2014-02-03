@@ -1,11 +1,11 @@
 
 
 library(BAMMtools);
-data(events.cetaceans);
-data(cetaceans);
+data(events.whales);
+data(whales);
 
 ## Process the event data
-ed <- getEventData(cetaceans, events.cetaceans, burnin=0.25, nsamples=200, verbose=T);
+ed <- getEventData(whales, events.whales, burnin=0.25, nsamples=200, verbose=F);
 
 ## Generate the rate through time matrices
 ##		Do for ALL lineages, and for dolphins only, 

@@ -73,7 +73,6 @@ private:
     int _treeWriteFreq;
     int _eventDataWriteFreq;
     int _mcmcWriteFreq;
-    int _acceptWriteFreq;
     int _printFreq;
     int _NGENS;
 };

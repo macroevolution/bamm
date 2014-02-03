@@ -11,10 +11,16 @@ IF(APPLE AND (${CMAKE_CXX_COMPILER_ID} MATCHES Clang))
     SET(CXX_ARCHITECTURE_FLAGS "-arch i386 -arch x86_64")
 ENDIF(APPLE AND (${CMAKE_CXX_COMPILER_ID} MATCHES Clang))
 
+# Statically link C++ libraries for Windows
+IF(WIN32)
+    SET(CXX_LIBRARY_FLAGS "-static-libgcc -static-libstdc++ -s")
+ENDIF(WIN32)
+
 ADD_DEFINITIONS(${CXX_DEBUG_FLAGS}
                 ${CXX_WARNING_FLAGS}
                 ${CXX_OPTIMIZATION_FLAGS}
-                ${CXX_ARCHITECTURE_FLAGS})
+                ${CXX_ARCHITECTURE_FLAGS}
+                ${CXX_LIBRARY_FLAGS})
 
 # Set Git commit id
 SET(GIT_COMMIT_ID "$(shell git rev-parse HEAD)")

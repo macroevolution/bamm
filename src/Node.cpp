@@ -10,6 +10,8 @@
 #include "TraitBranchHistory.h"
 //#include "MbRandom.h"
 
+//#define _NEW_RATEFUNCTION
+
 
 Node::Node(void)
 {
@@ -107,6 +109,69 @@ Node::Node(int x)
 
 }
 
+
+double Node::integrateExponentialRateFunction(double par_init, double shift, double t1, double t2)
+{
+
+    double x = 0.0;
+
+#ifdef _NEW_RATEFUNCTION
+    
+    if (shift == 0){
+        
+        x += (t2 - t1) * par_init;
+        
+    }else if (shift > 0){
+        
+        shift *= -1.0;
+        x += (2 * par_init * t2) - (2 * par_init * t1);
+        x += (par_init / shift) * (exp(shift * t2) - exp(shift * t1));
+        
+    }else{
+        
+        x += (par_init / shift) * (exp(shift * t2) - exp(shift * t1));
+    
+    }
+
+#else
+    
+    if (shift == 0){
+        x += (t2 - t1) * par_init;   
+    }else{
+       x += (par_init / shift) * (exp(shift * t2) - exp(shift * t1));
+    }
+    
+    
+#endif
+    
+    return x;
+
+}
+
+
+double Node::getExponentialRate(double par_init, double shift, double tm)
+{
+
+    double rate = 0.0;
+    
+#ifdef _NEW_RATEFUNCTION
+    if (shift > 0){
+        shift *= -1.0;
+        rate = 2*par_init - (par_init * exp(shift * tm));
+    }else{
+        rate = par_init * exp(shift * tm);
+    }
+    
+#else
+    rate = par_init * exp(shift * tm);
+
+#endif
+    
+    return rate;
+
+}
+
+
 int Node::getDescCount(void)
 {
     int count = 0;
@@ -198,31 +263,15 @@ void Node::computeNodeBranchSpeciationParams(void)
             double zpar = bh->getAncestralNodeEvent()->getLamShift();
             double lam0 = bh->getAncestralNodeEvent()->getLamInit();
 
-            if (zpar == 0)
-                rate = lam0;
-            else {
-                rate = (lam0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-                rate /= getBrlen();
-            }
+            rate = integrateExponentialRateFunction(lam0, zpar, t1, t2);
+            rate /= getBrlen();
 
-            //std::cout << "Tree::setMeanBranchSpeciation" << std::endl;
-            //std::cout << lam0 << "\t" << zpar << "\t" << rate << std::endl;
 
         } else {
-
-
-            //std::cout << std::endl << std::endl;
-            //std::cout << "Branch start: " << getAnc()->getTime() << "\tBranch End: " << getTime() << std::endl;
-            //std::cout << "N events: " << n_events << std::endl;
-            //std::cout << "event times: " << "\t";
-            //for (int k = 0; k <n_events; k++)
-            //  std::cout << bh->getEventByIndexPosition(k)->getAbsoluteTime() << "\t";
-            //std::cout << std::endl;
 
             double tcheck = 0.0;
             double t1 = getAnc()->getTime();
             double t2 = bh->getEventByIndexPosition(0)->getAbsoluteTime();
-            //std::cout << "Premod: t1: " << t1 << "\tt2: " << t2 << "\t" << t2 - t1 << std::endl;
 
             tcheck += (t2 - t1);
 
@@ -232,17 +281,7 @@ void Node::computeNodeBranchSpeciationParams(void)
             double zpar = bh->getAncestralNodeEvent()->getLamShift();
             double lam0 = bh->getAncestralNodeEvent()->getLamInit();
 
-            if (zpar == 0)
-                rate = lam0 * (t2 - t1);
-            else {
-                //rate = frac * ((lam0/zpar) * ( exp(zpar*t2) - exp( zpar * t1)) / (t2-t1));
-                // This can be simplified. All we have to do is sum the integrals over different
-                //  rate-portions of the branch, then divide the result by the branch length
-
-                rate = ((lam0 / zpar) * ( exp(zpar * t2) - exp( zpar * t1)));
-            }
-            //std::cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1  << "\t" << tcheck << std::endl;
-
+            rate = integrateExponentialRateFunction(lam0, zpar, t1, t2);
 
             for (int k = 1; k < n_events; k++) {
 
@@ -253,11 +292,8 @@ void Node::computeNodeBranchSpeciationParams(void)
                 zpar = bh->getEventByIndexPosition((k - 1))->getLamShift();
                 lam0 = bh->getEventByIndexPosition((k - 1))->getLamInit();
 
-                if (zpar == 0)
-                    rate += lam0 * (t2 - t1);
-                else
-                    rate += (lam0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-                //std::cout << k-1 <<  "\tt1: " <<  t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck<<std::endl;
+                rate += integrateExponentialRateFunction(lam0, zpar, t1, t2);
+
                 tcheck += (t2 - t1);
             }
 
@@ -267,14 +303,11 @@ void Node::computeNodeBranchSpeciationParams(void)
 
             zpar = bh->getNodeEvent()->getLamShift();
             lam0 = bh->getNodeEvent()->getLamInit();
-            if (zpar == 0)
-                rate += lam0 * (t2 - t1);
-            else
-                rate += (lam0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
+            
+            rate += integrateExponentialRateFunction(lam0, zpar, t1, t2);
+
             tcheck += (t2 - t1);
 
-            //std::cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck <<std::endl;
-            //std::cout << "timecheck: " << tcheck <<  "\tBrlen: " << getBrlen() << "\tNevents: " << n_events << std::endl;
             // The overall mean rate across the branch:
             rate /= (getBrlen());
         }
@@ -290,9 +323,11 @@ void Node::computeNodeBranchSpeciationParams(void)
 
     // compute speciation rate at the focal node:
     double reltime = getTime() - bh->getNodeEvent()->getAbsoluteTime();
-    double curLam = bh->getNodeEvent()->getLamInit() * exp((
-                        reltime * bh->getNodeEvent()->getLamShift()));
-
+    double r_init = bh->getNodeEvent()->getLamInit();
+    double r_shift = bh->getNodeEvent()->getLamShift();
+    
+    
+    double curLam = getExponentialRate(r_init, r_shift , reltime);
 
 #ifdef DEBUG_TIME_VARIABLE
 
@@ -337,12 +372,10 @@ void Node::computeNodeBranchExtinctionParams(void)
             double zpar = bh->getAncestralNodeEvent()->getMuShift();
             double r0 = bh->getAncestralNodeEvent()->getMuInit();
 
-            if (zpar == 0)
-                rate = r0;
-            else {
-                rate = (r0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-                rate /= getBrlen();
-            }
+            
+            rate = integrateExponentialRateFunction(r0, zpar, t1, t2);
+            rate /= getBrlen();
+
 
         } else {
 
@@ -359,17 +392,7 @@ void Node::computeNodeBranchExtinctionParams(void)
             double zpar = bh->getAncestralNodeEvent()->getMuShift();
             double r0 = bh->getAncestralNodeEvent()->getMuInit();
 
-            if (zpar == 0)
-                rate = r0 * (t2 - t1);
-            else {
-                //rate = frac * ((lam0/zpar) * ( exp(zpar*t2) - exp( zpar * t1)) / (t2-t1));
-                // This can be simplified. All we have to do is sum the integrals over different
-                //  rate-portions of the branch, then divide the result by the branch length
-
-                rate = ((r0 / zpar) * ( exp(zpar * t2) - exp( zpar * t1)));
-            }
-            //std::cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1  << "\t" << tcheck << std::endl;
-
+            rate = integrateExponentialRateFunction(r0, zpar, t1, t2);
 
             for (int k = 1; k < n_events; k++) {
 
@@ -380,13 +403,10 @@ void Node::computeNodeBranchExtinctionParams(void)
                 zpar = bh->getEventByIndexPosition((k - 1))->getMuShift();
                 r0 = bh->getEventByIndexPosition((k - 1))->getMuInit();
 
+                rate += integrateExponentialRateFunction(r0, zpar, t1, t2);
 
-                if (zpar == 0)
-                    rate += r0 * (t2 - t1);
-                else
-                    rate += (r0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-                //std::cout << k-1 <<  "\tt1: " <<  t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck<<std::endl;
                 tcheck += (t2 - t1);
+            
             }
 
             //t1 = t2;
@@ -395,14 +415,11 @@ void Node::computeNodeBranchExtinctionParams(void)
 
             zpar = bh->getNodeEvent()->getMuShift();
             r0 = bh->getNodeEvent()->getMuInit();
-            if (zpar == 0)
-                rate += r0 * (t2 - t1);
-            else
-                rate += (r0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
+            
+            rate += integrateExponentialRateFunction(r0, zpar, t1, t2);
+    
             tcheck += (t2 - t1);
-
-            //std::cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck <<std::endl;
-            //std::cout << "timecheck: " << tcheck <<  "\tBrlen: " << getBrlen() << "\tNevents: " << n_events << std::endl;
+    
             // The overall mean rate across the branch:
             rate /= (getBrlen());
         }
@@ -417,8 +434,11 @@ void Node::computeNodeBranchExtinctionParams(void)
 
     // compute extinction rate at the focal node:
     double reltime = getTime() - bh->getNodeEvent()->getAbsoluteTime();
-    double curMu = bh->getNodeEvent()->getMuInit() * exp(( reltime *
-                   bh->getNodeEvent()->getMuShift()));
+    
+    double r_init = bh->getNodeEvent()->getMuInit();
+    double r_shift = bh->getNodeEvent()->getMuShift();
+    double curMu = getExponentialRate(r_init, r_shift , reltime);
+
 
     setNodeMu(curMu); // extinction rate for node set
 
@@ -441,8 +461,12 @@ double Node::getPointExtinction(double branchtime)
     double curMu = 0.0;
     if (bh->getNumberOfBranchEvents() == 0) {
         reltime = abstime - bh->getNodeEvent()->getAbsoluteTime();
-        curMu = bh->getNodeEvent()->getMuInit() * exp(( reltime *
-                bh->getNodeEvent()->getMuShift()));
+        
+        double shift = bh->getNodeEvent()->getMuShift();
+        double init = bh->getNodeEvent()->getMuInit();
+        
+        curMu = getExponentialRate(init, shift, reltime);
+
     } else {
         //multi-event scenario
         BranchEvent* lastEvent = bh->getAncestralNodeEvent();
@@ -457,21 +481,18 @@ double Node::getPointExtinction(double branchtime)
             std::cout << "Invalid time in Node::getPointExtinction() " << std::endl;
             throw;
         }
-        curMu = lastEvent->getMuInit() * exp((reltime * lastEvent->getMuShift()));
+        
+        double shift = lastEvent->getMuShift();
+        double init = lastEvent->getMuInit();
+        
+        curMu = getExponentialRate(init, shift, reltime);
+        
     }
 
 
     return curMu;
 }
 
-/*
- Version 9.17.2012
- Previous version (see below) was returning mean rates for the entire branch. This is
- unacceptable. New version computes mean rates explicitly for the focal interval.
- tstart are times along branch, assuming t = 0 at ancestral node
- and t = branchlength at focal node (tstart < tstop always...)
-
- */
 
 
 double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
@@ -486,7 +507,6 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
     BranchHistory* bh = getBranchHistory();
 
     double rate = 0.0;
-    //std::cout << "at start: tstart: " << tstart << "\ttstop: " << tstop << std::endl;
 
     // COnvert start and stop times to absolute times...
     tstart += getAnc()->getTime();
@@ -500,24 +520,16 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
 
         double t1 = tstart;
         double t2 = tstop;
-        // times must be relative to event occurrence time:
-        //std::cout << "LE time: " << bh->getLastEvent(tstart)->getAbsoluteTime() << std::endl;
-
+        
         t1 -= bh->getLastEvent(tstart)->getAbsoluteTime();
         t2 -= bh->getLastEvent(tstart)->getAbsoluteTime();
 
         double zpar = bh->getLastEvent(tstart)->getLamShift();
         double lam0 = bh->getLastEvent(tstart)->getLamInit();
 
-        //std::cout << "z: " << zpar << "\tlam0: " << lam0 << "\tt1: " << t1 << "\tt2: " << t2 << std::endl;
-
-        if (zpar == 0)
-            rate = lam0;
-        else {
-            rate = (lam0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-            rate /= (t2 - t1);
-        }
-        //std::cout << "Rate: " <<  rate << std::endl;
+        rate = integrateExponentialRateFunction(lam0, zpar, t1, t2);
+        rate /= (t2 - t1);
+        
         if ((t1 < 0 ) | (t2 < t1)) {
             std::cout << "error in Node::computeSpeciationRateIntervalRelTime - times are bad...\n" <<
                  std::endl;
@@ -539,17 +551,10 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
         double zpar = be->getLamShift();
         double lam0 = be->getLamInit();
 
-        if (zpar == 0)
-            rate = lam0 * (trel2 - trel1);
-        else {
-            //rate = frac * ((lam0/zpar) * ( exp(zpar*t2) - exp( zpar * t1)) / (t2-t1));
-            // This can be simplified. All we have to do is sum the integrals over different
-            //  rate-portions of the branch, then divide the result by the branch length
-
-            rate = ((lam0 / zpar) * ( exp(zpar * trel2) - exp( zpar * trel1)));
-        }
-        //std::cout << "rate1 : " << rate;
+        rate = integrateExponentialRateFunction(lam0, zpar, trel1, trel2);
+        
         be = bh->getNextEvent(tabs1);
+        
         for (int k = 1; k < n_events; k++) {
 
             tabs1 = be->getAbsoluteTime();
@@ -558,10 +563,9 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
             trel2 = tabs2 - tabs1;
             zpar = be->getLamShift();
             lam0 = be->getLamInit();
-            if (zpar == 0)
-                rate += lam0 * (trel2 - trel1);
-            else
-                rate += (lam0 / zpar) * ( exp(zpar * trel2) - exp(zpar * trel1));
+            
+            rate += integrateExponentialRateFunction(lam0, zpar, trel1, trel2);
+
             tcheck += (trel2 - trel1);
             be = bh->getNextEvent(tabs1);
         }
@@ -573,17 +577,10 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
         zpar = be->getLamShift();
         lam0 = be->getLamInit();
 
-        //double rate2 = 0.0;
-        if (zpar == 0)
-            rate += lam0 * (trel2 - trel1);
-        else {
-            rate += (lam0 / zpar) * ( exp(zpar * trel2) - exp(zpar * trel1));
-            //rate2 = (lam0/zpar) * ( exp(zpar*trel2) - exp(zpar * trel1));
-        }
+        rate += integrateExponentialRateFunction(lam0, zpar, trel1, trel2);
+
         tcheck += (trel2 - trel1);
-        //std::cout << "\trate2: " << rate2 << std::endl;
-        //std::cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck <<std::endl;
-        //std::cout << "timecheck: " << tcheck <<  "\tBrlen: " << getBrlen() << "\tNevents: " << n_events << std::endl;
+
         // The overall mean rate across the branch:
         rate /= tcheck;
     }
@@ -592,12 +589,8 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
 
 }
 
-/*
- Version 9.18.2012
-    Computes mean speciation rate interval for branch but takes ABSOLUTE TIME as argument
-    throws error if times outside of bounds
- */
 
+// What is this function doing? Where is it called?
 
 double Node::computeSpeciationRateIntervalAbsoluteTime(double tstart,
         double tstop)
@@ -637,12 +630,9 @@ double Node::computeSpeciationRateIntervalAbsoluteTime(double tstart,
 
         //std::cout << "z: " << zpar << "\tlam0: " << lam0 << "\tt1: " << t1 << "\tt2: " << t2 << std::endl;
 
-        if (zpar == 0)
-            rate = lam0;
-        else {
-            rate = (lam0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-            rate /= (t2 - t1);
-        }
+        rate = integrateExponentialRateFunction(lam0, zpar, t1, t2);
+        rate /= (t2 - t1);
+
         //std::cout << "Rate: " <<  rate << std::endl;
         if ((t1 < 0 ) | (t2 < t1)) {
             std::cout << "error in Node::computeSpeciationRateIntervalAbsTime - times are bad...\n" <<
@@ -665,16 +655,9 @@ double Node::computeSpeciationRateIntervalAbsoluteTime(double tstart,
         double zpar = be->getLamShift();
         double lam0 = be->getLamInit();
 
-        if (zpar == 0)
-            rate = lam0 * (trel2 - trel1);
-        else {
-            //rate = frac * ((lam0/zpar) * ( exp(zpar*t2) - exp( zpar * t1)) / (t2-t1));
-            // This can be simplified. All we have to do is sum the integrals over different
-            //  rate-portions of the branch, then divide the result by the branch length
-
-            rate = ((lam0 / zpar) * ( exp(zpar * trel2) - exp( zpar * trel1)));
-        }
-        //std::cout << "rate1 : " << rate;
+        
+        rate = integrateExponentialRateFunction(lam0, zpar, trel1, trel2);
+    
         be = bh->getNextEvent(tabs1);
         for (int k = 1; k < n_events; k++) {
 
@@ -684,10 +667,9 @@ double Node::computeSpeciationRateIntervalAbsoluteTime(double tstart,
             trel2 = tabs2 - tabs1;
             zpar = be->getLamShift();
             lam0 = be->getLamInit();
-            if (zpar == 0)
-                rate += lam0 * (trel2 - trel1);
-            else
-                rate += (lam0 / zpar) * ( exp(zpar * trel2) - exp(zpar * trel1));
+            
+            rate += integrateExponentialRateFunction(lam0, zpar, trel1, trel2);
+
             tcheck += (trel2 - trel1);
             be = bh->getNextEvent(tabs1);
         }
@@ -699,17 +681,10 @@ double Node::computeSpeciationRateIntervalAbsoluteTime(double tstart,
         zpar = be->getLamShift();
         lam0 = be->getLamInit();
 
-        //double rate2 = 0.0;
-        if (zpar == 0)
-            rate += lam0 * (trel2 - trel1);
-        else {
-            rate += (lam0 / zpar) * ( exp(zpar * trel2) - exp(zpar * trel1));
-            //rate2 = (lam0/zpar) * ( exp(zpar*trel2) - exp(zpar * trel1));
-        }
+        rate += integrateExponentialRateFunction(lam0, zpar, trel1, trel2);
+        
         tcheck += (trel2 - trel1);
-        //std::cout << "\trate2: " << rate2 << std::endl;
-        //std::cout << "t1: " << t1 << "\tt2: " << t2 <<  "\t" << t2 - t1 << "\t" << tcheck <<std::endl;
-        //std::cout << "timecheck: " << tcheck <<  "\tBrlen: " << getBrlen() << "\tNevents: " << n_events << std::endl;
+        
         // The overall mean rate across the branch:
         rate /= tcheck;
     }
@@ -749,12 +724,8 @@ double Node::computeExtinctionRateIntervalRelativeTime(double tstart,
         double zpar = bh->getLastEvent(tstart)->getMuShift();
         double mu0  = bh->getLastEvent(tstart)->getMuInit();
 
-        if (zpar == 0)
-            rate = mu0;
-        else {
-            rate = (mu0 / zpar) * ( exp(zpar * t2) - exp(zpar * t1));
-            rate /= (t2 - t1);
-        }
+        rate = integrateExponentialRateFunction(mu0, zpar, t1, t2);
+        rate /= (t2 - t1);
 
         if ((t1 < 0 ) | (t2 < t1)) {
             std::cout << "error in Node::computeExtinctionRateInterval - times are bad...\n" <<
@@ -777,16 +748,8 @@ double Node::computeExtinctionRateIntervalRelativeTime(double tstart,
         double zpar = be->getMuShift();
         double mu0 = be->getMuInit();
 
-        if (zpar == 0)
-            rate = mu0 * (trel2 - trel1);
-        else {
-            //rate = frac * ((mu0/zpar) * ( exp(zpar*t2) - exp( zpar * t1)) / (t2-t1));
-            // This can be simplified. All we have to do is sum the integrals over different
-            //  rate-portions of the branch, then divide the result by the branch length
-
-            rate = ((mu0 / zpar) * ( exp(zpar * trel2) - exp( zpar * trel1)));
-        }
-
+        rate = integrateExponentialRateFunction(mu0, zpar, trel1, trel2);
+    
         be = bh->getNextEvent(tabs1);
         for (int k = 1; k < n_events; k++) {
 
@@ -796,10 +759,9 @@ double Node::computeExtinctionRateIntervalRelativeTime(double tstart,
             trel2 = tabs2 - tabs1;
             zpar = be->getMuShift();
             mu0 = be->getMuInit();
-            if (zpar == 0)
-                rate += mu0 * (trel2 - trel1);
-            else
-                rate += (mu0 / zpar) * ( exp(zpar * trel2) - exp(zpar * trel1));
+            
+            rate += integrateExponentialRateFunction(mu0, zpar, trel1, trel2);
+
             tcheck += (trel2 - trel1);
             be = bh->getNextEvent(tabs1);
         }
@@ -811,10 +773,8 @@ double Node::computeExtinctionRateIntervalRelativeTime(double tstart,
         zpar = be->getMuShift();
         mu0 = be->getMuInit();
 
-        if (zpar == 0)
-            rate += mu0 * (trel2 - trel1);
-        else
-            rate += (mu0 / zpar) * ( exp(zpar * trel2) - exp(zpar * trel1));
+        rate += integrateExponentialRateFunction(mu0, zpar, trel1, trel2);
+
         tcheck += (trel2 - trel1);
 
         // The overall mean rate across the branch:

@@ -75,6 +75,7 @@ private:
 
     // Flag for whether node can or cannot define branch that can hold event:
     bool _canHoldEvent;
+    
 
 public:
 
@@ -202,6 +203,11 @@ public:
         (double tstart, double tstop);
 
     double getPointExtinction(double branchtime);
+    
+    double integrateExponentialRateFunction(double par_init, double shift, double t1, double t2);
+    double getExponentialRate(double par_init, double shift, double tm);
+
+
 };
 
 
