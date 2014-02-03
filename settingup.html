@@ -55,8 +55,13 @@
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">4. Setting Up BAMM</a><ul>
-<li><a class="reference internal" href="#installation">4.1. Installation</a></li>
-<li><a class="reference internal" href="#running">4.2. Running</a></li>
+<li><a class="reference internal" href="#installation-from-binary">4.1. Installation From Binary</a><ul>
+<li><a class="reference internal" href="#mac-os-x">4.1.1. Mac OS X</a></li>
+<li><a class="reference internal" href="#windows">4.1.2. Windows</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installation-from-source">4.2. Installation From Source</a></li>
+<li><a class="reference internal" href="#running">4.3. Running</a></li>
 </ul>
 </li>
 </ul>
@@ -95,13 +100,39 @@
             
   <div class="section" id="setting-up-bamm">
 <span id="bammsetup"></span><h1>4. Setting Up BAMM<a class="headerlink" href="#setting-up-bamm" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="installation">
-<h2>4.1. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>The following instructions assume you are running <tt class="docutils literal"><span class="pre">bash</span></tt> or a similar
 Unix shell. In Linux and Mac OS X systems, <tt class="docutils literal"><span class="pre">bash</span></tt> is the default shell
 (in Mac OS X, you must first open the Terminal application).
 For Windows users, we recommend you use <a class="reference external" href="http://www.cygwin.com/">Cygwin</a>,
 where <tt class="docutils literal"><span class="pre">bash</span></tt> is also the default shell.</p>
+<div class="section" id="installation-from-binary">
+<h2>4.1. Installation From Binary<a class="headerlink" href="#installation-from-binary" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mac-os-x">
+<h3>4.1.1. Mac OS X<a class="headerlink" href="#mac-os-x" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first"><a class="reference external" href="http://bamm-project.org/download.html">Download</a> the Mac OS X
+tar.gz file containing a binary file of BAMM.</p>
+</li>
+<li><p class="first">This file is compressed as a tar.gz file. To uncompress it,
+run the following command from the directory in which BAMM was downloaded
+(the actual version of BAMM may be different):</p>
+<div class="highlight-python"><pre>tar -xzf bamm-1.0.0-MacOSX.tar.gz</pre>
+</div>
+<p>This will uncompress the single file <tt class="docutils literal"><span class="pre">bamm</span></tt> into the current directory.</p>
+</li>
+<li><p class="first">You may copy the file <tt class="docutils literal"><span class="pre">bamm</span></tt> to any directory in your system.
+See below for instructions on how to run BAMM.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="windows">
+<h3>4.1.2. Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
+<p>Binary file for Windows will be available soon.</p>
+</div>
+</div>
+<div class="section" id="installation-from-source">
+<h2>4.2. Installation From Source<a class="headerlink" href="#installation-from-source" title="Permalink to this headline">¶</a></h2>
+<p>Use this option to compile and install BAMM from its source files.</p>
 <ol class="arabic">
 <li><p class="first"><a class="reference external" href="http://bamm-project.org/download.html">Download</a> the latest available
 version of BAMM.</p>
@@ -138,10 +169,14 @@ to learn how to configure and run BAMM.</p>
 </ol>
 </div>
 <div class="section" id="running">
-<h2>4.2. Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
+<h2>4.3. Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
 <p>To run <tt class="docutils literal"><span class="pre">bamm</span></tt>, you must always specify a <em>contol</em> file. For example,
 if your control file is named <tt class="docutils literal"><span class="pre">divcontrol.txt</span></tt>, run the following:</p>
 <div class="highlight-python"><pre>bamm -c divcontrol.txt</pre>
+</div>
+<p>Note that if <tt class="docutils literal"><span class="pre">bamm</span></tt> is not installed in a common location, you may need
+to run <tt class="docutils literal"><span class="pre">bamm</span></tt> from the directory in which it exists as follows:</p>
+<div class="highlight-python"><pre>./bamm -c divcontrol.txt</pre>
 </div>
 </div>
 </div>
