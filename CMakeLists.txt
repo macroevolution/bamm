@@ -87,6 +87,6 @@ ENDIF(APPLE)
 SET(CPACK_SOURCE_PACKAGE_FILE_NAME
     ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION})
 SET(CPACK_SOURCE_GENERATOR TGZ)
-SET(CPACK_SOURCE_IGNORE_FILES .git build Rcode examples problems setup skeleton doc)
+SET(CPACK_SOURCE_IGNORE_FILES .DS_Store .git build Rcode examples problems skeleton doc)
 
 INCLUDE(CPack)
