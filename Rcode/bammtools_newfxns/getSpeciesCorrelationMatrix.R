@@ -1,6 +1,6 @@
 #############################################################
 #
-#	getEventCorrelationMatrix(....)
+#	getSpeciesCorrelationMatrix(....)
 #
 # 	Each entry of this matrix represents the expected 
 #	probability that a pair[i, j] of tips will have the same 
@@ -11,7 +11,7 @@
 #	Need to make a corStruct class that works with this
 #		for GLS analyses
 
-getEventCorrelationMatrix <- function(ephy) {
+getSpeciesCorrelationMatrix <- function(ephy) {
 
 	if (!'bammdata' %in% class(ephy)) {
 		stop("Object ephy must be of class bammdata\n");
