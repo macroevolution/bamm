@@ -1292,20 +1292,19 @@ void Tree::initializeSpeciationExtinctionModel(double sampFrac)
 
 void Tree::initializeSpeciationExtinctionModel(std::string fname)
 {
-    // Part 1. Read from file
-
     std::ifstream infile(fname.c_str());
-    std::cout << "Reading sampling fractions from file <<"
-              << fname << ">>\n";
+
+    if (!infile.good()) {
+        log(Error) << "Bad sampling fraction file.\n";
+        std::exit(1);
+    }
+
+    std::cout << "Reading sampling fractions from file <<" << fname << ">>\n";
 
     std::vector<std::string> stringvec;
     std::vector<std::string> spnames;
     std::vector<std::string> spfamilies;
     std::vector<double> sfracs;
-
-    if (!infile.good()) {
-        log(Error) << "Bad sampling fraction file name\n";
-    }
 
     std::string tempstring;
 
@@ -1357,7 +1356,9 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
 
     infile.close();
 
-    std::cout << "Read a total of " << sfracs.size() << " initial vals" << std::endl;
+    std::cout << "Read a total of " << sfracs.size() << " initial values.\n";
+
+    crossValidateSpecies(spnames);
 
     int counter = 0;
     for (std::vector<Node*>::iterator i = downPassSeq.begin();
@@ -1450,6 +1451,30 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
     }
     std::cout << "Set a total of < " << counter << " > tips nodes for Ei & Di" << std::endl;
     std::cout << "Failed to set < " << tcount << " > internal node eTip values" << std::endl;
+}
+
+
+// Assert that all elements in species are in the tree and vice versa
+void Tree::crossValidateSpecies(const std::vector<std::string>& species)
+{
+    const std::vector<std::string>& treeSpecies = terminalNames();
+
+    assertIsSubset(species, treeSpecies, "tree");
+    assertIsSubset(treeSpecies, species, "file");
+}
+
+
+void Tree::assertIsSubset(const std::vector<std::string>& list1,
+                          const std::vector<std::string>& list2,
+                          const std::string& list2Name)
+{
+    std::vector<std::string>::const_iterator it;
+    for (it = list1.begin(); it != list1.end(); ++it) {
+        if (std::find(list2.begin(), list2.end(), *it) == list2.end()) {
+            log(Error) << "<<" << *it << ">> is not in " << list2Name << ".\n";
+            std::exit(1);
+        }
+    }
 }
 
 

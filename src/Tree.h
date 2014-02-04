@@ -41,6 +41,11 @@ private:
 
     void storeTerminalNodesRecurse(Node* node, std::vector<Node*>& nodes);
 
+    void crossValidateSpecies(const std::vector<std::string>& species);
+    void assertIsSubset(const std::vector<std::string>& list1,
+                        const std::vector<std::string>& list2,
+                        const std::string& list2Name);
+
     void removeWhiteSpace(std::string& str);
 
     Node* root;
