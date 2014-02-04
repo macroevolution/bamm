@@ -1099,7 +1099,8 @@ void Tree::getPhenotypes(std::string fname)
     std::vector<double> traits;
 
     if (!infile.good()) {
-        std::cout << "Bad Filename" << std::endl;
+        log(Error) << "Error reading file.\n";
+        std::exit(1);
     }
 
     while (infile) {
@@ -1150,7 +1151,8 @@ void Tree::getPhenotypesMissingLatent(std::string fname)
     std::vector<double> traits;
 
     if (!infile.good()) {
-        std::cout << "Bad Filename" << std::endl;
+        log(Error) << "Error reading file.\n";
+        std::exit(1);
     }
 
     while (infile) {
