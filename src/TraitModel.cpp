@@ -2050,20 +2050,12 @@ void TraitModel::setMinMaxTraitPriors(void)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+double TraitModel::safeExponentiation(double x)
+{
+    if (x > 0.0)
+        return 1.0;
+    else if (x < -100.0)
+        return 0.0;
+    else
+        return exp(x);
+}

@@ -23,9 +23,6 @@ class MbRandom;
 class Settings;
 class Prior;
 
-double safeExponentiation(double x);
-double proportionalShrink(double x, double scale);
-
 
 class TraitModel
 {
@@ -49,6 +46,7 @@ public:
     double getEventRate();
     void   setEventRate(double x);
 
+    double safeExponentiation(double x);
     double proportionalShrink(double x, double scale);
     bool   acceptMetropolisHastings(const double lnR);
     void   incrementGeneration();

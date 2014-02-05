@@ -16,7 +16,7 @@
 
 
 class MbRandom;
-class Model;
+class SpExModel;
 class Settings;
 
 
@@ -25,7 +25,7 @@ class MCMC
 
 public:
 
-    MCMC(MbRandom* ran, Model* mymodel, Settings* sp);
+    MCMC(MbRandom* ran, SpExModel* mymodel, Settings* sp);
     ~MCMC();
 
     void writeStateToFile();
@@ -50,7 +50,7 @@ private:
     void exitWithErrorOutputFileExists();
 
     MbRandom* ranPtr;
-    Model*    ModelPtr;
+    SpExModel*    ModelPtr;
     Settings* sttings;
 
     std::vector<double> parWts;
