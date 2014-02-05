@@ -1,14 +1,7 @@
-/*
- *  TraitModel.h
- *  BAMMt
- *
- *  Created by Dan Rabosky on 6/20/12.
+#ifndef TRAIT_MODEL_H
+#define TRAIT_MODEL_H
 
- *
- */
-
-#ifndef TRAITMODEL_H
-#define TRAITMODEL_H
+#include "Model.h"
 
 #include <set>
 #include <vector>
@@ -16,7 +9,7 @@
 
 #include "TraitBranchEvent.h"
 
-//Forward declarations
+// Forward declarations
 class Tree;
 class Node;
 class MbRandom;
@@ -24,15 +17,13 @@ class Settings;
 class Prior;
 
 
-class TraitModel
+class TraitModel : public Model
 {
 
 public:
 
-    static double mhColdness;
-
-    TraitModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr);
-    ~TraitModel();
+    TraitModel(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior);
+    virtual ~TraitModel();
 
     // Full likelihood will be lnLikTraits + lnLikBranches
     void   setCurrLnLTraits(double x);
@@ -43,15 +34,9 @@ public:
 
     double computeLogPrior();
 
-    double getEventRate();
-    void   setEventRate(double x);
-
     double safeExponentiation(double x);
     double proportionalShrink(double x, double scale);
     bool   acceptMetropolisHastings(const double lnR);
-    void   incrementGeneration();
-    int    getGeneration();
-    void   resetGeneration();
 
     // Stuff for event handling:
     void addEventToTree();
@@ -77,7 +62,6 @@ public:
     // initialize all branch histories to the root node.
     void initializeBranchHistories(Node* x);
     void printStartAndEndEventStatesForBranch(Node* x);
-
 
     void eventLocalMove(TraitBranchEvent* x); // move specific event
     void eventGlobalMove(TraitBranchEvent* x); // move specific event
@@ -114,20 +98,9 @@ public:
     // Troubleshooting
     void printBranchHistories(Node* x);
 
-    Tree* getTreePtr();
-
     // more output: acceptance rates
     double getMHacceptanceRate();
     void   resetMHacceptanceParameters();
-    
-
-    void setAcceptLastUpdate(int x);
-    int  getAcceptLastUpdate();
-
-    // 0 = last was rejected; 1 = accepted; -1 = not set.
-
-    void   setPoissonRatePrior(double x);
-    double getPoissonRatePrior();
 
     TraitBranchEvent* getEventByIndex(int x);
 
@@ -147,32 +120,15 @@ private:
 
     double lnLikTraits;
 
-    double eventLambda; // Poisson rate
-    
     double _updateBetaScale;
     double _updateBetaShiftScale;
     double _updateNodeStateScale;
-    double _scale;
-    double _updateEventRateScale;
-    double _localGlobalMoveRatio;
-    double _poissonRatePrior;
 
     // Other private variables
-
-    int gen;
-    MbRandom* ran;
-    Tree* treePtr;
-    Settings* sttings;
-    Prior* cprior;
-
-    int acceptCount;
-    int rejectCount;
 
     // Event collection does not contain the root event
     std::set<TraitBranchEvent*, TraitBranchEventPtrCompare> eventCollection;
     TraitBranchEvent* rootEvent; //branch event at root node; can't be modified
-
-    double lastDeletedEventMapTime; // map time of last deleted event
 
     double _lastDeletedEventBetaInit;;
     double _lastDeletedEventBetaShift;
@@ -183,9 +139,6 @@ private:
     // this is a pointer to the last event modified, whether
     // it is moved, or has lambda updated, or whatever.
     TraitBranchEvent* lastEventModified;
-
-    // General acceptreject flag:
-    int acceptLast; // true if last generation was accept; false otherwise
 
     // Ultimately, initializations should be handled in TraitModel
     // and Model classes
@@ -209,36 +162,6 @@ inline double TraitModel::getCurrLnLTraits()
 }
 
 
-inline double TraitModel::getEventRate()
-{
-    return eventLambda;
-}
-
-
-inline void TraitModel::setEventRate(double x)
-{
-    eventLambda = x;
-}
-
-
-inline void TraitModel::incrementGeneration()
-{
-    gen++;
-}
-
-
-inline int TraitModel::getGeneration()
-{
-    return gen;
-}
-
-
-inline void TraitModel::resetGeneration()
-{
-    gen = 0;   // to be used after TraitPreBurnin
-}
-
-
 inline int TraitModel::getNumberOfEvents()
 {
     return (int)eventCollection.size();
@@ -248,36 +171,6 @@ inline int TraitModel::getNumberOfEvents()
 inline TraitBranchEvent* TraitModel::getRootEvent()
 {
     return rootEvent;
-}
-
-
-inline Tree* TraitModel::getTreePtr()
-{
-    return treePtr;
-}
-
-
-inline int TraitModel::getAcceptLastUpdate()
-{
-    return acceptLast;
-}
-
-
-inline void TraitModel::setAcceptLastUpdate(int x)
-{
-    acceptLast = x;
-}
-
-
-inline void TraitModel::setPoissonRatePrior(double x)
-{
-    _poissonRatePrior  = x;
-}
-
-
-inline double TraitModel::getPoissonRatePrior()
-{
-    return _poissonRatePrior;
 }
 
 

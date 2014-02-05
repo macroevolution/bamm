@@ -56,6 +56,7 @@ protected:
     int _acceptCount;
     int _rejectCount;
     int _acceptLast;    // true if last generation was accept; false otherwise
+    // 0 = last was rejected; 1 = accepted; -1 = not set.
 
     double _lastDeletedEventMapTime;    // map time of last deleted event
 };
