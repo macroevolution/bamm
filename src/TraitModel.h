@@ -128,7 +128,7 @@ private:
 
     // Event collection does not contain the root event
     std::set<BranchEvent*, BranchEvent::PtrCompare> eventCollection;
-    BranchEvent* rootEvent; //branch event at root node; can't be modified
+    BranchEvent* _rootEvent; //branch event at root node; can't be modified
 
     double _lastDeletedEventBetaInit;;
     double _lastDeletedEventBetaShift;
@@ -170,7 +170,7 @@ inline int TraitModel::getNumberOfEvents()
 
 inline BranchEvent* TraitModel::getRootEvent()
 {
-    return rootEvent;
+    return _rootEvent;
 }
 
 

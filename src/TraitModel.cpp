@@ -58,21 +58,21 @@ TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
     BranchEvent* x = new TraitBranchEvent
         (_settings->getBetaInit(), _settings->getBetaShiftInit(),
             _tree->getRoot(), _tree, _rng, 0);
-    rootEvent = x;
+    _rootEvent = x;
     lastEventModified = x;
 
     TraitBranchEvent* traitRootEvent =
-        static_cast<TraitBranchEvent*>(rootEvent);
+        static_cast<TraitBranchEvent*>(_rootEvent);
 
     log() << "\nRoot beta: " << traitRootEvent->getBetaInit() << "\t"
           << _settings->getBetaInit() << "\t"
           << "Shift: " << traitRootEvent->getBetaShift() << "\n";
 
-    // Set NodeEvent of root node equal to the rootEvent:
-    _tree->getRoot()->getBranchHistory()->setNodeEvent(rootEvent);
+    // Set NodeEvent of root node equal to the _rootEvent:
+    _tree->getRoot()->getBranchHistory()->setNodeEvent(_rootEvent);
 
     // Initialize all branch histories to equal the root event:
-    forwardSetBranchHistories(rootEvent);
+    forwardSetBranchHistories(_rootEvent);
 
     _tree->setMeanBranchTraitRates();
 
@@ -172,10 +172,10 @@ void TraitModel::initializeModelFromEventDataFileTrait(void)
             if (x  == _tree->getRoot()) {
 
                 // Only including this "root time setting" to replicate previous bug - Nov 1 2013
-                rootEvent->setAbsoluteTime(etime[i]);
+                _rootEvent->setAbsoluteTime(etime[i]);
 
                 TraitBranchEvent* re =
-                    static_cast<TraitBranchEvent*>(rootEvent);
+                    static_cast<TraitBranchEvent*>(_rootEvent);
                 re->setBetaInit(beta_par1[i]);
                 re->setBetaShift(beta_par2[i]);
 
@@ -617,7 +617,7 @@ void TraitModel::deleteEventFromTree(BranchEvent* be)
 {
     
     
-    if (be == rootEvent) {
+    if (be == _rootEvent) {
         std::cout << "Can't delete root event" << std::endl;
         exit(1);
     } else {
@@ -1103,7 +1103,7 @@ void TraitModel::updateTimeVariablePartitionsMH(void)
 
     //int n_events = eventCollection.size() + 1;
     int toUpdate = _rng->sampleInteger(0, (int)eventCollection.size());
-    BranchEvent* be = rootEvent;
+    BranchEvent* be = _rootEvent;
 
     if (toUpdate > 0) {
         std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
@@ -1182,7 +1182,7 @@ void TraitModel::updateBetaMH(void)
     
     int toUpdate = _rng->sampleInteger(0, (int)eventCollection.size());
     
-    TraitBranchEvent* be = static_cast<TraitBranchEvent*>(rootEvent);
+    TraitBranchEvent* be = static_cast<TraitBranchEvent*>(_rootEvent);
     
     
     if (toUpdate > 0) {
@@ -1260,7 +1260,7 @@ void TraitModel::updateBetaShiftMH(void)
     
     int toUpdate = _rng->sampleInteger(0, (int)eventCollection.size());
     
-    TraitBranchEvent* be = static_cast<TraitBranchEvent*>(rootEvent);
+    TraitBranchEvent* be = static_cast<TraitBranchEvent*>(_rootEvent);
     
     if (toUpdate > 0) {
         std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
@@ -1593,7 +1593,7 @@ double TraitModel::computeLogPrior(void)
     
     double logPrior = 0.0;
 
-    TraitBranchEvent* re = static_cast<TraitBranchEvent*>(rootEvent);
+    TraitBranchEvent* re = static_cast<TraitBranchEvent*>(_rootEvent);
     
     logPrior += _prior->betaInitPrior(re->getBetaInit());
     logPrior += dens_term + _prior->betaShiftPrior(re->getBetaShift());
@@ -1631,10 +1631,10 @@ bool TraitModel::acceptMetropolisHastings(const double lnR)
 void TraitModel::initializeBranchHistories(Node* x)
 {
     //std::cout << x << std::endl;
-    x->getBranchHistory()->setNodeEvent(rootEvent);
+    x->getBranchHistory()->setNodeEvent(_rootEvent);
 
     if (x->getAnc() != NULL)
-        x->getBranchHistory()->setAncestralNodeEvent(rootEvent);
+        x->getBranchHistory()->setAncestralNodeEvent(_rootEvent);
 
     if (x->getLfDesc() != NULL)
         initializeBranchHistories(x->getLfDesc());
@@ -1698,7 +1698,7 @@ void TraitModel::forwardSetBranchHistories(BranchEvent* x)
 
 
 
-    if (x == rootEvent) {
+    if (x == _rootEvent) {
         forwardSetHistoriesRecursive(myNode->getLfDesc());
         forwardSetHistoriesRecursive(myNode->getRtDesc());
 
@@ -1811,7 +1811,7 @@ int TraitModel::countTimeVaryingRatePartitions(void)
 {
 
     int count = 0;
-    count += (int)rootEvent->getIsEventTimeVariable();
+    count += (int)_rootEvent->getIsEventTimeVariable();
     for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
             i != eventCollection.end(); i++)
         count += (int)(*i)->getIsEventTimeVariable();
@@ -1833,7 +1833,7 @@ void TraitModel::getEventDataString(std::stringstream& ss)
     ss << getGeneration() << ",";
 
 
-    TraitBranchEvent* be = static_cast<TraitBranchEvent*>(rootEvent);
+    TraitBranchEvent* be = static_cast<TraitBranchEvent*>(_rootEvent);
     Node* xl = _tree->getRoot()->getRandomLeftTipNode();
     Node* xr = _tree->getRoot()->getRandomRightTipNode();
     ss << xl->getName() << "," << xr->getName() << "," << be->getAbsoluteTime() <<
@@ -1930,7 +1930,7 @@ bool TraitModel::isEventConfigurationValid(BranchEvent* be)
 void TraitModel::printEventData(void)
 {
 
-    TraitBranchEvent* be = static_cast<TraitBranchEvent*>(rootEvent);
+    TraitBranchEvent* be = static_cast<TraitBranchEvent*>(_rootEvent);
     std::cout << "RtBt: " << be->getBetaInit() << "\tSf: " << be->getBetaShift() <<
          "\tAtime:" << be->getAbsoluteTime() << std::endl;
     int ctr = 0;
