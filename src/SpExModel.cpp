@@ -13,6 +13,8 @@
 #include "Node.h"
 #include "Tree.h"
 #include "BranchHistory.h"
+#include "BranchEvent.h"
+#include "SpExBranchEvent.h"
 #include "Settings.h"
 #include "Log.h"
 
@@ -65,7 +67,7 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
     // Parameter for splitting branch into pieces for numerical computation
     _segLength = _settings->getSegLength() * _tree->maxRootToTipLength();
    
-    BranchEvent* x =  new BranchEvent
+    SpExBranchEvent* x =  new SpExBranchEvent
         (_lambdaInit0, _lambdaShift0, _muInit0, _muShift0,
             _tree->getRoot(), _tree, _rng, 0);
     _rootEvent = x;
@@ -100,7 +102,7 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
 SpExModel::~SpExModel(void)
 {
 
-    for (std::set<BranchEvent*>::iterator it = eventCollection.begin();
+    for (std::set<SpExBranchEvent*>::iterator it = eventCollection.begin();
             it != eventCollection.end(); it++)
         delete (*it);
 }
@@ -183,7 +185,7 @@ void SpExModel::initializeModelFromEventDataFile(void)
                 //std::cout << std::endl << x->getTime() << "\t" << x->getAnc()->getTime() << std::endl;
                 //std::cout << "maptimes: " << x->getMapStart() << "\t" << x->getMapEnd() << "\tcurmap: " << newmaptime << std::endl;
                 //std::cout << etime[i] << "\t" << _tree->getAbsoluteTimeFromMapTime(newmaptime) << std::endl;
-                BranchEvent* newEvent =  new BranchEvent(lam_par1[i], lam_par2[i], mu_par1[i],
+                SpExBranchEvent* newEvent =  new SpExBranchEvent(lam_par1[i], lam_par2[i], mu_par1[i],
                         mu_par2[i], x, _tree, _rng, newmaptime);
                 newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(newEvent);
 
@@ -198,7 +200,7 @@ void SpExModel::initializeModelFromEventDataFile(void)
             Node* x = _tree->getNodeByName(species1[i].c_str());
             double deltaT = x->getTime() - etime[i];
             double newmaptime = x->getMapStart() + deltaT;
-            BranchEvent* newEvent =  new BranchEvent(lam_par1[i], lam_par2[i], mu_par1[i],
+            SpExBranchEvent* newEvent =  new SpExBranchEvent(lam_par1[i], lam_par2[i], mu_par1[i],
                     mu_par2[i], x, _tree, _rng, newmaptime);
             newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(newEvent);
 
@@ -246,7 +248,7 @@ void SpExModel::addEventToTree(double x)
     Node* xnode = _tree->mapEventToTree(x);
     double atime = _tree->getAbsoluteTimeFromMapTime(x);
     BranchHistory* bh = xnode->getBranchHistory();
-    BranchEvent* be = bh->getAncestralNodeEvent();
+    SpExBranchEvent* be = bh->getAncestralNodeEvent();
 
     double elapsed = atime - be->getAbsoluteTime();
     double curLam = be->getLamInit() * exp( elapsed * be->getLamShift() );
@@ -294,7 +296,7 @@ void SpExModel::addEventToTree(double x)
 
     // End calculations:: now create event
 
-    BranchEvent* newEvent = new BranchEvent(newLam, newLambdaShift, newMu,
+    SpExBranchEvent* newEvent = new SpExBranchEvent(newLam, newLambdaShift, newMu,
                                             newMuShift, _tree->mapEventToTree(x), _tree, _rng, x);
 
     // add the event to the branch history.
@@ -341,7 +343,7 @@ void SpExModel::addEventToTree(void)
     Node* xnode = _tree->mapEventToTree(x);
     double atime = _tree->getAbsoluteTimeFromMapTime(x);
     BranchHistory* bh = xnode->getBranchHistory();
-    BranchEvent* be = bh->getAncestralNodeEvent();
+    SpExBranchEvent* be = bh->getAncestralNodeEvent();
 
     double elapsed = atime - be->getAbsoluteTime();
     double curLam = be->getLamInit() * exp( elapsed * be->getLamShift() );
@@ -394,7 +396,7 @@ void SpExModel::addEventToTree(void)
 
 #endif
 
-    BranchEvent* newEvent = new BranchEvent(newLam, newLambdaShift, newMu,
+    SpExBranchEvent* newEvent = new SpExBranchEvent(newLam, newLambdaShift, newMu,
                                             newMuShift, _tree->mapEventToTree(x), _tree, _rng, x);
 
 
@@ -425,7 +427,7 @@ void SpExModel::printEvents(void)
     int n_events = (int)eventCollection.size();
     std::cout << "N_events: " << n_events << std::endl;
     int counter = 1;
-    for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
+    for (std::set<SpExBranchEvent*>::iterator i = eventCollection.begin();
             i != eventCollection.end(); i++)
         std::cout << "event " << counter++ << "\tAddress: " << (*i) << "\t" <<
              (*i)->getMapTime() << "\tNode: " << (*i)->getEventNode() << std::endl << std::endl;
@@ -433,7 +435,7 @@ void SpExModel::printEvents(void)
 
 }
 
-BranchEvent* SpExModel::chooseEventAtRandom(void)
+SpExBranchEvent* SpExModel::chooseEventAtRandom(void)
 {
 
     int n_events = (int)eventCollection.size();
@@ -446,7 +448,7 @@ BranchEvent* SpExModel::chooseEventAtRandom(void)
         double xx = _rng->uniformRv();
         int chosen = (int)(xx * (double)n_events);
 
-        std::set<BranchEvent*>::iterator sit = eventCollection.begin();
+        std::set<SpExBranchEvent*>::iterator sit = eventCollection.begin();
 
         for (int i = 0; i < chosen; i++) {
             sit++;
@@ -479,7 +481,7 @@ void SpExModel::eventLocalMove(void)
     if (getNumberOfEvents() > 0) {
 
         // the event to be moved
-        BranchEvent* chosenEvent = chooseEventAtRandom();
+        SpExBranchEvent* chosenEvent = chooseEventAtRandom();
 
         // corresponding node defining branch on which event occurs
         //Node* theEventNode = chosenEvent->getEventNode();
@@ -520,7 +522,7 @@ void SpExModel::eventGlobalMove(void)
 {
 
     if (getNumberOfEvents() > 0) {
-        BranchEvent* chosenEvent = chooseEventAtRandom();
+        SpExBranchEvent* chosenEvent = chooseEventAtRandom();
 
         // this is the event preceding the chosen event: histories should be set forward from here..
         BranchEvent* previousEvent =
@@ -563,7 +565,7 @@ void SpExModel::revertMovedEventToPrevious(void)
         _lastEventModified->getEventNode()->getBranchHistory()->getLastEvent(
             _lastEventModified);
 
-    //BranchEvent * newLastEvent = getLastEvent(_lastEventModified);
+    //SpExBranchEvent * newLastEvent = getLastEvent(_lastEventModified);
 
     // pop event off its new position
     _lastEventModified->getEventNode()->getBranchHistory()->popEventOffBranchHistory(
@@ -621,7 +623,7 @@ int SpExModel::countEventsInBranchHistory(Node* p)
 
 */
 
-void SpExModel::deleteEventFromTree(BranchEvent* be)
+void SpExModel::deleteEventFromTree(SpExBranchEvent* be)
 {
 
     if (be ==_rootEvent) {
@@ -683,7 +685,7 @@ void SpExModel::deleteRandomEventFromTree(void)
         double xx = _rng->uniformRv();
         int chosen = (int)(xx * (double)n_events);
 
-        for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
+        for (std::set<SpExBranchEvent*>::iterator i = eventCollection.begin();
                 i != eventCollection.end(); i++) {
             if (counter++ == chosen) {
 
@@ -769,8 +771,8 @@ void SpExModel::restoreLastDeletedEvent(void)
 
     // Use constructor for speciation and extinction
 
-    BranchEvent* newEvent =
-        new BranchEvent(0.0, 0.0, 0.0, 0.0,
+    SpExBranchEvent* newEvent =
+        new SpExBranchEvent(0.0, 0.0, 0.0, 0.0,
             _tree->mapEventToTree(_lastDeletedEventMapTime), _tree, _rng,
             _lastDeletedEventMapTime);
 
@@ -1155,10 +1157,10 @@ void SpExModel::updateLambdaInitMH(void)
 
     //int n_events = eventCollection.size() + 1;
     int toUpdate =_rng->sampleInteger(0, (int)eventCollection.size());
-    BranchEvent* be =_rootEvent;
+    SpExBranchEvent* be =_rootEvent;
 
     if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
+        std::set<SpExBranchEvent*>::iterator myIt = eventCollection.begin();
         for (int i = 1; i < toUpdate; i++)
             myIt++;
 
@@ -1226,10 +1228,10 @@ void SpExModel::updateLambdaShiftMH(void)
 
     //int n_events = eventCollection.size() + 1;
     int toUpdate =_rng->sampleInteger(0, (int)eventCollection.size());
-    BranchEvent* be =_rootEvent;
+    SpExBranchEvent* be =_rootEvent;
 
     if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
+        std::set<SpExBranchEvent*>::iterator myIt = eventCollection.begin();
         for (int i = 1; i < toUpdate; i++)
             myIt++;
 
@@ -1312,10 +1314,10 @@ void SpExModel::updateTimeVariablePartitionsMH(void)
 
     //int n_events = eventCollection.size() + 1;
     int toUpdate =_rng->sampleInteger(0, (int)eventCollection.size());
-    BranchEvent* be =_rootEvent;
+    SpExBranchEvent* be =_rootEvent;
 
     if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
+        std::set<SpExBranchEvent*>::iterator myIt = eventCollection.begin();
         for (int i = 1; i < toUpdate; i++)
             myIt++;
 
@@ -1349,10 +1351,10 @@ void SpExModel::updateMuInitMH(void)
 
     //int n_events = eventCollection.size() + 1;
     int toUpdate =_rng->sampleInteger(0, (int)eventCollection.size());
-    BranchEvent* be =_rootEvent;
+    SpExBranchEvent* be =_rootEvent;
 
     if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
+        std::set<SpExBranchEvent*>::iterator myIt = eventCollection.begin();
         for (int i = 1; i < toUpdate; i++)
             myIt++;
 
@@ -1419,10 +1421,10 @@ void SpExModel::updateMuShiftMH(void)
 
     //int n_events = eventCollection.size() + 1;
     int toUpdate =_rng->sampleInteger(0, (int)eventCollection.size());
-    BranchEvent* be =_rootEvent;
+    SpExBranchEvent* be =_rootEvent;
 
     if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
+        std::set<SpExBranchEvent*>::iterator myIt = eventCollection.begin();
         for (int i = 1; i < toUpdate; i++)
             myIt++;
 
@@ -1782,7 +1784,7 @@ double SpExModel::computeLogPrior(void)
     
     int ctr = 0;
 
-    for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
+    for (std::set<SpExBranchEvent*>::iterator i = eventCollection.begin();
             i != eventCollection.end(); i++) {
 
         logPrior += _prior->lambdaInitPrior((*i)->getLamInit());
@@ -1972,11 +1974,11 @@ void  SpExModel::resetMHacceptanceParameters(void)
 
 
 
-BranchEvent* SpExModel::getEventByIndex(int x)
+SpExBranchEvent* SpExModel::getEventByIndex(int x)
 {
 
     //int ctr = 0;
-    std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
+    std::set<SpExBranchEvent*>::iterator myIt = eventCollection.begin();
     for (int i = 0; i <= x; i++)
         myIt++;
 
@@ -1991,7 +1993,7 @@ void SpExModel::printExtinctionParams(void)
 {
 
     if (eventCollection.size() > 0) {
-        for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
+        for (std::set<SpExBranchEvent*>::iterator i = eventCollection.begin();
                 i != eventCollection.end(); i++)
             std::cout << (*i) << "\t" << (*i)->getMuInit() << "\t" << (*i)->getMuShift() << std::endl;
 
@@ -2014,7 +2016,7 @@ int SpExModel::countTimeVaryingRatePartitions(void)
 
     int count = 0;
     count += (int)_rootEvent->getIsEventTimeVariable();
-    for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
+    for (std::set<SpExBranchEvent*>::iterator i = eventCollection.begin();
             i != eventCollection.end(); i++)
         count += (int)(*i)->getIsEventTimeVariable();
     return count;
@@ -2034,7 +2036,7 @@ void SpExModel::getEventDataString(std::stringstream& ss)
     ss << getGeneration() << ",";
 
 
-    BranchEvent* be =_rootEvent;
+    SpExBranchEvent* be =_rootEvent;
     Node* xl = _tree->getRoot()->getRandomLeftTipNode();
     Node* xr = _tree->getRoot()->getRandomRightTipNode();
     ss << xl->getName() << "," << xr->getName() << "," << be->getAbsoluteTime() <<
@@ -2047,7 +2049,7 @@ void SpExModel::getEventDataString(std::stringstream& ss)
 
 
     if (eventCollection.size() > 0) {
-        for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
+        for (std::set<SpExBranchEvent*>::iterator i = eventCollection.begin();
                 i != eventCollection.end(); i++) {
 
             ss << "\n" << getGeneration() << ",";
@@ -2070,7 +2072,7 @@ void SpExModel::getEventDataString(std::stringstream& ss)
 }
 
 
-bool SpExModel::isEventConfigurationValid(BranchEvent* be)
+bool SpExModel::isEventConfigurationValid(SpExBranchEvent* be)
 {
     //std::cout << "enter isEventConfigValid" << std::endl;
     bool isValidConfig = false;

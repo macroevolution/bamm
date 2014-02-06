@@ -39,3 +39,71 @@ Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
 Model::~Model()
 {
 }
+
+/*
+void Model::initializeModelFromEventDataFile()
+{
+    std::string inputFileName(_settings->getEventDataInfile());
+    std::ifstream inputFile(inputFileName.c_str());
+
+    if (!inputFile.good()) {
+        log(Error) << "<<" << inputFileName << ">> is a bad file name.\n";
+        std::exit(1);
+    }
+
+    log() << "Initializing model from <<" << inputFileName << ">>\n";
+
+    std::string species1;
+    std::string species2;
+    double eTime;
+
+    int eventCount = 0;
+    while (inputFile) {
+        inputFile >> species1;
+        inputFile >> species2;
+        inputFile >> eTime;
+
+        // Read the model-specific parameters
+        readModelSpecificParameters(inputFile);
+
+        // TODO: Might need to getline here to read last \n
+
+        Node* x = NULL;
+        
+        if ((species1 != "NA") && (species2 != "NA")) {
+            x = _tree->getNodeMRCA(species1.c_str(), species2.c_str());
+        } else if ((species1 != "NA") && (species2 == "NA")) {
+            x = _tree->getNodeByName(species1.c_str());
+        } else {
+            log(Error) << "Either both species are NA or the second species "
+                << "is NA\nwhile reading the event data file.";
+            std::exit(1);
+        }
+
+        if (x == _tree->getRoot()) {
+            // Set the root event with model-specific parameters
+            setRootEventWithReadParameters();
+        } else {
+            double deltaT = x->getTime() - eTime;
+            double newMapTime = x->getMapStart() + deltaT;
+
+            BranchEvent* newEvent =
+                newBranchEventWithReadParameters(x, newMapTime);
+            newEvent->getEventNode()->getBranchHistory()->
+                addEventToBranchHistory(newEvent);
+
+            _eventCollection.insert(newEvent);
+            forwardSetBranchHistories(newEvent);
+            setMeanBranchParameters();
+        }
+
+        eventCount++;
+    }
+
+    inputFile.close();
+
+    log() << "Read a total of " << eventCount << " events.\n";
+    log() << "Added " << _eventCollection.size() << " "
+          << "pre-defined events to tree, plus root event.\n";
+}
+*/

@@ -7,7 +7,7 @@
 #include <vector>
 #include <sstream>
 
-#include "BranchEvent.h"
+#include "SpExBranchEvent.h"
 
 //Forward declarations
 class Tree;
@@ -49,13 +49,13 @@ public:
     void addEventToTree();
     void addEventToTree(double x); // add to specific map position...
     void deleteRandomEventFromTree();
-    void deleteEventFromTree(BranchEvent* be);
+    void deleteEventFromTree(SpExBranchEvent* be);
 
     void printEvents();
 
     int getNumberOfEvents();
 
-    BranchEvent* getRootEvent();
+    SpExBranchEvent* getRootEvent();
 
     // These functions take a branch event
     // and recursively update branch histories for all nodes
@@ -70,14 +70,14 @@ public:
 
     void printStartAndEndEventStatesForBranch(Node* x);
 
-    void eventLocalMove(BranchEvent* x);   // move specific event
-    void eventGlobalMove(BranchEvent* x);  // move specific event
+    void eventLocalMove(SpExBranchEvent* x);   // move specific event
+    void eventGlobalMove(SpExBranchEvent* x);  // move specific event
     void eventLocalMove();             // move random event
     void eventGlobalMove();            // move random event
     void revertEventToPreviousPosition();
 
     // Return random event, or NULL if no events on tree (other than root)
-    BranchEvent* chooseEventAtRandom();
+    SpExBranchEvent* chooseEventAtRandom();
 
     // MCMC:
 
@@ -112,7 +112,7 @@ public:
     double getMHacceptanceRate();
     void   resetMHacceptanceParameters();
 
-    BranchEvent*  getEventByIndex(int x);
+    SpExBranchEvent*  getEventByIndex(int x);
 
     void printExtinctionParams();
     int countTimeVaryingRatePartitions();
@@ -120,7 +120,7 @@ public:
     // Generate string with event data:
     void getEventDataString(std::stringstream& ss);
 
-    bool isEventConfigurationValid(BranchEvent* be);
+    bool isEventConfigurationValid(SpExBranchEvent* be);
 
     void initializeModelFromEventDataFile();
 
@@ -171,8 +171,8 @@ private:
     // Other private variables
 
     // Event collection does not contain the root event
-    std::set<BranchEvent*, BranchEventPtrCompare> eventCollection;
-    BranchEvent* _rootEvent; // branch event at root node; can't be modified
+    std::set<SpExBranchEvent*, SpExBranchEvent::PtrCompare> eventCollection;
+    SpExBranchEvent* _rootEvent; // branch event at root node; can't be modified
 
     double _lastDeletedEventLambdaInit;
     double _lastDeletedEventLambdaShift;
@@ -185,7 +185,7 @@ private:
 
     // this is a pointer to the last event modified, whether
     // it is moved, or has lambda updated, or whatever.
-    BranchEvent*    _lastEventModified;
+    SpExBranchEvent*    _lastEventModified;
 
     double _segLength; // for splitting branches
 };
@@ -221,7 +221,7 @@ inline int SpExModel::getNumberOfEvents()
 }
 
 
-inline BranchEvent* SpExModel::getRootEvent()
+inline SpExBranchEvent* SpExModel::getRootEvent()
 {
     return _rootEvent;
 }

@@ -1,45 +1,30 @@
-/*
- *  BranchEvent.h
- *  rateshift
- *
- *  Created by Dan Rabosky on 12/5/11.
+#ifndef BRANCH_EVENT_H
+#define BRANCH_EVENT_H
 
+#include "Log.h"
 
- // Major update no more phenotypic evolution
- // March 25 2012
-
- */
-
-#ifndef BRANCHEVENT_H
-#define BRANCHEVENT_H
-
-
-//Forward declarations:
 class Tree;
 class Node;
-class TraitBranchEvent;
 class MbRandom;
 
 
-// Class TraitBranchEventPtrCompare is defined at the end
-
-
-/*
-
- class BranchEvent is the actual event.
- It contains:
-  (1) the node associated with the event
-  (2) the map position of the event
-  (3) parameters associated with the event
-    e.g., lambda
-The initial event will always be the root node
- with a map position of 0.
-This event is immutable.
-
- */
+// This base class contains:
+// (1) the node associated with the event
+// (2) the map position of the event
 
 class BranchEvent
 {
+
+public:
+
+    class PtrCompare
+    {
+    public:
+        bool operator()(const BranchEvent* m1,
+                        const BranchEvent* m2) const {
+            return *m1 < *m2;
+        }
+    };
 
 private:
 
@@ -54,26 +39,15 @@ private:
     Node* oldNodePtr;
     double oldMapTime;
 
-    /******************/
-    // New event parameters, March 25, 2012
-    double _absTime;   // real time, measured with t = 0 at root.
-    double _lamInit;   // Initial speciation rate at event
-    double _muInit;    // Initial Mu rate at event
-    double _lamShift;  // magnitude & direction of speciation shift
-    double _muShift;   // magnitude & direction of mu shift
+    double _absTime;    // real time, measured with t = 0 at root.
 
-    /*****************/
-    // New parameters June 12 2012
-    // allow rjMCMC to move between time-varying and time-constant partitions.
+    // Allow rjMCMC to move between time-varying and time-constant partitions.
     bool _isEventTimeVariable;
 
 public:
 
-    // constructors, depending on whether you want trait rate or lambda/mu
-    BranchEvent(double speciation, double lamshift, double extinction,
-        double mushift, Node* x, Tree* tp, MbRandom*rp, double map);
-
-    ~BranchEvent();
+    BranchEvent(Node* x, Tree* tp, MbRandom*rp, double map);
+    virtual ~BranchEvent();
 
     void   setMapTime(double x);
     double getMapTime();
@@ -84,24 +58,12 @@ public:
     void   setAbsoluteTime(double x);
     double getAbsoluteTime();
 
-    void   setLamInit(double x);
-    double getLamInit();
-
-    void   setMuInit(double x);
-    double getMuInit();
-
-    void   setLamShift(double x);
-    double getLamShift();
-
-    void   setMuShift(double x);
-    double getMuShift();
-
     void incrementMapPosition(double ink);
     void moveEventLocal(double stepsize);
     void moveEventGlobal();
     void setEventByMapPosition(double x);
 
-    // Functions to set and manipulate OLD events:
+    // Functions to set and manipulate old events:
     void  setOldEventNode(Node* x);
     Node* getOldEventNode();
 
@@ -158,54 +120,6 @@ inline double BranchEvent::getAbsoluteTime()
 }
 
 
-inline void BranchEvent::setLamInit(double x)
-{
-    _lamInit = x;
-}
-
-
-inline double BranchEvent::getLamInit()
-{
-    return _lamInit;
-}
-
-
-inline void BranchEvent::setMuInit(double x)
-{
-    _muInit = x;
-}
-
-
-inline double BranchEvent::getMuInit()
-{
-    return _muInit;
-}
-
-
-inline void BranchEvent::setLamShift(double x)
-{
-    _lamShift = x;
-}
-
-
-inline double BranchEvent::getLamShift()
-{
-    return _lamShift;
-}
-
-
-inline void BranchEvent::setMuShift(double x)
-{
-    _muShift = x;
-}
-
-
-inline double BranchEvent::getMuShift()
-{
-    return _muShift;
-}
-
-
 inline void BranchEvent::setOldEventNode(Node* x)
 {
     oldNodePtr = x;
@@ -230,29 +144,15 @@ inline double BranchEvent::getOldMapTime()
 }
 
 
-inline bool BranchEvent::getIsEventTimeVariable()
-{
-    return _isEventTimeVariable;
-}
-
-
 inline void BranchEvent::setIsEventTimeVariable(bool x)
 {
     _isEventTimeVariable = x;
 }
 
 
-class BranchEventPtrCompare
+inline bool BranchEvent::getIsEventTimeVariable()
 {
-public:
-    bool operator()(const BranchEvent* m1, const BranchEvent* m2) const;
-};
-
-
-inline bool BranchEventPtrCompare::operator()
-    (const BranchEvent* m1, const BranchEvent* m2) const
-{
-    return *m1 < *m2;
+    return _isEventTimeVariable;
 }
 
 

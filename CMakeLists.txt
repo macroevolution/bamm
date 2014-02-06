@@ -39,10 +39,10 @@ SET(BAMM_SRC
     src/Prior.cpp
     src/Settings.cpp
     src/SettingsParameter.cpp
+    src/SpExBranchEvent.cpp
     src/SpExModel.cpp
     src/Stat.cpp
     src/TraitBranchEvent.cpp
-    src/TraitBranchHistory.cpp
     src/TraitMCMC.cpp
     src/TraitModel.cpp
     src/Tree.cpp

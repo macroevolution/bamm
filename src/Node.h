@@ -17,7 +17,6 @@ class eventSet;
 class Phenotype;
 
 class BranchHistory;
-class TraitBranchHistory;
 
 
 class Node
@@ -47,8 +46,7 @@ private:
     double _mapStart;
     double _mapEnd;
 
-    BranchHistory*  history;
-    TraitBranchHistory* _traitHistory;
+    BranchHistory* _history;
 
     // For phenotypes:
     double _trait; // trait value
@@ -141,7 +139,6 @@ public:
 
     //Need to includet this
     BranchHistory* getBranchHistory();
-    TraitBranchHistory* getTraitBranchHistory();
 
     void   setMeanSpeciationRate(double x);
     double getMeanSpeciationRate();
@@ -399,14 +396,9 @@ inline double Node::getMapEnd()
 
 inline BranchHistory* Node::getBranchHistory()
 {
-    return history;
+    return _history;
 }
 
-
-inline TraitBranchHistory* Node::getTraitBranchHistory()
-{
-    return _traitHistory;
-}
 
 inline void Node::setMeanSpeciationRate(double x)
 {

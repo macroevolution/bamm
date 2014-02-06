@@ -7,7 +7,7 @@
 #include <vector>
 #include <sstream>
 
-#include "TraitBranchEvent.h"
+#include "BranchEvent.h"
 
 // Forward declarations
 class Tree;
@@ -43,18 +43,18 @@ public:
     void addEventToTreeWithSetBeta(double beta, double bshift);
     void addEventToTree(double x); // add to specific map position...
     void deleteRandomEventFromTree();
-    void deleteEventFromTree(TraitBranchEvent* be);
+    void deleteEventFromTree(BranchEvent* be);
 
     void printEvents();
 
     int getNumberOfEvents();
 
-    TraitBranchEvent* getRootEvent();
+    BranchEvent* getRootEvent();
 
     // These functions take a branch event
     //  and recursively update branch histories for all nodes
     //  going towards the tips
-    void forwardSetBranchHistories(TraitBranchEvent* x);
+    void forwardSetBranchHistories(BranchEvent* x);
     void forwardSetHistoriesRecursive(Node* p);
 
     int countEventsInBranchHistory(Node* p);
@@ -63,14 +63,14 @@ public:
     void initializeBranchHistories(Node* x);
     void printStartAndEndEventStatesForBranch(Node* x);
 
-    void eventLocalMove(TraitBranchEvent* x); // move specific event
-    void eventGlobalMove(TraitBranchEvent* x); // move specific event
+    void eventLocalMove(BranchEvent* x); // move specific event
+    void eventGlobalMove(BranchEvent* x); // move specific event
     void eventLocalMove(); // move random event
     void eventGlobalMove(); // move random event
     void revertEventToPreviousPosition();
 
     // Return random event, or NULL if no events on tree (other than root)
-    TraitBranchEvent* chooseEventAtRandom();
+    BranchEvent* chooseEventAtRandom();
 
     // MCMC:
     // Propose addition or deletion; accept/reject move.
@@ -102,13 +102,13 @@ public:
     double getMHacceptanceRate();
     void   resetMHacceptanceParameters();
 
-    TraitBranchEvent* getEventByIndex(int x);
+    BranchEvent* getEventByIndex(int x);
 
     int countTimeVaryingRatePartitions();
 
     // Generate string with event data:
     void getEventDataString(std::stringstream& ss);
-    bool isEventConfigurationValid(TraitBranchEvent* be);
+    bool isEventConfigurationValid(BranchEvent* be);
 
     double      getLastLH();
 
@@ -127,8 +127,8 @@ private:
     // Other private variables
 
     // Event collection does not contain the root event
-    std::set<TraitBranchEvent*, TraitBranchEventPtrCompare> eventCollection;
-    TraitBranchEvent* rootEvent; //branch event at root node; can't be modified
+    std::set<BranchEvent*, BranchEvent::PtrCompare> eventCollection;
+    BranchEvent* rootEvent; //branch event at root node; can't be modified
 
     double _lastDeletedEventBetaInit;;
     double _lastDeletedEventBetaShift;
@@ -138,7 +138,7 @@ private:
 
     // this is a pointer to the last event modified, whether
     // it is moved, or has lambda updated, or whatever.
-    TraitBranchEvent* lastEventModified;
+    BranchEvent* lastEventModified;
 
     // Ultimately, initializations should be handled in TraitModel
     // and Model classes
@@ -168,7 +168,7 @@ inline int TraitModel::getNumberOfEvents()
 }
 
 
-inline TraitBranchEvent* TraitModel::getRootEvent()
+inline BranchEvent* TraitModel::getRootEvent()
 {
     return rootEvent;
 }

@@ -2,6 +2,8 @@
 #define MODEL_H
 
 
+#include <iosfwd>
+
 class MbRandom;
 class Tree;
 class Settings;
@@ -36,8 +38,14 @@ public:
     int getAcceptLastUpdate();
     void setAcceptLastUpdate(int x);
 
-protected:
+//    void initializeModelFromEventDataFile();
 
+protected:
+/*
+    virtual void readModelSpecificParameters(std::ifstream& inputFile) = 0;
+    virtual void setRootEventWithReadParameters() = 0;
+    virtual void setMeanBranchParameters() = 0;
+*/
     MbRandom* _rng;
     Tree* _tree;
     Settings* _settings;
