@@ -79,7 +79,7 @@ TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
     if (_settings->getLoadEventData()) {
         log() << "\nLoading model data from file: "
               << _settings->getEventDataInfile() << "\n";
-        initializeModelFromEventDataFileTrait();
+        initializeModelFromEventDataFile();
     }
 
     setCurrLnLTraits(computeLikelihoodTraits());
@@ -96,133 +96,39 @@ TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
 
 TraitModel::~TraitModel(void)
 {
-    for (std::set<BranchEvent*>::iterator it = eventCollection.begin();
-            it != eventCollection.end(); ++it)
+    for (std::set<BranchEvent*>::iterator it = _eventCollection.begin();
+            it != _eventCollection.end(); ++it)
         delete *it;
 }
 
-/*
- Adds event to tree based on reference map value
- -adds to branch history set
- -inserts into Model::eventCollection
 
-
-
- */
-
-void TraitModel::initializeModelFromEventDataFileTrait(void)
+void TraitModel::readModelSpecificParameters(std::ifstream &inputFile)
 {
-    // Part 1. Read from file
-
-    // Assumes each parameter is on a new line:
-    // In order:
-    // sp1, sp2, time (absolute), beta0, shiftparm
-    // 5 parameters, so k * 5 lines in file, where k is number of events (k >= 1, if root included)
-
-    std::ifstream infile(_settings->getEventDataInfile().c_str());
-    std::cout << "Initializing model from <<" << _settings->getEventDataInfile() << ">>" <<
-         std::endl;
-    std::vector<std::string> species1;
-    std::vector<std::string> species2;
-    std::vector<double> etime;
-    std::vector<double> beta_par1;
-    std::vector<double> beta_par2;
-
-    if (!infile.good()) {
-        std::cout << "Bad Filename. Exiting\n" << std::endl;
-        exit(1);
-    }
-
-
-    std::string tempstring;
-
-    while (infile) {
-        getline(infile, tempstring, '\t');
-        species1.push_back(tempstring);
-
-        getline(infile, tempstring, '\t');
-        species2.push_back(tempstring);
-
-        getline(infile, tempstring, '\t');
-        etime.push_back(atof(tempstring.c_str()));
-
-        getline(infile, tempstring, '\t');
-        beta_par1.push_back(atof(tempstring.c_str()));
-
-        getline(infile, tempstring);
-        beta_par2.push_back(atof(tempstring.c_str()));
-
-        if (infile.peek() == EOF)
-            break;
-    }
-
-    infile.close();
-
-    std::cout << "Read a total of " << species1.size() << " events" << std::endl;
-    for (std::vector<std::string>::size_type i = 0; i < species1.size(); i++)
-        std::cout << species1[i] << "\t" << species2[i] << "\t" << etime[i] << "\t" <<
-             beta_par1[i] << "\t" << beta_par2[i] << std::endl;
-
-
-    for (std::vector<std::string>::size_type i = 0; i < species1.size(); i++) {
-        std::cout << std::endl << "MRCA of : " <<  species1[i] << "\t" << species2[i] << std::endl;
-        if ((species2[i] != "NA") && (species1[i] != "NA")) {
-
-            Node* x = _tree->getNodeMRCA(species1[i].c_str(), species2[i].c_str());
-            if (x  == _tree->getRoot()) {
-
-                // Only including this "root time setting" to replicate previous bug - Nov 1 2013
-                _rootEvent->setAbsoluteTime(etime[i]);
-
-                TraitBranchEvent* re =
-                    static_cast<TraitBranchEvent*>(_rootEvent);
-                re->setBetaInit(beta_par1[i]);
-                re->setBetaShift(beta_par2[i]);
-
-            } else {
-                double deltaT = x->getTime() - etime[i];
-
-                double newmaptime = x->getMapStart() + deltaT;
-
-                TraitBranchEvent* newEvent =
-                    new TraitBranchEvent(beta_par1[i], beta_par2[i], x, _tree,
-                            _rng, newmaptime);
-                newEvent->getEventNode()->getBranchHistory()->
-                    addEventToBranchHistory( newEvent);
-                eventCollection.insert(newEvent);
-                forwardSetBranchHistories(newEvent);
-                _tree->setMeanBranchTraitRates();
-            }
-
-        } else if ((species2[i] == "NA") && (species1[i] != "NA")) {
-
-            Node* x = _tree->getNodeByName(species1[i].c_str());
-
-            double deltaT = x->getTime() - etime[i];
-            double newmaptime = x->getMapStart() + deltaT;
-
-            TraitBranchEvent* newEvent = new TraitBranchEvent(beta_par1[i], beta_par2[i], x,
-                    _tree, _rng, newmaptime);
-            newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(
-                newEvent);
-            eventCollection.insert(newEvent);
-            forwardSetBranchHistories(newEvent);
-            _tree->setMeanBranchTraitRates();
-
-        } else {
-            std::cout << "Error in Model::initializeModelFromEventDataFile" << std::endl;
-            exit(1);
-        }
-
-        //std::cout << i << "\t" << computeLikelihoodBranches() << "\t" << computeLogPrior() << std::endl;
-    }
-
-    std::cout << "Added " << eventCollection.size() <<
-         " pre-defined events to tree, plus root event" << std::endl;
-    printEventData();
+    inputFile >> _readBetaInit;
+    inputFile >> _readBetaShift;
 }
 
 
+void TraitModel::setRootEventWithReadParameters()
+{
+    TraitBranchEvent* rootEvent = static_cast<TraitBranchEvent*>(_rootEvent);
+
+    rootEvent->setBetaInit(_readBetaInit);
+    rootEvent->setBetaShift(_readBetaShift);
+}
+
+
+BranchEvent* TraitModel::newBranchEventWithReadParameters(Node* x, double time)
+{
+    return new TraitBranchEvent(_readBetaInit, _readBetaShift,
+        x, _tree, _rng, time);
+}
+
+
+void TraitModel::setMeanBranchParameters()
+{
+    _tree->setMeanBranchTraitRates();
+}
 
 
 void TraitModel::addEventToTree(double x)
@@ -267,7 +173,7 @@ void TraitModel::addEventToTree(double x)
     newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(
         newEvent);
 
-    eventCollection.insert(newEvent);
+    _eventCollection.insert(newEvent);
 
     // Event is now inserted into branch history:
     //  however, branch histories must be updated.
@@ -285,7 +191,7 @@ void TraitModel::addEventToTree(double x)
 /*
  Adds event to tree based on uniform RV
  -adds to branch history set
- -inserts into Model::eventCollection
+ -inserts into Model::_eventCollection
 
 
 
@@ -335,7 +241,7 @@ void TraitModel::addEventToTree(void)
     newEvent->getEventNode()->getBranchHistory()->
         addEventToBranchHistory(newEvent);
     
-    eventCollection.insert(newEvent);
+    _eventCollection.insert(newEvent);
     
     // Event is now inserted into branch history:
     //  however, branch histories must be updated.
@@ -377,7 +283,7 @@ void TraitModel::addEventToTreeWithSetBeta(double beta, double bshift)
     newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(
         newEvent);
 
-    eventCollection.insert(newEvent);
+    _eventCollection.insert(newEvent);
 
     // Event is now inserted into branch history:
     //  however, branch histories must be updated.
@@ -399,11 +305,11 @@ void TraitModel::printEvents(void)
     //  print:  maptime
     //          nodeptr
     //
-    int n_events = (int)eventCollection.size();
+    int n_events = (int)_eventCollection.size();
     std::cout << "N_events: " << n_events << std::endl;
     int counter = 1;
-    for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
-            i != eventCollection.end(); ++i) {
+    for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
+            i != _eventCollection.end(); ++i) {
         std::cout << "event " << counter++ << "\tAddress: " << (*i) << "\t";
         std::cout << (*i)->getMapTime() << "\tNode: " << (*i)->getEventNode() << std::endl <<
              std::endl;
@@ -415,7 +321,7 @@ void TraitModel::printEvents(void)
 BranchEvent* TraitModel::chooseEventAtRandom(void)
 {
 
-    int n_events = (int)eventCollection.size();
+    int n_events = (int)_eventCollection.size();
     if (n_events == 0) {
         return NULL;
         //should ultimately throw exception here.
@@ -425,7 +331,7 @@ BranchEvent* TraitModel::chooseEventAtRandom(void)
         double xx = _rng->uniformRv();
         int chosen = (int)(xx * (double)n_events);
 
-        std::set<BranchEvent*>::iterator sit = eventCollection.begin();
+        std::set<BranchEvent*>::iterator sit = _eventCollection.begin();
 
         for (int i = 0; i < chosen; i++) {
             sit++;
@@ -642,7 +548,7 @@ void TraitModel::deleteEventFromTree(BranchEvent* be)
         
         currNode->getBranchHistory()->popEventOffBranchHistory((be));
         
-        eventCollection.erase(be);
+        _eventCollection.erase(be);
         
         // delete from global node set
         delete (be);
@@ -670,15 +576,15 @@ void TraitModel::deleteRandomEventFromTree(void)
     //printBranchHistories(_tree->getRoot());
     
     // can only delete event if more than root node present.
-    int n_events = (int)eventCollection.size();
+    int n_events = (int)_eventCollection.size();
     
-    if (eventCollection.size() > 0) {
+    if (_eventCollection.size() > 0) {
         int counter = 0;
         double xx = _rng->uniformRv();
         int chosen = (int)(xx * (double)n_events);
         
-        for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
-             i != eventCollection.end(); ++i) {
+        for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
+             i != _eventCollection.end(); ++i) {
             if (counter++ == chosen) {
                 
                 // erase from branch history:
@@ -705,7 +611,7 @@ void TraitModel::deleteRandomEventFromTree(void)
                 _logQratioJump += _prior->betaShiftPrior(_lastDeletedEventBetaShift);
                 
                 delete *i;
-                eventCollection.erase(i);
+                _eventCollection.erase(i);
                 
                 // reset forward history from last event:
                 //BranchEvent* lastEvent = getLastEvent(currNode);
@@ -745,7 +651,7 @@ void TraitModel::restoreLastDeletedEvent(void)
     newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(
         newEvent);
 
-    eventCollection.insert(newEvent);
+    _eventCollection.insert(newEvent);
 
     // Event is now inserted into branch history:
     //  however, branch histories must be updated.
@@ -763,7 +669,7 @@ void TraitModel::changeNumberOfEventsMH(void)
 {
     double oldLogPrior = computeLogPrior();
     double newLogPrior = 0.0;
-    int currState = (int)eventCollection.size();
+    int currState = (int)_eventCollection.size();
     int proposedState = 0;
     bool acceptMove = false;
     double oldLogLikelihood = getCurrLnLTraits();
@@ -959,7 +865,7 @@ void TraitModel::moveEventMH(void)
 {
 
 
-    if (eventCollection.size() > 0) {
+    if (_eventCollection.size() > 0) {
 
         double localMoveProb = _localGlobalMoveRatio / (1 + _localGlobalMoveRatio);
 
@@ -1101,12 +1007,12 @@ void TraitModel::moveEventMH(void)
 void TraitModel::updateTimeVariablePartitionsMH(void)
 {
 
-    //int n_events = eventCollection.size() + 1;
-    int toUpdate = _rng->sampleInteger(0, (int)eventCollection.size());
+    //int n_events = _eventCollection.size() + 1;
+    int toUpdate = _rng->sampleInteger(0, (int)_eventCollection.size());
     BranchEvent* be = _rootEvent;
 
     if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
+        std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
         for (int i = 1; i < toUpdate; i++)
             myIt++;
 
@@ -1180,13 +1086,13 @@ void TraitModel::updateEventRateMH(void)
 void TraitModel::updateBetaMH(void)
 {
     
-    int toUpdate = _rng->sampleInteger(0, (int)eventCollection.size());
+    int toUpdate = _rng->sampleInteger(0, (int)_eventCollection.size());
     
     TraitBranchEvent* be = static_cast<TraitBranchEvent*>(_rootEvent);
     
     
     if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
+        std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
         for (int i = 1; i < toUpdate; i++)
             myIt++;
         
@@ -1258,12 +1164,12 @@ void TraitModel::updateBetaMH(void)
 void TraitModel::updateBetaShiftMH(void)
 {
     
-    int toUpdate = _rng->sampleInteger(0, (int)eventCollection.size());
+    int toUpdate = _rng->sampleInteger(0, (int)_eventCollection.size());
     
     TraitBranchEvent* be = static_cast<TraitBranchEvent*>(_rootEvent);
     
     if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
+        std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
         for (int i = 1; i < toUpdate; i++)
             myIt++;
         
@@ -1598,8 +1504,8 @@ double TraitModel::computeLogPrior(void)
     logPrior += _prior->betaInitPrior(re->getBetaInit());
     logPrior += dens_term + _prior->betaShiftPrior(re->getBetaShift());
     
-    for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
-         i != eventCollection.end(); ++i) {
+    for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
+         i != _eventCollection.end(); ++i) {
 
         TraitBranchEvent* event = static_cast<TraitBranchEvent*>(*i);
         
@@ -1662,89 +1568,6 @@ void TraitModel::printStartAndEndEventStatesForBranch(Node* x)
 }
 
 
-
-
-/*
- If this works correctly, this will take care of the following:
- 1. if a new event is created or added to tree,
- this will forward set all branch histories from the insertion point
-
- 2. If an event is deleted, you find the next event rootwards,
- and call forwardSetBranchHistories from that point. It will replace
- settings due to the deleted node with the next rootwards node.
-
- */
-
-void TraitModel::forwardSetBranchHistories(BranchEvent* x)
-{
-    // If there is another event occurring more recent (closer to tips)
-    //  do nothing. Even just sits in BranchHistory but doesn't affect
-    //  state of any other nodes.
-
-
-    // this seems circular, but what else to do?
-    //  given an event (which references the node defining the branch on which event occurs)
-    //   you get the corresponding branch history and the last event
-    //   since the events will have been inserted in the correct order.
-
-    Node* myNode = x->getEventNode();
-    //std::cout << "Node: " << myNode << std::endl;
-
-    //std::cout << std::endl << std::endl;
-    //std::cout << "event in forwardSet: " << x << std::endl;
-
-    //printEventData();
-
-
-
-
-    if (x == _rootEvent) {
-        forwardSetHistoriesRecursive(myNode->getLfDesc());
-        forwardSetHistoriesRecursive(myNode->getRtDesc());
-
-    } else if (x == myNode->getBranchHistory()->getLastEvent()) {
-        // If TRUE, x is the most tip-wise event on branch.
-        myNode->getBranchHistory()->setNodeEvent(x);
-
-        // if myNode is not a tip:
-        if (myNode->getLfDesc() != NULL && myNode->getRtDesc() != NULL) {
-            forwardSetHistoriesRecursive(myNode->getLfDesc());
-            forwardSetHistoriesRecursive(myNode->getRtDesc());
-        }
-        // else: node is a tip : do nothing.
-
-
-    }
-    //else: there is another more tipwise event on same branch; do nothing
-
-
-}
-
-
-void TraitModel::forwardSetHistoriesRecursive(Node* p)
-{
-
-    // Get event that characterizes parent node
-    BranchEvent* lastEvent =
-        p->getAnc()->getBranchHistory()->getNodeEvent();
-    // set the ancestor equal to the event state of parent node:
-    p->getBranchHistory()->setAncestralNodeEvent(lastEvent);
-
-    // if no events on the branch, go down to descendants and do same thing
-    //  otherwise, process terminates (because it hits another event on branch
-    if (p->getBranchHistory()->getNumberOfBranchEvents() == 0) {
-        p->getBranchHistory()->setNodeEvent(lastEvent);
-        if (p->getLfDesc() != NULL)
-            forwardSetHistoriesRecursive(p->getLfDesc());
-        if (p->getRtDesc() != NULL)
-            forwardSetHistoriesRecursive(p->getRtDesc());
-    }
-
-}
-
-
-
-
 void TraitModel::printBranchHistories(Node* x)
 {
 
@@ -1792,7 +1615,7 @@ BranchEvent* TraitModel::getEventByIndex(int x)
 {
 
     //int ctr = 0;
-    std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
+    std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
     for (int i = 0; i <= x; i++)
         myIt++;
 
@@ -1812,8 +1635,8 @@ int TraitModel::countTimeVaryingRatePartitions(void)
 
     int count = 0;
     count += (int)_rootEvent->getIsEventTimeVariable();
-    for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
-            i != eventCollection.end(); i++)
+    for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
+            i != _eventCollection.end(); i++)
         count += (int)(*i)->getIsEventTimeVariable();
     return count;
 }
@@ -1840,9 +1663,9 @@ void TraitModel::getEventDataString(std::stringstream& ss)
        ",";
     ss << be->getBetaInit() << "," << be->getBetaShift();
 
-    if (eventCollection.size() > 0) {
-        for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
-                i != eventCollection.end(); ++i) {
+    if (_eventCollection.size() > 0) {
+        for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
+                i != _eventCollection.end(); ++i) {
 
             ss << "\n" << getGeneration() << ",";
             be = static_cast<TraitBranchEvent*>(*i);
@@ -1934,8 +1757,8 @@ void TraitModel::printEventData(void)
     std::cout << "RtBt: " << be->getBetaInit() << "\tSf: " << be->getBetaShift() <<
          "\tAtime:" << be->getAbsoluteTime() << std::endl;
     int ctr = 0;
-    for (std::set<BranchEvent*>::iterator i = eventCollection.begin();
-            i != eventCollection.end(); i++) {
+    for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
+            i != _eventCollection.end(); i++) {
         be = static_cast<TraitBranchEvent*>(*i);
         std::cout << ctr++ << "\tBt: " << be->getBetaInit() << "\tSt: " << be->getBetaShift()
              << "\tMap: " << be->getMapTime();

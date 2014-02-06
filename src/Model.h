@@ -2,18 +2,24 @@
 #define MODEL_H
 
 
+#include "BranchEvent.h"
+
+#include <set>
 #include <iosfwd>
 
 class MbRandom;
 class Tree;
 class Settings;
 class Prior;
+class Node;
 
 
 class Model
 {
 
 public:
+
+    typedef std::set<BranchEvent*, BranchEvent::PtrCompare> EventSet;
 
     static double mhColdness;
 
@@ -38,14 +44,24 @@ public:
     int getAcceptLastUpdate();
     void setAcceptLastUpdate(int x);
 
-//    void initializeModelFromEventDataFile();
+    void initializeModelFromEventDataFile();
+
+    // These functions take a branch event and recursively update
+    // the branch histories for all nodes going toward the tips
+    void forwardSetBranchHistories(BranchEvent* x);
+    void forwardSetHistoriesRecursive(Node* p);
+
+    int getNumberOfEvents();
+    BranchEvent* getRootEvent();
 
 protected:
-/*
+
     virtual void readModelSpecificParameters(std::ifstream& inputFile) = 0;
     virtual void setRootEventWithReadParameters() = 0;
+    virtual BranchEvent* newBranchEventWithReadParameters
+        (Node* x, double time) = 0;
     virtual void setMeanBranchParameters() = 0;
-*/
+
     MbRandom* _rng;
     Tree* _tree;
     Settings* _settings;
@@ -65,6 +81,9 @@ protected:
     int _rejectCount;
     int _acceptLast;    // true if last generation was accept; false otherwise
     // 0 = last was rejected; 1 = accepted; -1 = not set.
+
+    EventSet _eventCollection;
+    BranchEvent* _rootEvent;
 
     double _lastDeletedEventMapTime;    // map time of last deleted event
 };
@@ -139,6 +158,18 @@ inline int Model::getAcceptLastUpdate()
 inline void Model::setAcceptLastUpdate(int x)
 {
     _acceptLast = x;
+}
+
+
+inline int Model::getNumberOfEvents()
+{
+    return (int)_eventCollection.size();
+}
+
+
+inline BranchEvent* Model::getRootEvent()
+{
+    return _rootEvent;
 }
 
 

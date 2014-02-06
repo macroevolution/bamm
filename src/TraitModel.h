@@ -47,16 +47,6 @@ public:
 
     void printEvents();
 
-    int getNumberOfEvents();
-
-    BranchEvent* getRootEvent();
-
-    // These functions take a branch event
-    //  and recursively update branch histories for all nodes
-    //  going towards the tips
-    void forwardSetBranchHistories(BranchEvent* x);
-    void forwardSetHistoriesRecursive(Node* p);
-
     int countEventsInBranchHistory(Node* p);
 
     // initialize all branch histories to the root node.
@@ -112,9 +102,12 @@ public:
 
     double      getLastLH();
 
-    void      initializeModelFromEventDataFileTrait();
-
 private:
+
+    virtual void readModelSpecificParameters(std::ifstream& inputFile);
+    virtual void setRootEventWithReadParameters();
+    virtual BranchEvent* newBranchEventWithReadParameters(Node* x, double time);
+    virtual void setMeanBranchParameters();
 
     //  parameters of the model:
 
@@ -123,12 +116,6 @@ private:
     double _updateBetaScale;
     double _updateBetaShiftScale;
     double _updateNodeStateScale;
-
-    // Other private variables
-
-    // Event collection does not contain the root event
-    std::set<BranchEvent*, BranchEvent::PtrCompare> eventCollection;
-    BranchEvent* _rootEvent; //branch event at root node; can't be modified
 
     double _lastDeletedEventBetaInit;;
     double _lastDeletedEventBetaShift;
@@ -147,6 +134,9 @@ private:
     double _lastLH;
 
     double _logQratioJump;
+
+    double _readBetaInit;
+    double _readBetaShift;
 };
 
 
@@ -159,18 +149,6 @@ inline void TraitModel::setCurrLnLTraits(double x)
 inline double TraitModel::getCurrLnLTraits()
 {
     return lnLikTraits;
-}
-
-
-inline int TraitModel::getNumberOfEvents()
-{
-    return (int)eventCollection.size();
-}
-
-
-inline BranchEvent* TraitModel::getRootEvent()
-{
-    return _rootEvent;
 }
 
 

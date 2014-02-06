@@ -3,6 +3,14 @@
 #include "Tree.h"
 #include "Settings.h"
 #include "Prior.h"
+#include "Node.h"
+#include "BranchEvent.h"
+#include "BranchHistory.h"
+#include "Log.h"
+
+#include <string>
+#include <fstream>
+#include <cstdlib>
 
 
 double Model::mhColdness = 1.0;
@@ -40,7 +48,7 @@ Model::~Model()
 {
 }
 
-/*
+
 void Model::initializeModelFromEventDataFile()
 {
     std::string inputFileName(_settings->getEventDataInfile());
@@ -106,4 +114,67 @@ void Model::initializeModelFromEventDataFile()
     log() << "Added " << _eventCollection.size() << " "
           << "pre-defined events to tree, plus root event.\n";
 }
+
+
+void Model::forwardSetBranchHistories(BranchEvent* x)
+{
+    // If there is another event occurring more recent (closer to tips),
+    // do nothing. Even just sits in BranchHistory but doesn't affect
+    // state of any other nodes.
+
+    // This seems circular, but what else to do?
+    // given an event (which references the node defining the branch on which
+    // event occurs) you get the corresponding branch history and the last
+    // event since the events will have been inserted in the correct order.
+
+    Node* myNode = x->getEventNode();
+
+    if (x == _rootEvent) {
+        forwardSetHistoriesRecursive(myNode->getLfDesc());
+        forwardSetHistoriesRecursive(myNode->getRtDesc());
+    } else if (x == myNode->getBranchHistory()->getLastEvent()) {
+        // If true, x is the most tip-wise event on branch.
+        myNode->getBranchHistory()->setNodeEvent(x);
+
+        // If myNode is not a tip
+        if (myNode->getLfDesc() != NULL && myNode->getRtDesc() != NULL) {
+            forwardSetHistoriesRecursive(myNode->getLfDesc());
+            forwardSetHistoriesRecursive(myNode->getRtDesc());
+        }
+        // Else: node is a tip; do nothing
+    }
+    // Else: there is another more tipwise event on the same branch; do nothing
+}
+
+
+/*
+    If this works correctly, this will take care of the following:
+    1. if a new event is created or added to tree,
+       this will forward set all branch histories from the insertion point
+    2. If an event is deleted, you find the next event rootwards,
+       and call forwardSetBranchHistories from that point. It will replace
+       settings due to the deleted node with the next rootwards node.
 */
+
+void Model::forwardSetHistoriesRecursive(Node* p)
+{
+    // Get event that characterizes parent node
+    BranchEvent* lastEvent = p->getAnc()->getBranchHistory()->getNodeEvent();
+
+    // Set the ancestor equal to the event state of parent node:
+    p->getBranchHistory()->setAncestralNodeEvent(lastEvent);
+
+    // Ff no events on the branch, go down to descendants and do same thing;
+    // otherwise, process terminates (because it hits another event on branch
+    if (p->getBranchHistory()->getNumberOfBranchEvents() == 0) {
+        p->getBranchHistory()->setNodeEvent(lastEvent);
+
+        if (p->getLfDesc() != NULL) {
+            forwardSetHistoriesRecursive(p->getLfDesc());
+        }
+
+        if (p->getRtDesc() != NULL) {
+            forwardSetHistoriesRecursive(p->getRtDesc());
+        }
+    }
+}
