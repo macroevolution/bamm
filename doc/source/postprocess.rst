@@ -164,9 +164,9 @@ Estimating clade-specific rates with BAMMtools is straightforward. To compute th
 	library(BAMMtools)
 	data(whales)
 	data(events.whales)
-	ed <- getEventData(whales, events.whales, burnin=0.1)
+	edata <- getEventData(whales, events.whales, burnin=0.1)
 	#and here we get the rates
-	allrates <- getCladeRates(ed)
+	allrates <- getCladeRates(edata)
 
 ``allrates`` is a list with speciation and extinction components, with the mean rate across all whales for each sample in the posterior. It is important to realize that this function is *averaging* over any rate heterogeneity that occurs within your focal clade. Still, we can compute the mean speciation rate for whales and estimate the 90% highest posterior density (HPD)::
 
@@ -175,14 +175,14 @@ Estimating clade-specific rates with BAMMtools is straightforward. To compute th
 	
 To compute rates for **a specific clade**, just specify the node you'd like to compute the mean rate for. In the whales example, node 140 is the node number of the dolphin clade (you can find identify node numbers using ``plot.phylo`` and ``nodelabels`` from the ``ape`` package). We can estimate the mean of the marginal density of speciation rates for dolphins as follows::
 
-	dolphinrates <- getCladeRates(ed, node=140)	
+	dolphinrates <- getCladeRates(edata, node=140)	
 	mean(dolphinrates$lambda)
 
 which should be a bit higher than the overall rate, an effect that you can clearly visualize in some of the sample :ref:`phylorate plots for whales<whalemarg1>` (or just generate your own, with ``plot.bammdata(ed)``).
 
 You can also use the ``node`` argument to ``getCladeRates`` to **exclude** all the descendants of a particular node, thus computing the mean rate only for the *background* lineages. This is extremely useful in the present example. We have an evolutionary rate estimate for dolphins, and good evidence that their diversification dynamics are different from the background rate. We can thus compute a mean rate for *non-dolphin whales*, as follows::
 
-	nondolphinrate <- getCladeRates(ed, node = 140, nodetype = "exclude")
+	nondolphinrate <- getCladeRates(edata, node = 140, nodetype = "exclude")
 	mean(nondolphinrate)$lambda
 	quantile(nondolphinrate$lambda, c(0.05, 0.95))
 	
