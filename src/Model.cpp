@@ -830,10 +830,9 @@ void Model::deleteRandomEventFromTree(void)
 
                 currNode->getBranchHistory()->popEventOffBranchHistory((*i));
 
-                eventCollection.erase(i);
-
                 // delete from global node set
-                delete (*i);
+                delete *i;
+                eventCollection.erase(i);
 
                 forwardSetBranchHistories(newLastEvent);
 

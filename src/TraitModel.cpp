@@ -760,10 +760,10 @@ void TraitModel::deleteRandomEventFromTree(void)
                 _logQratioJump += cprior->betaInitPrior(_lastDeletedEventBetaInit);
                 _logQratioJump += cprior->betaShiftPrior(_lastDeletedEventBetaShift);
                 
+                // delete from global node set
+                delete *i;
                 eventCollection.erase(i);
                 
-                // delete from global node set
-                delete (*i);
                 //std::cout << "deleted..." << std::endl;
                 
                 //std::cout << "erased ... " << std::endl;
