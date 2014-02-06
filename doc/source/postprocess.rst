@@ -89,7 +89,7 @@ The following instructions for visualizing rate shifts assume that you have read
 Starting at the beginning, let's re-load our event data file::
 
 	> mytree <- read.tree("my_example_tree.tre")
-	> edata <- getEventData(mytree, eventfilename = "event_data.txt", burnin=0.1)
+	> edata <- getEventData(mytree, eventdata = "event_data.txt", burnin=0.1)
 	> # How many samples from the posterior are in edata?
 	> # Here is a quick check:
 	>
