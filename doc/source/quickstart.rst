@@ -25,7 +25,7 @@ Your phylogenetic tree must be **ultrametric**, it must be **fully bifurcating**
 If all of those checks are good, we can move on.
 
 Control file
-----------------
+------------
 
 To run ``bamm``, you must always specify a *control file*. The control file contains all of the settings necessary to run the program on your dataset, including the name(s) of the input files you seek to analyze. The easiest way to run BAMM is to place the control file, and all files to be analyzed (e.g., the phylogeny) in the same directory as the **BAMM** application. If your control file is named ``myControlFile.txt``, you would run BAMM as follows (on the OSX operating system)::
 
@@ -51,8 +51,10 @@ BAMM comes with example control files (located in the directory ``examples/`` ).
 There are many possible settings that can be tweaked in BAMM. The next two sections give you a simple recipe for running the program on your data, depending on whether you are analyzing speciation-extinction rates or phenotypic evolutionary rates. **There is no guarantee that these settings will work for your dataset**.
 
 .. _speciationextinctionquick:
+
 Speciation-extinction analyses
---------------------------
+------------------------------
+
 You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file linked :download:`here (divcontrol_template.txt)<divcontrol_template.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data. Here's an example :download:`phylogenetic tree of whales<examples/whaletree.txt>` that is used elsewhere in this documentation.
 
 If you open the template file, you'll see that there are extensive comments. For each parameter in the BAMM control file, we've included a brief description on the line following the parameter. For example: ::
@@ -98,7 +100,7 @@ For speciation-extinction analyses BAMM can analytically account for incomplete 
 .. _phenotypicquick:
 
 Phenotypic evolution
---------------------------
+--------------------
 
 This section is quite redundant with the preceding section on **speciation-extinction**, with a few differences.
 
@@ -147,7 +149,7 @@ You'll want to increase all of these once you are sure the program is correctly 
 
 
 BAMM output: brief
-----------------
+------------------
 
 BAMM generates multiple types of output files. These (usually) include:
 
