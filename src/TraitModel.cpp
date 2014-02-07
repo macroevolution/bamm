@@ -195,27 +195,6 @@ void TraitModel::addEventToTreeWithSetBeta(double beta, double bshift)
 }
 
 
-
-void TraitModel::printEvents(void)
-{
-
-    // for each event:
-    //  print:  maptime
-    //          nodeptr
-    //
-    int n_events = (int)_eventCollection.size();
-    std::cout << "N_events: " << n_events << std::endl;
-    int counter = 1;
-    for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
-            i != _eventCollection.end(); ++i) {
-        std::cout << "event " << counter++ << "\tAddress: " << (*i) << "\t";
-        std::cout << (*i)->getMapTime() << "\tNode: " << (*i)->getEventNode() << std::endl <<
-             std::endl;
-    }
-
-
-}
-
 BranchEvent* TraitModel::chooseEventAtRandom(void)
 {
 

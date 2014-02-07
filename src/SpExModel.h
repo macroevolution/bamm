@@ -49,8 +49,6 @@ public:
     void deleteRandomEventFromTree();
     void deleteEventFromTree(BranchEvent* be);
 
-    void printEvents();
-
     int countEventsInBranchHistory(Node* p);
 
     // Initialize all branch histories to the root node.
@@ -196,7 +194,6 @@ inline double SpExModel::getCurrLnLBranches()
 {
     return lnLikBranches;
 }
-
 
 
 inline void SpExModel::setUpdateLambdaInitScale(double x)

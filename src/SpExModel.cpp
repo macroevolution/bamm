@@ -160,24 +160,6 @@ BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
 }
 
 
-void SpExModel::printEvents(void)
-{
-
-    // for each event:
-    //  print:  maptime
-    //          nodeptr
-    //
-    int n_events = (int)_eventCollection.size();
-    std::cout << "N_events: " << n_events << std::endl;
-    int counter = 1;
-    for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
-            i != _eventCollection.end(); i++)
-        std::cout << "event " << counter++ << "\tAddress: " << (*i) << "\t" <<
-             (*i)->getMapTime() << "\tNode: " << (*i)->getEventNode() << std::endl << std::endl;
-
-
-}
-
 BranchEvent* SpExModel::chooseEventAtRandom(void)
 {
 
