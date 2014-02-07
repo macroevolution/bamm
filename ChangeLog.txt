@@ -1,0 +1,5 @@
+2014-02-06  Carlos Anderson  carlosjanderson@gmail.com
+
+        Bug fix: Error message "problem in BranchHistory::getLastEvent()"
+        followed by a segmentation fault. Fixed by deleting the object pointed
+        to by an iterator before erasing the iterator in the event collection.

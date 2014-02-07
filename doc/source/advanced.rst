@@ -4,8 +4,9 @@ Advanced analysis options
 =========================
 
 .. _incompsampling: 
+
 Accounting for *non-random* incomplete taxon sampling in diversification studies
-----------------------------------------------
+--------------------------------------------------------------------------------
 It is well-known that incomplete taxon sampling can bias analyses of speciation and extinction from phylogenetic trees. If you have an incompletely-sampled tree (e.g., some fraction < 1 of the total extant species richness of your focal taxon), you can easily specify this sampling fraction to generate unbiased estimates of speciation and extinction under the assumption that *species are missing at random from the tree*. In your controlfile, you can specify the percentage of species that have been sampled by setting the ``globalSamplingFraction`` parameter. Specifically, you should have the following settings in your control file::
 
 	useGlobalSamplingProbability = 1
@@ -98,7 +99,7 @@ BAMM is sufficiently flexible as to allow a number of permutations on these gene
  	betaShiftInit = 0.0
  
 Accounting for phylogenetic uncertainty
-----------------------------------------
+---------------------------------------
 
 Some researchers consider it important to account for phylogenetic uncertainty when performing macroevolutionary analyses. At present, there is no direct way of accounting for phylogenetic uncertainty in BAMM itself. It remains unclear whether phylogenetic uncertainty generally matters for the sorts of conclusions obtained with BAMM. My (DLR) personal view is that phylogenetic uncertainty is very much an issue for **some types** of results obtained using BAMM (and other programs), and (usually) not an issue at all for many other types of results. 
 
@@ -110,7 +111,7 @@ Although BAMM does not directly allow modeling phylogenetic uncertainty, it is s
 
 
 Understanding the event data file
-----------------------------------------
+---------------------------------
 
 .. _eventdatafile:
 
@@ -141,13 +142,5 @@ Each row of the event data file is a *macroevolutionary rate process*. Each samp
 	
 ``lambdainit,lambdashift,muinit,mushift`` or ``betainit,betashift``
 	Evolutionary rate parameters for the exponential change model 
-
-
-
-
-
-
-
-
 
 
