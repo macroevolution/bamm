@@ -59,7 +59,7 @@ TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
         (_settings->getBetaInit(), _settings->getBetaShiftInit(),
             _tree->getRoot(), _tree, _rng, 0);
     _rootEvent = x;
-    lastEventModified = x;
+    _lastEventModified = x;
 
     TraitBranchEvent* traitRootEvent =
         static_cast<TraitBranchEvent*>(_rootEvent);
@@ -131,128 +131,26 @@ void TraitModel::setMeanBranchParameters()
 }
 
 
-void TraitModel::addEventToTree(double x)
+BranchEvent* TraitModel::newBranchEventWithRandomParameters(double x)
 {
-
-
-    // Sample beta and beta shift from prior:
-
+    // Sample beta and beta shift from prior
     double newbeta = _prior->generateBetaInitFromPrior();
     double newBetaShift = _prior->generateBetaShiftFromPrior();
     
-    
 #ifdef NEGATIVE_SHIFT_PARAM
-    
     newBetaShift = -fabs(newBetaShift);
     double dens_term = log(2.0);
-    
 #else
     double dens_term = 0.0;
-    
-    
 #endif
-    
     
     _logQratioJump = 0.0;
     
     _logQratioJump += _prior->betaInitPrior(newbeta);
     _logQratioJump += dens_term + _prior->betaShiftPrior(newBetaShift);
     
-    //_logQratioJump += dens_term + _rng->lnExponentialPdf(_settings->getBetaInitPrior(), newbeta);
-    
-    // Add log(2) [see dens_term above] because this is truncated normal distribution constrained to negative values
-    //_logQratioJump += dens_term + _rng->lnNormalPdf((double)0.0, _settings->getBetaShiftPrior(),newBetaShift);
-
-    // End calculations:: now create event
-
-    BranchEvent* newEvent = new TraitBranchEvent(newbeta, newBetaShift,
-            _tree->mapEventToTree(x), _tree, _rng, x);
-
-    // add the event to the branch history.
-    //  ALWAYS done after event is added to tree.
-    newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(
-        newEvent);
-
-    _eventCollection.insert(newEvent);
-
-    // Event is now inserted into branch history:
-    //  however, branch histories must be updated.
-
-    forwardSetBranchHistories(newEvent);
-
-    _tree->setMeanBranchTraitRates();
-
-    // Addition June17 2012
-    lastEventModified = newEvent;
-
-}
-
-
-/*
- Adds event to tree based on uniform RV
- -adds to branch history set
- -inserts into Model::_eventCollection
-
-
-
- */
-
-
-void TraitModel::addEventToTree(void)
-{
-    
-    double aa = _tree->getRoot()->getMapStart();
-    double bb = _tree->getTotalMapLength();
-    double x = _rng->uniformRv(aa, bb);
-    
-    
-    /*      ********************* */
-    // Sample beta and beta shift from prior:
-    
-    double newbeta = _prior->generateBetaInitFromPrior();
-    double newBetaShift = _prior->generateBetaShiftFromPrior();
-    
-    
-#ifdef NEGATIVE_SHIFT_PARAM
-    
-    newBetaShift = -fabs(newBetaShift);
-    double dens_term = log(2.0);
-    
-#else
-    double dens_term = 0.0;
-    
-    
-#endif
-    
-    
-    
-    // End calculations:: now create event
-    
-    _logQratioJump = 0.0;
-    
-    _logQratioJump = _prior->betaInitPrior(newbeta);
-    _logQratioJump += dens_term + _prior->betaShiftPrior(newBetaShift);
-    
-    TraitBranchEvent* newEvent = new TraitBranchEvent(newbeta, newBetaShift,
-                                                      _tree->mapEventToTree(x), _tree, _rng, x);
-    
-    
-    
-    newEvent->getEventNode()->getBranchHistory()->
-        addEventToBranchHistory(newEvent);
-    
-    _eventCollection.insert(newEvent);
-    
-    // Event is now inserted into branch history:
-    //  however, branch histories must be updated.
-    
-    forwardSetBranchHistories(newEvent);
-    _tree->setMeanBranchTraitRates();
-    
-    // Addition June17 2012
-    lastEventModified = newEvent;
-    
-    
+    return new TraitBranchEvent(newbeta, newBetaShift,
+        _tree->mapEventToTree(x), _tree, _rng, x);
 }
 
 
@@ -292,7 +190,7 @@ void TraitModel::addEventToTreeWithSetBeta(double beta, double bshift)
     _tree->setMeanBranchTraitRates();
 
     // Addition June17 2012
-    lastEventModified = newEvent;
+    _lastEventModified = newEvent;
 
 }
 
@@ -376,7 +274,7 @@ void TraitModel::eventLocalMove(void)
             chosenEvent->getEventNode()->getBranchHistory()->getLastEvent(chosenEvent);
 
         // set this history variable in case move is rejected
-        lastEventModified = chosenEvent;
+        _lastEventModified = chosenEvent;
 
         chosenEvent->getEventNode()->getBranchHistory()->popEventOffBranchHistory(
             chosenEvent);
@@ -422,7 +320,7 @@ void TraitModel::eventGlobalMove(void)
             chosenEvent->getEventNode()->getBranchHistory()->getLastEvent(chosenEvent);
 
         // private variable
-        lastEventModified = chosenEvent;
+        _lastEventModified = chosenEvent;
 
         chosenEvent->getEventNode()->getBranchHistory()->popEventOffBranchHistory(
             chosenEvent);
@@ -458,39 +356,39 @@ void TraitModel::revertMovedEventToPrevious(void)
     // Get LAST EVENT from position of event to be removed:
 
     BranchEvent* newLastEvent =
-        lastEventModified->getEventNode()->getBranchHistory()->getLastEvent(
-            lastEventModified);
+        _lastEventModified->getEventNode()->getBranchHistory()->getLastEvent(
+            _lastEventModified);
 
-    //BranchEvent * newLastEvent = getLastEvent(lastEventModified);
+    //BranchEvent * newLastEvent = getLastEvent(_lastEventModified);
 
     // pop event off its new position
-    lastEventModified->getEventNode()->getBranchHistory()->popEventOffBranchHistory(
-        lastEventModified);
+    _lastEventModified->getEventNode()->getBranchHistory()->popEventOffBranchHistory(
+        _lastEventModified);
 
     // Reset nodeptr:
     // Reset mapTime:
-    lastEventModified->revertOldMapPosition();
+    _lastEventModified->revertOldMapPosition();
 
-    // Now: reset forward from lastEventModified (new position)
+    // Now: reset forward from _lastEventModified (new position)
     //  and from newLastEvent, which holds 'last' event before old position
 
-    lastEventModified->getEventNode()->getBranchHistory()->addEventToBranchHistory(
-        lastEventModified);
+    _lastEventModified->getEventNode()->getBranchHistory()->addEventToBranchHistory(
+        _lastEventModified);
 
     // Forward set from new position
     forwardSetBranchHistories(newLastEvent);
 
     // forward set from event immediately rootwards from previous position:
-    forwardSetBranchHistories(lastEventModified);
+    forwardSetBranchHistories(_lastEventModified);
 
 
 
-    // Set lastEventModified to NULL,
+    // Set _lastEventModified to NULL,
     //  because it has already been reset.
     //  Future implementations should check whether this is NULL
     //  before attempting to use it to set event
 
-    lastEventModified = NULL;
+    _lastEventModified = NULL;
 
     // Reset speciaton-extinction on branches
     _tree->setMeanBranchTraitRates();
@@ -739,7 +637,7 @@ void TraitModel::changeNumberOfEventsMH(void)
 
         if (acceptMove) {
 
-            bool isValidConfig = isEventConfigurationValid(lastEventModified);
+            bool isValidConfig = isEventConfigurationValid(_lastEventModified);
 
             if (isValidConfig) {
 
@@ -752,7 +650,7 @@ void TraitModel::changeNumberOfEventsMH(void)
 
                 // Need to get rid of event that was just gained...
                 //std::cout << "Invalid event config from addEventToTree - deleting." << std::endl;
-                deleteEventFromTree(lastEventModified);
+                deleteEventFromTree(_lastEventModified);
                 _tree->setMeanBranchTraitRates();
                 _rejectCount++;
                 _acceptLast = 0;
@@ -763,7 +661,7 @@ void TraitModel::changeNumberOfEventsMH(void)
 
             // Need to get rid of event that was just gained...
             //std::cout << "Invalid event config from addEventToTree - deleting." << std::endl;
-            deleteEventFromTree(lastEventModified);
+            deleteEventFromTree(_lastEventModified);
             _tree->setMeanBranchTraitRates();
             _rejectCount++;
             _acceptLast = 0;
@@ -898,7 +796,7 @@ void TraitModel::moveEventMH(void)
             bool acceptMove = false;
             bool isValid = false;
             //std::cout << "calling isValid from moveEventMH::local" << std::endl;
-            isValid = isEventConfigurationValid(lastEventModified);
+            isValid = isEventConfigurationValid(_lastEventModified);
 
             if (std::isinf(likeRatio) ) {
 
@@ -953,7 +851,7 @@ void TraitModel::moveEventMH(void)
             bool acceptMove = false;
             bool isValid = false;
             //std::cout << "calling isValid from moveEventMH::global" << std::endl;
-            isValid = isEventConfigurationValid(lastEventModified);
+            isValid = isEventConfigurationValid(_lastEventModified);
 
             if (std::isinf(likeRatio) ) {
 

@@ -141,116 +141,24 @@ void SpExModel::setMeanBranchParameters()
 }
 
 
-/*
-    Adds event to tree based on reference map value
-    -adds to branch history set
-    -inserts into SpExModel::_eventCollection
- */
-
-void SpExModel::addEventToTree(double x)
+BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
 {
-    // New way:
-    // Sample lambda, lambdaInit, mu, muInit parameters from appropriate prior distributions
-
     double newLam = _prior->generateLambdaInitFromPrior();
     double newLambdaShift = _prior->generateLambdaShiftFromPrior();
     double newMu = _prior->generateMuInitFromPrior();
     double newMuShift = _prior->generateMuShiftFromPrior();
  
-    // This block computes the jump density for the
-    //  addition of new parameters.
-
-    _logQratioJump = 0.0; // Set to zero to clear previous values...
+    // Computes the jump density for the addition of new parameters.
+    _logQratioJump = 0.0;    // Set to zero to clear previous values
     _logQratioJump = _prior->lambdaInitPrior(newLam);
     _logQratioJump += _prior->lambdaShiftPrior(newLambdaShift);
     _logQratioJump += _prior->muInitPrior(newMu);
     _logQratioJump += _prior->muShiftPrior(newMuShift);
     
-    // End calculations:: now create event
-
-    BranchEvent* newEvent = new SpExBranchEvent(newLam, newLambdaShift, newMu,
-                                            newMuShift, _tree->mapEventToTree(x), _tree, _rng, x);
-
-    // add the event to the branch history.
-    //  ALWAYS done after event is added to tree.
-    newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(newEvent);
-
-    _eventCollection.insert(newEvent);
-
-    // Event is now inserted into branch history:
-    //  however, branch histories must be updated.
-
-    forwardSetBranchHistories(newEvent);
-
-    _tree->setMeanBranchSpeciation();
-    _tree->setMeanBranchExtinction();
-
-    // Addition June17 2012
-    _lastEventModified = newEvent;
-
+    return new SpExBranchEvent(newLam, newLambdaShift, newMu,
+        newMuShift, _tree->mapEventToTree(x), _tree, _rng, x);
 }
 
-
-/*
- Adds event to tree based on uniform RV
- -adds to branch history set
- -inserts into SpExModel::_eventCollection
-
-
-
- */
-
-
-void SpExModel::addEventToTree(void)
-{
-
-    double aa = _tree->getRoot()->getMapStart();
-    double bb = _tree->getTotalMapLength();
-    double x = _rng->uniformRv(aa, bb);
-
-    // New way:
-    // Sample lambda, lambdaInit, mu, muInit parameters from appropriate prior distributions
-
-    double newLam = _rng->exponentialRv(_lambdaInitPrior) ;
-    double newLambdaShift = _rng->normalRv(0.0, _lambdaShiftPrior);
-    double newMu = _rng->exponentialRv(_muInitPrior);
-
-    double newMuShift = 0.0;
-
-    // This line would randomly generate a new muShift parameter
-    //      but for now we set this to zero
-    //double newMuShift = _rng->normalRv(0.0, _muShiftPrior);
-
-    // This block computes the jump density for the
-    //  addition of new parameters.
-
-    _logQratioJump = 0.0; // Set to zero to clear previous values...
-    _logQratioJump = _rng->lnExponentialPdf(_lambdaInitPrior, newLam);
-    _logQratioJump += _rng->lnExponentialPdf(_muInitPrior, newMu);
-    _logQratioJump += _rng->lnNormalPdf((double)0.0, _lambdaShiftPrior,
-                                       newLambdaShift);
-    _logQratioJump += _rng->lnNormalPdf((double)0.0, _muShiftPrior, newMuShift);
-
-    BranchEvent* newEvent = new SpExBranchEvent(newLam, newLambdaShift, newMu,
-                                            newMuShift, _tree->mapEventToTree(x), _tree, _rng, x);
-
-
-
-    newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(newEvent);
-
-    _eventCollection.insert(newEvent);
-
-    // Event is now inserted into branch history:
-    //  however, branch histories must be updated.
-
-    forwardSetBranchHistories(newEvent);
-    _tree->setMeanBranchSpeciation();
-    _tree->setMeanBranchExtinction();
-
-    // Addition June17 2012
-    _lastEventModified = newEvent;
-
-}
 
 void SpExModel::printEvents(void)
 {

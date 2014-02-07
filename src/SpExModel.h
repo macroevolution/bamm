@@ -46,8 +46,6 @@ public:
     bool   acceptMetropolisHastings(const double lnR);
 
     // Stuff for event handling:
-    void addEventToTree();
-    void addEventToTree(double x); // add to specific map position...
     void deleteRandomEventFromTree();
     void deleteEventFromTree(BranchEvent* be);
 
@@ -125,6 +123,7 @@ private:
     virtual void setRootEventWithReadParameters();
     virtual BranchEvent* newBranchEventWithReadParameters(Node* x, double time);
     virtual void setMeanBranchParameters();
+    virtual BranchEvent* newBranchEventWithRandomParameters(double x);
 
     // Parameters of the model:
 
@@ -165,13 +164,6 @@ private:
 
     double _lastDeletedEventMuInit;
     double _lastDeletedEventMuShift;
-
-    // Here are several variables that track the previous
-    // state. At some point, these should have their own class
-
-    // this is a pointer to the last event modified, whether
-    // it is moved, or has lambda updated, or whatever.
-    BranchEvent*    _lastEventModified;
 
     double _segLength; // for splitting branches
 

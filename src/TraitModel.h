@@ -39,9 +39,7 @@ public:
     bool   acceptMetropolisHastings(const double lnR);
 
     // Stuff for event handling:
-    void addEventToTree();
     void addEventToTreeWithSetBeta(double beta, double bshift);
-    void addEventToTree(double x); // add to specific map position...
     void deleteRandomEventFromTree();
     void deleteEventFromTree(BranchEvent* be);
 
@@ -109,6 +107,8 @@ private:
     virtual BranchEvent* newBranchEventWithReadParameters(Node* x, double time);
     virtual void setMeanBranchParameters();
 
+    virtual BranchEvent* newBranchEventWithRandomParameters(double x);
+
     //  parameters of the model:
 
     double lnLikTraits;
@@ -122,10 +122,6 @@ private:
 
     // Here are several variables that track the previous
     // state. At some point, these should have their own class
-
-    // this is a pointer to the last event modified, whether
-    // it is moved, or has lambda updated, or whatever.
-    BranchEvent* lastEventModified;
 
     // Ultimately, initializations should be handled in TraitModel
     // and Model classes

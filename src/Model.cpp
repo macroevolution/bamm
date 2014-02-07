@@ -178,3 +178,34 @@ void Model::forwardSetHistoriesRecursive(Node* p)
         }
     }
 }
+
+
+void Model::addEventToTree()
+{
+    double aa = _tree->getRoot()->getMapStart();
+    double bb = _tree->getTotalMapLength();
+    double x = _rng->uniformRv(aa, bb);
+                
+    addEventToTree(x);
+}
+
+
+// Adds event to tree based on reference map value
+// - Adds to branch history set
+// - Inserts into _eventCollection
+
+void Model::addEventToTree(double x)
+{
+    BranchEvent* newEvent = newBranchEventWithRandomParameters(x);
+            
+    // Add the event to the branch history.
+    // Always done after event is added to tree.
+    newEvent->getEventNode()->getBranchHistory()->
+        addEventToBranchHistory(newEvent);
+                
+    _eventCollection.insert(newEvent);
+    forwardSetBranchHistories(newEvent);
+    setMeanBranchParameters();
+                            
+    _lastEventModified = newEvent;
+}

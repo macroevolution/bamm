@@ -54,6 +54,9 @@ public:
     int getNumberOfEvents();
     BranchEvent* getRootEvent();
 
+    void addEventToTree();
+    void addEventToTree(double x);
+
 protected:
 
     virtual void readModelSpecificParameters(std::ifstream& inputFile) = 0;
@@ -61,6 +64,8 @@ protected:
     virtual BranchEvent* newBranchEventWithReadParameters
         (Node* x, double time) = 0;
     virtual void setMeanBranchParameters() = 0;
+
+    virtual BranchEvent* newBranchEventWithRandomParameters(double x) = 0;
 
     MbRandom* _rng;
     Tree* _tree;
@@ -86,6 +91,9 @@ protected:
     BranchEvent* _rootEvent;
 
     double _lastDeletedEventMapTime;    // map time of last deleted event
+
+    // Last event modified, whether it is moved, or has value updated
+    BranchEvent* _lastEventModified;
 };
 
 
