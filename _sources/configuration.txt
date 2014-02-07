@@ -104,9 +104,6 @@ MCMC Simulation
     Frequency (in generations) at which to print event details
     to ``eventDataOutfile``.
 
-``acceptWriteFreq``
-    Frequency (in generations) at which to print accept rate to the screen.
-
 ``printFreq``
     Frequency (in generations) at which to print output to the screen.
 

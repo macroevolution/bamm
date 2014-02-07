@@ -15,23 +15,23 @@ This paper contains a description of the model, the reversible jump MCMC impleme
 
 
 How much data does it need?
------------------------
+---------------------------
 **Not much**. There is no general rule here, but if your dataset is large enough to consider doing any other sort of diversification analysis, then it is probably large enough for BAMM. The whale diversification analysis shown in the :ref:`graph gallery<bammgraph>` uses a time-calibrated tree with 89 tips. We've had good success using BAMM on trees that are considerably smaller than this. 
 
 
 
 BAMM extensions
------------------------
+---------------
 
 We are currently testing extensions of BAMM that allow modeling evolutionary dynamics under a much greater range of phenotypic evolutionary scenarios, as well as the incorporation of paleontological data. Bleeding edge releases of BAMM can be obtained from here (**link**).
 
 
 Problems running BAMM
-......................
+.....................
 
 
 I can't get BAMM to run on my system
------------------------------------------
+------------------------------------
 
 **Under construction**
 
@@ -39,7 +39,7 @@ Brief list of possible things to try.
 
 
 I get an error message when I try to run BAMM
-----------------------------------------------
+---------------------------------------------
 
 **Under construction**
 
@@ -50,7 +50,7 @@ This section needs to explain common error messages obtained with BAMM. For exam
 implies that BAMM is having a hard time reading your control file. Are you spelling the control file name correctly (including the extension), and/or are you sure it is in the correct directory?
 
 Stepwise troubleshooting
------------------------------------------
+------------------------
 
 The simplest way to localize potential problems is to first try to load your data without doing anything else. You can do this by setting the following parameter in your controlfile::
 
@@ -65,7 +65,7 @@ If these issues fail to resolve the problem, and if you cannot
 
  
 I get a system error (segfault or equivalent) when running BAMM
----------------------------------------------------------------------
+---------------------------------------------------------------
 
 Other possible errors may arise, not discussed above. This may include errors that mention "Segmentation fault", or "Floating point error". Please contact Carlos Anderson (**link**) or Dan Rabosky (**link**) with information about system errors. Please send us as much information as possible, so that we can try to replicate the problem. You should include (if possible) the data files that led to the problem, your control file, and as much information as possible about your operating system and computer architecture. On unix/linux/OSX, you should be able to obtain most of this information using::
 	
@@ -95,7 +95,7 @@ The model and approximations
 ....................................
 
 How can BAMM detect diversity-dependent changes in speciation rates?
-------------------------------------------------------------------------
+--------------------------------------------------------------------
 
 BAMM models the dynamics of speciation and extinction within rate regimes using an exponential change function. The speciation rate :math:`\lambda` at any point in time is modeled as
 
@@ -112,5 +112,5 @@ As an aside, the user is encouraged to remember that all analytically tractable 
  
  
 Other questions
-.................
+...............
  

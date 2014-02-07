@@ -3,7 +3,6 @@
 BAMM graph gallery
 ==================
 
-
 Tree-wide diversification heterogeneity
 ---------------------------------------
 
@@ -59,7 +58,7 @@ Evolutionary rates through time for whales, color version with density shading.
 R code :download:`here<rcode/rate_through_time_whales_color.R>`
 
 Bayes factors
-----------------
+-------------
 
 .. _pwbffig: 
 .. figure:: figs/xBayesFactorsJetzPW.png
@@ -69,7 +68,7 @@ Bayes factors
    Pairwise matrix of Bayes factors for the JEA bird phylogeny (Jetz *et al*, **Nature**, 491:444-448, 2012). Orange/red colors involve decisive comparisons between models (Bayes factor evidence > 100). Color bar on right gives interpretation of colors in units of log(Bayes factor). Models with fewer than 50 processes fare poorly when compared to models with approximately 55 - 65 processes. This suggests the presence of massive diversification rate heterogeneity across the avian phylogeny. R code :download:`here<rcode/BF_pairwise.R>`.
  
 Maximum shift credibility configuration
--------------------------------
+---------------------------------------
 
 .. _maxcredibility: 
 .. figure:: figs/xMaxCredShiftTree.png
@@ -80,7 +79,7 @@ Maximum shift credibility configuration
       
       
 Cumulative shift probability
------------------------------
+----------------------------
 .. _cst: 
 .. figure:: figs/xCumShiftTree.png
    :width: 700

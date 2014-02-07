@@ -103,7 +103,7 @@
   <div class="section" id="advanced-analysis-options">
 <h1>7. Advanced analysis options<a class="headerlink" href="#advanced-analysis-options" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="accounting-for-non-random-incomplete-taxon-sampling-in-diversification-studies">
-<h2>7.1. Accounting for <em>non-random</em> incomplete taxon sampling in diversification studies<a class="headerlink" href="#accounting-for-non-random-incomplete-taxon-sampling-in-diversification-studies" title="Permalink to this headline">¶</a></h2>
+<span id="incompsampling"></span><h2>7.1. Accounting for <em>non-random</em> incomplete taxon sampling in diversification studies<a class="headerlink" href="#accounting-for-non-random-incomplete-taxon-sampling-in-diversification-studies" title="Permalink to this headline">¶</a></h2>
 <p>It is well-known that incomplete taxon sampling can bias analyses of speciation and extinction from phylogenetic trees. If you have an incompletely-sampled tree (e.g., some fraction &lt; 1 of the total extant species richness of your focal taxon), you can easily specify this sampling fraction to generate unbiased estimates of speciation and extinction under the assumption that <em>species are missing at random from the tree</em>. In your controlfile, you can specify the percentage of species that have been sampled by setting the <tt class="docutils literal"><span class="pre">globalSamplingFraction</span></tt> parameter. Specifically, you should have the following settings in your control file:</p>
 <div class="highlight-none"><div class="highlight"><pre>useGlobalSamplingProbability = 1
 globalSamplingFraction = XYZ
