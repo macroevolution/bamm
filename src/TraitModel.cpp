@@ -88,9 +88,6 @@ TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
     if (_settings->getSampleFromPriorOnly()) {
         log() << "Note that you have chosen to sample from prior only.\n";
     }
-
-    // This parameter only set during model-jumping.
-    _logQratioJump = 0.0;
 }
 
 
@@ -144,132 +141,35 @@ BranchEvent* TraitModel::newBranchEventWithRandomParameters(double x)
     double dens_term = 0.0;
 #endif
     
-    _logQratioJump = 0.0;
+    _logQRatioJump = 0.0;
     
-    _logQratioJump += _prior->betaInitPrior(newbeta);
-    _logQratioJump += dens_term + _prior->betaShiftPrior(newBetaShift);
+    _logQRatioJump += _prior->betaInitPrior(newbeta);
+    _logQRatioJump += dens_term + _prior->betaShiftPrior(newBetaShift);
     
     return new TraitBranchEvent(newbeta, newBetaShift,
         _tree->mapEventToTree(x), _tree, _rng, x);
 }
 
 
-/*
-
- Deletes an event from tree.
-
- */
-
-void TraitModel::deleteEventFromTree(BranchEvent* be)
+void TraitModel::setDeletedEventParameters(BranchEvent* be)
 {
-    
-    
-    if (be == _rootEvent) {
-        std::cout << "Can't delete root event" << std::endl;
-        exit(1);
-    } else {
-        // erase from branch history:
-        Node* currNode = (be)->getEventNode();
-        
-        //get event downstream of i
-        BranchEvent* newLastEvent =
-            currNode->getBranchHistory()->getLastEvent(be);
-        
-        _lastDeletedEventMapTime = (be)->getMapTime();
-        
-        TraitBranchEvent* event = static_cast<TraitBranchEvent*>(be);
-        _lastDeletedEventBetaInit = event->getBetaInit();
-        _lastDeletedEventBetaShift = event->getBetaShift();
-        
-        /************************/
-        _logQratioJump = 0.0;
-        
-        _logQratioJump = _prior->betaInitPrior(_lastDeletedEventBetaInit);
-        _logQratioJump += _prior->betaShiftPrior(_lastDeletedEventBetaShift);
-        
-        currNode->getBranchHistory()->popEventOffBranchHistory((be));
-        
-        _eventCollection.erase(be);
-        
-        // delete from global node set
-        delete (be);
-        //std::cout << "deleted..." << std::endl;
-        
-        forwardSetBranchHistories(newLastEvent);
-        
-    }
-    
-    
-    _tree->setMeanBranchTraitRates();
-    
-    
+    TraitBranchEvent* event = static_cast<TraitBranchEvent*>(be);
+
+    _lastDeletedEventBetaInit = event->getBetaInit();
+    _lastDeletedEventBetaShift = event->getBetaShift();
 }
 
 
-
-
-
-void TraitModel::deleteRandomEventFromTree(void)
+double TraitModel::calculateLogQRatioJump()
 {
+    double _logQRatioJump = 0.0;
     
-    
-    //std::cout << std::endl << std::endl << "START Delete: " << std::endl;
-    //printBranchHistories(_tree->getRoot());
-    
-    // can only delete event if more than root node present.
-    int n_events = (int)_eventCollection.size();
-    
-    if (_eventCollection.size() > 0) {
-        int counter = 0;
-        double xx = _rng->uniformRv();
-        int chosen = (int)(xx * (double)n_events);
-        
-        for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
-             i != _eventCollection.end(); ++i) {
-            if (counter++ == chosen) {
-                
-                // erase from branch history:
-                Node* currNode = (*i)->getEventNode();
-                
-                //get event downstream of i
-                BranchEvent* newLastEvent =
-                    currNode->getBranchHistory()->getLastEvent((*i));
-                
-                _lastDeletedEventMapTime = (*i)->getMapTime();
-                //lastDeletedEventBeta = (*i)->getBeta();
-                
-                TraitBranchEvent* be = static_cast<TraitBranchEvent*>(*i);
-                _lastDeletedEventBetaInit = be->getBetaInit();
-                _lastDeletedEventBetaShift = be->getBetaShift();
-                
-                
-                currNode->getBranchHistory()->popEventOffBranchHistory((*i));
-                
-                /************************/
-                _logQratioJump = 0.0;
-                
-                _logQratioJump += _prior->betaInitPrior(_lastDeletedEventBetaInit);
-                _logQratioJump += _prior->betaShiftPrior(_lastDeletedEventBetaShift);
-                
-                delete *i;
-                _eventCollection.erase(i);
-                
-                // reset forward history from last event:
-                //BranchEvent* lastEvent = getLastEvent(currNode);
-                //forwardSetBranchHistories(lastEvent);
-                forwardSetBranchHistories(newLastEvent);
-                
-                //std::cout << "forward set..." << std::endl;
-                
-                // is this correctly setting branch histories??
-                
-                break;
-            }
-        }
-    }
-    _tree->setMeanBranchTraitRates();
-    
+    _logQRatioJump = _prior->betaInitPrior(_lastDeletedEventBetaInit);
+    _logQRatioJump += _prior->betaShiftPrior(_lastDeletedEventBetaShift);
+
+    return _logQRatioJump;
 }
+    
 
 void TraitModel::restoreLastDeletedEvent(void)
 {
@@ -368,7 +268,7 @@ void TraitModel::changeNumberOfEventsMH(void)
 
         logHR += (newLogPrior - oldLogPrior);
 
-        logHR -= _logQratioJump;
+        logHR -= _logQRatioJump;
 
 
         if (std::isinf(likeRatio) ) {
@@ -455,7 +355,7 @@ void TraitModel::changeNumberOfEventsMH(void)
 
         logHR += (newLogPrior - oldLogPrior);
 
-        logHR += _logQratioJump;
+        logHR += _logQRatioJump;
 
         if (std::isinf(likeRatio) ) {
 
@@ -492,7 +392,7 @@ void TraitModel::changeNumberOfEventsMH(void)
 #ifdef DEBUG
 
     std::cout << "gain: " << gain << "\tOP: " << oldLogPrior << "\tNP: " << newLogPrior
-         << "\tLQ: " << _logQratioJump;
+         << "\tLQ: " << _logQRatioJump;
     std::cout << "\tAc: " << acceptMove << "\tlogHR " << logHR;
     std::cout << "ps/k:  " << K << "\t" << proposedState << std::endl;
 

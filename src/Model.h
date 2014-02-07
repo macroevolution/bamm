@@ -57,6 +57,9 @@ public:
     void addEventToTree();
     void addEventToTree(double x);
 
+    void deleteEventFromTree(BranchEvent* be);
+    void deleteRandomEventFromTree();
+
     BranchEvent* chooseEventAtRandom();
 
     // Move random event
@@ -76,6 +79,9 @@ protected:
     virtual void setMeanBranchParameters() = 0;
 
     virtual BranchEvent* newBranchEventWithRandomParameters(double x) = 0;
+
+    virtual void setDeletedEventParameters(BranchEvent* be) = 0;
+    virtual double calculateLogQRatioJump() = 0;
 
     void eventMove(bool local);
 
@@ -106,6 +112,11 @@ protected:
 
     // Last event modified, whether it is moved, or has value updated
     BranchEvent* _lastEventModified;
+
+    // This parameter holds the density of the new parameters proposed
+    // during jump moves. If the parameters are sampled from the prior,
+    // these should exactly cancel.
+    double _logQRatioJump;
 };
 
 

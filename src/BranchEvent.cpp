@@ -31,6 +31,7 @@ BranchEvent::~BranchEvent()
 
 bool BranchEvent::operator<(const BranchEvent& a) const
 {
+    // TODO: This is counter-intuitive; explain
     if ( mapTime > a.mapTime ) {
         return true;
     } else {

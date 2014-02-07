@@ -45,10 +45,6 @@ public:
     double proportionalShrink(double x, double scale);
     bool   acceptMetropolisHastings(const double lnR);
 
-    // Stuff for event handling:
-    void deleteRandomEventFromTree();
-    void deleteEventFromTree(BranchEvent* be);
-
     // Initialize all branch histories to the root node.
     void initializeBranchHistories(Node* x);
 
@@ -109,7 +105,11 @@ private:
     virtual void setRootEventWithReadParameters();
     virtual BranchEvent* newBranchEventWithReadParameters(Node* x, double time);
     virtual void setMeanBranchParameters();
+
     virtual BranchEvent* newBranchEventWithRandomParameters(double x);
+
+    virtual void setDeletedEventParameters(BranchEvent* be);
+    virtual double calculateLogQRatioJump();
 
     // Parameters of the model:
 
@@ -122,13 +122,6 @@ private:
 
     double _updateMuInitScale;
     double _updateMuShiftScale;
-
-    // This parameter holds the density of the new
-    // parameters proposed during jump moves.
-    // If the parameters are sampled from the prior,
-    //    these should exactly cancel.
-
-    double _logQratioJump;
 
     // Root event parameters:
 

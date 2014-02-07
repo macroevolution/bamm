@@ -41,6 +41,8 @@ Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
     _acceptLast = -1;
 
     _lastDeletedEventMapTime = 0;
+
+    _logQRatioJump = 0.0;
 }
 
 
@@ -344,4 +346,74 @@ int Model::countEventsInBranchHistory(Node* p)
     }
 
     return count;
+}
+
+
+void Model::deleteEventFromTree(BranchEvent* be)
+{
+    if (be ==_rootEvent) {
+        log(Error) << "Can't delete root event.\n";
+        std::exit(1);
+    }
+
+    // Erase from branch history
+    Node* currNode = be->getEventNode();
+
+    // Get event downstream of i
+    BranchEvent* newLastEvent = currNode->getBranchHistory()->getLastEvent(be);
+
+    _lastDeletedEventMapTime = be->getMapTime();
+
+    setDeletedEventParameters(be);
+    _logQRatioJump = calculateLogQRatioJump();
+
+    currNode->getBranchHistory()->popEventOffBranchHistory(be);
+
+    // Cannot remove "be" with _eventCollection.erase(be) because
+    // it is not always found in the collection, even though it is there.
+    // It seems that, because event pointers are compared by comparing
+    // doubles, the event is sometimes not seen (floating-point issue).
+    bool eventFound = false;
+    EventSet::iterator it;
+    for (it = _eventCollection.begin(); it != _eventCollection.end(); ++it) {
+        if (*it == be) {    // Compare pointers directly, not using comparer
+            _eventCollection.erase(it);
+            eventFound = true;
+            break;
+        }
+    }
+
+    if (!eventFound) {
+        log(Error) << "Could not find event to delete.\n";
+        std::exit(1);
+    }
+
+    delete be;
+
+    forwardSetBranchHistories(newLastEvent);
+
+    setMeanBranchParameters();
+}
+
+
+void Model::deleteRandomEventFromTree()
+{
+    int numEvents = (int)_eventCollection.size();
+
+    // Can only delete event if more than root node present.
+    if (numEvents == 0) {
+        return;
+    }
+
+    int counter = 0;
+    double xx = _rng->uniformRv();
+    int chosen = (int)(xx * (double)numEvents);
+
+    EventSet::iterator it;
+    for (it = _eventCollection.begin(); it != _eventCollection.end(); ++it) {
+        if (counter++ == chosen) {
+            deleteEventFromTree(*it);
+            break;
+        }
+    }
 }

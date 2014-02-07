@@ -93,9 +93,6 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
     log() << "\nInitial log-likelihood: " << getCurrLnLBranches() << "\n";
     if (_settings->getSampleFromPriorOnly())
         log() << "Note that you have chosen to sample from prior only.\n";
-
-    // This parameter only set during model-jumping
-    _logQratioJump = 0.0;
 }
 
 
@@ -149,135 +146,38 @@ BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
     double newMuShift = _prior->generateMuShiftFromPrior();
  
     // Computes the jump density for the addition of new parameters.
-    _logQratioJump = 0.0;    // Set to zero to clear previous values
-    _logQratioJump = _prior->lambdaInitPrior(newLam);
-    _logQratioJump += _prior->lambdaShiftPrior(newLambdaShift);
-    _logQratioJump += _prior->muInitPrior(newMu);
-    _logQratioJump += _prior->muShiftPrior(newMuShift);
+    _logQRatioJump = 0.0;    // Set to zero to clear previous values
+    _logQRatioJump = _prior->lambdaInitPrior(newLam);
+    _logQRatioJump += _prior->lambdaShiftPrior(newLambdaShift);
+    _logQRatioJump += _prior->muInitPrior(newMu);
+    _logQRatioJump += _prior->muShiftPrior(newMuShift);
     
     return new SpExBranchEvent(newLam, newLambdaShift, newMu,
         newMuShift, _tree->mapEventToTree(x), _tree, _rng, x);
 }
 
 
-/*
-
-    Deletes an event from tree.
-
-*/
-
-void SpExModel::deleteEventFromTree(BranchEvent* be)
+void SpExModel::setDeletedEventParameters(BranchEvent* be)
 {
+    SpExBranchEvent* event = static_cast<SpExBranchEvent*>(be);
 
-    if (be ==_rootEvent) {
-        std::cout << "Can't delete root event" << std::endl;
-        exit(1);
-    } else {
-        // erase from branch history:
-        Node* currNode = (be)->getEventNode();
-
-        //get event downstream of i
-        BranchEvent* newLastEvent = currNode->getBranchHistory()->getLastEvent(be);
-
-        _lastDeletedEventMapTime = (be)->getMapTime();
-
-        SpExBranchEvent* event = static_cast<SpExBranchEvent*>(be);
-        _lastDeletedEventLambdaInit = event->getLamInit();
-        _lastDeletedEventLambdaShift = event->getLamShift();
-
-        _lastDeletedEventMuInit = event->getMuInit();
-        _lastDeletedEventMuShift = event->getMuShift();
-
-
-        _logQratioJump = 0.0; // Set to zero to clear previous values...
-        
-        _logQratioJump = _prior->lambdaInitPrior(_lastDeletedEventLambdaInit);
-        _logQratioJump += _prior->lambdaShiftPrior(_lastDeletedEventLambdaShift);
-        _logQratioJump += _prior->muInitPrior(_lastDeletedEventMuInit);
-        _logQratioJump += _prior->muShiftPrior(_lastDeletedEventMuShift);
-    
-        currNode->getBranchHistory()->popEventOffBranchHistory((be));
-
-        _eventCollection.erase(be);
-
-        // delete from global node set
-        delete (be);
-        //std::cout << "deleted..." << std::endl;
-
-        forwardSetBranchHistories(newLastEvent);
-    }
-
-
-    _tree->setMeanBranchSpeciation();
-    _tree->setMeanBranchExtinction();
-
+    _lastDeletedEventLambdaInit = event->getLamInit();
+    _lastDeletedEventLambdaShift = event->getLamShift();
+    _lastDeletedEventMuInit = event->getMuInit();
+    _lastDeletedEventMuShift = event->getMuShift();
 }
 
 
-
-
-void SpExModel::deleteRandomEventFromTree(void)
+double SpExModel::calculateLogQRatioJump()
 {
+    double _logQRatioJump = 0.0;
+    
+    _logQRatioJump = _prior->lambdaInitPrior(_lastDeletedEventLambdaInit);
+    _logQRatioJump += _prior->lambdaShiftPrior(_lastDeletedEventLambdaShift);
+    _logQRatioJump += _prior->muInitPrior(_lastDeletedEventMuInit);
+    _logQRatioJump += _prior->muShiftPrior(_lastDeletedEventMuShift);
 
-    //std::cout << std::endl << std::endl << "START Delete: " << std::endl;
-    //printBranchHistories(_tree->getRoot());
-
-    // can only delete event if more than root node present.
-    int n_events = (int)_eventCollection.size();
-
-    if (_eventCollection.size() > 0) {
-        int counter = 0;
-        double xx = _rng->uniformRv();
-        int chosen = (int)(xx * (double)n_events);
-
-        for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
-                i != _eventCollection.end(); i++) {
-            if (counter++ == chosen) {
-
-                // erase from branch history:
-                Node* currNode = (*i)->getEventNode();
-
-                //get event downstream of i
-                BranchEvent* newLastEvent = currNode->getBranchHistory()->getLastEvent((*i));
-
-                _lastDeletedEventMapTime = (*i)->getMapTime();
-                //lastDeletedEventBeta = (*i)->getBeta();
-
-                SpExBranchEvent* event = static_cast<SpExBranchEvent*>(*i);
-                _lastDeletedEventLambdaInit = event->getLamInit();
-                _lastDeletedEventLambdaShift = event->getLamShift();
-
-                _lastDeletedEventMuInit = event->getMuInit();
-                _lastDeletedEventMuShift = event->getMuShift();
-
-                // This block computes the jump density for the
-                //  deletion of new parameters.
-
-                _logQratioJump = 0.0; // Set to zero to clear previous values...
-                _logQratioJump = _prior->lambdaInitPrior(_lastDeletedEventLambdaInit);
-                _logQratioJump += _prior->lambdaShiftPrior(_lastDeletedEventLambdaShift);
-                _logQratioJump += _prior->muInitPrior(_lastDeletedEventMuInit);
-                _logQratioJump += _prior->muShiftPrior(_lastDeletedEventMuShift);
-
-                //std::cout << (*i) << std::endl;
-
-                currNode->getBranchHistory()->popEventOffBranchHistory((*i));
-
-                _eventCollection.erase(i);
-
-                // delete from global node set
-                delete (*i);
-
-                forwardSetBranchHistories(newLastEvent);
-
-                break;
-            }
-        }
-    }
-
-    _tree->setMeanBranchSpeciation();
-    _tree->setMeanBranchExtinction();
-
+    return _logQRatioJump;
 }
 
 
@@ -396,7 +296,7 @@ void SpExModel::changeNumberOfEventsMH(void)
         logHR += (newLogPrior - oldLogPrior);
 
         // Now for jumping density of the bijection between parameter spaces:
-        logHR -= _logQratioJump;
+        logHR -= _logQRatioJump;
 
         if (std::isinf(likeRatio) ) {
 
@@ -491,7 +391,7 @@ void SpExModel::changeNumberOfEventsMH(void)
         logHR += (newLogPrior - oldLogPrior);
 
         // Now for jumping density of the bijection between parameter spaces:
-        logHR += _logQratioJump;
+        logHR += _logQRatioJump;
 
         if (std::isinf(likeRatio) ) {
 
@@ -526,7 +426,7 @@ void SpExModel::changeNumberOfEventsMH(void)
     }
 
     //std::cout << currState << "\t" << proposedState << "\tAcc: " << acceptMove << "\tOP: " << oldLogPrior;
-    //std::cout << "\tNP: " << newLogPrior << "\tqratio: " << _logQratioJump << std::endl;
+    //std::cout << "\tNP: " << newLogPrior << "\tqratio: " << _logQRatioJump << std::endl;
 
     incrementGeneration();
 

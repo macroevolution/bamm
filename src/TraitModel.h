@@ -38,10 +38,6 @@ public:
     double proportionalShrink(double x, double scale);
     bool   acceptMetropolisHastings(const double lnR);
 
-    // Stuff for event handling:
-    void deleteRandomEventFromTree();
-    void deleteEventFromTree(BranchEvent* be);
-
     // initialize all branch histories to the root node.
     void initializeBranchHistories(Node* x);
     void printStartAndEndEventStatesForBranch(Node* x);
@@ -94,6 +90,9 @@ private:
 
     virtual BranchEvent* newBranchEventWithRandomParameters(double x);
 
+    virtual void setDeletedEventParameters(BranchEvent* be);
+    virtual double calculateLogQRatioJump();
+
     //  parameters of the model:
 
     double lnLikTraits;
@@ -113,8 +112,6 @@ private:
     // NOT in class TREE!!
     void   initializeTraitParamsForNodes();
     double _lastLH;
-
-    double _logQratioJump;
 
     double _readBetaInit;
     double _readBetaShift;
