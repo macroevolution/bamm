@@ -1,10 +1,11 @@
 .. _bammtools:
 
 Analyzing BAMM output with BAMMtools
-===============================================
+====================================
 
 Brief
-................
+.....
+
 The R package **BAMMtools** contains almost everything you need to analyze and visualize evolutionary rate dynamics from BAMM output. You will need to install this package. To install BAMMtools, type the following in your R console::
 
 	> install.packages("BAMMtools")
@@ -12,7 +13,7 @@ The R package **BAMMtools** contains almost everything you need to analyze and v
 The information below is a brief overview to get you started - there is much more than can be done. The end of this page contains a :ref:`sample BAMMtools workflow<bammtoolsworkflow>` for analyzing rates and rate shifts.
 
 BAMM output files
-............................
+.................
 
 BAMM generates three primary output files. The first is the *mcmc data file*, which contains several pieces of information about the MCMC simulation that may be useful in diagnosing convergence. The most important pieces of information from this file are the number of shift events, the log-likelihood of the data, and the log-prior probability of the data, for each sample from the posterior. 
 
@@ -24,6 +25,7 @@ Finally, BAMM will (optionally) generate a second MCMC output file that contains
 
 Diagnosing convergence
 ......................
+
 The first question after running any MCMC simuluation should always be: *did my run converge?* While it may be difficult to prove convergence in an absolute sense, there are a few simple checks you can do. First, you can plot the log-likelihood trace of your MCMC output file::
 
 	> mcmcout <- read.csv("mcmc_out.txt", header=T)
@@ -49,7 +51,7 @@ In general, we want these to be at least 200 (and 200 is on the low side, but mi
 If you are having trouble with convergence, please see the section on :ref:`troubleshooting convergence issues<fixbammconvergence>`. 
 
 General BAMMtools workflow
-..........................................
+..........................
 
 The general analyses described in this section apply both to **speciation-extinction** and **phenotypic evolution** studies. As such, they are not treated separately. The primary difference is the name of the parameters (:math:`\lambda` and :math:`\mu` for speciation and extinction, and :math:`\beta` for trait evolution).
 
@@ -80,6 +82,7 @@ Now we will focus on a few simple analyses that you can do with the 'BAMM-data' 
 
 Analyzing locations of rate shifts
 ----------------------------------
+
 Once you have established there there is at least some evidence for heterogeneous evolutionary dynamics in your dataset, the obvious question is: where are these rate shifts? In the BAMM framework, this is a deceptively simple question, because BAMM does not generate a single *best* rate shift configuration. In the BAMM framework, many different shift configurations may be (more-or-less) equally plausible. BAMM samples shift configurations in proportion to their posterior probability. In principle, this means that each sample from your posterior contains a potentially unique configuration of regime shift events. 
 
 A conceptual discussion of the meaning of rate shifts is included in this documentation and it is **strongly recommended** that you :ref:`read this section before continuing<rateshifts>`. Approaches that identify a single best shift configuration (e.g., stepwise AIC, or other approaches that simply maximize the likelihood) are inherently limited by their assumption that the model with the best information theoretic score (AIC etc) is *the* model, given the candidate set of models. However, for most real datasets, the best rate shift configuration is merely one of a large number of possible rate shift configurations that have similar probabilities. The BAMM philosophy is largely oriented around addressing this. 
@@ -191,6 +194,7 @@ And you can see that the non-dolphin (background) rate is much lower than the do
 
 Branch-specific evolutionary rates
 ----------------------------------
+
 BAMM can estimate marginal distributions of evolutionary rates for any point in time along a phylogenetic tree (this is what the the function ``plot.bammdata`` is going to generate a phylorate plot). Sometimes, however, it is useful to have mean rates for individual branches. To pull out the mean rates for individual branches, you can use the function ``getMeanBranchLengthTree`` (see the ``?getMeanBranchLengthTree`` for help on this function). The function generates a copy of your original phylogenetic tree, but where each branch length is replaced by the mean of the marginal distribution of evolutionary rates on each branch. The function can be used to extract branch-specific mean rates of speciation, extinction, net diversification, and trait evolution.
 
 Plotting rate-through-time curves
@@ -256,7 +260,8 @@ Please see code underlying some BAMM graph gallery plots for more on working wit
 
 
 Computing Bayes factors
-----------------------------------
+-----------------------
+
 BAMMtools makes it easy to compute Bayes factor evidence in favor of one model relative to another. The disadvantage of Bayes factors is that they provide a measure of pairwise model support and don't necessarily identify a single best model (this isn't necessarily bad: *is* there a single best model?). An advantage of Bayes factors as that they allow model comparisons to be made *independent of the prior on the model*. In BAMM, you specified a hyperprior distribution on the number of shift regimes, and this will have some effect on your posterior model probabilities, so it can be useful to look at the Bayes factor matrix for model comparisons.
 
 This analysis assumes that you have generated an *MCMC output file* involving simulation from the **prior only**. BAMMtools will need to perform explicit comparisons of the prior and posterior model probabilities. Assuming you have files *prior_mcmc_out.txt* and *post_mcmc_out.txt* for your analysis, you can compute a pairwise Bayes factor matrix as::
@@ -268,7 +273,7 @@ This analysis assumes that you have generated an *MCMC output file* involving si
 and this will return a pairwise matrix of Bayes factors. It is very important to recognize that model probabilities for rarely sampled models are likely to be inaccurate. Hence, BAMM will return a matrix with missing values (NA) if a given model was insufficiently sampled to estimate posterior or prior odds (see the ``threshpost`` and ``threshprior`` arguments in ?computeBayesFactors). Also keep in mind that any model sampled too infrequently to estimate model odds is also a model that is highly improbable given the data, so the missing Bayes factors aren't really something to worry about. Please see the analysis detailed :ref:`here<pwbffig>` for analysis and visualization of pairwise Bayes factors for a large set of candidate models.
 
 BAMMtools workflows
---------------------------------
+-------------------
 
 .. _bammtoolsworkflow:
 
