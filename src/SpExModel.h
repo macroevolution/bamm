@@ -49,8 +49,6 @@ public:
     void deleteRandomEventFromTree();
     void deleteEventFromTree(BranchEvent* be);
 
-    int countEventsInBranchHistory(Node* p);
-
     // Initialize all branch histories to the root node.
     void initializeBranchHistories(Node* x);
 

@@ -328,3 +328,20 @@ void Model::revertMovedEventToPrevious()
 
     setMeanBranchParameters();
 }
+
+
+// Recursively count the number of events in the branch histories
+int Model::countEventsInBranchHistory(Node* p)
+{
+    int count = p->getBranchHistory()->getNumberOfBranchEvents();
+
+    if (p->getLfDesc() != NULL) {
+        count += countEventsInBranchHistory(p->getLfDesc());
+    }
+
+    if (p->getRtDesc() != NULL){
+        count += countEventsInBranchHistory(p->getRtDesc());
+    }
+
+    return count;
+}

@@ -65,6 +65,8 @@ public:
 
     void revertMovedEventToPrevious();
 
+    int countEventsInBranchHistory(Node* p);
+
 protected:
 
     virtual void readModelSpecificParameters(std::ifstream& inputFile) = 0;

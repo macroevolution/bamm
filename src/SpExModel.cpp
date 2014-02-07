@@ -160,19 +160,6 @@ BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
 }
 
 
-// Recursively count the number of events in the branch histories
-int SpExModel::countEventsInBranchHistory(Node* p)
-{
-    int count = 0;
-    count += p->getBranchHistory()->getNumberOfBranchEvents();
-    if (p->getLfDesc() != NULL)
-        count += countEventsInBranchHistory(p->getLfDesc());
-    if (p->getRtDesc() != NULL)
-        count += countEventsInBranchHistory(p->getRtDesc());
-
-    return count;
-}
-
 /*
 
     Deletes an event from tree.
