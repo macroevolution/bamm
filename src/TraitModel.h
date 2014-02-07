@@ -39,7 +39,6 @@ public:
     bool   acceptMetropolisHastings(const double lnR);
 
     // Stuff for event handling:
-    void addEventToTreeWithSetBeta(double beta, double bshift);
     void deleteRandomEventFromTree();
     void deleteEventFromTree(BranchEvent* be);
 
