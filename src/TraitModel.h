@@ -49,17 +49,10 @@ public:
     void initializeBranchHistories(Node* x);
     void printStartAndEndEventStatesForBranch(Node* x);
 
-    void eventLocalMove(BranchEvent* x); // move specific event
-    void eventGlobalMove(BranchEvent* x); // move specific event
-    void eventLocalMove(); // move random event
-    void eventGlobalMove(); // move random event
-    void revertEventToPreviousPosition();
-
     // MCMC:
     // Propose addition or deletion; accept/reject move.
     void changeNumberOfEventsMH();
     void moveEventMH();
-    void revertMovedEventToPrevious();
 
     /*  ***************** */
 

@@ -59,6 +59,12 @@ public:
 
     BranchEvent* chooseEventAtRandom();
 
+    // Move random event
+    void eventLocalMove();
+    void eventGlobalMove();
+
+    void revertMovedEventToPrevious();
+
 protected:
 
     virtual void readModelSpecificParameters(std::ifstream& inputFile) = 0;
@@ -68,6 +74,8 @@ protected:
     virtual void setMeanBranchParameters() = 0;
 
     virtual BranchEvent* newBranchEventWithRandomParameters(double x) = 0;
+
+    void eventMove(bool local);
 
     MbRandom* _rng;
     Tree* _tree;

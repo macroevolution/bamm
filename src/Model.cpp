@@ -234,3 +234,97 @@ BranchEvent* Model::chooseEventAtRandom()
 
     return *sit;
 }
+
+
+void Model::eventLocalMove(void)
+{
+    eventMove(true);
+}
+
+
+void Model::eventGlobalMove(void)
+{
+    eventMove(false);
+}
+
+
+// If events are on tree: choose event at random,
+// move locally (or globally) and forward set branch histories etc.
+// Should also store previous event information to revert to previous
+
+// If parameter local == true, does a local move;
+// otherwise, it does a global move
+
+void Model::eventMove(bool local)
+{
+    if (getNumberOfEvents() > 0) {
+        // The event to be moved
+        BranchEvent* chosenEvent = chooseEventAtRandom();
+
+        // This is the event preceding the chosen event:
+        // histories should be set forward from here.
+        BranchEvent* previousEvent = chosenEvent->getEventNode()->
+            getBranchHistory()->getLastEvent(chosenEvent);
+
+        // Set this history variable in case move is rejected
+        _lastEventModified = chosenEvent;
+
+        chosenEvent->getEventNode()->getBranchHistory()->
+            popEventOffBranchHistory(chosenEvent);
+
+        if (local) {
+            // Get step size for move
+            double step = _rng->uniformRv(0, _scale) - 0.5 * _scale;
+            chosenEvent->moveEventLocal(step);
+        } else {
+            chosenEvent->moveEventGlobal();
+        }
+
+        chosenEvent->getEventNode()->getBranchHistory()->
+            addEventToBranchHistory(chosenEvent);
+
+        // Get last event from the theEventNode, forward set its history.
+        // Then go to the "moved" event and forward set its history.
+
+        forwardSetBranchHistories(previousEvent);
+        forwardSetBranchHistories(chosenEvent);
+    }
+
+    setMeanBranchParameters();
+}
+
+
+// Used to reset position of event if move is rejected
+
+void Model::revertMovedEventToPrevious()
+{
+    // Get last event from position of event to be removed
+    BranchEvent* newLastEvent = _lastEventModified->getEventNode()->
+        getBranchHistory()->getLastEvent(_lastEventModified);
+
+    // Pop event off its new position
+    _lastEventModified->getEventNode()->getBranchHistory()->
+        popEventOffBranchHistory(_lastEventModified);
+
+    // Reset nodeptr, reset mapTime
+    _lastEventModified->revertOldMapPosition();
+
+    // Now reset forward from _lastEventModified (new position)
+    // and from newLastEvent, which holds 'last' event before old position
+    _lastEventModified->getEventNode()->getBranchHistory()->
+        addEventToBranchHistory(_lastEventModified);
+
+    // Forward set from new position
+    forwardSetBranchHistories(newLastEvent);
+
+    // Forward set from event immediately rootwards from previous position
+    forwardSetBranchHistories(_lastEventModified);
+
+    // Set _lastEventModified to NULL because it has already been reset.
+    // Future implementations should check whether this is NULL
+    // before attempting to use it to set event
+
+    _lastEventModified = NULL;
+
+    setMeanBranchParameters();
+}
