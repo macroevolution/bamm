@@ -154,47 +154,6 @@ BranchEvent* TraitModel::newBranchEventWithRandomParameters(double x)
 }
 
 
-// This function for adding event with beta...
-
-void TraitModel::addEventToTreeWithSetBeta(double beta, double bshift)
-{
-    
-    double aa = _tree->getRoot()->getMapStart();
-    double bb = _tree->getTotalMapLength();
-    double x = _rng->uniformRv(aa, bb);
-
-
-    // For now, the rates of speciation and extinction are set to whatever they should be based
-    // on the ancestralNodeEvent
-    //Node * xnode = _tree->mapEventToTree(x);
-    //double atime = _tree->getAbsoluteTimeFromMapTime(x);
-    //TraitBranchHistory * bh = xnode->getTraitBranchHistory();
-    //TraitBranchEvent * be = bh->getAncestralNodeEvent();
-
-    //double elapsed = atime - be->getAbsoluteTime();
-
-    // End calculations:: now create event
-
-    BranchEvent* newEvent = new TraitBranchEvent(beta, bshift,
-            _tree->mapEventToTree(x), _tree, _rng, x);
-
-    newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(
-        newEvent);
-
-    _eventCollection.insert(newEvent);
-
-    // Event is now inserted into branch history:
-    //  however, branch histories must be updated.
-
-    forwardSetBranchHistories(newEvent);
-    _tree->setMeanBranchTraitRates();
-
-    // Addition June17 2012
-    _lastEventModified = newEvent;
-
-}
-
-
 /*
 
  Deletes an event from tree.
