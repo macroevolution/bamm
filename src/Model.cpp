@@ -209,3 +209,28 @@ void Model::addEventToTree(double x)
                             
     _lastEventModified = newEvent;
 }
+
+
+// TODO: ctr is not doing anything
+BranchEvent* Model::chooseEventAtRandom()
+{
+    int numEvents = (int)_eventCollection.size();
+
+    if (numEvents == 0) {
+        log(Error) << "Number of events is zero.\n";
+        std::exit(1);
+    }
+
+    int ctr = 0;
+    double xx = _rng->uniformRv();
+    int chosen = (int)(xx * (double)numEvents);
+
+    EventSet::iterator sit = _eventCollection.begin();
+
+    for (int i = 0; i < chosen; i++) {
+        ++sit;
+        ctr++;
+    }
+
+    return *sit;
+}

@@ -55,9 +55,6 @@ public:
     void eventGlobalMove(); // move random event
     void revertEventToPreviousPosition();
 
-    // Return random event, or NULL if no events on tree (other than root)
-    BranchEvent* chooseEventAtRandom();
-
     // MCMC:
     // Propose addition or deletion; accept/reject move.
     void changeNumberOfEventsMH();

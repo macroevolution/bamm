@@ -57,6 +57,8 @@ public:
     void addEventToTree();
     void addEventToTree(double x);
 
+    BranchEvent* chooseEventAtRandom();
+
 protected:
 
     virtual void readModelSpecificParameters(std::ifstream& inputFile) = 0;

@@ -160,35 +160,6 @@ BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
 }
 
 
-BranchEvent* SpExModel::chooseEventAtRandom(void)
-{
-
-    int n_events = (int)_eventCollection.size();
-    if (n_events == 0) {
-        return NULL;
-        //should ultimately throw exception here.
-
-    } else {
-        int ctr = 0;
-        double xx = _rng->uniformRv();
-        int chosen = (int)(xx * (double)n_events);
-
-        std::set<BranchEvent*>::iterator sit = _eventCollection.begin();
-
-        for (int i = 0; i < chosen; i++) {
-            sit++;
-            ctr++;
-        }
-        return (*sit);
-    }
-
-
-}
-
-
-
-
-
 /*
  void SpExModel::eventLocalMove(void)
 
