@@ -181,15 +181,10 @@ double SpExModel::calculateLogQRatioJump()
 }
 
 
-void SpExModel::restoreLastDeletedEvent(void)
+BranchEvent* SpExModel::newBranchEventFromLastDeletedEvent()
 {
-
-
-    // Use constructor for speciation and extinction
-
-    SpExBranchEvent* newEvent =
-        new SpExBranchEvent(0.0, 0.0, 0.0, 0.0,
-            _tree->mapEventToTree(_lastDeletedEventMapTime), _tree, _rng,
+    SpExBranchEvent* newEvent = new SpExBranchEvent(0.0, 0.0, 0.0, 0.0,
+        _tree->mapEventToTree(_lastDeletedEventMapTime), _tree, _rng,
             _lastDeletedEventMapTime);
 
     newEvent->setLamInit(_lastDeletedEventLambdaInit);
@@ -197,24 +192,8 @@ void SpExModel::restoreLastDeletedEvent(void)
     newEvent->setMuInit(_lastDeletedEventMuInit);
     newEvent->setMuShift(_lastDeletedEventMuShift);
 
-
-
-    // add the event to the branch history.
-    //  ALWAYS done after event is added to tree.
-    newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(newEvent);
-
-    _eventCollection.insert(newEvent);
-
-    // Event is now inserted into branch history:
-    //  however, branch histories must be updated.
-
-    forwardSetBranchHistories(newEvent);
-
-    _tree->setMeanBranchSpeciation();
-    _tree->setMeanBranchExtinction();
-
+    return newEvent;
 }
-
 
 
 void SpExModel::changeNumberOfEventsMH(void)

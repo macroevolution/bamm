@@ -171,39 +171,17 @@ double TraitModel::calculateLogQRatioJump()
 }
     
 
-void TraitModel::restoreLastDeletedEvent(void)
+BranchEvent* TraitModel::newBranchEventFromLastDeletedEvent()
 {
-
-
-    // Constructor for traitEvolution model:
-
-   
-    // Use constructor for speciation and extinction
-
-    TraitBranchEvent* newEvent = new TraitBranchEvent((double)0.0, (double)0.0,
-            _tree->mapEventToTree(_lastDeletedEventMapTime), _tree, _rng,
+    TraitBranchEvent* newEvent = new TraitBranchEvent(0.0, 0.0,
+        _tree->mapEventToTree(_lastDeletedEventMapTime), _tree, _rng,
             _lastDeletedEventMapTime);
 
     newEvent->setBetaInit(_lastDeletedEventBetaInit);
     newEvent->setBetaShift(_lastDeletedEventBetaShift);
 
-    // add the event to the branch history.
-    //  ALWAYS done after event is added to tree.
-    newEvent->getEventNode()->getBranchHistory()->addEventToBranchHistory(
-        newEvent);
-
-    _eventCollection.insert(newEvent);
-
-    // Event is now inserted into branch history:
-    //  however, branch histories must be updated.
-
-    forwardSetBranchHistories(newEvent);
-
-    _tree->setMeanBranchTraitRates();
-    //setCurrLnLTraits(computeLikelihoodTraits());
-
+    return newEvent;
 }
-
 
 
 void TraitModel::changeNumberOfEventsMH(void)
@@ -1288,41 +1266,6 @@ bool TraitModel::isEventConfigurationValid(BranchEvent* be)
     //std::cout << "leaving isEventConfigValid. Value: " << isValidConfig << std::endl;
     return isValidConfig;
 }
-
-
-
-void TraitModel::printEventData(void)
-{
-
-    TraitBranchEvent* be = static_cast<TraitBranchEvent*>(_rootEvent);
-    std::cout << "RtBt: " << be->getBetaInit() << "\tSf: " << be->getBetaShift() <<
-         "\tAtime:" << be->getAbsoluteTime() << std::endl;
-    int ctr = 0;
-    for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
-            i != _eventCollection.end(); i++) {
-        be = static_cast<TraitBranchEvent*>(*i);
-        std::cout << ctr++ << "\tBt: " << be->getBetaInit() << "\tSt: " << be->getBetaShift()
-             << "\tMap: " << be->getMapTime();
-        std::cout << "\tAtime:" << be->getAbsoluteTime() << std::endl;
-
-    }
-    std::cout << std::endl;
-}
-
-/*
-void TraitModel::initializeTraitParamsForNodes(void){
-
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
-
-
-    }
-
-
-}
-
-
-
-*/
 
 
 void TraitModel::setMinMaxTraitPriors(void)

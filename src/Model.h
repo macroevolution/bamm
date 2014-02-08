@@ -70,6 +70,8 @@ public:
 
     int countEventsInBranchHistory(Node* p);
 
+    void restoreLastDeletedEvent();
+
 protected:
 
     virtual void readModelSpecificParameters(std::ifstream& inputFile) = 0;
@@ -82,6 +84,8 @@ protected:
 
     virtual void setDeletedEventParameters(BranchEvent* be) = 0;
     virtual double calculateLogQRatioJump() = 0;
+
+    virtual BranchEvent* newBranchEventFromLastDeletedEvent() = 0;
 
     void eventMove(bool local);
 

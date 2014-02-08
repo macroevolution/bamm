@@ -417,3 +417,23 @@ void Model::deleteRandomEventFromTree()
         }
     }
 }
+
+
+void Model::restoreLastDeletedEvent()
+{   
+    // Use constructor for speciation and extinction
+    BranchEvent* newEvent = newBranchEventFromLastDeletedEvent();
+
+    // Add the event to the branch history.
+    // Always done after event is added to tree.
+    newEvent->getEventNode()->getBranchHistory()->
+        addEventToBranchHistory(newEvent);
+
+    _eventCollection.insert(newEvent);
+
+    // Event is now inserted into branch history;
+    // however, branch histories must be updated.
+    forwardSetBranchHistories(newEvent);
+
+    setMeanBranchParameters();
+}

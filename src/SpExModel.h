@@ -70,11 +70,6 @@ public:
     void updateEventRateMH();
     void updateTimeVariablePartitionsMH();
 
-    /*  ********************  */
-    void printEventData();
-
-    void restoreLastDeletedEvent();
-
     // Troubleshooting
     void printBranchHistories(Node* x);
 
@@ -110,6 +105,8 @@ private:
 
     virtual void setDeletedEventParameters(BranchEvent* be);
     virtual double calculateLogQRatioJump();
+
+    virtual BranchEvent* newBranchEventFromLastDeletedEvent();
 
     // Parameters of the model:
 
