@@ -34,11 +34,6 @@ public:
 
     void printStartAndEndEventStatesForBranch(Node* x);
 
-    // MCMC:
-
-    // Propose addition or deletion; accept/reject move.
-    void moveEventMH();
-
     /*  ***************** */
     // lambda/mu related stuff:
     void updateLambdaInitMH();

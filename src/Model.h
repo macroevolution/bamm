@@ -66,6 +66,8 @@ public:
     void eventLocalMove();
     void eventGlobalMove();
 
+    void moveEventMH();
+
     void revertMovedEventToPrevious();
 
     int countEventsInBranchHistory(Node* p);

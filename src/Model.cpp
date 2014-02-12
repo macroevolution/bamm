@@ -564,6 +564,55 @@ double Model::computeEventLossLogHR(double K, double logLikelihood,
 }
 
 
+void Model::moveEventMH()
+{
+    // Consider proposal rejected (can't move nonexistent event)
+    if (_eventCollection.size() == 0) {
+        _rejectCount++;
+        _acceptLast = 0;
+        incrementGeneration();
+        return;
+    }
+
+    double localMoveProb = _localGlobalMoveRatio / (1 + _localGlobalMoveRatio);
+
+    bool isLocalMove = _rng->uniformRv() < localMoveProb;
+
+    if (isLocalMove) {
+        // Local move, with event drawn at random
+        eventLocalMove();
+    } else {
+        eventGlobalMove();
+    }
+
+    setMeanBranchParameters();
+
+    double logLikelihood = computeLogLikelihood();
+    double logLikelihoodRatio = logLikelihood - getCurrentLogLikelihood();
+    double logHR = logLikelihoodRatio;
+
+    bool isValid = isEventConfigurationValid(_lastEventModified);
+
+    bool acceptMove = false;
+    if (!std::isinf(logLikelihoodRatio) && isValid) {
+        acceptMove = acceptMetropolisHastings(logHR);
+    }
+
+    if (acceptMove) {
+        setCurrentLogLikelihood(logLikelihood);
+        _acceptCount++;
+        _acceptLast = 1;
+    } else {
+        revertMovedEventToPrevious();
+        setMeanBranchParameters();
+        _rejectCount++;
+        _acceptLast = 0;
+    }
+
+    incrementGeneration();
+}
+
+
 bool Model::acceptMetropolisHastings(double lnR)
 {
     double r = safeExponentiation(Model::mhColdness * lnR);
