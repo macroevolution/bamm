@@ -341,52 +341,6 @@ void SpExModel::updateLambdaShiftMH(void)
     }
 
     incrementGeneration();
-
-
-}
-
-/* June 12 2012
-    Select an event at random.
-    If partition is time-constant
-        flip state to time-variable
-    If partition is time-variable
-        flip state to time-constant
-
- */
-void SpExModel::updateTimeVariablePartitionsMH(void)
-{
-
-    //int n_events = _eventCollection.size() + 1;
-    int toUpdate =_rng->sampleInteger(0, (int)_eventCollection.size());
-    SpExBranchEvent* be = static_cast<SpExBranchEvent*>(_rootEvent);
-
-    if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
-        for (int i = 1; i < toUpdate; i++)
-            myIt++;
-
-        be = static_cast<SpExBranchEvent*>(*myIt);
-    } else {
-        // event remains as root event-
-    }
-
-    if (be->getIsEventTimeVariable()) {
-
-
-
-
-    } else if (!be->getIsEventTimeVariable()) {
-
-
-
-    } else {
-        // Should not be able to get here:
-        std::cout << "Invalid _isEventTimeVariable in SpExModel::UpdateTimeVariablePartitionsMH"
-             << std::endl;
-        throw;
-    }
-
-
 }
 
 

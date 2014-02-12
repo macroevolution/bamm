@@ -30,16 +30,11 @@ public:
 
     virtual double computeLogPrior();
 
-    /*  ***************** */
-
-    // Trait evolution stuff:
     void updateBetaMH();
     void updateNodeStateMH();
     void updateNodeStateMH(Node* xnode);
     void updateBetaShiftMH();
-    void updateDownstreamNodeStatesMH(Node* xnode);
     void updateEventRateMH();
-    void updateTimeVariablePartitionsMH();
     void setMinMaxTraitPriors();
 
     double      getLastLH();

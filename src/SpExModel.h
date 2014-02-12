@@ -2,14 +2,12 @@
 #define SP_EX_MODEL_H
 
 #include "Model.h"
+#include "BranchEvent.h"
 
 #include <set>
 #include <vector>
 #include <sstream>
 
-#include "BranchEvent.h"
-
-//Forward declarations
 class Tree;
 class Node;
 class MbRandom;
@@ -25,25 +23,17 @@ public:
     SpExModel(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior);
     virtual ~SpExModel();
 
-    // Likelihood functions for branches data
     virtual double computeLogLikelihood();
     virtual double computeLogPrior();
 
-    /*  ***************** */
-    // lambda/mu related stuff:
     void updateLambdaInitMH();
     void updateLambdaShiftMH();
-
     void updateMuInitMH();
     void updateMuShiftMH();
 
-    void updateNodeStateMH();
-    void updateNodeStateMH(Node* xnode);
-    void updateDownstreamNodeStatesMH(Node* xnode);
     void updateEventRateMH();
-    void updateTimeVariablePartitionsMH();
 
-	// Functions for auto-tuning
+	// Methods for auto-tuning
 	void setUpdateLambdaInitScale(double x);
 	void setUpdateMuInitScale(double x);
 	void setUpdateLambdaShiftScale(double x);
