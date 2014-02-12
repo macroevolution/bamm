@@ -11,7 +11,9 @@
 #include "Log.h"
 
 
-Settings::Settings(const std::string& controlFilename)
+Settings::Settings(const std::string& controlFilename,
+    const std::vector<UserParameter>& commandLineParameters) :
+    _commandLineParameters(commandLineParameters)
 {
     readControlFile(controlFilename);
 
@@ -241,6 +243,24 @@ void Settings::initializeSettingsWithUserValues()
             }
         } else {
             paramsNotFound.push_back(userParamIt->first);
+        }
+    }
+
+    // Handle command-line arguments
+    std::vector<UserParameter>::const_iterator cmdLineParamIt;
+    for (cmdLineParamIt = _commandLineParameters.begin();
+        cmdLineParamIt != _commandLineParameters.end(); ++cmdLineParamIt) {
+        // Find the command-line parameter in known parameter list
+        ParameterMap::iterator paramIt =
+            _parameters.find((cmdLineParamIt->first));
+
+        // If found, replace current parameter value with command-line value
+        if (paramIt != _parameters.end()) {
+            (paramIt->second).setStringValue(cmdLineParamIt->second);
+        } else {
+            log(Error) << "Command-line parameter " << cmdLineParamIt->first
+                << " is not a known parameter.\n";
+            std::exit(1);
         }
     }
 

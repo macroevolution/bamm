@@ -36,6 +36,7 @@ int main (int argc, char* argv[])
         exitWithMessageUsage();
     }
 
+    std::vector<UserParameter> commandLineParameters;
     std::string controlFilename;
 
     // Process command-line arguments
@@ -50,15 +51,30 @@ int main (int argc, char* argv[])
             } else {
                 exitWithErrorNoControlFile();
             }
+        // Let the Settings class (below) process the remaining arguments
         } else {
-            exitWithErrorUnknownArgument(arg);
+            if (++i < argc) {
+                // First, make sure argument starts with "--"
+                if ((arg[0] != '-') || (arg[1] != '-')) {
+                    log(Error) << "Invalid command-line option <<"
+                        << arg << ">>.\n";
+                    std::exit(1);
+                }
+                arg = arg.substr(2);    // Cut out the starting "--"
+                std::string arg_value = std::string(argv[i]);
+                UserParameter param(arg, arg_value);
+                commandLineParameters.push_back(param);
+            } else {
+                log(Error) << "Missing a command-line argument.\n";
+                std::exit(1);
+            }
         }
 
         i++;
     }
 
     // Load settings from control file
-    Settings mySettings(controlFilename);
+    Settings mySettings(controlFilename, commandLineParameters);
 
     MbRandom myRNG(mySettings.getSeed());
 

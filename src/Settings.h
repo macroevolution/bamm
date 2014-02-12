@@ -57,10 +57,14 @@ private:
     
     // Parameters read from the control file
     std::vector<UserParameter> _userParameters;
+
+    // Parameters read from the command line
+    std::vector<UserParameter> _commandLineParameters;
 	
 public:
 
-    Settings(const std::string& controlFilename);
+    Settings(const std::string& controlFilename,
+        const std::vector<UserParameter>& commandLineParameters);
 
     void printCurrentSettings(std::ostream& out = std::cout) const;
 
