@@ -68,6 +68,8 @@ public:
 
     void moveEventMH();
 
+    void updateEventRateMH();
+
     void revertMovedEventToPrevious();
 
     int countEventsInBranchHistory(Node* p);

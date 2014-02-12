@@ -31,8 +31,6 @@ public:
     void updateMuInitMH();
     void updateMuShiftMH();
 
-    void updateEventRateMH();
-
 	// Methods for auto-tuning
 	void setUpdateLambdaInitScale(double x);
 	void setUpdateMuInitScale(double x);

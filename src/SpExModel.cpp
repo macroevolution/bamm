@@ -492,58 +492,6 @@ void SpExModel::updateMuShiftMH(void)
 }
 
 
-
-
-/*
-
- Metropolis-Hastings step to update Poisson event rate.
- Note that changing this rate does not affect the likelihood,
- so the priors and qratio determine acceptance rate.
-
- */
-void SpExModel::updateEventRateMH(void)
-{
-
-
-    double oldEventRate = getEventRate();
-
-    double cterm = exp( _updateEventRateScale * (_rng->uniformRv() - 0.5) );
-    setEventRate(cterm * oldEventRate);
-
-    
-    double logPriorRatio = _prior->poissonRatePrior(getEventRate());
-    logPriorRatio -= _prior->poissonRatePrior(oldEventRate);
-    
-
-    double logProposalRatio = log(cterm);
-
-
-    // Experimental code:
-    // Sample new event rate from prior directly with each step.
-    //double newEventRate =_rng->exponentialRv(_poissonRatePrior);
-    //setEventRate(newEventRate);
-    //double LogPriorRatio = 0.0;
-    //double logProposalRatio = 1.0;
-
-    double logHR = logPriorRatio + logProposalRatio;
-    const bool acceptMove = acceptMetropolisHastings(logHR);
-
-
-    if (acceptMove == true) {
-        // continue
-        _acceptCount++;
-        _acceptLast = 1;
-    } else {
-        setEventRate(oldEventRate);
-        _rejectCount++;
-        _acceptLast = 0;
-    }
-
-    incrementGeneration();
-
-}
-
-
 double SpExModel::computeLogLikelihood()
 {
 

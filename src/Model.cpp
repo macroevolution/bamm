@@ -613,6 +613,40 @@ void Model::moveEventMH()
 }
 
 
+/*
+   Metropolis-Hastings step to update Poisson event rate.
+   Note that changing this rate does not affect the likelihood,
+   so the priors and qratio determine acceptance rate.
+*/
+
+void Model::updateEventRateMH()
+{
+    double oldEventRate = getEventRate();
+
+    double cterm = std::exp(_updateEventRateScale * (_rng->uniformRv() - 0.5));
+    setEventRate(cterm * oldEventRate);
+
+    double logPriorRatio = _prior->poissonRatePrior(getEventRate());
+    logPriorRatio -= _prior->poissonRatePrior(oldEventRate);
+    
+    double logProposalRatio = std::log(cterm);
+
+    double logHR = logPriorRatio + logProposalRatio;
+    bool acceptMove = acceptMetropolisHastings(logHR);
+
+    if (acceptMove) {
+        _acceptCount++;
+        _acceptLast = 1;
+    } else {
+        setEventRate(oldEventRate);
+        _rejectCount++;
+        _acceptLast = 0;
+    }
+
+    incrementGeneration();
+}
+
+
 bool Model::acceptMetropolisHastings(double lnR)
 {
     double r = safeExponentiation(Model::mhColdness * lnR);

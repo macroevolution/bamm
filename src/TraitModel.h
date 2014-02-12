@@ -34,7 +34,6 @@ public:
     void updateNodeStateMH();
     void updateNodeStateMH(Node* xnode);
     void updateBetaShiftMH();
-    void updateEventRateMH();
     void setMinMaxTraitPriors();
 
     double      getLastLH();

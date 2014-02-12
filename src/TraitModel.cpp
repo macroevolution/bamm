@@ -184,46 +184,6 @@ BranchEvent* TraitModel::newBranchEventFromLastDeletedEvent()
 }
 
 
-/*
-    Metropolis-Hastings step to update Poisson event rate.
-    Note that changing this rate does not affect the likelihood,
-    so the priors and qratio determine acceptance rate.
-*/
-
-void TraitModel::updateEventRateMH(void)
-{
-    //std::cout << "Entering update event rate" << std::endl;
-    
-    double oldEventRate = getEventRate();
-    double cterm = exp( _updateEventRateScale * (_rng->uniformRv() - 0.5) );
-    setEventRate(cterm * oldEventRate);
-    
-    
-    double LogPriorRatio = _prior->poissonRatePrior(getEventRate());
-    LogPriorRatio -= _prior->poissonRatePrior(oldEventRate);
-    
-    double logProposalRatio = log(cterm);
-    double logHR = LogPriorRatio + logProposalRatio;
-    const bool acceptMove = acceptMetropolisHastings(logHR);
-    
-    //std::cout << "ER " << oldEventRate << "\t" << cterm*oldEventRate << std::endl;
-    
-    if (acceptMove == true) {
-        // continue
-        _acceptCount++;
-        _acceptLast = 1;
-    } else {
-        setEventRate(oldEventRate);
-        _rejectCount++;
-        _acceptLast = 0;
-    }
-    
-    incrementGeneration();
-    //std::cout << "Leaving UpdateEventRate" << std::endl;
-}
-
-
-
 void TraitModel::updateBetaMH(void)
 {
     
