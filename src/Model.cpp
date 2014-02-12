@@ -686,6 +686,46 @@ void Model::resetMHAcceptanceParameters()
 }
 
 
+//  Write event data to file for all events "on" tree
+//  at a given point in the MCMC chain
+    
+void Model::getEventDataString(std::stringstream& ss)
+{   
+    ss << getGeneration() << ",";
+    
+    BranchEvent* be = _rootEvent;
+    Node* xl = _tree->getRoot()->getRandomLeftTipNode();
+    Node* xr = _tree->getRoot()->getRandomRightTipNode();
+    ss << xl->getName() << ","
+       << xr->getName() << ","
+       << be->getAbsoluteTime() << ",";
+    
+    // Implemented in derived class
+    getSpecificEventDataString(ss, be);
+
+    if (_eventCollection.size() == 0) {
+        return;
+    }
+    
+    EventSet::iterator it;
+    for (it = _eventCollection.begin(); it != _eventCollection.end(); ++it) {
+        ss << "\n" << getGeneration() << ",";
+        be = *it;
+        if (be->getEventNode()->getLfDesc() == NULL) {
+            ss << be->getEventNode()->getName() << "," << "NA" << ",";
+        } else {
+            Node* xl = be->getEventNode()->getRandomLeftTipNode();
+            Node* xr = be->getEventNode()->getRandomRightTipNode();
+            ss << xl->getName() << "," << xr->getName() << ",";
+        }
+        ss << be->getAbsoluteTime() << ",";
+
+        // Implemented in derived class
+        getSpecificEventDataString(ss, be);
+    }
+}
+
+
 double Model::safeExponentiation(double x)
 {
     if (x > 0.0)

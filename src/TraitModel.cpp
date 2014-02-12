@@ -710,54 +710,18 @@ double TraitModel::computeLogPrior(void)
 }
 
 
-/*
-    Write event data to file for all events "on" tree
-    at a given point in the MCMC chain
-*/
-
-void TraitModel::getEventDataString(std::stringstream& ss)
+void TraitModel::getSpecificEventDataString
+    (std::stringstream& ss, BranchEvent* event)
 {
+    TraitBranchEvent* be = static_cast<TraitBranchEvent*>(event);
 
-
-    ss << getGeneration() << ",";
-
-
-    TraitBranchEvent* be = static_cast<TraitBranchEvent*>(_rootEvent);
-    Node* xl = _tree->getRoot()->getRandomLeftTipNode();
-    Node* xr = _tree->getRoot()->getRandomRightTipNode();
-    ss << xl->getName() << "," << xr->getName() << "," << be->getAbsoluteTime() <<
-       ",";
-    ss << be->getBetaInit() << "," << be->getBetaShift();
-
-    if (_eventCollection.size() > 0) {
-        for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
-                i != _eventCollection.end(); ++i) {
-
-            ss << "\n" << getGeneration() << ",";
-            be = static_cast<TraitBranchEvent*>(*i);
-            if (be->getEventNode()->getLfDesc() == NULL)
-                ss << be->getEventNode()->getName() << ",NA,";
-            else {
-                Node* xl = be->getEventNode()->getRandomLeftTipNode();
-                Node* xr = be->getEventNode()->getRandomRightTipNode();
-
-                ss << xl->getName() << "," << xr->getName() << ",";
-            }
-            ss << be->getAbsoluteTime() << "," << be->getBetaInit() << "," <<
-               be->getBetaShift();
-
-        }
-
-
-
-    }
-
+    ss << be->getBetaInit() << ","
+    << be->getBetaShift();
 }
 
 
 void TraitModel::setMinMaxTraitPriors(void)
 {
-
     int nnodes = _tree->getNumberOfNodes();
     std::vector<double> tvec;
     for (int i = 0; i < nnodes; i++) {
@@ -779,5 +743,4 @@ void TraitModel::setMinMaxTraitPriors(void)
           << "\t\tMin: " << minprior << "\tMax: " << maxprior << "\n";
     _settings->setTraitPriorMin(minprior);
     _settings->setTraitPriorMax(maxprior);
-
 }

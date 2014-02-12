@@ -45,9 +45,6 @@ public:
 
     void printExtinctionParams();
 
-    // Generate string with event data:
-    void getEventDataString(std::stringstream& ss);
-
 	// Functions for auto-tuning
 	void setUpdateLambdaInitScale(double x);
 	void setUpdateMuInitScale(double x);
@@ -66,6 +63,9 @@ private:
     virtual double calculateLogQRatioJump();
 
     virtual BranchEvent* newBranchEventFromLastDeletedEvent();
+
+    virtual void getSpecificEventDataString
+        (std::stringstream& ss, BranchEvent* event);
 
     double computeLogLikelihoodByInterval();
 

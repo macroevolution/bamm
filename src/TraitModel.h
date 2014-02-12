@@ -42,9 +42,6 @@ public:
     void updateTimeVariablePartitionsMH();
     void setMinMaxTraitPriors();
 
-    // Generate string with event data:
-    void getEventDataString(std::stringstream& ss);
-
     double      getLastLH();
 
 private:
@@ -60,6 +57,9 @@ private:
     virtual double calculateLogQRatioJump();
 
     virtual BranchEvent* newBranchEventFromLastDeletedEvent();
+
+    virtual void getSpecificEventDataString
+        (std::stringstream& ss, BranchEvent* event);
 
     double _updateBetaScale;
     double _updateBetaShiftScale;

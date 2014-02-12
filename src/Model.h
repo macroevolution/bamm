@@ -85,6 +85,8 @@ public:
     double getMHAcceptanceRate();
     void resetMHAcceptanceParameters();
 
+    void getEventDataString(std::stringstream& ss);
+
 protected:
 
     virtual void readModelSpecificParameters(std::ifstream& inputFile) = 0;
@@ -99,6 +101,9 @@ protected:
     virtual double calculateLogQRatioJump() = 0;
 
     virtual BranchEvent* newBranchEventFromLastDeletedEvent() = 0;
+
+    virtual void getSpecificEventDataString
+        (std::stringstream& ss, BranchEvent* event) = 0;
 
     void eventMove(bool local);
 

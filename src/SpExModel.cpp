@@ -858,48 +858,13 @@ void SpExModel::printExtinctionParams(void)
 }
 
 
-/*
-    Write event data to file for all events "on" tree
-    at a given point in the MCMC chain
-*/
-
-void SpExModel::getEventDataString(std::stringstream& ss)
+void SpExModel::getSpecificEventDataString
+    (std::stringstream& ss, BranchEvent* event)
 {
+    SpExBranchEvent* be = static_cast<SpExBranchEvent*>(event);
 
-    ss << getGeneration() << ",";
-
-
-    SpExBranchEvent* be = static_cast<SpExBranchEvent*>(_rootEvent);
-    Node* xl = _tree->getRoot()->getRandomLeftTipNode();
-    Node* xr = _tree->getRoot()->getRandomRightTipNode();
-    ss << xl->getName() << "," << xr->getName() << "," << be->getAbsoluteTime() <<
-       ",";
-    ss << be->getLamInit() << "," << be->getLamShift() << "," << be->getMuInit() <<
-       ",";
-    ss << be->getMuShift();
-
-
-
-
-    if (_eventCollection.size() > 0) {
-        for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
-                i != _eventCollection.end(); i++) {
-
-            ss << "\n" << getGeneration() << ",";
-            be = static_cast<SpExBranchEvent*>(*i);
-            if (be->getEventNode()->getLfDesc() == NULL)
-                ss << be->getEventNode()->getName() << "," << "NA" << ",";
-
-            else {
-                Node* xl = be->getEventNode()->getRandomLeftTipNode();
-                Node* xr = be->getEventNode()->getRandomRightTipNode();
-                ss << xl->getName() << "," << xr->getName() << ",";
-            }
-            ss << be->getAbsoluteTime() << ",";
-            ss << be->getLamInit() << "," << be->getLamShift() << "," << be->getMuInit()  <<
-               "," << be->getMuShift();
-
-        }
-
-    }
+    ss << be->getLamInit() << ","
+       << be->getLamShift() << ","
+       << be->getMuInit() << ","
+       << be->getMuShift();
 }
