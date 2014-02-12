@@ -2,17 +2,14 @@
 #define SP_EX_MODEL_H
 
 #include "Model.h"
-#include "BranchEvent.h"
-
-#include <set>
-#include <vector>
-#include <sstream>
+#include <iosfwd>
 
 class Tree;
 class Node;
 class MbRandom;
 class Settings;
 class Prior;
+class BranchEvent;
 
 
 class SpExModel : public Model
@@ -37,50 +34,46 @@ public:
 
 private:
 
+    double computeLogLikelihoodByInterval();
+
     virtual void readModelSpecificParameters(std::ifstream& inputFile);
     virtual void setRootEventWithReadParameters();
+
     virtual BranchEvent* newBranchEventWithReadParameters(Node* x, double time);
-    virtual void setMeanBranchParameters();
-
     virtual BranchEvent* newBranchEventWithRandomParameters(double x);
-
-    virtual void setDeletedEventParameters(BranchEvent* be);
-    virtual double calculateLogQRatioJump();
-
     virtual BranchEvent* newBranchEventFromLastDeletedEvent();
+
+    virtual void setMeanBranchParameters();
+    virtual void setDeletedEventParameters(BranchEvent* be);
+
+    virtual double calculateLogQRatioJump();
 
     virtual void getSpecificEventDataString
         (std::stringstream& ss, BranchEvent* event);
 
-    double computeLogLikelihoodByInterval();
-
     double _updateLambdaInitScale;
     double _updateLambdaShiftScale;
-
     double _updateMuInitScale;
     double _updateMuShiftScale;
 
-    // Root event parameters:
+    // Root event parameters
     double _lambdaInit0;
     double _lambdaShift0;
-
     double _muInit0;
     double _muShift0;
 
     // Priors
     double _lambdaInitPrior;
     double _lambdaShiftPrior;
-
     double _muInitPrior;
     double _muShiftPrior;
 
     double _lastDeletedEventLambdaInit;
     double _lastDeletedEventLambdaShift;
-
     double _lastDeletedEventMuInit;
     double _lastDeletedEventMuShift;
 
-    double _segLength; // for splitting branches
+    double _segLength;
 
     double _readLambdaInit;
     double _readLambdaShift;

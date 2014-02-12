@@ -44,15 +44,23 @@ public:
     int getAcceptLastUpdate();
     void setAcceptLastUpdate(int x);
 
-    void initializeModelFromEventDataFile();
+    double getMHAcceptanceRate();
+    void resetMHAcceptanceParameters();
 
-    // These functions take a branch event and recursively update
-    // the branch histories for all nodes going toward the tips
-    void forwardSetBranchHistories(BranchEvent* x);
-    void forwardSetHistoriesRecursive(Node* p);
+    void setCurrentLogLikelihood(double x);
+    double getCurrentLogLikelihood();
+
+    virtual double computeLogLikelihood() = 0;
+    virtual double computeLogPrior() = 0;
+
+    void initializeModelFromEventDataFile();
 
     int getNumberOfEvents();
     BranchEvent* getRootEvent();
+
+    void changeNumberOfEventsMH();
+    void moveEventMH();
+    void updateEventRateMH();
 
     void addEventToTree();
     void addEventToTree(double x);
@@ -60,36 +68,41 @@ public:
     void deleteEventFromTree(BranchEvent* be);
     void deleteRandomEventFromTree();
 
-    BranchEvent* chooseEventAtRandom();
-
-    // Move random event
-    void eventLocalMove();
-    void eventGlobalMove();
-
-    void moveEventMH();
-
-    void updateEventRateMH();
-
-    void revertMovedEventToPrevious();
-
-    int countEventsInBranchHistory(Node* p);
-
-    void restoreLastDeletedEvent();
-
-    virtual double computeLogLikelihood() = 0;
-    virtual double computeLogPrior() = 0;
-
-    void changeNumberOfEventsMH();
-
-    void setCurrentLogLikelihood(double x);
-    double getCurrentLogLikelihood();
-
-    double getMHAcceptanceRate();
-    void resetMHAcceptanceParameters();
-
     void getEventDataString(std::stringstream& ss);
 
 protected:
+
+    BranchEvent* chooseEventAtRandom();
+
+    void addEventMH();
+    void removeEventMH();
+
+    void revertMovedEventToPrevious();
+    void restoreLastDeletedEvent();
+
+    double computeEventGainLogHR(double K, double logLikelihood,
+        double oldLogLikelihood, double logPrior, double oldLogPrior,
+            double qRatio);
+
+    double computeEventLossLogHR(double K, double logLikelihood,
+        double oldLogLikelihood, double logPrior, double oldLogPrior,
+            double qRatio);
+
+    void eventMove(bool local);
+    void eventLocalMove();
+    void eventGlobalMove();
+
+    bool acceptMetropolisHastings(double lnR);
+    bool isEventConfigurationValid(BranchEvent* be);
+
+    // These functions take a branch event and recursively update
+    // the branch histories for all nodes going toward the tips
+    void forwardSetBranchHistories(BranchEvent* x);
+    void forwardSetHistoriesRecursive(Node* p);
+
+    double safeExponentiation(double x);
+
+    // Pure virtual methods to be implemented by derived classes
 
     virtual void readModelSpecificParameters(std::ifstream& inputFile) = 0;
     virtual void setRootEventWithReadParameters() = 0;
@@ -106,24 +119,6 @@ protected:
 
     virtual void getSpecificEventDataString
         (std::stringstream& ss, BranchEvent* event) = 0;
-
-    void eventMove(bool local);
-
-    void addEventMH();
-    void removeEventMH();
-
-    double computeEventGainLogHR(double K, double logLikelihood,
-        double oldLogLikelihood, double logPrior, double oldLogPrior,
-            double qRatio);
-
-    double computeEventLossLogHR(double K, double logLikelihood,
-        double oldLogLikelihood, double logPrior, double oldLogPrior,
-            double qRatio);
-
-    bool acceptMetropolisHastings(double lnR);
-    bool isEventConfigurationValid(BranchEvent* be);
-
-    double safeExponentiation(double x);
 
     MbRandom* _rng;
     Tree* _tree;

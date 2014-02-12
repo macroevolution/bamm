@@ -34,8 +34,6 @@
 TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
     Prior* prior) : Model(rng, tree, settings, prior)
 {
-    _lastLH = 0.0;
-
     _updateBetaScale = _settings->getUpdateBetaScale();
     _updateBetaShiftScale = _settings->getUpdateBetaShiftScale();
 
@@ -232,10 +230,6 @@ void TraitModel::updateBetaMH(void)
         _acceptLast = 1;
         
     } else {
-        
-        // revert to previous state
-        _lastLH = PropLnLik;
-        
         
         be->setBetaInit(oldRate);
         _tree->setMeanBranchTraitRates();
