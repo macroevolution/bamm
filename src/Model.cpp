@@ -981,6 +981,7 @@ void Model::changeNumberOfEventsMH(void)
             bool isValidConfig = isEventConfigurationValid(lastEventModified);
 
             if (isValidConfig) {
+                setCurrLnLTraits(likTraits);
                 // Update accept/reject statistics
                 acceptCount++;
                 acceptLast = 1;
