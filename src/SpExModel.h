@@ -25,25 +25,9 @@ public:
     SpExModel(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior);
     virtual ~SpExModel();
 
-    // Full likelihood will be lnLikTraits + lnLikBranches
-    void   setCurrLnLTraits(double x);
-    double getCurrLnLTraits();
-
-    void   setCurrLnLBranches(double x);
-    double getCurrLnLBranches();
-
-    // Full likelihood function
-
-
     // Likelihood functions for branches data
-    double computeLikelihoodBranches();
-    double computeLikelihoodBranchesByInterval();
-
-    double computeLogPrior();
-
-    double safeExponentiation(double x);
-    double proportionalShrink(double x, double scale);
-    bool   acceptMetropolisHastings(const double lnR);
+    virtual double computeLogLikelihood();
+    virtual double computeLogPrior();
 
     // Initialize all branch histories to the root node.
     void initializeBranchHistories(Node* x);
@@ -53,7 +37,6 @@ public:
     // MCMC:
 
     // Propose addition or deletion; accept/reject move.
-    void changeNumberOfEventsMH();
     void moveEventMH();
 
     /*  ***************** */
@@ -85,10 +68,6 @@ public:
     // Generate string with event data:
     void getEventDataString(std::stringstream& ss);
 
-    bool isEventConfigurationValid(BranchEvent* be);
-
-    void debugLHcalculation();
-	
 	// Functions for auto-tuning
 	void setUpdateLambdaInitScale(double x);
 	void setUpdateMuInitScale(double x);
@@ -108,12 +87,8 @@ private:
 
     virtual BranchEvent* newBranchEventFromLastDeletedEvent();
 
-    // Parameters of the model:
+    double computeLogLikelihoodByInterval();
 
-    double lnLikTraits;
-    double lnLikBranches;
-
-    // new parameters: March 23 2012
     double _updateLambdaInitScale;
     double _updateLambdaShiftScale;
 
@@ -121,7 +96,6 @@ private:
     double _updateMuShiftScale;
 
     // Root event parameters:
-
     double _lambdaInit0;
     double _lambdaShift0;
 
@@ -148,30 +122,6 @@ private:
     double _readMuInit;
     double _readMuShift;
 };
-
-
-inline void SpExModel::setCurrLnLTraits(double x)
-{
-    lnLikTraits = x;
-}
-
-
-inline double SpExModel::getCurrLnLTraits()
-{
-    return lnLikTraits;
-}
-
-
-inline void SpExModel::setCurrLnLBranches(double x)
-{
-    lnLikBranches = x;
-}
-
-
-inline double SpExModel::getCurrLnLBranches()
-{
-    return lnLikBranches;
-}
 
 
 inline void SpExModel::setUpdateLambdaInitScale(double x)

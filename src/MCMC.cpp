@@ -204,7 +204,7 @@ void MCMC::writeStateToStream(std::ostream& outStream)
     outStream << ModelPtr->getGeneration()       << ","
               << ModelPtr->getNumberOfEvents()   << ","
               << ModelPtr->computeLogPrior()     << ","
-              << ModelPtr->getCurrLnLBranches()  << ","
+              << ModelPtr->getCurrentLogLikelihood()  << ","
               << ModelPtr->getEventRate()        << ","
               << ModelPtr->getMHacceptanceRate() << std::endl;
 }
@@ -220,7 +220,7 @@ void MCMC::writeStateToStream(std::ostream& outStream)
 void MCMC::printStateData(void)
 {
     log() << std::setw(15) << ModelPtr->getGeneration()
-          << std::setw(15) << ModelPtr->getCurrLnLBranches()
+          << std::setw(15) << ModelPtr->getCurrentLogLikelihood()
           << std::setw(15) << ModelPtr->getNumberOfEvents()
           << std::setw(15) << ModelPtr->computeLogPrior()
           << std::setw(15) << ModelPtr->getMHacceptanceRate()

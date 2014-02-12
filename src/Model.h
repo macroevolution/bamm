@@ -72,6 +72,14 @@ public:
 
     void restoreLastDeletedEvent();
 
+    virtual double computeLogLikelihood() = 0;
+    virtual double computeLogPrior() = 0;
+
+    void changeNumberOfEventsMH();
+
+    void setCurrentLogLikelihood(double x);
+    double getCurrentLogLikelihood();
+
 protected:
 
     virtual void readModelSpecificParameters(std::ifstream& inputFile) = 0;
@@ -89,6 +97,22 @@ protected:
 
     void eventMove(bool local);
 
+    void addEventMH();
+    void removeEventMH();
+
+    double computeEventGainLogHR(double K, double logLikelihood,
+        double oldLogLikelihood, double logPrior, double oldLogPrior,
+            double qRatio);
+
+    double computeEventLossLogHR(double K, double logLikelihood,
+        double oldLogLikelihood, double logPrior, double oldLogPrior,
+            double qRatio);
+
+    bool acceptMetropolisHastings(double lnR);
+    bool isEventConfigurationValid(BranchEvent* be);
+
+    double safeExponentiation(double x);
+
     MbRandom* _rng;
     Tree* _tree;
     Settings* _settings;
@@ -103,6 +127,8 @@ protected:
 
     double _poissonRatePrior;
     double _eventRate;    // Poisson rate
+
+    double _logLikelihood;
 
     int _acceptCount;
     int _rejectCount;
@@ -205,6 +231,18 @@ inline int Model::getNumberOfEvents()
 inline BranchEvent* Model::getRootEvent()
 {
     return _rootEvent;
+}
+
+
+inline void Model::setCurrentLogLikelihood(double x)
+{
+    _logLikelihood = x;
+}
+
+
+inline double Model::getCurrentLogLikelihood()
+{
+    return _logLikelihood;
 }
 
 

@@ -437,3 +437,199 @@ void Model::restoreLastDeletedEvent()
 
     setMeanBranchParameters();
 }
+
+
+void Model::changeNumberOfEventsMH()
+{
+    bool addEvent = _rng->uniformRv() < 0.5;
+    if (addEvent || _eventCollection.size() == 0) {
+        addEventMH();
+    } else {
+        removeEventMH();
+    }
+
+    incrementGeneration();
+}
+
+
+void Model::addEventMH()
+{
+    double oldLogLikelihood = getCurrentLogLikelihood();
+    double oldLogPrior = computeLogPrior();
+
+    int K = (int)_eventCollection.size();
+    double qRatio = (K > 0) ? 1.0 : 0.5;
+
+    addEventToTree();
+    setMeanBranchParameters();
+
+    double logLikelihood = computeLogLikelihood();
+    double logPrior = computeLogPrior();
+
+    double logHR = computeEventGainLogHR(K, logLikelihood, oldLogLikelihood,
+        logPrior, oldLogPrior, qRatio);
+
+    bool acceptMove = false;
+    double logLikelihoodRatio = logLikelihood - oldLogLikelihood;
+    if (!std::isinf(logLikelihoodRatio)) {  // TODO: When is this ever inifinte?
+        acceptMove = acceptMetropolisHastings(logHR);
+    }
+
+    bool isValidConfig = isEventConfigurationValid(_lastEventModified);
+    if (acceptMove && isValidConfig) {
+        setCurrentLogLikelihood(logLikelihood);
+        _acceptCount++;
+        _acceptLast = 1;
+    } else {
+        deleteEventFromTree(_lastEventModified);
+        setMeanBranchParameters();
+        _rejectCount++;
+        _acceptLast = 0;
+    }
+}
+
+
+double Model::computeEventGainLogHR(double K, double logLikelihood,
+    double oldLogLikelihood, double logPrior, double oldLogPrior, double qRatio)
+{
+    double logLikelihoodRatio = logLikelihood - oldLogLikelihood;
+    double logPriorRatio = logPrior - oldLogPrior;
+
+    double logHR = std::log(_eventRate) - std::log(K + 1.0);
+    logHR += logLikelihoodRatio;
+    logHR += logPriorRatio;
+    logHR += std::log(qRatio);
+
+    // Now for jumping density of the bijection between parameter spaces
+    logHR -= _logQRatioJump;
+
+    return logHR;
+}
+
+
+void Model::removeEventMH()
+{
+    double oldLogLikelihood = getCurrentLogLikelihood();
+    double oldLogPrior = computeLogPrior();
+
+    int K = (int)_eventCollection.size();
+    double qRatio = (K != 1) ? 1.0 : 2.0;
+
+    deleteRandomEventFromTree();
+    setMeanBranchParameters();
+
+    double logLikelihood = computeLogLikelihood();
+    double logPrior = computeLogPrior();
+
+    // First get prior ratio:
+    double logHR = computeEventLossLogHR(K, logLikelihood, oldLogLikelihood,
+        logPrior, oldLogPrior, qRatio);
+
+    double logLikelihoodRatio = logLikelihood - oldLogLikelihood;
+    bool acceptMove = false;
+    if (!std::isinf(logLikelihoodRatio)) {
+        acceptMove = acceptMetropolisHastings(logHR);
+    }
+
+    if (acceptMove) {
+        setCurrentLogLikelihood(logLikelihood);
+        _acceptCount++;
+        _acceptLast = 1;
+    } else {
+        restoreLastDeletedEvent();
+        _rejectCount++;
+        _acceptLast = 0;
+    }
+}
+
+
+double Model::computeEventLossLogHR(double K, double logLikelihood,
+    double oldLogLikelihood, double logPrior, double oldLogPrior, double qRatio)
+{
+    double logLikelihoodRatio = logLikelihood - oldLogLikelihood;
+    double logPriorRatio = logPrior - oldLogPrior;
+
+    // This is probability of going from K to K - 1
+    // So, prior ratio is (K / eventRate)
+
+    double logHR = std::log(K) - std::log(_eventRate);
+    logHR += logLikelihoodRatio;
+    logHR += logPriorRatio;
+    logHR += std::log(qRatio);
+
+    // Now for jumping density of the bijection between parameter spaces
+    logHR += _logQRatioJump;
+
+    return logHR;
+}
+
+
+bool Model::acceptMetropolisHastings(double lnR)
+{
+    double r = safeExponentiation(Model::mhColdness * lnR);
+    return _rng->uniformRv() < r;
+}
+
+
+bool Model::isEventConfigurationValid(BranchEvent* be)
+{
+    bool isValidConfig = false;
+
+    if (be->getEventNode() == _tree->getRoot()) {
+        Node* rt = _tree->getRoot()->getRtDesc();
+        Node* lf = _tree->getRoot()->getLfDesc();
+        if (rt->getBranchHistory()->getNumberOfBranchEvents() > 0 &&
+            lf->getBranchHistory()->getNumberOfBranchEvents() > 0) {
+            // Events on both descendants of root. This fails.
+            isValidConfig = false;
+        } else
+            isValidConfig = true;
+
+    } else {
+        int badsum = 0;
+
+        Node* anc = be->getEventNode()->getAnc();
+        Node* lf = anc->getLfDesc();
+        Node* rt = anc->getRtDesc();
+
+        // Test ancestor for events on branch
+
+        if (anc == _tree->getRoot())
+            badsum++;
+        else if (anc->getBranchHistory()->getNumberOfBranchEvents() > 0)
+            badsum++;
+        else {
+            // nothing
+        }
+
+        // Test lf desc
+        if (lf->getBranchHistory()->getNumberOfBranchEvents() > 0)
+            badsum++;
+
+        // Test rt desc
+        if (rt->getBranchHistory()->getNumberOfBranchEvents() > 0)
+            badsum++;
+
+        if (badsum == 3)
+            isValidConfig = false;
+        else if (badsum < 3)
+            isValidConfig = true;
+        else {
+            log(Error) << "Problem in Model::isEventConfigurationValid\n";
+            std::exit(1);
+        }
+    }
+
+    return isValidConfig;
+}
+
+
+double Model::safeExponentiation(double x)
+{
+    if (x > 0.0)
+        return 1.0;
+    else if (x < -100.0)
+        return 0.0;
+    else
+        return std::exp(x);
+}

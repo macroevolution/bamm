@@ -88,9 +88,9 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
         initializeModelFromEventDataFile();
     }
 
-    setCurrLnLBranches(computeLikelihoodBranches());
+    setCurrentLogLikelihood(computeLogLikelihood());
 
-    log() << "\nInitial log-likelihood: " << getCurrLnLBranches() << "\n";
+    log() << "\nInitial log-likelihood: " << getCurrentLogLikelihood() << "\n";
     if (_settings->getSampleFromPriorOnly())
         log() << "Note that you have chosen to sample from prior only.\n";
 }
@@ -196,221 +196,6 @@ BranchEvent* SpExModel::newBranchEventFromLastDeletedEvent()
 }
 
 
-void SpExModel::changeNumberOfEventsMH(void)
-{
-
-
-    // Get old prior density of the data:
-    double oldLogPrior = computeLogPrior();
-    double newLogPrior = 0.0;
-    int currState = (int)_eventCollection.size();
-    int proposedState = 0;
-    bool acceptMove = false;
-
-    // Propose gains & losses equally if not on boundary (n = 0) events:
-
-    // Current number of events on the tree, not counting root state:
-    double K = (double)(_eventCollection.size());
-
-    bool gain = _rng->uniformRv() <= 0.5;
-    if (K == 0) {
-        // set event to gain IF on boundary
-        gain = true;
-    }
-
-
-
-    // now to adjust acceptance ratios:
-
-    if (gain) {
-
-        proposedState = currState + 1;
-
-        double qratio = 1.0;
-        if (K == 0) {
-            // no events on tree
-            // can only propose gains.
-            qratio = 0.5;
-        } else {
-            // DO nothing.
-        }
-
-#ifdef NO_DATA
-        double likBranches = 0.0;
-        double PropLnLik = likBranches;
-
-#else
-
-        addEventToTree();
-
-        _tree->setMeanBranchSpeciation();
-        _tree->setMeanBranchExtinction();
-
-        double likBranches = computeLikelihoodBranches();
-        double PropLnLik = likBranches;
-
-
-
-#endif
-        // Prior density on all parameters
-        newLogPrior = computeLogPrior();
-
-
-        // Prior ratio is eventRate / (k + 1)
-        // but now, _eventCollection.size() == k + 1
-        //  because event has already been added.
-        // Here HR is just the prior ratio
-
-        double logHR = log(_eventRate) - log(K + 1.0);
-
-        // Now add log qratio
-
-        logHR += log(qratio);
-
-        double likeRatio = PropLnLik - getCurrLnLBranches();
-
-        logHR += likeRatio;
-
-        // Now for prior:
-        logHR += (newLogPrior - oldLogPrior);
-
-        // Now for jumping density of the bijection between parameter spaces:
-        logHR -= _logQRatioJump;
-
-        if (std::isinf(likeRatio) ) {
-
-        } else
-            acceptMove = acceptMetropolisHastings(logHR);
-
-
-
-
-        if (acceptMove) {
-            //std::cout << "gaining event in changeNumberOfEventsMH " << std::endl;
-            //std::cout << "gainaccept" << computeLikelihoodBranches()  << std::endl;
-
-            //addEventToTree();
-            //std::cout << "Calliing isValid from ChangeNumberEvents::gain" << std::endl;
-
-            bool isValidConfig = isEventConfigurationValid(_lastEventModified);
-
-            if (isValidConfig) {
-                // Update accept/reject statistics
-                _acceptCount++;
-                _acceptLast = 1;
-            } else {
-                // Need to get rid of event that was just gained...
-                //std::cout << "Invalid event config from addEventToTree - deleting." << std::endl;
-                deleteEventFromTree(_lastEventModified);
-                _rejectCount++;
-                _acceptLast = 0;
-
-            }
-
-
-        } else {
-            //std::cout << "gainreject" << computeLikelihoodBranches() << std::endl;
-
-            // Delete event.
-            deleteEventFromTree(_lastEventModified);
-
-            _rejectCount++;
-            _acceptLast = 0;
-        }
-
-
-
-
-
-    } else {
-        //std::cout << "loss: initial LH: " << computeLikelihoodBranches() << std::endl;
-        deleteRandomEventFromTree();
-        //std::cout << "loss: LH after deleteRandomEvent" << computeLikelihoodBranches() << std::endl;
-
-        proposedState = currState - 1;
-
-#ifdef NO_DATA
-        double likBranches = 0.0;
-        double PropLnLik = likBranches;
-
-#else
-
-        _tree->setMeanBranchSpeciation();
-        _tree->setMeanBranchExtinction();
-
-        double likBranches = computeLikelihoodBranches();
-        double PropLnLik = likBranches;
-        double likTraits = 0.0;
-
-#endif
-
-        // Prior density on all parameters
-        newLogPrior = computeLogPrior();
-
-        double qratio = 1.0; // if loss, can only be qratio of 1.0
-
-        if (K  == 1)
-            qratio = 2.0;
-
-        // This is probability of going from k to k-1
-        // So, prior ratio is (k / eventRate)
-
-        // First get prior ratio:
-        double logHR = log(K) - log(_eventRate);
-
-        // Now correct for proposal ratio:
-        logHR += log(qratio);
-
-        double likeRatio = PropLnLik - getCurrLnLBranches();
-
-
-        logHR += likeRatio;
-
-        // Now for prior:
-        logHR += (newLogPrior - oldLogPrior);
-
-        // Now for jumping density of the bijection between parameter spaces:
-        logHR += _logQRatioJump;
-
-        if (std::isinf(likeRatio) ) {
-
-        } else
-            acceptMove = acceptMetropolisHastings(logHR);
-
-
-        //std::cout << "loss: " << acceptMove << "\t" << PropLnLik << "\tLT " << getCurrLnLTraits() + getCurrLnLBranches() << std::endl;
-
-        if (acceptMove) {
-            //std::cout << "loss accept, LH: " << computeLikelihoodBranches() << "\tlikBranches" << likBranches << std::endl;
-            setCurrLnLTraits(likTraits);
-
-            setCurrLnLBranches(likBranches);
-
-            _acceptCount++;
-            _acceptLast = 1;
-
-
-        } else {
-            //std::cout << "loss reject, LH: " << computeLikelihoodBranches() << "\tlikBranches" << likBranches << std::endl;
-
-            restoreLastDeletedEvent();
-
-            // speciation-extinction rates on branches automatically updated after restoreLastDeletedEvent()
-
-            //std::cout << "loss reject restored, LH: " << computeLikelihoodBranches() << "\tlikBranches" << likBranches << std::endl;
-            _rejectCount++;
-            _acceptLast = 0;
-        }
-
-    }
-
-    //std::cout << currState << "\t" << proposedState << "\tAcc: " << acceptMove << "\tOP: " << oldLogPrior;
-    //std::cout << "\tNP: " << newLogPrior << "\tqratio: " << _logQRatioJump << std::endl;
-
-    incrementGeneration();
-
-}
-
 void SpExModel::moveEventMH(void)
 {
 
@@ -433,14 +218,14 @@ void SpExModel::moveEventMH(void)
             _tree->setMeanBranchSpeciation();
             _tree->setMeanBranchExtinction();
 
-            double likBranches = computeLikelihoodBranches();
+            double likBranches = computeLogLikelihood();
             double PropLnLik = likBranches;
 
 
 
 #endif
 
-            double likeRatio = PropLnLik - getCurrLnLBranches();
+            double likeRatio = PropLnLik - getCurrentLogLikelihood();
             double logHR = likeRatio;
 
             // No longer protecting this as const bool
@@ -462,7 +247,7 @@ void SpExModel::moveEventMH(void)
 
             if (acceptMove == true) {
 
-                setCurrLnLBranches(likBranches);
+                setCurrentLogLikelihood(likBranches);
                 _acceptCount++;
                 _acceptLast = 1;
 
@@ -491,12 +276,12 @@ void SpExModel::moveEventMH(void)
             _tree->setMeanBranchSpeciation();
             _tree->setMeanBranchExtinction();
 
-            double likBranches = computeLikelihoodBranches();
+            double likBranches = computeLogLikelihood();
             double PropLnLik = likBranches;
 
 #endif
 
-            double likeRatio = PropLnLik - getCurrLnLBranches();
+            double likeRatio = PropLnLik - getCurrentLogLikelihood();
             double logHR = likeRatio;
 
 
@@ -515,7 +300,7 @@ void SpExModel::moveEventMH(void)
 
             if (acceptMove == true) {
 
-                setCurrLnLBranches(likBranches);
+                setCurrentLogLikelihood(likBranches);
                 _acceptCount++;
                 _acceptLast = 1;
 
@@ -574,7 +359,7 @@ void SpExModel::updateLambdaInitMH(void)
     _tree->setMeanBranchSpeciation();
     _tree->setMeanBranchExtinction();
 
-    double PropLnLik = computeLikelihoodBranches();
+    double PropLnLik = computeLogLikelihood();
 
 #endif
 
@@ -585,7 +370,7 @@ void SpExModel::updateLambdaInitMH(void)
     
     double LogProposalRatio = log(cterm);
 
-    double likeRatio = PropLnLik - getCurrLnLBranches();
+    double likeRatio = PropLnLik - getCurrentLogLikelihood();
 
     double logHR = likeRatio +  logPriorRatio + LogProposalRatio;
 
@@ -598,7 +383,7 @@ void SpExModel::updateLambdaInitMH(void)
 
     if (acceptMove == true) {
 
-        setCurrLnLBranches(PropLnLik);
+        setCurrentLogLikelihood(PropLnLik);
         _acceptCount++;
         _acceptLast = 1;
     } else {
@@ -646,7 +431,7 @@ void SpExModel::updateLambdaShiftMH(void)
     _tree->setMeanBranchSpeciation();
     _tree->setMeanBranchExtinction();
 
-    double PropLnLik = computeLikelihoodBranches();
+    double PropLnLik = computeLogLikelihood();
 
 #endif
 
@@ -662,7 +447,7 @@ void SpExModel::updateLambdaShiftMH(void)
     
     double LogProposalRatio = 0.0;
 
-    double likeRatio = PropLnLik - getCurrLnLBranches();
+    double likeRatio = PropLnLik - getCurrentLogLikelihood();
 
     double logHR = likeRatio +  logPriorRatio + LogProposalRatio;
 
@@ -676,7 +461,7 @@ void SpExModel::updateLambdaShiftMH(void)
 
     if (acceptMove == true) {
 
-        setCurrLnLBranches(PropLnLik);
+        setCurrentLogLikelihood(PropLnLik);
         _acceptCount++;
         _acceptLast = 1;
     } else {
@@ -768,7 +553,7 @@ void SpExModel::updateMuInitMH(void)
     _tree->setMeanBranchSpeciation();
     _tree->setMeanBranchExtinction();
 
-    double PropLnLik = computeLikelihoodBranches();
+    double PropLnLik = computeLogLikelihood();
 
 #endif
 
@@ -777,7 +562,7 @@ void SpExModel::updateMuInitMH(void)
 
     double LogProposalRatio = log(cterm);
 
-    double likeRatio = PropLnLik - getCurrLnLBranches();
+    double likeRatio = PropLnLik - getCurrentLogLikelihood();
 
     double logHR = likeRatio +  logPriorRatio + LogProposalRatio;
 
@@ -790,7 +575,7 @@ void SpExModel::updateMuInitMH(void)
 
     if (acceptMove == true) {
 
-        setCurrLnLBranches(PropLnLik);
+        setCurrentLogLikelihood(PropLnLik);
         _acceptCount++;
         _acceptLast = 1;
     } else {
@@ -839,7 +624,7 @@ void SpExModel::updateMuShiftMH(void)
     _tree->setMeanBranchSpeciation();
     _tree->setMeanBranchExtinction();
 
-    double PropLnLik = computeLikelihoodBranches();
+    double PropLnLik = computeLogLikelihood();
 
 #endif
 
@@ -851,7 +636,7 @@ void SpExModel::updateMuShiftMH(void)
 
     double LogProposalRatio = 0.0;
 
-    double likeRatio = PropLnLik - getCurrLnLBranches();
+    double likeRatio = PropLnLik - getCurrentLogLikelihood();
 
     double logHR = likeRatio +  logPriorRatio + LogProposalRatio;
 
@@ -867,7 +652,7 @@ void SpExModel::updateMuShiftMH(void)
 
     if (acceptMove == true) {
 
-        setCurrLnLBranches(PropLnLik);
+        setCurrentLogLikelihood(PropLnLik);
         _acceptCount++;
         _acceptLast = 1;
 
@@ -941,14 +726,14 @@ void SpExModel::updateEventRateMH(void)
 }
 
 
-double SpExModel::computeLikelihoodBranches(void)
+double SpExModel::computeLogLikelihood()
 {
 
-    return computeLikelihoodBranchesByInterval();
+    return computeLogLikelihoodByInterval();
 }
 
 
-double SpExModel::computeLikelihoodBranchesByInterval(void)
+double SpExModel::computeLogLikelihoodByInterval()
 {
 
 
@@ -1163,13 +948,8 @@ double SpExModel::computeLikelihoodBranchesByInterval(void)
 }
 
 
-
-/* Only works on speciation + extinction
- */
-
-double SpExModel::computeLogPrior(void)
+double SpExModel::computeLogPrior()
 {
-
     double logPrior = 0.0;
 
     SpExBranchEvent* rootEvent = static_cast<SpExBranchEvent*>(_rootEvent);
@@ -1179,41 +959,21 @@ double SpExModel::computeLogPrior(void)
     logPrior += _prior->muInitPrior(rootEvent->getMuInit());
     logPrior += _prior->muShiftPrior(rootEvent->getMuShift());
     
-    int ctr = 0;
-
-    for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
-            i != _eventCollection.end(); i++) {
-
-        SpExBranchEvent* event = static_cast<SpExBranchEvent*>(*i);
+    EventSet::iterator it;
+    for (it = _eventCollection.begin(); it != _eventCollection.end(); ++it) {
+        SpExBranchEvent* event = static_cast<SpExBranchEvent*>(*it);
 
         logPrior += _prior->lambdaInitPrior(event->getLamInit());
         logPrior += _prior->lambdaShiftPrior(event->getLamShift());
         logPrior += _prior->muInitPrior(event->getMuInit());
         logPrior += _prior->muShiftPrior(event->getMuShift());
-        
-        ctr++;
-
     }
 
-    // Here's prior density on the event rate:
-    
-    logPrior += _prior->poissonRatePrior(getEventRate());
+    // Here's prior density on the event rate
+    logPrior += _prior->poissonRatePrior(_eventRate);
     
     return logPrior;
-
 }
-
-
-
-
-
-bool SpExModel::acceptMetropolisHastings(const double lnR)
-{
-    const double r = safeExponentiation(SpExModel::mhColdness * lnR);
-    return _rng->uniformRv() < r;
-}
-
-
 
 
 void SpExModel::initializeBranchHistories(Node* x)
@@ -1389,92 +1149,3 @@ void SpExModel::getEventDataString(std::stringstream& ss)
 
     }
 }
-
-
-bool SpExModel::isEventConfigurationValid(BranchEvent* be)
-{
-    //std::cout << "enter isEventConfigValid" << std::endl;
-    bool isValidConfig = false;
-
-    if (be->getEventNode() == _tree->getRoot()) {
-        Node* rt = _tree->getRoot()->getRtDesc();
-        Node* lf = _tree->getRoot()->getLfDesc();
-        if (rt->getBranchHistory()->getNumberOfBranchEvents() > 0 &&
-                lf->getBranchHistory()->getNumberOfBranchEvents() > 0) {
-            // events on both descendants of root. This fails.
-            isValidConfig = false;
-        } else
-            isValidConfig = true;
-
-    } else {
-        int badsum = 0;
-
-        Node* anc = be->getEventNode()->getAnc();
-        Node* lf = anc->getLfDesc();
-        Node* rt = anc->getRtDesc();
-
-        //std::cout << "a: " << anc << "\tb: " << lf << "\tc: " << rt << std::endl;
-
-        // test ancestor for events on branch:
-
-        if (anc == _tree->getRoot())
-            badsum++;
-        else if (anc->getBranchHistory()->getNumberOfBranchEvents() > 0)
-            badsum++;
-        else {
-            // nothing;
-        }
-
-        // test lf desc:
-        if (lf->getBranchHistory()->getNumberOfBranchEvents() > 0)
-            badsum++;
-
-        // test rt desc
-        if (rt->getBranchHistory()->getNumberOfBranchEvents() > 0)
-            badsum++;
-
-        if (badsum == 3)
-            isValidConfig = false;
-        else if (badsum < 3)
-            isValidConfig = true;
-        else {
-            std::cout << "problem in SpExModel::isEventConfigurationValid" << std::endl;
-            exit(1);
-        }
-
-
-    }
-
-
-    //std::cout << "leaving isEventConfigValid. Value: " << isValidConfig << std::endl;
-    return isValidConfig;
-}
-
-
-
-
-double SpExModel::safeExponentiation(double x)
-{
-    if (x > 0.0)
-        return 1.0;
-    else if (x < -100.0)
-        return 0.0;
-    else
-        return exp(x);
-}
-
-
-void SpExModel::debugLHcalculation(void)
-{
-    std::cout << "This does not currently support anything" << std::endl;
-
-}
-
-
-
-
-
-
-
-
-

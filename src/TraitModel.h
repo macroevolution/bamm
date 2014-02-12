@@ -25,18 +25,10 @@ public:
     TraitModel(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior);
     virtual ~TraitModel();
 
-    // Full likelihood will be lnLikTraits + lnLikBranches
-    void   setCurrLnLTraits(double x);
-    double getCurrLnLTraits();
+    virtual double computeLogLikelihood();
+    virtual double computeTriadLikelihoodTraits(Node* x);
 
-    double computeLikelihoodTraits();
-    double computeTriadLikelihoodTraits(Node* x);
-
-    double computeLogPrior();
-
-    double safeExponentiation(double x);
-    double proportionalShrink(double x, double scale);
-    bool   acceptMetropolisHastings(const double lnR);
+    virtual double computeLogPrior();
 
     // initialize all branch histories to the root node.
     void initializeBranchHistories(Node* x);
@@ -44,7 +36,6 @@ public:
 
     // MCMC:
     // Propose addition or deletion; accept/reject move.
-    void changeNumberOfEventsMH();
     void moveEventMH();
 
     /*  ***************** */
@@ -72,7 +63,6 @@ public:
 
     // Generate string with event data:
     void getEventDataString(std::stringstream& ss);
-    bool isEventConfigurationValid(BranchEvent* be);
 
     double      getLastLH();
 
@@ -89,10 +79,6 @@ private:
     virtual double calculateLogQRatioJump();
 
     virtual BranchEvent* newBranchEventFromLastDeletedEvent();
-
-    //  parameters of the model:
-
-    double lnLikTraits;
 
     double _updateBetaScale;
     double _updateBetaShiftScale;
@@ -113,18 +99,6 @@ private:
     double _readBetaInit;
     double _readBetaShift;
 };
-
-
-inline void TraitModel::setCurrLnLTraits(double x)
-{
-    lnLikTraits = x;
-}
-
-
-inline double TraitModel::getCurrLnLTraits()
-{
-    return lnLikTraits;
-}
 
 
 inline double TraitModel::getLastLH()

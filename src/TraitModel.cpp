@@ -82,9 +82,9 @@ TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
         initializeModelFromEventDataFile();
     }
 
-    setCurrLnLTraits(computeLikelihoodTraits());
+    setCurrentLogLikelihood(computeLogLikelihood());
 
-    log() << "\nInitial log-likelihood: " << getCurrLnLTraits() << "\n";
+    log() << "\nInitial log-likelihood: " << getCurrentLogLikelihood() << "\n";
     if (_settings->getSampleFromPriorOnly()) {
         log() << "Note that you have chosen to sample from prior only.\n";
     }
@@ -184,202 +184,6 @@ BranchEvent* TraitModel::newBranchEventFromLastDeletedEvent()
 }
 
 
-void TraitModel::changeNumberOfEventsMH(void)
-{
-    double oldLogPrior = computeLogPrior();
-    double newLogPrior = 0.0;
-    int currState = (int)_eventCollection.size();
-    int proposedState = 0;
-    bool acceptMove = false;
-    double oldLogLikelihood = getCurrLnLTraits();
-
-    double logHR = 0.0;
-
-    // current number of events on tree:
-    double K = (double)currState;
-
-    // Propose gains & losses equally if not on boundary (n = 0) events:
-
-    bool gain = (_rng->uniformRv() <= 0.5);
-    if (K == 0) {
-        // set event to gain IF on boundary
-        gain = true;
-    }
-
-    // now to adjust acceptance ratios:
-
-    if (gain) {
-
-        proposedState = currState + 1;
-
-        double qratio = 1.0;
-        if (K == 0) {
-            // no events on tree
-            // can only propose gains.
-            qratio = 0.5;
-        } else {
-            // DO nothing.
-        }
-
-#ifdef NO_DATA
-        double likTraits = 0.0;
-        double PropLnLik = likTraits;
-
-#else
-
-
-        addEventToTree();
-
-        _tree->setMeanBranchTraitRates();
-
-        double likTraits = computeLikelihoodTraits();
-
-#endif
-        // Prior density:
-        newLogPrior = computeLogPrior();
-
-        logHR = log(_eventRate) - log(K + 1.0);
-        logHR += log(qratio);
-
-        double likeRatio = (likTraits - oldLogLikelihood);
-        logHR += likeRatio;
-
-        logHR += (newLogPrior - oldLogPrior);
-
-        logHR -= _logQRatioJump;
-
-
-        if (std::isinf(likeRatio) ) {
-
-        } else
-            acceptMove = acceptMetropolisHastings(logHR);
-
-
-
-        if (acceptMove) {
-
-            bool isValidConfig = isEventConfigurationValid(_lastEventModified);
-
-            if (isValidConfig) {
-
-                setCurrLnLTraits(likTraits);
-                // Update accept/reject statistics
-                _acceptCount++;
-                _acceptLast = 1;
-            } else {
-
-
-                // Need to get rid of event that was just gained...
-                //std::cout << "Invalid event config from addEventToTree - deleting." << std::endl;
-                deleteEventFromTree(_lastEventModified);
-                _tree->setMeanBranchTraitRates();
-                _rejectCount++;
-                _acceptLast = 0;
-            }
-
-
-        } else {
-
-            // Need to get rid of event that was just gained...
-            //std::cout << "Invalid event config from addEventToTree - deleting." << std::endl;
-            deleteEventFromTree(_lastEventModified);
-            _tree->setMeanBranchTraitRates();
-            _rejectCount++;
-            _acceptLast = 0;
-
-
-        }
-        //setCurrLnLTraits(computeLikelihoodTraits());
-
-
-
-
-    } else {
-
-        // LOSS of event:
-
-        deleteRandomEventFromTree();
-
-        proposedState = currState - 1;
-
-        //std::cout << "loss: LH after deleteRandomEvent" << computeLikelihoodBranches() << std::endl;
-
-#ifdef NO_DATA
-        double likTraits = 0.0;
-        double PropLnLik = likTraits;
-
-#else
-
-        _tree->setMeanBranchTraitRates();
-
-        double likTraits = computeLikelihoodTraits();
-
-
-#endif
-
-        double qratio = 1.0; // if loss, can only be qratio of 1.0
-
-        if (K == 1)
-            qratio = 2.0;
-
-        // Prior density:
-        newLogPrior = computeLogPrior();
-
-        logHR = log(K) - log(_eventRate);
-        logHR += log(qratio);
-
-        double likeRatio = (likTraits - oldLogLikelihood);
-        logHR += likeRatio;
-
-        logHR += (newLogPrior - oldLogPrior);
-
-        logHR += _logQRatioJump;
-
-        if (std::isinf(likeRatio) ) {
-
-        } else
-            acceptMove = acceptMetropolisHastings(logHR);
-
-
-        if (acceptMove) {
-
-            //std::cout << "loss accept, LH: " << computeLikelihoodBranches() << "\tlikBranches" << likBranches << std::endl;
-            setCurrLnLTraits(likTraits);
-
-            _acceptCount++;
-            _acceptLast = 1;
-
-
-        } else {
-
-            restoreLastDeletedEvent();
-
-            // Trait evolution rates on branches automatically updated after restoreLastDeletedEvent()
-            setCurrLnLTraits(computeLikelihoodTraits());
-
-
-            //std::cout << "loss reject restored, LH: " << computeLikelihoodBranches() << "\tlikBranches" << likBranches << std::endl;
-            _rejectCount++;
-            _acceptLast = 0;
-
-
-        }
-        //setCurrLnLTraits(computeLikelihoodTraits());
-    }
-
-#ifdef DEBUG
-
-    std::cout << "gain: " << gain << "\tOP: " << oldLogPrior << "\tNP: " << newLogPrior
-         << "\tLQ: " << _logQRatioJump;
-    std::cout << "\tAc: " << acceptMove << "\tlogHR " << logHR;
-    std::cout << "ps/k:  " << K << "\t" << proposedState << std::endl;
-
-#endif
-
-    incrementGeneration();
-
-}
-
 void TraitModel::moveEventMH(void)
 {
 
@@ -402,14 +206,14 @@ void TraitModel::moveEventMH(void)
 
             _tree->setMeanBranchTraitRates();
 
-            double likTraits = computeLikelihoodTraits();
+            double likTraits = computeLogLikelihood();
             double PropLnLik = likTraits;
 
 
 
 #endif
 
-            double likeRatio = PropLnLik - getCurrLnLTraits();
+            double likeRatio = PropLnLik - getCurrentLogLikelihood();
             double logHR = likeRatio;
 
             // No longer protecting this as const bool
@@ -430,7 +234,7 @@ void TraitModel::moveEventMH(void)
             //const bool acceptMove = acceptMetropolisHastings(logHR);
 
             if (acceptMove == true) {
-                setCurrLnLTraits(likTraits);
+                setCurrentLogLikelihood(likTraits);
 
                 _acceptCount++;
                 _acceptLast = 1;
@@ -459,12 +263,12 @@ void TraitModel::moveEventMH(void)
 
             _tree->setMeanBranchTraitRates();
 
-            double likTraits = computeLikelihoodTraits();
+            double likTraits = computeLogLikelihood();
             double PropLnLik = likTraits;
 
 #endif
 
-            double likeRatio = PropLnLik - getCurrLnLTraits();
+            double likeRatio = PropLnLik - getCurrentLogLikelihood();
             double logHR = likeRatio;
 
             //const bool acceptMove = acceptMetropolisHastings(logHR);
@@ -483,7 +287,7 @@ void TraitModel::moveEventMH(void)
             }
 
             if (acceptMove == true) {
-                setCurrLnLTraits(likTraits);
+                setCurrentLogLikelihood(likTraits);
                 _acceptCount++;
                 _acceptLast = 1;
 
@@ -632,7 +436,7 @@ void TraitModel::updateBetaMH(void)
     double PropLnLik = 0;
 #else
     
-    double PropLnLik = computeLikelihoodTraits();
+    double PropLnLik = computeLogLikelihood();
     
 #endif
     
@@ -642,18 +446,18 @@ void TraitModel::updateBetaMH(void)
     
     double LogProposalRatio = log(cterm);
     
-    double likeRatio = PropLnLik - getCurrLnLTraits();
+    double likeRatio = PropLnLik - getCurrentLogLikelihood();
     
     double logHR = likeRatio + LogPriorRatio + LogProposalRatio;
     
     const bool acceptMove = acceptMetropolisHastings(logHR);
     
-    //  std::cout << getGeneration() << "\tL1: " << startLH << "\tL2: " << getCurrLnLTraits() << std::endl;
+    //  std::cout << getGeneration() << "\tL1: " << startLH << "\tL2: " << getCurrentLogLikelihood() << std::endl;
     
     
     if (acceptMove == true) {
         //std::cout << "accept: " << oldRate << "\t" << be->getBetaInit() << std::endl;
-        setCurrLnLTraits(PropLnLik);
+        setCurrentLogLikelihood(PropLnLik);
         _acceptCount++;
         _acceptLast = 1;
         
@@ -672,7 +476,7 @@ void TraitModel::updateBetaMH(void)
     
     /*if (!acceptMove){
      std::cout << std::endl;
-     std::cout << startLL << "\tCurr: " << getCurrLnLTraits() << "\tcalc: " << computeLikelihoodTraits() << std::endl;
+     std::cout << startLL << "\tCurr: " << getCurrentLogLikelihood() << "\tcalc: " << computeLogLikelihood() << std::endl;
      }*/
     
     incrementGeneration();
@@ -711,7 +515,7 @@ void TraitModel::updateBetaShiftMH(void)
 #ifdef NO_DATA
     double PropLnLik = 0;
 #else
-    double PropLnLik = computeLikelihoodTraits();
+    double PropLnLik = computeLogLikelihood();
     
 #endif
     
@@ -721,7 +525,7 @@ void TraitModel::updateBetaShiftMH(void)
     
     double LogProposalRatio = 0.0;
     
-    double likeRatio = PropLnLik - getCurrLnLTraits();
+    double likeRatio = PropLnLik - getCurrentLogLikelihood();
     
     double logHR = likeRatio + LogPriorRatio + LogProposalRatio;
     
@@ -729,7 +533,7 @@ void TraitModel::updateBetaShiftMH(void)
     
     if (acceptMove == true) {
         
-        setCurrLnLTraits(PropLnLik);
+        setCurrentLogLikelihood(PropLnLik);
         _acceptCount++;
         _acceptLast = 1;
         
@@ -772,7 +576,7 @@ void TraitModel::updateNodeStateMH(void)
 #else
     // Compute triad likelihood
     double newTriadLoglik = computeTriadLikelihoodTraits(xnode);
-    double PropLnLik = getCurrLnLTraits() - oldTriadLogLik + newTriadLoglik;
+    double PropLnLik = getCurrentLogLikelihood() - oldTriadLogLik + newTriadLoglik;
 
 #endif
 
@@ -782,7 +586,7 @@ void TraitModel::updateNodeStateMH(void)
 
     double logProposalRatio = 0.0; // proposal ratio for uniform = 1.0
 
-    double likeRatio = PropLnLik - getCurrLnLTraits();
+    double likeRatio = PropLnLik - getCurrentLogLikelihood();
 
 
     double logHR = LogPriorRatio + logProposalRatio + likeRatio;
@@ -794,7 +598,7 @@ void TraitModel::updateNodeStateMH(void)
         acceptMove = false;
     if (acceptMove == true) {
         //continue
-        setCurrLnLTraits(PropLnLik);
+        setCurrentLogLikelihood(PropLnLik);
         _acceptCount++;
         _acceptLast = 1;
 
@@ -831,7 +635,7 @@ void TraitModel::updateNodeStateMH(Node* xnode)
 #else
     // Compute triad likelihood
     double newTriadLoglik = computeTriadLikelihoodTraits(xnode);
-    double PropLnLik = getCurrLnLTraits() - oldTriadLogLik + newTriadLoglik;
+    double PropLnLik = getCurrentLogLikelihood() - oldTriadLogLik + newTriadLoglik;
 
 
 
@@ -843,7 +647,7 @@ void TraitModel::updateNodeStateMH(Node* xnode)
 
     double logProposalRatio = 0.0; // proposal ratio for uniform = 1.0
 
-    double likeRatio = PropLnLik - getCurrLnLTraits();
+    double likeRatio = PropLnLik - getCurrentLogLikelihood();
 
 
     double logHR = LogPriorRatio + logProposalRatio + likeRatio;
@@ -855,7 +659,7 @@ void TraitModel::updateNodeStateMH(Node* xnode)
         acceptMove = false;
     if (acceptMove == true) {
         //continue
-        setCurrLnLTraits(PropLnLik);
+        setCurrentLogLikelihood(PropLnLik);
         _acceptCount++;
         _acceptLast = 1;
 
@@ -891,7 +695,7 @@ void TraitModel::updateDownstreamNodeStatesMH(Node* xnode)
 }
 
 
-double TraitModel::computeLikelihoodTraits(void)
+double TraitModel::computeLogLikelihood()
 {
 
     double LnL = 0.0;
@@ -1040,17 +844,6 @@ double TraitModel::computeLogPrior(void)
     return logPrior;
     
 }
-
-
-
-
-
-bool TraitModel::acceptMetropolisHastings(const double lnR)
-{
-    const double r = safeExponentiation(TraitModel::mhColdness * lnR);
-    return (_rng->uniformRv() < r);
-}
-
 
 
 void TraitModel::initializeBranchHistories(Node* x)
@@ -1208,66 +1001,6 @@ void TraitModel::getEventDataString(std::stringstream& ss)
 }
 
 
-bool TraitModel::isEventConfigurationValid(BranchEvent* be)
-{
-    //std::cout << "enter isEventConfigValid" << std::endl;
-    bool isValidConfig = false;
-
-    if (be->getEventNode() == _tree->getRoot()) {
-        Node* rt = _tree->getRoot()->getRtDesc();
-        Node* lf = _tree->getRoot()->getLfDesc();
-        if (rt->getBranchHistory()->getNumberOfBranchEvents() > 0 &&
-                lf->getBranchHistory()->getNumberOfBranchEvents() > 0) {
-            // events on both descendants of root. This fails.
-            isValidConfig = false;
-        } else
-            isValidConfig = true;
-
-    } else {
-        int badsum = 0;
-
-        Node* anc = be->getEventNode()->getAnc();
-        Node* lf = anc->getLfDesc();
-        Node* rt = anc->getRtDesc();
-
-        //std::cout << "a: " << anc << "\tb: " << lf << "\tc: " << rt << std::endl;
-
-        // test ancestor for events on branch:
-
-        if (anc == _tree->getRoot())
-            badsum++;
-        else if (anc->getBranchHistory()->getNumberOfBranchEvents() > 0)
-            badsum++;
-        else {
-            // nothing;
-        }
-
-        // test lf desc:
-        if (lf->getBranchHistory()->getNumberOfBranchEvents() > 0)
-            badsum++;
-
-        // test rt desc
-        if (rt->getBranchHistory()->getNumberOfBranchEvents() > 0)
-            badsum++;
-
-        if (badsum == 3)
-            isValidConfig = false;
-        else if (badsum < 3)
-            isValidConfig = true;
-        else {
-            std::cout << "problem in Model::isEventConfigurationValid" << std::endl;
-            exit(1);
-        }
-
-
-    }
-
-
-    //std::cout << "leaving isEventConfigValid. Value: " << isValidConfig << std::endl;
-    return isValidConfig;
-}
-
-
 void TraitModel::setMinMaxTraitPriors(void)
 {
 
@@ -1293,15 +1026,4 @@ void TraitModel::setMinMaxTraitPriors(void)
     _settings->setTraitPriorMin(minprior);
     _settings->setTraitPriorMax(maxprior);
 
-}
-
-
-double TraitModel::safeExponentiation(double x)
-{
-    if (x > 0.0)
-        return 1.0;
-    else if (x < -100.0)
-        return 0.0;
-    else
-        return exp(x);
 }
