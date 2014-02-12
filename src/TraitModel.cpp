@@ -710,44 +710,6 @@ double TraitModel::computeLogPrior(void)
 }
 
 
-void TraitModel::printStartAndEndEventStatesForBranch(Node* x)
-{
-
-    if (x != _tree->getRoot()) {
-        std::cout << "Node: " << x << "\tAnc: " <<
-             x->getBranchHistory()->getAncestralNodeEvent();
-        std::cout << "\tevent: " << x->getBranchHistory()->getNodeEvent() << std::endl;
-    }
-
-    if (x->getLfDesc() != NULL)
-        printStartAndEndEventStatesForBranch(x->getLfDesc());
-    if (x->getRtDesc() != NULL)
-        printStartAndEndEventStatesForBranch(x->getRtDesc());
-}
-
-
-void TraitModel::printBranchHistories(Node* x)
-{
-
-    if (x != _tree->getRoot()) {
-        std::cout << "Node: " << x;
-        std::cout << "\t#Events: " << x->getBranchHistory()->getNumberOfBranchEvents()
-             << "\tStart: ";
-        std::cout << x->getBranchHistory()->getAncestralNodeEvent() << "\tEnd: ";
-        std::cout << x->getBranchHistory()->getNodeEvent() << std::endl;
-
-    }
-    if (x->getLfDesc() != NULL)
-        printBranchHistories(x->getLfDesc());
-    if (x->getRtDesc() != NULL)
-        printBranchHistories(x->getRtDesc());
-
-
-
-}
-
-
-
 double  TraitModel::getMHacceptanceRate(void)
 {
 

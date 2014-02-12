@@ -29,8 +29,6 @@ public:
     virtual double computeLogLikelihood();
     virtual double computeLogPrior();
 
-    void printStartAndEndEventStatesForBranch(Node* x);
-
     /*  ***************** */
     // lambda/mu related stuff:
     void updateLambdaInitMH();
@@ -44,9 +42,6 @@ public:
     void updateDownstreamNodeStatesMH(Node* xnode);
     void updateEventRateMH();
     void updateTimeVariablePartitionsMH();
-
-    // Troubleshooting
-    void printBranchHistories(Node* x);
 
     // More output: acceptance rates
     double getMHacceptanceRate();

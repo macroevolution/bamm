@@ -30,10 +30,6 @@ public:
 
     virtual double computeLogPrior();
 
-    // initialize all branch histories to the root node.
-    void initializeBranchHistories(Node* x);
-    void printStartAndEndEventStatesForBranch(Node* x);
-
     /*  ***************** */
 
     // Trait evolution stuff:
@@ -45,9 +41,6 @@ public:
     void updateEventRateMH();
     void updateTimeVariablePartitionsMH();
     void setMinMaxTraitPriors();
-
-    // Troubleshooting
-    void printBranchHistories(Node* x);
 
     // more output: acceptance rates
     double getMHacceptanceRate();
