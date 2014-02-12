@@ -59,7 +59,7 @@ double Prior::muInitPrior(double x)
 
 double Prior::generateMuInitFromPrior()
 {
-    if (sttings->getUpdateRateMu0() <= _UPDATE_TOL){
+    if (sttings->getUpdateRateMu0() <= _UPDATE_TOL) {
         return sttings->getMuInit0();
     } else {
         return ranPtr->exponentialRv(sttings->getMuInitPrior());
@@ -103,7 +103,7 @@ double Prior::betaInitPrior(double x)
 
 double Prior::generateBetaInitFromPrior()
 {
-    if (sttings->getUpdateRateBeta0() <= _UPDATE_TOL){
+    if (sttings->getUpdateRateBeta0() <= _UPDATE_TOL) {
         return sttings->getBetaInit();
     } else {
         return ranPtr->exponentialRv(sttings->getBetaInitPrior());
@@ -119,9 +119,70 @@ double Prior::betaShiftPrior(double x)
 
 double Prior::generateBetaShiftFromPrior()
 {
-    if (sttings->getUpdateRateBetaShift() <= _UPDATE_TOL){
+    if (sttings->getUpdateRateBetaShift() <= _UPDATE_TOL) {
         return sttings->getBetaShiftInit();
     } else {
         return ranPtr->normalRv((double)0.0, sttings->getBetaShiftPrior());
     }
+}
+
+
+double Prior::lambdaInitRootPrior(double x)
+{
+    if (fabs(sttings->getLambdaInitRootPrior() + 1) < _UPDATE_TOL) {
+        return ranPtr->lnExponentialPdf(sttings->getLambdaInitPrior(), x);
+    } else {
+        return ranPtr->lnExponentialPdf(sttings->getLambdaInitRootPrior(), x);
+    }
+
+}
+
+
+double Prior::lambdaShiftRootPrior(double x)
+{
+    if (fabs(sttings->getLambdaShiftRootPrior() + 1) < _UPDATE_TOL) {
+        return ranPtr->lnExponentialPdf(sttings->getLambdaShiftPrior(), x);
+    } else {
+        return ranPtr->lnExponentialPdf(sttings->getLambdaShiftRootPrior(), x);
+    }
+}
+
+
+double Prior::muInitRootPrior(double x)
+{
+    if (fabs(sttings->getMuInitRootPrior() + 1) < _UPDATE_TOL) {
+        return ranPtr->lnExponentialPdf(sttings->getMuInitPrior(), x);
+    } else {
+        return ranPtr->lnExponentialPdf(sttings->getMuInitRootPrior(), x);
+    }
+}
+
+
+double Prior::muShiftRootPrior(double x)
+{
+    if (fabs(sttings->getMuShiftRootPrior() + 1) < _UPDATE_TOL) {
+        return ranPtr->lnExponentialPdf(sttings->getMuShiftPrior(), x);
+    } else {
+        return ranPtr->lnExponentialPdf(sttings->getMuShiftRootPrior(), x);
+    }
+
+}
+
+double Prior::betaInitRootPrior(double x)
+{
+    if (fabs(sttings->getBetaInitRootPrior() + 1) < _UPDATE_TOL) {
+        return ranPtr->lnExponentialPdf(sttings->getBetaInitPrior(), x);
+    } else {
+        return ranPtr->lnExponentialPdf(sttings->getBetaInitRootPrior(), x);
+    }
+}
+
+double Prior::betaShiftRootPrior(double x)
+{
+    if (fabs(sttings->getBetaShiftRootPrior() + 1) < _UPDATE_TOL) {
+        return ranPtr->lnExponentialPdf(sttings->getBetaShiftPrior(), x);
+    } else {
+        return ranPtr->lnExponentialPdf(sttings->getBetaShiftRootPrior(), x);
+    }
+
 }

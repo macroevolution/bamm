@@ -161,6 +161,10 @@ void Settings::initializeSpeciationExtinctionSettings()
     addParameter("lambdaShiftPrior",             "0.0");
     addParameter("muInitPrior",                  "0.0");
     addParameter("muShiftPrior",                 "1.0", false);
+    addParameter("lambdaInitRootPrior",          "-1.0", false);
+    addParameter("lambdaShiftRootPrior",         "-1.0", false);
+    addParameter("muInitRootPrior",              "-1.0", false);
+    addParameter("muShiftRootPrior",             "-1.0", false);
 	addParameter("segLength",                    "0.0");
 
     // Output
@@ -192,6 +196,8 @@ void Settings::initializeTraitSettings()
     // Priors
     addParameter("betaInitPrior",                  "0.0");
     addParameter("betaShiftPrior",                 "0.0");
+    addParameter("betaInitRootPrior",              "-1.0", false);
+    addParameter("betaShiftRootPrior",             "-1.0", false);
     addParameter("useObservedMinMaxAsTraitPriors", "1");
     addParameter("traitPriorMin",                  "0.0");
     addParameter("traitPriorMax","0.0");

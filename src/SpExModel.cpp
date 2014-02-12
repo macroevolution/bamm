@@ -219,11 +219,15 @@ void SpExModel::updateLambdaInitMH(void)
 
 #endif
 
-        
-    double logPriorRatio = _prior->lambdaInitPrior(be->getLamInit());
-    logPriorRatio -= _prior->lambdaInitPrior(oldRate);
-    
-    
+    double logPriorRatio = 0.0;
+    if (be == _rootEvent){
+        logPriorRatio = _prior->lambdaInitRootPrior(be->getLamInit());
+        logPriorRatio -= _prior->lambdaInitRootPrior(oldRate);
+    } else {
+        logPriorRatio = _prior->lambdaInitPrior(be->getLamInit());
+        logPriorRatio -= _prior->lambdaInitPrior(oldRate);
+    }
+
     double LogProposalRatio = log(cterm);
 
     double likeRatio = PropLnLik - getCurrentLogLikelihood();
@@ -291,9 +295,15 @@ void SpExModel::updateLambdaShiftMH(void)
 
 #endif
 
-    double  logPriorRatio = _prior->lambdaShiftPrior(newLambdaShift);
-    logPriorRatio -= _prior->lambdaShiftPrior(oldLambdaShift);
-    
+    double logPriorRatio = 0.0;
+    if (be == _rootEvent){
+        logPriorRatio = _prior->lambdaShiftRootPrior(be->getLamShift());
+        logPriorRatio -= _prior->lambdaShiftRootPrior(oldLambdaShift);
+    } else {
+        logPriorRatio = _prior->lambdaShiftPrior(be->getLamShift());
+        logPriorRatio -= _prior->lambdaShiftPrior(oldLambdaShift);
+    }
+
 /*
     double  logPriorRatio =_rng->lnNormalPdf((double)0.0,
                             _settings->getLambdaShiftPrior(), newLambdaShift);
@@ -367,8 +377,14 @@ void SpExModel::updateMuInitMH(void)
 
 #endif
 
-    double logPriorRatio = _prior->muInitPrior(be->getMuInit());
-    logPriorRatio -= _prior->muInitPrior(oldRate);
+    double logPriorRatio = 0.0;
+    if (be == _rootEvent){
+        logPriorRatio = _prior->muInitRootPrior(be->getMuInit());
+        logPriorRatio -= _prior->muInitRootPrior(oldRate);
+    } else {
+        logPriorRatio = _prior->muInitPrior(be->getMuInit());
+        logPriorRatio -= _prior->muInitPrior(oldRate);
+    }
 
     double LogProposalRatio = log(cterm);
 
@@ -438,11 +454,14 @@ void SpExModel::updateMuShiftMH(void)
 
 #endif
 
-    
-    double logPriorRatio = _prior->muShiftPrior(newMuShift);
-    logPriorRatio -= _prior->muShiftPrior(oldMuShift);
-    
-    
+    double logPriorRatio = 0.0;
+    if (be == _rootEvent){
+        logPriorRatio = _prior->muShiftRootPrior(be->getMuShift());
+        logPriorRatio -= _prior->muShiftRootPrior(oldMuShift);
+    } else {
+        logPriorRatio = _prior->muShiftPrior(be->getMuShift());
+        logPriorRatio -= _prior->muShiftPrior(oldMuShift);
+    } 
 
     double LogProposalRatio = 0.0;
 
@@ -712,11 +731,11 @@ double SpExModel::computeLogPrior()
 
     SpExBranchEvent* rootEvent = static_cast<SpExBranchEvent*>(_rootEvent);
 
-    logPrior += _prior->lambdaInitPrior(rootEvent->getLamInit());
-    logPrior += _prior->lambdaShiftPrior(rootEvent->getLamShift());
-    logPrior += _prior->muInitPrior(rootEvent->getMuInit());
-    logPrior += _prior->muShiftPrior(rootEvent->getMuShift());
-    
+    logPrior += _prior->lambdaInitRootPrior(rootEvent->getLamInit());
+    logPrior += _prior->lambdaShiftRootPrior(rootEvent->getLamShift());
+    logPrior += _prior->muInitRootPrior(rootEvent->getMuInit());
+    logPrior += _prior->muShiftRootPrior(rootEvent->getMuShift());
+
     EventSet::iterator it;
     for (it = _eventCollection.begin(); it != _eventCollection.end(); ++it) {
         SpExBranchEvent* event = static_cast<SpExBranchEvent*>(*it);

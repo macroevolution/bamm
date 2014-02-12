@@ -176,11 +176,9 @@ BranchEvent* TraitModel::newBranchEventFromLastDeletedEvent()
 
 void TraitModel::updateBetaMH(void)
 {
-    
     int toUpdate = _rng->sampleInteger(0, (int)_eventCollection.size());
     
     TraitBranchEvent* be = static_cast<TraitBranchEvent*>(_rootEvent);
-    
     
     if (toUpdate > 0) {
         std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
@@ -196,10 +194,6 @@ void TraitModel::updateBetaMH(void)
     be->setBetaInit(cterm * oldRate);
     _tree->setMeanBranchTraitRates();
     
-    
-    
-    
-    
 #ifdef NO_DATA
     double PropLnLik = 0;
 #else
@@ -207,18 +201,23 @@ void TraitModel::updateBetaMH(void)
     double PropLnLik = computeLogLikelihood();
     
 #endif
-    
-    double LogPriorRatio = _prior->betaInitPrior(be->getBetaInit());
-    LogPriorRatio -= _prior->betaInitPrior(oldRate);
-    
-    
+
+    double logPriorRatio = 0.0;
+    if (be == _rootEvent){
+        logPriorRatio = _prior->betaInitRootPrior(be->getBetaInit());
+        logPriorRatio -= _prior->betaInitRootPrior(oldRate);
+    } else {
+        logPriorRatio = _prior->betaInitPrior(be->getBetaInit());
+        logPriorRatio -= _prior->betaInitPrior(oldRate);
+    }
+
     double LogProposalRatio = log(cterm);
     
     double likeRatio = PropLnLik - getCurrentLogLikelihood();
     
-    double logHR = likeRatio + LogPriorRatio + LogProposalRatio;
-    
-    const bool acceptMove = acceptMetropolisHastings(logHR);
+    double logHR = likeRatio + logPriorRatio + LogProposalRatio;    
+
+    bool acceptMove = acceptMetropolisHastings(logHR);
     
     //  std::cout << getGeneration() << "\tL1: " << startLH << "\tL2: " << getCurrentLogLikelihood() << std::endl;
     
@@ -250,7 +249,6 @@ void TraitModel::updateBetaMH(void)
 
 void TraitModel::updateBetaShiftMH(void)
 {
-    
     int toUpdate = _rng->sampleInteger(0, (int)_eventCollection.size());
     
     TraitBranchEvent* be = static_cast<TraitBranchEvent*>(_rootEvent);
@@ -282,16 +280,21 @@ void TraitModel::updateBetaShiftMH(void)
     double PropLnLik = computeLogLikelihood();
     
 #endif
-    
-    double LogPriorRatio = _prior->betaShiftPrior(newShift);
-    LogPriorRatio -= _prior->betaShiftPrior(oldShift);
-    
-    
+
+    double logPriorRatio = 0.0;
+    if (be == _rootEvent){
+        logPriorRatio = _prior->betaShiftRootPrior(be->getBetaShift());
+        logPriorRatio -= _prior->betaShiftRootPrior(oldShift);
+    } else {
+        logPriorRatio = _prior->betaShiftPrior(be->getBetaShift());
+        logPriorRatio -= _prior->betaShiftPrior(oldShift);
+    }
+
     double LogProposalRatio = 0.0;
     
     double likeRatio = PropLnLik - getCurrentLogLikelihood();
     
-    double logHR = likeRatio + LogPriorRatio + LogProposalRatio;
+    double logHR = likeRatio + logPriorRatio + LogProposalRatio;
     
     const bool acceptMove = acceptMetropolisHastings(logHR);
     
@@ -554,27 +557,19 @@ double TraitModel::computeTriadLikelihoodTraits(Node* x)
 
 double TraitModel::computeLogPrior(void)
 {
-    
-    
-    
-    
 #ifdef NEGATIVE_SHIFT_PARAM
-    
     double dens_term = log(2.0);
-    
 #else
     double dens_term = 0.0;
-    
 #endif
-    
     
     double logPrior = 0.0;
 
     TraitBranchEvent* re = static_cast<TraitBranchEvent*>(_rootEvent);
     
-    logPrior += _prior->betaInitPrior(re->getBetaInit());
-    logPrior += dens_term + _prior->betaShiftPrior(re->getBetaShift());
-    
+    logPrior += _prior->betaInitRootPrior(re->getBetaInit());
+    logPrior += dens_term + _prior->betaShiftRootPrior(re->getBetaShift());
+
     for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
          i != _eventCollection.end(); ++i) {
 
