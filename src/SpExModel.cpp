@@ -840,21 +840,6 @@ double SpExModel::computeLogPrior()
 }
 
 
-BranchEvent* SpExModel::getEventByIndex(int x)
-{
-
-    //int ctr = 0;
-    std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
-    for (int i = 0; i <= x; i++)
-        myIt++;
-
-    return (*myIt);
-}
-
-
-// adding log contrasts here.
-
-
 void SpExModel::printExtinctionParams(void)
 {
 

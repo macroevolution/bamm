@@ -710,19 +710,6 @@ double TraitModel::computeLogPrior(void)
 }
 
 
-BranchEvent* TraitModel::getEventByIndex(int x)
-{
-
-    //int ctr = 0;
-    std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
-    for (int i = 0; i <= x; i++)
-        myIt++;
-
-    return (*myIt);
-}
-
-
-
 /*
  Model::countTimeVaryingRatePartitions
 

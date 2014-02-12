@@ -43,8 +43,6 @@ public:
     void updateEventRateMH();
     void updateTimeVariablePartitionsMH();
 
-    BranchEvent*  getEventByIndex(int x);
-
     void printExtinctionParams();
     int countTimeVaryingRatePartitions();
 

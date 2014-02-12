@@ -42,8 +42,6 @@ public:
     void updateTimeVariablePartitionsMH();
     void setMinMaxTraitPriors();
 
-    BranchEvent* getEventByIndex(int x);
-
     int countTimeVaryingRatePartitions();
 
     // Generate string with event data:
