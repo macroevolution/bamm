@@ -840,24 +840,6 @@ double SpExModel::computeLogPrior()
 }
 
 
-void SpExModel::initializeBranchHistories(Node* x)
-{
-    //std::cout << x << std::endl;
-    x->getBranchHistory()->setNodeEvent(_rootEvent);
-
-    if (x->getAnc() != NULL)
-        x->getBranchHistory()->setAncestralNodeEvent(_rootEvent);
-
-    if (x->getLfDesc() != NULL)
-        initializeBranchHistories(x->getLfDesc());
-    if (x->getRtDesc() != NULL)
-        initializeBranchHistories(x->getRtDesc());
-
-
-}
-
-
-
 void SpExModel::printStartAndEndEventStatesForBranch(Node* x)
 {
 

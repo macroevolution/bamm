@@ -29,9 +29,6 @@ public:
     virtual double computeLogLikelihood();
     virtual double computeLogPrior();
 
-    // Initialize all branch histories to the root node.
-    void initializeBranchHistories(Node* x);
-
     void printStartAndEndEventStatesForBranch(Node* x);
 
     /*  ***************** */
