@@ -1265,10 +1265,15 @@ void Model::updateLambdaInitMH(void)
 
 #endif
 
-        
-    double logPriorRatio = cprior->lambdaInitPrior(be->getLamInit());
-    logPriorRatio -= cprior->lambdaInitPrior(oldRate);
-    
+    double logPriorRatio = 0.0;
+    if (be == rootEvent){
+        logPriorRatio = cprior->lambdaInitRootPrior(be->getLamInit());
+        logPriorRatio -= cprior->lambdaInitRootPrior(oldRate);
+    }else{
+        logPriorRatio = cprior->lambdaInitPrior(be->getLamInit());
+        logPriorRatio -= cprior->lambdaInitPrior(oldRate);
+    }
+
     
     double LogProposalRatio = log(cterm);
 
@@ -1337,9 +1342,15 @@ void Model::updateLambdaShiftMH(void)
 
 #endif
 
-    double  logPriorRatio = cprior->lambdaShiftPrior(newLambdaShift);
-    logPriorRatio -= cprior->lambdaShiftPrior(oldLambdaShift);
-    
+    double logPriorRatio = 0.0;
+    if (be == rootEvent){
+        logPriorRatio = cprior->lambdaShiftRootPrior(be->getLamShift());
+        logPriorRatio -= cprior->lambdaShiftRootPrior(oldLambdaShift);
+    }else{
+        logPriorRatio = cprior->lambdaShiftPrior(be->getLamShift());
+        logPriorRatio -= cprior->lambdaShiftPrior(oldLambdaShift);
+    }
+
 /*
     double  logPriorRatio = ran->lnNormalPdf((double)0.0,
                             sttings->getLambdaShiftPrior(), newLambdaShift);
@@ -1383,49 +1394,6 @@ void Model::updateLambdaShiftMH(void)
 
 }
 
-/* June 12 2012
-    Select an event at random.
-    If partition is time-constant
-        flip state to time-variable
-    If partition is time-variable
-        flip state to time-constant
-
- */
-void Model::updateTimeVariablePartitionsMH(void)
-{
-
-    //int n_events = eventCollection.size() + 1;
-    int toUpdate = ran->sampleInteger(0, (int)eventCollection.size());
-    BranchEvent* be = rootEvent;
-
-    if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = eventCollection.begin();
-        for (int i = 1; i < toUpdate; i++)
-            myIt++;
-
-        be = (*myIt);
-    } else {
-        // event remains as root event-
-    }
-
-    if (be->getIsEventTimeVariable()) {
-
-
-
-
-    } else if (!be->getIsEventTimeVariable()) {
-
-
-
-    } else {
-        // Should not be able to get here:
-        std::cout << "Invalid _isEventTimeVariable in Model::UpdateTimeVariablePartitionsMH"
-             << std::endl;
-        throw;
-    }
-
-
-}
 
 
 void Model::updateMuInitMH(void)
@@ -1459,8 +1427,14 @@ void Model::updateMuInitMH(void)
 
 #endif
 
-    double logPriorRatio = cprior->muInitPrior(be->getMuInit());
-    logPriorRatio -= cprior->muInitPrior(oldRate);
+    double logPriorRatio = 0.0;
+    if (be == rootEvent){
+        logPriorRatio = cprior->muInitRootPrior(be->getMuInit());
+        logPriorRatio -= cprior->muInitRootPrior(oldRate);
+    }else{
+        logPriorRatio = cprior->muInitPrior(be->getMuInit());
+        logPriorRatio -= cprior->muInitPrior(oldRate);
+    }
 
     double LogProposalRatio = log(cterm);
 
@@ -1531,10 +1505,14 @@ void Model::updateMuShiftMH(void)
 #endif
 
     
-    double logPriorRatio = cprior->muShiftPrior(newMuShift);
-    logPriorRatio -= cprior->muShiftPrior(oldMuShift);
-    
-    
+    double logPriorRatio = 0.0;
+    if (be == rootEvent){
+        logPriorRatio = cprior->muShiftRootPrior(be->getMuShift());
+        logPriorRatio -= cprior->muShiftRootPrior(oldMuShift);
+    }else{
+        logPriorRatio = cprior->muShiftPrior(be->getMuShift());
+        logPriorRatio -= cprior->muShiftPrior(oldMuShift);
+    } 
 
     double LogProposalRatio = 0.0;
 
@@ -1859,10 +1837,10 @@ double Model::computeLogPrior(void)
 
     double logPrior = 0.0;
 
-    logPrior += cprior->lambdaInitPrior(rootEvent->getLamInit());
-    logPrior += cprior->lambdaShiftPrior(rootEvent->getLamShift());
-    logPrior += cprior->muInitPrior(rootEvent->getMuInit());
-    logPrior += cprior->muShiftPrior(rootEvent->getMuShift());
+    logPrior += cprior->lambdaInitRootPrior(rootEvent->getLamInit());
+    logPrior += cprior->lambdaShiftRootPrior(rootEvent->getLamShift());
+    logPrior += cprior->muInitRootPrior(rootEvent->getMuInit());
+    logPrior += cprior->muShiftRootPrior(rootEvent->getMuShift());
     
     int ctr = 0;
 

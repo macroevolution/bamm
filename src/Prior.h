@@ -23,20 +23,19 @@ public:
     counterpart function that generates a random variable from
     the same distribution.
  
-    I have not implemented any of the generateFromPrior fxns
 */
     
     double lambdaShiftPrior(double);
-    double generateLambdaShiftFromPrior(); // not done
+    double generateLambdaShiftFromPrior();
     
     double lambdaInitPrior(double);
-    double generateLambdaInitFromPrior(); // not done
+    double generateLambdaInitFromPrior(); 
     
     double muShiftPrior(double);
-    double generateMuShiftFromPrior(); // not done
+    double generateMuShiftFromPrior(); 
     
     double muInitPrior(double);
-    double generateMuInitFromPrior(); // not done
+    double generateMuInitFromPrior(); 
     
     double poissonRatePrior(double);
     double generatePoissonRateFromPrior();
@@ -47,6 +46,27 @@ public:
     double betaShiftPrior(double);
     double generateBetaShiftFromPrior();
     
+// Root priors:
+    
+    double lambdaShiftRootPrior(double);
+    double generateLambdaShiftRootPrior();
+
+    double lambdaInitRootPrior(double);
+    double generateLambdaInitRootFromPrior();
+    
+    double muShiftRootPrior(double);
+    double generateMuShiftRootFromPrior();
+    
+    double muInitRootPrior(double);
+    double generateMuInitRootFromPrior();
+    
+    double betaInitRootPrior(double);
+    double generateBetaInitRootFromPrior();
+    
+    double betaShiftRootPrior(double);
+    double generateBetaShiftRootFromPrior();
+    
+
 private:
     
     MbRandom *ranPtr;
