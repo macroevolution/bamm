@@ -96,14 +96,6 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
 }
 
 
-SpExModel::~SpExModel(void)
-{
-    for (std::set<BranchEvent*>::iterator it = _eventCollection.begin();
-            it != _eventCollection.end(); it++)
-        delete (*it);
-}
-
-
 void SpExModel::readModelSpecificParameters(std::ifstream &inputFile)
 {
     inputFile >> _readLambdaInit;

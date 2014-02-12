@@ -23,7 +23,6 @@ class TraitModel : public Model
 public:
 
     TraitModel(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior);
-    virtual ~TraitModel();
 
     virtual double computeLogLikelihood();
     virtual double computeTriadLikelihoodTraits(Node* x);

@@ -91,14 +91,6 @@ TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
 }
 
 
-TraitModel::~TraitModel(void)
-{
-    for (std::set<BranchEvent*>::iterator it = _eventCollection.begin();
-            it != _eventCollection.end(); ++it)
-        delete *it;
-}
-
-
 void TraitModel::readModelSpecificParameters(std::ifstream &inputFile)
 {
     inputFile >> _readBetaInit;

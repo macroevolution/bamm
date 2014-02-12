@@ -21,7 +21,6 @@ class SpExModel : public Model
 public:
 
     SpExModel(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior);
-    virtual ~SpExModel();
 
     virtual double computeLogLikelihood();
     virtual double computeLogPrior();

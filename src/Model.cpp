@@ -48,6 +48,10 @@ Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
 
 Model::~Model()
 {
+    EventSet::iterator it;
+    for (it = _eventCollection.begin(); it != _eventCollection.end(); ++it) {
+        delete *it;
+    }
 }
 
 
