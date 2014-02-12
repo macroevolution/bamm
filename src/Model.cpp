@@ -170,7 +170,6 @@ Model::Model(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr)
 	
     setCurrLnLBranches(computeLikelihoodBranches());
 
-    setCurrLnLTraits(0.0);
     log() << "\nInitial log-likelihood: " << getCurrLnLBranches() << "\n";
     if (sttings->getSampleFromPriorOnly())
         log() << "Note that you have chosen to sample from prior only.\n";
@@ -981,7 +980,9 @@ void Model::changeNumberOfEventsMH(void)
             bool isValidConfig = isEventConfigurationValid(lastEventModified);
 
             if (isValidConfig) {
-                setCurrLnLTraits(likTraits);
+                
+                setCurrLnLBranches(PropLnLik);
+                
                 // Update accept/reject statistics
                 acceptCount++;
                 acceptLast = 1;
@@ -1027,7 +1028,6 @@ void Model::changeNumberOfEventsMH(void)
 
         double likBranches = computeLikelihoodBranches();
         double PropLnLik = likBranches;
-        double likTraits = 0.0;
 
 #endif
 
@@ -1065,12 +1065,8 @@ void Model::changeNumberOfEventsMH(void)
             acceptMove = acceptMetropolisHastings(logHR);
 
 
-        //std::cout << "loss: " << acceptMove << "\t" << PropLnLik << "\tLT " << getCurrLnLTraits() + getCurrLnLBranches() << std::endl;
-
         if (acceptMove) {
-            //std::cout << "loss accept, LH: " << computeLikelihoodBranches() << "\tlikBranches" << likBranches << std::endl;
-            setCurrLnLTraits(likTraits);
-
+ 
             setCurrLnLBranches(likBranches);
 
             acceptCount++;

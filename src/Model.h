@@ -28,10 +28,6 @@ public:
     Model(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr);
     ~Model();
 
-    // Full likelihood will be lnLikTraits + lnLikBranches
-    void   setCurrLnLTraits(double x);
-    double getCurrLnLTraits();
-
     void   setCurrLnLBranches(double x);
     double getCurrLnLBranches();
 
@@ -158,8 +154,7 @@ public:
 private:
 
     // Parameters of the model:
-
-    double lnLikTraits;
+    
     double lnLikBranches;
 
     // new parameters: March 23 2012
@@ -235,17 +230,6 @@ private:
     double _segLength; // for splitting branches
 };
 
-
-inline void Model::setCurrLnLTraits(double x)
-{
-    lnLikTraits = x;
-}
-
-
-inline double Model::getCurrLnLTraits()
-{
-    return lnLikTraits;
-}
 
 
 inline void Model::setCurrLnLBranches(double x)
