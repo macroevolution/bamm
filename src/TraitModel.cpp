@@ -1275,15 +1275,22 @@ void TraitModel::updateBetaMH(void)
     
 #endif
     
-    double LogPriorRatio = cprior->betaInitPrior(be->getBetaInit());
-    LogPriorRatio -= cprior->betaInitPrior(oldRate);
     
+    double logPriorRatio = 0.0;
+    if (be == rootEvent){
+        logPriorRatio = cprior->betaInitRootPrior(be->getBetaInit());
+        logPriorRatio -= cprior->betaInitRootPrior(oldRate);
+    }else{
+        logPriorRatio = cprior->betaInitPrior(be->getBetaInit());
+        logPriorRatio -= cprior->betaInitPrior(oldRate);
+    }
+
     
     double LogProposalRatio = log(cterm);
     
     double likeRatio = PropLnLik - getCurrLnLTraits();
     
-    double logHR = likeRatio + LogPriorRatio + LogProposalRatio;
+    double logHR = likeRatio + logPriorRatio + LogProposalRatio;
     
     const bool acceptMove = acceptMetropolisHastings(logHR);
     
@@ -1354,16 +1361,22 @@ void TraitModel::updateBetaShiftMH(void)
     double PropLnLik = computeLikelihoodTraits();
     
 #endif
-    
-    double LogPriorRatio = cprior->betaShiftPrior(newShift);
-    LogPriorRatio -= cprior->betaShiftPrior(oldShift);
-    
+
+    double logPriorRatio = 0.0;
+    if (be == rootEvent){
+        logPriorRatio = cprior->betaShiftRootPrior(be->getBetaShift());
+        logPriorRatio -= cprior->betaShiftRootPrior(oldShift);
+    }else{
+        logPriorRatio = cprior->betaShiftPrior(be->getBetaShift());
+        logPriorRatio -= cprior->betaShiftPrior(oldShift);
+    }
+
     
     double LogProposalRatio = 0.0;
     
     double likeRatio = PropLnLik - getCurrLnLTraits();
     
-    double logHR = likeRatio + LogPriorRatio + LogProposalRatio;
+    double logHR = likeRatio + logPriorRatio + LogProposalRatio;
     
     const bool acceptMove = acceptMetropolisHastings(logHR);
     
@@ -1658,8 +1671,8 @@ double TraitModel::computeLogPrior(void)
     
     double logPrior = 0.0;
     
-    logPrior += cprior->betaInitPrior(rootEvent->getBetaInit());
-    logPrior += dens_term + cprior->betaShiftPrior(rootEvent->getBetaShift());
+    logPrior += cprior->betaInitRootPrior(rootEvent->getBetaInit());
+    logPrior += dens_term + cprior->betaShiftRootPrior(rootEvent->getBetaShift());
     
     for (std::set<TraitBranchEvent*>::iterator i = eventCollection.begin();
          i != eventCollection.end(); i++) {
