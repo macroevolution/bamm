@@ -43,8 +43,6 @@ public:
     void updateEventRateMH();
     void updateTimeVariablePartitionsMH();
 
-    void printExtinctionParams();
-
 	// Functions for auto-tuning
 	void setUpdateLambdaInitScale(double x);
 	void setUpdateMuInitScale(double x);

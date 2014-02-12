@@ -840,24 +840,6 @@ double SpExModel::computeLogPrior()
 }
 
 
-void SpExModel::printExtinctionParams(void)
-{
-
-    if (_eventCollection.size() > 0) {
-        for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
-                i != _eventCollection.end(); i++) {
-            SpExBranchEvent* event = static_cast<SpExBranchEvent*>(*i);
-            std::cout << event << "\t" << event->getMuInit() << "\t" << event->getMuShift() << std::endl;
-        }
-    }
-
-    SpExBranchEvent* rootEvent = static_cast<SpExBranchEvent*>(_rootEvent);
-
-    std::cout << rootEvent << "\t" << rootEvent->getMuInit() << "\t" <<
-        rootEvent->getMuShift() << std::endl << std::endl;
-}
-
-
 void SpExModel::getSpecificEventDataString
     (std::stringstream& ss, BranchEvent* event)
 {
