@@ -42,8 +42,6 @@ public:
     void updateTimeVariablePartitionsMH();
     void setMinMaxTraitPriors();
 
-    int countTimeVaryingRatePartitions();
-
     // Generate string with event data:
     void getEventDataString(std::stringstream& ss);
 

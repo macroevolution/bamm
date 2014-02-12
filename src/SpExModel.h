@@ -44,7 +44,6 @@ public:
     void updateTimeVariablePartitionsMH();
 
     void printExtinctionParams();
-    int countTimeVaryingRatePartitions();
 
     // Generate string with event data:
     void getEventDataString(std::stringstream& ss);

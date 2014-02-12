@@ -859,29 +859,9 @@ void SpExModel::printExtinctionParams(void)
 
 
 /*
- SpExModel::countTimeVaryingRatePartitions
-
-    -counts number of time-varying rate partitions
-
- */
-int SpExModel::countTimeVaryingRatePartitions(void)
-{
-
-    int count = 0;
-    count += (int)_rootEvent->getIsEventTimeVariable();
-    for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
-            i != _eventCollection.end(); i++)
-        count += (int)(*i)->getIsEventTimeVariable();
-    return count;
-}
-
-
-/*
     Write event data to file for all events "on" tree
-        at a given point in the MCMC chain
-
-
- */
+    at a given point in the MCMC chain
+*/
 
 void SpExModel::getEventDataString(std::stringstream& ss)
 {
