@@ -82,6 +82,9 @@ public:
     void setCurrentLogLikelihood(double x);
     double getCurrentLogLikelihood();
 
+    double getMHAcceptanceRate();
+    void resetMHAcceptanceParameters();
+
 protected:
 
     virtual void readModelSpecificParameters(std::ifstream& inputFile) = 0;

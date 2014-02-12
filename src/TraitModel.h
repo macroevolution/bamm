@@ -42,10 +42,6 @@ public:
     void updateTimeVariablePartitionsMH();
     void setMinMaxTraitPriors();
 
-    // more output: acceptance rates
-    double getMHacceptanceRate();
-    void   resetMHacceptanceParameters();
-
     BranchEvent* getEventByIndex(int x);
 
     int countTimeVaryingRatePartitions();

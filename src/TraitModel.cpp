@@ -710,27 +710,6 @@ double TraitModel::computeLogPrior(void)
 }
 
 
-double  TraitModel::getMHacceptanceRate(void)
-{
-
-    double arate = (double)_acceptCount / ((double)_acceptCount +
-                                          (double)_rejectCount);
-
-
-    return arate;
-
-}
-
-void  TraitModel::resetMHacceptanceParameters(void)
-{
-    _acceptCount = 0;
-    _rejectCount = 0;
-    
-}
-
-
-
-
 BranchEvent* TraitModel::getEventByIndex(int x)
 {
 

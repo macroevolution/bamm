@@ -43,10 +43,6 @@ public:
     void updateEventRateMH();
     void updateTimeVariablePartitionsMH();
 
-    // More output: acceptance rates
-    double getMHacceptanceRate();
-    void   resetMHacceptanceParameters();
-
     BranchEvent*  getEventByIndex(int x);
 
     void printExtinctionParams();

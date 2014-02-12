@@ -99,7 +99,7 @@ TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
         if ((i % _printFreq == 0)){
             
             printStateData();
-            ModelPtr->resetMHacceptanceParameters();
+            ModelPtr->resetMHAcceptanceParameters();
         
         }
     }
@@ -230,7 +230,7 @@ void TraitMCMC::writeStateToStream(std::ostream& outStream)
               << ModelPtr->computeLogPrior()   << ","
               << ModelPtr->getCurrentLogLikelihood()  << ","
               << ModelPtr->getEventRate()      << ","
-              << ModelPtr->getMHacceptanceRate() << std::endl;
+              << ModelPtr->getMHAcceptanceRate() << std::endl;
 }
 
 
@@ -247,7 +247,7 @@ void TraitMCMC::printStateData(void)
           << std::setw(15) << ModelPtr->getCurrentLogLikelihood()
           << std::setw(15) << ModelPtr->getNumberOfEvents()
           << std::setw(15) << ModelPtr->computeLogPrior()
-          << std::setw(15) << ModelPtr->getMHacceptanceRate()
+          << std::setw(15) << ModelPtr->getMHAcceptanceRate()
           << "\n";
 }
 

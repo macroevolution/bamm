@@ -673,6 +673,19 @@ bool Model::isEventConfigurationValid(BranchEvent* be)
 }
 
 
+double Model::getMHAcceptanceRate()
+{
+    return (double)_acceptCount / (_acceptCount + _rejectCount);
+}
+
+
+void Model::resetMHAcceptanceParameters()
+{
+    _acceptCount = 0;
+    _rejectCount = 0;
+}
+
+
 double Model::safeExponentiation(double x)
 {
     if (x > 0.0)

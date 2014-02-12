@@ -840,26 +840,6 @@ double SpExModel::computeLogPrior()
 }
 
 
-double  SpExModel::getMHacceptanceRate(void)
-{
-
-    double arate = (double)_acceptCount / ((double)_acceptCount +
-                                          (double)_rejectCount);
-
-    return arate;
-
-}
-
-
-void  SpExModel::resetMHacceptanceParameters(void)
-{
-    _acceptCount = 0;
-    _rejectCount = 0;
-
-}
-
-
-
 BranchEvent* SpExModel::getEventByIndex(int x)
 {
 
