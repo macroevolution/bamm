@@ -2,6 +2,8 @@
 #include "BranchEvent.h"
 #include "Log.h"
 
+#include <cstdlib>
+
 
 BranchHistory::BranchHistory() : _nodeEvent(NULL), _ancestralNodeEvent(NULL)
 {
