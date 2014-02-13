@@ -10,7 +10,7 @@
 #include <iosfwd>
 
 class MbRandom;
-class Model;
+class SpExModel;
 class TraitModel;
 class Settings;
 
@@ -19,7 +19,7 @@ class Autotune
 {
 public:    
     
-    Autotune(MbRandom* ran, Model* mymodel, Settings* sp);
+    Autotune(MbRandom* ran, SpExModel* mymodel, Settings* sp);
     ~Autotune();
     
     void setUpdateWeights_Diversification(void);
@@ -29,7 +29,7 @@ public:
     
 private:    
     MbRandom* ranPtr;
-    Model*    ModelPtr;
+    SpExModel*    ModelPtr;
     Settings* sttings;
     
     std::vector<double> parWts;    

@@ -5,7 +5,7 @@
 #include <cstdlib>
 
 #include "MCMC.h"
-#include "Model.h"
+#include "SpExModel.h"
 #include "MbRandom.h"
 #include "Node.h"
 #include "Tree.h"
@@ -14,7 +14,7 @@
 #include "Log.h"
 
 
-MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
+MCMC::MCMC(MbRandom* ran, SpExModel* mymodel, Settings* sp)
 {
     ranPtr = ran;
     ModelPtr = mymodel;
@@ -89,7 +89,7 @@ MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
             //  state data are printed.
             //  This could lead to NANs if writeEventDataToFile is called after this.
             
-            ModelPtr->resetMHacceptanceParameters();
+            ModelPtr->resetMHAcceptanceParameters();
         }
     }
 }
@@ -204,9 +204,9 @@ void MCMC::writeStateToStream(std::ostream& outStream)
     outStream << ModelPtr->getGeneration()       << ","
               << ModelPtr->getNumberOfEvents()   << ","
               << ModelPtr->computeLogPrior()     << ","
-              << ModelPtr->getCurrLnLBranches()  << ","
+              << ModelPtr->getCurrentLogLikelihood()  << ","
               << ModelPtr->getEventRate()        << ","
-              << ModelPtr->getMHacceptanceRate() << std::endl;
+              << ModelPtr->getMHAcceptanceRate() << std::endl;
 }
 
 
@@ -220,10 +220,10 @@ void MCMC::writeStateToStream(std::ostream& outStream)
 void MCMC::printStateData(void)
 {
     log() << std::setw(15) << ModelPtr->getGeneration()
-          << std::setw(15) << ModelPtr->getCurrLnLBranches()
+          << std::setw(15) << ModelPtr->getCurrentLogLikelihood()
           << std::setw(15) << ModelPtr->getNumberOfEvents()
           << std::setw(15) << ModelPtr->computeLogPrior()
-          << std::setw(15) << ModelPtr->getMHacceptanceRate()
+          << std::setw(15) << ModelPtr->getMHAcceptanceRate()
           << std::endl;
 }
 

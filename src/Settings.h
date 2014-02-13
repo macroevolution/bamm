@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <iostream>
 
 #include "SettingsParameter.h"
 
@@ -56,10 +57,14 @@ private:
     
     // Parameters read from the control file
     std::vector<UserParameter> _userParameters;
+
+    // Parameters read from the command line
+    std::vector<UserParameter> _commandLineParameters;
 	
 public:
 
-    Settings(const std::string& controlFilename);
+    Settings(const std::string& controlFilename,
+        const std::vector<UserParameter>& commandLineParameters);
 
     void printCurrentSettings(std::ostream& out = std::cout) const;
 
@@ -105,6 +110,10 @@ public:
     double getLambdaShiftPrior() const;
     double getMuInitPrior() const;
     double getMuShiftPrior() const;
+    double getLambdaInitRootPrior() const;
+    double getLambdaShiftRootPrior() const;
+    double getMuInitRootPrior() const;
+    double getMuShiftRootPrior() const;
     double getSegLength() const;
 
     int getMinCladeSizeForShift() const;
@@ -155,6 +164,8 @@ public:
     double getBetaShiftInit() const;
     double getBetaInitPrior() const;
     double getBetaShiftPrior() const;
+    double getBetaInitRootPrior() const;
+    double getBetaShiftRootPrior() const;
     double getTraitPriorMin() const;
     double getTraitPriorMax() const;
     double getUpdateRateBeta0() const;
@@ -325,6 +336,30 @@ inline double Settings::getMuInitPrior() const
 inline double Settings::getMuShiftPrior() const
 {
     return _parameters.at("muShiftPrior").value<double>();
+}
+
+
+inline double Settings::getLambdaInitRootPrior() const
+{
+    return _parameters.at("lambdaInitRootPrior").value<double>();
+}
+
+
+inline double Settings::getLambdaShiftRootPrior() const
+{
+    return _parameters.at("lambdaShiftRootPrior").value<double>();
+}
+
+
+inline double Settings::getMuInitRootPrior() const
+{
+    return _parameters.at("muInitRootPrior").value<double>();
+}
+
+
+inline double Settings::getMuShiftRootPrior() const
+{
+    return _parameters.at("muShiftRootPrior").value<double>();
 }
 
 
@@ -505,6 +540,18 @@ inline double Settings::getBetaInitPrior() const
 inline double Settings::getBetaShiftPrior() const
 {
     return _parameters.at("betaShiftPrior").value<double>();
+}
+
+
+inline double Settings::getBetaInitRootPrior() const
+{
+    return _parameters.at("betaInitRootPrior").value<double>();
+}
+
+
+inline double Settings::getBetaShiftRootPrior() const
+{
+    return _parameters.at("betaShiftRootPrior").value<double>();
 }
 
 
