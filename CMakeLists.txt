@@ -40,6 +40,7 @@ SET(BAMM_SRC
     src/Settings.cpp
     src/SettingsParameter.cpp
     src/SpExBranchEvent.cpp
+    src/SpExMCMC.cpp
     src/SpExModel.cpp
     src/Stat.cpp
     src/TraitBranchEvent.cpp

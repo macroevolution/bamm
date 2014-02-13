@@ -9,9 +9,9 @@
 #include "Node.h"
 #include "MbRandom.h"
 #include "SpExModel.h"
-#include "MCMC.h"
-#include "Settings.h"
+#include "SpExMCMC.h"
 #include "TraitMCMC.h"
+#include "Settings.h"
 #include "TraitModel.h"
 #include "Autotune.h"
 #include "FastSimulatePrior.h"
@@ -132,7 +132,8 @@ int main (int argc, char* argv[])
             Autotune myTuneObject(&myRNG, &myModel, &mySettings);
         } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
             SpExModel myModel(&myRNG, &intree, &mySettings, &myPrior);
-            MCMC myMCMC(&myRNG, &myModel, &mySettings);
+            SpExMCMC myMCMC(&myRNG, &myModel, &mySettings);
+            myMCMC.run();
         } else {
             log(Error) << "Unsupported option in main.\n";
             std::exit(1);
@@ -160,6 +161,7 @@ int main (int argc, char* argv[])
                 !mySettings.getAutotune()) {
             TraitModel myModel(&myRNG, &intree, &mySettings, &myPrior);
             TraitMCMC myMCMC(&myRNG, &myModel, &mySettings);
+            myMCMC.run();
         } else if (mySettings.getInitializeModel() && mySettings.getAutotune()){
             log(Error) << "Autotune option not yet supported for phenotypic "
                 "(trait) analysis.\n";
