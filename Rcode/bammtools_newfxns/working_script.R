@@ -12,7 +12,7 @@ ed <- getEventData(whales, events.whales, burnin=0.2);
 configs <- distinctShiftConfigurations(ed, threshold=0.05);
  
  
-plotDistinctShiftConfigurations(configs, ed)
+plot.bammshifts(configs, ed);
  
  
  

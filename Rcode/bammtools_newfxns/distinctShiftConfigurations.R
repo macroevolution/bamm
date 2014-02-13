@@ -18,12 +18,12 @@
 
 
 
-distinctShiftConfigurations <- function(ephy, threshold = 0.05){
+distinctShiftConfigurations <- function(ephy, threshold = 0.05) {
 	
 	mm <- marginalShiftProbsTree(ephy);
 	goodnodes <- mm$edge[,2][mm$edge.length >= threshold];
 	xlist <- list();
-	for (i in 1:length(ephy$eventData)){
+	for (i in 1:length(ephy$eventData)) {
 		xlist[[i]] <- intersect(goodnodes, ephy$eventData[[i]]$node);
 	}
 
@@ -33,29 +33,27 @@ distinctShiftConfigurations <- function(ephy, threshold = 0.05){
 	ulist[[1]] <- xlist[[1]];
 	treesets[[1]] <- 1;
 	
-	for (i in 2:length(xlist)){
+	for (i in 2:length(xlist)) {
 		lx <- length(ulist);
 		#cat(lx, '\n')
-		for (k in 1:lx){
+		for (k in 1:lx) {
 			if (areShiftSetsEqual(ulist[[k]], xlist[[i]])){
 				treesets[[k]] <- c(treesets[[k]], i);
 				break;	
-			}else{
+			} else {
 				if (k == length(ulist)){
 					xlen <- length(ulist);
 					ulist[[xlen + 1]] <- xlist[[i]];
 					treesets[[xlen + 1]] <- i;
-
 				}
 			}
 		}
-		
 	}
 	
 	freqs <- unlist(lapply(treesets, length));
 	freqs <- freqs / sum(freqs);
 	
-	ord <- order(freqs, decreasing=T);
+	ord <- order(freqs, decreasing=TRUE);
 	
 	obj <- list();
 	obj$marg.probs <- mm$edge.length;  
@@ -65,8 +63,6 @@ distinctShiftConfigurations <- function(ephy, threshold = 0.05){
 	obj$frequency <- freqs[ord];
 	obj$threshold <- threshold;
 
-	
-	
 	class(obj) <- 'bammshifts';
 	
 	return(obj);
