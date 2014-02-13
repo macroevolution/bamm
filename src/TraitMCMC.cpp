@@ -1,308 +1,93 @@
-/*
- *  TraitMCMC.cpp
- *  BAMMt
- *
- *  Created by Dan Rabosky on 6/20/12.
-  *
- */
-
-#include <sstream>
-#include <fstream>
-#include <iostream>
-#include <iomanip>
-#include <cstdlib>
-
 #include "TraitMCMC.h"
-#include "TraitModel.h"
+#include "MCMC.h"
 #include "MbRandom.h"
+#include "Model.h"
+#include "TraitModel.h"
+#include "Settings.h"
 #include "Node.h"
 #include "Tree.h"
-#include "Settings.h"
-#include "TraitBranchEvent.h"
 #include "Log.h"
 
+#include <vector>
+#include <iostream>
+#include <sstream>
 
-TraitMCMC::TraitMCMC(MbRandom* ran, TraitModel* mymodel, Settings* sp)
+
+TraitMCMC::TraitMCMC(MbRandom* rng, Model* model, Settings* settings) :
+    MCMC(rng, model, settings)
 {
-    ranPtr = ran;
-    ModelPtr = mymodel;
-    sttings = sp;
+    _specificModel = static_cast<TraitModel*>(model);
 
-    //check if file exists; delete;
+    _betaOutputFileName = _settings->getBetaOutfile();
 
-    // MCMC parameters - for now....//
-    _mcmcOutFilename      = sttings->getMCMCoutfile();
-    _betaOutFilename      = sttings->getBetaOutfile();
-    _eventDataOutFilename = sttings->getEventDataOutfile();
+    _treeOutputFreq = _settings->getBranchRatesWriteFreq();
 
-    _writeMeanBranchLengthTrees = sttings->getWriteMeanBranchLengthTrees();
-
-    _treeWriteFreq =    sttings->getBranchRatesWriteFreq();
-    _mcmcWriteFreq =    sttings->getMCMCwriteFreq();
-    _eventDataWriteFreq = sttings->getEventDataWriteFreq();
-    _printFreq =        sttings->getPrintFreq();
-    _NGENS =            sttings->getNGENS();
-
-    // Open streams for writing (overwrite)
-    _mcmcOutStream.open(_mcmcOutFilename.c_str());
-    _eventDataOutStream.open(_eventDataOutFilename.c_str());
-
+    _writeMeanBranchLengthTrees = _settings->getWriteMeanBranchLengthTrees();
     if (_writeMeanBranchLengthTrees) {
-        _betaOutStream.open(_betaOutFilename.c_str());
+        _betaOutputStream.open(_betaOutputFileName.c_str());
     }
-
-    writeHeadersToOutputFiles();
-
-    setUpdateWeights();
-    ModelPtr->resetGeneration();
-
-    for (int i = 0; i < sttings->getInitialNumberEvents(); i++)
-        ModelPtr->addEventToTree();
-
-    log() << "\nRunning MCMC chain for " << _NGENS << " generations.\n";
-
-    log() << "\n"
-          << std::setw(15) << "Generation"
-          << std::setw(15) << "LogLikelihood"
-          << std::setw(15) << "NumShifts"    // Why not NumEvents?
-          << std::setw(15) << "LogPrior"
-          << std::setw(15) << "AcceptRate"
-          << "\n";
-
-    /*run chain*/
-    for (int i = 0; i < _NGENS; i++) {
-
-
-        int parmToUpdate = pickParameterClassToUpdate();
-        updateState(parmToUpdate); // update state
-
-
-
-        if (_writeMeanBranchLengthTrees && (i % _treeWriteFreq == 0)) {
-            writeBranchBetaRatesToFile();
-        }
-
-        if ((i % _eventDataWriteFreq) == 0){
-            writeEventDataToFile();        
-        }
-
-
-
-
-        if ((i % _mcmcWriteFreq) == 0){
-            writeStateToFile();      
-        }
-
-        
-
-
-        if ((i % _printFreq == 0)){
-            
-            printStateData();
-            ModelPtr->resetMHAcceptanceParameters();
-        
-        }
-    }
-
 }
 
 
 TraitMCMC::~TraitMCMC(void)
 {
-    _mcmcOutStream.close();
-    _eventDataOutStream.close();
-
     if (_writeMeanBranchLengthTrees) {
-        _betaOutStream.close();
+        _betaOutputStream.close();
     }
 }
 
 
-void TraitMCMC::setUpdateWeights(void)
+void TraitMCMC::setUpSpecificParameterWeights()
 {
-
-    parWts.push_back(
-        sttings->getUpdateRateEventNumber());                      // 0    event number
-    parWts.push_back(
-        sttings->getUpdateRateEventPosition());                    // 1    event position
-    parWts.push_back(
-        sttings->getUpdateRateEventRate());                        // 2    event rate
-    parWts.push_back(
-        sttings->getUpdateRateBeta0());                            // 3    beta0 rate
-    parWts.push_back(
-        sttings->getUpdateRateBetaShift());                        // 4    beta shift
-    parWts.push_back(
-        sttings->getUpdateRateNodeState());                        // 5    Node states
-
-
-    double sumwts = parWts[0];
-    for (std::vector<double>::size_type i = 1; i < parWts.size(); i++) {
-        sumwts += parWts[i];
-        parWts[i] += parWts[i - 1];
-    }
-
-    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++)
-        parWts[i] /= sumwts;
-
-    // Define std::vectors to hold accept/reject data:
-    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++) {
-        acceptCount.push_back(0);
-        rejectCount.push_back(0);
-    }
-
-
-
+    _parameterWeights.push_back(_settings->getUpdateRateBeta0());
+    _parameterWeights.push_back(_settings->getUpdateRateBetaShift());
+    _parameterWeights.push_back(_settings->getUpdateRateNodeState());
+    // TODO: Was node state depricated?
 }
 
 
-int TraitMCMC::pickParameterClassToUpdate(void)
+void TraitMCMC::updateSpecificState(int parameter)
 {
-    double rn = ranPtr->uniformRv();
-    int parm = 0;
-    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++) {
-        if (rn <= parWts[i]) {
-            parm = (int)i;
-            break;
-        }
-    }
-    return parm;
-}
-
-
-void TraitMCMC::updateState(int parm)
-{
-
-    if (parm == 0)
-        ModelPtr->changeNumberOfEventsMH();
-    else if (parm == 1)
-        ModelPtr->moveEventMH();
-    else if (parm == 2)
-        ModelPtr->updateEventRateMH();
-    else if (parm == 3)
-        ModelPtr->updateBetaMH();
-    else if (parm == 4)
-        ModelPtr->updateBetaShiftMH();
-    else if (parm == 5)
-        ModelPtr->updateNodeStateMH();
-    else if (parm == 6) {
-        // Update time variable partition:
-        std::cout << "should update isTimeVariable" << std::endl;
-        ModelPtr->setAcceptLastUpdate(1);
-
+    if (parameter == 3)
+        _specificModel->updateBetaMH();
+    else if (parameter == 4)
+        _specificModel->updateBetaShiftMH();
+    else if (parameter == 5)
+        _specificModel->updateNodeStateMH();
+    else if (parameter == 6) {
+        // Update time variable partition
+        log() << "Should update isTimeVariable\n";
+        _specificModel->setAcceptLastUpdate(1);
     } else {
-        // should never get here...throw exception?
-        std::cout << "Bad parm to update\n" << std::endl;
+        // Should never get here
+        log(Error) << "Bad parameter to update\n";
+        std::exit(1);
     }
+}
 
-    if (ModelPtr->getAcceptLastUpdate() == 1)
-        acceptCount[parm]++;
-    else if ( ModelPtr->getAcceptLastUpdate() == 0 )
-        rejectCount[parm]++;
-    else if ( ModelPtr->getAcceptLastUpdate() == -1) {
-        std::cout << "failed somewhere in MH step, parm " << parm << std::endl;
-        throw;
-    } else {
-        std::cout << "invalid accept/reject flag in model object" << std::endl;
-        throw;
+
+void TraitMCMC::outputSpecificEventDataHeaders()
+{
+    _eventDataOutputStream << ",betainit,betashift\n";
+}
+
+
+void TraitMCMC::outputSpecificData(int generation)
+{
+    if (_writeMeanBranchLengthTrees && (generation % _treeOutputFreq == 0)) {
+        outputBranchBetaRates();
     }
-    // reset to unmodified value
-    ModelPtr->setAcceptLastUpdate(-1);
-
 }
 
 
-void TraitMCMC::writeStateToFile()
+void TraitMCMC::outputBranchBetaRates()
 {
-    writeStateToStream(_mcmcOutStream);
-}
-
-
-void TraitMCMC::writeHeaderToStream(std::ostream& outStream)
-{
-    outStream << "generation,N_shifts,logPrior,logLik,acceptRate\n";
-}
-
-
-void TraitMCMC::writeStateToStream(std::ostream& outStream)
-{
-    outStream << ModelPtr->getGeneration()     << ","
-              << ModelPtr->getNumberOfEvents() << ","
-              << ModelPtr->computeLogPrior()   << ","
-              << ModelPtr->getCurrentLogLikelihood()  << ","
-              << ModelPtr->getEventRate()      << ","
-              << ModelPtr->getMHAcceptanceRate() << std::endl;
-}
-
-
-/* print state data to screen:
- current LnL
- # of events
- mean speciation rate?
-
-
- */
-void TraitMCMC::printStateData(void)
-{
-    log() << std::setw(15) << ModelPtr->getGeneration()
-          << std::setw(15) << ModelPtr->getCurrentLogLikelihood()
-          << std::setw(15) << ModelPtr->getNumberOfEvents()
-          << std::setw(15) << ModelPtr->computeLogPrior()
-          << std::setw(15) << ModelPtr->getMHAcceptanceRate()
-          << "\n";
-}
-
-////////
-
-void TraitMCMC::writeBranchBetaRatesToFile(void)
-{
-    ModelPtr->getTreePtr()->setMeanBranchTraitRates();
+    _specificModel->getTreePtr()->setMeanBranchTraitRates();
 
     std::stringstream outdata;
-    ModelPtr->getTreePtr()->writeMeanBranchTraitRateTree(
-        ModelPtr->getTreePtr()->getRoot(), outdata);
-
+    _specificModel->getTreePtr()->writeMeanBranchTraitRateTree
+        (_specificModel->getTreePtr()->getRoot(), outdata);
     outdata << ";";
 
-    _betaOutStream << outdata.str() << std::endl;
-}
-
-
-void TraitMCMC::writeEventDataToFile(void)
-{
-    std::stringstream eventData;
-    ModelPtr->getEventDataString(eventData);
-
-    _eventDataOutStream << eventData.str() << std::endl;
-}
-
-
-bool TraitMCMC::anyOutputFileExists()
-{
-    return fileExists(_mcmcOutFilename)      ||
-           fileExists(_betaOutFilename)      ||
-           fileExists(_eventDataOutFilename);
-}
-
-
-bool TraitMCMC::fileExists(const std::string& filename)
-{
-    std::ifstream inFile(filename.c_str());
-    return inFile.good();
-}
-
-
-void TraitMCMC::writeHeadersToOutputFiles()
-{
-    _mcmcOutStream << "generation,N_shifts,logPrior,logLik,eventRate,acceptRate\n";
-    _eventDataOutStream << "generation,leftchild,rightchild,abstime," <<
-        "betainit,betashift\n";
-}
-
-
-void TraitMCMC::exitWithErrorOutputFileExists()
-{
-    log(Error) << "Analysis is set to not overwrite files.\n"
-               << "Fix by removing or renaming output file(s),\n"
-               << "or set \"overwrite = 1\" in the control file.\n";
-    std::exit(1);
+    _betaOutputStream << outdata.str() << std::endl;
 }
