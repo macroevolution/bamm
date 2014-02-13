@@ -211,11 +211,14 @@ void TraitModel::updateBetaMH(void)
         logPriorRatio -= _prior->betaInitPrior(oldRate);
     }
 
+    
+    
+    
     double LogProposalRatio = log(cterm);
     
     double likeRatio = PropLnLik - getCurrentLogLikelihood();
     
-    double logHR = likeRatio + logPriorRatio + LogProposalRatio;    
+    double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
 
     bool acceptMove = acceptMetropolisHastings(logHR);
     
@@ -294,7 +297,7 @@ void TraitModel::updateBetaShiftMH(void)
     
     double likeRatio = PropLnLik - getCurrentLogLikelihood();
     
-    double logHR = likeRatio + logPriorRatio + LogProposalRatio;
+    double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
     
     const bool acceptMove = acceptMetropolisHastings(logHR);
     
@@ -354,9 +357,9 @@ void TraitModel::updateNodeStateMH(void)
     double logProposalRatio = 0.0; // proposal ratio for uniform = 1.0
 
     double likeRatio = PropLnLik - getCurrentLogLikelihood();
-
-
-    double logHR = LogPriorRatio + logProposalRatio + likeRatio;
+ 
+    double logHR = computeLogHastingsRatio(likeRatio, LogPriorRatio, logProposalRatio);
+    
     bool acceptMove = acceptMetropolisHastings(logHR);
 
     // Here we do prior calculation to avoid computing infinity...
@@ -416,8 +419,8 @@ void TraitModel::updateNodeStateMH(Node* xnode)
 
     double likeRatio = PropLnLik - getCurrentLogLikelihood();
 
+    double logHR = computeLogHastingsRatio(likeRatio, LogPriorRatio, logProposalRatio);
 
-    double logHR = LogPriorRatio + logProposalRatio + likeRatio;
     bool acceptMove = acceptMetropolisHastings(logHR);
 
     // Here we do prior calculation to avoid computing infinity...
