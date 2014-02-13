@@ -130,7 +130,7 @@ double Prior::generateBetaShiftFromPrior()
 double Prior::lambdaInitRootPrior(double x)
 {
     if (fabs(sttings->getLambdaInitRootPrior() + 1) < _UPDATE_TOL) {
-        return ranPtr->lnExponentialPdf(sttings->getLambdaInitPrior(), x);
+        return lambdaInitPrior(x);
     } else {
         return ranPtr->lnExponentialPdf(sttings->getLambdaInitRootPrior(), x);
     }
@@ -141,7 +141,7 @@ double Prior::lambdaInitRootPrior(double x)
 double Prior::lambdaShiftRootPrior(double x)
 {
     if (fabs(sttings->getLambdaShiftRootPrior() + 1) < _UPDATE_TOL) {
-        return ranPtr->lnExponentialPdf(sttings->getLambdaShiftPrior(), x);
+        return lambdaShiftPrior(x);
     } else {
         return ranPtr->lnExponentialPdf(sttings->getLambdaShiftRootPrior(), x);
     }
@@ -151,7 +151,7 @@ double Prior::lambdaShiftRootPrior(double x)
 double Prior::muInitRootPrior(double x)
 {
     if (fabs(sttings->getMuInitRootPrior() + 1) < _UPDATE_TOL) {
-        return ranPtr->lnExponentialPdf(sttings->getMuInitPrior(), x);
+        return muInitPrior(x);
     } else {
         return ranPtr->lnExponentialPdf(sttings->getMuInitRootPrior(), x);
     }
@@ -161,28 +161,28 @@ double Prior::muInitRootPrior(double x)
 double Prior::muShiftRootPrior(double x)
 {
     if (fabs(sttings->getMuShiftRootPrior() + 1) < _UPDATE_TOL) {
-        return ranPtr->lnExponentialPdf(sttings->getMuShiftPrior(), x);
+        return muShiftPrior(x);
     } else {
         return ranPtr->lnExponentialPdf(sttings->getMuShiftRootPrior(), x);
     }
-
 }
+
 
 double Prior::betaInitRootPrior(double x)
 {
     if (fabs(sttings->getBetaInitRootPrior() + 1) < _UPDATE_TOL) {
-        return ranPtr->lnExponentialPdf(sttings->getBetaInitPrior(), x);
+        return betaInitPrior(x);
     } else {
         return ranPtr->lnExponentialPdf(sttings->getBetaInitRootPrior(), x);
     }
 }
 
+
 double Prior::betaShiftRootPrior(double x)
 {
     if (fabs(sttings->getBetaShiftRootPrior() + 1) < _UPDATE_TOL) {
-        return ranPtr->lnExponentialPdf(sttings->getBetaShiftPrior(), x);
+        return betaShiftPrior(x);
     } else {
         return ranPtr->lnExponentialPdf(sttings->getBetaShiftRootPrior(), x);
     }
-
 }
