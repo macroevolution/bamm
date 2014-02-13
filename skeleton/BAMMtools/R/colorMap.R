@@ -20,8 +20,11 @@ colorMap = function(x, pal, breaks) {
 	else if (tolower(pal) == "set2") {
 		colpalette = colorRampPalette(c("darkgreen","pink","magenta4"),space='Lab')(NCOLORS);
 	}
-	else if (tolower(pal) == 'temperature') {
+	else if (tolower(pal) == "temperature") {
 		colpalette = richColors(NCOLORS);	
+	}
+	else if (tolower(pal) == "terrain") {
+		colpalette = terrain.colors(NCOLORS);
 	}
 	else {
 		stop("Unrecognized color palette specification");
