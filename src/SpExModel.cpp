@@ -542,7 +542,6 @@ double SpExModel::computeLogLikelihoodByInterval()
 
             double LtotalT = 0.0; // what is this doing?
 
-            double meanRateAtBranchBase = 0.0;
             double curLam = 0.0;
 
             while (starttime > 0) {
@@ -587,7 +586,6 @@ double SpExModel::computeLogLikelihoodByInterval()
             //   to correspond to fact that branch likelihoods themselves are computed
             //      using approximations.
 
-            meanRateAtBranchBase = curLam / 2;
             curLam = 0.0;
 
             // Setting extinction prob at root node IF xnode is the root
@@ -649,8 +647,6 @@ double SpExModel::computeLogLikelihoodByInterval()
 
             }
 
-            meanRateAtBranchBase += curLam / 2;
-
             // ########################## What to use as Einit for start of NEXT downstream branch?
             // At this point, lEinit is actually the lEinit for the parent node:
             //  Here, we will  (as of 9.1.2012) arbitrarily take this to be the LEFT extinction value:
@@ -696,10 +692,6 @@ double SpExModel::computeLogLikelihoodByInterval()
                 // Does not include root node, so it is conditioned on basal speciation event occurring:
 
                 LnL  += log(xnode->getNodeLambda());
-
-                //LnL += log(meanRateAtBranchBase);
-
-
 
                 xnode->setDinit(1.0);
 

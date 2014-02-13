@@ -120,7 +120,6 @@ void FastSimulatePrior::updateEventRateMH()
 void FastSimulatePrior::changeNumberOfEventsMH()
 {
 
-    int proposedState = 0;
     bool acceptMove = false;
     
     // Propose gains & losses equally if not on boundary (n = 0) events:
@@ -139,8 +138,6 @@ void FastSimulatePrior::changeNumberOfEventsMH()
     // now to adjust acceptance ratios:
     
     if (gain) {
-        
-        proposedState = _numberEvents + 1;
         
         double qratio = 1.0;
         if (K == 0) {
