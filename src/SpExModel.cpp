@@ -229,10 +229,9 @@ void SpExModel::updateLambdaInitMH(void)
     }
 
     double LogProposalRatio = log(cterm);
-
     double likeRatio = PropLnLik - getCurrentLogLikelihood();
 
-    double logHR = likeRatio +  logPriorRatio + LogProposalRatio;
+    double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
 
     bool acceptMove = false;
     if (std::isinf(likeRatio) ) {
@@ -304,18 +303,11 @@ void SpExModel::updateLambdaShiftMH(void)
         logPriorRatio -= _prior->lambdaShiftPrior(oldLambdaShift);
     }
 
-/*
-    double  logPriorRatio =_rng->lnNormalPdf((double)0.0,
-                            _settings->getLambdaShiftPrior(), newLambdaShift);
-    logPriorRatio -=_rng->lnNormalPdf((double)0.0, _settings->getLambdaShiftPrior(),
-                                      oldLambdaShift);
-*/
-    
     double LogProposalRatio = 0.0;
 
     double likeRatio = PropLnLik - getCurrentLogLikelihood();
 
-    double logHR = likeRatio +  logPriorRatio + LogProposalRatio;
+    double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
 
     bool acceptMove = false;
     if (std::isinf(likeRatio) ) {
@@ -390,7 +382,7 @@ void SpExModel::updateMuInitMH(void)
 
     double likeRatio = PropLnLik - getCurrentLogLikelihood();
 
-    double logHR = likeRatio +  logPriorRatio + LogProposalRatio;
+    double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
 
     bool acceptMove = false;
     if (std::isinf(likeRatio) ) {
@@ -464,11 +456,11 @@ void SpExModel::updateMuShiftMH(void)
     } 
 
     double LogProposalRatio = 0.0;
-
+    
     double likeRatio = PropLnLik - getCurrentLogLikelihood();
 
-    double logHR = likeRatio +  logPriorRatio + LogProposalRatio;
-
+    double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
+ 
     bool acceptMove = false;
 
 
@@ -723,6 +715,8 @@ double SpExModel::computeLogLikelihoodByInterval()
 
     return LnL;
 }
+
+
 
 
 double SpExModel::computeLogPrior()

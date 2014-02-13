@@ -20,6 +20,7 @@ public:
     SpExModel(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior);
 
     virtual double computeLogLikelihood();
+    
     virtual double computeLogPrior();
 
     void updateLambdaInitMH();
@@ -36,6 +37,7 @@ private:
 
     double computeLogLikelihoodByInterval();
 
+    
     virtual void readModelSpecificParameters(std::ifstream& inputFile);
     virtual void setRootEventWithReadParameters();
 

@@ -21,8 +21,6 @@ public:
 
     typedef std::set<BranchEvent*, BranchEvent::PtrCompare> EventSet;
 
-    static double mhColdness;
-
     Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior);
     virtual ~Model();
 
@@ -70,6 +68,9 @@ public:
 
     void getEventDataString(std::stringstream& ss);
 
+    double getModelTemperatureMH(void);
+    void setModelTemperatureMH(double x);
+    
 protected:
 
     BranchEvent* chooseEventAtRandom();
@@ -154,6 +155,13 @@ protected:
     // during jump moves. If the parameters are sampled from the prior,
     // these should exactly cancel.
     double _logQRatioJump;
+
+    // Temperature parameter for Metropolis coupling:
+    double _temperatureMH;
+
+    double computeLogHastingsRatio(double logLikRatio,
+                                    double logPriorRatio, double logQratio);
+    
 };
 
 
@@ -251,6 +259,21 @@ inline double Model::getCurrentLogLikelihood()
 {
     return _logLikelihood;
 }
+
+inline double Model::getModelTemperatureMH()
+{
+    return _temperatureMH;
+}
+
+
+inline double Model::computeLogHastingsRatio(double logLikRatio,
+                                            double logPriorRatio, double logQratio)
+{
+    return (_temperatureMH * (logLikRatio + logPriorRatio) + logQratio);
+    
+}
+
+
 
 
 #endif

@@ -12,10 +12,6 @@
 #include <fstream>
 #include <cstdlib>
 
-
-double Model::mhColdness = 1.0;
-
-
 Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
     _rng(rng), _tree(tree), _settings(settings), _prior(prior), _gen(0)
 {
@@ -43,6 +39,12 @@ Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
     _lastDeletedEventMapTime = 0;
 
     _logQRatioJump = 0.0;
+
+    // Initial setting for temperature = 1.0
+    // This must be explicitly set by calling the public
+    // function Model::setModelTemperature
+     
+    _temperatureMH = 1.0;
 }
 
 
@@ -480,16 +482,12 @@ double Model::computeEventGainLogHR(double K, double logLikelihood,
     double oldLogLikelihood, double logPrior, double oldLogPrior, double qRatio)
 {
     double logLikelihoodRatio = logLikelihood - oldLogLikelihood;
-    double logPriorRatio = logPrior - oldLogPrior;
+    double logPriorRatio = logPrior - oldLogPrior + std::log(_eventRate) - std::log(K + 1.0);
 
-    double logHR = std::log(_eventRate) - std::log(K + 1.0);
-    logHR += logLikelihoodRatio;
-    logHR += logPriorRatio;
-    logHR += std::log(qRatio);
-
-    // Now for jumping density of the bijection between parameter spaces
-    logHR -= _logQRatioJump;
-
+    double logQratio = std::log(qRatio) - _logQRatioJump;
+    
+    double logHR = computeLogHastingsRatio(logLikelihoodRatio, logPriorRatio, logQratio);
+    
     return logHR;
 }
 
@@ -533,20 +531,21 @@ void Model::removeEventMH()
 double Model::computeEventLossLogHR(double K, double logLikelihood,
     double oldLogLikelihood, double logPrior, double oldLogPrior, double qRatio)
 {
+
     double logLikelihoodRatio = logLikelihood - oldLogLikelihood;
-    double logPriorRatio = logPrior - oldLogPrior;
-
+    
     // This is probability of going from K to K - 1
-    // So, prior ratio is (K / eventRate)
-
-    double logHR = std::log(K) - std::log(_eventRate);
-    logHR += logLikelihoodRatio;
-    logHR += logPriorRatio;
-    logHR += std::log(qRatio);
-
-    // Now for jumping density of the bijection between parameter spaces
-    logHR += _logQRatioJump;
-
+    // So, prior ratio includes (K / eventRate)
+    
+    double logPriorRatio = logPrior - oldLogPrior + std::log(K) - std::log(_eventRate);
+    
+    // For our purposes here, qRatio will include both the proposal ratio
+    // and the jumping density of the bijection between parameter spaces
+    
+    double logQratio = std::log(qRatio) + _logQRatioJump;
+    
+    double logHR = computeLogHastingsRatio(logLikelihoodRatio, logPriorRatio, logQratio);
+    
     return logHR;
 }
 
@@ -576,7 +575,9 @@ void Model::moveEventMH()
 
     double logLikelihood = computeLogLikelihood();
     double logLikelihoodRatio = logLikelihood - getCurrentLogLikelihood();
-    double logHR = logLikelihoodRatio;
+    
+    double logHR = computeLogHastingsRatio(logLikelihoodRatio, (double)0.0, double(0.0));
+    
 
     bool isValid = isEventConfigurationValid(_lastEventModified);
 
@@ -615,10 +616,11 @@ void Model::updateEventRateMH()
 
     double logPriorRatio = _prior->poissonRatePrior(getEventRate());
     logPriorRatio -= _prior->poissonRatePrior(oldEventRate);
-    
-    double logProposalRatio = std::log(cterm);
 
-    double logHR = logPriorRatio + logProposalRatio;
+    double logProposalRatio = std::log(cterm);
+    
+    double logHR = computeLogHastingsRatio((double)0.0, logPriorRatio, logProposalRatio);
+    
     bool acceptMove = acceptMetropolisHastings(logHR);
 
     if (acceptMove) {
@@ -634,9 +636,16 @@ void Model::updateEventRateMH()
 }
 
 
+// The original code used here as a template from MrBayes is not correct:
+// It was raising the entire numerator of the Hastings Ratio
+// to the specified temperature, but temperature should only
+// be used for the ratio of posterior probabilities
+// WAS:     double r = safeExponentiation( Model::MhColdness * lnR );
+// with MhColdness equal to chain temperature (0 < MhColdness <= 1)
+
 bool Model::acceptMetropolisHastings(double lnR)
 {
-    double r = safeExponentiation(Model::mhColdness * lnR);
+    double r = safeExponentiation( lnR );
     return _rng->uniformRv() < r;
 }
 
@@ -756,3 +765,22 @@ double Model::safeExponentiation(double x)
     else
         return std::exp(x);
 }
+
+
+// TODO: fix exception handling using Log class
+void Model::setModelTemperatureMH(double x)
+{
+    if (x >= 0 & x <= 1.0){
+        _temperatureMH = x;
+    }else{
+        std::cout << "Attempt to set invalid temperature";
+        std::cout << "\n in Model::setModelTemperature";
+        std::cout << "\nAttempted: " << x << std::endl;
+        throw;
+    }
+    
+}
+
+
+
+
