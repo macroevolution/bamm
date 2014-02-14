@@ -333,6 +333,37 @@ void Node::computeNodeBranchSpeciationParams(void)
 }
 
 
+
+void Node::computeAndSetNodeSpeciationParams(void)
+{
+    BranchHistory* bh = getBranchHistory();
+    // Compute speciation rate at the focal node
+    SpExBranchEvent* event = static_cast<SpExBranchEvent*>(bh->getNodeEvent());
+    double reltime = getTime() - event->getAbsoluteTime();
+    double r_init = event->getLamInit();
+    double r_shift = event->getLamShift();
+    double curLam = getExponentialRate(r_init, r_shift, reltime);
+    
+    setNodeLambda(curLam); // speciation rate for node set
+
+}
+
+void Node::computeAndSetNodeExtinctionParams(void)
+{
+    
+    BranchHistory* bh = getBranchHistory();
+    // Compute extinction rate at the focal node:
+    SpExBranchEvent* event = static_cast<SpExBranchEvent*>(bh->getNodeEvent());
+    double reltime = getTime() - event->getAbsoluteTime();
+    double r_init = event->getMuInit();
+    double r_shift = event->getMuShift();
+    double curMu = getExponentialRate(r_init, r_shift, reltime);
+    
+    setNodeMu(curMu); // extinction rate for node
+    
+}
+
+
 void Node::computeNodeBranchExtinctionParams(void)
 {
 

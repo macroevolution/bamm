@@ -65,7 +65,7 @@ private:
     double _di;   // initial value of speciation probability (at node)
     double _ei;   // initial value of extinction probability (at node)
     double _etip; // initial value (sampling frac.) at tip descended from node
-
+    
     // value of log-likelihood at end of branch
     // (after combining w speciation event):
     //  Zero if node is terminal.
@@ -148,6 +148,9 @@ public:
 
     void computeNodeBranchSpeciationParams();
     void computeNodeBranchExtinctionParams();
+    
+    void computeAndSetNodeSpeciationParams();
+    void computeAndSetNodeExtinctionParams();
 
     void   setNodeLambda(double x);
     double getNodeLambda();

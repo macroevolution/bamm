@@ -36,7 +36,6 @@ public:
 private:
 
     double computeLogLikelihoodByInterval();
-
     
     virtual void readModelSpecificParameters(std::ifstream& inputFile);
     virtual void setRootEventWithReadParameters();

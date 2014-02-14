@@ -79,8 +79,10 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
     // Initialize all branch histories to equal the root event
     forwardSetBranchHistories(_rootEvent);
 
-    _tree->setMeanBranchSpeciation();
-    _tree->setMeanBranchExtinction();
+    _tree->setNodeSpeciationParameters();
+    _tree->setNodeExtinctionParameters();
+    //_tree->setMeanBranchSpeciation();
+    //_tree->setMeanBranchExtinction();
 
     // Initialize by previous event histories
     if (_settings->getLoadEventData()) {
@@ -212,8 +214,11 @@ void SpExModel::updateLambdaInitMH(void)
     double PropLnLik = 0;
 #else
 
-    _tree->setMeanBranchSpeciation();
-    _tree->setMeanBranchExtinction();
+    _tree->setNodeSpeciationParameters();
+    _tree->setNodeExtinctionParameters();
+    
+    //_tree->setMeanBranchSpeciation();
+    //_tree->setMeanBranchExtinction();
 
     double PropLnLik = computeLogLikelihood();
 
@@ -250,8 +255,11 @@ void SpExModel::updateLambdaInitMH(void)
         // revert to previous state
         be->setLamInit(oldRate);
 
-        _tree->setMeanBranchSpeciation();
-        _tree->setMeanBranchExtinction();
+        _tree->setNodeSpeciationParameters();
+        _tree->setNodeExtinctionParameters();
+        
+        //_tree->setMeanBranchSpeciation();
+        //_tree->setMeanBranchExtinction();
 
         _acceptLast = 0;
         _rejectCount++;
@@ -287,8 +295,11 @@ void SpExModel::updateLambdaShiftMH(void)
     double PropLnLik = 0;
 #else
 
-    _tree->setMeanBranchSpeciation();
-    _tree->setMeanBranchExtinction();
+    _tree->setNodeSpeciationParameters();
+    _tree->setNodeExtinctionParameters();
+    
+    //_tree->setMeanBranchSpeciation();
+    //_tree->setMeanBranchExtinction();
 
     double PropLnLik = computeLogLikelihood();
 
@@ -327,8 +338,11 @@ void SpExModel::updateLambdaShiftMH(void)
         // revert to previous state
         be->setLamShift(oldLambdaShift);
 
-        _tree->setMeanBranchSpeciation();
-        _tree->setMeanBranchExtinction();
+        _tree->setNodeSpeciationParameters();
+        _tree->setNodeExtinctionParameters();
+        
+        //_tree->setMeanBranchSpeciation();
+        //_tree->setMeanBranchExtinction();
 
         _acceptLast = 0;
         _rejectCount++;
@@ -361,9 +375,12 @@ void SpExModel::updateMuInitMH(void)
 #ifdef NO_DATA
     double PropLnLik = 0;
 #else
-
-    _tree->setMeanBranchSpeciation();
-    _tree->setMeanBranchExtinction();
+    
+    _tree->setNodeSpeciationParameters();
+    _tree->setNodeExtinctionParameters();
+    
+    //_tree->setMeanBranchSpeciation();
+    //_tree->setMeanBranchExtinction();
 
     double PropLnLik = computeLogLikelihood();
 
@@ -401,8 +418,11 @@ void SpExModel::updateMuInitMH(void)
         // revert to previous state
         be->setMuInit(oldRate);
 
-        _tree->setMeanBranchSpeciation();
-        _tree->setMeanBranchExtinction();
+        _tree->setNodeSpeciationParameters();
+        _tree->setNodeExtinctionParameters();
+        
+        //_tree->setMeanBranchSpeciation();
+        //_tree->setMeanBranchExtinction();
 
         _acceptLast = 0;
         _rejectCount++;
@@ -439,8 +459,11 @@ void SpExModel::updateMuShiftMH(void)
     double PropLnLik = 0;
 #else
 
-    _tree->setMeanBranchSpeciation();
-    _tree->setMeanBranchExtinction();
+    _tree->setNodeSpeciationParameters();
+    _tree->setNodeExtinctionParameters();
+    
+    //_tree->setMeanBranchSpeciation();
+    //_tree->setMeanBranchExtinction();
 
     double PropLnLik = computeLogLikelihood();
 
@@ -482,8 +505,11 @@ void SpExModel::updateMuShiftMH(void)
         // revert to previous state
         be->setMuShift(oldMuShift);
 
-        _tree->setMeanBranchSpeciation();
-        _tree->setMeanBranchExtinction();
+        _tree->setNodeSpeciationParameters();
+        _tree->setNodeExtinctionParameters();
+        
+        //_tree->setMeanBranchSpeciation();
+        //_tree->setMeanBranchExtinction();
 
         _acceptLast = 0;
         _rejectCount++;
@@ -500,6 +526,7 @@ double SpExModel::computeLogLikelihood()
 
     return computeLogLikelihoodByInterval();
 }
+
 
 
 double SpExModel::computeLogLikelihoodByInterval()

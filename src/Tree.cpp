@@ -915,6 +915,20 @@ void Tree::writeMeanBranchTraitRateTree(Node* p, std::stringstream& ss)
 
  */
 
+void Tree::setNodeSpeciationParameters(void)
+{
+    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
+        (*i)->computeAndSetNodeSpeciationParams();
+    }
+}
+
+void Tree::setNodeExtinctionParameters(void)
+{
+    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
+        (*i)->computeAndSetNodeExtinctionParams();
+    }
+}
+
 
 // Update both mean speciation rates on branch in addition to node speciation rate.
 void Tree::setMeanBranchSpeciation(void)
