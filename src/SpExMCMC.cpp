@@ -10,6 +10,7 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
 
 
 SpExMCMC::SpExMCMC(MbRandom* rng, Model* model, Settings* settings) :

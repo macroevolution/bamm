@@ -12,6 +12,7 @@
 #include <fstream>
 #include <cstdlib>
 
+
 Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
     _rng(rng), _tree(tree), _settings(settings), _prior(prior), _gen(0)
 {
@@ -767,20 +768,13 @@ double Model::safeExponentiation(double x)
 }
 
 
-// TODO: fix exception handling using Log class
 void Model::setModelTemperatureMH(double x)
 {
-    if (x >= 0 & x <= 1.0){
+    if ((x >= 0) && (x <= 1.0)) {
         _temperatureMH = x;
-    }else{
-        std::cout << "Attempt to set invalid temperature";
-        std::cout << "\n in Model::setModelTemperature";
-        std::cout << "\nAttempted: " << x << std::endl;
-        throw;
+    } else {
+        log(Error) << "Attempt to set invalid temperature in "
+            << "Model::setModelTemperature: " << x << "\n";
+        std::exit(1);
     }
-    
 }
-
-
-
-

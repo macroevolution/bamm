@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <cstdlib>
 
 
 MCMC::MCMC(MbRandom* rng, Model* model, Settings* settings) :
