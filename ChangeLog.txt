@@ -1,3 +1,19 @@
+2014-02-12  Carlos Anderson  carlosjanderson@gmail.com
+
+        Bug fix: Prior values were not computed correctly for the root event.
+
+        Feature: Any parameter in the control file can now be overriden by a
+        command-line argument. The argument must start with "--", followed by
+        the name of the parameter (as it is written in the control file),
+        followed by a space, and finally followed by the new value.
+
+2014-02-12  Dan Rabosky  dan.rabosky@gmail.com
+
+        Feature: Separate priors may be specified for the root event.
+
+        Bug fix: Log-likelihood was not updated after adding an event, causing
+        the wrong log-likelihood to be reported.
+
 2014-02-06  Carlos Anderson  carlosjanderson@gmail.com
 
         Bug fix: Error message "problem in BranchHistory::getLastEvent()"
