@@ -11,6 +11,7 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
 
 
 TraitMCMC::TraitMCMC(MbRandom* rng, Model* model, Settings* settings) :
