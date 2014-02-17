@@ -46,40 +46,44 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
  
 	tvec <- seq(start.time, end.time, length.out= nslices);
 	tol = 1*10^-decimals(ephy$eventBranchSegs[[1]][1,2]);
-	mm <- matrix(NA, nrow=length(ephy$eventBranchSegs), ncol=length(tvec));
-	mumat <- matrix(NA, nrow=length(ephy$eventBranchSegs), ncol=length(tvec));
 	
-	# this is much faster than 'safeCompare'.
 	goodTime <- function (vec, val, tol) {
 		(vec[,2] - val <= tol) & (val - vec[,3] <= tol);
 	}
 	
-	for (i in 1:nrow(mm)) {
-		es <- ephy$eventBranchSegs[[i]];
-		events <- ephy$eventData[[i]];
-		
-		isGoodNode <- rep(TRUE, nrow(es));
-		
-		for (k in 1:length(tvec)) {
-			isGoodTime <- goodTime(es, tvec[k], tol=tol);
-			if (!(is.null(node))) { # only enter this if not the root. otherwise, only have to set once per i.
-				isGoodNode <- es[,1] %in% nodeset;	
-			}
-			
-			estemp <- es[isGoodTime & isGoodNode, ];
-			if (is.vector(estemp)) {
-				index <- estemp[4];
-			} else {
-				index <- estemp[,4];
-			}
-			tvv <- tvec[k] - events$time[index];
-			rates <- exponentialRate(tvv, events$lam1[index], events$lam2[index]);
-			mm[i, k] <- mean(rates);
-			mumat[i,k] <- mean(events$mu1[index]);
+	getRates <- function(time, es, events, isGoodNode) {
+		isGoodTime <- goodTime(es, time, tol=tol);
+		if (!(is.null(node))) { # only enter this if not the root. otherwise, only have to set once per i.
+			isGoodNode <- es[,1] %in% nodeset;	
 		}
-		
+		estemp <- es[isGoodTime & isGoodNode, ];
+		if (is.vector(estemp)) {
+			index <- estemp[4];
+		} else {
+			index <- estemp[,4];
+		}
+		tvv <- time - events$time[index];
+		rates <- exponentialRate(tvv, events$lam1[index], events$lam2[index]);
+		return(list(rates,index));
 	}
+
+	bySample <- function(counter, ephy) {
+		es <- ephy$eventBranchSegs[[counter]];
+		events <- ephy$eventData[[counter]];
+		isGoodNode <- rep(TRUE, nrow(es));
+		ret <- lapply(tvec, function(x) getRates(time = x, es, events, isGoodNode));
+		mmRow <- unlist(lapply(ret, function(x) mean(x[[1]])));
+		mumatRow <- unlist(lapply(ret, function(x) mean(events$mu1[x[[2]]])));
+		return(list(mmRow,mumatRow));
+	}
+
 	
+	ret <- lapply(1:length(ephy$eventBranchSegs), function(y) bySample(y, ephy));
+	mm <- lapply(ret, function(x) x[[1]]);
+	mm <- do.call(rbind, mm);
+	mumat <- lapply(ret, function(x) x[[2]]);
+	mumat <- do.call(rbind, mumat);
+		
 	obj <- list();
 	if (ephy$type == 'diversification') {
 		obj$lambda <- mm;
