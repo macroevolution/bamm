@@ -117,7 +117,7 @@ plot.bammdata = function (ephy, method = "phylogram", vtheta = 5, rbf = 0.001, s
             par(op);
         }
     }
-    invisible(list(coords = ret$segs[-1, ], color = colorobj$colsdensity));
+    invisible(list(coords = ret$segs[-1, ], colorbreaks = colorbreaks, colordens = colorobj$colsdensity));
 }
 
 # plot.bammdata = function(ephy, method='phylogram', tau=0.01, index=NULL, vtheta=5, rbf=0.001, show=TRUE, labels=FALSE, multi=FALSE, hrates=FALSE, spex = "s", lwd=1, cex=1, ncolors=64, pal='temperature', ...) {

@@ -93,13 +93,16 @@ Internally \code{plot.bammdata} checks whether or not rates have been calculated
 If \code{plot.bammdata} is called repeatedly with the same \code{bammdata} object computation can be reduced by first calling \code{dtRates} in the global environment.
 }
 \value{
-Returns (invisibly) a list with two components. 
+Returns (invisibly) a list with three components. 
 \item{coords}{
 A matrix of plot coordinates. Rows correspond to branches. Columns 1-2 are starting (x,y) coordinates 
 of each branch and columns 3-4 are ending (x,y) coordinates of each branch. If \code{method = "polar"} a 
 fifth column gives the angle (in radians) of each branch.
 }
-\item{color}{
+\item{colorbreaks}{
+A vector of percentiles used to group macroevolutionary rates into color bins.	
+}
+\item{colordens}{
 A matrix of the kernel density estimates (column 2) of evolutionary rates (column 1) and the color (column 3) corresponding to each rate value.
 }
 }
@@ -130,31 +133,26 @@ plot(ed, lwd = 3, spex = "s") #internally calls dtRates and assignColorBreaks
 
 #now plot.bammdata no longer calls dtRates
 ed <- dtRates(ed, tau = 0.01)
-plot(ed, lwd = 3, spex = "s")
+ed <- plot(ed, lwd = 3, spex = "s")
 
-#now plot.bammdata calls neither dtRates nor assignColorBreaks
-colorbreaks <- assignColorBreaks(ed$dtrates$rates)
-plot(ed, lwd = 3, colorbreaks = colorbreaks)
-
-#now you can plot subtrees while preserving the original rates to colors map by passing the colorbreaks object as an argument
+#you can plot subtrees while preserving the original rates to colors map by passing the colorbreaks object as an argument
 sed <- subtreeBAMM(ed, node = 103)
-plot(sed, lwd = 3, colorbreaks = colorbreaks)
+plot(sed, lwd = 3, colorbreaks = ed$colorbreaks)
 sed <- subtreeBAMM(ed, node = 140)
-plot(sed, lwd = 3, colorbreaks = colorbreaks)
+plot(sed, lwd = 3, colorbreaks = ed$colorbreaks)
 #note how if we do not pass colorbreaks the map is no longer relative to the rest of the tree and the plot is quite
 #distinct from the original
 plot(sed, lwd = 3)
 
 #if you want to change the value of tau and the rates to colors map for the entire tree
 ed <- dtRates(ed, tau = 0.002)
-colorbreaks <- assignColorBreaks(ed$dtrates$rates)
 #now you can re-plot the subtrees using this finer tau partition
 sed <- subtreeBAMM(ed, node = 103)
 sed <- dtRates(sed, 0.002)
-plot(sed, lwd = 3, colorbreaks = colorbreaks)
+plot(sed, lwd = 3, colorbreaks = ed$colorbreaks)
 sed <- subtreeBAMM(ed, node = 140)
 sed <- dtRates(sed, 0.002)
-plot(sed, lwd = 3, colorbreaks = colorbreaks)
+plot(sed, lwd = 3, colorbreaks = ed$colorbreaks)
 
 #multi-panel plotting and adding shifts of specific posterior samples
 par(mfrow=c(2,3),mar=c(5,1,1,1))
