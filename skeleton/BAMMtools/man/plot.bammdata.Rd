@@ -82,8 +82,7 @@ may be used. The first, second, and third colors are mapped to low, intermediate
 of evolution. This provides lots of flexibility for choosing a color scheme.
 Second, the option \code{pal = "temperature"} uses the \code{rich.colors} function written by Arni Magnusson for the package gplots. Finally, if the package RColorBrewer is loaded, any of the named diverging color palettes documented 
 under \code{brewer.pal} may also be used. Two default choices exist which make use of the first option. Specifying "set1"
-uses a color ramp from green to red that we happen to like. This option is probably not suitable for people with certain forms of colorblindness. Specifying "set2" creates a color ramp from green to magenta that is hopefully better
-for color deficient vision.
+uses a color ramp from green to red [\code{pal = c("darkgreen","yellow2","red")}] that we happen to like. This option is probably not suitable for people with certain forms of colorblindness. Specifying "set2" creates a color ramp from purple to orange [\code{pal = c("#443C45","#A1B398","#FF4A21")}] that is hopefully better for color blind viewers.
 
 Specifying smaller values for \code{tau} will result in smoother-looking rate changes on the tree. Note that smaller values of \code{tau} require more computation.  
 
@@ -146,6 +145,7 @@ plot(sed, lwd = 3)
 
 #if you want to change the value of tau and the rates to colors map for the entire tree
 ed <- dtRates(ed, tau = 0.002)
+xx <- plot(ed, lwd = 3, spex = "s")
 #now you can re-plot the subtrees using this finer tau partition
 sed <- subtreeBAMM(ed, node = 103)
 sed <- dtRates(sed, 0.002)
@@ -157,17 +157,22 @@ plot(sed, lwd = 3, colorbreaks = xx$colorbreaks)
 #multi-panel plotting and adding shifts of specific posterior samples
 par(mfrow=c(2,3),mar=c(5,1,1,1))
 samples = sample(1:length(ed$eventData), 6)
+ed <- dtRates(ed, 0.005)
+xx <- plot(ed, show=FALSE) #individual plots will have a color map relative to the mean
 for (i in 1:6) {
 	ed <- dtRates(ed, 0.005, samples[i])
-	plot(ed, multi=TRUE)
+	plot(ed, multi=TRUE, colorbreaks=xx$colorbreaks)
 	addBAMMshifts(ed,method="phylogram",index=samples[i],multi=TRUE)	
 }
+dev.off()
 
 #color options
 ed <- dtRates(ed,0.01)
-plot(ed, pal="set1")
-plot(ed, pal="set2")
-plot(ed, pal=c("midnightblue","lightskyblue","orangered"))
+plot(ed, pal="set1",lwd=3)
+plot(ed, pal="set2",lwd=3)
+plot(ed, pal="temperature",lwd=3)
+plot(ed, pal="terrain",lwd=3)
+plot(ed, pal=c("blue","yellow","red"),lwd=3)
 if (require(RColorBrewer)) {
 	plot(ed,method="polar",pal="Spectral", lwd=3)
 	plot(ed,method="polar",pal="RdYlBu", lwd=3)
