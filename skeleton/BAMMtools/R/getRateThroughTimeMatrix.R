@@ -45,7 +45,8 @@ getRateThroughTimeMatrix <- function(ephy, start.time=NULL, end.time=NULL, nslic
 	}
  
 	tvec <- seq(start.time, end.time, length.out= nslices);
-	tol = 1*10^-decimals(ephy$eventBranchSegs[[1]][1,2]);
+	#tol = 1*10^-decimals(ephy$eventBranchSegs[[1]][1,2]);
+	tol <- 0.00001
 	
 	goodTime <- function (vec, val, tol) {
 		(vec[,2] - val <= tol) & (val - vec[,3] <= tol);
