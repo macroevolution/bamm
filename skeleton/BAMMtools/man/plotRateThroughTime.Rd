@@ -7,11 +7,7 @@ Plot rates through time
 Generates a plot of diversification or phenotypic rate through time with confidence intervals.
 }
 \usage{
-plotRateThroughTime(ephy, useMedian = FALSE, intervals = seq(from = 0, to = 1, by = 0.01), 
-ratetype = "auto", nBins = 100, smooth = FALSE, smoothParam = 0.2, opacity = 0.01, intervalCol = "blue", 
-avgCol = "red", start.time = NULL, end.time = NULL, node = NULL, nodetype = "include", 
-plot = TRUE, cex.axis = 1, cex = 1.3, xline = 3.5, yline = 3.5, mar = c(6, 6, 1, 1), 
-xticks = 5, yticks = 5, xlim = "auto", ylim = "auto", add = FALSE)
+plotRateThroughTime(ephy, useMedian = TRUE, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'auto', nBins = 100, smooth = FALSE, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red', start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = TRUE, cex.axis=1, cex.lab=1.3, lwd=3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=FALSE, axis.labels=TRUE)
 }
 \arguments{
   \item{ephy}{
@@ -64,8 +60,11 @@ boolean: if TRUE, a plot will be returned, if FALSE, the data for the plot will 
   \item{cex.axis}{
 size of axis tick labels.
 }
-  \item{cex}{
+  \item{cex.lab}{
 size of axis labels.
+}
+  \item{lwd}{
+line width of the average rate.  	
 }
   \item{xline}{
 margin line for placing x-axis label.
@@ -91,6 +90,9 @@ vector of length 2 with min and max rates for y axis. Can also be 'auto'.
 }
   \item{add}{
 boolean: should rates be added to an existing plot.
+}
+  \item{axis.labels}{
+boolean: if TRUE, axis labels will be plotted.
 }
 }
 \details{
