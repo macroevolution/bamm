@@ -83,7 +83,8 @@ plotRateThroughTime <- function(ephy, useMedian = TRUE, intervals=seq(from = 0,t
 	}
 
 	#generate coordinates for polygons
-	maxTime <- max(rmat$times);
+	rmat$times <- max(rmat$times) - rmat$times;
+	maxTime <- max(rmat$times)
 	if (!is.null(intervals)) {
 		mm <- apply(rate, MARGIN = 2, quantile, intervals);
 
@@ -164,10 +165,10 @@ plotRateThroughTime <- function(ephy, useMedian = TRUE, intervals=seq(from = 0,t
 		#plot intervals
 		if (!is.null(intervals)) {
 			for (i in 1:length(poly)) {
-				polygon(x=maxTime - poly[[i]][,1],y=poly[[i]][,2],col=transparentColor(intervalCol,opacity),border=NA);
+				polygon(x=poly[[i]][,1],y=poly[[i]][,2],col=transparentColor(intervalCol,opacity),border=NA);
 			}
 		}
-		lines(x = maxTime - rmat$time, y = avg, lwd = lwd, col = avgCol);
+		lines(x = rmat$time, y = avg, lwd = lwd, col = avgCol);
 	} else {
 		return(list(poly = poly,avg = avg,times = rmat$time));
 	}
