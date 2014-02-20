@@ -18,7 +18,7 @@ colorMap = function(x, pal, breaks) {
 		colpalette = colorRampPalette(c("darkgreen","yellow2","red"),space='Lab')(NCOLORS);
 	}
 	else if (tolower(pal) == "set2") {
-		colpalette = colorRampPalette(c("darkgreen","pink","magenta4"),space='Lab')(NCOLORS);
+		colpalette = colorRampPalette(c("#443C45","#A1B398","#FF4A21"),space='Lab')(NCOLORS);
 	}
 	else if (tolower(pal) == "temperature") {
 		colpalette = richColors(NCOLORS);	

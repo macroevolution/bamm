@@ -7,7 +7,7 @@
 #	add.freq.text = argument to add text to each plot indicating the frequency of the 
 #		shift configuration
 
-plot.bammshifts <- function(sc, ephy, plotmax=9, method='phylogram', pal = 'temperature', add.freq.text = TRUE, use.plot.bammdata = TRUE, send2pdf = FALSE){
+plot.bammshifts <- function(sc, ephy, plotmax=9, method='phylogram', pal = 'temperature', spex = "s", add.freq.text = TRUE, use.plot.bammdata = TRUE, send2pdf = FALSE){
 	if (class(sc) != 'bammshifts') {
 		stop('arg sc must be of class "bammshifts"');
 	}
@@ -34,11 +34,13 @@ plot.bammshifts <- function(sc, ephy, plotmax=9, method='phylogram', pal = 'temp
 		par(mfrow=c(3,3));
 	}
 	cat("Omitted", max(length(sc$frequency),mm) - min(length(sc$frequency),mm), "plots\n");
+	ephy = dtRates(ephy, 0.01);
+	colorbreaks = assignColorBreaks(ephy$dtrates$rates,spex=spex);
 	for (i in 1:mm) {
 		tmp <- subsetEventData(ephy, index=sc$sampleset[[i]][1]);
 		par(mar = c(2,2,2,2));
 		if (use.plot.bammdata) {
-    		plot.bammdata(tmp, method, pal=pal);
+    		plot.bammdata(tmp, method, pal=pal, colorbreaks=colorbreaks);
 		}
 		else {
 		    if (method=="polar") method = "fan";
@@ -46,7 +48,7 @@ plot.bammshifts <- function(sc, ephy, plotmax=9, method='phylogram', pal = 'temp
 		}
 		if (add.freq.text) mtext(signif(sc$frequency[i],2),3);
 		box();
-		cex = 10 * sc$marg.probs[as.character(getShiftNodesFromIndex(ephy,sc$sampleset[[i]][1]))];
+		cex = 2 + 8 * sc$marg.probs[as.character(getShiftNodesFromIndex(ephy,sc$sampleset[[i]][1]))];
 		shiftnodes = getShiftNodesFromIndex(ephy,sc$sampleset[[i]][1]);
 		shiftnode_parents = ephy$edge[which(ephy$edge[,2] %in% shiftnodes),1];
 		
@@ -62,10 +64,11 @@ plot.bammshifts <- function(sc, ephy, plotmax=9, method='phylogram', pal = 'temp
 		bg = rep("blue", length(AcDc));
 		bg[which(AcDc == FALSE)] = "red";
 		
-		lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv);
-        XX = lastPP$xx[shiftnodes];
-        YY = lastPP$yy[shiftnodes];
-        points(XX, YY, pch = 21, cex = cex, col = 1, bg = transparentColor(bg,0.5)); 		
+		#lastPP <- get("last_plot.phylo", envir = .PlotPhyloEnv);
+        #XX = lastPP$xx[shiftnodes];
+        #YY = lastPP$yy[shiftnodes];
+        #points(XX, YY, pch = 21, cex = cex, col = 1, bg = transparentColor(bg,0.5)); 		
+	    addBAMMshifts(tmp, method, 1, cex = cex, bg = transparentColor(bg,0.5), multi=TRUE);
 	}
 	if (send2pdf) dev.off();
 }

@@ -30,7 +30,8 @@ dtRates = function (ephy, tau, ism = NULL, tmat = FALSE) {
     phy = getStartStopTimes(phy);
     tH = max(branching.times(phy));
     segmat = segMap(ephy, tau);
-    tol = max(1 * 10^-decimals(ephy$eventBranchSegs[[1]][1, 2]),1 * 10^-decimals(ephy$eventBranchSegs[[1]][1, 3]));
+    #tol = max(1 * 10^-decimals(ephy$eventBranchSegs[[1]][1, 2]),1 * 10^-decimals(ephy$eventBranchSegs[[1]][1, 3]));
+    tol = 0.00001;
     if (storage.mode(segmat) != "double") stop("Exiting");
     if (storage.mode(tol) != "double") stop("Exiting");
     if (storage.mode(ephy) != "list") stop("Exiting");

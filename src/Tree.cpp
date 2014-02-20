@@ -763,6 +763,7 @@ void Tree::buildTreeFromNewickString(std::string ts)
             readingBL = true;
         } else if (c == ';') {
             // done with tree
+            break;
         } else {
             std::string s = "";
             while (isValidChar(ts[i])) {
