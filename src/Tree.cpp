@@ -217,7 +217,7 @@ void Tree::printCanHoldEventByNode(void)
 // Get number of descendant nodes from a given node
 int Tree::getDescNodeCount(Node* p)
 {
-    double count = 0;
+    int count = 0;
     if (p->getLfDesc() != NULL) {
         count++;
         count += getDescNodeCount(p->getLfDesc());
