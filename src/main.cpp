@@ -99,11 +99,6 @@ int main (int argc, char* argv[])
     }
     log(Message, runInfoFile) << "Start time: " << currentTime() << "\n";
 
-
-    if (mySettings.getSimulatePriorShifts()){
-        FastSimulatePrior fsp(&myRNG, &mySettings);
-    }
-    
     if (mySettings.getModeltype() == "speciationextinction") {
         log(Message) << "\nModel type: Speciation/Extinction\n";
 
@@ -170,6 +165,10 @@ int main (int argc, char* argv[])
             log(Error) << "Invalid run settings specified in main.\n";
             std::exit(1);
         }
+    }
+
+    if (mySettings.getSimulatePriorShifts()){
+        FastSimulatePrior fsp(&myRNG, &mySettings);
     }
 
     log(Message, runInfoFile) << "End time: " << currentTime() << "\n";
