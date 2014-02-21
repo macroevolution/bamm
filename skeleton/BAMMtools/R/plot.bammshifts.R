@@ -34,8 +34,10 @@ plot.bammshifts <- function(sc, ephy, plotmax=9, method='phylogram', pal = 'temp
 		par(mfrow=c(3,3));
 	}
 	cat("Omitted", max(length(sc$frequency),mm) - min(length(sc$frequency),mm), "plots\n");
-	ephy = dtRates(ephy, 0.01);
-	colorbreaks = assignColorBreaks(ephy$dtrates$rates,spex=spex);
+	if (use.plot.bammdata) {
+    	ephy = dtRates(ephy, 0.01);
+	    colorbreaks = assignColorBreaks(ephy$dtrates$rates,spex=spex);
+	}
 	for (i in 1:mm) {
 		tmp <- subsetEventData(ephy, index=sc$sampleset[[i]][1]);
 		par(mar = c(2,2,2,2));
@@ -46,7 +48,7 @@ plot.bammshifts <- function(sc, ephy, plotmax=9, method='phylogram', pal = 'temp
 		    if (method=="polar") method = "fan";
 		    plot.phylo(as.phylo.bammdata(ephy),type=method,show.tip.label=FALSE);
 		}
-		if (add.freq.text) mtext(signif(sc$frequency[i],2),3);
+		if (add.freq.text) mtext(paste("f =",signif(sc$frequency[i],2)),3);
 		box();
 		cex = 2 + 8 * sc$marg.probs[as.character(getShiftNodesFromIndex(ephy,sc$sampleset[[i]][1]))];
 		shiftnodes = getShiftNodesFromIndex(ephy,sc$sampleset[[i]][1]);
