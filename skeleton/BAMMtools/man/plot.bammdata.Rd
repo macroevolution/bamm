@@ -12,7 +12,7 @@ colors each branch by the estimated rate of speciation, extinction, or trait evo
 S3 method for class \code{bammdata}:		
 plot(ephy, method = "phylogram", spex="s", 
     vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, 
-    legend = FALSE, lwd = 1, cex = 1, pal = "set1", colorbreaks = NULL, ...)
+    legend = FALSE, lwd = 1, cex = 1, pal = "RdYlBu", colorbreaks = NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -77,12 +77,30 @@ slow rates and warm colors represent fast rates. When the tree is
 plotted each of these small segments is plotted so that changes in rates through time and shifts in 
 rates are visible as gradients of color.
 
-Currently three options exist for specifying the color palette. First, any vector of three valid named colors
-may be used. The first, second, and third colors are mapped to low, intermediate, and fast rates 
-of evolution. This provides lots of flexibility for choosing a color scheme.
-Second, the option \code{pal = "temperature"} uses the \code{rich.colors} function written by Arni Magnusson for the package gplots. Finally, if the package RColorBrewer is loaded, any of the named diverging color palettes documented 
-under \code{brewer.pal} may also be used. Two default choices exist which make use of the first option. Specifying "set1"
-uses a color ramp from green to red [\code{pal = c("darkgreen","yellow2","red")}] that we happen to like. This option is probably not suitable for people with certain forms of colorblindness. Specifying "set2" creates a color ramp from purple to orange [\code{pal = c("#443C45","#A1B398","#FF4A21")}] that is hopefully better for color blind viewers.
+A number of color palettes come built in with BAMMtools. Color-blind friendly options include
+\tabular{r}{
+\code{BrBG} \cr
+\code{PiYG} \cr
+\code{PRGn} \cr
+\code{PuOr} \cr
+\code{RdBu} \cr
+\code{RdYlBu} \cr
+\code{BuOr} \cr
+\code{BuOrRd} \cr
+\code{DkRdBu} \cr
+\code{BuDkOr} \cr
+\code{GnPu} \cr	
+}
+Some color-blind unfriendly options include
+\tabular{r}{
+\code{RdYlGn} \cr
+\code{Spectral} \cr
+\code{temperature} \cr
+\code{terrain} \cr
+}
+For more information about these color palettes visit \code{colorbrewer2.org} and \code{geography.uoregon.edu/datagraphics/color_scales.htm} or use the help files of the R packages \code{RColorBrewer} and \code{dichromat}.
+
+Additionally, any vector of valid named colors may also be used. The only restriction is that the length of this vector be greater than or equal to three. The colors should be ordered from cool to warm as the colors will be mapped from low rates to high rates in the order supplied (e.g. \code{pal=c("darkgreen","yellow2","red")}). The option \code{pal = "temperature"} uses the \code{rich.colors} function written by Arni Magnusson for the R package \code{gplots}.
 
 Specifying smaller values for \code{tau} will result in smoother-looking rate changes on the tree. Note that smaller values of \code{tau} require more computation.  
 
@@ -105,8 +123,8 @@ A vector of percentiles used to group macroevolutionary rates into color bins.
 A matrix of the kernel density estimates (column 2) of evolutionary rates (column 1) and the color (column 3) corresponding to each rate value.
 }
 }
-\references{
-
+\source{
+\link{colorbrewer2.org}, \link{geography.uoregon.edu/datagraphics/color_scales.htm}
 }
 \author{
 Mike Grundler
@@ -119,7 +137,8 @@ returning unless \code{multi = TRUE}.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{dtRates}}, \code{\link{addBAMMshifts}}, \code{\link{assignColorBreaks}}, \code{\link{subtreeBAMM}}	
+\code{\link{dtRates}}, \code{\link{addBAMMshifts}}, \code{\link{assignColorBreaks}}, \code{\link{subtreeBAMM}}, 
+\code{\link{colorRampPalette}}	
 }
 \examples{
 	
@@ -168,15 +187,11 @@ dev.off()
 
 #color options
 ed <- dtRates(ed,0.01)
-plot(ed, pal="set1",lwd=3)
-plot(ed, pal="set2",lwd=3)
 plot(ed, pal="temperature",lwd=3)
 plot(ed, pal="terrain",lwd=3)
-plot(ed, pal=c("blue","yellow","red"),lwd=3)
-if (require(RColorBrewer)) {
-	plot(ed,method="polar",pal="Spectral", lwd=3)
-	plot(ed,method="polar",pal="RdYlBu", lwd=3)
-}	
+plot(ed, pal=c("darkgreen","yellow2","red"),lwd=3)
+plot(ed,method="polar",pal="Spectral", lwd=3)
+plot(ed,method="polar",pal="RdYlBu", lwd=3)	
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

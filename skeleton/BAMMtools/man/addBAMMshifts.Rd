@@ -64,18 +64,19 @@ Mike Grundler
 	
 library(BAMMtools)
 data(whales, events.whales)
-ephy = getEventData(whales, events.whales, burnin=0.25)
+ed <- getEventData(whales, events.whales, burnin=0.25)
 
 #adding shifts to tree for specific posterior samples
-plot(ephy, method="polar", index=5)
-addBAMMshifts(ephy, "polar", index=5)
+plot(ed, method="polar")
+addBAMMshifts(ed, "polar", index=5)
 
 #multi-panel plotting and adding shifts
 par(mfrow=c(2,3),mar=c(5,1,1,1))
-samples = sample(1:length(ephy$eventData), 6)
+samples = sample(1:length(ed$eventData), 6)
 for (i in 1:6) {
-	plot(ephy, tau=0.001, index=samples[i], multi=TRUE)
-	addBAMMshifts(ephy,method="phylogram",index=samples[i],multi=TRUE)	
+	sed <- subsetEventData(ed, samples[i])
+	plot(sed, multi=TRUE)
+	addBAMMshifts(sed,method="phylogram",index=1,multi=TRUE)	
 }
 }
 

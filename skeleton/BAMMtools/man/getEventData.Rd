@@ -32,9 +32,7 @@ a character string. Either "diversification" or "trait" depending on your BAMM a
 
 \details{
 In the BAMM framework, an "event" defines a macroevolutionary process of diversification 
-or trait evolution. Every sample from the posterior includes at least one process, defined by such an "event". If given sample includes just a single event, then the dynamics of diversification or trait evolution can be described entirely by a single time-constant or time-varying process that begins at the root of the tree. Any sample from the posterior distribution may include a complex mixture of distinct processes. To represent temporal heterogeneity in macroevolutionary rates, \code{BAMM} models a rate \eqn{R}, e.g. speciation, as a function that changes exponentially with time: 
-\deqn{R(t) = R(0)*exp(b*t)}. 
-Here \eqn{R(0)} is the initial rate and \eqn{b} is a parameter determining how quickly that rate grows or decays with time. 
+or trait evolution. Every sample from the posterior includes at least one process, defined by such an "event". If a given sample includes just a single event, then the dynamics of diversification or trait evolution can be described entirely by a single time-constant or time-varying process that begins at the root of the tree. Any sample from the posterior distribution may include a complex mixture of distinct processes. To represent temporal heterogeneity in macroevolutionary rates, \code{BAMM} models a rate \eqn{R}, e.g. speciation, as a function that changes exponentially with time: \eqn{R(t) = R(0)*exp(b*t)}. Here \eqn{R(0)} is the initial rate and \eqn{b} is a parameter determining how quickly that rate grows or decays with time. 
 
 The \code{eventdata} file (or data frame) is a record of events and associated parameters that were sampled with \code{BAMM} during simulation of the posterior with reversible jump MCMC. This complex, information-rich file is processed into a \code{bammdata} object, which serves as the core data object for numerous downstream analyses. From a \code{bammdata} object, you can summarize rate variation through time, among clades, extract locations of rate shifts, summarize clade-specific rates of speciation and extinction, and more.
 
@@ -119,7 +117,7 @@ the descendants of any node. e.g. the descendants of node 89 can be found by
 
 }
 \references{
-\url{www.bamm-project.org}
+\url{bamm-project.org}
 }
 \author{
 Dan Rabosky, Mike Grundler

@@ -1,4 +1,4 @@
-plot.bammdata = function (ephy, method = "phylogram", vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, legend = FALSE, spex = "s", lwd = 1, cex = 1, pal = "set1", colorbreaks = NULL, ...) {
+plot.bammdata = function (ephy, method = "phylogram", vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, legend = FALSE, spex = "s", lwd = 1, cex = 1, pal = "RdYlBu", colorbreaks = NULL, ...) {
     if ("bammdata" %in% class(ephy)) {
     	if (attributes(ephy)$order != "cladewise") {
     		stop("Function requires tree in 'cladewise' order");

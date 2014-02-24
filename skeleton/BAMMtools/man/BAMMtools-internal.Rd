@@ -4,7 +4,6 @@
 \alias{as.phylo.bammdata}
 \alias{branchMeanRateExponential}
 \alias{colorMap}
-\alias{decimals}
 \alias{exponentialRate}
 \alias{getPathToRoot}
 \alias{getRecursiveSequence}
