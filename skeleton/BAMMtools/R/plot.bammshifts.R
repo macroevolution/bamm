@@ -7,7 +7,7 @@
 #	add.freq.text = argument to add text to each plot indicating the frequency of the 
 #		shift configuration
 
-plot.bammshifts <- function(sc, ephy, plotmax=9, method='phylogram', pal = 'temperature', spex = "s", add.freq.text = TRUE, use.plot.bammdata = TRUE, send2pdf = FALSE){
+plot.bammshifts <- function(sc, ephy, plotmax=9, method='phylogram', pal = 'temperature', spex = "s", add.freq.text = TRUE, use.plot.bammdata = TRUE, send2pdf = FALSE, ...){
 	if (class(sc) != 'bammshifts') {
 		stop('arg sc must be of class "bammshifts"');
 	}
@@ -42,7 +42,7 @@ plot.bammshifts <- function(sc, ephy, plotmax=9, method='phylogram', pal = 'temp
 		tmp <- subsetEventData(ephy, index=sc$sampleset[[i]][1]);
 		par(mar = c(2,2,2,2));
 		if (use.plot.bammdata) {
-    		plot.bammdata(tmp, method, pal=pal, colorbreaks=colorbreaks);
+    		plot.bammdata(tmp, method, pal=pal, colorbreaks=colorbreaks, ...);
 		}
 		else {
 		    if (method=="polar") method = "fan";

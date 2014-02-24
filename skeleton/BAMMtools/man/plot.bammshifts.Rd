@@ -11,7 +11,7 @@
 S3 method for class \code{bammshift}
 plot(sc, ephy, plotmax=9, method="phylogram",pal="temperature",
 	 spex="s",add.freq.text=TRUE, use.plot.bammdata=TRUE, 
-	 send2pdf=FALSE)
+	 send2pdf=FALSE, ...)
 }
 \arguments{
 	\item{sc}{
@@ -45,6 +45,9 @@ rates. Ignored if \code{ephy$type = "trait"}.
 	\item{send2pdf}{
 		a logical indicating whether the output should be written to a PDF file. 
 	}
+	\item{...}{
+		other arguments to \code{plot.bammdata}.
+	}	
 }
 \details{
 A rate shift configuration is the set of nodes of the phylogeny where a shift occurs in the macroevolutionary rate dynamic of diversification or trait evolution. Each posterior sample is a potentially distinct rate shift configuration.
