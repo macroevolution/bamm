@@ -24,6 +24,17 @@ Individual rate-shift configurations sampled by BAMM
 Three evolutionary rate configurations (speciation) sampled by BAMM for the cetacean phylogeny, under three different color schemes (warm colors = fast rates). Columns show the 10\ :sup:`th`, 20\ :sup:`th`, and 30\ :sup:`th` samples from the posterior distribution included as an example in BAMMtools (see the **events.whales** dataset). Black circles denote the position of the macroevolutionary regime shifts present in each sample. Every sample from the posterior contains a potentially unique configuration of shift locations, which are sampled in proportion to their posterior probability. The trees shown in this figure differ from the preceding figure, which shows the mean marginal rates over all samples in the posterior. Note the consistent spike and subsequent deceleration in rates that occurs after shift events. R code for this figure available :download:`here<rcode/plot_multishift.R>`.
 
 
+Distinct shift configurations and their frequencies
+----------------------------------------------------
+
+.. _distinct: 
+.. figure:: figs/x_distinctShiftConfigs.png
+   :width: 600
+   :align: center
+
+BAMM enables the user to tabulate the "distinct shift configurations" within a given dataset as well as the posterior probability of each configuration. Each distinct shift configuration may have been sampled multiple times during simulation of the posterior. This example shows the six most-commonly sampled shift configurations during the analysis of the whale dataset. R code for this figure available :download:`here<rcode/distinctShifts.R>`.
+
+
 Phenotypic evolutionary rates
 -----------------------------
 
