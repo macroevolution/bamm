@@ -158,7 +158,7 @@ plotRateThroughTime <- function(ephy, useMedian = TRUE, intervals=seq(from = 0,t
 			axis(at=c(1.3*xMin,seq(xMin,xMax, length.out=xticks+1)), labels = c(1.3*xMin,signif(seq(xMin, xMax, length.out=xticks+1),digits=2)), cex.axis = cex.axis, side = 1);
 			axis(at=c(-0.2,seq(yMin, 1.2*yMax, length.out=yticks+1)), labels = c(-0.2,signif(seq(yMin, 1.2*yMax, length.out=yticks+1),digits=2)), las=1, cex.axis = cex.axis, side = 2);
 			if (axis.labels) {
-				mtext(side = 1, text = 'time since present', line = xline, cex = cex.lab);
+				mtext(side = 1, text = 'time before present', line = xline, cex = cex.lab);
 				mtext(side = 2, text = ratelabel, line = yline, cex = cex.lab);
 			}
 		}

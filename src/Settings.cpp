@@ -201,8 +201,8 @@ void Settings::initializeTraitSettings()
     addParameter("betaInitRootPrior",              "-1.0", false);
     addParameter("betaShiftRootPrior",             "-1.0", false);
     addParameter("useObservedMinMaxAsTraitPriors", "1");
-    addParameter("traitPriorMin",                  "0.0");
-    addParameter("traitPriorMax","0.0");
+    addParameter("traitPriorMin",                  "0.0", false);
+    addParameter("traitPriorMax","0.0", false);
 
     // Output
     addParameter("betaOutfile",                    "beta_rates.txt", false);
