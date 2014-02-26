@@ -1,3 +1,14 @@
+2014-02-21  Carlos Anderson  carlosjanderson@gmail.com
+
+        Change: If the simulate priors option is turned on, priors will be
+        simulated after the MCMC has run, not before (as it did previously).
+
+2014-02-14  Carlos Anderson  carlosjanderson@gmail.com
+
+        Bug fix: In some systems, BAMM will not compile because the exit()
+        method was not recognized. Fixed by including cstdlib in the relevant
+        files.
+
 2014-02-12  Carlos Anderson  carlosjanderson@gmail.com
 
         Bug fix: Prior values were not computed correctly for the root event.
