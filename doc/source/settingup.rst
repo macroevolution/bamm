@@ -87,3 +87,18 @@ Note that if ``bamm`` is not installed in a common location, you may need
 to run ``bamm`` from the directory in which it exists as follows::
 
     ./bamm -c divcontrol.txt
+
+Any option in the control file may be overridden in the command-line
+by prefixing the option name by ``--``, followed by the new value.
+For example, to set the seed to 1234::
+
+    ./bamm -c divcontrol.txt --seed 1234
+
+To set the initial lambda at the root of the tree to 0.05
+and the print frequency to 5000, use::
+
+    ./bamm -c divcontrol.txt --lambdaInit0 0.05 --printFreq 5000
+
+When run, BAMM produces a file named ``run_info.txt`` that logs
+the command-line call used, the random seed, the start and end
+time-stamps, and a list of parameters/options and their values.
