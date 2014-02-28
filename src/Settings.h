@@ -152,6 +152,7 @@ public:
 
     // Other:
     int getInitialNumberEvents() const;
+    double getExtinctionProbMax() const;
 
     /* Parameters specific to trait evolution module */
 
@@ -492,6 +493,12 @@ inline double Settings::getUpdateRateMuShift() const
 inline int Settings::getInitialNumberEvents() const
 {
     return _parameters.at("initialNumberEvents").value<int>();
+}
+
+
+inline double Settings::getExtinctionProbMax() const
+{
+    return _parameters.at("ExtinctionProbMax").value<double>();
 }
 
 

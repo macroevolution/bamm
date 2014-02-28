@@ -37,9 +37,7 @@
 #define NO_TRAIT
 //#undef NO_TRAIT
 
-// Maximum value of extinction probability on branch that will be tolerated:
-//  to avoid numerical overflow issues (especially rounding to 1)
-#define MAX_E_PROB 0.999
+
 #define JUMP_VARIANCE_NORMAL 0.05
 
 
@@ -682,12 +680,12 @@ double SpExModel::computeLogLikelihoodByInterval()
                 xnode->setEinit(rEinit);
             }
                         ****************        */
-
+            
 
             // Clearly a problem if extinction values approaching/equaling 1.0
             // If so, set to -Inf, leading to automatic rejection of state
 
-            if ((lEinit > MAX_E_PROB) || (rEinit > MAX_E_PROB)) {
+            if ((lEinit > _settings->getExtinctionProbMax()) || (rEinit > _settings->getExtinctionProbMax())) {
                 //std::cout << xnode << "\t" << lEinit << "\t" << rEinit << std::endl;
                 return -INFINITY;
             }

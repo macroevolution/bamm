@@ -178,6 +178,13 @@ void Settings::initializeSpeciationExtinctionSettings()
     addParameter("updateRateLambdaShift",        "0.0");
     addParameter("updateRateMu0",                "0.0");
     addParameter("updateRateMuShift",            "0.0", false);
+
+    // Maximum value of extinction probability on branch that will be tolerated:
+    //  to avoid numerical overflow issues (especially rounding to 1)
+    addParameter("ExtinctionProbMax", "0.999", false);
+
+    
+    
 }
 
 
