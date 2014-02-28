@@ -45,7 +45,9 @@ further arguments to pass to \code{plot.bammdata}.
 }
 }
 \details{
-	
+A core shift configuration is defined by a set of nodes that have a marginal shift probability greater than some threshold value that is specified in the function \code{distinctShiftConfigurations}. It is almost certain that more than one core shift configuration will be sampled by BAMM.
+
+Points are added to the branches subtending the nodes of each rate configuration. The size of the point is proportional to the marginal probability that a shift occurs on a specific branch. If the instantaneous rate at a shift's origin represents an initial increase above the ancestral instantaneous rate the point is red. If the instantaneous rate at a shift's origin represents an initial decrease below the ancestral instantaneous rate the point is blue.  	
 }
 \value{
 	
@@ -57,7 +59,7 @@ further arguments to pass to \code{plot.bammdata}.
 Mike Grundler
 }
 \seealso{
-\code{\link{credibleShiftSet}}, \code{\link{distinctShiftConfigurations}}, \code{\link{plot.bammdata}}
+\code{\link{credibleShiftSet}}, \code{\link{distinctShiftConfigurations}}, \code{\link{plot.bammdata}}, \code{\link{plot.bammshifts}}
 }
 \examples{
 data(events.whales)
