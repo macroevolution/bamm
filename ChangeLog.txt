@@ -1,3 +1,13 @@
+2014-02-27 Dan Rabosky dan.rabosky@gmail.com
+		
+		Change: Previously, numerical tolerance parameter MAX_E_PROB was defined 
+		as a macro in SpExModel.cpp with a default setting of 0.999. This is now an 
+		optional (usually not specified) parameter that can be changed
+		in the control file or commmand line. This was necessary because 
+		a large dataset with highly incomplete sampling was getting non-finite
+		initial likelihoods. The problem was solved after increasing 
+		the parameter to 0.9999. The new name is "ExtinctionProbMax"
+
 2014-02-21  Carlos Anderson  carlosjanderson@gmail.com
 
         Change: If the simulate priors option is turned on, priors will be
