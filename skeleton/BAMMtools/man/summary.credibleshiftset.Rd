@@ -1,5 +1,6 @@
 \name{summary.credibleshiftset}
 \alias{summary.credibleshiftset}
+\alias{print.credibleshiftset}
 \title{
 Summary of credible set of shift configurations from a \code{BAMM} analysis.
 }
@@ -8,6 +9,7 @@ Prints summary attributes of the \code{BAMM} credible set of shift configuration
 }
 \usage{
 summary(css)
+print(css)
 }
 \arguments{
   \item{css}{
@@ -20,7 +22,7 @@ Prints to console summary attributes of the XX\% credible set of shift configura
  
 }
 \value{
-Returns (invisibly) a dataframe with a number of rows equal to the number of shift configurations in the credible set and four columns:
+\code{summary.credibleshiftset} returns (invisibly) a dataframe with a number of rows equal to the number of shift configurations in the credible set and four columns:
 \item{rank}{
 The ranked index of each shift configuration (ranked by posterior probability)
 }
