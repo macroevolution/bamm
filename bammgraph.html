@@ -52,17 +52,21 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="documentation.html">
+              <img class="logo" src="_static/bamm-logo.png" alt="Logo"/>
+            </a></p>
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">2. BAMM graph gallery</a><ul>
 <li><a class="reference internal" href="#tree-wide-diversification-heterogeneity">2.1. Tree-wide diversification heterogeneity</a></li>
 <li><a class="reference internal" href="#individual-rate-shift-configurations-sampled-by-bamm">2.2. Individual rate-shift configurations sampled by BAMM</a></li>
-<li><a class="reference internal" href="#phenotypic-evolutionary-rates">2.3. Phenotypic evolutionary rates</a></li>
-<li><a class="reference internal" href="#evolutionary-rate-variation-through-time">2.4. Evolutionary rate variation through time</a></li>
-<li><a class="reference internal" href="#rate-variation-through-time-color-density-plot">2.5. Rate variation through time: color density plot</a></li>
-<li><a class="reference internal" href="#bayes-factors">2.6. Bayes factors</a></li>
-<li><a class="reference internal" href="#maximum-shift-credibility-configuration">2.7. Maximum shift credibility configuration</a></li>
-<li><a class="reference internal" href="#cumulative-shift-probability">2.8. Cumulative shift probability</a></li>
+<li><a class="reference internal" href="#distinct-shift-configurations-and-their-frequencies">2.3. Distinct shift configurations and their frequencies</a></li>
+<li><a class="reference internal" href="#phenotypic-evolutionary-rates">2.4. Phenotypic evolutionary rates</a></li>
+<li><a class="reference internal" href="#evolutionary-rate-variation-through-time">2.5. Evolutionary rate variation through time</a></li>
+<li><a class="reference internal" href="#rate-variation-through-time-color-density-plot">2.6. Rate variation through time: color density plot</a></li>
+<li><a class="reference internal" href="#bayes-factors">2.7. Bayes factors</a></li>
+<li><a class="reference internal" href="#maximum-shift-credibility-configuration">2.8. Maximum shift credibility configuration</a></li>
+<li><a class="reference internal" href="#cumulative-shift-probability">2.9. Cumulative shift probability</a></li>
 </ul>
 </li>
 </ul>
@@ -115,22 +119,29 @@
 </div>
 <p>Three evolutionary rate configurations (speciation) sampled by BAMM for the cetacean phylogeny, under three different color schemes (warm colors = fast rates). Columns show the 10<sup>th</sup>, 20<sup>th</sup>, and 30<sup>th</sup> samples from the posterior distribution included as an example in BAMMtools (see the <strong>events.whales</strong> dataset). Black circles denote the position of the macroevolutionary regime shifts present in each sample. Every sample from the posterior contains a potentially unique configuration of shift locations, which are sampled in proportion to their posterior probability. The trees shown in this figure differ from the preceding figure, which shows the mean marginal rates over all samples in the posterior. Note the consistent spike and subsequent deceleration in rates that occurs after shift events. R code for this figure available <a class="reference download internal" href="_downloads/plot_multishift.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
 </div>
+<div class="section" id="distinct-shift-configurations-and-their-frequencies">
+<h2>2.3. Distinct shift configurations and their frequencies<a class="headerlink" href="#distinct-shift-configurations-and-their-frequencies" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center" id="distinct">
+<a class="reference internal image-reference" href="_images/x_distinctShiftConfigs.png"><img alt="_images/x_distinctShiftConfigs.png" src="_images/x_distinctShiftConfigs.png" style="width: 600px;" /></a>
+</div>
+<p>BAMM enables the user to tabulate the &#8220;distinct shift configurations&#8221; within a given dataset as well as the posterior probability of each configuration. Each distinct shift configuration may have been sampled multiple times during simulation of the posterior. This example shows the six most-commonly sampled shift configurations during the analysis of the whale dataset. R code for this figure available <a class="reference download internal" href="_downloads/distinctShifts.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
+</div>
 <div class="section" id="phenotypic-evolutionary-rates">
-<h2>2.3. Phenotypic evolutionary rates<a class="headerlink" href="#phenotypic-evolutionary-rates" title="Permalink to this headline">¶</a></h2>
+<h2>2.4. Phenotypic evolutionary rates<a class="headerlink" href="#phenotypic-evolutionary-rates" title="Permalink to this headline">¶</a></h2>
 <div class="figure align-center" id="primatesize">
 <a class="reference internal image-reference" href="_images/xPrimatesBodySize.png"><img alt="_images/xPrimatesBodySize.png" src="_images/xPrimatesBodySize.png" style="width: 550px;" /></a>
 </div>
 <p>Rates of body-size evolution across a time-calibrated phylogenetic tree of living primates. Left figure simply shows original time-calibrated tree with colors indicating instantaneous rates of phenotypic evolution. Figure on left is identical to right, but all rate shifts sampled during a BAMM run have been plotted (N = 401 posterior samples accounting for 1484 total rate shifts). Opaque colors have been used to plot shifts on individual branches; hence, branches on which shifts are frequently sampled appear dark. R code for this figure available <a class="reference download internal" href="_downloads/primate_bodysize.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
 </div>
 <div class="section" id="evolutionary-rate-variation-through-time">
-<h2>2.4. Evolutionary rate variation through time<a class="headerlink" href="#evolutionary-rate-variation-through-time" title="Permalink to this headline">¶</a></h2>
+<h2>2.5. Evolutionary rate variation through time<a class="headerlink" href="#evolutionary-rate-variation-through-time" title="Permalink to this headline">¶</a></h2>
 <div class="figure align-center" id="rttwhale">
 <a class="reference internal image-reference" href="_images/xGrayscaleWhalerates.png"><img alt="_images/xGrayscaleWhalerates.png" src="_images/xGrayscaleWhalerates.png" style="width: 700px;" /></a>
 </div>
 <p>Grayscale plot of speciation rates through time during the radiation of modern whales. Polygons denote 10% through 90% Bayesian credible regions on the distribution of rates at any point in time, given at 10% increments. The middle figure shows the rate-through-time estimates for the dolphins alone, and the right-hand figure shows the background rates for all whales once the dolphin clade has been excluded. R code <a class="reference download internal" href="_downloads/rate_through_time_whales.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
 </div>
 <div class="section" id="rate-variation-through-time-color-density-plot">
-<h2>2.5. Rate variation through time: color density plot<a class="headerlink" href="#rate-variation-through-time-color-density-plot" title="Permalink to this headline">¶</a></h2>
+<h2>2.6. Rate variation through time: color density plot<a class="headerlink" href="#rate-variation-through-time-color-density-plot" title="Permalink to this headline">¶</a></h2>
 <div class="figure align-center" id="rttwhalecolor">
 <a class="reference internal image-reference" href="_images/xWhales_color_rtt.png"><img alt="_images/xWhales_color_rtt.png" src="_images/xWhales_color_rtt.png" style="width: 700px;" /></a>
 </div>
@@ -138,21 +149,21 @@
 R code <a class="reference download internal" href="_downloads/rate_through_time_whales_color.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a></p>
 </div>
 <div class="section" id="bayes-factors">
-<h2>2.6. Bayes factors<a class="headerlink" href="#bayes-factors" title="Permalink to this headline">¶</a></h2>
+<h2>2.7. Bayes factors<a class="headerlink" href="#bayes-factors" title="Permalink to this headline">¶</a></h2>
 <div class="figure align-center" id="pwbffig">
 <a class="reference internal image-reference" href="_images/xBayesFactorsJetzPW.png"><img alt="_images/xBayesFactorsJetzPW.png" src="_images/xBayesFactorsJetzPW.png" style="width: 640px;" /></a>
 <p class="caption">Pairwise matrix of Bayes factors for the JEA bird phylogeny (Jetz <em>et al</em>, <strong>Nature</strong>, 491:444-448, 2012). Orange/red colors involve decisive comparisons between models (Bayes factor evidence &gt; 100). Color bar on right gives interpretation of colors in units of log(Bayes factor). Models with fewer than 50 processes fare poorly when compared to models with approximately 55 - 65 processes. This suggests the presence of massive diversification rate heterogeneity across the avian phylogeny. R code <a class="reference download internal" href="_downloads/BF_pairwise.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
 </div>
 </div>
 <div class="section" id="maximum-shift-credibility-configuration">
-<h2>2.7. Maximum shift credibility configuration<a class="headerlink" href="#maximum-shift-credibility-configuration" title="Permalink to this headline">¶</a></h2>
+<h2>2.8. Maximum shift credibility configuration<a class="headerlink" href="#maximum-shift-credibility-configuration" title="Permalink to this headline">¶</a></h2>
 <div class="figure align-center" id="maxcredibility">
 <a class="reference internal image-reference" href="_images/xMaxCredShiftTree.png"><img alt="_images/xMaxCredShiftTree.png" src="_images/xMaxCredShiftTree.png" style="width: 700px;" /></a>
 <p class="caption">The <em>maximum shift credibility configuration</em> (or <em>MSC</em> configuration) for the JEA bird phylogeny (6670 tips). The MSC tree displays the joint distribution of rate shift configurations that maximize the marginal probability of the data. This is analogous to the <em>maximum clade credibility tree</em> in Bayesian phylogenetic analyses. Tree shows the location of shifts, as well as their marginal probabilities (color and size). It is important to recognize that rate shifts with low marginal probability (e.g., blue nodes) can still be consistent with extremely high <em>cumulative</em> shift probabilities (see <a class="reference internal" href="#cumulative-shift-probability">Cumulative Shift Probability</a>). R code <a class="reference download internal" href="_downloads/jetztree_shifts.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
 </div>
 </div>
 <div class="section" id="cumulative-shift-probability">
-<h2>2.8. Cumulative shift probability<a class="headerlink" href="#cumulative-shift-probability" title="Permalink to this headline">¶</a></h2>
+<h2>2.9. Cumulative shift probability<a class="headerlink" href="#cumulative-shift-probability" title="Permalink to this headline">¶</a></h2>
 <div class="figure align-center" id="cst">
 <a class="reference internal image-reference" href="_images/xCumShiftTree.png"><img alt="_images/xCumShiftTree.png" src="_images/xCumShiftTree.png" style="width: 700px;" /></a>
 <p class="caption">The <em>cumulative shift probability tree</em> shows the cumulative marginal probability that a given node/branch is characterized by evolutionary rate dynamics that are decoupled from the &#8220;background&#8221; rate. In this figure, all branches with cumulative shift probabilities greater than 0.95 are shown in red. The maximum shift credibility configuration is also shown, for comparison. Note that some nodes have relatively low marginal shift probabilities, but the subtrees descended from them have extremely high cumulative shift probabilities. R code <a class="reference download internal" href="_downloads/jetztree_shifts.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>

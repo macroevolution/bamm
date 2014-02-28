@@ -52,6 +52,9 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="documentation.html">
+              <img class="logo" src="_static/bamm-logo.png" alt="Logo"/>
+            </a></p>
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">4. Setting Up BAMM</a><ul>
@@ -178,6 +181,18 @@ if your control file is named <tt class="docutils literal"><span class="pre">div
 to run <tt class="docutils literal"><span class="pre">bamm</span></tt> from the directory in which it exists as follows:</p>
 <div class="highlight-python"><pre>./bamm -c divcontrol.txt</pre>
 </div>
+<p>Any option in the control file may be overridden in the command-line
+by prefixing the option name by <tt class="docutils literal"><span class="pre">--</span></tt>, followed by the new value.
+For example, to set the seed to 1234:</p>
+<div class="highlight-python"><pre>./bamm -c divcontrol.txt --seed 1234</pre>
+</div>
+<p>To set the initial lambda at the root of the tree to 0.05
+and the print frequency to 5000, use:</p>
+<div class="highlight-python"><pre>./bamm -c divcontrol.txt --lambdaInit0 0.05 --printFreq 5000</pre>
+</div>
+<p>When run, BAMM produces a file named <tt class="docutils literal"><span class="pre">run_info.txt</span></tt> that logs
+the command-line call used, the random seed, the start and end
+time-stamps, and a list of parameters/options and their values.</p>
 </div>
 </div>
 
