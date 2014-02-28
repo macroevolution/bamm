@@ -20,7 +20,7 @@ summary.credibleshiftset <- function(x){
 	
 	
 	cat('\n\nFrequency of', mm, 'shift configurations with highest posterior probability:\n');
-	cat('\n\tRank\t\tProb\tCumulative\t\tNshifts\n')
+	cat('\n\tRank\t\tProb\tCumulative\t\tCoreShifts\n')
 	for (i in 1:mm){
 		cat('\t', format(i, justify='left'), '\t\t', format(round(x$frequency[i], 3), nsmall=3), '\t');
 		cat(round(x$cumulative[i], 3), '\t\t\t', length(x$shiftnodes[[i]]), '\n');
