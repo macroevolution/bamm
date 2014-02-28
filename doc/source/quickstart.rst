@@ -29,7 +29,7 @@ Control file
 
 To run ``bamm``, you must always specify a *control file*. The control file contains all of the settings necessary to run the program on your dataset, including the name(s) of the input files you seek to analyze. The easiest way to run BAMM is to place the control file, and all files to be analyzed (e.g., the phylogeny) in the same directory as the **BAMM** application. If your control file is named ``myControlFile.txt``, you would run BAMM as follows (on the OSX operating system)::
 
-    .\bamm -control myControlFile.txt
+    ./bamm -control myControlFile.txt
 
 On Windows machines, you would ...
 
@@ -153,7 +153,7 @@ BAMM output: brief
 
 BAMM generates multiple types of output files. These (usually) include:
 
-* The ``runInfo`` file, containing a summary of your parameters/settings
+* The ``run_info.txt`` file, containing a summary of your parameters/settings
 * An ``mcmc_out.txt`` or equivalent file, containing raw MCMC information useful in diagnosing convergence
 * An ``event_data.txt`` file or equivalent, containing all of evolutionary rate parameters and their topological mappings
 * A ``prior.txt`` file or equivalent, giving the prior expectation on the number of shift events (this is optional and can be turned off).

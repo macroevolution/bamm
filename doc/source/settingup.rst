@@ -12,13 +12,13 @@ where ``bash`` is also the default shell.
 Installation From Binary
 ------------------------
 
-Mac OS X
-........
+OS X
+....
 
 1. `Download <http://bamm-project.org/download.html>`_ the Mac OS X
-   tar.gz file containing a binary file of BAMM.
+   tar.gz file containing the binary file for BAMM.
 
-2. This file is compressed as a tar.gz file. To uncompress it,
+2. This file is a compressed tar.gz file. To uncompress it,
    run the following command from the directory in which BAMM was downloaded
    (the actual version of BAMM may be different)::
 
@@ -32,7 +32,16 @@ Mac OS X
 Windows
 .......
 
-Binary file for Windows will be available soon.
+1. `Download <http://bamm-project.org/download.html>`_ the Windows .zip file
+   containing the binary file and required library files for BAMM.
+
+2. This file is a compressed zip file. Extract the contents of the zip file
+   and move it to a location you can access from the command-line.
+
+3. Open the command-line in Windows by clicking on the Start button
+   and typing "cmd" in the search text box. Use the ``cd`` command
+   to go to the directory where BAMM is located.
+   See below for instructions on how to run BAMM.
    
 Installation From Source
 ------------------------
@@ -67,7 +76,8 @@ Use this option to compile and install BAMM from its source files.
    to compile BAMM. The executable will be named ``bamm``.
 
 5. You can run ``bamm`` from this directory, or you may wish to install it
-   in a more permanent location. To do this, run::
+   in a more permanent location. To do this, go into the ``build`` directory
+   and run::
 
        sudo make install
 
@@ -88,14 +98,18 @@ to run ``bamm`` from the directory in which it exists as follows::
 
     ./bamm -c divcontrol.txt
 
+Any file names specified in the control file are relative to the directory
+in which ``bamm`` was called, which may not be the same location as where
+the executable ``bamm`` nor the control file reside.
+
 Any option in the control file may be overridden in the command-line
 by prefixing the option name by ``--``, followed by the new value.
-For example, to set the seed to 1234::
+For example, to set the seed to 1234, run::
 
     ./bamm -c divcontrol.txt --seed 1234
 
 To set the initial lambda at the root of the tree to 0.05
-and the print frequency to 5000, use::
+and the print frequency to 5000, run::
 
     ./bamm -c divcontrol.txt --lambdaInit0 0.05 --printFreq 5000
 
