@@ -141,6 +141,10 @@ credibleShiftSet <- function(ephy, set.limit=0.95, threshold=0.01){
 
 	obj$eventBranchSegs <- eventBranchSegs; 	
 	obj$tipMu <- tipMu;
+	
+	obj$begin <- ephy$begin;
+	obj$end <- ephy$end;
+	obj$marg.probs <- dsc$marg.probs;
 
 	if (ephy$type == 'diversification') {
 		obj$type <- 'diversification';
@@ -159,11 +163,9 @@ credibleShiftSet <- function(ephy, set.limit=0.95, threshold=0.01){
  	obj$set.limit <- set.limit;
  	obj$number.distinct <- length(indices);
  	
-	# adds new class: 'bammdata'
 	class(obj) <- 'credibleshiftset';
 	return(obj);	
 	
-	return(obj);
 }
 
 

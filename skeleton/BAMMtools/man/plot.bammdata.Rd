@@ -102,10 +102,8 @@ For more information about these color palettes visit \code{colorbrewer2.org} an
 
 Additionally, any vector of valid named colors may also be used. The only restriction is that the length of this vector be greater than or equal to three. The colors should be ordered from cool to warm as the colors will be mapped from low rates to high rates in the order supplied (e.g. \code{pal=c("darkgreen","yellow2","red")}). The option \code{pal = "temperature"} uses the \code{rich.colors} function written by Arni Magnusson for the R package \code{gplots}.
 
-Specifying smaller values for \code{tau} will result in smoother-looking rate changes on the tree. Note that smaller values of \code{tau} require more computation.  
-
 Internally \code{plot.bammdata} checks whether or not rates have been calculated by looking for a component named
-"dtrates" in the \code{bammdata} object. If rates have not been calculated \code{plot.bammdata} calls \code{dtRates} with \code{tau = 0.01}. If the \code{colorbreaks} argument is \code{NULL} a map of rates to colors is also made by calling \code{assignColorBreaks} with \code{NCOLORS = 64}. A user supplied \code{colorbreaks} argument can be passed as well. This allows one to plot parts of a tree while preserving the map of rates to colors that was made using rates for the entire tree.
+"dtrates" in the \code{bammdata} object. If rates have not been calculated \code{plot.bammdata} calls \code{dtRates} with \code{tau = 0.01}. Specifying smaller values for \code{tau} will result in smoother-looking rate changes on the tree. Note that smaller values of \code{tau} require more computation. If the \code{colorbreaks} argument is \code{NULL} a map of rates to colors is also made by calling \code{assignColorBreaks} with \code{NCOLORS = 64}. A user supplied \code{colorbreaks} argument can be passed as well. This allows one to plot parts of a tree while preserving the map of rates to colors that was made using rates for the entire tree.
 
 If \code{plot.bammdata} is called repeatedly with the same \code{bammdata} object computation can be reduced by first calling \code{dtRates} in the global environment.
 }
