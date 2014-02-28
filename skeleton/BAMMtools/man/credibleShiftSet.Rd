@@ -141,7 +141,7 @@ Dan Rabosky
 }
 
 \seealso{
-\code{\link{distinctShiftConfigurations}}, \code{\link{plot.bammshifts}}, \code{\link{summary.credibleshiftset}}	
+\code{\link{distinctShiftConfigurations}}, \code{\link{plot.bammshifts}}, \code{\link{summary.credibleshiftset}}, \code{\link{plot.credibleshiftset}}	
 } 
  
 \examples{
