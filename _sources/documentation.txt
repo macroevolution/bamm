@@ -17,8 +17,9 @@ BAMM Documentation
    configuration
    postprocess
    advanced
-   faq
    rateshifts
+   faq
+   troubleshooting
 
 Indices and tables
 ==================
