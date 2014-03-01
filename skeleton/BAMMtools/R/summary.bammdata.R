@@ -1,21 +1,21 @@
 summary.bammdata = function(ephy, opt="product", display=10) {
 	cat("\nAnalyzed", length(ephy$eventData), "posterior samples\n");
-	shiftsindex = maximumShiftCredibility(ephy,maximize=opt)$sampleindex;
-	shiftnodes = getShiftNodesFromIndex(ephy, shiftsindex);
-	if (length(shiftnodes) > 1) {
-		cat("\nMaximum shift credibility tree has", length(shiftnodes), "shifts\n\n");
-		cat("Shifts occur leading to nodes:", shiftnodes,"\n\n");
-		cat("Optimality type:", opt,"\n\n");
-	}
-	else if (length(shiftnodes) == 1) {
-		cat("\nMaximum shift credibility tree has 1 shift\n\n");
-		cat("Shift occurs leading to node:", shiftnodes,"\n\n");
-		cat("Optimality type:", opt,"\n\n");
-	}
-	else {
-		cat("\nMaximum shift credibility tree has 0 shifts\n\n");
-		cat("Optimality type:", opt,"\n\n");
-	}
+#	shiftsindex = maximumShiftCredibility(ephy,maximize=opt)$sampleindex;
+#	shiftnodes = getShiftNodesFromIndex(ephy, shiftsindex);
+#	if (length(shiftnodes) > 1) {
+#		cat("\nMaximum shift credibility tree has", length(shiftnodes), "shifts\n\n");
+#		cat("Shifts occur leading to nodes:", shiftnodes,"\n\n");
+#		cat("Optimality type:", opt,"\n\n");
+#	}
+#	else if (length(shiftnodes) == 1) {
+#		cat("\nMaximum shift credibility tree has 1 shift\n\n");
+#		cat("Shift occurs leading to node:", shiftnodes,"\n\n");
+#		cat("Optimality type:", opt,"\n\n");
+#	}
+#	else {
+#		cat("\nMaximum shift credibility tree has 0 shifts\n\n");
+#		cat("Optimality type:", opt,"\n\n");
+#	}
 	cat("Shift posterior distribution:\n\n");
 	fev = sapply(ephy$eventData, nrow);
 	disp = tabulate(fev); disp = disp/sum(disp);
@@ -38,5 +38,8 @@ summary.bammdata = function(ephy, opt="product", display=10) {
 			cat("... omitted", nrow(disp)-index[3]-1,"rows\n\n");
 		}
 	}
-	invisible(list(posterior = tabulate(fev), mscshiftnodes = shiftnodes));
+	cat("\nCompute credible set of shift configurations for more information:\n");
+	cat("\tSee ?credibleShiftSet and ?getBestShiftConfiguration\n");
+	
+	invisible(list(posterior = tabulate(fev)));
 }
