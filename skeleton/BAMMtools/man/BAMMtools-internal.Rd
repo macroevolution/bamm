@@ -25,6 +25,7 @@
 \alias{print.bammdata}
 \alias{setPhyloTreeCoords}
 \alias{setPolarTreeCoords}
+\alias{phylogeneticMean}
 
 \title{Internal BAMMtools functions}
 \description{

@@ -9,7 +9,7 @@ Adds symbols to a plotted tree to mark the location(s) where there is a shift in
 macroevolutionary dynamics of diversification or trait evolution.
 }
 \usage{
-addBAMMshifts(ephy, method, index, cex = 1, pch = 21, col = 1, bg = 2, multi = FALSE)
+addBAMMshifts(ephy, method = 'phylogram', index, cex = 1, pch = 21, col = 1, bg = 2, multi = FALSE)
 }
 
 \arguments{
@@ -42,7 +42,8 @@ a logical indicating whether the device is configured for multi-panel plotting.
 
 Any given sample from the posterior distribution sampled using \code{BAMM} contains a potentially unique configuration of rate shifts and associated parameters. There is no single "best" rate shift, but rather a set of shift configurations (and associated parameters) - along with their relative probabilities - sampled with MCMC. This function enables the user to plot the locations of shifts sampled with \code{BAMM} for a given sample from the posterior. 
 
-Of particular relevance is the function \link[BAMMtools]{}
+If the \code{bammdata} object contains just a single sample, these shifts will be plotted regardless of the value of \code{index}.
+
 
 }
 \value{

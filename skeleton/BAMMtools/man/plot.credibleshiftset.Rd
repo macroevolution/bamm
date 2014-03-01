@@ -2,7 +2,7 @@
 \alias{plot.credibleshiftset}
 
 \title{
-	Plot core rate shift configurations on a phylogeny
+	Plot credible set of rate shift configurations from BAMM analysis
 }
 \usage{
 S3 method for class \code{credibleshiftset}
@@ -14,7 +14,7 @@ use.plot.bammdata=TRUE, border=TRUE, legend=FALSE, send2pdf=FALSE, ...)
 an object of class \code{credibleshiftset}.	
 }
 \item{plotmax}{
-an integer number of plots to display.
+an integer number of plots to display. 
 }
 \item{method}{
 a coordinate method to use for plotting. Options are "phylogram" or "polar".
@@ -45,7 +45,7 @@ further arguments to pass to \code{plot.bammdata}.
 }
 }
 \details{
-A core shift configuration is defined by a set of nodes that have a marginal shift probability greater than some threshold value that is specified in the function \code{distinctShiftConfigurations}. It is almost certain that more than one core shift configuration will be sampled by BAMM.
+This produces phylorate plots for the \code{plotmax} most-probable shift configurations sampled with \code{BAMM}. Shift configurations are plotted in a single graphics window. The posterior probability (frequency) of each rate shift configuration in the posterior is shown (omitted with argument \code{add.freq.text = FALSE}).
 
 Points are added to the branches subtending the nodes of each rate configuration. The size of the point is proportional to the marginal probability that a shift occurs on a specific branch. If the instantaneous rate at a shift's origin represents an initial increase above the ancestral instantaneous rate the point is red. If the instantaneous rate at a shift's origin represents an initial decrease below the ancestral instantaneous rate the point is blue.  	
 }
