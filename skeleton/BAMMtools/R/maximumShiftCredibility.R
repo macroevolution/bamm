@@ -39,6 +39,9 @@ maximumShiftCredibility <- function(ephy, maximize = 'product') {
 	probvec <- numeric(length(ephy$eventData));
 	
 	mtree <- marginalShiftProbsTree(ephy);
+	
+	mtree$edge.length[mtree$edge.length < threshold] <- 0;
+	
 	px <- mtree$edge.length;
 	
 	ttx <- table(ephy$numberEvents) / length(ephy$numberEvents);
