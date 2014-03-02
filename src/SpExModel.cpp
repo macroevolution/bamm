@@ -90,6 +90,12 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
 
     setCurrentLogLikelihood(computeLogLikelihood());
 
+    if (std::isinf(getCurrentLogLikelihood())) {
+        log(Error) << "Initial log-likelihood is infinity.\n"
+            << "Please check your initial parameter values.\n";
+        std::exit(1);
+    }
+
     log() << "\nInitial log-likelihood: " << getCurrentLogLikelihood() << "\n";
     if (_settings->getSampleFromPriorOnly())
         log() << "Note that you have chosen to sample from prior only.\n";
