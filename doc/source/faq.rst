@@ -7,16 +7,19 @@ General
 Citing BAMM
 -----------
 
-The primary methodological description of the BAMM model and implementation is *in press* in *PLoS ONE*. This should be out in early February 2014. In the meantime, a preprint of the manuscript is available on the arXiv preprint server:
+The primary methodological description of the BAMM model was published in *PLoS ONE*. A link to the paper is `available here <http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543>`_ 
 
-http://arxiv.org/abs/1401.6602
-
-This paper contains a description of the model, the reversible jump MCMC implementation, and a comprehensive performance evaluation. 
+This paper contains a description of the model, the reversible jump MCMC implementation, a comprehensive performance evaluation, and an empirical application.
 
 
 How much data does it need?
 ---------------------------
 **Not much**. There is no general rule here, but if your dataset is large enough to consider doing any other sort of diversification analysis, then it is probably large enough for BAMM. The whale diversification analysis shown in the :ref:`graph gallery<bammgraph>` uses a time-calibrated tree with 89 tips. We've had good success using BAMM on trees that are considerably smaller than this. 
+
+
+How often should I sample the chain?
+--------------------------
+Your first consideration should be: for how long should I run the chain? The answer to this question has a lot to do with how quickly the chain converges and how well it samples the posterior. We suggest that there is little advantage in going to more than 5000 samples from the posterior, and potentially large costs: for large datasets, sampling too frequently with BAMM can literally generate gigabytes of highly autocorrelated and mostly-unusable output. Moreover, due to memory issues with R, BAMMtools cannot handle output files of that size. So, pick a chain length (e.g., :math:`10^7` generations), and then specify a sample frequency that should give you somewhere between 500 and 5000 samples from the posterior after burnin. 
 
 
 

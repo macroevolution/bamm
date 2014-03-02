@@ -95,10 +95,11 @@ One of the most important ideas to grasp regarding BAMM is that BAMM simulates a
    :align: center
 
 
+
 Marginal shift probabilities
 ----------------------------
 
-The marginal shift probabilities on individual branches across the tree are of considerable interest. As discussed above, there are some nuances to interpreting these, because the probability associated with any particular branch is not independent of other branches in the tree. From your bammdata object, you can easily compute the branch-specific marginal shift probabilities with BAMMtools::
+The marginal shift probabilities on individual branches across the tree are of considerable interest. As discussed above, there are some nuances to interpreting these, because the probability associated with a shift on any particular branch is not independent of other branches in the tree. From your bammdata object, you can easily compute the branch-specific marginal shift probabilities with BAMMtools::
 	
 	library(BAMMtools)
 	data(whales, events.whales)
@@ -110,6 +111,12 @@ The object ``marg_probs`` is a copy of your original phylogenetic tree, but wher
 You can convey this information in several possible ways. You can directly indicate marginal shift probabilities on a phylorate plot, as shown :ref:`here<whalemarg1>`. You can plot your ``marg_probs`` tree itself: the branches are scaled directly by probabilities, so a tree plotted in such a fashion conveys quite a bit of information (see Figure 9 from Rabosky 2014 for an example of such a plot). You can potentially color branches by their marginal shift probabilities, or you could add circles to each branch with a shift probability greater than some threshold.
 
 But don't get hung up on the fact that your shift probabilities are less than 0.95. Even *very* strongly supported rate heterogeneity will generally be associated with marginal shift probabilities < 0.95. As discussed :ref:`here<whalemarg1>`, you can (and often will) have exceptionally strong evidence for rate heterogeneity even if any given branch has marginal shift probabilities that do not appear particularly high. **Marginal shift probabilities tell you very little about the probability of rate heterogeneity in your dataset**. In principle, you could have high confidence that your data were shaped by a very large number of rate shifts, but at the same time find that no single branch has a marginal probability exceeding 0.10. 
+
+
+Identifying the distinct shift configurations
+---------------------------------------
+
+
 
 Maximum credibility shift configuration
 ---------------------------------------

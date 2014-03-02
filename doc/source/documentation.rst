@@ -20,6 +20,7 @@ BAMM Documentation
    rateshifts
    faq
    troubleshooting
+   glossary
 
 Indices and tables
 ==================

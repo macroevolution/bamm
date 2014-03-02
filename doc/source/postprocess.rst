@@ -10,10 +10,78 @@ The R package **BAMMtools** contains almost everything you need to analyze and v
 
 	> install.packages("BAMMtools")
 	
-The information below is a brief overview to get you started - there is much more than can be done. The end of this page contains a :ref:`sample BAMMtools workflow<bammtoolsworkflow>` for analyzing rates and rate shifts.
+The information below is a brief overview to get you started - there is much more than can be done. We first cover a :ref:`sample BAMMtools workflow<bammtoolsworkflow>` for analyzing rates and rate shifts. 
 
-BAMM output files
+The sections below include:
+
+BAMMtools quickstart guide
+------------------
+
+This is a :ref:`one sentence guide<workflow>` to major *BAMMtools* functions, covering several common analyses.
+
+BAMM output and the *bammdata* object
+------------------
+
+A :ref:`quick overview<bammoutput>` of **BAMM** output files.
+
+
+Assessing MCMC convergence
+-------------------
+
+Standard tests you should do to check :ref:`BAMM convergence<BAMMconverge>`.
+
+Number of rate shifts
+-------------------
+Posterior probabilities of :ref:`rate shifts<numbershifts>`
+
+Locations of rate shifts
+-------------------
+Identifying and visualizing rate shifts on trees in :ref:`this section<shiftlocations>`.
+
+Clade-specific evolutionary rates
+----------------
+Estimating mean rates for :ref:`specific clades<claderates>`.
+
+Branch and tip-specific evolutionary rates
+-----------------
+Estimate marginal densities of rates for individual :ref:`branches and tips<branchrates>`
+
+Rate-through-time analysis
+----------------
+Analyze and plot macroevolutionary :ref:`rates through time<bammtoolsRTT>`
+
+Bayes factors for model comparison
+----------------
+Model selection with :ref:`Bayes factors<bayesfactors>`
+
+BAMMtools quickstart guide
+...............
+
+.. _workflow:
+
+This is a quickstart guide to some of the analyses discussed below (and many more are possible). Additional ideas are illustrated in the R code samples available on the :ref:`BAMM graph gallery<bammgraph>`, and the **BAMMtools** package contains functions for a number of additional analyses.  
+
+* Test for convergence using the MCMC output with the ``coda`` package for R
+* Load event data with ``getEventData(....)``
+* Generate a phylorate plot with ``plot.bammdata(....)``
+* Compute the 95% *credible set of rate shift configurations* using ``credibleShiftSet``
+* Extract the rate shift configuration with the highest posterior probability with ``getBestShiftConfiguration``
+* Visualize random samples from the posterior distribution of rate shifts using ``plot.bammshifts``
+* Generate phylorate plots for the distinct rate shift configurations in your 95% credible set using ``plot.credibleshiftset``
+* Compute marginal shift probabilities for branches with ``marginalShiftProbsTree``
+* Plot rates through time with ``plotRateThroughTime(...)`` and :ref:`BAMM graph gallery<bammgraph>` does this
+* Compute clade-specific marginal distributions of rates with ``getCladeRates(...)`` 
+
+Here is a :ref:`reference<bammtoolsworkflow>`, and :ref:`BAMM graph gallery<bammgraph>`
+
+
+BAMM output and the *bammdata* object
 .................
+
+.. _bammoutput:
+
+BAMM output
+----------
 
 BAMM generates three primary output files. The first is the *mcmc data file*, which contains several pieces of information about the MCMC simulation that may be useful in diagnosing convergence. The most important pieces of information from this file are the number of shift events, the log-likelihood of the data, and the log-prior probability of the data, for each sample from the posterior. 
 
@@ -21,10 +89,22 @@ The second is the *event data file*, which contains all of the actual model para
 
 Finally, BAMM will (optionally) generate a second MCMC output file that contains the results of a prior-only simulation. This file can be used to reconstruct the prior distribution of the number of shift events and is important for the estimation of Bayes factors. 
 
+The *bammdata* object
+--------------
+The *bammdata* object is the core of most analyses discussed below. This is a complex data structure that includes a phylogenetic tree and a mapping of all macroevolutionary rate parameters sampled using BAMM. Many of the methods in BAMMtools operate directly on objects of class *bammdata*. This object is created in R using the BAMMtools function ``getEventData``. Here's sample code where we create the bammdata object (assume your phylogeny is in a file *mytree.tre*, and your event data file from a BAMM run is in file *bammrun_eventdata.txt*::
+
+	> library(BAMMtools)
+	> tree <- read.tree("mytree.tre")
+	> ed <- getEventData(tree, eventdata = "bammrun_eventdata.txt", burnin=0.1)
+	
+
+
 .. _convergence:
 
-Diagnosing convergence
+Assessing MCMC convergence
 ......................
+
+.. _BAMMconverge:
 
 The first question after running any MCMC simuluation should always be: *did my run converge?* While it may be difficult to prove convergence in an absolute sense, there are a few simple checks you can do. First, you can plot the log-likelihood trace of your MCMC output file::
 
@@ -47,13 +127,20 @@ And using these samples, it is good to check the *effective sample sizes* of the
 	> effectiveSize(postburn$logLik)
 
 In general, we want these to be at least 200 (and 200 is on the low side, but might be reasonable for very large datasets).
+
+As an additional test for convergence, we recommend analyzing multiple independent BAMM runs. You can test whether the runs are converging on similar distributions by analyzing the branch-specific marginal rate shift probabilities (see ``marginalShiftProbsTree``). 
  
-If you are having trouble with convergence, please see the section on :ref:`troubleshooting convergence issues<fixbammconvergence>`. 
+If you are having trouble with convergence, please see the section on :ref:`troubleshooting convergence issues<convergenceproblems>`. 
 
-General BAMMtools workflow
+
+
+Number of rate shifts
 ..........................
+.. _numbershifts:
 
-The general analyses described in this section apply both to **speciation-extinction** and **phenotypic evolution** studies. As such, they are not treated separately. The primary difference is the name of the parameters (:math:`\lambda` and :math:`\mu` for speciation and extinction, and :math:`\beta` for trait evolution).
+**Major caveat to this section**. The literature is obsessed with questions similar to *how many rate shifts are in my dataset*? We feel that it is more productive and more natural to use BAMM to identify distinct sets of rate shift configurations and their posterior probabilities, regardless of the numbers of shifts that are implied. It is entirely possible that the number of rate shifts with the highest posterior probability is not the *distinct rate shift configuration* with the highest posterior probability. To appreciate this point, you must understand what we mean by *distinct shift configurations* and *credible sets of rate shift configurations*. Understanding these concepts is fundamental to the BAMM philosophy. We have included a detailed discussion on this topic :ref:`here<rateshifts>`, and the user is strongly encouraged to read this section before proceeding.
+
+However, given the historical focus on *numbers of rate shifts*, we will explain how to estimate them from BAMM output. The general analyses described in this section apply both to **speciation-extinction** and **phenotypic evolution** studies. As such, they are not treated separately. The primary difference is the name of the parameters (:math:`\lambda` and :math:`\mu` for speciation and extinction, and :math:`\beta` for trait evolution).
 
 The first step in the analysis of BAMM output is to ask some basic questions about the number of macroevolutionary rate regimes on our phylogenetic tree. We can do this directly using the post-burn *MCMC output file*. Here, we'll compute the posterior probabilities of models sampled using BAMM::
 
@@ -67,7 +154,14 @@ And to compute the posterior odds ratio for (say) two models 'X' and 'Y' (X and 
 
 	> post_probs['X'] / post_probs['Y'] 
 
-In general, any model that is not included in *names(post_probs)* was so lousy that it was never even sampled. Thus, if you fail to observe a model '0' in this set, this means that you have such overwhelming evidence for diversification rate heterogeneity in your data that this model probability is effectively 0 (bear in mind that a model with name '0' is model :math:`M_0`, or a model with no rate shifts). The probability of model '0' is the posterior probability of a model with just a single evolutionary rate dynamic (no rate shifts). We'll discuss the use of Bayes factors in gauging model support a little further down in this document (**INTERNAL LINK**), but posterior model probabilities are a valuable way of identifying the best model (or set of models). The BAMMtools vignette **#LINK#** shows other tricks, like identifying the 95% credibility set of models.
+In general, any model that is not included in *names(post_probs)* was so lousy that it was never even sampled. Thus, if you fail to observe a model '0' in this set, this means that you have such overwhelming evidence for diversification rate heterogeneity in your data that this model probability is effectively 0 (bear in mind that a model with name '0' is model :math:`M_0`, or a model with no rate shifts). The probability of model '0' is the posterior probability of a model with just a single evolutionary rate dynamic (no rate shifts). We'll discuss the use of Bayes factors in gauging model support a little further down in :ref:`this document<bayesfactors>`, but posterior model probabilities are a valuable way of identifying the best model (or set of models). 
+
+Alternatively, if have our *bammdata* object, we can summarize the posterior distribution of the number of shifts using summary methods:
+	> library(BAMMtools)
+	> tree <- read.tree("mytree.tre")
+	> ed <- getEventData(tree, eventdata = "bammrun_eventdata.txt", burnin=0.1)
+	> summary(ed)
+
 
 The next step in the analysis of BAMM output is to get the *event data file* into a more workable format. Using BAMMtools, we'll process this output into an R data object that will be much easier to work with. We also need our time-calibrated phylogenetic tree that we analyzed::
 	
@@ -80,8 +174,16 @@ The next step in the analysis of BAMM output is to get the *event data file* int
 Now we will focus on a few simple analyses that you can do with the 'BAMM-data' object. We won't go into details here about making particularly pretty plots (see the :ref:`graph gallery`<bammgraph>` for some ideas) but will use tools available in **BAMMtools** package.
 
 
-Analyzing locations of rate shifts
-----------------------------------
+Credible sets of rate shifts
+.....................
+
+.. _crediblesets:
+
+
+Locations of rate shifts
+....................
+
+.. _shiftlocations:
 
 Once you have established there there is at least some evidence for heterogeneous evolutionary dynamics in your dataset, the obvious question is: where are these rate shifts? In the BAMM framework, this is a deceptively simple question, because BAMM does not generate a single *best* rate shift configuration. In the BAMM framework, many different shift configurations may be (more-or-less) equally plausible. BAMM samples shift configurations in proportion to their posterior probability. In principle, this means that each sample from your posterior contains a potentially unique configuration of regime shift events. 
 
@@ -159,8 +261,9 @@ And we can also view the rate-through-time dynamics implied by this sample::
 	> plot.bammdata(edata, index = samp)
 
 
-Estimating clade-specific rates
--------------------------------
+Clade-specific evolutionary rates
+....................
+.. _claderates:
 
 Estimating clade-specific rates with BAMMtools is straightforward. To compute the overall rate of speciation, extinction, or trait evolution, you can use the function ``getCladeRates``, which computes the average rate for the focal clade. Here we will use an example from the ``whales`` example dataset that is included with BAMMtools::
 
@@ -192,13 +295,14 @@ You can also use the ``node`` argument to ``getCladeRates`` to **exclude** all t
 And you can see that the non-dolphin (background) rate is much lower than the dolphin rate.
 
 
-Branch-specific evolutionary rates
-----------------------------------
+Branch & tip-specific evolutionary rates
+....................
+.. _branchrates:
 
 BAMM can estimate marginal distributions of evolutionary rates for any point in time along a phylogenetic tree (this is what the the function ``plot.bammdata`` is going to generate a phylorate plot). Sometimes, however, it is useful to have mean rates for individual branches. To pull out the mean rates for individual branches, you can use the function ``getMeanBranchLengthTree`` (see the ``?getMeanBranchLengthTree`` for help on this function). The function generates a copy of your original phylogenetic tree, but where each branch length is replaced by the mean of the marginal distribution of evolutionary rates on each branch. The function can be used to extract branch-specific mean rates of speciation, extinction, net diversification, and trait evolution.
 
-Plotting rate-through-time curves
----------------------------------
+Rate-through-time analysis
+......................
 
 .. _bammtoolsRTT:
 
@@ -259,8 +363,9 @@ You can also include- and exclude nodes from the calculation of the rate-through
 Please see code underlying some BAMM graph gallery plots for more on working with these objects. For example, the code linked :ref:`here<rttwhale>` demonstrates how you can directly work with the rate matrices for extremely flexible plotting options.
 
 
-Computing Bayes factors
------------------------
+Bayes factors for model comparison
+.................
+.. _bayesfactors:
 
 BAMMtools makes it easy to compute Bayes factor evidence in favor of one model relative to another. The disadvantage of Bayes factors is that they provide a measure of pairwise model support and don't necessarily identify a single best model (this isn't necessarily bad: *is* there a single best model?). An advantage of Bayes factors as that they allow model comparisons to be made *independent of the prior on the model*. In BAMM, you specified a hyperprior distribution on the number of shift regimes, and this will have some effect on your posterior model probabilities, so it can be useful to look at the Bayes factor matrix for model comparisons.
 
@@ -272,19 +377,3 @@ This analysis assumes that you have generated an *MCMC output file* involving si
 	
 and this will return a pairwise matrix of Bayes factors. It is very important to recognize that model probabilities for rarely sampled models are likely to be inaccurate. Hence, BAMM will return a matrix with missing values (NA) if a given model was insufficiently sampled to estimate posterior or prior odds (see the ``threshpost`` and ``threshprior`` arguments in ?computeBayesFactors). Also keep in mind that any model sampled too infrequently to estimate model odds is also a model that is highly improbable given the data, so the missing Bayes factors aren't really something to worry about. Please see the analysis detailed :ref:`here<pwbffig>` for analysis and visualization of pairwise Bayes factors for a large set of candidate models.
 
-BAMMtools workflows
--------------------
-
-.. _bammtoolsworkflow:
-
-This is a simple guide to some of the analyses discussed above (and many more are possible). Some additional workflow ideas are illustrated in the R code samples available on the :ref:`BAMM graph gallery<bammgraph>`.
-
-* Test for convergence using the MCMC output with the ``coda`` package for R
-* Load event data with ``getEventData(....)``
-* Generate a phylorate plot with ``plot.bammdata(....)``
-* Analyze the distribution of rate shifts by plotting individual shift configurations
-* Compute marginal shift probabilities for branches with ``marginalShiftProbsTree``
-* Compute the *maximum shift credibility (MSC) configuration* with ``maximumShiftCredibility``
-* Plot the MSC configuration with ``addBAMMshifts`` and ``plot.bammdata(...)``.
-* Plot rates through time with ``plotRateThroughTime(...)``
-* Compute clade-specific marginal distributions of rates with ``getCladeRates(...)`` 
