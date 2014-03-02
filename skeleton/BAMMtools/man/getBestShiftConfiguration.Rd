@@ -39,6 +39,7 @@ Dan Rabosky
 \link{getEventData},  \link{credibleShiftSet}, \link{plot.credibleshiftset}, \link{plot.bammdata}
 }
 \examples{
+library(BAMMtools)
 data(whales, events.whales)
 ed <- getEventData(whales, events.whales, burnin=0.1)
 
@@ -63,7 +64,7 @@ best <- getBestShiftConfiguration(css);
 
 plot.bammdata(best)
 
-## NOw, for comparison, here we will plot
+## Now, for comparison, here we will plot
 # the 6 most probable shift configurations:
 plot.credibleshiftset(css, plotmax=6)
 
