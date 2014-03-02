@@ -40,7 +40,7 @@ maximumShiftCredibility <- function(ephy, maximize = 'product') {
 	
 	mtree <- marginalShiftProbsTree(ephy);
 	
-	mtree$edge.length[mtree$edge.length < threshold] <- 0;
+	#mtree$edge.length[mtree$edge.length < threshold] <- 0;
 	
 	px <- mtree$edge.length;
 	
