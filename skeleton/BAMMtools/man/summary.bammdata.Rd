@@ -25,9 +25,12 @@ distribution on the number of shifts, which is just the fraction of
 samples in the posterior having 0,1,2,...n shifts.
 }
 \value{
-Returns (invisibly) a list with:
-\item{posterior}{
-	the number of posterior samples having 0,1,2,...,n shifts
+Returns (invisibly) a dataframe with 2 components:
+\item{shifts}{
+	the number of shifts
+}
+\item{prob}{
+	the corresponding posterior probability of a model with a given number of rate shifts.
 }
 
 }
@@ -35,7 +38,7 @@ Returns (invisibly) a list with:
 \url{www.bamm-project.org}
 }
 \author{
-Mike Grundler
+Mike Grundler, Dan Rabosky
 }
  
 \seealso{
