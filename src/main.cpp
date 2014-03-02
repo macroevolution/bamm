@@ -191,7 +191,7 @@ void printAbout()
 |   Authors: Carlos Anderson, Joseph Brown, Michael Grundler,              |\n\
 |            Daniel Rabosky, Jeff Shi, Pascal Title                        |\n\
 |                                                                          |\n\
-|   Copyright (C) 2012-2013 Daniel Rabosky                                 |\n\
+|   Copyright (C) 2012-2014 Daniel Rabosky                                 |\n\
 |   See LICENSE for details.                                               |\n\
 |                                                                          |\n\
 +--------------------------------------------------------------------------+\n\
