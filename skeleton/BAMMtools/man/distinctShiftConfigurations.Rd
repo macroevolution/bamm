@@ -8,7 +8,7 @@ Identify distinct rate shift configurations
 Identify topologically distinct rate shift configurations that were sampled with BAMM, and assign each sample in the posterior to one of the distinct shift configurations.	
 }
 \usage{
-distinctShiftConfigurations(ephy, threshhold)
+distinctShiftConfigurations(ephy, threshold)
 }
 \arguments{
 	\item{ephy}{

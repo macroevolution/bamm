@@ -7,7 +7,7 @@ Compute phylogeny with branch lengths equal to corresponding macroevolutionary r
 Takes a \code{bammdata} object and computes a phylogenetic tree where branch lengths are equal the mean of the marginal distributions of rates on each branch. This tree can be plotted to visualize rate variation across a phylogeny. 
 }
 \usage{
-getMeanBranchLengthTree(obj, rate = "speciation")
+getMeanBranchLengthTree(ephy, rate = "speciation")
 }
 
 \arguments{

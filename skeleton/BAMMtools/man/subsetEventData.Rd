@@ -41,7 +41,7 @@ addBAMMshifts(ed2, cex=2)
 
 # Using the function to pull out distinct shift configs
 # from the credible set
-css <- credibleShiftSet(ed)
+css <- credibleShiftSet(ed, threshold=0.05)
 
 # Pull out the 2nd most probable shift configuration:
 secondbest <- subsetEventData(css, index=2)

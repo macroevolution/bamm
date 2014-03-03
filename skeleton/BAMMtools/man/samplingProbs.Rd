@@ -70,13 +70,13 @@ richnessVec <- c(cladeA=5, cladeB=4, cladeC=12)
 # Option 1: We have a table of clade assignment for the species in the tree, along with a vector of known clade richness
 spTable
 richnessVec
-samplingProbs(tree, cladeTable = spTable, cladeRichness = richnessVec, globalSampling = 1, writeToDisk = F)
+samplingProbs(tree, cladeTable = spTable, cladeRichness = richnessVec, globalSampling = 1, writeToDisk = FALSE)
 
 # Option 2: We have a table of known species, beyond the sampling in the phylogeny
 spTable <- rbind(spTable, c('Species10','cladeA'),c('Species11','cladeA'),c('Species12','cladeC'),c('Species13','cladeC'),c('Species14','cladeC'))
 spTable
 
-samplingProbs(tree, cladeTable = spTable, cladeRichness = NULL, globalSampling = 0.9, writeToDisk = F)
+samplingProbs(tree, cladeTable = spTable, cladeRichness = NULL, globalSampling = 0.9, writeToDisk = FALSE)
 
 }
 
