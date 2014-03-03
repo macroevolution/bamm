@@ -35,7 +35,6 @@
 	Mike Grundler
 }
 \examples{
-	library(BAMMtools)
 	data(whales, events.whales)
 	ed <- getEventData(whales,events.whales,0.2)
 	

@@ -38,8 +38,6 @@ Huateng Huang
 \code{\link{getmrca}}, \code{\link{plot.bammdata}}
 }
 \examples{
-  
-library(BAMMtools)
 data(whales, events.whales)
 ephy = getEventData(whales, events.whales, burnin=0.25)
 

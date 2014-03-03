@@ -62,8 +62,7 @@ Mike Grundler
 \code{\link{getShiftNodesFromIndex}}, \code{\link{plot.bammdata}}
 }
 \examples{
-	
-library(BAMMtools)
+
 data(whales, events.whales)
 ed <- getEventData(whales, events.whales, burnin=0.25)
 

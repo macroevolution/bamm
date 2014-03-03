@@ -71,7 +71,6 @@ Points are added to the branches subtending the nodes of each rate configuration
 	\code{\link{distinctShiftConfigurations}}, \code{\link{plot.bammdata}}
 }
 \examples{
-library(BAMMtools)
 data(whales, events.whales)
 ed <- getEventData(whales, events.whales, burnin=0.25)
 

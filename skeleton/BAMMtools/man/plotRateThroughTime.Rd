@@ -120,7 +120,6 @@ Pascal Title
 See \code{\link{getEventData}} and \code{\link{getRateThroughTimeMatrix}} to generate input data.
 }
 \examples{
-library(BAMMtools)
 data(events.whales)
 data(whales)
 ephy <- getEventData(whales,events.whales)

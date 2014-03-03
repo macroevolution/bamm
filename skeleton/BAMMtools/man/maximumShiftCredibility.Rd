@@ -53,7 +53,6 @@ Dan Rabosky
 \link[BAMMtools]{marginalShiftProbsTree}, \link[BAMMtools]{addBAMMshifts}, \link{cumulativeShiftProbsTree}, \link[BAMMtools]{credibleShiftSet}, \link[BAMMtools]{getBestShiftConfiguration}
 }
 \examples{
-library(BAMMtools)
 data(whales)
 data(events.whales)
 ed <- getEventData(whales, events.whales, burnin=0.25)

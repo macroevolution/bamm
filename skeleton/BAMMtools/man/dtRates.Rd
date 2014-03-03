@@ -53,7 +53,6 @@ If there are zero length branches in the input tree \code{NA}s will result.
 \code{\link{plot.bammdata}}
 }
 \examples{
-library(BAMMtools)
 data(whales, events.whales)
 ed <- getEventData(whales, events.whales, burnin=0.25)
 

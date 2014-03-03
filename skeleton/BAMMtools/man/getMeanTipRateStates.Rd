@@ -31,7 +31,6 @@ Pascal Title
 Requires an object of class \code{bammdata} as obtained with \code{\link{getEventData}}. 
 }
 \examples{
-library(BAMMtools)
 data(whales, events.whales)
 ephy <- getEventData(whales, events.whales, burnin=0.25)
 
