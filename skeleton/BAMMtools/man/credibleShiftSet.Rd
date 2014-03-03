@@ -8,17 +8,17 @@ Computes the XX\% credible set of macroevolutionary rate shift configurations fr
 
 }
 \usage{
-credibleShiftSet(ephy, set.limit = 0.95, threshold)
+credibleShiftSet(ephy, threshold, set.limit = 0.95)
 }
 \arguments{
   \item{ephy}{
 an object of class \code{bammdata}
 }
+  \item{threshold}{
+Either an object of class \code{branchprior}, or a numeric value giving the marginal probability threshold for including nodes in the enumeration of distinct shift configurations. See \code{\link{getBranchShiftPriors}}
+}
   \item{set.limit}{
 the desired limit to the credible set. A value of 0.95 will return the 95\% credible set of shift configurations.
-}
-  \item{threshold}{
-Either an object of class \code{branchprior}, or a numeric value giving the marginal probability threshold for including nodes in the enumeration of distinct shift configurations. See \code{\link[BAMMtools]{getBranchShiftPrior}}
 }
 }
 \details{
@@ -28,7 +28,7 @@ To understand how this calculation is performed, one must first distinguish betw
 
 If we compute distinct shift configurations with every sampled shift (including those shifts with very low marginal probabilities), the number of distinct shift configurations will be overwhelmingly high. However, most of these configurations are functionally identical because they contain the same core shifts and differ only in non-core shifts that have very low marginal probabilities. 
 
-By specifying a \code{threshold} argument, the user can choose to ignore shifts with low probabilities during enumeration of distinct shift configurations. Ideally, you should include a \code{branchprior} object for this argument (see function \link[BAMMtools]{getBranchShiftPriors}). This will essentially ignore all rate shifts with marginal probabilities less than expected under the prior alone. Shifts are thus retained only if their marginal probability is greater than expected under the prior.
+By specifying a \code{threshold} argument, the user can choose to ignore shifts with low probabilities during enumeration of distinct shift configurations. Ideally, you should include a \code{branchprior} object for this argument (see function \code{\link{getBranchShiftPriors}}). This will essentially ignore all rate shifts with marginal probabilities less than expected under the prior alone. Shifts are thus retained only if their marginal probability is greater than expected under the prior.
 
 For each shift configuration in the credible set, this function will compute the average diversification parameters. For example, the most frequent shift configuration (the maximum a posteriori shift configuration) might have 3 shifts, and 150 samples from your posterior (within the \code{bammdata} object) might show this shift configuration. However, the parameters associated with each of these shift configurations (the actual evolutionary rate parameters) might be different for every sample. This function returns the mean set of rate parameters for each shift configuration, averaging over all samples from the posterior that can be assigned to a particular shift configuration.
 
@@ -133,14 +133,14 @@ the descendants of any node. e.g. the descendants of node 89 can be found by
 
 }
 \references{
-\code{bamm-project.org}
+\url{bamm-project.org}
 }
 \author{
 Dan Rabosky
 }
 
 \seealso{
-\code{\link{distinctShiftConfigurations}}, \code{\link{plot.bammshifts}}, \code{\link{summary.credibleshiftset}}, \code{\link{plot.credibleshiftset}}	
+\code{\link{distinctShiftConfigurations}}, \code{\link{plot.bammshifts}}, \code{\link{summary.credibleshiftset}}, \code{\link{plot.credibleshiftset}}, \code{\link{getBranchShiftPriors}}	
 } 
  
 \examples{

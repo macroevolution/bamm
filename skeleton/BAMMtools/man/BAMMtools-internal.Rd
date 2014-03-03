@@ -1,6 +1,9 @@
 \name{BAMMtools-internal}
 \alias{arc}
 \alias{areEventConfigurationsIdentical}
+\alias{areShiftSetsEqual}
+\alias{as.bammdata}
+\alias{as.bammdata.credibleshiftset}
 \alias{as.phylo.bammdata}
 \alias{branchMeanRateExponential}
 \alias{colorMap}

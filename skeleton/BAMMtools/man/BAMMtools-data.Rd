@@ -8,7 +8,6 @@
 \alias{events.whales}
 \alias{events.primates}
 \alias{mass.primates}
-
 \docType{data}
 \title{
 BAMMtools datasets
@@ -53,15 +52,12 @@ The "core" \code{BAMM} output is included in the \emph{event data} files (\code{
 }
 \references{
 
-Vos R.A., Mooers A.Ø. 2006. A new dated supertree of the Primates. Chapter 5. In Inferring large phylogenies: the big tree problem (R Vos, Ph.D. thesis) Simon Fraser University.
+Vos R.A., Mooers A.O. 2006. A new dated supertree of the Primates. Chapter 5. In Inferring large phylogenies: the big tree problem (R Vos, Ph.D. thesis) Simon Fraser University.
 
-Redding D.W., DeWolff C., Mooers A.Ø. 2010. Evolutionary distinctiveness, threat status and ecological oddity in primates. Conserv. Biol. 24:1052–1058.
+Redding D.W., DeWolff C., Mooers A.O. 2010. Evolutionary distinctiveness, threat status and ecological oddity in primates. Conserv. Biol. 24:1052-1058.
 
-Steeman, M. E., M. B. Hebsgaard, R. E. Fordyce, S. W. Y. Ho, D. L. Rabosky, R. Nielsen, C. Rahbek, H.  Glenner, M. V. Sørensen, E. Willerslev.  2009. Evolution and radiation of extant whales. Systematic Biology. 58:573-585.
+Steeman, M. E., M. B. Hebsgaard, R. E. Fordyce, S. W. Y. Ho, D. L. Rabosky, R. Nielsen, C. Rahbek, H.  Glenner, M. V. Sorensen, E. Willerslev.  2009. Evolution and radiation of extant whales. Systematic Biology. 58:573-585.
 
 }
 
-\examples{
- 
-}
 \keyword{datasets}

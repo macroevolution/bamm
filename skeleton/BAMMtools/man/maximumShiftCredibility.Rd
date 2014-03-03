@@ -41,10 +41,6 @@ A vector of the index values of MCMC samples with shift configurations equal to 
 }
 }
 
-\references{
-
-}
-
 \author{
 Dan Rabosky
 }

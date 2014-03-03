@@ -6,6 +6,5 @@ Date: 2014-01-05
 Author: Dan Rabosky, Mike Grundler, Pascal Title, Joseph Brown, Carlos Anderson, Jeff Shi
 Maintainer: Dan Rabosky <dan.rabosky@gmail.com>
 Depends: ape
-Suggests: RColorBrewer
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Description: BAMMtools provides functions for analyzing and visualizing complex macroevolutionary dynamics
+License: GPL (>=2)

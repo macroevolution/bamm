@@ -18,9 +18,6 @@ an object of class \code{bammdata}
 the type of rate-tree to be computed. Options: "speciation" (default), "extinction", "ndr" (net diversification), and "trait"
 }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
 \value{
 A list with the following components:
   \item{phy}{

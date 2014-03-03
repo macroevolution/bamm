@@ -8,10 +8,10 @@
 #		shift configuration
 
 
-plot.bammshifts = function(sc, ephy, method="phylogram", pal="RdYlBu", 
+plot.bammshifts = function(x, ephy, method="phylogram", pal="RdYlBu", 
 rank=NULL, index=NULL, spex="s", legend=TRUE, add.freq.text=TRUE, ...) 
 {
-	if (class(sc) != "bammshifts") {
+	if (class(x) != "bammshifts") {
 		stop("arg sc must be of class 'bammshifts'");
 	}        	
 	if (class(ephy) != "bammdata") {
@@ -22,16 +22,16 @@ rank=NULL, index=NULL, spex="s", legend=TRUE, add.freq.text=TRUE, ...)
 		spex = "s";
 	}
 	if (is.null(rank) && is.null(index)) {
-		rank = sample.int(length(sc$shifts),1);
-		index = sc$samplesets[[rank]][sample.int(length(sc$samplesets[[rank]]),1)];
+		rank = sample.int(length(x$shifts),1);
+		index = x$samplesets[[rank]][sample.int(length(x$samplesets[[rank]]),1)];
 	}
 	else if (!is.null(rank) && is.null(index)) {
-		index = sc$samplesets[[rank]][sample.int(length(sc$samplesets[[rank]]),1)];
+		index = x$samplesets[[rank]][sample.int(length(x$samplesets[[rank]]),1)];
 	}
 	else if (is.null(rank) && !is.null(index)) {
 		rank <- {
-			for (i in 1:length(sc$sampleset)) {
-			    if (index %in% sc$sampleset[[i]]) {
+			for (i in 1:length(x$sampleset)) {
+			    if (index %in% x$sampleset[[i]]) {
 				    break;
 			    }
 			}
@@ -39,12 +39,12 @@ rank=NULL, index=NULL, spex="s", legend=TRUE, add.freq.text=TRUE, ...)
 		}
 	}
 	else {
-		if (index > length(sc$samplesets[[rank]])) {
+		if (index > length(x$samplesets[[rank]])) {
 			warning("arg index is not relative to the set of posterior samples of the given core shift configuration");
-			index = sc$samplesets[[rank]][1];
+			index = x$samplesets[[rank]][1];
 		}
 		else {
-    		index = sc$samplesets[[rank]][index];
+    		index = x$samplesets[[rank]][index];
 		}
 	}
 	
@@ -93,12 +93,12 @@ rank=NULL, index=NULL, spex="s", legend=TRUE, add.freq.text=TRUE, ...)
     }
     bg = rep("blue", length(AcDc));
     bg[which(AcDc == FALSE)] = "red";
-	cex = 0.75 + 5 * sc$marg.probs[as.character(getShiftNodesFromIndex(ephy, index))];
+	cex = 0.75 + 5 * x$marg.probs[as.character(getShiftNodesFromIndex(ephy, index))];
 	addBAMMshifts(sed, method, 1, cex=cex, bg=transparentColor(bg, 0.5),multi=par.reset);
 	if (add.freq.text) {
-		mtext(sprintf("core shift configuration: rank %i of %i", rank, length(sc$shifts)),3,line=0);
-		mtext(sprintf("sampled with frequency f = %.2g",sc$frequency[rank]),3,line=-1.25);
-		mtext(sprintf("showing subconfiguration %i of %i with this rank", match(index,sc$samplesets[[rank]]), length(sc$samplesets[[rank]])),1,line=-1.25);
+		mtext(sprintf("core shift configuration: rank %i of %i", rank, length(x$shifts)),3,line=0);
+		mtext(sprintf("sampled with frequency f = %.2g",x$frequency[rank]),3,line=-1.25);
+		mtext(sprintf("showing subconfiguration %i of %i with this rank", match(index,x$samplesets[[rank]]), length(x$samplesets[[rank]])),1,line=-1.25);
 	}
 	if (legend) {
 		par(mar=c(5.1,1.1,2.1,2.1));

@@ -30,7 +30,9 @@ Only compute Bayes factors for models sampled at least this many times in the po
   \item{threshprior}{
 Only compute Bayes factors for models sampled at least this many times during simulation of the prior.
 }
-
+\item{nbprior}{
+Use a negative binomial distribution to approximate the prior.	
+}
   \item{strict}{
 If TRUE, requires that both models i and j be sampled at least \code{threshpost} and \code{threshprior} times. Otherwise, only requires that one of the target models meet this condition to be included in the calculation.
 }
@@ -45,22 +47,13 @@ If \code{computeBayesFactors} gives a matrix \code{mm}, and \code{mm[2,1]} is 10
 \value{
 A matrix of pairwise Bayes factors between models.
 }
-\references{
 
-
-}
 \author{
 
 Dan Rabosky
 
 }
-\note{
 
-}
-
-\seealso{
-
-}
 \examples{
 data(mcmc.whales)
 data(prior.whales)

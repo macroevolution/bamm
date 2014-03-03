@@ -8,14 +8,16 @@ Summary of credible set of shift configurations from a \code{BAMM} analysis.
 Prints summary attributes of the \code{BAMM} credible set of shift configurations.
 }
 \usage{
-summary(css)
-print(css)
+\method{summary}{credibleshiftset}(object, ...)
+\method{print}{credibleshiftset}(x, ...)
 }
 \arguments{
-  \item{css}{
-an object of class \code{credibleshiftset}
+  \item{object,x}{
+an object of class \code{credibleshiftset}.
 }
-
+\item{...}{
+	additional arguments (unused).
+}
 }
 \details{
 Prints to console summary attributes of the XX\% credible set of shift configurations sampled using \code{BAMM}. Attributes printed include: the number of distinct configurations in the XX\% credible set and the posterior probability, cumulative probability, and number of rate shifts in the 9 most-probable shift configurations.

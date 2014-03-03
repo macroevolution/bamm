@@ -7,16 +7,18 @@ Summary of rate shift results from \code{BAMM} analysis.
 Summarizes the posterior distribution on the number of shifts.
 }
 \usage{
-S3 method for class \code{bammdata}:
-summary(ephy, display = 10)
+\method{summary}{bammdata}(object, display = 10, ...)
 }
 \arguments{
-  \item{ephy}{
-an object of class \code{bammdata}
+  \item{object}{
+an object of class \code{bammdata}.
 }
 
   \item{display}{
-an integer for the number of rows of the posterior to display
+an integer for the number of rows of the posterior to display.
+}
+\item{...}{
+	additional arguments (unused).
 }
 }
 \details{
@@ -35,14 +37,12 @@ Returns (invisibly) a dataframe with 2 components:
 
 }
 \references{
-\url{www.bamm-project.org}
+\url{bamm-project.org}
 }
 \author{
 Mike Grundler, Dan Rabosky
 }
  
-\seealso{
-}
 \examples{
 data(whales, events.whales)
 ephy = getEventData(whales,events.whales,nsamples=100)

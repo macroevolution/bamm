@@ -18,9 +18,7 @@ distinctShiftConfigurations(ephy, threshold)
 		Either an object of class \code{branchprior} or a numeric value indicating the minimum frequency at which a shift has to be sampled to be included in the calculation.
 	}
 }
-\details{
-	
-}
+
 \value{
 an object of class \code{bammshifts}. This is a list with the following components
 \item{marg.probs}{
@@ -44,9 +42,7 @@ $frequency[1] gives the most common shift configuration sampled.
 $shifts[[1]] gives the corresponding node indices for that configuration.
 $samplesets[[1]] gives the indices of samples with this configuration.
 }
-\references{
-	
-}
+
 \author{
 	Dan Rabosky
 }

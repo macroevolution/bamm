@@ -1,3 +1,3 @@
-print.branchprior <- function(x){
-	summary.branchprior(x);
+print.branchprior <- function(x, ...){
+	summary.branchprior(x, ...);
 }

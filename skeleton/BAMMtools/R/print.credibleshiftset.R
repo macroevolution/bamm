@@ -1,8 +1,5 @@
-
-print.credibleshiftset <- function(x){
-	
-	summary(x);
-	
+print.credibleshiftset <- function(x, ...){
+	summary.credibleshiftset(x, ...);
 }
 
 

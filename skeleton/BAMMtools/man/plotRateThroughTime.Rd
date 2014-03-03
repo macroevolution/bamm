@@ -108,9 +108,7 @@ If \code{plot = FALSE}, then a list is returned with the following components:
 \item{avg}{a vector of y-coordinates for mean or median rates used to plot the average rates line.}
 \item{times}{a vector of time values, used as x-coordinates in this plot function.}
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
+
 \author{
 Pascal Title
 }

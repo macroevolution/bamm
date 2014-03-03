@@ -31,8 +31,6 @@ This function allows users to extract a subtree from a big \code{bammdata} objec
 \author{
 Huateng Huang
 }
-\note{
-}
 
 \seealso{
 \code{\link{getmrca}}, \code{\link{plot.bammdata}}

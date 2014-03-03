@@ -1,4 +1,5 @@
 \name{getBranchShiftPriors}
+\alias{getBranchShiftPriors}
 \title{
 Compute expected percentiles of distribution of rate shifts per branch under prior
 }
@@ -44,7 +45,7 @@ Dan Rabosky
 }
 
 \seealso{
-\code{\link{distinctShiftConfigurations}}, \code{\link{plot.bammshifts}}, \code{\link{summary.credibleshiftset}}, \code{\link{plot.credibleshiftset}}	
+\code{\link{distinctShiftConfigurations}}, \code{\link{plot.bammshifts}}, \code{\link{summary.credibleshiftset}}, \code{\link{plot.credibleshiftset}}, \code{\link{credibleShiftSet}}	
 } 
  
 \examples{

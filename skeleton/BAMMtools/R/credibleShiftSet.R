@@ -1,6 +1,6 @@
 
 # Feb 28 2014
-credibleShiftSet <- function(ephy, set.limit=0.95, threshold){
+credibleShiftSet <- function(ephy, threshold, set.limit=0.95){
 	
 	dsc <- distinctShiftConfigurations(ephy, threshold);
 	cfreq <- cumsum(dsc$frequency);

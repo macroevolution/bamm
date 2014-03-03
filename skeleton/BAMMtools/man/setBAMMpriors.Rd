@@ -59,11 +59,5 @@ The function does not return anything. It simply performs some calculations and 
 Dan Rabosky
 }
  
-\seealso{
-
-}
-\examples{
-
-}
  
 \keyword{ models}

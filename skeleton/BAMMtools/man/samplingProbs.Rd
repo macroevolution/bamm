@@ -50,8 +50,7 @@ The resultant table must contain one row for each species in the phylogeny, alon
 The first line must contain the overall sampling fraction for the phylogeny and must be written as tab-delimited, with no headers.
 }
 
-\seealso{
-}
+
 \examples{
 #Generate dummy data
 tree <- read.tree(text="(((t1:0.678555,(t2:0.064823,t3:0.064823):0.613732):0.291158,((t4:0.07812,t5:0.07812):0.019788,t6:0.097908):0.871805):0.030287,(t7:0.68478,(t8:0.259145,t9:0.259145):0.425635):0.31522);")
@@ -77,5 +76,3 @@ samplingProbs(tree, cladeTable = spTable, cladeRichness = NULL, globalSampling =
 
 }
 
-\keyword{
-}
