@@ -18,7 +18,7 @@ an object of class \code{bammdata}
 the desired limit to the credible set. A value of 0.95 will return the 95\% credible set of shift configurations.
 }
   \item{threshold}{
-Marginal probability threshold for including nodes in the enumeration of distinct shift configurations. Recommended value = 0.01. See details.
+Either an object of class \code{branchprior}, or a numeric value giving the marginal probability threshold for including nodes in the enumeration of distinct shift configurations.  
 }
 }
 \details{
@@ -28,8 +28,8 @@ To understand how this calculation is performed, one must first distinguish betw
 
 If we compute distinct shift configurations with every sampled shift (including those shifts with very low marginal probabilities), the number of distinct shift configurations will be overwhelmingly high. However, most of these configurations are functionally identical because they contain the same core shifts and differ only in transient shifts that have very low marginal probabilities. 
 
-By specifying a \code{threshold} argument, the user can choose to ignore shifts with low probabilities during enumeration of distinct shift configurations. We suggest using this option. Rate shifts with marginal probabilities less than \code{threshold} are simply ignored. 
- 
+By specifying a \code{threshold} argument, the user can choose to ignore shifts with low probabilities during enumeration of distinct shift configurations. Ideally, you should include a \code{branchprior} object for this argument (see function \link[BAMMtools]{getBranchShiftPriors}). This will essentially ignore all rate shifts with marginal probabilities less than expected under the prior alone. 
+
 For each shift configuration in the credible set, this function will compute the average diversification parameters. For example, the most frequent shift configuration (the maximum a posteriori shift configuration) might have 3 shifts, and 150 samples from your posterior (within the \code{bammdata} object) might show this shift configuration. However, the parameters associated with each of these shift configurations (the actual evolutionary rate parameters) might be different for every sample. This function returns the mean set of rate parameters for each shift configuration, averaging over all samples from the posterior that can be assigned to a particular shift configuration.
 
 See the \code{examples} below for a worked example.
@@ -55,9 +55,8 @@ Like \code{frequency}, but contains the cumulative frequencies
 }
 
 \item{threshold}{
-Threshold value for identifying "core" shifts. Any topological shift locations with a marginal probability lower than this value were ignored during enumeration of the credible set.
+Threshold for identifying "core" shifts.  
 }
-
 \item{number.distinct}{
 Number of distinct shift configurations in the credible set
 }
@@ -147,8 +146,13 @@ Dan Rabosky
 \examples{
 data(events.whales)
 data(whales)
+data(prior.whales)
 ed <- getEventData(whales, events.whales)
-cset <- credibleShiftSet(ed, threshold = 0.05)
+
+# Here we get the prior distribution on branch-specific shifts:
+priordist <- getBranchShiftPriors(whales, prior.whales)
+
+cset <- credibleShiftSet(ed, threshold = priordist)
 
 # Here is the total number of samples in the posterior:
 length(ed$eventData)
@@ -171,7 +175,8 @@ cset$cumulative
 
 cset$indices[[1]]
  
- 
+# Now we can plot the credible set:
+plot.credibleshiftset(cset, plotmax=4) 
  
 }
  

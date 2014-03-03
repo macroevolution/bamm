@@ -5,7 +5,17 @@ credibleShiftSet <- function(ephy, set.limit=0.95, threshold=0.01){
 	dsc <- distinctShiftConfigurations(ephy, threshold = threshold);
 	cfreq <- cumsum(dsc$frequency);
 	cut <- min(which(cfreq >= set.limit));
-	nodeset <- dsc$marg.probs[dsc$marg.probs >= threshold];
+	nodeset <- NULL;
+
+	if (class(threshold) == 'branchprior'){
+		dsc$marg.probs <- dsc$marg.probs[as.character(threshold$edge[,2])];	
+		nodeset <- dsc$margprobs[dsc$margprobs >= threshold$edge.length];
+	}else if (class(threshold) == 'numeric'){
+		nodeset <- dsc$marg.probs[dsc$marg.probs >= threshold];		
+	}else{
+		stop("arg threshold is of the wrong class\n");
+	}
+
  	
  	shiftnodes <- dsc$shifts[1:cut];
 	indices <- dsc$samplesets[1:cut];

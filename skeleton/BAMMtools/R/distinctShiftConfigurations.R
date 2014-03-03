@@ -18,10 +18,20 @@
 
 
 
-distinctShiftConfigurations <- function(ephy, threshold = 0.05) {
+distinctShiftConfigurations <- function(ephy, threshold = 0.01) {
 	
 	mm <- marginalShiftProbsTree(ephy);
-	goodnodes <- mm$edge[,2][mm$edge.length >= threshold];
+	
+	if (class(threshold) == 'branchprior'){
+		goodnodes <- mm$edge[,2][mm$edge.length >= threshold$edge.length];
+	}else if (class(threshold) == 'numeric'){
+		goodnodes <- mm$edge[,2][mm$edge.length >= threshold];		
+	}else{
+		stop('Threshold is of wrong class\n');
+	}
+	
+	
+
 	xlist <- list();
 	for (i in 1:length(ephy$eventData)) {
 		xlist[[i]] <- intersect(goodnodes, ephy$eventData[[i]]$node);

@@ -2,21 +2,20 @@
 \alias{distinctShiftConfigurations}
 
 \title{
-	Sample distinct rate shift configurations from the posterior
+Identify distinct rate shift configurations
 }
 \description{
-	
+Identify topologically distinct rate shift configurations that were sampled with BAMM, and assign each sample in the posterior to one of the distinct shift configurations.	
 }
 \usage{
-distinctRateShiftConfigurations(ephy, threshhold=0.05)
+distinctShiftConfigurations(ephy, threshhold=0.01)
 }
 \arguments{
 	\item{ephy}{
 		an object of class \code{bammdata}.
 	}
 	\item{threshold}{
-		a numeric indicating the minimum frequency at which a shift has to be sampled
-		to be included in the calculation.
+		Either an object of class \code{branchprior} or a numeric indicating the minimum frequency at which a shift has to be sampled to be included in the calculation.
 	}
 }
 \details{
@@ -38,7 +37,7 @@ A list of sample indices that reduce to each of the unique shift sets.
 A vector of frequencies of each distinct shift configuration	.
 }
 \item{threshold}{
-The marginal probability threshold for nodes (ignores all nodes less than this value).	
+The marginal probability threshold for nodes (ignores all nodes less than this value). Alternatively, an object of class \code{branchprior} containing this information.	
 }	
 Results are sorted by frequency:
 $frequency[1] gives the most common shift configuration sampled.
@@ -52,13 +51,23 @@ $samplesets[[1]] gives the indices of samples with this configuration.
 	Dan Rabosky
 }
 \seealso{
-	\code{\link{plot.bammshifts}}
+	\code{\link{plot.bammshifts}}, \code{\link{credibleShiftSet}}
 }
 \examples{
 library(BAMMtools)
-data(whales, events.whales)
+data(whales, events.whales, prior.whales)
+
+# Get the prior distribution on the number of shifts per branch:
+bp <- getBranchShiftPriors(whales, prior.whales)
+
+
 ed <- getEventData(whales, events.whales, burnin=0.25)
 
-sc <- distinctShiftConfigurations(ed, threshold=0.05)
-plot(sc, ed)
+sc <- distinctShiftConfigurations(ed, threshold=bp)
+
+plot.bammshifts(sc, ed, rank=1)
+
 }
+
+
+
