@@ -8,7 +8,7 @@ Computes the XX\% credible set of macroevolutionary rate shift configurations fr
 
 }
 \usage{
-credibleShiftSet(ephy, set.limit = 0.95, threshold = 0.01)
+credibleShiftSet(ephy, set.limit = 0.95, threshold)
 }
 \arguments{
   \item{ephy}{
@@ -18,7 +18,7 @@ an object of class \code{bammdata}
 the desired limit to the credible set. A value of 0.95 will return the 95\% credible set of shift configurations.
 }
   \item{threshold}{
-Either an object of class \code{branchprior}, or a numeric value giving the marginal probability threshold for including nodes in the enumeration of distinct shift configurations.  
+Either an object of class \code{branchprior}, or a numeric value giving the marginal probability threshold for including nodes in the enumeration of distinct shift configurations. See \code{\link[BAMMtools]{getBranchShiftPrior}}
 }
 }
 \details{

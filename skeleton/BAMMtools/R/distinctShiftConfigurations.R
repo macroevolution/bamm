@@ -18,8 +18,7 @@
 
 
 
-distinctShiftConfigurations <- function(ephy, threshold = 0.01) {
-	
+distinctShiftConfigurations <- function(ephy, threshold) {
 	mm <- marginalShiftProbsTree(ephy);
 	
 	if (class(threshold) == 'branchprior'){

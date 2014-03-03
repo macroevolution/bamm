@@ -129,9 +129,9 @@ ephy <- getEventData(whales,events.whales)
 plotRateThroughTime(ephy)
 
 #Plot two processes separately with 90% CI and loess smoothing
-plotRateThroughTime(ephy, intervals=seq(from=0,0.9,by=0.01), smooth=T, node=141, nodetype='exclude', ylim=c(0,1.2))
-plotRateThroughTime(ephy, intervals=seq(from=0,0.9,by=0.01), smooth=T, node=141, nodetype='include', add=T, intervalCol='orange')
-legend('topleft',legend=c('Dolphins','Whales'),col='red',fill=c('orange','blue'),border=F,lty=1,lwd=2,merge=T,seg.len=0.6)
+plotRateThroughTime(ephy, intervals=seq(from=0,0.9,by=0.01), smooth=TRUE, node=141, nodetype='exclude', ylim=c(0,1.2))
+plotRateThroughTime(ephy, intervals=seq(from=0,0.9,by=0.01), smooth=TRUE, node=141, nodetype='include', add=TRUE, intervalCol='orange')
+legend('topleft',legend=c('Dolphins','Whales'),col='red',fill=c('orange','blue'),border=FALSE,lty=1,lwd=2,merge=TRUE,seg.len=0.6)
 }
 
 

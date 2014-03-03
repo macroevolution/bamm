@@ -50,6 +50,6 @@ data(events.whales)
 ed <- getEventData(whales, events.whales)
 ed2 <- subsetEventData(ed, index = 1:20)
 ratetree <- getMeanBranchLengthTree(ed2, rate='speciation')
-plot(ratetree$phy, show.tip.label=F)
+plot(ratetree$phy, show.tip.label=FALSE)
 }
 \keyword{ models}

@@ -1,9 +1,12 @@
 
-getBestShiftConfiguration <- function(x, threshold=0.01){
+getBestShiftConfiguration <- function(x, threshold){
 	
-
+	if (class(threshold) != 'branchprior' & class(threshold) != 'numeric'){
+		stop("arg threshold is not valid\n")
+	}
+	
 	if (class(x) == 'bammdata'){
-		x <- credibleShiftSet(x, threshold);	
+		x <- credibleShiftSet(x, set.limit = 0.95, threshold = threshold);	
 	}else if (class(x) == 'credibleshiftset'){
 
 	}else{

@@ -1,15 +1,15 @@
 
 # Feb 28 2014
-credibleShiftSet <- function(ephy, set.limit=0.95, threshold=0.01){
+credibleShiftSet <- function(ephy, set.limit=0.95, threshold){
 	
-	dsc <- distinctShiftConfigurations(ephy, threshold = threshold);
+	dsc <- distinctShiftConfigurations(ephy, threshold);
 	cfreq <- cumsum(dsc$frequency);
 	cut <- min(which(cfreq >= set.limit));
 	nodeset <- NULL;
 
 	if (class(threshold) == 'branchprior'){
 		dsc$marg.probs <- dsc$marg.probs[as.character(threshold$edge[,2])];	
-		nodeset <- dsc$margprobs[dsc$margprobs >= threshold$edge.length];
+		nodeset <- dsc$marg.probs[dsc$marg.probs >= threshold$edge.length];
 	}else if (class(threshold) == 'numeric'){
 		nodeset <- dsc$marg.probs[dsc$marg.probs >= threshold];		
 	}else{

@@ -9,7 +9,7 @@ Get the best (sampled) rate shift configuration from a BAMM analysis
 Get the rate shift configuration with the maximum a posteriori probability, e.g., the shift configuration that was sampled most frequently with \code{BAMM}.
 }
 \usage{
-getBestShiftConfiguration(x, threshold = 0.01)
+getBestShiftConfiguration(x, threshold)
 }
 
 \arguments{
@@ -17,7 +17,7 @@ getBestShiftConfiguration(x, threshold = 0.01)
 either a \code{bammdata} object or a \code{credibleshiftset} object
 }
   \item{threshold}{
-Marginal probability threshold for including nodes in the enumeration of distinct shift configurations. Recommended value = 0.01. See \link[BAMMtools]{credibleShiftSet} for more information.
+Marginal probability threshold for including nodes in the enumeration of distinct shift configurations. Usually a \code{branchprior} object containing this information (see examples below). Alternatively, a numeric value. See \link[BAMMtools]{credibleShiftSet} for more information.
 }
 }
 \details{
@@ -43,13 +43,17 @@ library(BAMMtools)
 data(whales, events.whales)
 ed <- getEventData(whales, events.whales, burnin=0.1)
 
+# Get prior distribution on shifts-per-branch:
+data(prior.whales)
+bp <- getBranchShiftPriors(whales, prior.whales)
+
 # Pass the event data object in to the function:
-best <- getBestShiftConfiguration(ed)
+best <- getBestShiftConfiguration(ed, threshold = bp)
 plot.bammdata(best, lwd=2)
 addBAMMshifts(best, cex=2)
 
 # Now we can also work with the credible shift set:
-css <- credibleShiftSet(ed) 
+css <- credibleShiftSet(ed, threshold = bp) 
 
 summary(css)
 
@@ -60,7 +64,7 @@ summary(css)
 css$eventData[[1]];
 
 # Get bammdata representation of MAP configuration:
-best <- getBestShiftConfiguration(css);
+best <- getBestShiftConfiguration(css, threshold = bp);
 
 plot.bammdata(best)
 

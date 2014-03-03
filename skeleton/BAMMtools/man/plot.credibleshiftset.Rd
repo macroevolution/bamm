@@ -65,6 +65,10 @@ Mike Grundler
 data(events.whales)
 data(whales)
 ed <- getEventData(whales, events.whales)
-cset <- credibleShiftSet(ed)
+
+# Get branch prior on number of shifts:
+data(prior.whales)
+bp <- getBranchShiftPriors(whales, prior.whales)
+cset <- credibleShiftSet(ed, threshold = bp)
 plot(cset)
 }

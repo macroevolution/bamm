@@ -58,8 +58,8 @@ cst <- cumulativeShiftProbsTree(ed)
 #compare the two types of shift trees side-by-side:
 plot.new()
 par(mfrow=c(1,2))
-plot.phylo(mst, no.margin=T, show.tip.label=F)
-plot.phylo(cst, no.margin=T, show.tip.label=F)
+plot.phylo(mst, no.margin=TRUE, show.tip.label=FALSE)
+plot.phylo(cst, no.margin=TRUE, show.tip.label=FALSE)
 }
  
 \keyword{ graphics}

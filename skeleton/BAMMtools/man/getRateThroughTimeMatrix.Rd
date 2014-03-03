@@ -91,7 +91,7 @@ xv <- c(rmat$times, rev(rmat$times))
 yv <- c(qq[1,], rev(qq[3,]))
 
 # Add the confidence polygon on rate distributions:
-polygon(xv, yv, col='gray80', border=F)
+polygon(xv, yv, col='gray80', border=FALSE)
 
 # Add the median rate line:
 lines(rmat$times, qq[2,], lwd=3, col='red')
@@ -102,7 +102,7 @@ axis(2, at=seq(-0.2, 1, by=0.2), las=1)
 
 ####### Now we will show the actual grid used for rate calculations:
 
-plot(whales, show.tip.label=F)
+plot(whales, show.tip.label=FALSE)
 axisPhylo()
 
 mbt <- max(branching.times(whales))
