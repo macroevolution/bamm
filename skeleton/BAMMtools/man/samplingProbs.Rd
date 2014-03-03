@@ -28,7 +28,7 @@ percent sampling for the backbone of the phylogeny
 path + output file name
 }
 \item{writeToDisk}{
-boolean, should the table be written to disk, defaults to \code{TRUE}.
+a logical, should the table be written to disk, defaults to \code{TRUE}.
 }
 }
 \details{
@@ -38,7 +38,7 @@ If the table only contains those species in the phylogeny, then a vector \code{c
 that contains known clade richness. If the cladeTable contains more than the species in the phylogeny, 
 then cladeRichness should be set to \code{NULL}.
 The \code{globalSampling} value should represent the overall completeness of species sampling in terms of major clades.
-See the BAMM documentation for additional details.
+See \url{bamm-project.org} for additional details.
 }
 
 \author{
