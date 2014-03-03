@@ -15,7 +15,7 @@ distinctShiftConfigurations(ephy, threshhold)
 		an object of class \code{bammdata}.
 	}
 	\item{threshold}{
-		Either an object of class \code{branchprior} or a numeric indicating the minimum frequency at which a shift has to be sampled to be included in the calculation.
+		Either an object of class \code{branchprior} or a numeric value indicating the minimum frequency at which a shift has to be sampled to be included in the calculation.
 	}
 }
 \details{
@@ -37,7 +37,7 @@ A list of sample indices that reduce to each of the unique shift sets.
 A vector of frequencies of each distinct shift configuration	.
 }
 \item{threshold}{
-The marginal probability threshold for nodes (ignores all nodes less than this value). Alternatively, an object of class \code{branchprior} containing this information.	
+An object of class \code{branchprior} containing the marginal probability for each branch that was used to distinguish between core and non-core shifts. Alternatively, a single numeric value (we ignore all shift locations with marginal probabilities less than this value during the enumerating of distinct shift configuratins). 
 }	
 Results are sorted by frequency:
 $frequency[1] gives the most common shift configuration sampled.
