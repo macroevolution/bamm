@@ -54,7 +54,6 @@ $samplesets[[1]] gives the indices of samples with this configuration.
 	\code{\link{plot.bammshifts}}, \code{\link{credibleShiftSet}}
 }
 \examples{
-library(BAMMtools)
 data(whales, events.whales, prior.whales)
 
 # Get the prior distribution on the number of shifts per branch:

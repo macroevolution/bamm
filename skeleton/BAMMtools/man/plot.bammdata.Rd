@@ -139,8 +139,6 @@ returning unless \code{multi = TRUE}.
 \code{\link{colorRampPalette}}	
 }
 \examples{
-	
-library(BAMMtools)
 data(whales, events.whales)
 ed <- getEventData(whales, events.whales, burnin=0.25)
 

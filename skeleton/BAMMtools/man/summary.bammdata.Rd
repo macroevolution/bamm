@@ -44,7 +44,6 @@ Mike Grundler, Dan Rabosky
 \seealso{
 }
 \examples{
-library(BAMMtools)
 data(whales, events.whales)
 ephy = getEventData(whales,events.whales,nsamples=100)
 summary(ephy)

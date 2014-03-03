@@ -39,7 +39,6 @@ Dan Rabosky
 \link{getEventData},  \link{credibleShiftSet}, \link{plot.credibleshiftset}, \link{plot.bammdata}
 }
 \examples{
-library(BAMMtools)
 data(whales, events.whales)
 ed <- getEventData(whales, events.whales, burnin=0.1)
 
