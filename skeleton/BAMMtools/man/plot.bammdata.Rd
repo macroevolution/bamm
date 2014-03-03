@@ -104,7 +104,7 @@ Additionally, any vector of valid named colors may also be used. The only restri
 Internally \code{plot.bammdata} checks whether or not rates have been calculated by looking for a component named
 "dtrates" in the \code{bammdata} object. If rates have not been calculated \code{plot.bammdata} calls \code{dtRates} with \code{tau = 0.01}. Specifying smaller values for \code{tau} will result in smoother-looking rate changes on the tree. Note that smaller values of \code{tau} require more computation. If the \code{colorbreaks} argument is \code{NULL} a map of rates to colors is also made by calling \code{assignColorBreaks} with \code{NCOLORS = 64}. A user supplied \code{colorbreaks} argument can be passed as well. This allows one to plot parts of a tree while preserving the map of rates to colors that was made using rates for the entire tree.
 
-If \code{plot.bammdata} is called repeatedly with the same \code{bammdata} object computation can be reduced by first calling \code{dtRates} in the global environment.
+If \code{plot.bammdata} is called repeatedly with the same \code{bammdata} object, computation can be reduced by first calling \code{dtRates} in the global environment.
 }
 \value{
 Returns (invisibly) a list with three components. 
@@ -170,7 +170,7 @@ plot(sed, lwd = 3, colorbreaks = xx$colorbreaks)
 
 #multi-panel plotting and adding shifts of specific posterior samples
 par(mfrow=c(2,3),mar=c(5,1,1,1))
-samples = sample(1:length(ed$eventData), 6)
+samples <- sample(1:length(ed$eventData), 6)
 ed <- dtRates(ed, 0.005)
 xx <- plot(ed, show=FALSE) #individual plots will have a color map relative to the mean
 for (i in 1:6) {

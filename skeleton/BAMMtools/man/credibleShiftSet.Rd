@@ -22,7 +22,7 @@ the desired limit to the credible set. A value of 0.95 will return the 95\% cred
 }
 }
 \details{
-Computes the 95\% credible set (or XX\% credible set, depending on \code{set.limit} of diversification shift configurations sampled using BAMM. This is analogous to a credible set of phylogenetic tree topologies from a Bayesian phylogenetic analysis. 
+Computes the 95\% credible set (or XX\% credible set, depending on \code{set.limit}) of diversification shift configurations sampled using BAMM. This is analogous to a credible set of phylogenetic tree topologies from a Bayesian phylogenetic analysis. 
 
 To understand how this calculation is performed, one must first distinguish between "core" and "non-core" rate shifts. Because the BAMM algorithm is always proposing (and deleting) shifts during simulation of the posterior, it is often the case that - for any sample - there is at least one non-core shift that has been proposed and accepted but which is not really improving the ability to model the data. Hence, such non-core shift locations will have extremely low marginal probabilities overall. Core shifts are those that do contribute to the ability to model the data and which are favored in the posterior as they improve the posterior probability of the data. 
 
@@ -43,7 +43,7 @@ A vector of frequencies of shift configurations, including those that account fo
 }
 
 \item{shiftnodes}{
-A list of the "core" rate shifts (marginal probability > threshold) that occurred in each distinct shift configuration in the credible set. The i'th vector from this list gives the core shift nodes for the i'th shift configuration. They are sorted by frequency, so \code{x\$shiftnodes[[1]]} gives the shift nodes that occurred together in the shift configuration with the highest posterior probability.
+A list of the "core" rate shifts (marginal probability > threshold) that occurred in each distinct shift configuration in the credible set. The i'th vector from this list gives the core shift nodes for the i'th shift configuration. They are sorted by frequency, so \code{x$shiftnodes[[1]]} gives the shift nodes that occurred together in the shift configuration with the highest posterior probability.
 }
 
  \item{indices}{
@@ -76,10 +76,10 @@ In addition, a number of components that are defined similarly in class \code{ph
 \item{end}{The ending time of each branch in absolute time.}
 
 \item{numberEvents}{
-An integer vector with the number of core events contained in \code{ephy} for each shift configuration in the credible set. The length of this vector is equal to the number of distinct shift configurations in the credible set.
+An integer vector with the number of core events contained in the \code{bammdata} object for each shift configuration in the credible set. The length of this vector is equal to the number of distinct shift configurations in the credible set.
 }
 \item{eventData}{
-A list of dataframes. Each element holds the average rate and location parameters for all samples from the posterior that were assigned to a particular distinct shift configuration.Each row in a dataframe holds the data for a single event.
+A list of dataframes. Each element holds the average rate and location parameters for all samples from the posterior that were assigned to a particular distinct shift configuration. Each row in a dataframe holds the data for a single event.
 Data associated with an event are: \code{node} - a node number. This identifies 
 the branch where the event originates. \code{time} - this is the absolute time on 
 that branch where the event originates (with the root at time 0). \code{lam1} - an initial rate of speciation or trait evolution.
@@ -88,7 +88,7 @@ that branch where the event originates (with the root at time 0). \code{lam1} - 
 See 'Details' in the documentation for \code{getEventData} for more information.
 }
 \item{eventVectors}{
-A list of integer vectors. Each element is for a single shift configuration in the posterior. For each branch in \code{ephy}, gives the index of the event that governing the (tipwards) end of the branch. Branches are ordered increasing here and elsewhere.
+A list of integer vectors. Each element is for a single shift configuration in the posterior. For each branch in the \code{bammdata} object, gives the index of the event governing the (tipwards) end of the branch. Branches are ordered increasing here and elsewhere.
 }
 \item{eventBranchSegs}{
 A list of matrices. Each element of the list is a single distinct shift configuration.
@@ -96,12 +96,12 @@ Each matrix has four columns: \code{Column 1} identifies a node in \code{phy}.
 \code{Column 2} identifies the beginning time of the branch or segment 
 of the branch that subtends the node in \code{Column 1}. \code{Column 3} identifies the 
 ending time of the branch or segment of the branch that subtends the node in \code{Column 1}. 
-\code{Column 4} identifies the index of the event that obtains along the branch or segment 
+\code{Column 4} identifies the index of the event that occurs along the branch or segment 
 of the branch that subtends the node in \code{Column 1}.
 }
 \item{tipStates}{
 A list of integer vectors. Each element is a single distinct shift configuration.
-For each tip the index of the event that obtains along the branch subtending the tip.
+For each tip the index of the event that occurs along the branch subtending the tip.
 Tips are ordered increasing here and elsewhere.
 }
 \item{tipLambda}{

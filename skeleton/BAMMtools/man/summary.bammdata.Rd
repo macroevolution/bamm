@@ -24,7 +24,7 @@ an integer for the number of rows of the posterior to display.
 \details{
 Prints to console the number of posterior samples and the posterior 
 distribution on the number of shifts, which is just the fraction of 
-samples in the posterior having 0,1,2,...n shifts.
+samples in the posterior having 0, 1, 2,...n shifts.
 }
 \value{
 Returns (invisibly) a dataframe with 2 components:
@@ -45,7 +45,7 @@ Mike Grundler, Dan Rabosky
  
 \examples{
 data(whales, events.whales)
-ephy = getEventData(whales,events.whales,nsamples=100)
+ephy <- getEventData(whales,events.whales,nsamples=100)
 summary(ephy)
 }
 

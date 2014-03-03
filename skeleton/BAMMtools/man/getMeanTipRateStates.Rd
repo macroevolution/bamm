@@ -17,7 +17,7 @@ an object of class \code{bammdata}.
 the type of rate to return: either \code{speciation}, \code{extinction}, \code{netdiv}, or \code{trait}.
 }
   \item{use.names}{
-boolean: should the returned vector be named with taxon names, defaults to \code{TRUE}.
+logical: should the returned vector be named with taxon names, defaults to \code{TRUE}.
 }
 }
 

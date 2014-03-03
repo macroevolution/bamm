@@ -16,7 +16,7 @@ maximumShiftCredibility(ephy, maximize = "product")
 an object of class \code{BAMMdata}
 }
   \item{maximize}{
-Maximize the marginal probability of the product or sum of branch-specific shifts (see details)
+Maximize the marginal probability of the product or sum of branch-specific shifts
 }
 }
 \details{

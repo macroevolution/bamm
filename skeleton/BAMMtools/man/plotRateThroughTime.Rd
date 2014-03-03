@@ -11,13 +11,13 @@ plotRateThroughTime(ephy, useMedian = TRUE, intervals=seq(from = 0,to = 1,by = 0
 }
 \arguments{
   \item{ephy}{
-object of class \code{bammdata} or \code{bamm-ratematrix}.
+object of class \code{bammdata} or \code{bamm-ratematrix}
 }
   \item{useMedian}{
-boolean: will plot median if TRUE, mean if FALSE.
+a logical: will plot median if TRUE, mean if FALSE
 }
   \item{intervals}{
-if NULL, no intervals will be plotted, otherwise a vector of quantiles must be supplied (these will define shaded polygons).
+if NULL, no intervals will be plotted, otherwise a vector of quantiles must be supplied (these will define shaded polygons)
 }
   \item{ratetype}{
 if 'auto', defaults to speciation (for diversification) or beta (for traits). 
@@ -27,7 +27,7 @@ Can alternatively specify 'netdiv' or 'extinction'.
 number of time slices used to generate rates through time.
 }
   \item{smooth}{
-boolean: whether or not to apply loess smoothing.
+a logical: whether or not to apply loess smoothing.
 }
   \item{smoothParam}{
 loess smoothing parameter, ignored if smooth = FALSE.
@@ -55,7 +55,7 @@ if 'include', rates will be plotted only for the clade descended from \code{node
 If 'exclude', the clade descended from \code{node} will be left out of the calculation of rates. 
 }
   \item{plot}{
-boolean: if TRUE, a plot will be returned, if FALSE, the data for the plot will be returned.
+a logical: if TRUE, a plot will be returned, if FALSE, the data for the plot will be returned.
 }
   \item{cex.axis}{
 size of axis tick labels.
@@ -89,10 +89,10 @@ so if plotting till the present, \code{xlim[2]==0}. Can also be 'auto'.
 vector of length 2 with min and max rates for y axis. Can also be 'auto'.
 }
   \item{add}{
-boolean: should rates be added to an existing plot.
+a logical: should rates be added to an existing plot.
 }
   \item{axis.labels}{
-boolean: if TRUE, axis labels will be plotted.
+a logical: if TRUE, axis labels will be plotted.
 }
 }
 \details{

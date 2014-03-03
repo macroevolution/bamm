@@ -38,7 +38,8 @@ The prior datasets (\code{prior.primates} and \code{prior.whales}) are the corre
 
 The "core" \code{BAMM} output is included in the \emph{event data} files (\code{events.whales} and \code{events.primates}). These are all the parameters sampled with MCMC that are relevant to reconstructing the nature and location of evolutionary rate dynamics across a phylogeny. Please refer to \code{BAMM} documentation for a detailed overview of this output, but a brief description is as follows:
 
-\code{generation}: The index value of the state in the MCMC simulation (the "generation")
+\code{generation}: The index value of the state in the MCMC simulation (the "generation").
+
 \code{leftchild, rightchild}: This defines a unique topological location where a rate shift was sampled. Specifically, for given right-left pair, the shift is sampled on the branch leading to the node from which \code{rightchild} and \code{leftchild} are descended (these two taxa are part of the spanning set of taxa for the node). If \code{leftchild} is "NA", this simply means that the shift was sampled on a terminal branch.
 
 \code{abstime}: The absolute occurrence time of the shift, assuming that the time of the root node is 0.0.
