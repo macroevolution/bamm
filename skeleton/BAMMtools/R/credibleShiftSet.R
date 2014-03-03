@@ -142,7 +142,7 @@ credibleShiftSet <- function(ephy, set.limit=0.95, threshold){
 		tipMu[[i]] <- tipmu;	
  	}
  	
- 	obj <- as.phylo.bammdata(ed);
+ 	obj <- as.phylo.bammdata(ephy);
  	
 	obj$begin <- ephy$begin;
 	obj$end <- ephy$end; 	
