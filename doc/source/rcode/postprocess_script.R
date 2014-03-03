@@ -31,7 +31,11 @@ addBAMMshifts(e2, cex=2)
 #########################################
 ########   Bayesian credible set of shifts
 
-css <- credibleShiftSet(edata)
+data(prior.whales)
+priorshifts <- getBranchShiftPriors(whales, prior.whales)
+dss <- distinctShiftConfigurations(edata, priorshifts)
+
+css <- credibleShiftSet(edata, threshold = priorshifts)
 
 # Number of shift configurations in the credible set:
 css$number.distinct
@@ -47,7 +51,7 @@ plot.credibleshiftset(css, plotmax=9, legend=F)
 #########################################
 ########   Best shift configuration
 
-best <- getBestShiftConfiguration(edata);
+best <- getBestShiftConfiguration(edata, threshold = priorshifts);
 plot.bammdata(best, lwd=2)
 addBAMMshifts(best, cex=2.5)
 
@@ -174,6 +178,7 @@ plotRateThroughTime(edata, node = mrca, nodetype = "exclude", ylim=c(0, 0.7))
 rtt_subtree <- getRateThroughTimeMatrix(edata, node = mrca)
 
 ###########
+
 
 
 

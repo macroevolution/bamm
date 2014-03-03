@@ -115,6 +115,8 @@ You can convey this information in several possible ways. You can directly indic
 But don't get hung up on the fact that your shift probabilities are less than 0.95. Even *very* strongly supported rate heterogeneity will generally be associated with marginal shift probabilities < 0.95. As discussed :ref:`here<whalemarg1>`, you can (and often will) have exceptionally strong evidence for rate heterogeneity even if any given branch has marginal shift probabilities that do not appear particularly high. **Marginal shift probabilities tell you very little about the probability of rate heterogeneity in your dataset**. In principle, you could have high confidence that your data were shaped by a very large number of rate shifts, but at the same time find that no single branch has a marginal probability exceeding 0.10. 
 
 
+.. _coreshifts:
+
 Identifying the distinct shift configurations
 ---------------------------------------
 For any given phylogenetic tree, there are many possible **topologically distinct shift configurations**. A topologically distinct shift configuration on a phylogeny is one that is distinguishable from all other shift configurations by the presence or absence of a rate shift on at least one branch. The total possible number of **distinct shift configurations**, or *D*, for a given tree with *N* branches is simply
@@ -124,7 +126,7 @@ For any given phylogenetic tree, there are many possible **topologically distinc
  
 This includes one shift configuration for the case where there are no rate shifts, one configuration for the case where every branch has a rate shift, and all combinations between those two extremes. This is a large number for real phylogenies. 
 
-In reality, if we were to enumerate every single **distinct shift configuration**, we would end up with a very large set of shift configurations. However, the vast majority of these would contain rate shifts of no significance whatsoever. During simulation of the posterior, BAMM is continuously proposing new shifts (and deleting shifts), and - if you simulate for long enough- you will end up with non-zero marginal shift probabilities for every branch in the tree. For example, suppose you run BAMM on a dataset and observe the following shift configurations in your posterior distribution:
+In reality, if we were to enumerate every single **distinct shift configuration**, we would end up with a very large set of shift configurations. However, the vast majority of these would contain rate shifts of no significance. During simulation of the posterior, BAMM is continuously proposing new shifts (and deleting shifts), and - if you simulate for long enough- you will end up with non-zero marginal shift probabilities for every branch in the tree. In other words, the mere fact that you have placed a non-zero prior on the number of shifts on the tree means that you will detect shifts on every branch if you run BAMM for long enough. For example, suppose you run BAMM on a dataset and observe the following shift configurations in your posterior distribution:
 
 .. _distinctshifts_illustrate_A:  
 .. figure:: figs/xdistinct_illustrate_A.png
@@ -138,7 +140,16 @@ The number *f* associated with each configuration gives the corresponding poster
    :width: 200
    :align: center
 
-In reality, every BAMM analysis would generate enormous numbers of distinct shift configurations if we tracked every trivial occurrence of a rate shift in the posterior. In the BAMM model, we **expect shifts to occur on every branch with some low frequency simply as a function of the prior alone**. Hence, our solution is to divide rate shifts into **core shifts** and **transient shifts**. **Core shifts** are those that are actively retained during simulation of the posterior: they contribute appreciably to your ability to model the data. **Transient shifts** are simply ephemeral shifts that don't really contribute anything: they are simply what you expect under the prior distribution for rate shifts across the tree. In BAMMtools, we arbitrarily define a particular threshold value below which we consider rate shifts to be transient, and we ignore these shifts during the enumeration of distinct shift configurations. If we choose a threshold marginal probability of 0.01, then we are ignoring the shifts that occurred on the branches leading to clades B and C. It is as though these shifts do not even exist for the purposes of tabulating the number of distinct shifts. This exercise leads us to exactly two distinct shift configurations for this dataset: those with a shift on the branch leading to A, and those lacking this shift. We can assign the four shift configurations from the strict set (a, above) to each of these new distinct shift configurations, and we can compute their posterior probability:
+In reality, every BAMM analysis would generate enormous numbers of distinct shift configurations if we tracked every trivial occurrence of a rate shift in the posterior. In the BAMM model, we **expect shifts to occur on every branch with some low frequency simply as a function of the prior alone**. Hence, our solution is to divide rate shifts into **core shifts** and **non-core** shifts. **Core shifts** are those that are actively retained during simulation of the posterior: they contribute appreciably to your ability to model the data. **Non-core shifts** are simply ephemeral shifts that don't really contribute anything: they are simply what you expect under the prior distribution for rate shifts across the tree. In BAMMtools, we provide functions for explicitly estimating the expected frequency of observing shifts on every branch of the tree under the prior alone. Any branches with shift probabilities that can be explained by the prior are ignored during the enumeration of distinct shift configurations. 
+
+Consider the example above. Let's imagine that we have done an analysis of our prior distribution (this is done by default in BAMM), and that we have estimated the expected probability of shifts on each of the branches in the tree. Suppose the 95th percentile on the expected number of shifts per branch is 0.01. In this case, the frequencies of shifts on the branches leading to B and C are just what we expect under the prior. They are thus designated as **non-core** shifts:
+
+.. _distinctshifts_illustrate_D:  
+.. figure:: figs/xdistinct_illustrate_D.png
+   :width: 200
+   :align: center
+
+Here we've denoted the **non-core** shifts in white, and the single **core** shift in red. The **core** shift is the only one that occurs more often in the posterior than we expect under the prior alone. This exercise leads us to exactly two distinct shift configurations for this dataset: those with a shift on the branch leading to A, and those lacking this shift. We can assign the four shift configurations from the strict set (a, above) to each of these new distinct shift configurations, and we can compute their posterior probability:
 
 
 .. _distinctshifts_illustrate_C:  
@@ -150,14 +161,30 @@ Credible set of shift configurations
 ----------------------------
 Given a set of distinct shift configurations and their posterior probabilities, we can immediately extract the 95% (or other) credible set of shift configurations. To do this, we rank each shift configuration by their posterior probability. Starting with the most probable shift configuration, we then continue adding shift configurations to the set until the set accounts for at least 95% of the total probability. 
 
+To do this with BAMMtools, we will first compute the threshold between **core** and **non-core** shifts by analyzing the prior distribution on the number of shifts (here, we will use the ``primates`` example dataset)::
+
+	> data(primates) #primate phylogeny
+	> data(prior.primates) # Prior distribution simulated with BAMM
+	> prior.threshold <- getBranchShiftPriors(primates, prior.primates)
+	
+``prior.threshold`` is now a copy of our phylogenetic tree, but where each branch is the marginal probability threshold for distinguishing between **core** and **non-core** shifts. To compute the credible set, we do::
+
+	> data(events.primates)
+	> edata <- getEventData(primates, events.primates, burnin=0.1, type ='trait')
+	> css <- credibleShiftSet(edata, threshold = priors)
+	
+And we can view and plot the results with ``summary.credibleshiftset`` and ``plot.credibleshiftset``.
+
+
 Overall *best* shift configuration
 ---------------------------
 
 Marginal shift probabilities don't tell you much about the most likely sets of shifts that generated your dataset, and it is generally not possible to show all shift configurations sampled during simulation of the posterior. One possibility is to show the maximum *a posteriori* probability (MAP) shift configuration. This is the distinct shift configuration with the highest posterior probability - e.g., the one that was sampled most often. In BAMMtools, it is straightforward to estimate (and plot) this. Here, we will do this using the example primates dataset::
 
-	> data(primates, events.primates)
+	> data(primates, events.primates, prior.primates)
+	> priors <- getBranchShiftPriors(primates, prior.primates)
 	> ed <- getEventData(primates, events.primates, burnin=0.1, type = 'trait')
-	> best <- getBestShiftConfiguration(ed)
+	> best <- getBestShiftConfiguration(ed, threshold=priors)
 	> plot.bammdata(best)
 	> addBAMMshifts(best, cex=2)
 

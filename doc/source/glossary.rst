@@ -6,7 +6,7 @@ Keywords in BAMM and BAMMtools. Alphabetical. Words in glossary are in **bold**.
 
 Core shift
 ........
-A rate shift location (e.g., associated with a particular branch in a phylogeny) that has a marginal probability greater than some threshold value. In the BAMM model, the very manner in which shifts are proposed and deleted during MCMC simulation means that, sooner or later, a shift will be sampled on every branch of the tree. Most of these are *transient shifts* that don't stick around and which don't contribute to your ability to model the data. To distinguish between **core** and **transient** shifts in the posterior, we arbitrarily define a threshold value (typically, 0.01). We then ignore all shifts detected with marginal probabilities less than this threshold value during the enumeration of **distinct shift configurations**. 
+A rate shift location (e.g., associated with a particular branch in a phylogeny) that has a marginal probability greater than some threshold value. In the BAMM model, the very manner in which shifts are proposed and deleted during MCMC simulation means that, sooner or later, a shift will be sampled on every branch of the tree. Most of these are *non-core shifts* that don't stick around and which don't contribute to your ability to model the data. To distinguish between **core** and **non-core** shifts in the posterior, we identify all shift locations where shifts are observed more often that expected under the prior alone. If the frequency of observing a shift at a particular location is not different from that which we expect under the prior alone, we term this a "non-core" shift location. We then ignore all **non-core** shifts during the enumeration of **distinct shift configurations**. 
 
 Credible set of shift configurations
 .........
@@ -47,6 +47,10 @@ Maximum shift credibility configuration
 ...............
 Another measure of the overall best **distinct shift configuration**. This is best viewed as analogous to the maximum clade credibility (MCC) tree in a Bayesian phylogenetic analysis.
 
+Non-core shift
+.................
+A topological shift location (e.g., a unique branch) with low **marginal shift probability**. Formally, these shifts are defined by having **marginal shift probabilities** that are not substantially different from that expected under the prior. 
+
 Phylorate plot
 ........................
 A visualization of evolutionary dynamics on phylogenetic trees where colors are used to represent instantaneous evolutionary rate parameters at any point in time along any branch. The **mean phylorate plot** summarizes rate dynamics across the entire posterior, because colors for any branch segment reflect the mean of the marginal density of evolutionary rates at any particular point in time.
@@ -61,8 +65,5 @@ Root process
 The set of evolutionary rate parameters at the root of the tree. In the absence of rate shifts, all lineages in the phylogeny have dynamics that are governed by the **root process**.
 
 
-Transient shift
-.................
-A topological shift location (e.g., a unique branch) with low **marginal shift probability**. Formally, these shifts should be defined by those that have **marginal shift probabilities** that are not substantially different from that expected under the prior. 
 
 
