@@ -21,8 +21,7 @@ License: \tab GPL-2\cr
 }
 
 \author{
-Dan Rabosky, Carlos Anderson, Mike Grundler, Pascal Title, Jeff Shi, Joseph Brown
-
+Dan Rabosky, Mike Grundler, Pascal Title, Carlos Anderson, Jeff Shi, Joseph Brown, Huateng Huang
 Maintainer: Dan Rabosky <dan.rabosky@gmail.com>
 }
 \references{
