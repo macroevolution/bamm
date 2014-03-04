@@ -2,7 +2,7 @@
 .. _rateshifts: 
 
 Rate Shifts on Phylogenies: Theoretical Background
-=======================================
+==================================================
 
 This section details some of the most common conceptual issues that can arise when interpreting rate shifts on phylogenetic trees. Many studies have attempted to identify ***the*** rate shifts within a given dataset. In the BAMM framework, there is no single set of independent rate shifts waiting to be identified. Rather, BAMM identifies *configurations* of rate shifts - sets of shifts that are sampled together - and enables us to compute relative probability of those configurations. Three *shift configurations* sampled with BAMM during simulation of the posterior are shown :ref:`here<dtmulti>`.
  
@@ -57,7 +57,7 @@ Addressing this issue is one of the primary reasons that we created BAMM.
 
 
 Is this really an issue with real datasets?
--------------------------
+-------------------------------------------
  
 **Yes**.
 
@@ -136,7 +136,7 @@ But don't get hung up on the fact that your shift probabilities are less than 0.
 .. _coreshifts:
 
 Identifying the distinct shift configurations
----------------------------------------
+---------------------------------------------
 For any given phylogenetic tree, there are many possible **topologically distinct shift configurations**. A topologically distinct shift configuration on a phylogeny is one that is distinguishable from all other shift configurations by the presence or absence of a rate shift on at least one branch. The total possible number of **distinct shift configurations**, or *D*, for a given tree with *N* branches is simply
 
 .. math::
@@ -176,7 +176,7 @@ Here we've denoted the **non-core** shifts in white, and the single **core** shi
    :align: center
 
 Credible set of shift configurations
-----------------------------
+------------------------------------
 Given a set of distinct shift configurations and their posterior probabilities, we can immediately extract the 95% (or other) credible set of shift configurations. To do this, we rank each shift configuration by their posterior probability. Starting with the most probable shift configuration, we then continue adding shift configurations to the set until the set accounts for at least 95% of the total probability. 
 
 To do this with BAMMtools, we will first compute the threshold between **core** and **non-core** shifts by analyzing the prior distribution on the number of shifts. Here, we will use another dataset from BAMMtools consisting of body size data for living primates::
@@ -196,7 +196,7 @@ And we can view and plot the results with two other BAMMtools functions: ``summa
 
 
 Overall *best* shift configuration
----------------------------
+----------------------------------
 
 Marginal shift probabilities don't tell you much about the most likely sets of shifts that generated your dataset, and it is generally not possible to show all shift configurations sampled during simulation of the posterior. One possibility is to show the maximum *a posteriori* probability (MAP) shift configuration. This is the distinct shift configuration with the highest posterior probability - e.g., the one that was sampled most often. In BAMMtools, it is straightforward to estimate (and plot) this. Here, we will do this using the example primates dataset::
 

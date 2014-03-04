@@ -85,8 +85,8 @@ instructions on how to contact us.
 Analysis
 --------
 
-The MCMC does not converge.
-.............
+The MCMC does not converge
+..........................
 
 .. _convergenceproblems:
 
