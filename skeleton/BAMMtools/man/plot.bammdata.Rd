@@ -146,51 +146,53 @@ ed <- getEventData(whales, events.whales, burnin=0.25)
 #the first call to plot.bammdata. No calculations or assignments of rates have been made
 plot(ed, lwd = 3, spex = "s") #internally calls dtRates and assignColorBreaks
 
-#now plot.bammdata no longer calls dtRates
-ed <- dtRates(ed, tau = 0.01)
-xx <- plot(ed, lwd = 3, spex = "s")
-
-#you can plot subtrees while preserving the original 
-# rates to colors map by passing the colorbreaks object as an argument
-sed <- subtreeBAMM(ed, node = 103)
-plot(sed, lwd = 3, colorbreaks = xx$colorbreaks)
-sed <- subtreeBAMM(ed, node = 140)
-plot(sed, lwd = 3, colorbreaks = xx$colorbreaks)
-#note how if we do not pass colorbreaks the map is 
-# no longer relative to the rest of the tree and the plot is quite
-# distinct from the original
-plot(sed, lwd = 3)
-
-#if you want to change the value of tau and the rates to colors map for the entire tree
-ed <- dtRates(ed, tau = 0.002)
-xx <- plot(ed, lwd = 3, spex = "s")
-#now you can re-plot the subtrees using this finer tau partition
-sed <- subtreeBAMM(ed, node = 103)
-sed <- dtRates(sed, 0.002)
-plot(sed, lwd = 3, colorbreaks = xx$colorbreaks)
-sed <- subtreeBAMM(ed, node = 140)
-sed <- dtRates(sed, 0.002)
-plot(sed, lwd = 3, colorbreaks = xx$colorbreaks)
-
-#multi-panel plotting and adding shifts of specific posterior samples
-par(mfrow=c(2,3),mar=c(5,1,1,1))
-samples <- sample(1:length(ed$eventData), 6)
-ed <- dtRates(ed, 0.005)
-xx <- plot(ed, show=FALSE) #individual plots will have a color map relative to the mean
-for (i in 1:6) {
-	ed <- dtRates(ed, 0.005, samples[i])
-	plot(ed, par.reset=FALSE, colorbreaks=xx$colorbreaks)
-	addBAMMshifts(ed,method="phylogram",index=samples[i],par.reset=FALSE)	
-}
-dev.off()
-
-#color options
-ed <- dtRates(ed,0.01)
-plot(ed, pal="temperature",lwd=3)
-plot(ed, pal="terrain",lwd=3)
-plot(ed, pal=c("darkgreen","yellow2","red"),lwd=3)
-plot(ed,method="polar",pal="Spectral", lwd=3)
-plot(ed,method="polar",pal="RdYlBu", lwd=3)	
+##NOT RUN##
+## now plot.bammdata no longer calls dtRates
+# ed <- dtRates(ed, tau = 0.01)
+# xx <- plot(ed, lwd = 3, spex = "s")
+#
+## you can plot subtrees while preserving the original 
+## rates to colors map by passing the colorbreaks object as an argument
+# sed <- subtreeBAMM(ed, node = 103)
+# plot(sed, lwd = 3, colorbreaks = xx$colorbreaks)
+# sed <- subtreeBAMM(ed, node = 140)
+# plot(sed, lwd = 3, colorbreaks = xx$colorbreaks)
+## note how if we do not pass colorbreaks the map is 
+## no longer relative to the rest of the tree and the plot is quite
+## distinct from the original
+# plot(sed, lwd = 3)
+#
+## if you want to change the value of tau and the rates to colors map for the entire tree
+# ed <- dtRates(ed, tau = 0.002)
+# xx <- plot(ed, lwd = 3, spex = "s")
+## now you can re-plot the subtrees using this finer tau partition
+# sed <- subtreeBAMM(ed, node = 103)
+# sed <- dtRates(sed, 0.002)
+# plot(sed, lwd = 3, colorbreaks = xx$colorbreaks)
+# sed <- subtreeBAMM(ed, node = 140)
+# sed <- dtRates(sed, 0.002)
+# plot(sed, lwd = 3, colorbreaks = xx$colorbreaks)
+#
+## multi-panel plotting and adding shifts of specific posterior samples
+# par(mfrow=c(2,3),mar=c(5,1,1,1))
+# samples <- sample(1:length(ed$eventData), 6)
+# ed <- dtRates(ed, 0.005)
+# xx <- plot(ed, show=FALSE) #individual plots will have a color map relative to the mean
+# for (i in 1:6) {
+# 	ed <- dtRates(ed, 0.005, samples[i])
+# 	plot(ed, par.reset=FALSE, colorbreaks=xx$colorbreaks)
+# 	addBAMMshifts(ed,method="phylogram",index=samples[i],par.reset=FALSE)	
+# }
+# dev.off()
+#
+## color options
+# ed <- dtRates(ed,0.01)
+# plot(ed, pal="temperature",lwd=3)
+# plot(ed, pal="terrain",lwd=3)
+# plot(ed, pal=c("darkgreen","yellow2","red"),lwd=3)
+# plot(ed,method="polar",pal="Spectral", lwd=3)
+# plot(ed,method="polar",pal="RdYlBu", lwd=3)
+##END##	
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
