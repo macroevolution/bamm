@@ -40,10 +40,16 @@
 	
 	ed <- dtRates(ed, 0.01)
 	colors <- assignColorBreaks(ed$dtrates$rates, spex="s") #speciation rates
-	#colors <- assignColorBreaks(ed$dtrates$rates[[1]]) #this also works for speciation rates
+	#colors <- assignColorBreaks(ed$dtrates$rates[[1]]) 
+	#this also works for speciation rates
+	
 	plot(ed, colorbreaks = colors, spex="s")
-	colors <- assignColorBreaks(ed$dtrates$rates, spex="se") #diversification rates
-	#colors <- assignColorBreaks(ed$dtrates$rates[[1]] - ed$dtrates$rates[[2]]) #this also works for diversification rates
+	colors <- assignColorBreaks(ed$dtrates$rates, spex="se") 
+	#diversification rates
+	
+	#colors <- assignColorBreaks(ed$dtrates$rates[[1]] - ed$dtrates$rates[[2]]) 
+	#this also works for diversification rates
+	
 	plot(ed, colorbreaks = colors, spex="se")
 }
 \seealso{
