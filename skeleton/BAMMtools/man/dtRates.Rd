@@ -19,7 +19,7 @@ an object of class \code{bammdata}.
 }
   \item{tau}{
 a numeric that specifies the size (as a fraction of 
-tree height) of the segments that each branch will be discretized into  .
+tree height) of the segments that each branch will be discretized into.
 }
   \item{ism}{
 an integer vector indexing which posterior samples to include

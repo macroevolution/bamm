@@ -1,6 +1,13 @@
 useDynLib(BAMMtools)
 exportPattern(".+")
 
+S3method(as.bammdata, credibleshiftset)
 S3method(print, bammdata)
+S3method(print, branchprior)
+S3method(print, credibleshiftset)
 S3method(summary, bammdata)
+S3method(summary, branchprior)
+S3method(summary, credibleshiftset)
 S3method(plot, bammdata)
+S3method(plot, bammshifts)
+S3method(plot, credibleshiftset)

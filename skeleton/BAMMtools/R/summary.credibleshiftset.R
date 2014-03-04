@@ -1,32 +1,31 @@
+summary.credibleshiftset <- function(object, ...) {
 
-summary.credibleshiftset <- function(x){
-
-	conf <- round(100*x$set.limit);
+	conf <- round(100*object$set.limit);
 	cat('\n', conf, '% credible set of rate shift configurations sampled with BAMM');
-	cat('\n\nDistinct shift configurations in credible set: ', x$number.distinct);
+	cat('\n\nDistinct shift configurations in credible set: ', object$number.distinct);
 	
-	mm <- min(c(9, x$number.distinct));
-	if (x$number.distinct > 9){
-		omitted <- x$number.distinct - 9;
+	mm <- min(c(9, object$number.distinct));
+	if (object$number.distinct > 9){
+		omitted <- object$number.distinct - 9;
 	}
 	
-	xvec <- numeric(x$number.distinct);
-	dd <- data.frame(rank=1:x$number.distinct, probability = xvec, cumulative=xvec, N_shifts=xvec);
+	xvec <- numeric(object$number.distinct);
+	dd <- data.frame(rank=1:object$number.distinct, probability = xvec, cumulative=xvec, N_shifts=xvec);
 	for (i in 1:nrow(dd)){
-		dd$probability[i] <- x$frequency[i];
-		dd$cumulative[i] <- x$cumulative[i];
-		dd$N_shifts[i] <- length(x$shiftnodes[[i]]);
+		dd$probability[i] <- object$frequency[i];
+		dd$cumulative[i] <- object$cumulative[i];
+		dd$N_shifts[i] <- length(object$shiftnodes[[i]]);
 	}
 	
 	
 	cat('\n\nFrequency of', mm, 'shift configurations with highest posterior probability:\n');
 	cat('\n\tRank\t\tProb\tCumulative\t\tCoreShifts\n')
 	for (i in 1:mm){
-		cat('\t\t', format(i, justify='left'), '\t\t', format(round(x$frequency[i], 3), nsmall=3), '\t');
-		cat(round(x$cumulative[i], 3), '\t\t\t', length(x$shiftnodes[[i]]), '\n');
+		cat('\t\t', format(i, justify='left'), '\t\t', format(round(object$frequency[i], 3), nsmall=3), '\t');
+		cat(round(object$cumulative[i], 3), '\t\t\t', length(object$shiftnodes[[i]]), '\n');
 	}	
 	
-	if (x$number.distinct > 9){
+	if (object$number.distinct > 9){
 		cat('\n...omitted', omitted, 'additional distinct shift configurations\n');
 		cat('from the credible set. You can access the full set from your \n');
 		cat('credibleshiftset object\n');

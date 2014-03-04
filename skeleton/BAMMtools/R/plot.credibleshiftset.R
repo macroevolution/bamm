@@ -1,19 +1,18 @@
-plot.credibleshiftset = function(cset, plotmax=9, method='phylogram', pal = 'RdYlBu', spex = "s", add.freq.text = TRUE, use.plot.bammdata = TRUE, border = TRUE, legend = FALSE, send2pdf = FALSE, ...)
+plot.credibleshiftset = function(x, plotmax=9, method='phylogram', pal = 'RdYlBu', spex = "s", add.freq.text = TRUE, use.plot.bammdata = TRUE, border = TRUE, legend = FALSE, send2pdf = FALSE, ...)
 {
-	if (class(cset) != "credibleshiftset") {
+	if (class(x) != "credibleshiftset") {
 		stop('arg sc must be of class "credibleshiftset"');
 	}
-	if ((spex == "e" || spex == "se") && cset$type == "trait") {
+	if ((spex == "e" || spex == "se") && x$type == "trait") {
 		warning("arg spex not meaningful for BAMMtrait");
 		spex = "s";
 	}
-	cset.bamm = cset;
-	class(cset.bamm) = "bammdata";
+	cset.bamm = as.bammdata(x);
 	if (plotmax > 9 && send2pdf == FALSE) {
 	    plotmax = 9;
 	    cat("arg plotmax coerced to 9\n");
 	}
-	mm = min(cset$number.distinct, plotmax);
+	mm = min(x$number.distinct, plotmax);
 	if (send2pdf) {
 	    pdf("credibleshiftset.pdf");
 	}
@@ -53,7 +52,7 @@ plot.credibleshiftset = function(cset, plotmax=9, method='phylogram', pal = 'RdY
 			par(mfrow=c(3,3));	
 		}
 	}
-	cat("Omitted", max(cset$number.distinct,mm) - min(cset$number.distinct,mm), "plots\n");
+	cat("Omitted", max(x$number.distinct,mm) - min(x$number.distinct,mm), "plots\n");
 	if (use.plot.bammdata) {
     	cset.bamm = dtRates(cset.bamm, 0.01);
 	    colorbreaks = assignColorBreaks(cset.bamm$dtrates$rates,spex=spex);
@@ -68,7 +67,7 @@ plot.credibleshiftset = function(cset, plotmax=9, method='phylogram', pal = 'RdY
 		    if (method=="polar") method = "fan";
 		    plot.phylo(as.phylo.bammdata(cset.bamm),type=method,show.tip.label=FALSE);
 		}
-		if (add.freq.text) mtext(sprintf("f = %.2g",cset$frequency[i]),3);	
+		if (add.freq.text) mtext(sprintf("f = %.2g",x$frequency[i]),3);	
 		if (border) box();
 		shiftnodes = getShiftNodesFromIndex(cset.bamm, i);
 		shiftnode_parents = cset.bamm$edge[match(shiftnodes, cset.bamm$edge[,2],nomatch=0), 1];
@@ -102,7 +101,7 @@ plot.credibleshiftset = function(cset, plotmax=9, method='phylogram', pal = 'RdY
    		}
     	bg = rep("blue", length(AcDc));
     	bg[which(AcDc == FALSE)] = "red";
-		cex = 0.75 + 5 * cset$marg.probs[as.character(getShiftNodesFromIndex(cset.bamm, i))];
+		cex = 0.75 + 5 * x$marg.probs[as.character(getShiftNodesFromIndex(cset.bamm, i))];
 		if (use.plot.bammdata) {
 			addBAMMshifts(sed, method, 1, cex=cex, bg=transparentColor(bg, 0.5),multi=TRUE);	
 		}

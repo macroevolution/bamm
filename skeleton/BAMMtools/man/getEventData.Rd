@@ -66,7 +66,7 @@ See 'Details'.
 }
 \item{eventVectors}{
 A list of integer vectors. Each element is a single posterior sample.
-For each branch in \code{phy} the index of the event that obtains along that branch.
+For each branch in \code{phy} the index of the event that occurs along that branch.
 Branches are ordered increasing here and elsewhere.
 }
 \item{eventBranchSegs}{
@@ -75,12 +75,12 @@ Each matrix has four columns: \code{Column 1} identifies a node in \code{phy}.
 \code{Column 2} identifies the beginning time of the branch or segment 
 of the branch that subtends the node in \code{Column 1}. \code{Column 3} identifies the 
 ending time of the branch or segment of the branch that subtends the node in \code{Column 1}. 
-\code{Column 4} identifies the index of the event that obtains along the branch or segment 
+\code{Column 4} identifies the index of the event that occurs along the branch or segment 
 of the branch that subtends the node in \code{Column 1}.
 }
 \item{tipStates}{
 A list of integer vectors. Each element is a single posterior sample.
-For each tip the index of the event that obtains along the branch subtending the tip.
+For each tip the index of the event that occurs along the branch subtending the tip.
 Tips are ordered increasing here and elsewhere.
 }
 \item{tipLambda}{

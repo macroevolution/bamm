@@ -8,13 +8,12 @@
 	Plots a random distinct rate shift configuration sampled by BAMM on a phylogeny.
 }
 \usage{
-S3 method for class \code{bammshift}
-plot(sc, ephy, method="phylogram",pal="RdYlBu",
-	 rank=NULL, index=NULL, spex="s",add.freq.text=TRUE, 
-	 legend=TRUE, ...)
+\method{plot}{bammshifts}(x, ephy, method="phylogram",pal="RdYlBu",
+	 rank=NULL, index=NULL, spex="s", 
+	 legend=TRUE, add.freq.text=TRUE,...)
 }
 \arguments{
-	\item{sc}{
+	\item{x}{
 		an object of class \code{bammshifts}.
 	}
 	\item{ephy}{
@@ -39,11 +38,11 @@ a character string indicating what type of macroevolutionary rates should be plo
 speciation rates, "e" indicates extinction rates, and any other character, e.g. "se", indicates net diversification
 rates. Ignored if \code{ephy$type = "trait"}.
 	}
-	\item{add.freq.text}{
-		a logical indicating whether the frequency of each sampled shift configuration should be added to each plot.
-	}
 	\item{legend}{
 		a logical indicating whether to plot a legend.
+	}
+	\item{add.freq.text}{
+		a logical indicating whether the frequency of each sampled shift configuration should be added to each plot.
 	}
 	\item{...}{
 		other arguments to \code{plot.bammdata}.
@@ -58,11 +57,9 @@ A core shift configuration is defined by a set of nodes that have a marginal shi
 Points are added to the branches subtending the nodes of each rate configuration. The size of the point is proportional to the marginal probability that a shift occurs on a specific branch. If the instantaneous rate at a shift's origin represents an initial increase above the ancestral instantaneous rate the point is red. If the instantaneous rate at a shift's origin represents an initial decrease below the ancestral instantaneous rate the point is blue.   
 	
 }
-\value{
-	
-}
+
 \references{
-	\link{bamm-project.org}
+	\url{bamm-project.org}
 }
 \author{
 	Mike Grundler, Dan Rabosky

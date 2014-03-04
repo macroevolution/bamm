@@ -23,9 +23,7 @@
 		a character string. "s" (default) calculates speciation rates; "e" calculates extinction rates; "se" calculates diversification rates. Ignored if \code{ephy$type = "trait"}
 	}
 }
-\details{
-	
-}
+
 \value{
 	A list with two components:
 	\item{times}{

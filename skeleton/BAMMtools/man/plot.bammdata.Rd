@@ -9,25 +9,19 @@ Plot \code{BAMM}-estimated macroevolutionary rates on a phylogeny
 colors each branch by the estimated rate of speciation, extinction, or trait evolution. Rates are not assumed to be constant in time, and the function can plot continuously-varying rates along individual branches. 
 }
 \usage{
-S3 method for class \code{bammdata}:		
-plot(ephy, method = "phylogram", spex="s", 
+\method{plot}{bammdata}(x, method = "phylogram", 
     vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, 
-    legend = FALSE, lwd = 1, cex = 1, pal = "RdYlBu", colorbreaks = NULL, ...)
+    legend = FALSE, spex="s", lwd = 1, cex = 1, pal = "RdYlBu", colorbreaks = NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{ephy}{
+  \item{x}{
 an object of class \code{bammdata}.
 }
   \item{method}{
 a character string indicating the method for plotting the phylogenetic tree. 
 \code{method = "phylogram"} (default) plots the phylogenetic tree using rectangular 
 coordinates. \code{method = "polar"} plots the phylogenetic tree using polar coordinates.
-}
-  \item{spex}{
-a character string indicating what type of macroevolutionary rates should be plotted. "s" (default) indicates
-speciation rates, "e" indicates extinction rates, and any other character, e.g. "se", indicates net diversification
-rates. Ignored if \code{ephy$type = "trait"}.  	
 }
   \item{vtheta}{
 a numeric indicating the angular separation (in degrees) of the first and last
@@ -50,6 +44,11 @@ Defaults to \code{FALSE}.
   \item{legend}{
 a logical indicating whether or not to plot a density function for interpreting the 
 mapping of evolutionary rates to colors. Defaults to \code{FALSE}.
+}
+  \item{spex}{
+a character string indicating what type of macroevolutionary rates should be plotted. "s" (default) indicates
+speciation rates, "e" indicates extinction rates, and any other character, e.g. "se", indicates net diversification
+rates. Ignored if \code{ephy$type = "trait"}.  	
 }
   \item{lwd}{
 a numeric specifying the line width for branches.
@@ -105,7 +104,7 @@ Additionally, any vector of valid named colors may also be used. The only restri
 Internally \code{plot.bammdata} checks whether or not rates have been calculated by looking for a component named
 "dtrates" in the \code{bammdata} object. If rates have not been calculated \code{plot.bammdata} calls \code{dtRates} with \code{tau = 0.01}. Specifying smaller values for \code{tau} will result in smoother-looking rate changes on the tree. Note that smaller values of \code{tau} require more computation. If the \code{colorbreaks} argument is \code{NULL} a map of rates to colors is also made by calling \code{assignColorBreaks} with \code{NCOLORS = 64}. A user supplied \code{colorbreaks} argument can be passed as well. This allows one to plot parts of a tree while preserving the map of rates to colors that was made using rates for the entire tree.
 
-If \code{plot.bammdata} is called repeatedly with the same \code{bammdata} object computation can be reduced by first calling \code{dtRates} in the global environment.
+If \code{plot.bammdata} is called repeatedly with the same \code{bammdata} object, computation can be reduced by first calling \code{dtRates} in the global environment.
 }
 \value{
 Returns (invisibly) a list with three components. 
@@ -122,7 +121,7 @@ A matrix of the kernel density estimates (column 2) of evolutionary rates (colum
 }
 }
 \source{
-\link{colorbrewer2.org}, \link{geography.uoregon.edu/datagraphics/color_scales.htm}
+\url{colorbrewer2.org}, \url{geography.uoregon.edu/datagraphics/color_scales.htm}
 }
 \author{
 Mike Grundler
@@ -171,7 +170,7 @@ plot(sed, lwd = 3, colorbreaks = xx$colorbreaks)
 
 #multi-panel plotting and adding shifts of specific posterior samples
 par(mfrow=c(2,3),mar=c(5,1,1,1))
-samples = sample(1:length(ed$eventData), 6)
+samples <- sample(1:length(ed$eventData), 6)
 ed <- dtRates(ed, 0.005)
 xx <- plot(ed, show=FALSE) #individual plots will have a color map relative to the mean
 for (i in 1:6) {

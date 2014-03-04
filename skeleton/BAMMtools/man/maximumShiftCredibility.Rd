@@ -16,7 +16,7 @@ maximumShiftCredibility(ephy, maximize = "product")
 an object of class \code{BAMMdata}
 }
   \item{maximize}{
-Maximize the marginal probability of the product or sum of branch-specific shifts (see details)
+Maximize the marginal probability of the product or sum of branch-specific shifts
 }
 }
 \details{
@@ -39,10 +39,6 @@ A vector of the index values of MCMC samples with shift configurations equal to 
 
 \item{sampleindex}{A representative sample that is equal to the maximum shift credibility configuration (e.g., this can be plotted with \link[BAMMtools]{addBAMMshifts})
 }
-}
-
-\references{
-
 }
 
 \author{

@@ -46,16 +46,9 @@ If the \code{bammdata} object contains just a single sample, these shifts will b
 
 
 }
-\value{
 
-}
-\references{
-
-}
 \author{
 Mike Grundler
-}
-\note{
 }
 
 \seealso{

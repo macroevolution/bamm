@@ -17,12 +17,10 @@ getShiftNodesFromIndex(ephy, index)
 a \code{bammdata} object
 }
   \item{index}{
-The index value of the posterior sample which you want to identify shift nodes. This is \emph{not} the same as the actual generation number of the MCMC sample. If your \code{bammdata} object contains 100 samples from the posterior distribution, the value of \code{index} must range from 1 to 100.
+The index value of the posterior sample from which you want to identify shift nodes. This is \emph{not} the same as the actual generation number of the MCMC sample. If your \code{bammdata} object contains 100 samples from the posterior distribution, the value of \code{index} must range from 1 to 100.
 }
 }
-\details{
 
-}
 \value{
 A vector of nodes (excluding the root) that define branches on which shifts occurred for the specified sample from the posterior. Will return a numeric of length 0 if no non-root shifts occur in the specified sample.
 }

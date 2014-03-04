@@ -34,7 +34,7 @@ Two options: "include" and "exclude". If "include", computes rate matrix only fo
 
 }
 \details{
-Computes evolutionary rates for each sampled in the posterior included as part of the \code{bammdata} object. Rates are computed by draping an imaginary grid over the phylogeny, where the grid begins at \code{start.time} and ends at \code{end.time}, with \code{nslices} vertical lines through the phylogeny. The mean rate at each point in time (for a given sample from the posterior) is simply the mean rate at that time for all branches that are intersected by the grid (see the grid plot in the examples section).
+Computes evolutionary rates for each sample in the posterior included as part of the \code{bammdata} object. Rates are computed by draping an imaginary grid over the phylogeny, where the grid begins at \code{start.time} and ends at \code{end.time}, with \code{nslices} vertical lines through the phylogeny. The mean rate at each point in time (for a given sample from the posterior) is simply the mean rate at that time for all branches that are intersected by the grid (see the grid plot in the examples section).
 
 This function is used by \link{plotRateThroughTime}, but the user can work directly with the \code{bamm-ratematrix} object for greater control in plotting rate-through-time trajectories for individual clades. See \code{examples} for an example of how this can be used to plot confidence intervals on a rate trajectory using shaded polygons.
 

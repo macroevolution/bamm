@@ -11,7 +11,7 @@
 }
 \arguments{
 	\item{rates}{
-		a numeric vector of phentypic rates or a list of numeric vectors of speciation and extinction rates.
+		a numeric vector of phenotypic rates or a list of numeric vectors of speciation and extinction rates.
 	}
 	\item{NCOLORS}{
 		an integer number of colors to use for the mapping. Larger numbers do not 

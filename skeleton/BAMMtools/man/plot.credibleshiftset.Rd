@@ -4,13 +4,15 @@
 \title{
 	Plot credible set of rate shift configurations from BAMM analysis
 }
+\description{
+	Plots the credible set of rate shift configurations from a BAMM analysis on a phylogeny
+}
 \usage{
-S3 method for class \code{credibleshiftset}
-plot(cset, plotmax=9, method="phylogram", pal="RdYlBu", spex="s", add.freq.text=TRUE,
+\method{plot}{credibleshiftset}(x, plotmax=9, method="phylogram", pal="RdYlBu", spex="s", add.freq.text=TRUE,
 use.plot.bammdata=TRUE, border=TRUE, legend=FALSE, send2pdf=FALSE, ...)
 }
 \arguments{
-\item{cset}{
+\item{x}{
 an object of class \code{credibleshiftset}.	
 }
 \item{plotmax}{
@@ -49,11 +51,9 @@ This produces phylorate plots for the \code{plotmax} most-probable shift configu
 
 Points are added to the branches subtending the nodes of each rate configuration. The size of the point is proportional to the marginal probability that a shift occurs on a specific branch. If the instantaneous rate at a shift's origin represents an initial increase above the ancestral instantaneous rate the point is red. If the instantaneous rate at a shift's origin represents an initial decrease below the ancestral instantaneous rate the point is blue.  	
 }
-\value{
-	
-}
+
 \references{
-\link{bamm-project.org}	
+\url{bamm-project.org}	
 }
 \author{
 Mike Grundler
