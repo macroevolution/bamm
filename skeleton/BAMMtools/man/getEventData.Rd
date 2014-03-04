@@ -119,6 +119,11 @@ the descendants of any node. e.g. the descendants of node 89 can be found by
 }
 \references{
 \url{bamm-project.org}
+
+Rabosky, D. L. 2014. Automatic detection of key innovations, rate shifts, and diversity-dependence on phylogenetic trees. PLoS ONE 9:e89543
+
+Rabosky, D. L., F. Santini, J. T. Eastman, S. A. Smith, B. L. Sidlauskas, J. Chang, and M. E. Alfaro. 2013. Rates of speciation and morphological evolution are correlated across the largest vertebrate radiation. Nature Communications DOI: 10.1038/ncomms2958 
+
 }
 \author{
 Dan Rabosky, Mike Grundler

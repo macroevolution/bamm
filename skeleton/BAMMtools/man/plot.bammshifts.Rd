@@ -68,9 +68,14 @@ Points are added to the branches subtending the nodes of each rate configuration
 	\code{\link{distinctShiftConfigurations}}, \code{\link{plot.bammdata}}
 }
 \examples{
-data(whales, events.whales)
+data(whales, events.whales, prior.whales)
+
 ed <- getEventData(whales, events.whales, burnin=0.25)
 
-sc <- distinctShiftConfigurations(ed, threshold=0.05)
+# Here we get prior for identifying "significant" (core) rate shifts
+priordist <- getBranchShiftPriors(whales, prior.whales)
+
+sc <- distinctShiftConfigurations(ed, threshold=priordist)
+
 plot(sc, ed)
 }
