@@ -55,7 +55,7 @@ There are many possible settings that can be tweaked in BAMM. The next two secti
 Speciation-extinction analyses
 ------------------------------
 
-You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file linked :download:`here (divcontrol_template.txt)<divcontrol_template.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data. Here's an example :download:`phylogenetic tree of whales<examples/whaletree.txt>` that is used elsewhere in this documentation.
+You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file linked :download:`here (template_diversification.txt)<template_diversification.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data. Here's an example :download:`phylogenetic tree of whales<examples/whaletree.txt>` that is used elsewhere in this documentation.
 
 If you open the template file, you'll see that there are extensive comments. For each parameter in the BAMM control file, we've included a brief description on the line following the parameter. For example: ::
 
@@ -85,7 +85,7 @@ BAMM generates two types of output. The first is a file containing basic attribu
 
 You can set these parameters to whatever you want. However, please remember that you will be working with the *event data file* in R, which is a bit limited on memory. As a rough guide, we suggest choosing a value for ``eventDataWriteFreq`` that gives at least 1000 samples from the posterior, but we also don't see much advantage to having more than 5000. 
 
-That's all you need to know. For starters, you should try a simple run with settings like this::
+For starters, you should try a simple run with settings like this::
 
 	numberGenerations = 5000
 	mcmcWriteFreq = 1000
@@ -93,6 +93,26 @@ That's all you need to know. For starters, you should try a simple run with sett
 	printFreq = 100
 	
 You'll want to increase all of these once you are sure the program is correctly loading your data etc, but it's a good first check. 
+
+One other block of parameters can be critical to BAMM performance: the priors that you place on your evolutionary rate parameters. The prior block in your control file looks similar to this (ignoring most comments in the template file)::
+
+	# PRIORS
+	# <START prior block >
+	poissonRatePrior = 1.0
+	lambdaInitPrior = 1.0
+	lambdaInitRootPrior = 5.0
+	lambdaShiftPrior = 0.05
+	lambdaShiftRootPrior = 0.05
+	muInitPrior = 1.0
+	muInitRootPrior = 5.0
+	# <END prior block >
+
+These priors may work for your dataset. They may also be extremely inadequate. To this end, we have included a function in the BAMMtools package to help you choose appropriate prior values. The function, ``setBAMMpriors``, will automatically generate a prior block as a text file that you can copy and paste over the prior block in the template file. To do this, you need to install BAMMtools (see :ref:`here<postprocess>`), and you need your phylogenetic tree. Assuming you have a phylogenetic tree file ``my_tree.tre``, you can generate the prior block with::
+	
+	> library(BAMMtools) # Assuming you have installed BAMMtools !
+	> setBAMMpriors("my_tree.tre")
+	
+and the relevant output file will be generated in your working directory. See the help file (``?setBAMMpriors``) for more information. To be clear: this does not optimize priors to your dataset. It simply chooses a set of priors that we have found to be reasonable for most datasets and scales the distributions based on the age (root depth) of your tree. A more complete explanation :ref:`can be found here<ratepriors>`.
 
 Incomplete taxon sampling
 *************************
@@ -104,9 +124,9 @@ For speciation-extinction analyses BAMM can analytically account for incomplete 
 Phenotypic evolution
 --------------------
 
-This section is quite redundant with the preceding section on **speciation-extinction**, with a few differences.
+This section is redundant with the preceding section on **speciation-extinction**, with a few differences.
 
-You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file linked :download:`here (traitcontrol_template.txt)<traitcontrol_template.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data.
+You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file linked :download:`here (template_trait.txt)<template_trait.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data.
 
 If you open the template file, you'll see that there are extensive comments. For each parameter in the BAMM control file, we've included a brief description on the line following the parameter. For example: ::
 
@@ -140,7 +160,7 @@ The other parameters we will force you to define explicitly have to do with outp
 
 You can set these parameters to whatever you want. However, please remember that you will be working with the *event data file* in R, which is a bit limited on memory. As a rough guide, we suggest choosing a value for ``eventDataWriteFreq`` that gives at least 1000 samples from the posterior, but we also don't see much advantage to having more than 5000. 
 
-That's all you need to know. For starters, you should try a simple run with settings like this::
+For starters, you should try a simple run with settings like this::
 
 	numberGenerations = 5000
 	mcmcWriteFreq = 1000
@@ -148,6 +168,25 @@ That's all you need to know. For starters, you should try a simple run with sett
 	printFreq = 100
 	
 You'll want to increase all of these once you are sure the program is correctly loading your data etc, but it's a good first check. 
+
+As for the speciation-extinction models, the priors you place on phenotypic evolutionary parameters can have a substantial impact on BAMM performance. The prior block in your (trait) template control file looks similar to this::
+
+	# PRIORS
+	# <START prior block >
+	poissonRatePrior = 1
+	betaInitPrior = 1
+	betaShiftPrior = 0.05
+	betaInitRootPrior = 5.0
+	betaShiftRootPrior = 0.05
+	useObservedMinMaxAsTraitPriors = 1
+	# <END prior block >
+
+These priors may work for your dataset, but they may also be very poor choices: it really depends on the scale of your tree (e.g., depth of the tree) and the variances in your trait values. The function ``setBAMMpriors`` (BAMMtools) will automatically generate a prior block as a text file that you can copy and paste over the prior block in the template file. This new set of priors is matched to the "scale" of your data. To do this, you need to install BAMMtools (see :ref:`here<postprocess>`), and you need your phylogenetic tree. Assuming you have a phylogenetic tree file ``my_tree.tre`` and a trait dataset ``my_traitfile.txt``, you can generate the prior block with::
+	
+	> library(BAMMtools) # Assuming you have installed BAMMtools !
+	> setBAMMpriors(phy = "my_tree.tre", traits = "my_traitfile.txt")
+	
+and the relevant output file will be generated in your working directory. See the help file (``?setBAMMpriors``) for more information. To be clear: this does not optimize priors to your dataset. It simply chooses a set of priors that we have found to be reasonable for most datasets and scales the distributions based on the age (root depth) of your tree and the variance of your trait data. A more complete explanation :ref:`can be found here<ratepriors>`.
 
 
 BAMM output: brief

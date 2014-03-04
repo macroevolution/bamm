@@ -45,11 +45,12 @@ For many datasets, this is an easy way of using incomplete sampling information.
 
 Specifying a backbone sampling fraction can pose some challenges if it is unlikely to equal 1.0. Here's an example where this is not equal to one. Continuing with the example above, suppose that there are several other general totaling 7 species in our focal clade that were not sampled. Provided we are (reasonably) confident that this genus does not reside *within* our genera *fu* and *bar*, this implies that these lineages must have branched off the backbone (black) portion of the phylogeny. One possible correction would be to assume that the 2 sampled backbone lineages are 2 of a total of 9 (including the 7 unsampled taxa from other genera), or 0.22. Another possibility is to just set the backbone fraction equal to the total sampling fraction across the entire clade. In this case, We have sampled a total of 6 species from *fu* and *bar*, which together account for 15 species. There are another 7 species unsampled from other genera. You could set the backbone fraction equal to 6 / (15 + 7) = 0.27. These are not perfect solutions, but we contend that - in general - it is better to use clade-specific sampling fractions if the percentage of sampled taxa varies considerably across your tree.
 
+.. _ratepriors:
+
 
 Priors on rate parameters
 -------------------------------------------
 
-.. _ratepriors:
 
 In the :ref:`quickstart<quickstart>` guide to BAMM, we suggested that you explicitly set rate parameters to the scale of your data using the **BAMMtools** function ``setBAMMpriors``. 
 
