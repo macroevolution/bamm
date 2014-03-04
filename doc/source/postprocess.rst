@@ -92,7 +92,7 @@ The *bammdata* object is the core of most analyses discussed below. This is a co
 
 	> library(BAMMtools)
 	> tree <- read.tree("mytree.tre")
-	> edata <- getEventData(tree, eventdata = "bammrun_eventdata.txt", burnin=0.1)
+	> edata <- getEventData(tree, eventdata = "event_data.txt", burnin=0.1)
 	
 *edata* is now a "BAMM-data" object, which has all the attributes of a class "phylo" object, plus many more. Please be patient with *getEventData* - this function can take some time to run for large datasets. 
 
