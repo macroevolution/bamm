@@ -12,12 +12,13 @@ BAMM Documentation
 
    introduction
    bammgraph
+   rateshifts   
    quickstart
    settingup
    configuration
    postprocess
    advanced
-   rateshifts
+
    faq
    troubleshooting
    glossary

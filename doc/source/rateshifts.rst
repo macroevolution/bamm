@@ -1,10 +1,12 @@
 
 .. _rateshifts: 
 
-Interpreting Rate Shifts on Phylogenies
+Rate Shifts on Phylogenies: Theoretical Background
 =======================================
 
 This section details some of the most common conceptual issues that can arise when interpreting rate shifts on phylogenetic trees. Many studies have attempted to identify ***the*** rate shifts within a given dataset. In the BAMM framework, there is no single set of independent rate shifts waiting to be identified. Rather, BAMM identifies *configurations* of rate shifts - sets of shifts that are sampled together - and enables us to compute relative probability of those configurations. Three *shift configurations* sampled with BAMM during simulation of the posterior are shown :ref:`here<dtmulti>`.
+ 
+Many features and analyses with BAMM and BAMMtools **will not be clear** unless you have a good understanding of the concepts below. It is especially important to grasp the idea of *distinct shift configurations* and *marginal shift probabilities*.
  
 The BAMM model is an approximation
 ..................................
@@ -81,7 +83,7 @@ Put simply: there is very strong (prob > 0.99) evidence for a shift in dynamics 
 Because of the non-independence of rate shift configurations, it doesn't really make sense to show - in a single tree - all the rate shifts discovered by BAMM. A good (but imperfect) analogy for thinking about rate shift configurations and their potential non-independence comes from Bayesian phylogenetic analysis. Any given shift configuration is like a phylogenetic tree sampled from a posterior. Some trees in that posterior will be incompatible with others. Trying to show all the rate shifts at once on a single tree, or reporting them as though they are independent, is sort of like trying to show a phylogenetic tree where you show all recovered clades at the same time. Suppose in a Bayesian phylogenetic analysis of 3 clades (A, B, C) you recover, each with probability 0.5, the following topologies: (A,(B,C)) and ((A,B),C). These topologies are incompatible, and it doesn't make sense to demand a single phylogenetic tree that represents all sampled clades within a single tree. The solution in phylogenetics is to collapse these incompatible topologies to a consensus tree with a polytomy. Showing all rate shifts recovered with BAMM on a single phylogenetic tree is a bit like showing a consensus phylogeny with polytomies: it isn't the "true" tree, but it summarizes some of the total run information.
 
 
-Meaningful reporting of "rate shifts" in the BAMM framework
+Analysis of rate shifts in the BAMM framework
 ...........................................................
 
 There are many types of information that can be extracted from a BAMM run. Here we describe several useful methods of summarizing and visualizing shift information from a BAMM analysis.
@@ -101,16 +103,32 @@ One of the most important ideas to grasp regarding BAMM is that BAMM simulates a
 Marginal shift probabilities
 ----------------------------
 
-The marginal shift probabilities on individual branches across the tree are of considerable interest. As discussed above, there are some nuances to interpreting these, because the probability associated with a shift on any particular branch is not independent of other branches in the tree. From your bammdata object, you can easily compute the branch-specific marginal shift probabilities with BAMMtools::
+The marginal shift probabilities on individual branches across the tree are of considerable interest. As discussed above, there are some nuances to interpreting these, because the probability associated with a shift on any particular branch is not independent of other branches in the tree. The following snippet of R code will compute the marginal shift probabilities for each branch in one of the example datasets included with BAMMtools. It is not necessary to understand (or even run) this code yet; we will cover BAMMtools in much greater depth in subsequent sections. 
+
+If you don't have BAMMtools installed and/or don't know how to install it, you may wish to read the first few paragraphs of :ref:`this section<bammtools>`. First, we load BAMMtools::
+
+	> library(BAMMtools)
+
+Now, we load two datasets included with BAMMtools: a time-calibrated phylogenetic tree of living whales (``whales``), and an output file from our BAMM analysis (``events.whales``). We will load these using the ``data`` function in R::
+
+	> data(whales)
+	> data(events.whales)
 	
-	library(BAMMtools)
-	data(whales, events.whales)
-	ed <- getEventData(whales, events.whales, burnin=0.1)
-	marg_probs <- marginalShiftProbsTree(ed)
+Now we convert the phylogeny and BAMM output file into a particular data object that is at the heart of BAMMtools analyses::
+	
+	> ed <- getEventData(whales, events.whales, burnin=0.1)
+	
+Object ``ed`` is now a ``bammdata`` object. Finally, we can compute the marginal shift probabilities for this phylogeny::	
+	
+	> marg_probs <- marginalShiftProbsTree(ed)
 
-The object ``marg_probs`` is a copy of your original phylogenetic tree, but where the branch lengths have been replaced by the branch-specific marginal shift probabilities. In other words, the length of a given branch is equal to the percentage of samples from the posterior that contain a rate shift on that particular branch.
+The object ``marg_probs`` is a copy of the original phylogenetic tree, but where the branch lengths have been replaced by the branch-specific marginal shift probabilities. In other words, the length of a given branch is equal to the percentage of samples from the posterior that contain a rate shift on that particular branch.
 
-You can convey this information in several possible ways. You can directly indicate marginal shift probabilities on a phylorate plot, as shown :ref:`here<whalemarg1>`. You can plot your ``marg_probs`` tree itself: the branches are scaled directly by probabilities, so a tree plotted in such a fashion conveys quite a bit of information (see Figure 9 from `Rabosky 2014 <http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543>`_ for an example of such a plot). You can potentially color branches by their marginal shift probabilities, or you could add circles to each branch with a shift probability greater than some threshold.
+You can convey this information in several possible ways. You can directly indicate marginal shift probabilities on a phylorate plot, as shown :ref:`here<whalemarg1>`. You can plot your ``marg_probs`` tree itself: the branches are scaled directly by probabilities, so a tree plotted in such a fashion conveys quite a bit of information (see Figure 9 from `Rabosky 2014 <http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543>`_ for an example of such a plot). You could create such a plot by simply executing::
+	
+		> plot.phylo(marg_probs)
+		
+in R. You can potentially color branches by their marginal shift probabilities, or you could add circles to each branch with a shift probability greater than some threshold.
 
 But don't get hung up on the fact that your shift probabilities are less than 0.95. Even *very* strongly supported rate heterogeneity will generally be associated with marginal shift probabilities < 0.95. As discussed :ref:`here<whalemarg1>`, you can (and often will) have exceptionally strong evidence for rate heterogeneity even if any given branch has marginal shift probabilities that do not appear particularly high. **Marginal shift probabilities tell you very little about the probability of rate heterogeneity in your dataset**. In principle, you could have high confidence that your data were shaped by a very large number of rate shifts, but at the same time find that no single branch has a marginal probability exceeding 0.10. 
 
@@ -161,9 +179,10 @@ Credible set of shift configurations
 ----------------------------
 Given a set of distinct shift configurations and their posterior probabilities, we can immediately extract the 95% (or other) credible set of shift configurations. To do this, we rank each shift configuration by their posterior probability. Starting with the most probable shift configuration, we then continue adding shift configurations to the set until the set accounts for at least 95% of the total probability. 
 
-To do this with BAMMtools, we will first compute the threshold between **core** and **non-core** shifts by analyzing the prior distribution on the number of shifts (here, we will use the ``primates`` example dataset)::
+To do this with BAMMtools, we will first compute the threshold between **core** and **non-core** shifts by analyzing the prior distribution on the number of shifts. Here, we will use another dataset from BAMMtools consisting of body size data for living primates::
 
-	> data(primates) #primate phylogeny
+	> library(BAMMtools) # load BAMMtools
+	> data(primates) # load primate phylogeny
 	> data(prior.primates) # Prior distribution simulated with BAMM
 	> prior.threshold <- getBranchShiftPriors(primates, prior.primates)
 	
@@ -173,7 +192,7 @@ To do this with BAMMtools, we will first compute the threshold between **core** 
 	> edata <- getEventData(primates, events.primates, burnin=0.1, type ='trait')
 	> css <- credibleShiftSet(edata, threshold = priors)
 	
-And we can view and plot the results with ``summary.credibleshiftset`` and ``plot.credibleshiftset``.
+And we can view and plot the results with two other BAMMtools functions: ``summary.credibleshiftset`` and ``plot.credibleshiftset``.
 
 
 Overall *best* shift configuration
