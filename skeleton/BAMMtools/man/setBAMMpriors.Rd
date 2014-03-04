@@ -9,7 +9,8 @@ Set priors for BAMM analysis
 
 }
 \usage{
-setBAMMpriors(phy, total.taxa = NULL, traits=NULL, outfile = 'myPriors.txt', Nmax = 1000)
+setBAMMpriors(phy, total.taxa = NULL, traits=NULL, 
+	outfile = 'myPriors.txt', Nmax = 1000)
 }
 
 \arguments{
@@ -42,7 +43,8 @@ For the \code{lambdaInitRootPrior} (this is the prior on the speciation rate for
 
 The \code{lambdaShiftPrior} is the standard deviation of the normal prior on the exponential change parameter k. We set the prior distribution based on the age of the root of the tree. We set the standard deviation of this distribution such that 2 standard deviations give a parameter that will yield a 90\% decline in the initial speciation rate between the root of the tree and the tips. The basic model is lambda(t) = lambda_0 * exp(k * t). This is a straightforward calculation: let x = -log(0.1) / TMAX, where TMAX is the age of the tree. Then set the standard deviation equal to (x / 2).
 
-We set \code{muInitPrior} equal to \code{lambdaInitPrior}. Also, \code{muInitRootPrior} equal to \code{lambdaInitRootPrior}.
+We set \code{muInitPrior} equal to \code{lambdaInitPrior}. Also, \code{muInitRootPrior} equal 
+to \code{lambdaInitRootPrior}.
 
 For trait evolution, we first compute the maximum likelihood estimate of the variance of a Brownian motion process of trait evolution. The prior \code{betaInitPrior} is then set to an exponential distribution with a mean 5 times greater than this value (similar to what is done for lambda and mu, above). The \code{betaInitRootPrior} is set to a distribution with a mean equal to the Brownian variance, and the \code{betaShiftPrior} is parameterized identically to \code{lambdaShiftPrior} above.
 

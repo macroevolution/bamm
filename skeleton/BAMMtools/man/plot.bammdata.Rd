@@ -11,7 +11,8 @@ colors each branch by the estimated rate of speciation, extinction, or trait evo
 \usage{
 \method{plot}{bammdata}(x, method = "phylogram", 
     vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, 
-    legend = FALSE, spex="s", lwd = 1, cex = 1, pal = "RdYlBu", colorbreaks = NULL, par.reset = TRUE, ...)
+    legend = FALSE, spex="s", lwd = 1, cex = 1, pal = "RdYlBu", 
+    colorbreaks = NULL, par.reset = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,7 +22,8 @@ an object of class \code{bammdata}.
   \item{method}{
 a character string indicating the method for plotting the phylogenetic tree. 
 \code{method = "phylogram"} (default) plots the phylogenetic tree using rectangular 
-coordinates. \code{method = "polar"} plots the phylogenetic tree using polar coordinates.
+coordinates. 
+\code{method = "polar"} plots the phylogenetic tree using polar coordinates.
 }
   \item{vtheta}{
 a numeric indicating the angular separation (in degrees) of the first and last
@@ -96,7 +98,8 @@ Some color-blind unfriendly options include
 \code{temperature} \cr
 \code{terrain} \cr
 }
-For more information about these color palettes visit \code{colorbrewer2.org} and \code{geography.uoregon.edu/datagraphics/color_scales.htm} or use the help files of the R packages \code{RColorBrewer} and \code{dichromat}.
+For more information about these color palettes visit \code{colorbrewer2.org} and 
+\code{geography.uoregon.edu/datagraphics/color_scales.htm} or use the help files of the R packages \code{RColorBrewer} and \code{dichromat}.
 
 Additionally, any vector of valid named colors may also be used. The only restriction is that the length of this vector be greater than or equal to three. The colors should be ordered from cool to warm as the colors will be mapped from low rates to high rates in the order supplied (e.g. \code{pal=c("darkgreen","yellow2","red")}). The option \code{pal = "temperature"} uses the \code{rich.colors} function written by Arni Magnusson for the R package \code{gplots}.
 
@@ -147,13 +150,15 @@ plot(ed, lwd = 3, spex = "s") #internally calls dtRates and assignColorBreaks
 ed <- dtRates(ed, tau = 0.01)
 xx <- plot(ed, lwd = 3, spex = "s")
 
-#you can plot subtrees while preserving the original rates to colors map by passing the colorbreaks object as an argument
+#you can plot subtrees while preserving the original 
+# rates to colors map by passing the colorbreaks object as an argument
 sed <- subtreeBAMM(ed, node = 103)
 plot(sed, lwd = 3, colorbreaks = xx$colorbreaks)
 sed <- subtreeBAMM(ed, node = 140)
 plot(sed, lwd = 3, colorbreaks = xx$colorbreaks)
-#note how if we do not pass colorbreaks the map is no longer relative to the rest of the tree and the plot is quite
-#distinct from the original
+#note how if we do not pass colorbreaks the map is 
+# no longer relative to the rest of the tree and the plot is quite
+# distinct from the original
 plot(sed, lwd = 3)
 
 #if you want to change the value of tau and the rates to colors map for the entire tree
