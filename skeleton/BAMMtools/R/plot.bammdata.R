@@ -1,4 +1,4 @@
-plot.bammdata = function (x, method = "phylogram", vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, legend = FALSE, spex = "s", lwd = 1, cex = 1, pal = "RdYlBu", colorbreaks = NULL, ...) {
+plot.bammdata = function (x, method = "phylogram", vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, legend = FALSE, spex = "s", lwd = 1, cex = 1, pal = "RdYlBu", colorbreaks = NULL, par.reset = TRUE, ...) {
     if ("bammdata" %in% class(x)) {
     	if (attributes(x)$order != "cladewise") {
     		stop("Function requires tree in 'cladewise' order");
@@ -112,7 +112,7 @@ plot.bammdata = function (x, method = "phylogram", vtheta = 5, rbf = 0.001, show
     else if (method == "polar") {
         assign("last_plot.phylo", list(type = "fan", Ntip = phy$Nnode + 1, Nnode = phy$Nnode, edge = phy$edge, xx = ret$segs[index, 3], yy = ret$segs[index, 4], theta = ret$segs[index, 5], rb = rb, pp = par(no.readonly = TRUE)), envir = .PlotPhyloEnv);
     }
-    if (!multi) {
+    if (par.reset) {
         if (length(list(...))) {
             par(op);
         }

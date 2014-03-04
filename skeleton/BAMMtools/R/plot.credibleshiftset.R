@@ -61,7 +61,7 @@ plot.credibleshiftset = function(x, plotmax=9, method='phylogram', pal = 'RdYlBu
 	    sed = subsetEventData(cset.bamm, index=i);
 		par(mar = c(2,2,2,2));
 		if (use.plot.bammdata) {
-    		plot.bammdata(sed, method, pal=pal, colorbreaks=colorbreaks, multi=TRUE, ...);
+    		plot.bammdata(sed, method, pal=pal, colorbreaks=colorbreaks, par.reset=FALSE, ...);
 		}
 		else {
 		    if (method=="polar") method = "fan";
@@ -103,7 +103,7 @@ plot.credibleshiftset = function(x, plotmax=9, method='phylogram', pal = 'RdYlBu
     	bg[which(AcDc == FALSE)] = "red";
 		cex = 0.75 + 5 * x$marg.probs[as.character(getShiftNodesFromIndex(cset.bamm, i))];
 		if (use.plot.bammdata) {
-			addBAMMshifts(sed, method, 1, cex=cex, bg=transparentColor(bg, 0.5),multi=TRUE);	
+			addBAMMshifts(sed, method, 1, cex=cex, bg=transparentColor(bg, 0.5),par.reset=FALSE);	
 		}
 		else {
 			r = cset.bamm$edge.length[match(shiftnodes,cset.bamm$edge[,2])];

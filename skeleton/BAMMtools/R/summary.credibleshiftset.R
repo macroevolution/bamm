@@ -18,12 +18,15 @@ summary.credibleshiftset <- function(object, ...) {
 	}
 	
 	
-	cat('\n\nFrequency of', mm, 'shift configurations with highest posterior probability:\n');
-	cat('\n\tRank\t\tProb\tCumulative\t\tCoreShifts\n')
-	for (i in 1:mm){
-		cat('\t\t', format(i, justify='left'), '\t\t', format(round(object$frequency[i], 3), nsmall=3), '\t');
-		cat(round(object$cumulative[i], 3), '\t\t\t', length(object$shiftnodes[[i]]), '\n');
-	}	
+	cat('\n\nFrequency of', mm, 'shift configurations with highest posterior probability:\n\n\n');
+	write.table(format(t(names(dd)),justify="centre",width=10), col.names=FALSE, row.names=FALSE, quote=FALSE);
+	write.table(format(dd[1:mm,], justify="none", width=10), col.names=FALSE, row.names=FALSE, quote=FALSE);
+	
+#	cat('\n\tRank\t\tProb\tCumulative\t\tCoreShifts\n')
+#	for (i in 1:mm){
+#		cat('\t\t', format(i, justify='left'), '\t\t', format(round(object$frequency[i], 3), nsmall=3), '\t');
+#		cat(round(object$cumulative[i], 3), '\t\t\t', length(object$shiftnodes[[i]]), '\n');
+#	}	
 	
 	if (object$number.distinct > 9){
 		cat('\n...omitted', omitted, 'additional distinct shift configurations\n');

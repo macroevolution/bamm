@@ -10,8 +10,8 @@ colors each branch by the estimated rate of speciation, extinction, or trait evo
 }
 \usage{
 \method{plot}{bammdata}(x, method = "phylogram", 
-    vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, multi = FALSE, 
-    legend = FALSE, spex="s", lwd = 1, cex = 1, pal = "RdYlBu", colorbreaks = NULL, ...)
+    vtheta = 5, rbf = 0.001, show = TRUE, labels = FALSE, 
+    legend = FALSE, spex="s", lwd = 1, cex = 1, pal = "RdYlBu", colorbreaks = NULL, par.reset = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -37,10 +37,6 @@ a logical indicating whether or not to plot the tree. Defaults to \code{TRUE}.
   \item{labels}{
 a logical indicating whether or not to plot the tip labels. Defaults to \code{FALSE}.
 }
-  \item{multi}{
-a logical indicating whether or not the device is configured for a multi-panel plot.
-Defaults to \code{FALSE}.
-}
   \item{legend}{
 a logical indicating whether or not to plot a density function for interpreting the 
 mapping of evolutionary rates to colors. Defaults to \code{FALSE}.
@@ -63,6 +59,9 @@ Details for explanation of options.
   \item{colorbreaks}{
 a numeric vector of percentiles delimiting the bins for mapping rates to colors. If \code{NULL} (default) bins
 are calculated from the rates that are passed with the \code{bammdata} object.  	
+}
+  \item{par.reset}{
+a logical indicating whether or not to reset the graphical parameters when the function exits. Defaults to \code{TRUE}. The function will only reset the graphical parameters if arguments are passed via \dots.
 }
   \item{\dots}{
 further arguments passed to \code{par}.
@@ -175,8 +174,8 @@ ed <- dtRates(ed, 0.005)
 xx <- plot(ed, show=FALSE) #individual plots will have a color map relative to the mean
 for (i in 1:6) {
 	ed <- dtRates(ed, 0.005, samples[i])
-	plot(ed, multi=TRUE, colorbreaks=xx$colorbreaks)
-	addBAMMshifts(ed,method="phylogram",index=samples[i],multi=TRUE)	
+	plot(ed, par.reset=FALSE, colorbreaks=xx$colorbreaks)
+	addBAMMshifts(ed,method="phylogram",index=samples[i],par.reset=FALSE)	
 }
 dev.off()
 

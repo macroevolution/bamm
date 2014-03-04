@@ -18,57 +18,57 @@
 #	Returns: an ephy object with a list appended containing a vector of branch
 #			 rates and the step size used for calculation.
 
-dtRates = function (ephy, tau, ism = NULL, tmat = FALSE) {
+dtRates <- function (ephy, tau, ism = NULL, tmat = FALSE) {
     if (!"bammdata" %in% class(ephy)) {
         stop("Object ephy must be of class bammdata");
     }
     if (attributes(ephy)$order != "cladewise") {
     	stop("Function requires tree in 'cladewise' order");
     }
-    ephy$eventBranchSegs = lapply(ephy$eventBranchSegs, function(x) x[order(x[,1]), ]);
-    phy = as.phylo.bammdata(ephy);
-    phy = getStartStopTimes(phy);
-    tH = max(branching.times(phy));
-    segmat = segMap(ephy, tau);
+    ephy$eventBranchSegs <- lapply(ephy$eventBranchSegs, function(x) x[order(x[,1]), ]);
+    phy <- as.phylo.bammdata(ephy);
+    phy <- getStartStopTimes(phy);
+    tH <- max(branching.times(phy));
+    segmat <- segMap(ephy, tau);
     #tol = max(1 * 10^-decimals(ephy$eventBranchSegs[[1]][1, 2]),1 * 10^-decimals(ephy$eventBranchSegs[[1]][1, 3]));
-    tol = 0.00001;
-    if (storage.mode(segmat) != "double") stop("Exiting");
-    if (storage.mode(tol) != "double") stop("Exiting");
-    if (storage.mode(ephy) != "list") stop("Exiting");
+    tol <- 0.00001;
+    if (storage.mode(segmat) != "double") stop("Error: wrong storage mode in foreign function call");
+    if (storage.mode(tol) != "double") stop("Error: wrong storage mode in foreign function call");
+    if (storage.mode(ephy) != "list") stop("Error: wrong storage mode in foreign function call");
     if (is.null(ism)) {
-        ism = as.integer(1:length(ephy$eventBranchSegs));
+        ism <- as.integer(1:length(ephy$eventBranchSegs));
     }
-    else ism = as.integer(ism);
+    else ism <- as.integer(ism);
     if (ism[length(ism)] > length(ephy$eventBranchSegs)) {
         warning("Sample index out of range");
-        ism = as.integer(1:length(ephy$eventBranchSegs));
+        ism <- as.integer(1:length(ephy$eventBranchSegs));
     }
-    index = 1:nrow(segmat);
-    rownames(segmat) = index;
-    segmat = segmat[order(segmat[, 1]), ];
+    index <- 1:nrow(segmat);
+    rownames(segmat) <- index;
+    segmat <- segmat[order(segmat[, 1]), ];
     if (ephy$type == "diversification") {
-        dtrates = .Call("dtrates", ephy, segmat, tol, ism, 0L, PACKAGE = "BAMMtools");
+        dtrates <- .Call("dtrates", ephy, segmat, tol, ism, 0L, PACKAGE = "BAMMtools");
         for (i in 1:2) {
-            names(dtrates[[i]]) = rownames(segmat);
-            dtrates[[i]] = dtrates[[i]][as.character(index)];
-            names(dtrates[[i]]) = NULL;
+            names(dtrates[[i]]) <- rownames(segmat);
+            dtrates[[i]] <- dtrates[[i]][as.character(index)];
+            names(dtrates[[i]]) <- NULL;
         }
     }
     else if (ephy$type == "trait") {
-        dtrates = .Call("dtrates", ephy, segmat, tol, ism, 1L, PACKAGE = "BAMMtools");
-        names(dtrates) = rownames(segmat);
-        dtrates = dtrates[as.character(index)];
-        names(dtrates) = NULL;
+        dtrates <- .Call("dtrates", ephy, segmat, tol, ism, 1L, PACKAGE = "BAMMtools");
+        names(dtrates) <- rownames(segmat);
+        dtrates <- dtrates[as.character(index)];
+        names(dtrates) <- NULL;
     }
     else {
     	stop("Unrecognized model type");
     }
 	if (tmat) {
-		segmat = segmat[as.character(index),];
-		ephy$dtrates = list(tau = tau, rates = dtrates, tmat = segmat);
+		segmat <- segmat[as.character(index),];
+		ephy$dtrates <- list(tau = tau, rates = dtrates, tmat = segmat);
 		return(ephy);
 	}
-	ephy$dtrates = list(tau = tau, rates = dtrates);
+	ephy$dtrates <- list(tau = tau, rates = dtrates);
 	return(ephy);
 }
 

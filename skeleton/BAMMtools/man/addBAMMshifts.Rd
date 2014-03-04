@@ -9,7 +9,7 @@ Adds symbols to a plotted tree to mark the location(s) where there is a shift in
 macroevolutionary dynamics of diversification or trait evolution.
 }
 \usage{
-addBAMMshifts(ephy, method = 'phylogram', index, cex = 1, pch = 21, col = 1, bg = 2, multi = FALSE)
+addBAMMshifts(ephy, method = 'phylogram', index, cex = 1, pch = 21, col = 1, bg = 2, par.reset = TRUE)
 }
 
 \arguments{
@@ -34,8 +34,8 @@ an integer or character string indicating the border color of the plotting symbo
   \item{bg}{
 an integer or character string indicating the background color of the plotting symbol.
 }
-  \item{multi}{
-a logical indicating whether the device is configured for multi-panel plotting.
+  \item{par.reset}{
+a logical indicating whether to reset the graphical parameters before exiting.
 }
 }
 \details{
@@ -68,8 +68,8 @@ par(mfrow=c(2,3),mar=c(5,1,1,1))
 samples = sample(1:length(ed$eventData), 6)
 for (i in 1:6) {
 	sed <- subsetEventData(ed, samples[i])
-	plot(sed, multi=TRUE)
-	addBAMMshifts(sed,method="phylogram",index=1,multi=TRUE)	
+	plot(sed, par.reset=FALSE)
+	addBAMMshifts(sed,method="phylogram",index=1,par.reset=FALSE)	
 }
 }
 

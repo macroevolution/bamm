@@ -48,9 +48,9 @@ rank=NULL, index=NULL, spex="s", legend=TRUE, add.freq.text=TRUE, ...)
 		}
 	}
 	
-	par.reset = FALSE;
+	par.reset = TRUE;
 	if (legend) {
-		par.reset = TRUE;
+		par.reset = FALSE;
 		m = matrix(c(1,0,1,2,1,0),byrow=TRUE,nrow=3,ncol=2);
     	layout(m, widths=c(1,0.25));
 		par(mar=c(7.1,1,7.1,1));
@@ -59,7 +59,7 @@ rank=NULL, index=NULL, spex="s", legend=TRUE, add.freq.text=TRUE, ...)
 	ephy = dtRates(ephy,0.01);
 	colorbreaks = assignColorBreaks(ephy$dtrates$rates, spex=spex);
 	sed = subsetEventData(ephy, index);
-	plot.bammdata(sed, method=method, pal=pal, spex=spex, colorbreaks=colorbreaks, multi=par.reset, ...);
+	plot.bammdata(sed, method=method, pal=pal, spex=spex, colorbreaks=colorbreaks, par.reset=par.reset, ...);
 
 	shiftnodes = getShiftNodesFromIndex(ephy, index);
 	shiftnode_parents = ephy$edge[match(shiftnodes,ephy$edge[,2],nomatch=0), 1];
@@ -94,7 +94,7 @@ rank=NULL, index=NULL, spex="s", legend=TRUE, add.freq.text=TRUE, ...)
     bg = rep("blue", length(AcDc));
     bg[which(AcDc == FALSE)] = "red";
 	cex = 0.75 + 5 * x$marg.probs[as.character(getShiftNodesFromIndex(ephy, index))];
-	addBAMMshifts(sed, method, 1, cex=cex, bg=transparentColor(bg, 0.5),multi=par.reset);
+	addBAMMshifts(sed, method, 1, cex=cex, bg=transparentColor(bg, 0.5),par.reset=par.reset);
 	if (add.freq.text) {
 		mtext(sprintf("core shift configuration: rank %i of %i", rank, length(x$shifts)),3,line=0);
 		mtext(sprintf("sampled with frequency f = %.2g",x$frequency[rank]),3,line=-1.25);

@@ -12,7 +12,7 @@ as.phylo.bammdata <- function(x, ...) {
 	class(newphylo) <- 'phylo';
 	attributes(newphylo)$order = attributes(x)$order;
 	if (attributes(newphylo)$order != "cladewise") {
-		newphylo = reorder(newphylo);
+		newphylo <- reorder(newphylo);
 	}
 	return(newphylo);
 }

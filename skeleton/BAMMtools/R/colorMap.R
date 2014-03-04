@@ -2,8 +2,8 @@
 #	Internal function called by plot.bammdata(...)
 #
 #
-colorMap = function(x, pal, breaks) {
-    dpal = list(
+colorMap <- function(x, pal, breaks) {
+    dpal <- list(
 BrBG=rev(c("#543005","#8c510a","#bf812d","#dfc27d","#f6e8c3","#f5f5f5","#c7eae5","#80cdc1","#35978f","#01665e","#003c30")),
 PiYG=rev(c("#8e0152","#c51b7d","#de77ae","#f1b6da","#fde0ef","#f7f7f7","#e6f5d0","#b8e186","#7fbc41","#4d9221","#276419")),
 PRGn=rev(c("#40004b","#762a83","#9970ab","#c2a5cf","#e7d4e8","#f7f7f7","#d9f0d3","#a6dba0","#5aae61","#1b7837","#00441b")),
@@ -19,40 +19,40 @@ RdYlGn=rev(c("#a50026","#d73027","#f46d43","#fdae61","#fee08b","#ffffbf","#d9ef8
 Spectral=c("#9e0142","#d53e4f","#f46d43","#fdae61","#fee08b","#ffffbf","#e6f598","#abdda4","#66c2a5","#3288bd","#5e4fa2")
 );
     	
-	NCOLORS = length(breaks)-1;
+	NCOLORS <- length(breaks)-1;
 	if (length(pal) >= 3) {
-		colpalette = colorRampPalette(pal,space='Lab')(NCOLORS);	
+		colpalette <- colorRampPalette(pal,space='Lab')(NCOLORS);	
 	}
 	else if (pal %in% names(dpal)) {
-		colpalette = colorRampPalette(dpal[[pal]],space='Lab')(NCOLORS);
+		colpalette <- colorRampPalette(dpal[[pal]],space='Lab')(NCOLORS);
 	}
 	else if (tolower(pal) == "temperature") {
-		colpalette = richColors(NCOLORS);	
+		colpalette <- richColors(NCOLORS);	
 	}
 	else if (tolower(pal) == "terrain") {
-		colpalette = terrain.colors(NCOLORS);
+		colpalette <- terrain.colors(NCOLORS);
 	}
 	else {
 		stop("Unrecognized color palette specification");
 	}
-	kde = density(x, from=min(x), to=max(x));
-	colset = numeric(length(x));
-	coldens = numeric(length(kde$x));
+	kde <- density(x, from=min(x), to=max(x));
+	colset <- numeric(length(x));
+	coldens <- numeric(length(kde$x));
 	for (i in 2:length(breaks)) {
         if (i == 2) {
-            colset[x < breaks[2]] = colpalette[1];
-            coldens[kde$x < breaks[2]] = colpalette[1];
+            colset[x < breaks[2]] <- colpalette[1];
+            coldens[kde$x < breaks[2]] <- colpalette[1];
         }
         else if (i == length(breaks)) {
-            colset[x >= breaks[length(breaks)-1]] = colpalette[length(breaks)-1];
-            coldens[kde$x >= breaks[length(breaks)-1]] = colpalette[length(breaks)-1];
+            colset[x >= breaks[length(breaks)-1]] <- colpalette[length(breaks)-1];
+            coldens[kde$x >= breaks[length(breaks)-1]] <- colpalette[length(breaks)-1];
         }
         else {
-            colset[x >= breaks[i-1] & x < breaks[i]] = colpalette[i-1];
-        	coldens[kde$x >= breaks[i-1] & kde$x < breaks[i]] = colpalette[i-1];
+            colset[x >= breaks[i-1] & x < breaks[i]] <- colpalette[i-1];
+        	coldens[kde$x >= breaks[i-1] & kde$x < breaks[i]] <- colpalette[i-1];
         }
     }
-	coldens = data.frame(kde$x,kde$y,coldens,stringsAsFactors=FALSE);
+	coldens <- data.frame(kde$x,kde$y,coldens,stringsAsFactors=FALSE);
 	return(list(cols = colset, colsdensity = coldens));
 }
 
