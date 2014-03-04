@@ -9,14 +9,6 @@
 #ifndef __bamm__FastSimulatePrior__
 #define __bamm__FastSimulatePrior__
 
-//#include <iostream>
-
-//#include <vector>
-
-//#include <stdlib.h>
-//#include <string.h>
-
-#include <stdlib.h>
 #include <string>
 #include <fstream>
 #include <iosfwd>
