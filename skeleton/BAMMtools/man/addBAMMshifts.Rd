@@ -9,7 +9,8 @@ Adds symbols to a plotted tree to mark the location(s) where there is a shift in
 macroevolutionary dynamics of diversification or trait evolution.
 }
 \usage{
-addBAMMshifts(ephy, method = 'phylogram', index, cex = 1, pch = 21, col = 1, bg = 2, par.reset = TRUE)
+addBAMMshifts(ephy, method = 'phylogram', index, 
+	cex = 1, pch = 21, col = 1, bg = 2, par.reset = TRUE)
 }
 
 \arguments{

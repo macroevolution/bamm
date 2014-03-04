@@ -7,7 +7,8 @@ Create \code{bammdata} object from MCMC output
 \code{getEventData} reads shift configuration data (the "event data" output) from a \code{BAMM} analysis and creates a \code{bammdata} object. The \code{bammdata} object is fundamental for extracting information about macroevolutionary rate variation through time and among lineages.
 }
 \usage{
-getEventData(phy, eventdata, burnin = 0, nsamples = NULL, verbose = FALSE, type = "diversification")
+getEventData(phy, eventdata, burnin = 0, nsamples = NULL, 
+	verbose = FALSE, type = "diversification")
 }
 \arguments{
   \item{phy}{
@@ -39,7 +40,7 @@ The \code{eventdata} file (or data frame) is a record of events and associated p
 In general, the user does not need to be concerned with the details of a \code{bammdata} object. The object is used as input by a number of \code{BAMMtools} functions. 
  
 The parameter \code{nsamples} can be used to reduce the total amount of data included in the raw eventdata output from a \code{BAMM} run. The final \code{bammdata} object will consist of all data for \code{nsamples} from the posterior. These \code{nsamples} are equally spaced after discarding some \code{burnin} fraction as "burn-in". If \code{nsamples} is set to \code{NULL}, the \code{bammdata} object will include all samples in the posterior after discarding the \code{burnin} fraction.
- 
+
 }
 \value{
 A list with many components:

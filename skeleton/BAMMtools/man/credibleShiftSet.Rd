@@ -4,7 +4,7 @@
 Credible set of macroevolutionary rate shift configurations from BAMM results
 }
 \description{
-Computes the XX\% credible set of macroevolutionary rate shift configurations from a \code{bammdata} object. These results can be analyzed further and/or plotted.
+Computes the 95\% (or any other \%) credible set of macroevolutionary rate shift configurations from a \code{bammdata} object. These results can be analyzed further and/or plotted.
 
 }
 \usage{
