@@ -335,7 +335,7 @@ which should be a bit higher than the overall rate, an effect that you can clear
 You can also use the ``node`` argument to ``getCladeRates`` to **exclude** all the descendants of a particular node, thus computing the mean rate only for the *background* lineages. This is extremely useful in the present example. We have an evolutionary rate estimate for dolphins, and good evidence that their diversification dynamics are different from the background rate. We can thus compute a mean rate for *non-dolphin whales*, as follows::
 
 	> nondolphinrate <- getCladeRates(edata, node = 140, nodetype = "exclude")
-	> mean(nondolphinrate)$lambda
+	> mean(nondolphinrate$lambda)
 	> quantile(nondolphinrate$lambda, c(0.05, 0.95))
 	
 And you can see that the non-dolphin (background) rate is much lower than the dolphin rate. These are *mean time-averaged clade-specific rates*. If diversification rates have changed dramatically through the history of a particular clade, a single overall mean rate might not be particularly informative.
