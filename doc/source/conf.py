@@ -172,7 +172,7 @@ html_static_path = ['_static']
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
-html_additional_pages = {'index': 'index.html', 'download': 'download.html'}
+html_additional_pages = {'download': 'download.html'}
 
 # If false, no module index is generated.
 html_domain_indices = False
