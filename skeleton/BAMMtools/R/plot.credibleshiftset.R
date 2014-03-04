@@ -1,7 +1,7 @@
 plot.credibleshiftset = function(x, plotmax=9, method='phylogram', pal = 'RdYlBu', spex = "s", add.freq.text = TRUE, use.plot.bammdata = TRUE, border = TRUE, legend = FALSE, send2pdf = FALSE, ...)
 {
 	if (class(x) != "credibleshiftset") {
-		stop('arg sc must be of class "credibleshiftset"');
+		stop('arg x must be of class "credibleshiftset"');
 	}
 	if ((spex == "e" || spex == "se") && x$type == "trait") {
 		warning("arg spex not meaningful for BAMMtrait");
