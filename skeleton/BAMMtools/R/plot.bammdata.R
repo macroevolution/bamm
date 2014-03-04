@@ -93,7 +93,7 @@ plot.bammdata = function (x, method = "phylogram", vtheta = 5, rbf = 0.001, show
         }
         if (method == "phylogram") {
             plot.window(xlim = c(0, 1 + ofs), ylim = c(0, phy$Nnode * 1/(phy$Nnode + 1)));
-            segments(x0, y0, x1, y1, col = edge.color, lwd = lwd, lend = 2);
+            segments(x0[-1], y0[-1], x1[-1], y1[-1], col = edge.color[-1], lwd = lwd, lend = 2);
             isTip <- phy$edge[, 2] <= phy$Nnode + 1;
             isTip <- c(FALSE, isTip);
             segments(ret$arcs[!isTip, 1], ret$arcs[!isTip, 2], ret$arcs[!isTip, 3], ret$arcs[!isTip, 4], col = arc.color[!isTip], lwd = lwd, lend = 2);
