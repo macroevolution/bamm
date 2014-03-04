@@ -12,44 +12,34 @@ The R package **BAMMtools** contains almost everything you need to analyze and v
 	
 The information below is a brief overview to get you started - there is much more than can be done. We first cover a :ref:`sample BAMMtools workflow<bammtoolsworkflow>` for analyzing rates and rate shifts. The general analyses described in this section apply both to **speciation-extinction** and **phenotypic evolution** studies. As such, they are not treated separately. The primary difference is the name of the parameters (:math:`\lambda` and :math:`\mu` for speciation and extinction, and :math:`\beta` for trait evolution).
 
+In case you missed it, you really should read :ref:`this section<rateshifts>` before proceeding. Having a solid understanding of *distinct shift configurations*, *marginal shift probabilities*, and *the overall best shift configuration* is critical to appreciating what BAMMtools can do.  
+
 The sections below include:
 
-BAMMtools quickstart guide
-------------------
+* **BAMMtools quickstart guide**
+	This is a :ref:`one sentence guide<workflow>` to major *BAMMtools* functions, covering several common analyses.
 
-This is a :ref:`one sentence guide<workflow>` to major *BAMMtools* functions, covering several common analyses.
-
-BAMM output and the *bammdata* object
-------------------
-
-A :ref:`quick overview<bammoutput>` of **BAMM** output files.
+* **BAMM output and the *bammdata* object**
+	A :ref:`quick overview<bammoutput>` of **BAMM** output files.
 
 
-Assessing MCMC convergence
--------------------
+* **Assessing MCMC convergence**
+	Standard tests you should do to check :ref:`BAMM convergence<BAMMconverge>`.
 
-Standard tests you should do to check :ref:`BAMM convergence<BAMMconverge>`.
-
-Analysis of rate shifts
---------------------
-:ref:`This section<numbershifts>` describes how to analyze the number and location of rate shifts from a Bayesian perspective.
+* **Analysis of rate shifts**
+	:ref:`This section<numbershifts>` describes how to analyze the number and location of rate shifts from a Bayesian perspective.
  
+* **Clade-specific evolutionary rates**
+	Estimating mean rates for :ref:`specific clades<claderates>`.
 
-Clade-specific evolutionary rates
-----------------
-Estimating mean rates for :ref:`specific clades<claderates>`.
+* **Branch and tip-specific evolutionary rates**
+	Estimate marginal densities of rates for individual :ref:`branches and tips<branchrates>`
 
-Branch and tip-specific evolutionary rates
------------------
-Estimate marginal densities of rates for individual :ref:`branches and tips<branchrates>`
+* **Rate-through-time analysis**
+	Analyze and plot macroevolutionary :ref:`rates through time<bammtoolsRTT>`
 
-Rate-through-time analysis
-----------------
-Analyze and plot macroevolutionary :ref:`rates through time<bammtoolsRTT>`
-
-Bayes factors for model comparison
-----------------
-Model selection with :ref:`Bayes factors<bayesfactors>`
+* **Bayes factors for model comparison**
+	Model selection with :ref:`Bayes factors<bayesfactors>`
 
 BAMMtools quickstart guide
 ...............
@@ -68,8 +58,6 @@ This is a quickstart guide to some of the analyses discussed below (and many mor
 * Compute marginal shift probabilities for branches with ``marginalShiftProbsTree``
 * Plot rates through time with ``plotRateThroughTime(...)``
 * Compute clade-specific marginal distributions of rates with ``getCladeRates(...)`` 
-
-Here is a :ref:`reference<bammtoolsworkflow>`, and :ref:`BAMM graph gallery<bammgraph>`
 
 
 BAMM output and the *bammdata* object
