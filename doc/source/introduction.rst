@@ -19,7 +19,7 @@ the R package **BAMMtools**.
 
  
 Why Use BAMM?
-.............
+---------------
 
 **Allows modeling of rates through time and among clades.**
 BAMM abandons the simple notion of *rate shifts* involving constant-rate
@@ -68,7 +68,7 @@ approaches that are limited to identifying a single best model. These
 approaches are inherently limited, because many distinct combinations of
 evolutionary shift regimes might have roughly equal probabilities. Rather than
 identifying a single best configuration of rate shifts, BAMM samples rate shift
-configurations in proportion to their posterior probability. Please :ref:`read our detailed explanation <rateshifts>` of several fundamental problems associated with stepwise AIC and other methods that identify a single "best" rate shift configuration.
+configurations in proportion to their posterior probability. Please :ref:`read our detailed explanation <rateshifts>` of problems associated with stepwise AIC and other methods that identify a single "best" rate shift configuration.
 
 **It is fast.**
 BAMM's underlying C++ core allows rapid modeling of evolutionary dynamics in

@@ -4,13 +4,12 @@ Frequently Asked Questions
 General
 .......
 
-Citing BAMM
------------
+How do I cite BAMM?
+-------------------------------
 
-The primary methodological description of the BAMM model was published in *PLoS ONE*. A link to the paper is `available here <http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543>`_ 
+The primary methodological description of the full BAMM model was published in *PLoS ONE*. A link to the paper is `available here <http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543>`_ 
 
-This paper contains a description of the model, the reversible jump MCMC implementation, a comprehensive performance evaluation, and an empirical application.
-
+This paper contains a description of the model, the reversible jump MCMC implementation, a comprehensive performance evaluation, and an empirical application. An earlier paper used a related implementation that assumed constant rates of diversification through time within evolutionary rate regimes (`Rabosky et al. 2013 <http://www.nature.com/ncomms/2013/130606/ncomms2958/full/ncomms2958.html>`_).
 
 How much data does it need?
 ---------------------------
@@ -23,21 +22,38 @@ Your first consideration should be: for how long should I run the chain? The ans
 
 
 
-BAMM extensions
----------------
+What extensions are underway for BAMM?
+--------------------------------------
 
-We are currently testing extensions of BAMM that allow modeling evolutionary dynamics under a much greater range of phenotypic evolutionary scenarios, as well as the incorporation of paleontological data. Bleeding edge releases of BAMM can be obtained from here (**link**).
+We are currently testing extensions of BAMM that allow modeling evolutionary dynamics under a much greater range of phenotypic evolutionary scenarios, as well as the incorporation of paleontological data. Bleeding edge releases of BAMM can be obtained from our `GitHub page <https://github.com/macroevolution/bamm>`_.
 
-
-How can BAMM detect diversity-dependent changes in speciation rates?
+What is the actual model implemented in BAMM for time-varying rates?
 --------------------------------------------------------------------
 
-BAMM models the dynamics of speciation and extinction within rate regimes using an exponential change function. The speciation rate :math:`\lambda` at any point in time is modeled as
+The model originally described for time-varying macroevolutionary rate regimes (e.g., `Rabosky 2014
+<http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543>`_) used a simple exponential change function for rates through time:
 
 .. math::
 	\lambda(t) = \lambda_{0}e^{k t}
 
-where :math:`\lambda` is the initial speciation rate at the start of the rate regime, :math:`k` is a parameter that controls the dynamics of rate change through time, and :math:`t` is the elapsed time since the start of the rate regime. Theoretically, a linear *diversity-dependent* change in speciation rates through time leaves a signal in molecular phylogenies that is virtually indistinguishable from an exponential *time-dependent* change in rates. Our analyses of simulated datasets suggest that these two types of models are not distinguishable in practice. 
+We have since come to recognize that this model is not ideal, because it is highly asymmetric with respect to increasing (k > 0) and decreasing (k < 0) rates through time. Specifically, the prior we place on *k* is symmetric (normal), but the rates are not. The problem, put simply, is that negative values of *k* can only decrease the evolutionary rate to zero. However, positive values - even of equivalent absolute value - can lead to extremely large values. Just consider the values of the exponential function above evaluated at :math:`\lambda_{0} = 1`, :math:`t = 1`, :math:`k = -10` and :math:`k = 10`.  With *k = -10*, the value of the rate function approaches zero, but with *k = +10*, it is 22026.47. Yet both of these *k* values have equal prior densities. 
+
+We thus modified the exponential change function to make it symmetric. For *k < 0*, we use the exponential change function defined above. For *k > 0*, we use the function
+
+.. math::
+	\lambda(t) = \lambda_{0} (2 - e^{k t})
+	
+If *k > 0*, this function asymptotically approaches the limiting value :math:`2\lambda_{0}`. 
+
+This has the nice property that the function :math:`\lambda(t)` is symmetric about the line :math:`x = \lambda_{0}`, for positive and negative values of k with the same absolute value.
+
+
+	
+
+How can BAMM detect diversity-dependent changes in speciation rates?
+--------------------------------------------------------------------
+
+BAMM models the dynamics of speciation and extinction within rate regimes using an exponential change function described in the preceding section. Theoretically, a linear *diversity-dependent* change in speciation rates through time leaves a signal in molecular phylogenies that is virtually indistinguishable from an exponential *time-dependent* change in rates. Our analyses of simulated datasets suggest that these two types of models are not distinguishable in practice. 
 
 We have conducted extensive performance evaluations where we have simulated datasets under formal *diversity-dependent* scenarios, then used BAMM to reconstruct the number of macroevolutionary rate regimes as well as the dynamics of speciation and extinction through time. Our simulations indicate that BAMM can estimate both the number of distinct macroevolutionary regimes, as well as the underlying evolutionary rates, even though we are using the exponential approximation to the diversity-dependent process. We have published these results **here** (non-functional link).
  
