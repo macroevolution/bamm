@@ -72,51 +72,50 @@ Dan Rabosky
 \link[BAMMtools]{plotRateThroughTime}
 }
 \examples{
-
+##NOT RUN##
 # Plot a rate-through-time curve with 
 # confidence intervals for the whale dataset:
 
-data(whales, events.whales)
-ed <- getEventData(whales, events.whales)
+# data(whales, events.whales)
+# ed <- getEventData(whales, events.whales)
 
-rmat <- getRateThroughTimeMatrix(ed)
+# rmat <- getRateThroughTimeMatrix(ed)
 
-plot.new()
-plot.window(xlim=c(0, 36), ylim=c(0, .7))
+# plot.new()
+# plot.window(xlim=c(0, 36), ylim=c(0, .7))
 
-# Speciation quantiles: plot 90% CIs
-qq <- apply(rmat$lambda, 2, quantile, c(0.05, 0.5, 0.95))
+## Speciation quantiles: plot 90% CIs
+# qq <- apply(rmat$lambda, 2, quantile, c(0.05, 0.5, 0.95))
 
-xv <- c(rmat$times, rev(rmat$times))
-yv <- c(qq[1,], rev(qq[3,]))
+# xv <- c(rmat$times, rev(rmat$times))
+# yv <- c(qq[1,], rev(qq[3,]))
 
-# Add the confidence polygon on rate distributions:
-polygon(xv, yv, col='gray80', border=FALSE)
+## Add the confidence polygon on rate distributions:
+# polygon(xv, yv, col='gray80', border=FALSE)
 
-# Add the median rate line:
-lines(rmat$times, qq[2,], lwd=3, col='red')
+## Add the median rate line:
+# lines(rmat$times, qq[2,], lwd=3, col='red')
 
 # Add axes
-axis(1, at=seq(-5, 35, by=5))
-axis(2, at=seq(-0.2, 1, by=0.2), las=1)
+# axis(1, at=seq(-5, 35, by=5))
+# axis(2, at=seq(-0.2, 1, by=0.2), las=1)
 
 ####### Now we will show the actual grid used for rate calculations:
 
-plot(whales, show.tip.label=FALSE)
-axisPhylo()
+# plot(whales, show.tip.label=FALSE)
+# axisPhylo()
 
-mbt <- max(branching.times(whales))
-#tvec <- mbt - rmat$times;
-tvec <- rmat$times;
-
-
-for (i in 1:length(tvec)){
-	lines(x=c(tvec[i], tvec[i]), y=c(0, 90), lwd=0.7, col='gray70')
-}
-
-# This shows the grid of time slices over the phylogeny
+# mbt <- max(branching.times(whales))
+## tvec <- mbt - rmat$times;
+# tvec <- rmat$times;
 
 
+# for (i in 1:length(tvec)){
+# 	lines(x=c(tvec[i], tvec[i]), y=c(0, 90), lwd=0.7, col='gray70')
+# }
+
+## This shows the grid of time slices over the phylogeny
+##END##
 }
  
 \keyword{ models}

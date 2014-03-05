@@ -1,0 +1,221 @@
+#
+#   BAMM control file for speciation-extinction analysis 
+#
+#   General Format: 
+#       - Whitespace (tabs and spaces) is not important
+#         and is stripped out when this file is parsed.
+#       - Each parameter is specified as: par_name = par_value
+#         where par_name is the name of the parameter
+#         and par_value is the value you are assigning it.
+#       - Parameter names must be spelled exactly.
+#       - Comments start with # and go to the end of the line
+#       - True/False parameters (e.g., runMCMC) are specified
+#       - with "1" (True) or "0" (False).
+
+###################################
+# GENERAL SETUP AND DATA INPUT
+
+modeltype = speciationextinction        
+# Specify speciationextinction or trait analysis
+                                  
+treefile = %%%%
+# Location of phylogenetic tree to be analyzed
+
+runInfoFilename = run_info.txt
+# File name to output general information about this run
+
+sampleFromPriorOnly = 0                 
+# If TRUE will perform BAMM analysis sampling 
+# from prior only. (no likelihoods computed)
+
+runMCMC = 1                             
+# perform an MCMC simulation? If runMCMC = 0, the program will 
+# check whether the data file can be read and whether 
+# an initial likelihood can be computed.
+
+simulatePriorShifts = 1
+# Simulate prior distribution of the number of shift events
+#	given the hyperprior on the Poisson rate parameter.
+# This is necessary to compute Bayes factors
+
+# loadEventData = 0                       
+# Load event configuration - see Documentation
+
+# eventDataInfile = event_data_in.txt
+# Used only if loadEventData = 1
+
+initializeModel = 1                     
+# Initializes (but does not run) the MCMC. If initializeModel = 0, 
+# will just check parameter file and also ensure that data (treefile etc) 
+# can be read.                          
+
+useGlobalSamplingProbability = 1        
+# Use a "global" sampling probability? If FALSE (value = 0), expects a 
+# filename for species-specific sampling probabilities (see documentation)
+                                        
+globalSamplingFraction = 1.0            
+# The sampling probability. If useGlobalSamplingFraction = 0, 
+# this is ignored and BAMM looks for a filename with 
+# species-specific sampling fractions
+
+# sampleProbsFilename = sample_probs.txt
+# File containing species-specific sampling fractions. See documentation.
+
+# seed = 12345
+# Seed for the random number generator. 
+# If not specified (or is -1), a seed is obtained from clock time
+
+overwrite = 0
+# If TRUE will overwrite analysis result files (if present).
+# Default is set to FALSE: analyses will stop before overwriting files.
+
+###################################
+# PRIORS
+#
+# If you used setBAMMpriors, paste the output 
+# over everything between 
+# #<START prior block># and #<END prior block>#
+#
+# <START prior block >
+
+poissonRatePrior = 1.0
+# The rate parameter of the exponential prior on the rate parameter of the 
+# Poisson process. Smaller values favor greater numbers of distinct evolutionary
+# regimes on tree. 
+# Suggested values: 
+#     poissonRatePrior = 1.0 # for smaller datasets (< 500 tips)
+#	  poissonRatePrior = 0.1 or even 0.02 for large (5000+ tips) 
+ 
+lambdaInitPrior = 1.0
+# Prior (rate parameter of exponential) on initial lambda value for rate regimes
+
+lambdaInitRootPrior = 5.0
+# Prior on initial lambda value for the root process
+
+lambdaShiftPrior = 0.05
+# Prior (std dev of normal) on lambda shift parameter for rate regimes
+#  You cannot adjust the mean of this distribution (fixed at zero, 
+#		which is equal to a constant rate diversification process)
+
+lambdaShiftRootPrior = 0.05
+# Prior on the lambda shift parameter of the root process
+
+muInitPrior = 1.0
+# Prior (rate parameter of exponential) on extinction rates  
+
+muInitRootPrior = 5.0
+# Prior on the initial mu value for the root process
+
+# <END prior block >
+###################################
+# MCMC SIMULATION SETTINGS & OUTPUT OPTIONS
+
+numberGenerations = %%%%
+# Generations to perform MCMC simulation.
+
+mcmcWriteFreq = %%%%
+# Writes MCMC simulation parameters (log-likelihood, log-prior,
+# number of processes) to file every mcmcWriteFreq generations.
+
+eventDataWriteFreq = %%%%
+# Specify frequency to write actual model parameters to file. 
+# These are the main results!
+
+printFreq = %%%%
+# Prints MCMC status to screen every printFreq generations.
+
+# outName = BAMM
+# Name of analysis (output files will be prefixed with this)
+# if commented out, no prefix will be used
+
+# mcmcOutfile = mcmc_out.txt
+# The name of file for MCMC output. Only includes summar
+# information about MCMC simulation (log-likelihoods etc)
+
+# eventDataOutfile = event_data.txt
+# The raw event data. ALL of the results are contained in this file,
+# and all branch-specific speciation rates, shift positions, 
+# marginal distributions etc can be reconstructed from this output. 
+# See R package BAMMtools for working with this output.
+
+###################################
+# OPERATORS: MCMC_SCALING_OPERATORS
+
+updateLambdaInitScale = 2.0
+# Scale parameter for updating the initial speciation rate for each process
+
+updateLambdaShiftScale = 0.1
+# Scale parameter for the exponential change parameter for speciation
+
+updateMuInitScale = 2.0
+# Scale parameter for updating initial extinction rate for each process
+
+updateEventLocationScale = 0.05
+# Scale parameter for updating LOCAL moves of events on the tree
+# This defines the width of the sliding window proposal.
+ 
+updateEventRateScale = 4.0
+# Scale parameter (proportional shrinking/expanding) for updating
+# the rate parameter of the Poisson process 
+
+###################################
+# OPERATORS: MCMC_MOVE_FREQUENCIES
+
+updateRateEventNumber = 0.1
+# Relative frequency of MCMC moves that change the number of events
+
+updateRateEventPosition = 1
+# Relative frequency of MCMC moves that change the location of an event on the tree
+
+updateRateEventRate = 1
+# Relative frequency of MCMC moves that change the rate at which events occur 
+
+updateRateLambda0 = 1
+# Relative frequency of MCMC moves that change the initial speciation rate
+# associated with an event
+
+updateRateLambdaShift = 1
+# Relative frequency of MCMC moves that change the exponential shift parameter of 
+# a speciation rate associated with an event
+
+updateRateMu0 = 1
+# Relative frequency of MCMC moves that change the extinction rate for a given event
+
+localGlobalMoveRatio = 10.0
+# Ratio of local to global moves of events 
+
+###################################
+# INITIAL PARAMETER VALUES
+
+lambdaInit0 = 0.032
+# Initial speciation rate (at the root of the tree)
+
+lambdaShift0 = 0
+# Initial shift parameter for the root process
+
+muInit0 = .005
+# Initial value of extinction (at the root)
+
+initialNumberEvents = 0
+# Initial number of non-root processes
+ 
+###################################
+# NUMERICAL AND OTHER PARAMETERS
+
+minCladeSizeForShift = 1
+# Allows you to constrain location of possible rate-change events to occur
+# only on branches with at least this many descendant tips. A value of 1
+# allows shifts to occur on all branches. 
+
+segLength = 0.02
+# Controls the "grain" of the likelihood calculations. Approximates the 
+# continuous-time change in diversification rates by breaking each branch into
+# a constant-rate diversification segments, with each segment given a length
+# determined by segLength
+# segLength is in units of the root-to-tip distance of the tree. So, if the
+# segLength parameter is 0.01, and the crown age of your tree is 50, the 
+# "step size" of the constant rate approximation will be 0.5.
+# If the value is greater than the branch length 
+# (e.g., you have a branch of length < 0.5 in the preceding example)
+# BAMM will not break the branch into segments but use the mean 
+# rate across the entire branch. See Documentation for more information on this.

@@ -1,6 +1,8 @@
 useDynLib(BAMMtools)
 exportPattern(".+")
 
+import(ape)
+
 S3method(as.bammdata, credibleshiftset)
 S3method(print, bammdata)
 S3method(print, branchprior)

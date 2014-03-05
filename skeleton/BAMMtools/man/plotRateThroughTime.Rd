@@ -7,12 +7,13 @@ Plot rates through time
 Generates a plot of diversification or phenotypic rate through time with confidence intervals.
 }
 \usage{
-plotRateThroughTime(ephy, useMedian = TRUE, intervals=seq(from = 0,to = 1,by = 0.01),
- 	ratetype = 'auto', nBins = 100, smooth = FALSE, smoothParam = 0.20, opacity = 0.01,
- 	intervalCol='blue', avgCol='red', start.time = NULL, end.time = NULL, node = NULL,
-  	nodetype='include', plot = TRUE, cex.axis=1, cex.lab=1.3, lwd=3, xline=3.5, yline=3.5,
- 	mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', 
- 	ylim='auto',add=FALSE, axis.labels=TRUE)
+plotRateThroughTime(ephy, useMedian = TRUE, 
+    intervals=seq(from = 0,to = 1,by = 0.01),
+ 	ratetype = 'auto', nBins = 100, smooth = FALSE, smoothParam = 0.20, 
+ 	opacity = 0.01, intervalCol='blue', avgCol='red', start.time = NULL, 
+ 	end.time = NULL, node = NULL, nodetype='include', plot = TRUE, cex.axis=1, 
+ 	cex.lab=1.3, lwd=3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, 
+ 	xlim='auto', ylim='auto',add=FALSE, axis.labels=TRUE)
 }
 \arguments{
   \item{ephy}{
@@ -123,22 +124,24 @@ Pascal Title
 See \code{\link{getEventData}} and \code{\link{getRateThroughTimeMatrix}} to generate input data.
 }
 \examples{
-data(events.whales)
-data(whales)
-ephy <- getEventData(whales,events.whales)
+##NOT RUN##
+# data(events.whales)
+# data(whales)
+# ephy <- getEventData(whales,events.whales)
 
-#Simple plot of rates through time with default settings
-plotRateThroughTime(ephy)
+## Simple plot of rates through time with default settings
+# plotRateThroughTime(ephy)
 
-#Plot two processes separately with 90% CI and loess smoothing
-plotRateThroughTime(ephy, intervals=seq(from=0,0.9,by=0.01), smooth=TRUE, 
-	node=141, nodetype='exclude', ylim=c(0,1.2))
-
-plotRateThroughTime(ephy, intervals=seq(from=0,0.9,by=0.01), smooth=TRUE, 
-	node=141, nodetype='include', add=TRUE, intervalCol='orange')
-
-legend('topleft',legend=c('Dolphins','Whales'),col='red',
-	fill=c('orange','blue'),border=FALSE,lty=1,lwd=2,merge=TRUE,seg.len=0.6)
+## Plot two processes separately with 90% CI and loess smoothing
+# plotRateThroughTime(ephy, intervals=seq(from=0,0.9,by=0.01), smooth=TRUE, 
+#	node=141, nodetype='exclude', ylim=c(0,1.2))
+#
+# plotRateThroughTime(ephy, intervals=seq(from=0,0.9,by=0.01), smooth=TRUE, 
+#	node=141, nodetype='include', add=TRUE, intervalCol='orange')
+#
+# legend('topleft',legend=c('Dolphins','Whales'),col='red',
+#	fill=c('orange','blue'),border=FALSE,lty=1,lwd=2,merge=TRUE,seg.len=0.6)
+##END##
 }
 
 

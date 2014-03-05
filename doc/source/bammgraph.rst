@@ -11,7 +11,7 @@ Tree-wide diversification heterogeneity
    :width: 400
    :align: center
 
-   Speciation rates (cool colors = slow, warm = fast) along each branch of the whale phylogeny from Steeman *et al.* (2009). Each unique color section of a branch represents the mean of the marginal posterior density of speciation rates on a localized segment of a phylogenetic tree. The "background rate" for lineages involves a temporal deceleration in speciation rates (note warm colors at root). One clade - the dolphins - is characterized by a massive increase in the rate of speciation. R code :download:`here<rcode/cetaceans_polarRateTree.R>`.
+   A **phylorate plot** showing speciation rates (cool colors = slow, warm = fast) along each branch of the whale phylogeny from Steeman *et al.* (2009). Each unique color section of a branch represents the mean of the marginal posterior density of speciation rates on a localized segment of a phylogenetic tree. The "background rate" for lineages involves a temporal deceleration in speciation rates (note warm colors at root). One clade - the dolphins - is characterized by a massive increase in the rate of speciation. R code :download:`here<rcode/cetaceans_polarRateTree.R>`.
 
 Individual rate-shift configurations sampled by BAMM
 ----------------------------------------------------
@@ -21,7 +21,7 @@ Individual rate-shift configurations sampled by BAMM
    :width: 500
    :align: center
 
-Three evolutionary rate configurations (speciation) sampled by BAMM for the cetacean phylogeny, under three different color schemes (warm colors = fast rates). Columns show the 10\ :sup:`th`, 20\ :sup:`th`, and 30\ :sup:`th` samples from the posterior distribution included as an example in BAMMtools (see the **events.whales** dataset). Black circles denote the position of the macroevolutionary regime shifts present in each sample. Every sample from the posterior contains a potentially unique configuration of shift locations, which are sampled in proportion to their posterior probability. The trees shown in this figure differ from the preceding figure, which shows the mean marginal rates over all samples in the posterior. Note the consistent spike and subsequent deceleration in rates that occurs after shift events. R code for this figure available :download:`here<rcode/plot_multishift.R>`.
+Phylorate plots for three evolutionary rate configurations (speciation) sampled by BAMM for the cetacean phylogeny, under three different color schemes (warm colors = fast rates). Columns show the 10\ :sup:`th`, 20\ :sup:`th`, and 30\ :sup:`th` samples from the posterior distribution included as an example in BAMMtools (see the **events.whales** dataset). Black circles denote the position of the macroevolutionary regime shifts present in each sample. Every sample from the posterior contains a potentially unique configuration of shift locations, which are sampled in proportion to their posterior probability. The trees shown in this figure differ from the preceding figure, which shows the mean marginal rates over all samples in the posterior. Note the consistent spike and subsequent deceleration in rates that occurs after shift events. R code for this figure available :download:`here<rcode/plot_multishift.R>`.
 
 
 Distinct shift configurations and their frequencies
@@ -43,7 +43,7 @@ Phenotypic evolutionary rates
    :width: 550
    :align: center
 
-Rates of body-size evolution across a time-calibrated phylogenetic tree of living primates. Left figure simply shows original time-calibrated tree with colors indicating instantaneous rates of phenotypic evolution. Figure on left is identical to right, but all rate shifts sampled during a BAMM run have been plotted (N = 401 posterior samples accounting for 1484 total rate shifts). Opaque colors have been used to plot shifts on individual branches; hence, branches on which shifts are frequently sampled appear dark. R code for this figure available :download:`here<rcode/primate_bodysize.R>`.
+Phylorate plot showing rates of body-size evolution across a time-calibrated phylogenetic tree of living primates. Left figure simply shows original time-calibrated tree with colors indicating instantaneous rates of phenotypic evolution. Figure on left is identical to right, but all rate shifts sampled during a BAMM run have been plotted (N = 401 posterior samples accounting for 1484 total rate shifts). Opaque colors have been used to plot shifts on individual branches; hence, branches on which shifts are frequently sampled appear dark. R code for this figure available :download:`here<rcode/primate_bodysize.R>`.
 
 
 Evolutionary rate variation through time 
@@ -86,7 +86,7 @@ Maximum shift credibility configuration
    :width: 700
    :align: center
    
-   The *maximum shift credibility configuration* (or *MSC* configuration) for the JEA bird phylogeny (6670 tips). The MSC tree displays the joint distribution of rate shift configurations that maximize the marginal probability of the data. This is analogous to the *maximum clade credibility tree* in Bayesian phylogenetic analyses. Tree shows the location of shifts, as well as their marginal probabilities (color and size). It is important to recognize that rate shifts with low marginal probability (e.g., blue nodes) can still be consistent with extremely high *cumulative* shift probabilities (see `Cumulative Shift Probability`_). R code :download:`here<rcode/jetztree_shifts.R>`.
+   The *maximum shift credibility configuration* (or *MSC* configuration) for the JEA bird phylogeny (6670 tips). The MSC shift configuration is one estimate of the overall *best* rate shift configuration (the *MAP shift configuration* is another...). This is analogous to the *maximum clade credibility tree* in Bayesian phylogenetic analyses. Tree shows the location of shifts, as well as their marginal probabilities (color and size). It is important to recognize that rate shifts with low marginal probability (e.g., blue nodes) can still be consistent with extremely high *cumulative* shift probabilities (see `Cumulative Shift Probability`_). R code :download:`here<rcode/jetztree_shifts.R>`.
       
       
 Cumulative shift probability

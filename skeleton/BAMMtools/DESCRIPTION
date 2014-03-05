@@ -1,10 +1,12 @@
 Package: BAMMtools
 Type: Package
-Title: Analysis and visualization of complex macroevolutionary dynamics
+Title: Analysis and visualization of macroevolutionary dynamics on phylogenetic trees
 Version: 1.0
-Date: 2014-01-05
-Author: Dan Rabosky, Mike Grundler, Pascal Title, Joseph Brown, Carlos Anderson, Jeff Shi
+Date: 2014-03-04
+Author: Dan Rabosky, Mike Grundler, Pascal Title, Carlos Anderson, Jeff Shi, Joseph Brown, Huateng Huang
 Maintainer: Dan Rabosky <dan.rabosky@gmail.com>
 Depends: ape
-Description: BAMMtools provides functions for analyzing and visualizing complex macroevolutionary dynamics
+Description: BAMMtools provides functions for analyzing and visualizing complex macroevolutionary dynamics on phylogenetic trees. It is a companion package to the command line program BAMM (Bayesian Analysis of Macroevolutionary Mixtures) and is entirely oriented towards the analysis, interpretation, and visualization of evolutionary rates. Functionality includes visualization of rate shifts on phylogenies, estimating evolutionary rates through time, comparing posterior distributions of evolutionary rates across clades, comparing diversification models using Bayes factors, and more. 
 License: GPL (>=2)
+URL: http://www.bamm-project.org
+NeedsCompilation: yes
