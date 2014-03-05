@@ -23,8 +23,7 @@ BAMM Documentation
    troubleshooting
    glossary
 
-Indices and tables
-==================
+Search
+======
 
-* :ref:`genindex`
 * :ref:`search`
