@@ -203,15 +203,16 @@ Priors
 	Prior on the initial mu value for the root process.
 
 ``segLength``
-    The "grain" of the likelihood calculations. It approximates the 
+    The "grain" of the likelihood calculations. It approximates the
     continuous-time change in diversification rates by breaking each branch
-    into a constant-rate diversification segments, with each segment equal
-    to ``segLength``. The parameter is specified in units of total tree depth. If you 
-    have a tree of age T = 100, and set ``segLength = 0.05``, the segment size will be 5.
-    A branch of length 20 would thus have the exponential
-    speciation-rate change approximated by 4 segments. If the value is greater than 
-	the branch length (e.g., ``segLength = 0.20`` in this case) BAMM will not 
-	break the branch into segments but use the mean rate across the entire branch.
+    into a constant-rate diversification segments, with each segment equal to
+    ``segLength``. The parameter is specified in units of total tree depth. If
+    you have a tree of age T = 100, and set ``segLength = 0.05``, the segment
+    size will be 5.  A branch of length 20 would thus have the exponential
+    speciation-rate change approximated by 4 segments. If the value is greater
+    than the branch length (e.g., ``segLength = 0.20`` in this case) BAMM will
+    not break the branch into segments but use the mean rate across the entire
+    branch.
 
 MCMC Simulation
 ...............
