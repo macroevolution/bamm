@@ -24,6 +24,8 @@ class Node
 
 private:
 
+    void init(int x = 0);
+
     Node*  _lfDesc;
     Node*  _rtDesc;
     Node*  _anc;

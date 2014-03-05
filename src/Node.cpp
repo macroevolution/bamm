@@ -8,21 +8,29 @@
 #include "Node.h"
 #include "BranchHistory.h"
 #include "SpExBranchEvent.h"
-//#include "MbRandom.h"
-
-//#define _NEW_RATEFUNCTION
 
 
-Node::Node(void)
+Node::Node()
+{
+    init();
+}
+
+
+Node::Node(int x)
+{
+    init(x);
+}
+
+
+void Node::init(int x)
 {
     _lfDesc = NULL;
     _rtDesc = NULL;
     _anc = NULL;
     _name = "";
-    _index = 0;
+    _index = x;
     _time = 0.0;
     _brlen = 0.0;
-    //_descCount = NULL;
     _isTip = false;
     _isExtant = false;
     _isConstant = false;
@@ -54,51 +62,6 @@ Node::Node(void)
     _nodeLikelihood = 0.0;
 
     _canHoldEvent = false;
-
-}
-
-Node::Node(int x)
-{
-    _lfDesc = NULL;
-    _rtDesc = NULL;
-    _anc = NULL;
-    _name = "";
-    _index = x;
-    _time = 0.0;
-    _brlen = 0.0;
-    //_descCount = NULL;
-    _isExtant = false;
-    _isTip = false;
-    _isConstant = false;
-
-    _mapStart = 0.0;
-    _mapEnd = 0.0;
-
-    _branchTime = 0.0;
-    _cladeName = "";
-
-    _history = new BranchHistory();
-
-    _meanSpeciationRate = 0;
-    _meanExtinctionRate = 0;
-
-    _nodeLambda = 0.0;
-    _nodeMu = 0.0;
-
-    // For phenotypes:
-    //Phenotype * pheno = new Phenotype();
-    _trait = 0.0;
-    _meanBeta = 0;
-    _isTraitFixed = 0;
-
-    //Speciation-extinction initial conditions
-    _ei = -1.0;
-    _di = -1.0;
-    _etip = -1.0;
-    _nodeLikelihood = 0.0;
-
-    _canHoldEvent = false;
-
 }
 
 
