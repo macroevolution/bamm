@@ -128,33 +128,38 @@ plotRateThroughTime <- function(ephy, useMedian = TRUE, intervals=seq(from = 0,t
 			plot.new();
 			par(mar=mar);
 			if (unique(xlim == 'auto') & unique(ylim == 'auto')) {
-				plot.window(xlim=c(maxTime, 0), ylim=c(0, max(poly[[1]][,2])));
 				xMin <- maxTime;
 				xMax <- 0;
 				yMin <- 0;
-				yMax <- max(poly[[1]][,2]);
+				if (!is.null(intervals)){
+					yMax <- max(poly[[1]][,2]);
+				} else {
+					yMax <- max(avg);
+				}
 			}
 			if (unique(xlim != 'auto') & unique(ylim == 'auto')) {
-				plot.window(xlim = xlim, ylim=c(0, max(poly[[1]][,2])));
 				xMin <- xlim[1];
 				xMax <- xlim[2];
 				yMin <- 0;
-				yMax <- max(poly[[1]][,2]);
+				if (!is.null(intervals)){
+					yMax <- max(poly[[1]][,2]);
+				} else {
+					yMax <- max(avg);
+				}
 			}
 			if (unique(xlim == 'auto') & unique(ylim != 'auto')) {
-				plot.window(xlim=c(maxTime, 0), ylim=ylim);
 				xMin <- maxTime;
 				xMax <- 0;
 				yMin <- ylim[1];
 				yMax <- ylim[2];
 			}
 			if (unique(xlim != 'auto') & unique(ylim != 'auto')) {
-				plot.window(xlim=xlim, ylim=ylim);
 				xMin <- xlim[1];
 				xMax <- xlim[2];
 				yMin <- ylim[1];
 				yMax <- ylim[2];
 			}
+			plot.window(xlim=c(xMin, xMax), ylim=c(yMin, yMax));
 			axis(at=c(1.3*xMin,seq(xMin,xMax, length.out=xticks+1)), labels = c(1.3*xMin,signif(seq(xMin, xMax, length.out=xticks+1),digits=2)), cex.axis = cex.axis, side = 1);
 			axis(at=c(-0.2,seq(yMin, 1.2*yMax, length.out=yticks+1)), labels = c(-0.2,signif(seq(yMin, 1.2*yMax, length.out=yticks+1),digits=2)), las=1, cex.axis = cex.axis, side = 2);
 			if (axis.labels) {
