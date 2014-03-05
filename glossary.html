@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>11. Glossary &mdash; bamm 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="bamm 1.0 documentation" href="index.html" />
+    <link rel="prev" title="10. Troubleshooting" href="troubleshooting.html" /> 
+  </head>
+  <body>
+<div class="pageheader">
+    <img src="_static/bamm-header.png" /img>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="troubleshooting.html" title="10. Troubleshooting"
+             accesskey="P">previous</a></li>
+<li><a href="index.html">Home</a>&nbsp;|</li>
+<li><a href="download.html">Download</a>&nbsp;|</li>
+<li><a href="documentation.html">Documentation</a>&nbsp;|</li>
+<li><a href="contact_us.html">Contact Us</a></li>
+ 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="troubleshooting.html"
+                        title="previous chapter">10. Troubleshooting</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/glossary.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="glossary">
+<span id="id1"></span><h1>11. Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h1>
+<p>Keywords in BAMM and BAMMtools. Alphabetical. Words in glossary are in <strong>bold</strong>.</p>
+<dl class="docutils">
+<dt><strong>Core shift</strong></dt>
+<dd>A rate shift location (e.g., associated with a particular branch in a phylogeny) that has a marginal probability greater than some threshold value. In the BAMM model, the very manner in which shifts are proposed and deleted during MCMC simulation means that, sooner or later, a shift will be sampled on every branch of the tree. Most of these are <em>non-core shifts</em> that don&#8217;t stick around and which don&#8217;t contribute to your ability to model the data. To distinguish between <strong>core</strong> and <strong>non-core</strong> shifts in the posterior, we identify all shift locations where shifts are observed more often that expected under the prior alone. If the frequency of observing a shift at a particular location is not different from that which we expect under the prior alone, we term this a &#8220;non-core&#8221; shift location. We then ignore all <strong>non-core</strong> shifts during the enumeration of <strong>distinct shift configurations</strong>.</dd>
+<dt><strong>Credible set of shift configurations</strong></dt>
+<dd>The set of <strong>distinct shift configurations</strong> that account for some total probability of the data (typically 95%). To delimit this set, we identify all <strong>distinct shift configurations</strong> and rank them by their posterior probability. The set of shifts (starting with the most probable) that sum to 0.95 (for the 95% credible set) is this set. Alternatively, if you have N total <strong>distinct shift configurations</strong>, with probability <img class="math" src="_images/math/7362a012b7d8d01c498e8912d9b18fe24f0cd9c4.png" alt="p_1, p_2, ... p_N"/>, the 95% credible set is the smallest set (of N total) that sum to a cumulative probability of 0.95. The idea of <em>credible set of phylogenetic trees</em> is conceptually identical to this.</dd>
+<dt><strong>Cumulative shift probability tree</strong></dt>
+<dd>A phylogenetic tree where branch lengths are scaled by the cumulative probability that a rate shift occurred somewhere between the focal branch and the root of the tree. For a given branch X, this is computed by summing the marginal shift probabilities for each branch that lies on the path connecting X to the root. A value of 0.98 means that 98% of the samples from the posterior have a rate shift somewhere between the focal branch and the root. This would also imply that macroevolutionary dynamics for branch X and the root are decoupled (e.g., in distinct regimes) for 98% of samples in the posterior.</dd>
+<dt><strong>Distinct shift configuration</strong></dt>
+<dd>A topologically distinct configuration of rate shifts. Imagine a rooted phylogenetic tree of 2 taxa, with branches A and B. This tree has a total of 4 distinct shift configurations: shift on A, shift on B, shift on both A and B, and shifts on neither A nor B. For any BAMM analysis, we can tabulate the frequency of each of these <strong>distinct shift configurations</strong> from the posterior.</dd>
+<dt><strong>Event</strong></dt>
+<dd>In the BAMM framework, an <strong>event</strong> initiates a macroevolutionary rate <strong>regime</strong>. An <strong>event</strong> can occur along any branch of a phylogeny, and there is always a <strong>root event</strong> associated with the root of the tree. All lineages downstream of a given <strong>event</strong> are governed by the evolutionary rate parameters of the <strong>event</strong>, until either (i) the end of the tree (tips) are reached, or (ii) another <strong>event</strong> occurs.</dd>
+<dt><strong>Macroevolutionary cohort matrix</strong></dt>
+<dd>A macroevolutionary cohort matrix represents the pairwise probability that any two taxa share a common macroevolutionary rate regime. <strong>Macroevolutionary cohorts</strong> of taxa are those that exhibit statistical dynamics suggesting that they share common evolutionary rate parameters. In the simplest case, with no rate heterogeneity (no rate shifts), all taxa share the same rate <strong>root process</strong> and are thus part of a single cohort.</dd>
+<dt><strong>Marginal shift probability</strong></dt>
+<dd>The probability of a rate shift on a particular branch of a phylogenetic tree. It is obtained by <em>marginalizing</em> over everything else in the posterior.</dd>
+<dt><strong>Marginal shift probability tree</strong></dt>
+<dd>A phylogenetic tree where branch lengths are scaled by the corresponding <strong>marginal shift probability</strong>.</dd>
+<dt><strong>Maximum a posteriori probability (MAP) shift configuration</strong></dt>
+<dd>An estimate of the best <strong>distinct shift configuration</strong>. This is the <strong>distinct shift configuration</strong> that has the highest posterior probability (e.g., was sampled most frequently during simulation of the posterior).</dd>
+<dt><strong>Maximum shift credibility configuration</strong></dt>
+<dd>Another measure of the overall best <strong>distinct shift configuration</strong>. This is best viewed as analogous to the maximum clade credibility (MCC) tree in a Bayesian phylogenetic analysis.</dd>
+<dt><strong>Non-core shift</strong></dt>
+<dd>A topological shift location (e.g., a unique branch) with low <strong>marginal shift probability</strong>. Formally, these shifts are defined by having <strong>marginal shift probabilities</strong> that are not substantially different from that expected under the prior.</dd>
+<dt><strong>Phylorate plot</strong></dt>
+<dd>A visualization of evolutionary dynamics on phylogenetic trees where colors are used to represent instantaneous evolutionary rate parameters at any point in time along any branch. The <strong>mean phylorate plot</strong> summarizes rate dynamics across the entire posterior, because colors for any branch segment reflect the mean of the marginal density of evolutionary rates at any particular point in time.</dd>
+<dt><strong>Regime</strong></dt>
+<dd>A distinct set of macroevolutionary rate parameters associated with an <strong>event</strong>. This does not imply that rates are constant through time; all lineages within a particular clade might share a common diversity-dependent rate <strong>regime</strong>, for example.</dd>
+<dt><strong>Root process</strong></dt>
+<dd>The set of evolutionary rate parameters at the root of the tree. In the absence of rate shifts, all lineages in the phylogeny have dynamics that are governed by the <strong>root process</strong>.</dd>
+</dl>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="troubleshooting.html" title="10. Troubleshooting"
+             >previous</a></li>
+<li><a href="index.html">Home</a>&nbsp;|</li>
+<li><a href="download.html">Download</a>&nbsp;|</li>
+<li><a href="documentation.html">Documentation</a>&nbsp;|</li>
+<li><a href="contact_us.html">Contact Us</a></li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014 BAMM Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    </div>
+  </body>
+</html>

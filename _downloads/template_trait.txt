@@ -58,7 +58,7 @@ overwrite = 0
 
 ###################################
 # PRIORS
-
+# <START prior block >
 poissonRatePrior = 1
 # The rate parameter of the exponential prior on the rate parameter of the 
 # Poisson process. Smaller values favor greater numbers of distinct evolutionary
@@ -76,35 +76,42 @@ betaShiftPrior = 0.05
 #  You cannot adjust the mean of this distribution (fixed at zero, 
 #		which is equal to a constant rate diversification process)
 
+betaInitRootPrior = 5.0
+# Parameter of the exponential prior on the initial beta at the root process
+
+betaShiftRootPrior = 0.05
+# Prior on shift parameter for the root process
+
+
 useObservedMinMaxAsTraitPriors = 1
 # If TRUE (1), will put a uniform prior density on the distribution of ancestral
 #	character states, with upper and lower bounds determined by the min and max of 
 #	the observed data.
 
-traitPriorMin = 0
+# traitPriorMin = 0
 # User-defined minimum value for the uniform density on the distribution of ancestral
 #	character states. Only used if useObservedMinMaxAsTraitPriors = 0.
 
-traitPriorMax = 0
+# traitPriorMax = 0
 # user-defined maximum value for the uniform density on the distribution of ancestral
 #	character states. Only used if useObservedMinMaxAsTraitPriors = 0
 
-
+# <END prior block >
 ###################################
 # MCMC SIMULATION SETTINGS & OUTPUT OPTIONS
 
-numberGenerations = 100000
+numberGenerations = %%%%
 # Generations to perform MCMC simulation.
 
-mcmcWriteFreq = 5000
+mcmcWriteFreq = %%%%
 # Writes MCMC simulation parameters (log-likelihood, log-prior,
 # number of processes) to file every mcmcWriteFreq generations.
 
-eventDataWriteFreq = 10000
+eventDataWriteFreq = %%%%
 # Specify frequency to write actual model parameters to file. 
 # These are the main results!
 
-printFreq = 20000
+printFreq = %%%%
 # Prints MCMC status to screen every printFreq generations.
 
 # outName = BAMM
@@ -193,4 +200,3 @@ initialNumberEvents = 0
 # Presently none.
 #
 #
-

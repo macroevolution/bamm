@@ -45,6 +45,31 @@ For many datasets, this is an easy way of using incomplete sampling information.
 
 Specifying a backbone sampling fraction can pose some challenges if it is unlikely to equal 1.0. Here's an example where this is not equal to one. Continuing with the example above, suppose that there are several other general totaling 7 species in our focal clade that were not sampled. Provided we are (reasonably) confident that this genus does not reside *within* our genera *fu* and *bar*, this implies that these lineages must have branched off the backbone (black) portion of the phylogeny. One possible correction would be to assume that the 2 sampled backbone lineages are 2 of a total of 9 (including the 7 unsampled taxa from other genera), or 0.22. Another possibility is to just set the backbone fraction equal to the total sampling fraction across the entire clade. In this case, We have sampled a total of 6 species from *fu* and *bar*, which together account for 15 species. There are another 7 species unsampled from other genera. You could set the backbone fraction equal to 6 / (15 + 7) = 0.27. These are not perfect solutions, but we contend that - in general - it is better to use clade-specific sampling fractions if the percentage of sampled taxa varies considerably across your tree.
 
+.. _ratepriors:
+
+
+Priors on rate parameters
+-------------------------------------------
+
+
+In the :ref:`quickstart<quickstart>` guide to BAMM, we suggested that you explicitly set rate parameters to the scale of your data using the **BAMMtools** function ``setBAMMpriors``. 
+
+To be clear, priors **really can matter** for a BAMM analysis. It is easy to specify really bad priors. In principle, we want the effects of somewhat arbitrary prior choice to be minimized for any dataset we might want to analyze. For the purposes of this discussion, we assume that you don't really care about the absolute magnitude of a given evolutionary rate: the important issue is how much these rates vary between clades and through time, and the relative differences between those rates is thus of paramount importance.
+
+Here, in a nutshell, is the problem with the way priors are currently specified in BAMM. Because they are specified as absolute parameters of distributions, their effects are not independent of the "scale" of your tree. Suppose you run BAMM on some dataset with two clades, X and Y, leading to inferred clade-wise rates of :math:`\lambda_X` and :math:`\lambda_Y`. Suppose also that the estimated evolutionary rate at the root of your tree is :math:`\lambda_1` and that it declines to some rate :math:`\lambda_2` by the time it reaches the present. The prior distributions you choose should make the ratio of rates :math:`\lambda_X / \lambda_Y` and (:math:`\lambda_1` / :math:`\lambda_2`) invariant with respect to rescaling of the tree itself. Hence, if you multiply your branch lengths by 0.001 (or multiply them by 1000!) you want the ratios of those rates to be the same.
+
+If you change the scale of your tree, you **will** have to change your prior distributions to avoid scale dependence. The function ``setBAMMpriors`` is designed to do this. It sets a relatively flat prior on ``lambdaInit``, ``betaInit``, and ``muInit``. It also sets a much more informative prior on those same parameters for the root process.
+
+To set the main ``lambdaInit`` and ``muInit`` priors, ``setBAMMpriors`` first estimates the rate of speciation for your full tree under a pure birth model of diversification. We assume, arbitrarily, that a reasonable prior distribution for the initial rate parameters is an exponential distribution with a mean five times greater than this pure birth value. 
+
+We also apply a separate prior distribution to the process at the root of the tree. The justification for this is that, in our experience, the root process is more sensitive to prior parameterization than anything other processes. Hence, we set the mean of the prior distributions for rate parameters on the root process to exactly equal the pure birth rate. This is a conservative choice and probably reduces the probability of detecting weak rate heterogeneity through time. At the same time, it reduces the probability of detecting spurious declines in diversification attributable to misspecified priors.
+
+For ``betaInitPrior`` and ``betaInitRootPrior``, the general settings are very similar. However, rather than fitting a pure-birth model, we find the maximum likelihood estimate of the variance parameter under a Brownian motion model. This is done analytically in **BAMMtools**.
+
+For the shift parameters (``lambdaShiftPrior`` etc), the prior distribution is normal with a mean of zero. What standard deviation should we use? For ``setBAMMpriors``, we arbitrarily chose a prior distribution with a standard deviation *s* such that *2s* gives a parameter that results in either a 90% decline in the evolutionary rate or a 190% increase in rate on the interval of time from the root to the tips of the tree. If *T* is the root age of the tree (time before present), this value is computed as :math:`z = log(0.1)/ T`. The standard deviation parameter for the prior is just the value of *s* for which *2s* gives *z*.
+
+**SUMMARY**: Using ``setBAMMpriors`` will give you a set of priors that are consistent across different scalings of your tree (assuming, of course, that you also use ``setBAMMpriors`` on the rescaled trees...).
+
 
 Modeling *less complex* evolutionary scenarios
 ----------------------------------------------
@@ -75,8 +100,12 @@ However, you must be careful to ensure that the initial value of extinction is s
 	 
 Note that you cannot account for incomplete sampling under a pure-birth model (modeling incomplete sampling is mathematically identical to allowing a particular type of extinction).
 
+.. _constantratebamm:
+
 MEDUSA-like model
 ************************
+
+
 To run a Bayesian MEDUSA-like model, where the rate of speciation and extinction is constant within specific shift regimes, you can set your MCMC move frequencies as follows::
 	
 	updateRateEventNumber = 0.1

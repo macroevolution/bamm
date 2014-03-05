@@ -25,24 +25,21 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 1.0 documentation" href="index.html" />
     <link rel="next" title="10. Troubleshooting" href="troubleshooting.html" />
-    <link rel="prev" title="8. Interpreting Rate Shifts on Phylogenies" href="rateshifts.html" /> 
+    <link rel="prev" title="8. Advanced analysis options" href="advanced.html" /> 
   </head>
   <body>
 <div class="pageheader">
-    <h1>BAMM: Bayesian Analysis of Macroevolutionary Mixtures</h1>
+    <img src="_static/bamm-header.png" /img>
 </div>
 
     <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="troubleshooting.html" title="10. Troubleshooting"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
-          <a href="rateshifts.html" title="8. Interpreting Rate Shifts on Phylogenies"
+          <a href="advanced.html" title="8. Advanced analysis options"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -53,17 +50,16 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="documentation.html">
-              <img class="logo" src="_static/bamm-logo.png" alt="Logo"/>
-            </a></p>
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">9. Frequently Asked Questions</a><ul>
 <li><a class="reference internal" href="#general">9.1. General</a><ul>
-<li><a class="reference internal" href="#citing-bamm">9.1.1. Citing BAMM</a></li>
+<li><a class="reference internal" href="#how-do-i-cite-bamm">9.1.1. How do I cite BAMM?</a></li>
 <li><a class="reference internal" href="#how-much-data-does-it-need">9.1.2. How much data does it need?</a></li>
-<li><a class="reference internal" href="#bamm-extensions">9.1.3. BAMM extensions</a></li>
-<li><a class="reference internal" href="#how-can-bamm-detect-diversity-dependent-changes-in-speciation-rates">9.1.4. How can BAMM detect diversity-dependent changes in speciation rates?</a></li>
+<li><a class="reference internal" href="#how-often-should-i-sample-the-chain">9.1.3. How often should I sample the chain?</a></li>
+<li><a class="reference internal" href="#what-extensions-are-underway-for-bamm">9.1.4. What extensions are underway for BAMM?</a></li>
+<li><a class="reference internal" href="#what-is-the-actual-model-implemented-in-bamm-for-time-varying-rates">9.1.5. What is the actual model implemented in BAMM for time-varying rates?</a></li>
+<li><a class="reference internal" href="#how-can-bamm-detect-diversity-dependent-changes-in-speciation-rates">9.1.6. How can BAMM detect diversity-dependent changes in speciation rates?</a></li>
 </ul>
 </li>
 </ul>
@@ -71,8 +67,8 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="rateshifts.html"
-                        title="previous chapter">8. Interpreting Rate Shifts on Phylogenies</a></p>
+  <p class="topless"><a href="advanced.html"
+                        title="previous chapter">8. Advanced analysis options</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="troubleshooting.html"
                         title="next chapter">10. Troubleshooting</a></p>
@@ -106,26 +102,38 @@
 <h1>9. Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="general">
 <h2>9.1. General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="citing-bamm">
-<h3>9.1.1. Citing BAMM<a class="headerlink" href="#citing-bamm" title="Permalink to this headline">¶</a></h3>
-<p>The primary methodological description of the BAMM model and implementation is <em>in press</em> in <em>PLoS ONE</em>. This should be out in early February 2014. In the meantime, a preprint of the manuscript is available on the arXiv preprint server:</p>
-<p><a class="reference external" href="http://arxiv.org/abs/1401.6602">http://arxiv.org/abs/1401.6602</a></p>
-<p>This paper contains a description of the model, the reversible jump MCMC implementation, and a comprehensive performance evaluation.</p>
+<div class="section" id="how-do-i-cite-bamm">
+<h3>9.1.1. How do I cite BAMM?<a class="headerlink" href="#how-do-i-cite-bamm" title="Permalink to this headline">¶</a></h3>
+<p>The primary methodological description of the full BAMM model was published in <em>PLoS ONE</em>. A link to the paper is <a class="reference external" href="http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543">available here</a></p>
+<p>This paper contains a description of the model, the reversible jump MCMC implementation, a comprehensive performance evaluation, and an empirical application. An earlier paper used a related implementation that assumed constant rates of diversification through time within evolutionary rate regimes (<a class="reference external" href="http://www.nature.com/ncomms/2013/130606/ncomms2958/full/ncomms2958.html">Rabosky et al. 2013</a>).</p>
 </div>
 <div class="section" id="how-much-data-does-it-need">
 <h3>9.1.2. How much data does it need?<a class="headerlink" href="#how-much-data-does-it-need" title="Permalink to this headline">¶</a></h3>
 <p><strong>Not much</strong>. There is no general rule here, but if your dataset is large enough to consider doing any other sort of diversification analysis, then it is probably large enough for BAMM. The whale diversification analysis shown in the <em class="xref std std-ref">graph gallery</em> uses a time-calibrated tree with 89 tips. We&#8217;ve had good success using BAMM on trees that are considerably smaller than this.</p>
 </div>
-<div class="section" id="bamm-extensions">
-<h3>9.1.3. BAMM extensions<a class="headerlink" href="#bamm-extensions" title="Permalink to this headline">¶</a></h3>
-<p>We are currently testing extensions of BAMM that allow modeling evolutionary dynamics under a much greater range of phenotypic evolutionary scenarios, as well as the incorporation of paleontological data. Bleeding edge releases of BAMM can be obtained from here (<strong>link</strong>).</p>
+<div class="section" id="how-often-should-i-sample-the-chain">
+<h3>9.1.3. How often should I sample the chain?<a class="headerlink" href="#how-often-should-i-sample-the-chain" title="Permalink to this headline">¶</a></h3>
+<p>Your first consideration should be: for how long should I run the chain? The answer to this question has a lot to do with how quickly the chain converges and how well it samples the posterior. We suggest that there is little advantage in going to more than 5000 samples from the posterior, and potentially large costs: for large datasets, sampling too frequently with BAMM can literally generate gigabytes of highly autocorrelated and mostly-unusable output. Moreover, due to memory issues with R, BAMMtools cannot handle output files of that size. So, pick a chain length (e.g., <img class="math" src="_images/math/31d8060244221fb74c7a4f66bbecf45cd9f40f7d.png" alt="10^7"/> generations), and then specify a sample frequency that should give you somewhere between 500 and 5000 samples from the posterior after burnin.</p>
 </div>
-<div class="section" id="how-can-bamm-detect-diversity-dependent-changes-in-speciation-rates">
-<h3>9.1.4. How can BAMM detect diversity-dependent changes in speciation rates?<a class="headerlink" href="#how-can-bamm-detect-diversity-dependent-changes-in-speciation-rates" title="Permalink to this headline">¶</a></h3>
-<p>BAMM models the dynamics of speciation and extinction within rate regimes using an exponential change function. The speciation rate <img class="math" src="_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/> at any point in time is modeled as</p>
+<div class="section" id="what-extensions-are-underway-for-bamm">
+<h3>9.1.4. What extensions are underway for BAMM?<a class="headerlink" href="#what-extensions-are-underway-for-bamm" title="Permalink to this headline">¶</a></h3>
+<p>We are currently testing extensions of BAMM that allow modeling evolutionary dynamics under a much greater range of phenotypic evolutionary scenarios, as well as the incorporation of paleontological data. Bleeding edge releases of BAMM can be obtained from our <a class="reference external" href="https://github.com/macroevolution/bamm">GitHub page</a>.</p>
+</div>
+<div class="section" id="what-is-the-actual-model-implemented-in-bamm-for-time-varying-rates">
+<h3>9.1.5. What is the actual model implemented in BAMM for time-varying rates?<a class="headerlink" href="#what-is-the-actual-model-implemented-in-bamm-for-time-varying-rates" title="Permalink to this headline">¶</a></h3>
+<p>The model originally described for time-varying macroevolutionary rate regimes (e.g., <a class="reference external" href="http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543">Rabosky 2014</a>) used a simple exponential change function for rates through time:</p>
 <div class="math">
 <p><img src="_images/math/5571ddb82a4c89045b03a9f052acf765d5968d10.png" alt="\lambda(t) = \lambda_{0}e^{k t}"/></p>
-</div><p>where <img class="math" src="_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/> is the initial speciation rate at the start of the rate regime, <img class="math" src="_images/math/8c325612684d41304b9751c175df7bcc0f61f64f.png" alt="k"/> is a parameter that controls the dynamics of rate change through time, and <img class="math" src="_images/math/e0d2bf360290fd61d1c1557e763f2622363b3d35.png" alt="t"/> is the elapsed time since the start of the rate regime. Theoretically, a linear <em>diversity-dependent</em> change in speciation rates through time leaves a signal in molecular phylogenies that is virtually indistinguishable from an exponential <em>time-dependent</em> change in rates. Our analyses of simulated datasets suggest that these two types of models are not distinguishable in practice.</p>
+</div><p>We have since come to recognize that this model is not ideal, because it is highly asymmetric with respect to increasing (k &gt; 0) and decreasing (k &lt; 0) rates through time. Specifically, the prior we place on <em>k</em> is symmetric (normal), but the rates are not. The problem, put simply, is that negative values of <em>k</em> can only decrease the evolutionary rate to zero. However, positive values - even of equivalent absolute value - can lead to extremely large values. Just consider the values of the exponential function above evaluated at <img class="math" src="_images/math/1a914822d9922cf871e1ae8cdbc178324b823a7a.png" alt="\lambda_{0} = 1"/>, <img class="math" src="_images/math/9c30bbb3a66ef235e5183332e4bdd8bc0972d31d.png" alt="t = 1"/>, <img class="math" src="_images/math/b056d539ef00410b9675c5ea714c711a7807e412.png" alt="k = -10"/> and <img class="math" src="_images/math/5c593c45953fbca6d0da4893f2126c6f16bf6cf1.png" alt="k = 10"/>.  With <em>k = -10</em>, the value of the rate function approaches zero, but with <em>k = +10</em>, it is 22026.47. Yet both of these <em>k</em> values have equal prior densities.</p>
+<p>We thus modified the exponential change function to make it symmetric. For <em>k &lt; 0</em>, we use the exponential change function defined above. For <em>k &gt; 0</em>, we use the function</p>
+<div class="math">
+<p><img src="_images/math/caf4a796fbcc22ab81b13a00dc6a21780ddc3913.png" alt="\lambda(t) = \lambda_{0} (2 - e^{k t})"/></p>
+</div><p>If <em>k &gt; 0</em>, this function asymptotically approaches the limiting value <img class="math" src="_images/math/1966168ba51ff2f4fcdc3df62f2d612a9d6be0d2.png" alt="2\lambda_{0}"/>.</p>
+<p>This has the nice property that the function <img class="math" src="_images/math/0ff4791f2273598336fc827116349d2baacb20e8.png" alt="\lambda(t)"/> is symmetric about the line <img class="math" src="_images/math/a083e2fca37256b6cf5c022d3aa974504e537556.png" alt="x = \lambda_{0}"/>, for positive and negative values of k with the same absolute value.</p>
+</div>
+<div class="section" id="how-can-bamm-detect-diversity-dependent-changes-in-speciation-rates">
+<h3>9.1.6. How can BAMM detect diversity-dependent changes in speciation rates?<a class="headerlink" href="#how-can-bamm-detect-diversity-dependent-changes-in-speciation-rates" title="Permalink to this headline">¶</a></h3>
+<p>BAMM models the dynamics of speciation and extinction within rate regimes using an exponential change function described in the preceding section. Theoretically, a linear <em>diversity-dependent</em> change in speciation rates through time leaves a signal in molecular phylogenies that is virtually indistinguishable from an exponential <em>time-dependent</em> change in rates. Our analyses of simulated datasets suggest that these two types of models are not distinguishable in practice.</p>
 <p>We have conducted extensive performance evaluations where we have simulated datasets under formal <em>diversity-dependent</em> scenarios, then used BAMM to reconstruct the number of macroevolutionary rate regimes as well as the dynamics of speciation and extinction through time. Our simulations indicate that BAMM can estimate both the number of distinct macroevolutionary regimes, as well as the underlying evolutionary rates, even though we are using the exponential approximation to the diversity-dependent process. We have published these results <strong>here</strong> (non-functional link).</p>
 <p>It is (vastly) more efficient computationally to work with the exponential change model than the formal diversity-dependent model, and calculations of single likelihoods on phylogenies can be many orders of magnitude faster with the exponential approximation than with the formal diversity-dependent model. The multi-process explorations of macroevolutionary dynamics that are possible with BAMM wouldn&#8217;t really be feasible without the ability to quickly compute likelihoods.</p>
 <p>As an aside, the user is encouraged to remember that all analytically tractable models of diversity-dependence (e.g., Rabosky &amp; Lovette, <em>Proc. R. Soc. B.</em>, 2008; or Etienne <em>et. al.</em>, <em>Proc. R. Soc. B</em>, 2011) are models that we are imposing on the data: there is no reason why a true diversity-dependent process need follow a linear model.</p>
@@ -143,13 +151,10 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="troubleshooting.html" title="10. Troubleshooting"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
-          <a href="rateshifts.html" title="8. Interpreting Rate Shifts on Phylogenies"
+          <a href="advanced.html" title="8. Advanced analysis options"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -159,7 +164,7 @@
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013 BAMM Team.
+        &copy; Copyright 2014 BAMM Team.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>

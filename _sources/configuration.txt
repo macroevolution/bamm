@@ -123,7 +123,11 @@ MCMC Simulation
 
 ``updateEventLocationScale``
     Scale parameter for updating local moves of events on the tree.
-    This defines the width of the sliding window proposal.
+    This defines the width of the sliding window proposal. This parameter
+    is specified in units of "total tree depth" to minimize scale dependence. 
+    Suppose you have a tree of age *T* (*T* is the time of the root node). Parameter 
+    ``updateEventLocationScale`` is in units of T. A value of 0.05 means that the uniform
+    distribution for event location changes has a width of 0.05T.
 
 ``updateEventRateScale``
     Scale parameter (proportional shrinking/expanding) for updating
@@ -177,26 +181,38 @@ Priors
 
 ``lambdaInitPrior``
     Prior on the inital lambda (rate parameter of the exponential distribution)
-    for the speciation rate.
-
+    for the speciation rate. Applies to all non-root events.
+    
+``lambdaInitRootPrior``
+	Prior on the initial lambda value at the root of the tree
+	
 ``lambdaShiftPrior``
     Prior on the the lambda shift parameter (standard deviation of the normal
     distribution) for the speciation rate. The mean of the distribution
-    is fixed at zero, which is equal to a constant rate diversification process.
+    is fixed at zero, which is equal to a constant rate diversification process. 
+    Applies to non-root events.
 
+``lambdaShiftRootPrior`` 
+	Prior on the lambda shift parameter for the root process.
+	
 ``muInitPrior``
     Prior on the extinction rate (rate paramater of the exponential
-    distribution).
+    distribution). Applies to non-root events.
+    
+``muInitRootPrior``
+	Prior on the initial mu value for the root process.
 
 ``segLength``
-    The "grain" of the likelihood calculations. It approximates the 
+    The "grain" of the likelihood calculations. It approximates the
     continuous-time change in diversification rates by breaking each branch
-    into a constant-rate diversification segments, with each segment equal
-    to ``segLength``. So, a branch of length 10 will have the exponential
-    speciation-rate change approximated by 10 segments if ``segLength = 1.0``.
-    If the value is greater than the branch length (e.g., ``segLength = 100``
-    in this case) BAMM will not break the branch into segments but use the mean 
-    rate across the entire branch.
+    into a constant-rate diversification segments, with each segment equal to
+    ``segLength``. The parameter is specified in units of total tree depth. If
+    you have a tree of age T = 100, and set ``segLength = 0.05``, the segment
+    size will be 5.  A branch of length 20 would thus have the exponential
+    speciation-rate change approximated by 4 segments. If the value is greater
+    than the branch length (e.g., ``segLength = 0.20`` in this case) BAMM will
+    not break the branch into segments but use the mean rate across the entire
+    branch.
 
 MCMC Simulation
 ...............
@@ -296,11 +312,19 @@ Priors
 
 ``betaInitPrior``
     Parameter (rate) of the prior (exponential) on the inital phenotypic
-    evolutionary rate associated with regimes.
+    evolutionary rate associated with regimes, for non-root events.
+
+``betaInitRootPrior``
+    Parameter (rate) of the prior (exponential) on the inital phenotypic
+    evolutionary rate associated with regimes for the root event.
 
 ``betaShiftPrior``
     Parameter (stdandard deviation) of the prior (normal) on the rate-change
-    parameter.
+    parameter for non-root events.
+
+``betaShiftRootPrior``
+    Parameter (stdandard deviation) of the prior (normal) on the rate-change
+    parameter for the root event.
 
 ``useObservedMinMaxAsTraitPriors``
     If ``1``, puts a uniform prior density on the distribution of ancestral

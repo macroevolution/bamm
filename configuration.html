@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5. Configuration &mdash; bamm 1.0 documentation</title>
+    <title>6. Configuration &mdash; bamm 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,25 +24,22 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 1.0 documentation" href="index.html" />
-    <link rel="next" title="6. Analyzing BAMM output with BAMMtools" href="postprocess.html" />
-    <link rel="prev" title="4. Setting Up BAMM" href="settingup.html" /> 
+    <link rel="next" title="7. Analyzing BAMM output with BAMMtools" href="postprocess.html" />
+    <link rel="prev" title="5. Setting Up BAMM" href="settingup.html" /> 
   </head>
   <body>
 <div class="pageheader">
-    <h1>BAMM: Bayesian Analysis of Macroevolutionary Mixtures</h1>
+    <img src="_static/bamm-header.png" /img>
 </div>
 
     <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
+          <a href="postprocess.html" title="7. Analyzing BAMM output with BAMMtools"
+             accesskey="N">next</a></li>
         <li class="right" >
-          <a href="postprocess.html" title="6. Analyzing BAMM output with BAMMtools"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="settingup.html" title="4. Setting Up BAMM"
+          <a href="settingup.html" title="5. Setting Up BAMM"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -53,34 +50,31 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="documentation.html">
-              <img class="logo" src="_static/bamm-logo.png" alt="Logo"/>
-            </a></p>
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">5. Configuration</a><ul>
-<li><a class="reference internal" href="#control-file">5.1. Control File</a></li>
-<li><a class="reference internal" href="#general-options-and-parameters">5.2. General Options and Parameters</a><ul>
-<li><a class="reference internal" href="#general">5.2.1. General</a></li>
-<li><a class="reference internal" href="#priors">5.2.2. Priors</a></li>
-<li><a class="reference internal" href="#mcmc-simulation">5.2.3. MCMC Simulation</a></li>
-<li><a class="reference internal" href="#parameter-update-rates">5.2.4. Parameter Update Rates</a></li>
+<li><a class="reference internal" href="#">6. Configuration</a><ul>
+<li><a class="reference internal" href="#control-file">6.1. Control File</a></li>
+<li><a class="reference internal" href="#general-options-and-parameters">6.2. General Options and Parameters</a><ul>
+<li><a class="reference internal" href="#general">6.2.1. General</a></li>
+<li><a class="reference internal" href="#priors">6.2.2. Priors</a></li>
+<li><a class="reference internal" href="#mcmc-simulation">6.2.3. MCMC Simulation</a></li>
+<li><a class="reference internal" href="#parameter-update-rates">6.2.4. Parameter Update Rates</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#speciation-extinction-model">5.3. Speciation/Extinction Model</a><ul>
-<li><a class="reference internal" href="#id1">5.3.1. General</a></li>
-<li><a class="reference internal" href="#id2">5.3.2. Priors</a></li>
-<li><a class="reference internal" href="#id3">5.3.3. MCMC Simulation</a></li>
-<li><a class="reference internal" href="#starting-parameters">5.3.4. Starting Parameters</a></li>
-<li><a class="reference internal" href="#id4">5.3.5. Parameter Update Rates</a></li>
+<li><a class="reference internal" href="#speciation-extinction-model">6.3. Speciation/Extinction Model</a><ul>
+<li><a class="reference internal" href="#id1">6.3.1. General</a></li>
+<li><a class="reference internal" href="#id2">6.3.2. Priors</a></li>
+<li><a class="reference internal" href="#id3">6.3.3. MCMC Simulation</a></li>
+<li><a class="reference internal" href="#starting-parameters">6.3.4. Starting Parameters</a></li>
+<li><a class="reference internal" href="#id4">6.3.5. Parameter Update Rates</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#phenotypic-evolution-model">5.4. Phenotypic Evolution Model</a><ul>
-<li><a class="reference internal" href="#id5">5.4.1. General</a></li>
-<li><a class="reference internal" href="#mcmc-tuning">5.4.2. MCMC Tuning</a></li>
-<li><a class="reference internal" href="#id6">5.4.3. Starting Parameters</a></li>
-<li><a class="reference internal" href="#id7">5.4.4. Priors</a></li>
-<li><a class="reference internal" href="#id8">5.4.5. Parameter Update Rates</a></li>
+<li><a class="reference internal" href="#phenotypic-evolution-model">6.4. Phenotypic Evolution Model</a><ul>
+<li><a class="reference internal" href="#id5">6.4.1. General</a></li>
+<li><a class="reference internal" href="#mcmc-tuning">6.4.2. MCMC Tuning</a></li>
+<li><a class="reference internal" href="#id6">6.4.3. Starting Parameters</a></li>
+<li><a class="reference internal" href="#id7">6.4.4. Priors</a></li>
+<li><a class="reference internal" href="#id8">6.4.5. Parameter Update Rates</a></li>
 </ul>
 </li>
 </ul>
@@ -89,10 +83,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="settingup.html"
-                        title="previous chapter">4. Setting Up BAMM</a></p>
+                        title="previous chapter">5. Setting Up BAMM</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="postprocess.html"
-                        title="next chapter">6. Analyzing BAMM output with BAMMtools</a></p>
+                        title="next chapter">7. Analyzing BAMM output with BAMMtools</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/configuration.txt"
@@ -120,9 +114,9 @@
           <div class="body">
             
   <div class="section" id="configuration">
-<h1>5. Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+<h1>6. Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="control-file">
-<h2>5.1. Control File<a class="headerlink" href="#control-file" title="Permalink to this headline">¶</a></h2>
+<h2>6.1. Control File<a class="headerlink" href="#control-file" title="Permalink to this headline">¶</a></h2>
 <p>Configuration options and parameters in BAMM are specified in a <em>control file</em>,
 a plain text file in which each line contains the name of the option or
 parameter, an equal sign, and the value of the option or parameter:</p>
@@ -137,13 +131,13 @@ is called, is specified with the flag <tt class="docutils literal"><span class="
 </div>
 </div>
 <div class="section" id="general-options-and-parameters">
-<h2>5.2. General Options and Parameters<a class="headerlink" href="#general-options-and-parameters" title="Permalink to this headline">¶</a></h2>
+<h2>6.2. General Options and Parameters<a class="headerlink" href="#general-options-and-parameters" title="Permalink to this headline">¶</a></h2>
 <p>The following describes the configuration options and parameters
 that are required regardless of the specific model used.
 For true or false values, 1 is used for true and 0 is used for false.
 File paths are relative to the directory in which <tt class="docutils literal"><span class="pre">bamm</span></tt> is called.</p>
 <div class="section" id="general">
-<h3>5.2.1. General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
+<h3>6.2.1. General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">modeltype</span></tt></dt>
 <dd>The type of model BAMM uses for analysis.
@@ -185,7 +179,7 @@ If <tt class="docutils literal"><span class="pre">0</span></tt>, do not run if o
 </dl>
 </div>
 <div class="section" id="priors">
-<h3>5.2.2. Priors<a class="headerlink" href="#priors" title="Permalink to this headline">¶</a></h3>
+<h3>6.2.2. Priors<a class="headerlink" href="#priors" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">poissonRatePrior</span></tt></dt>
 <dd>The rate parameter of the exponential prior on the rate parameter
@@ -196,7 +190,7 @@ evolutionary regimes on the tree. Suggested values:
 </dl>
 </div>
 <div class="section" id="mcmc-simulation">
-<h3>5.2.3. MCMC Simulation<a class="headerlink" href="#mcmc-simulation" title="Permalink to this headline">¶</a></h3>
+<h3>6.2.3. MCMC Simulation<a class="headerlink" href="#mcmc-simulation" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">numberGenerations</span></tt></dt>
 <dd>Number of MCMC generations to run.</dd>
@@ -221,7 +215,11 @@ can be reconstructed from this output. See <a class="reference internal" href="p
 for more information on working with this output format.</dd>
 <dt><tt class="docutils literal"><span class="pre">updateEventLocationScale</span></tt></dt>
 <dd>Scale parameter for updating local moves of events on the tree.
-This defines the width of the sliding window proposal.</dd>
+This defines the width of the sliding window proposal. This parameter
+is specified in units of &#8220;total tree depth&#8221; to minimize scale dependence.
+Suppose you have a tree of age <em>T</em> (<em>T</em> is the time of the root node). Parameter
+<tt class="docutils literal"><span class="pre">updateEventLocationScale</span></tt> is in units of T. A value of 0.05 means that the uniform
+distribution for event location changes has a width of 0.05T.</dd>
 <dt><tt class="docutils literal"><span class="pre">updateEventRateScale</span></tt></dt>
 <dd>Scale parameter (proportional shrinking/expanding) for updating
 the rate parameter of the Poisson process.</dd>
@@ -230,7 +228,7 @@ the rate parameter of the Poisson process.</dd>
 </dl>
 </div>
 <div class="section" id="parameter-update-rates">
-<h3>5.2.4. Parameter Update Rates<a class="headerlink" href="#parameter-update-rates" title="Permalink to this headline">¶</a></h3>
+<h3>6.2.4. Parameter Update Rates<a class="headerlink" href="#parameter-update-rates" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">updateRateEventNumber</span></tt></dt>
 <dd>Relative frequency of MCMC moves that change the number of events.</dd>
@@ -245,11 +243,11 @@ on the tree.</dd>
 </div>
 </div>
 <div class="section" id="speciation-extinction-model">
-<h2>5.3. Speciation/Extinction Model<a class="headerlink" href="#speciation-extinction-model" title="Permalink to this headline">¶</a></h2>
+<h2>6.3. Speciation/Extinction Model<a class="headerlink" href="#speciation-extinction-model" title="Permalink to this headline">¶</a></h2>
 <p>The following describes the configuration options and parameters
 that are specific to speciation/extinction analyses in BAMM.</p>
 <div class="section" id="id1">
-<h3>5.3.1. General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>6.3.1. General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">useGlobalSamplingProbability</span></tt></dt>
 <dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, look for a global correction for incomplete sampling
@@ -265,31 +263,40 @@ incomplete sampling.</dd>
 </dl>
 </div>
 <div class="section" id="id2">
-<h3>5.3.2. Priors<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h3>6.3.2. Priors<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">lambdaInitPrior</span></tt></dt>
 <dd>Prior on the inital lambda (rate parameter of the exponential distribution)
-for the speciation rate.</dd>
+for the speciation rate. Applies to all non-root events.</dd>
+<dt><tt class="docutils literal"><span class="pre">lambdaInitRootPrior</span></tt></dt>
+<dd>Prior on the initial lambda value at the root of the tree</dd>
 <dt><tt class="docutils literal"><span class="pre">lambdaShiftPrior</span></tt></dt>
 <dd>Prior on the the lambda shift parameter (standard deviation of the normal
 distribution) for the speciation rate. The mean of the distribution
-is fixed at zero, which is equal to a constant rate diversification process.</dd>
+is fixed at zero, which is equal to a constant rate diversification process.
+Applies to non-root events.</dd>
+<dt><tt class="docutils literal"><span class="pre">lambdaShiftRootPrior</span></tt></dt>
+<dd>Prior on the lambda shift parameter for the root process.</dd>
 <dt><tt class="docutils literal"><span class="pre">muInitPrior</span></tt></dt>
 <dd>Prior on the extinction rate (rate paramater of the exponential
-distribution).</dd>
+distribution). Applies to non-root events.</dd>
+<dt><tt class="docutils literal"><span class="pre">muInitRootPrior</span></tt></dt>
+<dd>Prior on the initial mu value for the root process.</dd>
 <dt><tt class="docutils literal"><span class="pre">segLength</span></tt></dt>
 <dd>The &#8220;grain&#8221; of the likelihood calculations. It approximates the
 continuous-time change in diversification rates by breaking each branch
-into a constant-rate diversification segments, with each segment equal
-to <tt class="docutils literal"><span class="pre">segLength</span></tt>. So, a branch of length 10 will have the exponential
-speciation-rate change approximated by 10 segments if <tt class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">1.0</span></tt>.
-If the value is greater than the branch length (e.g., <tt class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">100</span></tt>
-in this case) BAMM will not break the branch into segments but use the mean
-rate across the entire branch.</dd>
+into a constant-rate diversification segments, with each segment equal to
+<tt class="docutils literal"><span class="pre">segLength</span></tt>. The parameter is specified in units of total tree depth. If
+you have a tree of age T = 100, and set <tt class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">0.05</span></tt>, the segment
+size will be 5.  A branch of length 20 would thus have the exponential
+speciation-rate change approximated by 4 segments. If the value is greater
+than the branch length (e.g., <tt class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">0.20</span></tt> in this case) BAMM will
+not break the branch into segments but use the mean rate across the entire
+branch.</dd>
 </dl>
 </div>
 <div class="section" id="id3">
-<h3>5.3.3. MCMC Simulation<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<h3>6.3.3. MCMC Simulation<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">updateLambdaInitScale</span></tt></dt>
 <dd>Scale parameter for updating the initial speciation rate for each process.</dd>
@@ -304,7 +311,7 @@ A value of <tt class="docutils literal"><span class="pre">1</span></tt> allows s
 </dl>
 </div>
 <div class="section" id="starting-parameters">
-<h3>5.3.4. Starting Parameters<a class="headerlink" href="#starting-parameters" title="Permalink to this headline">¶</a></h3>
+<h3>6.3.4. Starting Parameters<a class="headerlink" href="#starting-parameters" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">lambdaInit0</span></tt></dt>
 <dd>Initial speciation rate (at the root of the tree).</dd>
@@ -317,7 +324,7 @@ A negative value implies decreasing rates through time.</dd>
 </dl>
 </div>
 <div class="section" id="id4">
-<h3>5.3.5. Parameter Update Rates<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<h3>6.3.5. Parameter Update Rates<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">updateRateLambda0</span></tt></dt>
 <dd>Relative frequency of MCMC moves that change the initial speciation rate
@@ -332,13 +339,13 @@ event.</dd>
 </div>
 </div>
 <div class="section" id="phenotypic-evolution-model">
-<h2>5.4. Phenotypic Evolution Model<a class="headerlink" href="#phenotypic-evolution-model" title="Permalink to this headline">¶</a></h2>
+<h2>6.4. Phenotypic Evolution Model<a class="headerlink" href="#phenotypic-evolution-model" title="Permalink to this headline">¶</a></h2>
 <p>The following describes the configuration options and parameters
 specific to the phenotypic evolution model in BAMM.
 The parameter &#8220;beta&#8221; represents the rate of phenotypic evolution
 at any point in time.</p>
 <div class="section" id="id5">
-<h3>5.4.1. General<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h3>6.4.1. General<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">traitfile</span></tt></dt>
 <dd>The path to a file that contains the phenotypic trait data.
@@ -350,7 +357,7 @@ All species in the trait data file must be in the tree and vice versa.</dd>
 </dl>
 </div>
 <div class="section" id="mcmc-tuning">
-<h3>5.4.2. MCMC Tuning<a class="headerlink" href="#mcmc-tuning" title="Permalink to this headline">¶</a></h3>
+<h3>6.4.2. MCMC Tuning<a class="headerlink" href="#mcmc-tuning" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">updateBetaScale</span></tt></dt>
 <dd>Scale operator for proportional shrinking/expanding move to update
@@ -363,7 +370,7 @@ at internal nodes.</dd>
 </dl>
 </div>
 <div class="section" id="id6">
-<h3>5.4.3. Starting Parameters<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<h3>6.4.3. Starting Parameters<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">betaInit</span></tt></dt>
 <dd>Initial value of the phenotypic evolutionary process at the root
@@ -376,14 +383,20 @@ If negative, it implies decreasing rates through time.</dd>
 </dl>
 </div>
 <div class="section" id="id7">
-<h3>5.4.4. Priors<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<h3>6.4.4. Priors<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">betaInitPrior</span></tt></dt>
 <dd>Parameter (rate) of the prior (exponential) on the inital phenotypic
-evolutionary rate associated with regimes.</dd>
+evolutionary rate associated with regimes, for non-root events.</dd>
+<dt><tt class="docutils literal"><span class="pre">betaInitRootPrior</span></tt></dt>
+<dd>Parameter (rate) of the prior (exponential) on the inital phenotypic
+evolutionary rate associated with regimes for the root event.</dd>
 <dt><tt class="docutils literal"><span class="pre">betaShiftPrior</span></tt></dt>
 <dd>Parameter (stdandard deviation) of the prior (normal) on the rate-change
-parameter.</dd>
+parameter for non-root events.</dd>
+<dt><tt class="docutils literal"><span class="pre">betaShiftRootPrior</span></tt></dt>
+<dd>Parameter (stdandard deviation) of the prior (normal) on the rate-change
+parameter for the root event.</dd>
 <dt><tt class="docutils literal"><span class="pre">useObservedMinMaxAsTraitPriors</span></tt></dt>
 <dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, puts a uniform prior density on the distribution of ancestral
 character states, with upper and lower bonds determined by the min and max
@@ -399,7 +412,7 @@ of ancestral charater states. Only used if
 </dl>
 </div>
 <div class="section" id="id8">
-<h3>5.4.5. Parameter Update Rates<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<h3>6.4.5. Parameter Update Rates<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">updateRateBeta0</span></tt></dt>
 <dd>Relative freuency of moves that change the initial phenotypic rate
@@ -429,13 +442,10 @@ that need to be updated.</dd>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
+          <a href="postprocess.html" title="7. Analyzing BAMM output with BAMMtools"
+             >next</a></li>
         <li class="right" >
-          <a href="postprocess.html" title="6. Analyzing BAMM output with BAMMtools"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="settingup.html" title="4. Setting Up BAMM"
+          <a href="settingup.html" title="5. Setting Up BAMM"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -445,7 +455,7 @@ that need to be updated.</dd>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013 BAMM Team.
+        &copy; Copyright 2014 BAMM Team.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>

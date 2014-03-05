@@ -24,23 +24,20 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 1.0 documentation" href="index.html" />
-    <link rel="next" title="3. Quick-start guide to BAMM" href="quickstart.html" />
+    <link rel="next" title="3. Rate Shifts on Phylogenies: Theoretical Background" href="rateshifts.html" />
     <link rel="prev" title="1. Introduction" href="introduction.html" /> 
   </head>
   <body>
 <div class="pageheader">
-    <h1>BAMM: Bayesian Analysis of Macroevolutionary Mixtures</h1>
+    <img src="_static/bamm-header.png" /img>
 </div>
 
     <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="quickstart.html" title="3. Quick-start guide to BAMM"
-             accesskey="N">next</a> |</li>
+          <a href="rateshifts.html" title="3. Rate Shifts on Phylogenies: Theoretical Background"
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="introduction.html" title="1. Introduction"
              accesskey="P">previous</a> |</li>
@@ -53,9 +50,6 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="documentation.html">
-              <img class="logo" src="_static/bamm-logo.png" alt="Logo"/>
-            </a></p>
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">2. BAMM graph gallery</a><ul>
@@ -76,8 +70,8 @@
   <p class="topless"><a href="introduction.html"
                         title="previous chapter">1. Introduction</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="quickstart.html"
-                        title="next chapter">3. Quick-start guide to BAMM</a></p>
+  <p class="topless"><a href="rateshifts.html"
+                        title="next chapter">3. Rate Shifts on Phylogenies: Theoretical Background</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/bammgraph.txt"
@@ -110,7 +104,7 @@
 <h2>2.1. Tree-wide diversification heterogeneity<a class="headerlink" href="#tree-wide-diversification-heterogeneity" title="Permalink to this headline">¶</a></h2>
 <div class="figure align-center" id="dtpolar">
 <a class="reference internal image-reference" href="_images/xPolarRates_whales.png"><img alt="_images/xPolarRates_whales.png" src="_images/xPolarRates_whales.png" style="width: 400px;" /></a>
-<p class="caption">Speciation rates (cool colors = slow, warm = fast) along each branch of the whale phylogeny from Steeman <em>et al.</em> (2009). Each unique color section of a branch represents the mean of the marginal posterior density of speciation rates on a localized segment of a phylogenetic tree. The &#8220;background rate&#8221; for lineages involves a temporal deceleration in speciation rates (note warm colors at root). One clade - the dolphins - is characterized by a massive increase in the rate of speciation. R code <a class="reference download internal" href="_downloads/cetaceans_polarRateTree.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
+<p class="caption">A <strong>phylorate plot</strong> showing speciation rates (cool colors = slow, warm = fast) along each branch of the whale phylogeny from Steeman <em>et al.</em> (2009). Each unique color section of a branch represents the mean of the marginal posterior density of speciation rates on a localized segment of a phylogenetic tree. The &#8220;background rate&#8221; for lineages involves a temporal deceleration in speciation rates (note warm colors at root). One clade - the dolphins - is characterized by a massive increase in the rate of speciation. R code <a class="reference download internal" href="_downloads/cetaceans_polarRateTree.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
 </div>
 </div>
 <div class="section" id="individual-rate-shift-configurations-sampled-by-bamm">
@@ -118,7 +112,7 @@
 <div class="figure align-center" id="dtmulti">
 <a class="reference internal image-reference" href="_images/xMultipleShifts.png"><img alt="_images/xMultipleShifts.png" src="_images/xMultipleShifts.png" style="width: 500px;" /></a>
 </div>
-<p>Three evolutionary rate configurations (speciation) sampled by BAMM for the cetacean phylogeny, under three different color schemes (warm colors = fast rates). Columns show the 10<sup>th</sup>, 20<sup>th</sup>, and 30<sup>th</sup> samples from the posterior distribution included as an example in BAMMtools (see the <strong>events.whales</strong> dataset). Black circles denote the position of the macroevolutionary regime shifts present in each sample. Every sample from the posterior contains a potentially unique configuration of shift locations, which are sampled in proportion to their posterior probability. The trees shown in this figure differ from the preceding figure, which shows the mean marginal rates over all samples in the posterior. Note the consistent spike and subsequent deceleration in rates that occurs after shift events. R code for this figure available <a class="reference download internal" href="_downloads/plot_multishift.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
+<p>Phylorate plots for three evolutionary rate configurations (speciation) sampled by BAMM for the cetacean phylogeny, under three different color schemes (warm colors = fast rates). Columns show the 10<sup>th</sup>, 20<sup>th</sup>, and 30<sup>th</sup> samples from the posterior distribution included as an example in BAMMtools (see the <strong>events.whales</strong> dataset). Black circles denote the position of the macroevolutionary regime shifts present in each sample. Every sample from the posterior contains a potentially unique configuration of shift locations, which are sampled in proportion to their posterior probability. The trees shown in this figure differ from the preceding figure, which shows the mean marginal rates over all samples in the posterior. Note the consistent spike and subsequent deceleration in rates that occurs after shift events. R code for this figure available <a class="reference download internal" href="_downloads/plot_multishift.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
 </div>
 <div class="section" id="distinct-shift-configurations-and-their-frequencies">
 <h2>2.3. Distinct shift configurations and their frequencies<a class="headerlink" href="#distinct-shift-configurations-and-their-frequencies" title="Permalink to this headline">¶</a></h2>
@@ -132,7 +126,7 @@
 <div class="figure align-center" id="primatesize">
 <a class="reference internal image-reference" href="_images/xPrimatesBodySize.png"><img alt="_images/xPrimatesBodySize.png" src="_images/xPrimatesBodySize.png" style="width: 550px;" /></a>
 </div>
-<p>Rates of body-size evolution across a time-calibrated phylogenetic tree of living primates. Left figure simply shows original time-calibrated tree with colors indicating instantaneous rates of phenotypic evolution. Figure on left is identical to right, but all rate shifts sampled during a BAMM run have been plotted (N = 401 posterior samples accounting for 1484 total rate shifts). Opaque colors have been used to plot shifts on individual branches; hence, branches on which shifts are frequently sampled appear dark. R code for this figure available <a class="reference download internal" href="_downloads/primate_bodysize.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
+<p>Phylorate plot showing rates of body-size evolution across a time-calibrated phylogenetic tree of living primates. Left figure simply shows original time-calibrated tree with colors indicating instantaneous rates of phenotypic evolution. Figure on left is identical to right, but all rate shifts sampled during a BAMM run have been plotted (N = 401 posterior samples accounting for 1484 total rate shifts). Opaque colors have been used to plot shifts on individual branches; hence, branches on which shifts are frequently sampled appear dark. R code for this figure available <a class="reference download internal" href="_downloads/primate_bodysize.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
 </div>
 <div class="section" id="evolutionary-rate-variation-through-time">
 <h2>2.5. Evolutionary rate variation through time<a class="headerlink" href="#evolutionary-rate-variation-through-time" title="Permalink to this headline">¶</a></h2>
@@ -160,7 +154,7 @@ R code <a class="reference download internal" href="_downloads/rate_through_time
 <h2>2.8. Maximum shift credibility configuration<a class="headerlink" href="#maximum-shift-credibility-configuration" title="Permalink to this headline">¶</a></h2>
 <div class="figure align-center" id="maxcredibility">
 <a class="reference internal image-reference" href="_images/xMaxCredShiftTree.png"><img alt="_images/xMaxCredShiftTree.png" src="_images/xMaxCredShiftTree.png" style="width: 700px;" /></a>
-<p class="caption">The <em>maximum shift credibility configuration</em> (or <em>MSC</em> configuration) for the JEA bird phylogeny (6670 tips). The MSC tree displays the joint distribution of rate shift configurations that maximize the marginal probability of the data. This is analogous to the <em>maximum clade credibility tree</em> in Bayesian phylogenetic analyses. Tree shows the location of shifts, as well as their marginal probabilities (color and size). It is important to recognize that rate shifts with low marginal probability (e.g., blue nodes) can still be consistent with extremely high <em>cumulative</em> shift probabilities (see <a class="reference internal" href="#cumulative-shift-probability">Cumulative Shift Probability</a>). R code <a class="reference download internal" href="_downloads/jetztree_shifts.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
+<p class="caption">The <em>maximum shift credibility configuration</em> (or <em>MSC</em> configuration) for the JEA bird phylogeny (6670 tips). The MSC shift configuration is one estimate of the overall <em>best</em> rate shift configuration (the <em>MAP shift configuration</em> is another...). This is analogous to the <em>maximum clade credibility tree</em> in Bayesian phylogenetic analyses. Tree shows the location of shifts, as well as their marginal probabilities (color and size). It is important to recognize that rate shifts with low marginal probability (e.g., blue nodes) can still be consistent with extremely high <em>cumulative</em> shift probabilities (see <a class="reference internal" href="#cumulative-shift-probability">Cumulative Shift Probability</a>). R code <a class="reference download internal" href="_downloads/jetztree_shifts.R"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
 </div>
 </div>
 <div class="section" id="cumulative-shift-probability">
@@ -182,11 +176,8 @@ R code <a class="reference download internal" href="_downloads/rate_through_time
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="quickstart.html" title="3. Quick-start guide to BAMM"
-             >next</a> |</li>
+          <a href="rateshifts.html" title="3. Rate Shifts on Phylogenies: Theoretical Background"
+             >next</a></li>
         <li class="right" >
           <a href="introduction.html" title="1. Introduction"
              >previous</a> |</li>
@@ -198,7 +189,7 @@ R code <a class="reference download internal" href="_downloads/rate_through_time
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013 BAMM Team.
+        &copy; Copyright 2014 BAMM Team.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
