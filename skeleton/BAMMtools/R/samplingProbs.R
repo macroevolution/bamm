@@ -11,7 +11,7 @@
 #		writeToDisk = boolean, should the table be written to disk, defaults to TRUE
 
 
-samplingProbs <- function(tree, cladeTable, cladeRichness = NULL, globalSampling, output, writeToDisk = T) {
+samplingProbs <- function(tree, cladeTable, cladeRichness = NULL, globalSampling, output, writeToDisk = TRUE) {
 	
 	if (length(intersect(tree$tip.label,cladeTable[,1])) != length(tree$tip.label)) {
 		stop("Not all species from tree are in cladeTable.");

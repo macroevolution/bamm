@@ -8,10 +8,10 @@
 #include "Tree.h"
 #include "Node.h"
 #include "MbRandom.h"
-#include "Model.h"
-#include "MCMC.h"
-#include "Settings.h"
+#include "SpExModel.h"
+#include "SpExMCMC.h"
 #include "TraitMCMC.h"
+#include "Settings.h"
 #include "TraitModel.h"
 #include "Autotune.h"
 #include "FastSimulatePrior.h"
@@ -36,6 +36,7 @@ int main (int argc, char* argv[])
         exitWithMessageUsage();
     }
 
+    std::vector<UserParameter> commandLineParameters;
     std::string controlFilename;
 
     // Process command-line arguments
@@ -50,15 +51,30 @@ int main (int argc, char* argv[])
             } else {
                 exitWithErrorNoControlFile();
             }
+        // Let the Settings class (below) process the remaining arguments
         } else {
-            exitWithErrorUnknownArgument(arg);
+            if (++i < argc) {
+                // First, make sure argument starts with "--"
+                if ((arg[0] != '-') || (arg[1] != '-')) {
+                    log(Error) << "Invalid command-line option <<"
+                        << arg << ">>.\n";
+                    std::exit(1);
+                }
+                arg = arg.substr(2);    // Cut out the starting "--"
+                std::string arg_value = std::string(argv[i]);
+                UserParameter param(arg, arg_value);
+                commandLineParameters.push_back(param);
+            } else {
+                log(Error) << "Missing a command-line argument.\n";
+                std::exit(1);
+            }
         }
 
         i++;
     }
 
     // Load settings from control file
-    Settings mySettings(controlFilename);
+    Settings mySettings(controlFilename, commandLineParameters);
 
     MbRandom myRNG(mySettings.getSeed());
 
@@ -83,11 +99,6 @@ int main (int argc, char* argv[])
     }
     log(Message, runInfoFile) << "Start time: " << currentTime() << "\n";
 
-
-    if (mySettings.getSimulatePriorShifts()){
-        FastSimulatePrior fsp(&myRNG, &mySettings);
-    }
-    
     if (mySettings.getModeltype() == "speciationextinction") {
         log(Message) << "\nModel type: Speciation/Extinction\n";
 
@@ -110,13 +121,14 @@ int main (int argc, char* argv[])
         intree.setTreeMap(intree.getRoot());
 
         if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
-            Model myModel(&myRNG, &intree, &mySettings, &myPrior);
+            SpExModel myModel(&myRNG, &intree, &mySettings, &myPrior);
         } else if (mySettings.getInitializeModel() && mySettings.getAutotune()){
-            Model myModel(&myRNG, &intree, &mySettings, &myPrior);
+            SpExModel myModel(&myRNG, &intree, &mySettings, &myPrior);
             Autotune myTuneObject(&myRNG, &myModel, &mySettings);
         } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
-            Model myModel(&myRNG, &intree, &mySettings, &myPrior);
-            MCMC myMCMC(&myRNG, &myModel, &mySettings);
+            SpExModel myModel(&myRNG, &intree, &mySettings, &myPrior);
+            SpExMCMC myMCMC(&myRNG, &myModel, &mySettings);
+            myMCMC.run();
         } else {
             log(Error) << "Unsupported option in main.\n";
             std::exit(1);
@@ -144,6 +156,7 @@ int main (int argc, char* argv[])
                 !mySettings.getAutotune()) {
             TraitModel myModel(&myRNG, &intree, &mySettings, &myPrior);
             TraitMCMC myMCMC(&myRNG, &myModel, &mySettings);
+            myMCMC.run();
         } else if (mySettings.getInitializeModel() && mySettings.getAutotune()){
             log(Error) << "Autotune option not yet supported for phenotypic "
                 "(trait) analysis.\n";
@@ -152,6 +165,10 @@ int main (int argc, char* argv[])
             log(Error) << "Invalid run settings specified in main.\n";
             std::exit(1);
         }
+    }
+
+    if (mySettings.getSimulatePriorShifts()){
+        FastSimulatePrior fsp(&myRNG, &mySettings);
     }
 
     log(Message, runInfoFile) << "End time: " << currentTime() << "\n";
@@ -174,7 +191,7 @@ void printAbout()
 |   Authors: Carlos Anderson, Joseph Brown, Michael Grundler,              |\n\
 |            Daniel Rabosky, Jeff Shi, Pascal Title                        |\n\
 |                                                                          |\n\
-|   Copyright (C) 2012-2013 Daniel Rabosky                                 |\n\
+|   Copyright (C) 2012-2014 Daniel Rabosky                                 |\n\
 |   See LICENSE for details.                                               |\n\
 |                                                                          |\n\
 +--------------------------------------------------------------------------+\n\

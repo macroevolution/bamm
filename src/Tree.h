@@ -177,6 +177,9 @@ public:
     void setMeanBranchSpeciation();
     void setMeanBranchExtinction();
 
+    void setNodeSpeciationParameters();
+    void setNodeExtinctionParameters();
+    
     void echoMeanBranchRates();
 
     void writeMeanBranchSpeciationTree(Node* p, std::stringstream& ss);

@@ -71,6 +71,12 @@ overwrite = 0
 
 ###################################
 # PRIORS
+#
+# If you used setBAMMpriors, paste the output 
+# over everything between 
+# #<START prior block># and #<END prior block>#
+#
+# <START prior block >
 
 poissonRatePrior = 1.0
 # The rate parameter of the exponential prior on the rate parameter of the 
@@ -83,14 +89,24 @@ poissonRatePrior = 1.0
 lambdaInitPrior = 1.0
 # Prior (rate parameter of exponential) on initial lambda value for rate regimes
 
+lambdaInitRootPrior = 5.0
+# Prior on initial lambda value for the root process
+
 lambdaShiftPrior = 0.05
 # Prior (std dev of normal) on lambda shift parameter for rate regimes
 #  You cannot adjust the mean of this distribution (fixed at zero, 
 #		which is equal to a constant rate diversification process)
 
+lambdaShiftRootPrior = 0.05
+# Prior on the lambda shift parameter of the root process
+
 muInitPrior = 1.0
 # Prior (rate parameter of exponential) on extinction rates  
 
+muInitRootPrior = 5.0
+# Prior on the initial mu value for the root process
+
+# <END prior block >
 ###################################
 # MCMC SIMULATION SETTINGS & OUTPUT OPTIONS
 

@@ -35,14 +35,14 @@ The \emph{cumulative shift probability tree} is a copy of the target phylogeny b
 An object of class \code{phylo}, but with branch lengths equal to the marginal or cumulative shift probabilities.
 }
 \references{
-\url{www.bamm-project.org}
+\url{bamm-project.org}
 }
 \author{
 Dan Rabosky
 }
 
 \seealso{
-\link[BAMMtools]{maximumShiftCredibility}, \link[BAMMtools]{marginalShiftProbsTree}
+\link[BAMMtools]{maximumShiftCredibility}
 }
 \examples{
 data(whales)
@@ -52,14 +52,14 @@ ed <- getEventData(whales, events.whales)
 # computing the marginal shift probs tree:
 mst <- marginalShiftProbsTree(ed)
 
-# THe cumulative shift probs tree:
+# The cumulative shift probs tree:
 cst <- cumulativeShiftProbsTree(ed)
 
 #compare the two types of shift trees side-by-side:
 plot.new()
 par(mfrow=c(1,2))
-plot.phylo(mst, no.margin=T, show.tip.label=F)
-plot.phylo(cst, no.margin=T, show.tip.label=F)
+plot.phylo(mst, no.margin=TRUE, show.tip.label=FALSE)
+plot.phylo(cst, no.margin=TRUE, show.tip.label=FALSE)
 }
  
 \keyword{ graphics}

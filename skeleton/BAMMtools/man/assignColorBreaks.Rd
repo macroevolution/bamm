@@ -11,7 +11,7 @@
 }
 \arguments{
 	\item{rates}{
-		a numeric vector of phentypic rates or a list of numeric vectors of speciation and extinction rates.
+		a numeric vector of phenotypic rates or a list of numeric vectors of speciation and extinction rates.
 	}
 	\item{NCOLORS}{
 		an integer number of colors to use for the mapping. Larger numbers do not 
@@ -35,16 +35,21 @@
 	Mike Grundler
 }
 \examples{
-	library(BAMMtools)
 	data(whales, events.whales)
 	ed <- getEventData(whales,events.whales,0.2)
 	
 	ed <- dtRates(ed, 0.01)
 	colors <- assignColorBreaks(ed$dtrates$rates, spex="s") #speciation rates
-	#colors <- assignColorBreaks(ed$dtrates$rates[[1]]) #this also works for speciation rates
+	#colors <- assignColorBreaks(ed$dtrates$rates[[1]]) 
+	#this also works for speciation rates
+	
 	plot(ed, colorbreaks = colors, spex="s")
-	colors <- assignColorBreaks(ed$dtrates$rates, spex="se") #diversification rates
-	#colors <- assignColorBreaks(ed$dtrates$rates[[1]] - ed$dtrates$rates[[2]]) #this also works for diversification rates
+	colors <- assignColorBreaks(ed$dtrates$rates, spex="se") 
+	#diversification rates
+	
+	#colors <- assignColorBreaks(ed$dtrates$rates[[1]] - ed$dtrates$rates[[2]]) 
+	#this also works for diversification rates
+	
 	plot(ed, colorbreaks = colors, spex="se")
 }
 \seealso{

@@ -6,7 +6,7 @@
 
 #include "Autotune.h"
 
-#include "Model.h"
+#include "SpExModel.h"
 #include "TraitModel.h"
 #include "MbRandom.h"
 #include "Node.h"
@@ -15,7 +15,7 @@
 #include "BranchEvent.h"
 #include "TraitBranchEvent.h"
 
-Autotune::Autotune(MbRandom* ran, Model * mymodel, Settings*sp)
+Autotune::Autotune(MbRandom* ran, SpExModel * mymodel, Settings*sp)
 {
     std::cout << "\n\nThis is a tuning run to optimize MCMC operators\n" << std::endl;
     

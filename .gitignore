@@ -15,6 +15,12 @@
 # Build directories
 build
 
+# Default output files
+mcmc_out*
+event_data*
+run_info*
+shiftPrior*
+
 # Other junk
 .DS_Store
 ._*

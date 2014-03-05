@@ -1,9 +1,9 @@
 ### subsetEventData
 
-subsetEventData <- function(ephy, index=NULL) {
+subsetEventData <- function(ephy, index) {
 	
-	if (!'bammdata' %in% class(ephy)) {
-		stop("Object ephy must be of class 'bammdata'\n");
+	if (class(ephy) != 'bammdata' & class(ephy) != 'credibleshiftset') {
+		stop("Object ephy must be of class 'bammdata or credibleshiftset'\n");
 	}
 	
 	nsamples <- length(ephy$eventData);
@@ -13,7 +13,7 @@ subsetEventData <- function(ephy, index=NULL) {
 	
 	if (length(badsubset) > 0) {
 		cat("Bad call to BAMMtools::subsetEventData\n");
-		cat("You have << ", nsamples, " >> samples in your 'bammdata' object \n");
+		cat("You have << ", nsamples, " >> samples in your data object \n");
 		stop("Attempt to access invalid samples. Check index.")
 	}
 	

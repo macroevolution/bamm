@@ -28,7 +28,7 @@
 #	+ several undocumented args to set plot parameters: mar, cex, xline, yline, etc.
 #	
 
-plotRateThroughTime <- function(ephy, useMedian = TRUE, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'auto', nBins = 100, smooth = FALSE, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = TRUE, cex.axis=1, cex=1.3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=FALSE) {
+plotRateThroughTime <- function(ephy, useMedian = TRUE, intervals=seq(from = 0,to = 1,by = 0.01), ratetype = 'auto', nBins = 100, smooth = FALSE, smoothParam = 0.20, opacity = 0.01, intervalCol='blue', avgCol='red',start.time = NULL, end.time = NULL, node = NULL, nodetype='include', plot = TRUE, cex.axis=1, cex.lab=1.3, lwd=3, xline=3.5, yline=3.5, mar=c(6,6,1,1), xticks=5, yticks=5, xlim='auto', ylim='auto',add=FALSE, axis.labels=TRUE) {
 	
 	if (!any(c('bammdata', 'bamm-ratematrix') %in% class(ephy))) {
 		stop("ERROR: Object ephy must be of class 'bammdata' or 'bamm-ratematrix'.\n");
@@ -67,7 +67,7 @@ plotRateThroughTime <- function(ephy, useMedian = TRUE, intervals=seq(from = 0,t
 	}
 	if (ratetype == 'auto' & ephy$type == 'diversification') {
 		rate <- rmat$lambda;
-		ratelabel <- 'Speciation';
+		ratelabel <- 'speciation rate';
 	}
 	if (ratetype == 'auto' & ephy$type == 'trait') {
 		rate <- rmat$beta;
@@ -75,15 +75,16 @@ plotRateThroughTime <- function(ephy, useMedian = TRUE, intervals=seq(from = 0,t
 	}
 	if (ratetype == 'extinction') {
 		rate <- rmat$mu;
-		ratelabel <- 'Extinction';
+		ratelabel <- 'extinction rate';
 	}
 	if (ratetype == 'netdiv') {
 		rate <- rmat$lambda - rmat$mu;
-		ratelabel <- 'Net diversification';
+		ratelabel <- 'net diversification rate';
 	}
 
 	#generate coordinates for polygons
-	maxTime <- max(rmat$times);
+	rmat$times <- max(rmat$times) - rmat$times;
+	maxTime <- max(rmat$times)
 	if (!is.null(intervals)) {
 		mm <- apply(rate, MARGIN = 2, quantile, intervals);
 
@@ -127,40 +128,52 @@ plotRateThroughTime <- function(ephy, useMedian = TRUE, intervals=seq(from = 0,t
 			plot.new();
 			par(mar=mar);
 			if (unique(xlim == 'auto') & unique(ylim == 'auto')) {
-				plot.window(xlim=c(maxTime, 0), ylim=c(0, max(poly[[1]][,2])));
 				xMin <- maxTime;
 				xMax <- 0;
 				yMin <- 0;
-				yMax <- max(poly[[1]][,2]);
+				if (!is.null(intervals)){
+					yMax <- max(poly[[1]][,2]);
+				} else {
+					yMax <- max(avg);
+				}
 			}
 			if (unique(xlim != 'auto') & unique(ylim == 'auto')) {
-				plot.window(xlim = xlim, ylim=c(0, max(poly[[1]][,2])));
 				xMin <- xlim[1];
 				xMax <- xlim[2];
 				yMin <- 0;
-				yMax <- max(poly[[1]][,2]);
+				if (!is.null(intervals)){
+					yMax <- max(poly[[1]][,2]);
+				} else {
+					yMax <- max(avg);
+				}
 			}
 			if (unique(xlim == 'auto') & unique(ylim != 'auto')) {
-				plot.window(xlim=c(maxTime, 0), ylim=ylim);
 				xMin <- maxTime;
 				xMax <- 0;
 				yMin <- ylim[1];
 				yMax <- ylim[2];
 			}
+			if (unique(xlim != 'auto') & unique(ylim != 'auto')) {
+				xMin <- xlim[1];
+				xMax <- xlim[2];
+				yMin <- ylim[1];
+				yMax <- ylim[2];
+			}
+			plot.window(xlim=c(xMin, xMax), ylim=c(yMin, yMax));
 			axis(at=c(1.3*xMin,seq(xMin,xMax, length.out=xticks+1)), labels = c(1.3*xMin,signif(seq(xMin, xMax, length.out=xticks+1),digits=2)), cex.axis = cex.axis, side = 1);
 			axis(at=c(-0.2,seq(yMin, 1.2*yMax, length.out=yticks+1)), labels = c(-0.2,signif(seq(yMin, 1.2*yMax, length.out=yticks+1),digits=2)), las=1, cex.axis = cex.axis, side = 2);
-
-			mtext(side = 1, text = 'Time since present', line = xline, cex = cex);
-			mtext(side = 2, text = ratelabel, line = yline, cex = cex);
-
+			if (axis.labels) {
+				mtext(side = 1, text = 'time before present', line = xline, cex = cex.lab);
+				mtext(side = 2, text = ratelabel, line = yline, cex = cex.lab);
+			}
 		}
 		#plot intervals
 		if (!is.null(intervals)) {
 			for (i in 1:length(poly)) {
-				polygon(x=maxTime - poly[[i]][,1],y=poly[[i]][,2],col=transparentColor(intervalCol,opacity),border=NA);
+				polygon(x=poly[[i]][,1],y=poly[[i]][,2],col=transparentColor(intervalCol,opacity),border=NA);
 			}
 		}
-		lines(x = maxTime - rmat$time, y = avg, lwd = 3, col = avgCol);
+		lines(x = rmat$time, y = avg, lwd = lwd, col = avgCol);
 	} else {
 		return(list(poly = poly,avg = avg,times = rmat$time));
 	}

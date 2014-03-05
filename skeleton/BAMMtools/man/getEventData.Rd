@@ -7,7 +7,8 @@ Create \code{bammdata} object from MCMC output
 \code{getEventData} reads shift configuration data (the "event data" output) from a \code{BAMM} analysis and creates a \code{bammdata} object. The \code{bammdata} object is fundamental for extracting information about macroevolutionary rate variation through time and among lineages.
 }
 \usage{
-getEventData(phy, eventdata, burnin = 0, nsamples = NULL, verbose = FALSE, type = "diversification")
+getEventData(phy, eventdata, burnin = 0, nsamples = NULL, 
+	verbose = FALSE, type = "diversification")
 }
 \arguments{
   \item{phy}{
@@ -32,16 +33,14 @@ a character string. Either "diversification" or "trait" depending on your BAMM a
 
 \details{
 In the BAMM framework, an "event" defines a macroevolutionary process of diversification 
-or trait evolution. Every sample from the posterior includes at least one process, defined by such an "event". If given sample includes just a single event, then the dynamics of diversification or trait evolution can be described entirely by a single time-constant or time-varying process that begins at the root of the tree. Any sample from the posterior distribution may include a complex mixture of distinct processes. To represent temporal heterogeneity in macroevolutionary rates, \code{BAMM} models a rate \eqn{R}, e.g. speciation, as a function that changes exponentially with time: 
-\deqn{R(t) = R(0)*exp(b*t)}. 
-Here \eqn{R(0)} is the initial rate and \eqn{b} is a parameter determining how quickly that rate grows or decays with time. 
+or trait evolution. Every sample from the posterior includes at least one process, defined by such an "event". If a given sample includes just a single event, then the dynamics of diversification or trait evolution can be described entirely by a single time-constant or time-varying process that begins at the root of the tree. Any sample from the posterior distribution may include a complex mixture of distinct processes. To represent temporal heterogeneity in macroevolutionary rates, \code{BAMM} models a rate \eqn{R}, e.g. speciation, as a function that changes exponentially with time: \eqn{R(t) = R(0)*exp(b*t)}. Here \eqn{R(0)} is the initial rate and \eqn{b} is a parameter determining how quickly that rate grows or decays with time. 
 
 The \code{eventdata} file (or data frame) is a record of events and associated parameters that were sampled with \code{BAMM} during simulation of the posterior with reversible jump MCMC. This complex, information-rich file is processed into a \code{bammdata} object, which serves as the core data object for numerous downstream analyses. From a \code{bammdata} object, you can summarize rate variation through time, among clades, extract locations of rate shifts, summarize clade-specific rates of speciation and extinction, and more.
 
 In general, the user does not need to be concerned with the details of a \code{bammdata} object. The object is used as input by a number of \code{BAMMtools} functions. 
  
 The parameter \code{nsamples} can be used to reduce the total amount of data included in the raw eventdata output from a \code{BAMM} run. The final \code{bammdata} object will consist of all data for \code{nsamples} from the posterior. These \code{nsamples} are equally spaced after discarding some \code{burnin} fraction as "burn-in". If \code{nsamples} is set to \code{NULL}, the \code{bammdata} object will include all samples in the posterior after discarding the \code{burnin} fraction.
- 
+
 }
 \value{
 A list with many components:
@@ -68,7 +67,7 @@ See 'Details'.
 }
 \item{eventVectors}{
 A list of integer vectors. Each element is a single posterior sample.
-For each branch in \code{phy} the index of the event that obtains along that branch.
+For each branch in \code{phy} the index of the event that occurs along that branch.
 Branches are ordered increasing here and elsewhere.
 }
 \item{eventBranchSegs}{
@@ -77,12 +76,12 @@ Each matrix has four columns: \code{Column 1} identifies a node in \code{phy}.
 \code{Column 2} identifies the beginning time of the branch or segment 
 of the branch that subtends the node in \code{Column 1}. \code{Column 3} identifies the 
 ending time of the branch or segment of the branch that subtends the node in \code{Column 1}. 
-\code{Column 4} identifies the index of the event that obtains along the branch or segment 
+\code{Column 4} identifies the index of the event that occurs along the branch or segment 
 of the branch that subtends the node in \code{Column 1}.
 }
 \item{tipStates}{
 A list of integer vectors. Each element is a single posterior sample.
-For each tip the index of the event that obtains along the branch subtending the tip.
+For each tip the index of the event that occurs along the branch subtending the tip.
 Tips are ordered increasing here and elsewhere.
 }
 \item{tipLambda}{
@@ -119,7 +118,12 @@ the descendants of any node. e.g. the descendants of node 89 can be found by
 
 }
 \references{
-\url{www.bamm-project.org}
+\url{bamm-project.org}
+
+Rabosky, D. L. 2014. Automatic detection of key innovations, rate shifts, and diversity-dependence on phylogenetic trees. PLoS ONE 9:e89543
+
+Rabosky, D. L., F. Santini, J. T. Eastman, S. A. Smith, B. L. Sidlauskas, J. Chang, and M. E. Alfaro. 2013. Rates of speciation and morphological evolution are correlated across the largest vertebrate radiation. Nature Communications DOI: 10.1038/ncomms2958 
+
 }
 \author{
 Dan Rabosky, Mike Grundler

@@ -12,16 +12,18 @@ BAMM Documentation
 
    introduction
    bammgraph
+   rateshifts   
    quickstart
    settingup
    configuration
    postprocess
    advanced
+
    faq
-   rateshifts
+   troubleshooting
+   glossary
 
-Indices and tables
-==================
+Search
+======
 
-* :ref:`genindex`
 * :ref:`search`

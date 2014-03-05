@@ -1,271 +1,232 @@
-#include <sstream>
-#include <fstream>
+#include "MCMC.h"
+#include "MbRandom.h"
+#include "Model.h"
+#include "Settings.h"
+#include "Log.h"
+
+#include <vector>
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 #include <cstdlib>
 
-#include "MCMC.h"
-#include "Model.h"
-#include "MbRandom.h"
-#include "Node.h"
-#include "Tree.h"
-#include "Settings.h"
-#include "BranchEvent.h"
-#include "Log.h"
 
-
-MCMC::MCMC(MbRandom* ran, Model* mymodel, Settings* sp)
+MCMC::MCMC(MbRandom* rng, Model* model, Settings* settings) :
+    _rng(rng), _model(model), _settings(settings)
 {
-    ranPtr = ran;
-    ModelPtr = mymodel;
-    sttings = sp;
+    _numGenerations = _settings->getNGENS();
 
-    //check if file exists; delete;
+    // Output file names
+    _mcmcOutputFileName      = _settings->getMCMCoutfile();
+    _eventDataOutputFileName = _settings->getEventDataOutfile();
 
-    // MCMC parameters - for now....//
-    _mcmcOutFilename       = sttings->getMCMCoutfile();
-    _lambdaOutFilename     = sttings->getLambdaOutfile();
-    _muOutFilename         = sttings->getMuOutfile();
-    _eventDataOutFilename  = sttings->getEventDataOutfile();
-
-    _writeMeanBranchLengthTrees = sttings->getWriteMeanBranchLengthTrees();
-
-    _treeWriteFreq =        sttings->getBranchRatesWriteFreq();
-    _eventDataWriteFreq =   sttings->getEventDataWriteFreq();
-    _mcmcWriteFreq =        sttings->getMCMCwriteFreq();
-    _printFreq =            sttings->getPrintFreq();
-    _NGENS =                sttings->getNGENS();
+    // Output frequencies
+    _mcmcOutputFreq      = _settings->getMCMCwriteFreq();
+    _eventDataOutputFreq = _settings->getEventDataWriteFreq();
+    _stdOutFreq          = _settings->getPrintFreq();
 
     // Open streams for writing
-    _mcmcOutStream.open(_mcmcOutFilename.c_str());
-    _eventDataOutStream.open(_eventDataOutFilename.c_str());
+    _mcmcOutputStream.open(_mcmcOutputFileName.c_str());
+    _eventDataOutputStream.open(_eventDataOutputFileName.c_str());
+}
 
-    if (_writeMeanBranchLengthTrees) {
-        _lambdaOutStream.open(_lambdaOutFilename.c_str());
-        _muOutStream.open(_muOutFilename.c_str());
-    }
 
-    writeHeadersToOutputFiles();
+MCMC::~MCMC()
+{
+    _mcmcOutputStream.close();
+    _eventDataOutputStream.close();
+}
 
+
+void MCMC::run()
+{
     setUpdateWeights();
-    ModelPtr->resetGeneration();
+    _model->resetGeneration(); // TODO: Really needed?
 
-    for (int i = 0; i < sttings->getInitialNumberEvents(); i++) {
-        ModelPtr->addEventToTree();
+    // TODO: Might be better to put this in model initialization
+    for (int i = 0; i < _settings->getInitialNumberEvents(); i++) {
+        _model->addEventToTree();
     }
 
-    log() << "\nRunning MCMC chain for " << _NGENS << " generations.\n";
+    log() << "\nRunning MCMC chain for "
+          << _numGenerations << " generations.\n";
 
-    log() << "\n"
-          << std::setw(15) << "Generation"
+    log() << "\n";
+    outputHeaders();
+
+    int parameterToUpdate = 0;
+    for (int gen = 0; gen < _numGenerations; gen++) {
+        parameterToUpdate = chooseRandomParameter();
+        updateState(parameterToUpdate);
+        outputData(gen);
+    }
+}
+
+
+void MCMC::setUpdateWeights()
+{
+    setUpParameterWeights();
+
+    double sumWeights = _parameterWeights[0];
+    for (SizeType i = 1; i < _parameterWeights.size(); i++) {
+        sumWeights += _parameterWeights[i];
+        _parameterWeights[i] += _parameterWeights[i - 1];
+    }
+
+    for (SizeType i = 0; i < _parameterWeights.size(); i++) {
+        _parameterWeights[i] /= sumWeights;
+    }
+
+    // Define vectors to hold accept/reject data:
+    for (SizeType i = 0; i < _parameterWeights.size(); i++) {
+        _acceptCount.push_back(0);
+        _rejectCount.push_back(0);
+    }
+}
+
+
+void MCMC::setUpParameterWeights()
+{
+    _parameterWeights.push_back(_settings->getUpdateRateEventNumber());
+    _parameterWeights.push_back(_settings->getUpdateRateEventPosition());
+    _parameterWeights.push_back(_settings->getUpdateRateEventRate());
+
+    // Defined by concrete subclass
+    setUpSpecificParameterWeights();
+}
+
+
+int MCMC::chooseRandomParameter()
+{
+    double r = _rng->uniformRv();
+
+    for (SizeType i = 0; i < _parameterWeights.size(); i++) {
+        if (r < _parameterWeights[i]) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+
+void MCMC::updateState(int parameter)
+{
+    if (parameter == 0) {
+        _model->changeNumberOfEventsMH();
+    } else if (parameter == 1) {
+        _model->moveEventMH();
+    } else if (parameter == 2) {
+        _model->updateEventRateMH();
+    } else if (parameter > 2) {
+        // Defined in concrete subclass
+        updateSpecificState(parameter);
+    } else {
+        // Should never get here
+        log(Error) << "Bad parameter to update\n";
+        std::exit(1);
+    }
+
+    if (_model->getAcceptLastUpdate() == 1) {
+        _acceptCount[parameter]++;
+    } else if (_model->getAcceptLastUpdate() == 0) {
+        _rejectCount[parameter]++;
+    } else if (_model->getAcceptLastUpdate() == -1) {
+        log(Error) << "Failed somewhere in MH step, parameter "
+                   << parameter << "\n";
+        std::exit(1);
+    } else {
+        log(Error) << "Invalid accept/reject flag in model object\n";
+        std::exit(1);
+    }
+
+    // Reset to unmodified value
+    _model->setAcceptLastUpdate(-1);
+}
+
+
+void MCMC::outputHeaders()
+{
+    outputMCMCHeaders();
+    outputEventDataHeaders();
+    outputStdOutHeaders();
+}
+
+
+void MCMC::outputMCMCHeaders()
+{
+    _mcmcOutputStream << "generation,N_shifts,logPrior,logLik,"
+                      << "eventRate,acceptRate\n";
+}
+
+
+void MCMC::outputEventDataHeaders()
+{
+    _eventDataOutputStream << "generation,leftchild,rightchild,abstime";
+    outputSpecificEventDataHeaders();
+}
+
+
+void MCMC::outputStdOutHeaders()
+{
+    log() << std::setw(15) << "Generation"
           << std::setw(15) << "LogLikelihood"
-          << std::setw(15) << "NumShifts"    // Why not NumEvents?
+          << std::setw(15) << "NumShifts"
           << std::setw(15) << "LogPrior"
-          << std::setw(15) << "AcceptRate"
-          << std::endl;
-
-    /*run chain*/
-    for (int i = 0; i < _NGENS; i++) {
-        int parmToUpdate = pickParameterClassToUpdate();
-        updateState(parmToUpdate); // update state
-
-        if (_writeMeanBranchLengthTrees && (i % _treeWriteFreq == 0)) {
-            writeBranchSpeciationRatesToFile();
-            writeBranchExtinctionRatesToFile();
-        }
-
-        if ((i % _eventDataWriteFreq) == 0) {
-            writeEventDataToFile();
-        }
-        
-        if ((i % _mcmcWriteFreq) == 0) {
-            writeStateToFile();
-        }
-
-        if ((i % _printFreq == 0)) {
-            printStateData();
-        
-            // Resets acceptance rates every time
-            //  state data are printed.
-            //  This could lead to NANs if writeEventDataToFile is called after this.
-            
-            ModelPtr->resetMHacceptanceParameters();
-        }
-    }
+          << std::setw(15) << "AcceptRate" << "\n";
 }
 
 
-MCMC::~MCMC(void)
+void MCMC::outputData(int generation)
 {
-    _mcmcOutStream.close();
-    _eventDataOutStream.close();
-
-    if (_writeMeanBranchLengthTrees) {
-        _lambdaOutStream.close();
-        _muOutStream.close();
-    }
-}
-
-
-void MCMC::setUpdateWeights(void)
-{
-    parWts.push_back(sttings->getUpdateRateEventNumber()); // event number
-    parWts.push_back(sttings->getUpdateRateEventPosition()); // event position
-    parWts.push_back(sttings->getUpdateRateEventRate()); // event rate
-    parWts.push_back(sttings->getUpdateRateLambda0()); // lambda0 rate
-    parWts.push_back(sttings->getUpdateRateLambdaShift()); // lambda shift
-    parWts.push_back(sttings->getUpdateRateMu0()); //mu0 rate
-    parWts.push_back(sttings->getUpdateRateMuShift()); // mu shift
-
-    double sumwts = parWts[0];
-    for (std::vector<double>::size_type i = 1; i < parWts.size(); i++) {
-        sumwts += parWts[i];
-        parWts[i] += parWts[i - 1];
+    if (generation % _mcmcOutputFreq == 0) {
+        outputMCMCData();
     }
 
-    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++) {
-        parWts[i] /= sumwts;
+    if (generation % _eventDataOutputFreq == 0) {
+        outputEventData();
     }
 
-    //for (int i = 0; i < parWts.size(); i++)
-    //  std::cout << parWts[i] << std::endl;
+    if (generation % _stdOutFreq == 0) {
+        outputStdOutData();
 
-    // Define std::vectors to hold accept/reject data:
-    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++) {
-        acceptCount.push_back(0);
-        rejectCount.push_back(0);
-    }
-}
-
-
-int MCMC::pickParameterClassToUpdate(void)
-{
-    double rn = ranPtr->uniformRv();
-    int parm = 0;
-    for (std::vector<double>::size_type i = 0; i < parWts.size(); i++) {
-        if (rn <= parWts[i]) {
-            parm = (int)i;
-            break;
-        }
-    }
-    return parm;
-}
-
-
-void MCMC::updateState(int parm)
-{
-    if (parm == 0) {
-        ModelPtr->changeNumberOfEventsMH();
-    } else if (parm == 1) {
-        ModelPtr->moveEventMH();
-    } else if (parm == 2) {
-        ModelPtr->updateEventRateMH();
-    } else if (parm == 3) {
-        ModelPtr->updateLambdaInitMH();
-    } else if (parm == 4) {
-        ModelPtr->updateLambdaShiftMH();
-    } else if (parm == 5) {
-        ModelPtr->updateMuInitMH();
-    } else if (parm == 6) {
-        ModelPtr->updateMuShiftMH();
-    } else if (parm == 7) {
-        // Update time variable partition:
-        std::cout << "should update isTimeVariable" << std::endl;
-        ModelPtr->setAcceptLastUpdate(1);
-    } else {
-        // should never get here...throw exception?
-        std::cout << "Bad parm to update\n" << std::endl;
+        // Reset acceptance rates when state data are printed to the screen.
+        // This could lead to NANs if outputEventData() is called after this.
+        _model->resetMHAcceptanceParameters();
     }
 
-    if (ModelPtr->getAcceptLastUpdate() == 1) {
-        acceptCount[parm]++;
-    } else if ( ModelPtr->getAcceptLastUpdate() == 0 ) {
-        rejectCount[parm]++;
-    } else if ( ModelPtr->getAcceptLastUpdate() == -1) {
-        std::cout << "failed somewhere in MH step, parm " << parm << std::endl;
-        throw;
-    } else {
-        std::cout << "invalid accept/reject flag in model object" << std::endl;
-        throw;
-    }
-    // reset to unmodified value
-    ModelPtr->setAcceptLastUpdate(-1);
+    // Defined in concrete subclass
+    outputSpecificData(generation);
 }
 
 
-void MCMC::writeStateToFile()
+void MCMC::outputMCMCData()
 {
-    writeStateToStream(_mcmcOutStream);
+    _mcmcOutputStream << _model->getGeneration()            << ","
+                      << _model->getNumberOfEvents()        << ","
+                      << _model->computeLogPrior()          << ","
+                      << _model->getCurrentLogLikelihood()  << ","
+                      << _model->getEventRate()             << ","
+                      << _model->getMHAcceptanceRate()
+                      << std::endl;
 }
 
 
-void MCMC::writeStateToStream(std::ostream& outStream)
-{
-    outStream << ModelPtr->getGeneration()       << ","
-              << ModelPtr->getNumberOfEvents()   << ","
-              << ModelPtr->computeLogPrior()     << ","
-              << ModelPtr->getCurrLnLBranches()  << ","
-              << ModelPtr->getEventRate()        << ","
-              << ModelPtr->getMHacceptanceRate() << std::endl;
-}
-
-
-/* print state data to screen:
-    current LnL
-    # of events
-    mean speciation rate?
-
-
-*/
-void MCMC::printStateData(void)
-{
-    log() << std::setw(15) << ModelPtr->getGeneration()
-          << std::setw(15) << ModelPtr->getCurrLnLBranches()
-          << std::setw(15) << ModelPtr->getNumberOfEvents()
-          << std::setw(15) << ModelPtr->computeLogPrior()
-          << std::setw(15) << ModelPtr->getMHacceptanceRate()
-          << std::endl;
-}
-
-////////
-
-void MCMC::writeBranchSpeciationRatesToFile(void)
-{
-    ModelPtr->getTreePtr()->setMeanBranchSpeciation();
-    std::stringstream outdata;
-    ModelPtr->getTreePtr()->writeMeanBranchSpeciationTree(
-        ModelPtr->getTreePtr()->getRoot(), outdata);
-    outdata << ";";
-
-    _lambdaOutStream << outdata.str() << std::endl;
-}
-
-
-void MCMC::writeBranchExtinctionRatesToFile(void)
-{
-    ModelPtr->getTreePtr()->setMeanBranchExtinction();
-    std::stringstream outdata;
-    ModelPtr->getTreePtr()->writeMeanBranchExtinctionTree(
-        ModelPtr->getTreePtr()->getRoot(), outdata);
-    outdata << ";";
-
-    _muOutStream << outdata.str() << std::endl;
-}
-
-
-void MCMC::writeEventDataToFile(void)
+// TODO: Perhaps the model should be printing this directly
+void MCMC::outputEventData()
 {
     std::stringstream eventData;
-    ModelPtr->getEventDataString(eventData);
-
-    _eventDataOutStream << eventData.str() << std::endl;
+    _model->getEventDataString(eventData);
+    _eventDataOutputStream << eventData.str() << std::endl;
 }
 
 
-void MCMC::writeHeadersToOutputFiles()
+void MCMC::outputStdOutData()
 {
-    _mcmcOutStream << "generation,N_shifts,logPrior,logLik," <<
-        "eventRate,acceptRate" << std::endl;
-    _eventDataOutStream << "generation,leftchild,rightchild,abstime," <<
-        "lambdainit,lambdashift,muinit,mushift" << std::endl;
+    log() << std::setw(15) << _model->getGeneration()
+          << std::setw(15) << _model->getCurrentLogLikelihood()
+          << std::setw(15) << _model->getNumberOfEvents()
+          << std::setw(15) << _model->computeLogPrior()
+          << std::setw(15) << _model->getMHAcceptanceRate()
+          << std::endl;
 }

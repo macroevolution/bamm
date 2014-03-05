@@ -4,56 +4,48 @@
 Summary of rate shift results from \code{BAMM} analysis.
 }
 \description{
-Summarizes the number of shifts and their locations in the 
-maximum shift credibility (MSC) configuration and the posterior 
-distribution on the number of shifts.
+Summarizes the posterior distribution on the number of shifts.
 }
 \usage{
-S3 method for class \code{bammdata}:
-summary(ephy, opt = "product", display = 10)
+\method{summary}{bammdata}(object, display = 10, ...)
 }
 \arguments{
-  \item{ephy}{
-an object of class \code{bammdata}
+  \item{object}{
+an object of class \code{bammdata}.
 }
-  \item{opt}{
-a character string indicating the optimality criterion to be used in calculation of the maximum shift credibility configuration. May be "product" or "sum"
-}
+
   \item{display}{
-an integer for the number of rows of the posterior to display
+an integer for the number of rows of the posterior to display.
+}
+\item{...}{
+	additional arguments (unused).
 }
 }
 \details{
-Prints to console the number of posterior samples, the number of 
-shifts in the MSC configuration, the locations of those shifts, the optimality
-criterion used for calculating the MSC configuration, and the posterior 
+Prints to console the number of posterior samples and the posterior 
 distribution on the number of shifts, which is just the fraction of 
-samples in the posterior having 0,1,2,...n shifts.
+samples in the posterior having 0, 1, 2,...n shifts.
 }
 \value{
-Returns (invisibly) a list with two components:
-\item{posterior}{
-	the number of posterior samples having 0,1,2,...,n shifts
+Returns (invisibly) a dataframe with 2 components:
+\item{shifts}{
+	the number of shifts
 }
-\item{mscshiftnodes}{
-	the node(s) where a shift occurs in the maximum shift credibility
-	configuration
+\item{prob}{
+	the corresponding posterior probability of a model with a given number of rate shifts.
 }
+
 }
 \references{
-\url{www.bamm-project.org}
+\url{bamm-project.org}
 }
 \author{
-Mike Grundler
+Mike Grundler, Dan Rabosky
 }
  
-\seealso{
-\code{\link{maximumShiftCredibility}}
-}
 \examples{
-library(BAMMtools)
 data(whales, events.whales)
-ephy = getEventData(whales,events.whales,nsamples=100)
+ephy <- getEventData(whales,events.whales,nsamples=100)
 summary(ephy)
 }
 

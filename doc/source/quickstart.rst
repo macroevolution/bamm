@@ -3,7 +3,7 @@
 Quick-start guide to BAMM
 =========================
 
-This section assumes you have a compiled version of **BAMM** in a directory on your computer (see :ref:`this section<bammsetup>` for installation). This is a **quick-start** guide: we will provide guidance for some general parameter settings that should get BAMM running on your dataset, but you should explore the :ref:`configurations and settings<configuration>` page in more detail to optimize performance.
+This section assumes you have a compiled version of **BAMM** in a directory on your computer (see :ref:`Setting Up BAMM<bammsetup>` for installation). This is a **quick-start** guide: we will provide guidance for some general parameter settings that should get BAMM running on your dataset, but you should explore the `Configuration <configuration.html>`_ page in more detail to optimize performance.
 
 BAMM can be used to model speciation-extinction rates and phenotypic evolutionary rates across phylogenetic trees. To run a speciation-extinciont analysis on your dataset, you need the following (easiest if all in the same directory): 
 
@@ -29,13 +29,13 @@ Control file
 
 To run ``bamm``, you must always specify a *control file*. The control file contains all of the settings necessary to run the program on your dataset, including the name(s) of the input files you seek to analyze. The easiest way to run BAMM is to place the control file, and all files to be analyzed (e.g., the phylogeny) in the same directory as the **BAMM** application. If your control file is named ``myControlFile.txt``, you would run BAMM as follows (on the OSX operating system)::
 
-    .\bamm -control myControlFile.txt
+    ./bamm -c myControlFile.txt
 
-On Windows machines, you would ...
+On Windows machines, you would run::
 
-**NOT DONE** %% Needs Windows explanation 
+    bamm -c myControlFile.txt
 
-BAMM comes with example control files (located in the directory ``examples/`` ). Use these as a template for setting up your own analyses. The control file is simply a text file with a set of parameter names, followed by the "equals" sign (=), followed by the parameter value. Anything on a line of the control file to the right of a pound sign (#) will be ignored by the program (e.g., it is considered a *comment*). Part of your control file might look like this::
+You may download example control files (or if you have the development repository, it is located in the directory ``examples/`` ). Use these as a template for setting up your own analyses. The control file is simply a text file with a set of parameter names, followed by the "equals" sign (=), followed by the parameter value. Anything on a line of the control file to the right of a pound sign (#) will be ignored by the program (e.g., it is considered a *comment*). Part of your control file might look like this::
 
 	# This line is a comment. It will not be read by BAMM
 	modeltype = speciationextinction        
@@ -55,16 +55,16 @@ There are many possible settings that can be tweaked in BAMM. The next two secti
 Speciation-extinction analyses
 ------------------------------
 
-You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file linked :download:`here (divcontrol_template.txt)<divcontrol_template.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data. Here's an example :download:`phylogenetic tree of whales<examples/whaletree.txt>` that is used elsewhere in this documentation.
+You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file linked :download:`here (template_diversification.txt)<template_diversification.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data. Here's an example :download:`phylogenetic tree of whales<examples/whaletree.txt>` that is used elsewhere in this documentation.
 
 If you open the template file, you'll see that there are extensive comments. For each parameter in the BAMM control file, we've included a brief description on the line following the parameter. For example: ::
 
 	modeltype = speciationextinction        
 	# Specify speciationextinction or trait analysis
    
-This tells us what parameter `modeltype` does. It specifies the type of analysis (here, a speciation-extinction analysis). If we wanted to do a phenotypic evolutionary analysis, we would have set `modeltype = trait`.
+This tells us what parameter ``modeltype`` does. It specifies the type of analysis (here, a speciation-extinction analysis). If we wanted to do a phenotypic evolutionary analysis, we would have set ``modeltype = trait``.
 
-There are only a handful of parameters in the template file that you need to set explicitly in order to run BAMM. These are currently defined with the following symbol: `%%%%`. For example, you see the following immediately after `modeltype`::
+There are only a handful of parameters in the template file that you need to set explicitly in order to run BAMM. These are currently defined with the following symbol: ``%%%%``. For example, you see the following immediately after ``modeltype``::
 
 	treefile = %%%%
 	# Location of phylogenetic tree to be analyzed
@@ -79,11 +79,13 @@ This is where you specify the name of your phylogenetic tree. For example, ``tre
 	
 	printFreq = %%%%
 
-``numberGenerations`` is the number of simulation steps you want in your MCMC analysis. ``printfreq`` is the frequency that BAMM will write some simple information to the screen so you can track the progress of the run. ``mcmcWriteFreq`` and ``eventDataWriteFreq`` tells BAMM how often to write the two basic types of output to file. BAMM generates two types of output. The first is a file containing basic attributes of the MCMC chain as you sample it at particular timepoints. This includes: the log-likelihood of the data under the current parameters, the number of diversification shifts in the current state, the log-prior density of the current parameters, and a moving-window average of the acceptance rate for the MCMC simulation. The second type of output is the *event data*. This is the real stuff of interest. It all parameters associated with the macroevolutionary rate regimes and is used for all the subsequent analyses of evolutionary rates. 
+``numberGenerations`` is the number of simulation steps you want in your MCMC analysis. ``printfreq`` is the frequency that BAMM will write some simple information to the screen so you can track the progress of the run. ``mcmcWriteFreq`` and ``eventDataWriteFreq`` tells BAMM how often to write the two basic types of output to file.
+
+BAMM generates two types of output. The first is a file containing basic attributes of the MCMC chain as you sample it at particular timepoints. This includes: the log-likelihood of the data under the current parameters, the number of diversification shifts in the current state, the log-prior density of the current parameters, and a moving-window average of the acceptance rate for the MCMC simulation. The second type of output is the *event data*. This is the real stuff of interest. It contains all parameters associated with the macroevolutionary rate regimes and is used for all the subsequent analyses of evolutionary rates. 
 
 You can set these parameters to whatever you want. However, please remember that you will be working with the *event data file* in R, which is a bit limited on memory. As a rough guide, we suggest choosing a value for ``eventDataWriteFreq`` that gives at least 1000 samples from the posterior, but we also don't see much advantage to having more than 5000. 
 
-That's all you need to know. For starters, you should try a simple run with settings like this::
+For starters, you should try a simple run with settings like this::
 
 	numberGenerations = 5000
 	mcmcWriteFreq = 1000
@@ -92,19 +94,39 @@ That's all you need to know. For starters, you should try a simple run with sett
 	
 You'll want to increase all of these once you are sure the program is correctly loading your data etc, but it's a good first check. 
 
+One other block of parameters can be critical to BAMM performance: the priors that you place on your evolutionary rate parameters. The prior block in your control file looks similar to this (ignoring most comments in the template file)::
+
+	# PRIORS
+	# <START prior block >
+	poissonRatePrior = 1.0
+	lambdaInitPrior = 1.0
+	lambdaInitRootPrior = 5.0
+	lambdaShiftPrior = 0.05
+	lambdaShiftRootPrior = 0.05
+	muInitPrior = 1.0
+	muInitRootPrior = 5.0
+	# <END prior block >
+
+These priors may work for your dataset. They may also be extremely inadequate. To this end, we have included a function in the BAMMtools package to help you choose appropriate prior values. The function, ``setBAMMpriors``, will automatically generate a prior block as a text file that you can copy and paste over the prior block in the template file. To do this, you need to install BAMMtools (see `here <postprocess.html>`_), and you need your phylogenetic tree. Assuming you have a phylogenetic tree file ``my_tree.tre``, you can generate the prior block with::
+	
+	> library(BAMMtools) # Assuming you have installed BAMMtools !
+	> setBAMMpriors("my_tree.tre")
+	
+and the relevant output file will be generated in your working directory. See the help file (``?setBAMMpriors``) for more information. To be clear: this does not optimize priors to your dataset. It simply chooses a set of priors that we have found to be reasonable for most datasets and scales the distributions based on the age (root depth) of your tree. A more complete explanation :ref:`can be found here<ratepriors>`.
+
 Incomplete taxon sampling
 *************************
 
-For speciation-extinction analyses BAMM can analytically account for incomplete taxon sampling that might otherwise bias results. You can even correct for *non-random* taxon sampling. An explanation of how to account for both random and non-random taxon sampling is found  :ref:`here<incompsampling>`.
+For speciation-extinction analyses BAMM can analytically account for incomplete taxon sampling that might otherwise bias results. You can even correct for *non-random* taxon sampling. An explanation of how to account for both random and non-random taxon sampling is found :ref:`here<incompsampling>`.
 
 .. _phenotypicquick:
 
 Phenotypic evolution
 --------------------
 
-This section is quite redundant with the preceding section on **speciation-extinction**, with a few differences.
+This section is redundant with the preceding section on **speciation-extinction**, with a few differences.
 
-You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file linked :download:`here (traitcontrol_template.txt)<traitcontrol_template.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data.
+You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file linked :download:`here (template_trait.txt)<template_trait.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data.
 
 If you open the template file, you'll see that there are extensive comments. For each parameter in the BAMM control file, we've included a brief description on the line following the parameter. For example: ::
 
@@ -138,7 +160,7 @@ The other parameters we will force you to define explicitly have to do with outp
 
 You can set these parameters to whatever you want. However, please remember that you will be working with the *event data file* in R, which is a bit limited on memory. As a rough guide, we suggest choosing a value for ``eventDataWriteFreq`` that gives at least 1000 samples from the posterior, but we also don't see much advantage to having more than 5000. 
 
-That's all you need to know. For starters, you should try a simple run with settings like this::
+For starters, you should try a simple run with settings like this::
 
 	numberGenerations = 5000
 	mcmcWriteFreq = 1000
@@ -147,13 +169,32 @@ That's all you need to know. For starters, you should try a simple run with sett
 	
 You'll want to increase all of these once you are sure the program is correctly loading your data etc, but it's a good first check. 
 
+As for the speciation-extinction models, the priors you place on phenotypic evolutionary parameters can have a substantial impact on BAMM performance. The prior block in your (trait) template control file looks similar to this::
+
+	# PRIORS
+	# <START prior block >
+	poissonRatePrior = 1
+	betaInitPrior = 1
+	betaShiftPrior = 0.05
+	betaInitRootPrior = 5.0
+	betaShiftRootPrior = 0.05
+	useObservedMinMaxAsTraitPriors = 1
+	# <END prior block >
+
+These priors may work for your dataset, but they may also be very poor choices: it really depends on the scale of your tree (e.g., depth of the tree) and the variances in your trait values. The function ``setBAMMpriors`` (BAMMtools) will automatically generate a prior block as a text file that you can copy and paste over the prior block in the template file. This new set of priors is matched to the "scale" of your data. To do this, you need to install BAMMtools (see `here <postprocess.html>`_), and you need your phylogenetic tree. Assuming you have a phylogenetic tree file ``my_tree.tre`` and a trait dataset ``my_traitfile.txt``, you can generate the prior block with::
+	
+	> library(BAMMtools) # Assuming you have installed BAMMtools !
+	> setBAMMpriors(phy = "my_tree.tre", traits = "my_traitfile.txt")
+	
+and the relevant output file will be generated in your working directory. See the help file (``?setBAMMpriors``) for more information. To be clear: this does not optimize priors to your dataset. It simply chooses a set of priors that we have found to be reasonable for most datasets and scales the distributions based on the age (root depth) of your tree and the variance of your trait data. A more complete explanation :ref:`can be found here<ratepriors>`.
+
 
 BAMM output: brief
 ------------------
 
 BAMM generates multiple types of output files. These (usually) include:
 
-* The ``runInfo`` file, containing a summary of your parameters/settings
+* The ``run_info.txt`` file, containing a summary of your parameters/settings
 * An ``mcmc_out.txt`` or equivalent file, containing raw MCMC information useful in diagnosing convergence
 * An ``event_data.txt`` file or equivalent, containing all of evolutionary rate parameters and their topological mappings
 * A ``prior.txt`` file or equivalent, giving the prior expectation on the number of shift events (this is optional and can be turned off).
@@ -168,8 +209,4 @@ In general, the post-BAMM workflow consists of:
 
 #. Many potential downstream analyses, including summarizing mean evolutionary rates for clades, analyses of rate shift distributions, plotting model-averaged rate-through-time curves, and so on.
 
-A more detailed description of BAMMtools workflows for postprocessing BAMM output :ref:`can be found here<bammtools>`.
-
-
-
-
+A more detailed description of BAMMtools workflows for postprocessing BAMM output can be found :ref:`here<bammtools>`.

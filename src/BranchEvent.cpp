@@ -1,77 +1,37 @@
-/*
- *  BranchEvent.cpp
- *  rateshift
- *
- *  Created by Dan Rabosky on 12/5/11.
-  *
- */
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "BranchEvent.h"
 #include "Node.h"
 #include "Tree.h"
 #include "MbRandom.h"
+#include "Log.h"
 
 
-/*
-    Note that BranchEvent now inherits shift parameter
-    thus addition of event need not change likelihood of tree.
-
- */
-
-
-BranchEvent::BranchEvent(double speciation, double lamshift, double extinction,
-                         double mushift, Node* x, Tree* tp,  MbRandom* rp, double map)
+BranchEvent::BranchEvent(Node* x, Tree* tp, MbRandom* rp, double map) :
+    mapTime(map), nodeptr(x), treePtr(tp), ranPtr(rp),
+    oldNodePtr(x), oldMapTime(map), _isEventTimeVariable(false)
 {
-    // Speciation and extinction from new event assumed constant in time...
-
-    //std::cout << "Event ctor: map " << map << std::endl;
-
-
-    _lamInit = speciation;
-    _lamShift = lamshift;
-    _muInit = extinction;
-    _muShift = mushift;
-
     if (tp->getRoot() == x) {
         _absTime = 0.0;
     } else {
         _absTime = tp->getAbsoluteTimeFromMapTime(map);
     }
-
-    nodeptr = x;
-    mapTime = map;
-    treePtr = tp;
-	ranPtr = rp;
-
-    oldMapTime = map;
-    oldNodePtr = x;
-
-    _isEventTimeVariable = false;
-
 }
 
 
-BranchEvent::~BranchEvent(void)
+BranchEvent::~BranchEvent()
 {
-
-
 }
 
-/*
- bool BranchEvent::operator<(const BranchEvent& a) const
- Modified on 9.17.2012.
- if maptime is > than a.maptime
- THEN event must have occurred earlier than a.maptime event
- THus operator < would be TRUE. for a->maptime > b->maptime,
-                        then a < b evaluates to TRUE
 
- */
+// If maptime is > than a.maptime, then event must have occurred earlier
+// than a.maptime event; thus operator < would be true.
+// For a->maptime > b->maptime, then a < b evaluates to true.
 
 bool BranchEvent::operator<(const BranchEvent& a) const
 {
-
+    // TODO: This is counter-intuitive; explain
     if ( mapTime > a.mapTime ) {
         return true;
     } else {
@@ -80,41 +40,32 @@ bool BranchEvent::operator<(const BranchEvent& a) const
 }
 
 
-/* this (along with incrementMapPosition) implements a uniform proposal mechanism
-    with reflecting boundaries at all major tree boundaries: at the root, the proposal
-    is bounced back onto the parent branch.
- At the tips OR at invalid nodes (defined in tree constructor)
+// This (along with incrementMapPosition) implements a uniform proposal
+// mechanism with reflecting boundaries at all major tree boundaries:
+// at the root, the proposal is bounced back onto the parent branch.
+// At the tips OR at invalid nodes (defined in tree constructor)
 
-
- This mechanism of local move involves actually moving the position of the event
- If the proposed move is accepted, this is fine. If the proposed move is rejected,
-    then the branchEvent will need to be reset to its original value.
- IN practice, this should be done by:
-    oldMapPosition = getMapTime();
-    moveEventLocal();
-    calculate likelihood etc
-    if (accept)
-        event has already been updated.
-    if (reject)
-        setEventByMapPosition(oldMapPosition)
-            // should undo it.
-
-*/
-
+// This mechanism of local move involves actually moving the position of the
+// event. If the proposed move is accepted, this is fine. If the proposed move
+// is rejected, then the branchEvent will need to be reset to its original
+// value. In practice, this should be done by:
+//
+//     oldMapPosition = getMapTime();
+//     moveEventLocal();
+//     calculate likelihood etc
+//     if (accept)
+//         event has already been updated.
+//     if (reject)
+//         setEventByMapPosition(oldMapPosition)
 
 void BranchEvent::moveEventLocal(double stepsize)
 {
-
     oldNodePtr = nodeptr;
     oldMapTime = mapTime;
 
     incrementMapPosition(stepsize);
-
-    // shouldn't actually need to update model attributes.
-    // if node position shifts, it just brings its current attributes
-    // along, e.g., lambda etc.
-
 }
+
 
 void BranchEvent::incrementMapPosition(double ink)
 {
@@ -128,37 +79,38 @@ void BranchEvent::incrementMapPosition(double ink)
 
     if (temp > mapend) {
         // Goes to next most "ROOTWARDS" branch
-        // BUT if there is no next branch (because ancestor of curr branch is ROOT)
-        //      go FORWARD down other descendant.
+        // BUT if there is no next branch (because ancestor of curr branch
+        // is ROOT) go FORWARD down other descendant.
 
         ink = temp - mapend; // residual...
 
         if (getEventNode() == treePtr->getRoot()) {
-            std::cout << " Root problem in incrementMapPosition: should never get here" << std::endl;
-            throw;
+            // Should never get here
+            log(Error) << "Root problem in incrementMapPosition\n";
+            std::exit(1);
         }
 
         if (getEventNode()->getAnc() == treePtr->getRoot()) {
-
             ink = -1 * ink;
 
-            if ((treePtr->getRoot()->getLfDesc() == getEventNode()) &
+            if ((treePtr->getRoot()->getLfDesc() == getEventNode()) &&
                     treePtr->getRoot()->getRtDesc()->getCanHoldEvent()) {
                 setEventNode(treePtr->getRoot()->getRtDesc());
 
-            } else if ((treePtr->getRoot()->getRtDesc() == getEventNode()) &
+            } else if ((treePtr->getRoot()->getRtDesc() == getEventNode()) &&
                      treePtr->getRoot()->getLfDesc()->getCanHoldEvent()) {
                 setEventNode(treePtr->getRoot()->getLfDesc());
 
             } else {
-                // If you get here, either the right or left desc of the root CANNOT hold event
-                // Do nothing. Just go backwards and reflect off of root.
+                // If you get here, either the right or left desc of the root
+                // CANNOT hold event. Do nothing. Just go backwards and reflect
+                // off of root.
             }
+
             setMapTime(getEventNode()->getMapEnd());
             incrementMapPosition(ink);
 
         } else {
-
             setEventNode(getEventNode()->getAnc());
             setMapTime(getEventNode()->getMapStart());
             incrementMapPosition(ink);
@@ -212,22 +164,20 @@ void BranchEvent::incrementMapPosition(double ink)
             incrementMapPosition(ink);
 
         } else {
-            std::cout << "Problem in incrementMapPosition()" << std::endl;
-            throw;
+            log(Error) << "Problem in incrementMapPosition()\n";
+            std::exit(1);
         }
 
     } else {
-
         setMapTime(temp);
     }
 
     setAbsoluteTime(treePtr->getAbsoluteTimeFromMapTime(getMapTime()));
-
 }
+
 
 void BranchEvent::moveEventGlobal(void)
 {
-
     oldNodePtr = nodeptr;
     oldMapTime = mapTime;
 
@@ -237,11 +187,9 @@ void BranchEvent::moveEventGlobal(void)
     setEventNode(treePtr->mapEventToTree(position));
     setMapTime(position);
     setAbsoluteTime(treePtr->getAbsoluteTimeFromMapTime(getMapTime()));
-
 }
 
 
-// test
 void BranchEvent::setEventByMapPosition(double x)
 {
     setEventNode(treePtr->mapEventToTree(x));
@@ -249,12 +197,10 @@ void BranchEvent::setEventByMapPosition(double x)
     setAbsoluteTime(treePtr->getAbsoluteTimeFromMapTime(getMapTime()));
 }
 
+
 void BranchEvent::revertOldMapPosition(void)
 {
-
     nodeptr = oldNodePtr;
     mapTime = oldMapTime;
     setAbsoluteTime(treePtr->getAbsoluteTimeFromMapTime(getMapTime()));
-
 }
-

@@ -17,13 +17,14 @@ class eventSet;
 class Phenotype;
 
 class BranchHistory;
-class TraitBranchHistory;
 
 
 class Node
 {
 
 private:
+
+    void init(int x = 0);
 
     Node*  _lfDesc;
     Node*  _rtDesc;
@@ -47,8 +48,7 @@ private:
     double _mapStart;
     double _mapEnd;
 
-    BranchHistory*  history;
-    TraitBranchHistory* _traitHistory;
+    BranchHistory* _history;
 
     // For phenotypes:
     double _trait; // trait value
@@ -67,7 +67,7 @@ private:
     double _di;   // initial value of speciation probability (at node)
     double _ei;   // initial value of extinction probability (at node)
     double _etip; // initial value (sampling frac.) at tip descended from node
-
+    
     // value of log-likelihood at end of branch
     // (after combining w speciation event):
     //  Zero if node is terminal.
@@ -141,7 +141,6 @@ public:
 
     //Need to includet this
     BranchHistory* getBranchHistory();
-    TraitBranchHistory* getTraitBranchHistory();
 
     void   setMeanSpeciationRate(double x);
     double getMeanSpeciationRate();
@@ -151,6 +150,9 @@ public:
 
     void computeNodeBranchSpeciationParams();
     void computeNodeBranchExtinctionParams();
+    
+    void computeAndSetNodeSpeciationParams();
+    void computeAndSetNodeExtinctionParams();
 
     void   setNodeLambda(double x);
     double getNodeLambda();
@@ -399,14 +401,9 @@ inline double Node::getMapEnd()
 
 inline BranchHistory* Node::getBranchHistory()
 {
-    return history;
+    return _history;
 }
 
-
-inline TraitBranchHistory* Node::getTraitBranchHistory()
-{
-    return _traitHistory;
-}
 
 inline void Node::setMeanSpeciationRate(double x)
 {

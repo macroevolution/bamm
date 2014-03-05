@@ -7,7 +7,7 @@ Compute clade-specific mean rates
 Computes marginal clade-specific rates of speciation, extinction, or (if relevant) trait evolution from \code{BAMM} output. 
 }
 \usage{
-getCladeRates(ephy, node = NULL, nodetype = "include")
+getCladeRates(ephy, node = NULL, nodetype = "include", verbose = FALSE)
 }
 \arguments{
   \item{ephy}{

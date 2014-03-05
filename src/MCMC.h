@@ -1,19 +1,9 @@
-/*
- *  MCMC.h
- *  rateshift
- *
- *  Created by Dan Rabosky on 12/2/11.
- *
- */
-
 #ifndef MCMC_H
 #define MCMC_H
 
-#include <iosfwd>
-#include <stdlib.h>
-#include <string>
 #include <vector>
-
+#include <string>
+#include <fstream>
 
 class MbRandom;
 class Model;
@@ -22,59 +12,57 @@ class Settings;
 
 class MCMC
 {
+    typedef std::vector<double>::size_type SizeType;
 
 public:
 
-    MCMC(MbRandom* ran, Model* mymodel, Settings* sp);
-    ~MCMC();
+    MCMC(MbRandom* rng, Model* model, Settings* settings);
+    virtual ~MCMC();
 
-    void writeStateToFile();
-    void printStateData();
-    void writeBranchSpeciationRatesToFile();
-    void writeBranchExtinctionRatesToFile();
-    void writeEventDataToFile();
+    void run();
 
-    int  pickParameterClassToUpdate();
-    void updateState(int parm);
+protected:
 
     void setUpdateWeights();
+    void setUpParameterWeights();
+    virtual void setUpSpecificParameterWeights() = 0;
 
-private:
+    int  chooseRandomParameter();
+    void updateState(int parameter);
+    virtual void updateSpecificState(int parameter) = 0;
 
-    void writeHeaderToStream(std::ostream& outStream);
-    void writeStateToStream(std::ostream& outStream);
+    void outputHeaders();
+    void outputMCMCHeaders();
+    void outputEventDataHeaders();
+    virtual void outputSpecificEventDataHeaders() = 0;
+    void outputStdOutHeaders();
 
-    bool anyOutputFileExists();
-    bool fileExists(const std::string& filename);
-    void writeHeadersToOutputFiles();
-    void exitWithErrorOutputFileExists();
+    void outputData(int generation);
+    void outputMCMCData();
+    void outputEventData();
+    void outputStdOutData();
+    virtual void outputSpecificData(int generation) = 0;
 
-    MbRandom* ranPtr;
-    Model*    ModelPtr;
-    Settings* sttings;
+    MbRandom* _rng;
+    Model* _model;
+    Settings* _settings;
 
-    std::vector<double> parWts;
+    int _numGenerations;
 
-    std::vector<int> acceptCount;
-    std::vector<int> rejectCount;
+    std::vector<double> _parameterWeights;
 
-    std::string _mcmcOutFilename;
-    std::string _lambdaOutFilename;
-    std::string _muOutFilename;
-    std::string _eventDataOutFilename;
+    std::vector<int> _acceptCount;
+    std::vector<int> _rejectCount;
 
-    std::ofstream _mcmcOutStream;
-    std::ofstream _lambdaOutStream;
-    std::ofstream _muOutStream;
-    std::ofstream _eventDataOutStream;
+    std::string _mcmcOutputFileName;
+    std::string _eventDataOutputFileName;
 
-    bool _writeMeanBranchLengthTrees;
+    std::ofstream _mcmcOutputStream;
+    std::ofstream _eventDataOutputStream;
 
-    int _treeWriteFreq;
-    int _eventDataWriteFreq;
-    int _mcmcWriteFreq;
-    int _printFreq;
-    int _NGENS;
+    int _mcmcOutputFreq;
+    int _eventDataOutputFreq;
+    int _stdOutFreq;
 };
 
 

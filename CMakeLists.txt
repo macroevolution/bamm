@@ -2,25 +2,23 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT(BAMM CXX)
 
 # Set compiler flags
-SET(CXX_DEBUG_FLAGS "-g")
-SET(CXX_WARNING_FLAGS "-Wall -Wextra")
-SET(CXX_OPTIMIZATION_FLAGS "-O3")
+IF(NOT WIN32)
+  SET(CXX_DEBUG_FLAGS "-g")
+  SET(CXX_WARNING_FLAGS "-Wall -Wextra")
+  SET(CXX_OPTIMIZATION_FLAGS "-O3")
 
-# Support Mac OS X 10.5 and greater architectures (if using Clang)
-IF(APPLE AND (${CMAKE_CXX_COMPILER_ID} MATCHES Clang))
-    SET(CXX_ARCHITECTURE_FLAGS "-mmacosx-version-min=10.5 -arch i386 -arch x86_64")
-ENDIF(APPLE AND (${CMAKE_CXX_COMPILER_ID} MATCHES Clang))
-
-# Statically link C++ libraries for Windows
-IF(WIN32)
-    SET(CXX_LIBRARY_FLAGS "-static-libgcc -static-libstdc++ -s")
-ENDIF(WIN32)
+  # Support Mac OS X 10.5 and greater architectures (if using Clang)
+  IF(APPLE AND (${CMAKE_CXX_COMPILER_ID} MATCHES Clang))
+      SET(CXX_ARCHITECTURE_FLAGS "-mmacosx-version-min=10.5 -arch i386 -arch x86_64")
+  ENDIF(APPLE AND (${CMAKE_CXX_COMPILER_ID} MATCHES Clang))
+ELSE(NOT WIN32)
+  SET(CXX_WARNING_FLAGS "/W4")
+ENDIF(NOT WIN32)
 
 ADD_DEFINITIONS(${CXX_DEBUG_FLAGS}
                 ${CXX_WARNING_FLAGS}
                 ${CXX_OPTIMIZATION_FLAGS}
-                ${CXX_ARCHITECTURE_FLAGS}
-                ${CXX_LIBRARY_FLAGS})
+                ${CXX_ARCHITECTURE_FLAGS})
 
 # Set Git commit id
 SET(GIT_COMMIT_ID "$(shell git rev-parse HEAD)")
@@ -39,9 +37,11 @@ SET(BAMM_SRC
     src/Prior.cpp
     src/Settings.cpp
     src/SettingsParameter.cpp
+    src/SpExBranchEvent.cpp
+    src/SpExMCMC.cpp
+    src/SpExModel.cpp
     src/Stat.cpp
     src/TraitBranchEvent.cpp
-    src/TraitBranchHistory.cpp
     src/TraitMCMC.cpp
     src/TraitModel.cpp
     src/Tree.cpp
@@ -49,13 +49,9 @@ SET(BAMM_SRC
 
 ADD_EXECUTABLE(bamm ${BAMM_SRC})
 
-# Testing by manually adding libstdc++
-#FIND_LIBRARY(STD stdc++)
-#MESSAGE(${STD})
-#TARGET_LINK_LIBRARIES(bamm ${STD})
-
 INSTALL(TARGETS bamm
-        RUNTIME DESTINATION bin)
+        RUNTIME DESTINATION bin
+        CONFIGURATIONS Release)
 
 SET(CPACK_PACKAGE_VERSION_MAJOR "1")
 SET(CPACK_PACKAGE_VERSION_MINOR "0")

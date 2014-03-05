@@ -19,7 +19,7 @@ print progress during processing of \code{bammdata} object
 }
 }
 \details{
-If a \code{type = 'diversificiation'} \code{bammdata} object is passes as an argument, the function will return matrices for both speciation and extinction. If \code{type = 'trait'} object, the matrix will simply be the corresponding phenotypic rates. Branch-specific rates are the mean rates computed by integrating the relevant rate-through-time function along each branch, then dividing by the length of the branch.
+If a \code{type = 'diversification'} \code{bammdata} object is passed as an argument, the function will return matrices for both speciation and extinction. If \code{type = 'trait'} object, the matrix will simply be the corresponding phenotypic rates. Branch-specific rates are the mean rates computed by integrating the relevant rate-through-time function along each branch, then dividing by the length of the branch.
 
 }
 \value{

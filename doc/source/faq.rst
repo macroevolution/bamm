@@ -2,115 +2,61 @@ Frequently Asked Questions
 ==========================
  
 General
-.............
+.......
 
-Citing BAMM
------------
+How do I cite BAMM?
+-------------------------------
 
-The primary methodological description of the BAMM model and implementation is *in press* in *PLoS ONE*. This should be out in early February 2014. In the meantime, a preprint of the manuscript is available on the arXiv preprint server:
+The primary methodological description of the full BAMM model was published in *PLoS ONE*. A link to the paper is `available here <http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543>`_ 
 
-http://arxiv.org/abs/1401.6602
-
-This paper contains a description of the model, the reversible jump MCMC implementation, and a comprehensive performance evaluation. 
-
+This paper contains a description of the model, the reversible jump MCMC implementation, a comprehensive performance evaluation, and an empirical application. An earlier paper used a related implementation that assumed constant rates of diversification through time within evolutionary rate regimes (`Rabosky et al. 2013 <http://www.nature.com/ncomms/2013/130606/ncomms2958/full/ncomms2958.html>`_).
 
 How much data does it need?
 ---------------------------
 **Not much**. There is no general rule here, but if your dataset is large enough to consider doing any other sort of diversification analysis, then it is probably large enough for BAMM. The whale diversification analysis shown in the :ref:`graph gallery<bammgraph>` uses a time-calibrated tree with 89 tips. We've had good success using BAMM on trees that are considerably smaller than this. 
 
 
-
-BAMM extensions
----------------
-
-We are currently testing extensions of BAMM that allow modeling evolutionary dynamics under a much greater range of phenotypic evolutionary scenarios, as well as the incorporation of paleontological data. Bleeding edge releases of BAMM can be obtained from here (**link**).
-
-
-Problems running BAMM
-.....................
-
-
-I can't get BAMM to run on my system
+How often should I sample the chain?
 ------------------------------------
-
-**Under construction**
-
-Brief list of possible things to try.
+Your first consideration should be: for how long should I run the chain? The answer to this question has a lot to do with how quickly the chain converges and how well it samples the posterior. We suggest that there is little advantage in going to more than 5000 samples from the posterior, and potentially large costs: for large datasets, sampling too frequently with BAMM can literally generate gigabytes of highly autocorrelated and mostly-unusable output. Moreover, due to memory issues with R, BAMMtools cannot handle output files of that size. So, pick a chain length (e.g., :math:`10^7` generations), and then specify a sample frequency that should give you somewhere between 500 and 5000 samples from the posterior after burnin. 
 
 
-I get an error message when I try to run BAMM
----------------------------------------------
 
-**Under construction**
+What extensions are underway for BAMM?
+--------------------------------------
 
-This section needs to explain common error messages obtained with BAMM. For example,::
-	
-	ERROR: No control file specified
+We are currently testing extensions of BAMM that allow modeling evolutionary dynamics under a much greater range of phenotypic evolutionary scenarios, as well as the incorporation of paleontological data. Bleeding edge releases of BAMM can be obtained from our `GitHub page <https://github.com/macroevolution/bamm>`_.
 
-implies that BAMM is having a hard time reading your control file. Are you spelling the control file name correctly (including the extension), and/or are you sure it is in the correct directory?
-
-Stepwise troubleshooting
-------------------------
-
-The simplest way to localize potential problems is to first try to load your data without doing anything else. You can do this by setting the following parameter in your controlfile::
-
-	initializeModel = 0 
-
-This tells BAMM to simply try reading the tree (and associated trait or taxon sampling datafiles). If this works fine, your problem is probably elsewhere. The next step is to try initializing your MCMC simulation, without actually running it. This step involves actually computing likelihoods and priors, so may reveal problems with those steps::
-
-	initializeModel = 1 
-	runMCMC = 0
-
-If these issues fail to resolve the problem, and if you cannot 
-
- 
-I get a system error (segfault or equivalent) when running BAMM
----------------------------------------------------------------
-
-Other possible errors may arise, not discussed above. This may include errors that mention "Segmentation fault", or "Floating point error". Please contact Carlos Anderson (**link**) or Dan Rabosky (**link**) with information about system errors. Please send us as much information as possible, so that we can try to replicate the problem. You should include (if possible) the data files that led to the problem, your control file, and as much information as possible about your operating system and computer architecture. On unix/linux/OSX, you should be able to obtain most of this information using::
-	
-	uname -a
-
-If you compiled BAMM on your system, please send details about the compiler used. You can determine the compiler you've used to build BAMM with:: 
-
-	How to do this?
-
-If BAMM actually begins to perform an analysis, then it will also generated a detailed run_info file that contains information about your analysis. Please include this file in your bug description. 
-
-
-Troubleshooting BAMM runs
-..........................
-
-This section addresses a few of the most commonly-encountered problems with BAMM.
-
-Resolving convergence problems
-------------------------------
-
-.. _fixbammconvergence:
-
-**Under construction**
-
-
-The model and approximations
-....................................
-
-How can BAMM detect diversity-dependent changes in speciation rates?
+What is the actual model implemented in BAMM for time-varying rates?
 --------------------------------------------------------------------
 
-BAMM models the dynamics of speciation and extinction within rate regimes using an exponential change function. The speciation rate :math:`\lambda` at any point in time is modeled as
+The model originally described for time-varying macroevolutionary rate regimes (e.g., `Rabosky 2014
+<http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543>`_) used a simple exponential change function for rates through time:
 
 .. math::
 	\lambda(t) = \lambda_{0}e^{k t}
 
-where :math:`\lambda` is the initial speciation rate at the start of the rate regime, :math:`k` is a parameter that controls the dynamics of rate change through time, and :math:`t` is the elapsed time since the start of the rate regime. Theoretically, a linear *diversity-dependent* change in speciation rates through time leaves a signal in molecular phylogenies that is virtually indistinguishable from an exponential *time-dependent* change in rates. Our analyses of simulated datasets suggest that these two types of models are not distinguishable in practice. 
+We have since come to recognize that this model is not ideal, because it is highly asymmetric with respect to increasing (k > 0) and decreasing (k < 0) rates through time. Specifically, the prior we place on *k* is symmetric (normal), but the rates are not. The problem, put simply, is that negative values of *k* can only decrease the evolutionary rate to zero. However, positive values - even of equivalent absolute value - can lead to extremely large values. Just consider the values of the exponential function above evaluated at :math:`\lambda_{0} = 1`, :math:`t = 1`, :math:`k = -10` and :math:`k = 10`.  With *k = -10*, the value of the rate function approaches zero, but with *k = +10*, it is 22026.47. Yet both of these *k* values have equal prior densities. 
+
+We thus modified the exponential change function to make it symmetric. For *k < 0*, we use the exponential change function defined above. For *k > 0*, we use the function
+
+.. math::
+	\lambda(t) = \lambda_{0} (2 - e^{k t})
+	
+If *k > 0*, this function asymptotically approaches the limiting value :math:`2\lambda_{0}`. 
+
+This has the nice property that the function :math:`\lambda(t)` is symmetric about the line :math:`x = \lambda_{0}`, for positive and negative values of k with the same absolute value.
+
+
+	
+
+How can BAMM detect diversity-dependent changes in speciation rates?
+--------------------------------------------------------------------
+
+BAMM models the dynamics of speciation and extinction within rate regimes using an exponential change function described in the preceding section. Theoretically, a linear *diversity-dependent* change in speciation rates through time leaves a signal in molecular phylogenies that is virtually indistinguishable from an exponential *time-dependent* change in rates. Our analyses of simulated datasets suggest that these two types of models are not distinguishable in practice. 
 
 We have conducted extensive performance evaluations where we have simulated datasets under formal *diversity-dependent* scenarios, then used BAMM to reconstruct the number of macroevolutionary rate regimes as well as the dynamics of speciation and extinction through time. Our simulations indicate that BAMM can estimate both the number of distinct macroevolutionary regimes, as well as the underlying evolutionary rates, even though we are using the exponential approximation to the diversity-dependent process. We have published these results **here** (non-functional link).
  
 It is (vastly) more efficient computationally to work with the exponential change model than the formal diversity-dependent model, and calculations of single likelihoods on phylogenies can be many orders of magnitude faster with the exponential approximation than with the formal diversity-dependent model. The multi-process explorations of macroevolutionary dynamics that are possible with BAMM wouldn't really be feasible without the ability to quickly compute likelihoods. 
  
 As an aside, the user is encouraged to remember that all analytically tractable models of diversity-dependence (e.g., Rabosky & Lovette, *Proc. R. Soc. B.*, 2008; or Etienne *et. al.*, *Proc. R. Soc. B*, 2011) are models that we are imposing on the data: there is no reason why a true diversity-dependent process need follow a linear model.
- 
- 
-Other questions
-...............
- 
