@@ -11,7 +11,7 @@ BAMM is oriented entirely towards detecting and quantifying heterogeneity in
 evolutionary rates. It uses reversible jump Markov chain Monte Carlo to
 automatically explore a vast universe of candidate models of lineage
 diversification and trait evolution. It has been described and extended in
-several publications (`Rabosky et al. 2012
+several publications (`Rabosky et al. 2013
 <http://www.nature.com/ncomms/2013/130606/ncomms2958/full/ncomms2958.html>`_,
 `Rabosky 2014
 <http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543>`_).
