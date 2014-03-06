@@ -66,14 +66,18 @@ data(whales, events.whales)
 ephy <- getEventData(whales, events.whales, burnin=0.25)
 
 #return a vector of average species-specific speciation rates.
-getTipRates(ephy, returnNetDiv = FALSE, statistic = 'mean')$lambda.avg
+meanlam <- getTipRates(ephy, returnNetDiv = FALSE, statistic = 'mean')$lambda.avg
+meanlam
 
 #return a vector of median species-specific net diversification rates.
-getTipRates(ephy, returnNetDiv = TRUE, statistic = 'median')$netdiv.avg
+ndr <- getTipRates(ephy, returnNetDiv = TRUE, statistic = 'median')$netdiv.avg
+
 
 #Return mean species-specific speciation rates from all posterior 
 #	samples in the \code{bamm-data} object.
-getTipRates(ephy, returnNetDiv = FALSE, statistic = 'mean')$lambda
+lam <- getTipRates(ephy, returnNetDiv = FALSE, statistic = 'mean')$lambda
+rowMeans(lam)
+
 
 }
  
