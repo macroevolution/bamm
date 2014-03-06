@@ -19,7 +19,7 @@ BAMM is a command line program written in
 C++. Post-run analysis and visualization is performed using the R package
 **BAMMtools**.
 
-- `Download BAMM and BAMMtools <downloads.html>`_ or go to our
+- `Download BAMM and BAMMtools <download.html>`_ or go to our
   `GitHub page <https://github.com/macroevolution/bamm>`_
   to get the development source code.
 
