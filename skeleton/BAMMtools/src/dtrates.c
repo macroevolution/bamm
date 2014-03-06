@@ -104,9 +104,10 @@ SEXP dtrates(SEXP ephy, SEXP segmat, SEXP tol, SEXP sample, SEXP type) {
 			end = REAL(eventSegs)[j + nrow * 2];
 			
 			//find next node to later check for shift point on branch
-			if (j < nrow) {
+			if (j < (nrow-1)) {
 				nnode = (int) REAL(eventSegs)[(j+1) + nrow * 0];
 				nxtevent = (int) REAL(eventSegs)[(j+1) + nrow * 3];
+				//Rprintf("%d\n", nxtevent);
 			}
 			
 			//eventData is dataframe holding event parameters for the current tree
