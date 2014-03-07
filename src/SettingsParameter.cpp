@@ -5,17 +5,17 @@
 
 
 SettingsParameter::SettingsParameter(const std::string& name,
-    const std::string& defaultValue, bool mustBeUserDefined) :
-        _name(name), _value(defaultValue),
-        _mustBeUserDefined(mustBeUserDefined), _isUserDefined(false)
+    const std::string& defaultValue, UserDefinedStatus userDefined,
+    DeprecationStatus deprecated) :
+        _name(name), _value(defaultValue), _userDefined(userDefined),
+        _isUserDefined(false), _deprecated(deprecated)
 {
 }
 
 
 SettingsParameter::SettingsParameter(const SettingsParameter& other) :
-    _name(other._name), _value(other._value),
-    _mustBeUserDefined(other._mustBeUserDefined),
-    _isUserDefined(other._isUserDefined)
+    _name(other._name), _value(other._value), _userDefined(other._userDefined),
+    _isUserDefined(other._isUserDefined), _deprecated(other._deprecated)
 {
 }
 
@@ -24,34 +24,11 @@ SettingsParameter& SettingsParameter::operator=(const SettingsParameter &other)
 {
     _name = other._name;
     _value = other._value;
-    _mustBeUserDefined = other._mustBeUserDefined;
+    _userDefined = other._userDefined;
     _isUserDefined = other._isUserDefined;
+    _deprecated = other._deprecated;
+
     return *this;
-}
-
-
-const std::string& SettingsParameter::name() const
-{
-    return _name;
-}
-
-
-void SettingsParameter::setStringValue(const std::string& value)
-{
-    _value = value;
-    _isUserDefined = true;
-}
-
-
-bool SettingsParameter::mustBeUserDefined() const
-{
-    return _mustBeUserDefined;
-}
-
-
-bool SettingsParameter::isUserDefined() const
-{
-    return _isUserDefined;
 }
 
 

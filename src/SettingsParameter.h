@@ -6,13 +6,26 @@
 #include <sstream>
 
 
+enum UserDefinedStatus {
+    Required,
+    NotRequired
+};
+
+
+enum DeprecationStatus {
+    Deprecated,
+    NotDeprecated
+};
+
+
 class SettingsParameter
 {
 
 public:
 
     SettingsParameter(const std::string& name, const std::string& defaultValue,
-        bool mustBeUserDefined = true);
+        UserDefinedStatus userDefined = Required,
+        DeprecationStatus deprecated = NotDeprecated);
 
     SettingsParameter(const SettingsParameter& other);
     SettingsParameter& operator=(const SettingsParameter& other);
@@ -25,6 +38,9 @@ public:
 
     void setStringValue(const std::string& value);
 
+    const std::string& version() const;
+    // No setter: the parameter version should never be changed.
+
     // By default, parameters must be user-defined, but some parameters
     // are optional and should instead use their default value
     bool mustBeUserDefined() const;
@@ -33,6 +49,8 @@ public:
     // (even if it is the same as the default value).
     bool isUserDefined() const;
 
+    bool isDeprecated() const;
+
 private:
 
     void exitWithErrorWrongType() const;
@@ -40,10 +58,18 @@ private:
     std::string _name;
     std::string _value;
 
-    bool _mustBeUserDefined;
+    UserDefinedStatus _userDefined;
     bool _isUserDefined;
 
+    DeprecationStatus _deprecated;
+
 };
+
+
+inline const std::string& SettingsParameter::name() const
+{
+    return _name;
+}
 
 
 template <typename T>
@@ -88,6 +114,31 @@ void SettingsParameter::setValue<>(const std::string& value)
 {
     _value = value;
     _isUserDefined = true;
+}
+
+
+inline void SettingsParameter::setStringValue(const std::string& value)
+{
+    _value = value;
+    _isUserDefined = true;
+}
+
+
+inline bool SettingsParameter::mustBeUserDefined() const
+{
+    return _userDefined == Required;
+}
+
+
+inline bool SettingsParameter::isUserDefined() const
+{
+    return _isUserDefined;
+}
+
+
+inline bool SettingsParameter::isDeprecated() const
+{
+    return _deprecated == Deprecated;
 }
 
 

@@ -30,7 +30,8 @@ private:
 
     void assertNotUserDefined(const SettingsParameter& parameter) const;
     void addParameter(const std::string& name, const std::string& value,
-        bool mustBeUserDefined = true);
+        UserDefinedStatus userDefined = Required,
+        DeprecationStatus deprecated = NotDeprecated);
 
     // TODO: If filename is a path (e.g., output/mcmc_out.txt),
     // prefix should only be attached to the file name
@@ -47,6 +48,7 @@ private:
     void exitWithErrorInvalidModelType() const;
     void exitWithErrorParametersNotFound
         (const std::vector<std::string>& paramsNotFound) const;
+    void exitWithErrorParameterIsDeprecated(const std::string& param) const;
     void exitWithErrorDuplicateParameter(const std::string& param) const;
     void exitWithErrorOutputFileExists() const;
 
@@ -70,7 +72,7 @@ public:
 
     std::string getRunInfoFilename() const;
 
-	std::string getModeltype() const;
+    std::string getModeltype() const;
 	
     // Functions to access parameters for MCMC/Model/Other
     // from Class Settings object:

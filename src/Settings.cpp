@@ -94,47 +94,47 @@ void Settings::readControlFile(const std::string& controlFilename)
 void Settings::initializeGlobalSettings()
 {
     // General
-    addParameter("modeltype",                    "speciationextinction");
-    addParameter("treefile",                     "tree.txt");
-    addParameter("sampleFromPriorOnly",          "0", false);
-    addParameter("runMCMC",                      "0");
-    addParameter("loadEventData",                "0", false);
-    addParameter("eventDataInfile",              "event_data_in.txt", false);
-    addParameter("initializeModel",              "0");
-    addParameter("simulatePriorShifts",       "1", false);
-    addParameter("numberGenerations",            "0");
-    addParameter("seed",                         "-1", false);
+    addParameter("modeltype", "speciationextinction");
+    addParameter("treefile", "tree.txt");
+    addParameter("sampleFromPriorOnly", "0", NotRequired);
+    addParameter("runMCMC", "0");
+    addParameter("loadEventData", "0", NotRequired);
+    addParameter("eventDataInfile", "event_data_in.txt", NotRequired);
+    addParameter("initializeModel", "0");
+    addParameter("simulatePriorShifts", "1", NotRequired);
+    addParameter("numberGenerations", "0");
+    addParameter("seed", "-1", NotRequired);
 
     // MCMC tuning
-    addParameter("updateEventLocationScale",     "0.0");
-    addParameter("updateEventRateScale",         "0.0");
-    addParameter("localGlobalMoveRatio",         "0.0");
+    addParameter("updateEventLocationScale", "0.0");
+    addParameter("updateEventRateScale", "0.0");
+    addParameter("localGlobalMoveRatio", "0.0");
 
     // Priors
-    addParameter("poissonRatePrior",             "0.0");
+    addParameter("poissonRatePrior", "0.0");
 
     // Output
-    addParameter("outName",                      "", false);
-    addParameter("runInfoFilename",              "run_info.txt", false);
-    addParameter("mcmcOutfile",                  "mcmc_out.txt", false);
-    addParameter("eventDataOutfile",             "event_data.txt", false);
+    addParameter("outName", "", NotRequired);
+    addParameter("runInfoFilename", "run_info.txt", NotRequired);
+    addParameter("mcmcOutfile", "mcmc_out.txt", NotRequired);
+    addParameter("eventDataOutfile", "event_data.txt", NotRequired);
 
-    addParameter("branchRatesWriteFreq",         "0", false);
-    addParameter("mcmcWriteFreq",                "0");
-    addParameter("eventDataWriteFreq",           "0");
+    addParameter("branchRatesWriteFreq", "0", NotRequired);
+    addParameter("mcmcWriteFreq", "0");
+    addParameter("eventDataWriteFreq", "0");
     
-    addParameter("printFreq",                    "0");
-    addParameter("overwrite",                    "0", false);
-    addParameter("writeMeanBranchLengthTrees",   "0", false);
+    addParameter("printFreq", "0");
+    addParameter("overwrite", "0", NotRequired);
+    addParameter("writeMeanBranchLengthTrees", "0", NotRequired);
 
     // Parameter update rates
-    addParameter("updateRateEventNumber",        "0.0");
-    addParameter("updateRateEventPosition",      "0.0");
-    addParameter("updateRateEventRate",          "0.0");
-    addParameter("initialNumberEvents",          "0");
+    addParameter("updateRateEventNumber", "0.0");
+    addParameter("updateRateEventPosition", "0.0");
+    addParameter("updateRateEventRate", "0.0");
+    addParameter("initialNumberEvents", "0");
  
     // Other (TODO: Need to add documentation for these)
-    addParameter("autotune",                     "0", false);
+    addParameter("autotune", "0", NotRequired);
 }
 
 
@@ -142,90 +142,87 @@ void Settings::initializeSpeciationExtinctionSettings()
 {
     // General
     addParameter("useGlobalSamplingProbability", "1");
-    addParameter("globalSamplingFraction",       "0.0");
-    addParameter("sampleProbsFilename",          "sample_probs.txt", false);
+    addParameter("globalSamplingFraction", "0.0");
+    addParameter("sampleProbsFilename", "sample_probs.txt", NotRequired);
 
     // MCMC tuning
-    addParameter("updateLambdaInitScale",        "0.0");
-    addParameter("updateMuInitScale",            "0.0");
-    addParameter("updateLambdaShiftScale",       "0.0");
-    addParameter("updateMuShiftScale",           "0.0", false);
-    addParameter("minCladeSizeForShift",         "1", false);
+    addParameter("updateLambdaInitScale", "0.0");
+    addParameter("updateMuInitScale", "0.0");
+    addParameter("updateLambdaShiftScale", "0.0");
+    addParameter("updateMuShiftScale", "0.0", NotRequired);
+    addParameter("minCladeSizeForShift", "1", NotRequired);
 
     // Starting parameters
-    addParameter("lambdaInit0",                  "0.0");
-    addParameter("lambdaShift0",                 "0.0");
-    addParameter("muInit0",                      "0.0");
-    addParameter("muShift0",                     "0.0", false);
+    addParameter("lambdaInit0", "0.0");
+    addParameter("lambdaShift0", "0.0");
+    addParameter("muInit0", "0.0");
+    addParameter("muShift0", "0.0", NotRequired);
 
     // Priors
-    addParameter("lambdaInitPrior",              "0.0");
-    addParameter("lambdaShiftPrior",             "0.0");
-    addParameter("muInitPrior",                  "0.0");
-    addParameter("muShiftPrior",                 "1.0", false);
-    addParameter("lambdaInitRootPrior",          "-1.0", false);
-    addParameter("lambdaShiftRootPrior",         "-1.0", false);
-    addParameter("muInitRootPrior",              "-1.0", false);
-    addParameter("muShiftRootPrior",             "-1.0", false);
-	addParameter("segLength",                    "0.0");
+    addParameter("lambdaInitPrior", "0.0");
+    addParameter("lambdaShiftPrior", "0.0");
+    addParameter("muInitPrior", "0.0");
+    addParameter("muShiftPrior", "1.0", NotRequired);
+    addParameter("lambdaInitRootPrior", "-1.0", NotRequired);
+    addParameter("lambdaShiftRootPrior", "-1.0", NotRequired);
+    addParameter("muInitRootPrior", "-1.0", NotRequired);
+    addParameter("muShiftRootPrior", "-1.0", NotRequired);
+	addParameter("segLength", "0.0");
 
     // Output
-    addParameter("lambdaOutfile",                "lambda_rates.txt", false);
-    addParameter("muOutfile",                    "mu_rates.txt", false);
+    addParameter("lambdaOutfile", "lambda_rates.txt", NotRequired);
+    addParameter("muOutfile", "mu_rates.txt", NotRequired);
 
     // Parameter update rates
-    addParameter("updateRateLambda0",            "0.0");
-    addParameter("updateRateLambdaShift",        "0.0");
-    addParameter("updateRateMu0",                "0.0");
-    addParameter("updateRateMuShift",            "0.0", false);
+    addParameter("updateRateLambda0", "0.0");
+    addParameter("updateRateLambdaShift", "0.0");
+    addParameter("updateRateMu0", "0.0");
+    addParameter("updateRateMuShift", "0.0", NotRequired);
 
     // Maximum value of extinction probability on branch that will be tolerated:
-    //  to avoid numerical overflow issues (especially rounding to 1)
-    addParameter("ExtinctionProbMax", "0.999", false);
-
-    
-    
+    // to avoid numerical overflow issues (especially rounding to 1)
+    addParameter("ExtinctionProbMax", "0.999", NotRequired);
 }
 
 
 void Settings::initializeTraitSettings()
 {
     // General
-    addParameter("traitfile",                      "traits.txt");
+    addParameter("traitfile", "traits.txt");
 
     // MCMC tuning
-    addParameter("updateBetaScale",                "0.0");
-    addParameter("updateNodeStateScale",           "0.0");
-    addParameter("updateBetaShiftScale",           "0.0");
+    addParameter("updateBetaScale", "0.0");
+    addParameter("updateNodeStateScale", "0.0");
+    addParameter("updateBetaShiftScale", "0.0");
 
     // Starting parameters
-    addParameter("betaInit",                       "0.0");
-    addParameter("betaShiftInit",                  "0.0");
+    addParameter("betaInit", "0.0");
+    addParameter("betaShiftInit", "0.0");
 
     // Priors
-    addParameter("betaInitPrior",                  "0.0");
-    addParameter("betaShiftPrior",                 "0.0");
-    addParameter("betaInitRootPrior",              "-1.0", false);
-    addParameter("betaShiftRootPrior",             "-1.0", false);
+    addParameter("betaInitPrior", "0.0");
+    addParameter("betaShiftPrior", "0.0");
+    addParameter("betaInitRootPrior", "-1.0", NotRequired);
+    addParameter("betaShiftRootPrior", "-1.0", NotRequired);
     addParameter("useObservedMinMaxAsTraitPriors", "1");
-    addParameter("traitPriorMin",                  "0.0", false);
-    addParameter("traitPriorMax","0.0", false);
+    addParameter("traitPriorMin", "0.0", NotRequired);
+    addParameter("traitPriorMax", "0.0", NotRequired);
 
     // Output
-    addParameter("betaOutfile",                    "beta_rates.txt", false);
+    addParameter("betaOutfile", "beta_rates.txt", NotRequired);
 
     // Parameter update rates
-    addParameter("updateRateBeta0",                "0.0");
-    addParameter("updateRateBetaShift",            "0.0");
-    addParameter("updateRateNodeState",            "0.0");
+    addParameter("updateRateBeta0", "0.0");
+    addParameter("updateRateBetaShift", "0.0");
+    addParameter("updateRateNodeState", "0.0");
 }
 
 
 void Settings::addParameter(const std::string& name, const std::string& value,
-    bool mustBeUserDefined)
+    UserDefinedStatus userDefined, DeprecationStatus deprecated)
 {
     _parameters.insert(Parameter(name,
-        SettingsParameter(name, value, mustBeUserDefined)));
+        SettingsParameter(name, value, userDefined, deprecated)));
 }
 
 
@@ -242,12 +239,17 @@ void Settings::initializeSettingsWithUserValues()
 
         // If found, set the value of the parameter to the user's
         if (paramIt != _parameters.end()) {
+            // Parameter should not be deprecated
+            if ((paramIt->second).isDeprecated()) {
+                exitWithErrorParameterIsDeprecated(paramIt->first);
+            }
+
             // Parameter should not already be user-defined
             if ((paramIt->second).isUserDefined()) {
                 exitWithErrorDuplicateParameter(paramIt->first);
-            } else {
-                (paramIt->second).setStringValue(userParamIt->second);
             }
+
+            (paramIt->second).setStringValue(userParamIt->second);
         } else {
             paramsNotFound.push_back(userParamIt->first);
         }
@@ -321,8 +323,10 @@ void Settings::checkAllSettingsAreUserDefined() const
     ParameterMap::const_iterator it;
     for (it = _parameters.begin(); it != _parameters.end(); ++it) {
         const SettingsParameter& parameter = it->second;
-        if (!parameter.isUserDefined() && parameter.mustBeUserDefined()) {
-            exitWithErrorUndefinedParameter(parameter.name());
+        if (!parameter.isDeprecated()) {
+            if (!parameter.isUserDefined() && parameter.mustBeUserDefined()) {
+                exitWithErrorUndefinedParameter(parameter.name());
+            }
         }
     }
 }
@@ -408,7 +412,7 @@ void Settings::exitWithErrorInvalidLine(const std::string& line) const
 void Settings::exitWithErrorUndefinedParameter(const std::string& name) const
 {
     log(Error) << "Parameter " << name << " is undefined.\n"
-               << "Fix by giving the parameter a value in the control file\n";
+               << "Fix by giving the parameter a value in the control file.\n";
     std::exit(1);
 }
 
@@ -424,16 +428,24 @@ void Settings::exitWithErrorInvalidModelType() const
 void Settings::exitWithErrorParametersNotFound
     (const std::vector<std::string>& paramsNotFound) const
 {
-    log(Error) << "One or more parameters from control file\n"
-               << "does not correspond to valid model parameters.\n"
-               << "Fix by checking the following to see if they are\n"
-               << "specified (or spelled) correctly:\n\n";
+    log(Error) << "One or more parameters from the control file does not\n"
+        << "correspond to valid model parameters. Make sure that you are\n"
+        << "running the correct version of BAMM or check that the following\n"
+        << "parameters are spelled correctly:\n\n";
 
     std::vector<std::string>::const_iterator it;
     for (it = paramsNotFound.begin(); it != paramsNotFound.end(); ++it) {
         log() << std::setw(30) << *it << std::endl;
     }
 
+    std::exit(1);
+}
+
+void Settings::exitWithErrorParameterIsDeprecated
+    (const std::string& param) const
+{
+    log(Error) << "Parameter " << param << " has been deprecated. Fix by\n"
+        << "removing this parameter or use the appropriate version of BAMM.\n";
     std::exit(1);
 }
 
