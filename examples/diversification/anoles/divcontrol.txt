@@ -83,13 +83,22 @@ poissonRatePrior = 1.0
 lambdaInitPrior = 1.0
 # Prior (rate parameter of exponential) on initial lambda value for rate regimes
 
+lambdaInitRootPrior = 5.0
+# Prior on initial lambda value for the root process
+
 lambdaShiftPrior = 0.05
 # Prior (std dev of normal) on lambda shift parameter for rate regimes
 #  You cannot adjust the mean of this distribution (fixed at zero, 
 #		which is equal to a constant rate diversification process)
 
+lambdaShiftRootPrior = 0.05
+# Prior on the lambda shift parameter of the root process
+
 muInitPrior = 1.0
 # Prior (rate parameter of exponential) on extinction rates  
+
+muInitRootPrior = 5.0
+# Prior on the initial mu value for the root process
 
 ###################################
 # MCMC SIMULATION SETTINGS & OUTPUT OPTIONS
@@ -191,12 +200,15 @@ minCladeSizeForShift = 1
 # only on branches with at least this many descendant tips. A value of 1
 # allows shifts to occur on all branches. 
 
-segLength = 1.0
+segLength = 0.02
 # Controls the "grain" of the likelihood calculations. Approximates the 
 # continuous-time change in diversification rates by breaking each branch into
-# a constant-rate diversification segments, with each segment equal to segLength
-# So, a branch of length 10 will have the exponential speciation-rate change 
-# approximated by 10 segments if segLength = 1.0. 
-# If the value is greater than the branch length (e.g., segLength = 100
-# in this case)	BAMM will not break the branch into segments but use the mean 
+# a constant-rate diversification segments, with each segment given a length
+# determined by segLength
+# segLength is in units of the root-to-tip distance of the tree. So, if the
+# segLength parameter is 0.01, and the crown age of your tree is 50, the 
+# "step size" of the constant rate approximation will be 0.5.
+# If the value is greater than the branch length 
+# (e.g., you have a branch of length < 0.5 in the preceding example)
+# BAMM will not break the branch into segments but use the mean 
 # rate across the entire branch. See Documentation for more information on this.

@@ -41,10 +41,10 @@ simulatePriorShifts = 1
 #	given the hyperprior on the Poisson rate parameter.
 # This is necessary to compute Bayes factors
 
-loadEventData = 0
+# loadEventData = 0
 # Load event configuration - see Documentation
 
-eventDataInfile = my_event_datafile.txt
+# eventDataInfile = my_event_datafile.txt
 # Used only if loadEventData = 1
 
 initializeModel = 1
@@ -75,6 +75,12 @@ betaShiftPrior = 0.05
 # Parameter (std deviation) of the prior (normal) on the rate-change parameter
 #  You cannot adjust the mean of this distribution (fixed at zero, 
 #		which is equal to a constant rate diversification process)
+
+betaInitRootPrior = 5.0
+# Parameter of the exponential prior on the initial beta at the root process
+
+betaShiftRootPrior = 0.05
+# Prior on shift parameter for the root process
 
 useObservedMinMaxAsTraitPriors = 1
 # If TRUE (1), will put a uniform prior density on the distribution of ancestral

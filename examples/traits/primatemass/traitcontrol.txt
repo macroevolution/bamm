@@ -76,6 +76,12 @@ betaShiftPrior = 0.05
 #  You cannot adjust the mean of this distribution (fixed at zero, 
 #		which is equal to a constant rate diversification process)
 
+betaInitRootPrior = 5.0
+# Parameter of the exponential prior on the initial beta at the root process
+
+betaShiftRootPrior = 0.05
+# Prior on shift parameter for the root process
+
 useObservedMinMaxAsTraitPriors = 1
 # If TRUE (1), will put a uniform prior density on the distribution of ancestral
 #	character states, with upper and lower bounds determined by the min and max of 
