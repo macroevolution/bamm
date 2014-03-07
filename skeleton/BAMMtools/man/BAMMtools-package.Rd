@@ -13,9 +13,9 @@ An R package for the analysis and visualization of complex macroevolutionary dyn
 \tabular{ll}{
 Package: \tab BAMMtools\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2014-01-05\cr
-License: \tab GPL-2\cr
+Version: \tab 1.0.1\cr
+Date: \tab 2014-03-07\cr
+License: \tab GPL (>= 2)\cr
 }
 
 }
