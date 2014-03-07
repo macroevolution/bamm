@@ -34,15 +34,15 @@ Download BAMMtools
 ==================
 
 BAMMtools will soon be available on CRAN. For now, you can download the full
-package here: `BAMMtools_1.0.tar.gz
-<http://www-personal.umich.edu/~carlosja/BAMMtools_1.0.tar.gz>`_
+package here: `BAMMtools_1.0.1.tar.gz
+<http://www-personal.umich.edu/~carlosja/BAMMtools_1.0.1.tar.gz>`_
 
 You can install this in R in several ways. On Mac OS X, you can open the
 Terminal application, navigate to a directory containing the
-BAMMtools_1.0.tar.gz file, and type "R CMD INSTALL BAMMtools_1.0.tar.gz".
+BAMMtools_1.0.1.tar.gz file, and type "R CMD INSTALL BAMMtools_1.0.1.tar.gz".
 Or you can launch the R GUI and go to Packages & Data -> Package
 Installer -> Local Source Package, and use the dialog box to navigate to
-the BAMMtools_1.0.tar.gz file. It should now behave like any other package
+the BAMMtools_1.0.1.tar.gz file. It should now behave like any other package
 you've installed in R, and you can load it with "library(BAMMtools)".
 
 Download BAMM Source Files
