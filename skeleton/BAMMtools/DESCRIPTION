@@ -1,8 +1,8 @@
 Package: BAMMtools
 Type: Package
 Title: Analysis and visualization of macroevolutionary dynamics on phylogenetic trees
-Version: 1.0
-Date: 2014-03-04
+Version: 1.0.1
+Date: 2014-03-07
 Author: Dan Rabosky, Mike Grundler, Pascal Title, Carlos Anderson, Jeff Shi, Joseph Brown, Huateng Huang
 Maintainer: Dan Rabosky <dan.rabosky@gmail.com>
 Depends: ape
