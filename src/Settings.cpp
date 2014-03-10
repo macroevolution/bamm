@@ -135,6 +135,8 @@ void Settings::initializeGlobalSettings()
  
     // Other (TODO: Need to add documentation for these)
     addParameter("autotune", "0", NotRequired);
+    addParameter("outputAcceptanceInfo", "0", NotRequired);
+    addParameter("acceptanceInfoFileName", "acceptance_info.txt", NotRequired);
 }
 
 

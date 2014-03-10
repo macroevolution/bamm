@@ -20,6 +20,10 @@ MCMC::MCMC(MbRandom* rng, Model* model, Settings* settings) :
     _mcmcOutputFileName      = _settings->getMCMCoutfile();
     _eventDataOutputFileName = _settings->getEventDataOutfile();
 
+    // Acceptance info
+    _outputAcceptanceInfo = _settings->getOutputAcceptanceInfo();
+    _acceptanceInfoFileName = _settings->getAcceptanceInfoFileName();
+
     // Output frequencies
     _mcmcOutputFreq      = _settings->getMCMCwriteFreq();
     _eventDataOutputFreq = _settings->getEventDataWriteFreq();
@@ -28,6 +32,10 @@ MCMC::MCMC(MbRandom* rng, Model* model, Settings* settings) :
     // Open streams for writing
     _mcmcOutputStream.open(_mcmcOutputFileName.c_str());
     _eventDataOutputStream.open(_eventDataOutputFileName.c_str());
+
+    if (_outputAcceptanceInfo) {
+        _acceptanceInfoStream.open(_acceptanceInfoFileName.c_str());
+    }
 }
 
 
@@ -35,6 +43,10 @@ MCMC::~MCMC()
 {
     _mcmcOutputStream.close();
     _eventDataOutputStream.close();
+
+    if (_outputAcceptanceInfo) {
+        _acceptanceInfoStream.close();
+    }
 }
 
 
@@ -127,11 +139,13 @@ void MCMC::updateState(int parameter)
         std::exit(1);
     }
 
-    if (_model->getAcceptLastUpdate() == 1) {
+    int accepted = _model->getAcceptLastUpdate();
+
+    if (accepted == 1) {
         _acceptCount[parameter]++;
-    } else if (_model->getAcceptLastUpdate() == 0) {
+    } else if (accepted == 0) {
         _rejectCount[parameter]++;
-    } else if (_model->getAcceptLastUpdate() == -1) {
+    } else if (accepted == -1) {
         log(Error) << "Failed somewhere in MH step, parameter "
                    << parameter << "\n";
         std::exit(1);
@@ -139,6 +153,8 @@ void MCMC::updateState(int parameter)
         log(Error) << "Invalid accept/reject flag in model object\n";
         std::exit(1);
     }
+
+    outputAcceptanceInfo(parameter, _model->getAcceptLastUpdate() == 1);
 
     // Reset to unmodified value
     _model->setAcceptLastUpdate(-1);
@@ -150,6 +166,7 @@ void MCMC::outputHeaders()
     outputMCMCHeaders();
     outputEventDataHeaders();
     outputStdOutHeaders();
+    outputAcceptanceInfoHeaders();
 }
 
 
@@ -174,6 +191,12 @@ void MCMC::outputStdOutHeaders()
           << std::setw(15) << "NumShifts"
           << std::setw(15) << "LogPrior"
           << std::setw(15) << "AcceptRate" << "\n";
+}
+
+
+void MCMC::outputAcceptanceInfoHeaders()
+{
+    _acceptanceInfoStream << "proposedParam,accepted\n";
 }
 
 
@@ -229,4 +252,10 @@ void MCMC::outputStdOutData()
           << std::setw(15) << _model->computeLogPrior()
           << std::setw(15) << _model->getMHAcceptanceRate()
           << std::endl;
+}
+
+
+void MCMC::outputAcceptanceInfo(int param, bool accepted)
+{
+    _acceptanceInfoStream << param << "," << (accepted ? 1 : 0) << std::endl;
 }

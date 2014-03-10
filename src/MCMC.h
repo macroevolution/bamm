@@ -36,12 +36,14 @@ protected:
     void outputEventDataHeaders();
     virtual void outputSpecificEventDataHeaders() = 0;
     void outputStdOutHeaders();
+    void outputAcceptanceInfoHeaders();
 
     void outputData(int generation);
     void outputMCMCData();
     void outputEventData();
     void outputStdOutData();
     virtual void outputSpecificData(int generation) = 0;
+    void outputAcceptanceInfo(int param, bool accepted);
 
     MbRandom* _rng;
     Model* _model;
@@ -56,13 +58,17 @@ protected:
 
     std::string _mcmcOutputFileName;
     std::string _eventDataOutputFileName;
+    std::string _acceptanceInfoFileName;
 
     std::ofstream _mcmcOutputStream;
     std::ofstream _eventDataOutputStream;
+    std::ofstream _acceptanceInfoStream;
 
     int _mcmcOutputFreq;
     int _eventDataOutputFreq;
     int _stdOutFreq;
+
+    bool _outputAcceptanceInfo;
 };
 
 

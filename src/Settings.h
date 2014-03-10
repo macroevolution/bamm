@@ -62,7 +62,7 @@ private:
 
     // Parameters read from the command line
     std::vector<UserParameter> _commandLineParameters;
-	
+
 public:
 
     Settings(const std::string& controlFilename,
@@ -81,6 +81,9 @@ public:
     bool getRunMCMC() const;
     bool getInitializeModel() const;
 	bool getAutotune() const;
+
+    bool getOutputAcceptanceInfo() const;
+    std::string getAcceptanceInfoFileName() const;
     
     bool getSimulatePriorShifts() const;
 
@@ -190,6 +193,18 @@ inline std::string Settings::getRunInfoFilename() const
 inline bool Settings::getAutotune() const
 {
 	return _parameters.at("autotune").value<bool>();
+}
+
+
+inline bool Settings::getOutputAcceptanceInfo() const
+{
+    return _parameters.at("outputAcceptanceInfo").value<bool>();
+}
+
+
+inline std::string Settings::getAcceptanceInfoFileName() const
+{
+    return _parameters.at("acceptanceInfoFileName").value<std::string>();
 }
 
 
