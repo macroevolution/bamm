@@ -9,6 +9,7 @@
 
 #include "Settings.h"
 #include "Log.h"
+#include "MatchPathSeparator.h"
 
 
 Settings::Settings(const std::string& controlFilename,
@@ -317,9 +318,32 @@ void Settings::attachPrefixToOutputFiles()
 
 
 std::string Settings::attachPrefix
-  (const std::string& prefix, const std::string& str) const
+  (const std::string& prefix, const std::string& path) const
 {
-    return (prefix != "") ? (prefix + "_" + str) : (str);
+    if (prefix == "") {
+        return path;
+    }
+
+    const std::string& dir = extractDir(path);
+    const std::string& fileName = extractFileName(path);
+
+    return dir + prefix + "_" + fileName;
+}
+
+
+std::string Settings::extractDir(const std::string& path) const
+{
+    // Starts from the beginning, stops when it finds the last path separator
+    return std::string(path.begin(), std::find_if(path.rbegin(), path.rend(),
+        MatchPathSeparator()).base());
+}
+
+
+std::string Settings::extractFileName(const std::string& path) const
+{
+    // Starts from the end and stops when it finds a path separator
+    return std::string(std::find_if(path.rbegin(), path.rend(),
+        MatchPathSeparator()).base(), path.end());
 }
 
 

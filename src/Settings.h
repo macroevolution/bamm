@@ -38,6 +38,8 @@ private:
     void attachPrefixToOutputFiles();
     std::string attachPrefix
         (const std::string& prefix, const std::string& str) const;
+    std::string extractDir(const std::string& path) const;
+    std::string extractFileName(const std::string& path) const;
 
     bool anyOutputFileExists() const;
     bool fileExists(const std::string& filename) const;
