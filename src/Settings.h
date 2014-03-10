@@ -52,7 +52,7 @@ private:
     void exitWithErrorDuplicateParameter(const std::string& param) const;
     void exitWithErrorOutputFileExists() const;
 
-    static const size_t NumberOfParamsToPrefix = 6;
+    static const size_t NumberOfParamsToPrefix = 7;
 
     // Parameters that settings knows about
     ParameterMap _parameters;

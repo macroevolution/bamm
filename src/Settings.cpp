@@ -297,6 +297,7 @@ void Settings::attachPrefixToOutputFiles()
         { "runInfoFilename",
           "mcmcOutfile",
           "eventDataOutfile",
+          "acceptanceInfoFileName",
           "lambdaOutfile",
           "muOutfile",
           "betaOutfile" };
