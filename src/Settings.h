@@ -33,8 +33,6 @@ private:
         UserDefinedStatus userDefined = Required,
         DeprecationStatus deprecated = NotDeprecated);
 
-    // TODO: If filename is a path (e.g., output/mcmc_out.txt),
-    // prefix should only be attached to the file name
     void attachPrefixToOutputFiles();
     std::string attachPrefix
         (const std::string& prefix, const std::string& str) const;
