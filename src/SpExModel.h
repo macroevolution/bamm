@@ -80,6 +80,8 @@ private:
     double _readLambdaShift;
     double _readMuInit;
     double _readMuShift;
+
+    double _extinctionProbMax;
 };
 
 

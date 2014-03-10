@@ -88,6 +88,8 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
         initializeModelFromEventDataFile();
     }
 
+    _extinctionProbMax = _settings->getExtinctionProbMax();
+
     setCurrentLogLikelihood(computeLogLikelihood());
 
     if (std::isinf(getCurrentLogLikelihood())) {
@@ -691,8 +693,7 @@ double SpExModel::computeLogLikelihoodByInterval()
             // Clearly a problem if extinction values approaching/equaling 1.0
             // If so, set to -Inf, leading to automatic rejection of state
 
-            if ((lEinit > _settings->getExtinctionProbMax()) || (rEinit > _settings->getExtinctionProbMax())) {
-                //std::cout << xnode << "\t" << lEinit << "\t" << rEinit << std::endl;
+            if (lEinit > _extinctionProbMax || rEinit > _extinctionProbMax) {
                 return -INFINITY;
             }
 
