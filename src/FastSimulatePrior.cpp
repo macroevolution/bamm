@@ -36,7 +36,7 @@ FastSimulatePrior::FastSimulatePrior(MbRandom* ranptr, Settings* sp)
     _poissonRatePrior = sttings->getPoissonRatePrior();
     _numberEvents = 0;
     
-    _outfileName = "shiftPrior_" + sp->getMCMCoutfile();
+    _outfileName = sttings->getPriorOutputFileName();
     
 
     // Open streams for writing

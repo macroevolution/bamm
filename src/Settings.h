@@ -52,7 +52,7 @@ private:
     void exitWithErrorDuplicateParameter(const std::string& param) const;
     void exitWithErrorOutputFileExists() const;
 
-    static const size_t NumberOfParamsToPrefix = 7;
+    static const size_t NumberOfParamsToPrefix = 8;
 
     // Parameters that settings knows about
     ParameterMap _parameters;
@@ -136,6 +136,7 @@ public:
     // Class MCMC parameters:
     std::string getMCMCoutfile() const;
     std::string getEventDataOutfile() const;
+    std::string getPriorOutputFileName() const;
     std::string getLambdaOutfile() const;
     std::string getMuOutfile() const;
 
@@ -420,6 +421,12 @@ inline std::string Settings::getMCMCoutfile() const
 inline std::string Settings::getEventDataOutfile() const
 {
     return _parameters.at("eventDataOutfile").value<std::string>();
+}
+
+
+inline std::string Settings::getPriorOutputFileName() const
+{
+    return _parameters.at("priorOutputFileName").value<std::string>();
 }
 
 

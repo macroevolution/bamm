@@ -118,6 +118,7 @@ void Settings::initializeGlobalSettings()
     addParameter("runInfoFilename", "run_info.txt", NotRequired);
     addParameter("mcmcOutfile", "mcmc_out.txt", NotRequired);
     addParameter("eventDataOutfile", "event_data.txt", NotRequired);
+    addParameter("priorOutputFileName", "shiftPrior_mcmc_out.txt", NotRequired);
 
     addParameter("branchRatesWriteFreq", "0", NotRequired);
     addParameter("mcmcWriteFreq", "0");
@@ -297,6 +298,7 @@ void Settings::attachPrefixToOutputFiles()
         { "runInfoFilename",
           "mcmcOutfile",
           "eventDataOutfile",
+          "priorOutputFileName",
           "acceptanceInfoFileName",
           "lambdaOutfile",
           "muOutfile",
