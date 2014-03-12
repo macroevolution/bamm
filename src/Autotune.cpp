@@ -55,7 +55,8 @@ Autotune::Autotune(MbRandom* ran, SpExModel * mymodel, Settings*sp)
     int PRINT_FREQ = 1000;
     
     setUpdateWeights_Diversification();
-    ModelPtr->resetGeneration();
+    // TODO: Commented out when moving generation tracking to MCMC
+    // ModelPtr->resetGeneration();
     
     for (int i = 0; i < TUNE_GENS; i++) {
         int parmToUpdate = pickParameterClassToUpdate();

@@ -26,10 +26,6 @@ public:
 
     Tree* getTreePtr();
 
-    void incrementGeneration();
-    int getGeneration();
-    void resetGeneration();
-
     void setMoveSizeScale(double x);
     void setUpdateEventRateScale(double x);
 
@@ -66,7 +62,7 @@ public:
     void deleteEventFromTree(BranchEvent* be);
     void deleteRandomEventFromTree();
 
-    void getEventDataString(std::stringstream& ss);
+    void getEventDataString(std::stringstream& ss, int generation);
 
     double getModelTemperatureMH(void);
     void setModelTemperatureMH(double x);
@@ -126,8 +122,6 @@ protected:
     Settings* _settings;
     Prior* _prior;
 
-    int _gen;
-
     // Parameters for MCMC proposals
     double _scale;    // scale for moving event
     double _updateEventRateScale;
@@ -168,24 +162,6 @@ protected:
 inline Tree* Model::getTreePtr()
 {
     return _tree;
-}
-
-
-inline void Model::incrementGeneration()
-{
-    _gen++;
-}
-
-
-inline int Model::getGeneration()
-{
-    return _gen;
-}
-
-
-inline void Model::resetGeneration()
-{
-    _gen = 0;    // to be used after TraitPreBurnin
 }
 
 

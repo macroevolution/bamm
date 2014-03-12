@@ -251,9 +251,6 @@ void TraitModel::updateBetaMH(void)
      std::cout << std::endl;
      std::cout << startLL << "\tCurr: " << getCurrentLogLikelihood() << "\tcalc: " << computeLogLikelihood() << std::endl;
      }*/
-    
-    incrementGeneration();
-    
 }
 
 
@@ -323,12 +320,6 @@ void TraitModel::updateBetaShiftMH(void)
         _rejectCount++;
         
     }
-    
-    
-    
-    incrementGeneration();
-    
-    
 }
 
 void TraitModel::updateNodeStateMH(void)
@@ -385,10 +376,6 @@ void TraitModel::updateNodeStateMH(void)
         _rejectCount++;
         _acceptLast = 0;
     }
-
-    incrementGeneration();
-
-
 }
 
 
@@ -446,13 +433,6 @@ void TraitModel::updateNodeStateMH(Node* xnode)
         _rejectCount++;
         _acceptLast = 0;
     }
-
-    incrementGeneration();
-
-
-
-
-
 }
 
 

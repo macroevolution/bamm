@@ -53,7 +53,6 @@ MCMC::~MCMC()
 void MCMC::run()
 {
     setUpdateWeights();
-    _model->resetGeneration(); // TODO: Really needed?
 
     // TODO: Might be better to put this in model initialization
     for (int i = 0; i < _settings->getInitialNumberEvents(); i++) {
@@ -67,10 +66,10 @@ void MCMC::run()
     outputHeaders();
 
     int parameterToUpdate = 0;
-    for (int gen = 0; gen < _numGenerations; gen++) {
+    for (_generation = 0; _generation < _numGenerations; _generation++) {
         parameterToUpdate = chooseRandomParameter();
         updateState(parameterToUpdate);
-        outputData(gen);
+        outputData(_generation);
     }
 }
 
@@ -225,7 +224,7 @@ void MCMC::outputData(int generation)
 
 void MCMC::outputMCMCData()
 {
-    _mcmcOutputStream << _model->getGeneration()            << ","
+    _mcmcOutputStream << _generation                        << ","
                       << _model->getNumberOfEvents()        << ","
                       << _model->computeLogPrior()          << ","
                       << _model->getCurrentLogLikelihood()  << ","
@@ -239,14 +238,14 @@ void MCMC::outputMCMCData()
 void MCMC::outputEventData()
 {
     std::stringstream eventData;
-    _model->getEventDataString(eventData);
+    _model->getEventDataString(eventData, _generation);
     _eventDataOutputStream << eventData.str() << std::endl;
 }
 
 
 void MCMC::outputStdOutData()
 {
-    log() << std::setw(15) << _model->getGeneration()
+    log() << std::setw(15) << _generation
           << std::setw(15) << _model->getCurrentLogLikelihood()
           << std::setw(15) << _model->getNumberOfEvents()
           << std::setw(15) << _model->computeLogPrior()

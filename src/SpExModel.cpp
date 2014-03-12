@@ -270,10 +270,6 @@ void SpExModel::updateLambdaInitMH(void)
         _acceptLast = 0;
         _rejectCount++;
     }
-
-    incrementGeneration();
-
-
 }
 
 void SpExModel::updateLambdaShiftMH(void)
@@ -353,8 +349,6 @@ void SpExModel::updateLambdaShiftMH(void)
         _acceptLast = 0;
         _rejectCount++;
     }
-
-    incrementGeneration();
 }
 
 
@@ -433,10 +427,6 @@ void SpExModel::updateMuInitMH(void)
         _acceptLast = 0;
         _rejectCount++;
     }
-
-    incrementGeneration();
-
-
 }
 
 
@@ -520,10 +510,6 @@ void SpExModel::updateMuShiftMH(void)
         _acceptLast = 0;
         _rejectCount++;
     }
-
-    incrementGeneration();
-
-
 }
 
 

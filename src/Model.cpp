@@ -14,7 +14,7 @@
 
 
 Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
-    _rng(rng), _tree(tree), _settings(settings), _prior(prior), _gen(0)
+    _rng(rng), _tree(tree), _settings(settings), _prior(prior)
 {
     // Reduce weird autocorrelation of values at start by calling RNG
     // a few times. TODO: Why is there a weird autocorrelation?
@@ -437,8 +437,6 @@ void Model::changeNumberOfEventsMH()
     } else {
         removeEventMH();
     }
-
-    incrementGeneration();
 }
 
 
@@ -557,7 +555,6 @@ void Model::moveEventMH()
     if (_eventCollection.size() == 0) {
         _rejectCount++;
         _acceptLast = 0;
-        incrementGeneration();
         return;
     }
 
@@ -597,8 +594,6 @@ void Model::moveEventMH()
         _rejectCount++;
         _acceptLast = 0;
     }
-
-    incrementGeneration();
 }
 
 
@@ -632,8 +627,6 @@ void Model::updateEventRateMH()
         _rejectCount++;
         _acceptLast = 0;
     }
-
-    incrementGeneration();
 }
 
 
@@ -720,9 +713,9 @@ void Model::resetMHAcceptanceParameters()
 //  Write event data to file for all events "on" tree
 //  at a given point in the MCMC chain
     
-void Model::getEventDataString(std::stringstream& ss)
+void Model::getEventDataString(std::stringstream& ss, int generation)
 {   
-    ss << getGeneration() << ",";
+    ss << generation << ",";
     
     BranchEvent* be = _rootEvent;
     Node* xl = _tree->getRoot()->getRandomLeftTipNode();
@@ -740,7 +733,7 @@ void Model::getEventDataString(std::stringstream& ss)
     
     EventSet::iterator it;
     for (it = _eventCollection.begin(); it != _eventCollection.end(); ++it) {
-        ss << "\n" << getGeneration() << ",";
+        ss << "\n" << generation << ",";
         be = *it;
         if (be->getEventNode()->getLfDesc() == NULL) {
             ss << be->getEventNode()->getName() << "," << "NA" << ",";

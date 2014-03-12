@@ -50,6 +50,7 @@ protected:
     Settings* _settings;
 
     int _numGenerations;
+    int _generation;
 
     std::vector<double> _parameterWeights;
 
