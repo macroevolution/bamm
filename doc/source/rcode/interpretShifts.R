@@ -14,7 +14,7 @@ quartz.options(height=5, width=10, dpi=72);
 par(mfrow=c(1,2));
 
 plot(v, show.tip.label=F, edge.width=1.1);
-addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='red', cex=1.7, multi=T)
+addBAMMshifts(ed, method='phylogram', index=msc$sampleindex, pch=21, bg='red', cex=1.7, par.reset=FALSE)
  
 ee <- rep('black', nrow(v$edge));
 ee[v$edge[,2] %in% c(132, 140, 129, 141)] <- 'red';
@@ -81,13 +81,13 @@ par(oma=c(0,0,0,0));
 par(mar=c(0,0,0,0));
 par(mfrow=c(2,2));
 plot.phylo(primates, show.tip.label=F, edge.color='gray30');
-addBAMMshifts(ed, method='phylogram', index=1, cex=1.75, multi=T);
+addBAMMshifts(ed, method='phylogram', index=1, cex=1.75, par.reset=FALSE);
 
 plot.phylo(primates, show.tip.label=F, edge.color='gray30');
-addBAMMshifts(ed, method='phylogram', index=50, cex=1.75, multi=T);
+addBAMMshifts(ed, method='phylogram', index=50, cex=1.75, par.reset=FALSE);
 
 plot.phylo(primates, show.tip.label=F, edge.color='gray30');
-addBAMMshifts(ed, method='phylogram', index=100, cex=1.75, multi=T);
+addBAMMshifts(ed, method='phylogram', index=100, cex=1.75, par.reset=FALSE);
 
 plot.bammdata(ed, pal=c("darkgreen","yellow2","red"), lwd=1, tau=0.001, legend=F)
 

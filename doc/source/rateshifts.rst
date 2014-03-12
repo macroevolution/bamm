@@ -190,7 +190,7 @@ To do this with BAMMtools, we will first compute the threshold between **core** 
 
 	> data(events.primates)
 	> edata <- getEventData(primates, events.primates, burnin=0.1, type ='trait')
-	> css <- credibleShiftSet(edata, threshold = priors)
+	> css <- credibleShiftSet(edata, threshold = prior.threshold)
 	
 And we can view and plot the results with two other BAMMtools functions: ``summary.credibleshiftset`` and ``plot.credibleshiftset``.
 
