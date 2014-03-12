@@ -87,12 +87,6 @@ void MCMC::setUpdateWeights()
     for (SizeType i = 0; i < _parameterWeights.size(); i++) {
         _parameterWeights[i] /= sumWeights;
     }
-
-    // Define vectors to hold accept/reject data:
-    for (SizeType i = 0; i < _parameterWeights.size(); i++) {
-        _acceptCount.push_back(0);
-        _rejectCount.push_back(0);
-    }
 }
 
 
@@ -139,21 +133,7 @@ void MCMC::updateState(int parameter)
     }
 
     int accepted = _model->getAcceptLastUpdate();
-
-    if (accepted == 1) {
-        _acceptCount[parameter]++;
-    } else if (accepted == 0) {
-        _rejectCount[parameter]++;
-    } else if (accepted == -1) {
-        log(Error) << "Failed somewhere in MH step, parameter "
-                   << parameter << "\n";
-        std::exit(1);
-    } else {
-        log(Error) << "Invalid accept/reject flag in model object\n";
-        std::exit(1);
-    }
-
-    outputAcceptanceInfo(parameter, _model->getAcceptLastUpdate() == 1);
+    outputAcceptanceInfo(parameter, accepted == 1);
 
     // Reset to unmodified value
     _model->setAcceptLastUpdate(-1);

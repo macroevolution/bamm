@@ -54,9 +54,6 @@ protected:
 
     std::vector<double> _parameterWeights;
 
-    std::vector<int> _acceptCount;
-    std::vector<int> _rejectCount;
-
     std::string _mcmcOutputFileName;
     std::string _eventDataOutputFileName;
     std::string _acceptanceInfoFileName;
