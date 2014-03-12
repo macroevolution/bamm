@@ -101,6 +101,35 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
     log() << "\nInitial log-likelihood: " << getCurrentLogLikelihood() << "\n";
     if (_settings->getSampleFromPriorOnly())
         log() << "Note that you have chosen to sample from prior only.\n";
+
+    Model::finishConstruction();
+}
+
+
+void SpExModel::initializeSpecificUpdateWeights()
+{
+    _updateWeights.push_back(_settings->getUpdateRateLambda0());
+    _updateWeights.push_back(_settings->getUpdateRateLambdaShift());
+    _updateWeights.push_back(_settings->getUpdateRateMu0());
+    _updateWeights.push_back(_settings->getUpdateRateMuShift());
+}
+
+
+void SpExModel::proposeSpecificNewState(int parameter)
+{
+    if (parameter == 3) {
+        updateLambdaInitMH();
+    } else if (parameter == 4) {
+        updateLambdaShiftMH();
+    } else if (parameter == 5) {
+        updateMuInitMH();
+    } else if (parameter == 6) {
+        updateMuShiftMH();
+    } else {
+        // Should never get here
+        log(Error) << "Bad parameter to update.\n";
+        std::exit(1);
+    }
 }
 
 

@@ -93,6 +93,32 @@ TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
     if (_settings->getSampleFromPriorOnly()) {
         log() << "Note that you have chosen to sample from prior only.\n";
     }
+
+    Model::finishConstruction();
+}
+
+
+void TraitModel::initializeSpecificUpdateWeights()
+{
+    _updateWeights.push_back(_settings->getUpdateRateBeta0());
+    _updateWeights.push_back(_settings->getUpdateRateBetaShift());
+    _updateWeights.push_back(_settings->getUpdateRateNodeState());
+}
+
+
+void TraitModel::proposeSpecificNewState(int parameter)
+{
+    if (parameter == 3) {
+        updateBetaMH();
+    } else if (parameter == 4) {
+        updateBetaShiftMH();
+    } else if (parameter == 5) {
+        updateNodeStateMH();
+    } else {
+        // Should never get here
+        log(Error) << "Bad parameter to update.\n";
+        std::exit(1);
+    }
 }
 
 

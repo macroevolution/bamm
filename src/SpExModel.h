@@ -36,6 +36,10 @@ public:
 private:
 
     double computeLogLikelihoodByInterval();
+
+    virtual void initializeSpecificUpdateWeights();
+
+    virtual void proposeSpecificNewState(int parameter);
     
     virtual void readModelSpecificParameters(std::ifstream& inputFile);
     virtual void setRootEventWithReadParameters();

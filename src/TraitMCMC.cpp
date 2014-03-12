@@ -38,35 +38,6 @@ TraitMCMC::~TraitMCMC(void)
 }
 
 
-void TraitMCMC::setUpSpecificParameterWeights()
-{
-    _parameterWeights.push_back(_settings->getUpdateRateBeta0());
-    _parameterWeights.push_back(_settings->getUpdateRateBetaShift());
-    _parameterWeights.push_back(_settings->getUpdateRateNodeState());
-    // TODO: Was node state depricated?
-}
-
-
-void TraitMCMC::updateSpecificState(int parameter)
-{
-    if (parameter == 3)
-        _specificModel->updateBetaMH();
-    else if (parameter == 4)
-        _specificModel->updateBetaShiftMH();
-    else if (parameter == 5)
-        _specificModel->updateNodeStateMH();
-    else if (parameter == 6) {
-        // Update time variable partition
-        log() << "Should update isTimeVariable\n";
-        _specificModel->setAcceptLastUpdate(1);
-    } else {
-        // Should never get here
-        log(Error) << "Bad parameter to update\n";
-        std::exit(1);
-    }
-}
-
-
 void TraitMCMC::outputSpecificEventDataHeaders()
 {
     _eventDataOutputStream << ",betainit,betashift\n";

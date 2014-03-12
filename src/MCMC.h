@@ -23,14 +23,6 @@ public:
 
 protected:
 
-    void setUpdateWeights();
-    void setUpParameterWeights();
-    virtual void setUpSpecificParameterWeights() = 0;
-
-    int  chooseRandomParameter();
-    void updateState(int parameter);
-    virtual void updateSpecificState(int parameter) = 0;
-
     void outputHeaders();
     void outputMCMCHeaders();
     void outputEventDataHeaders();
@@ -43,7 +35,7 @@ protected:
     void outputEventData();
     void outputStdOutData();
     virtual void outputSpecificData(int generation) = 0;
-    void outputAcceptanceInfo(int param, bool accepted);
+    void outputAcceptanceInfo();
 
     MbRandom* _rng;
     Model* _model;
@@ -51,8 +43,6 @@ protected:
 
     int _numGenerations;
     int _generation;
-
-    std::vector<double> _parameterWeights;
 
     std::string _mcmcOutputFileName;
     std::string _eventDataOutputFileName;

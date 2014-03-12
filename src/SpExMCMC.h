@@ -23,9 +23,6 @@ public:
 
 private:
 
-    virtual void setUpSpecificParameterWeights();
-    virtual void updateSpecificState(int parameter);
-
     virtual void outputSpecificEventDataHeaders();
 
     virtual void outputSpecificData(int generation);

@@ -36,6 +36,9 @@ private:
     virtual void readModelSpecificParameters(std::ifstream& inputFile);
     virtual void setRootEventWithReadParameters();
 
+    void initializeSpecificUpdateWeights();
+    virtual void proposeSpecificNewState(int parameter);
+
     virtual BranchEvent* newBranchEventWithReadParameters(Node* x, double time);
     virtual BranchEvent* newBranchEventWithRandomParameters(double x);
     virtual BranchEvent* newBranchEventFromLastDeletedEvent();

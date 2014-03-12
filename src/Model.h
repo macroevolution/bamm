@@ -4,6 +4,7 @@
 
 #include "BranchEvent.h"
 
+#include <vector>
 #include <set>
 #include <iosfwd>
 
@@ -24,6 +25,8 @@ public:
     Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior);
     virtual ~Model();
 
+    void finishConstruction();
+
     Tree* getTreePtr();
 
     void setMoveSizeScale(double x);
@@ -34,6 +37,8 @@ public:
 
     double getEventRate();
     void setEventRate(double x);
+
+    int getLastParameterUpdated();
 
     int getAcceptLastUpdate();
     void setAcceptLastUpdate(int x);
@@ -52,6 +57,8 @@ public:
     int getNumberOfEvents();
     BranchEvent* getRootEvent();
 
+    void proposeNewState();
+
     void changeNumberOfEventsMH();
     void moveEventMH();
     void updateEventRateMH();
@@ -69,7 +76,15 @@ public:
     
 protected:
 
+    void calculateUpdateWeights();
+    void initializeUpdateWeights();
+    virtual void initializeSpecificUpdateWeights() = 0;
+
     BranchEvent* chooseEventAtRandom();
+
+    int chooseParameterToUpdate();
+
+    virtual void proposeSpecificNewState(int parameter) = 0;
 
     void addEventMH();
     void removeEventMH();
@@ -84,6 +99,9 @@ protected:
     double computeEventLossLogHR(double K, double logLikelihood,
         double oldLogLikelihood, double logPrior, double oldLogPrior,
             double qRatio);
+
+    double computeLogHastingsRatio(double logLikRatio,
+        double logPriorRatio, double logQratio);
 
     void eventMove(bool local);
     void eventLocalMove();
@@ -122,6 +140,9 @@ protected:
     Settings* _settings;
     Prior* _prior;
 
+    std::vector<double> _updateWeights;
+    int _lastParameterUpdated;
+
     // Parameters for MCMC proposals
     double _scale;    // scale for moving event
     double _updateEventRateScale;
@@ -152,10 +173,6 @@ protected:
 
     // Temperature parameter for Metropolis coupling:
     double _temperatureMH;
-
-    double computeLogHastingsRatio(double logLikRatio,
-                                    double logPriorRatio, double logQratio);
-    
 };
 
 
@@ -168,6 +185,12 @@ inline Tree* Model::getTreePtr()
 inline void Model::setMoveSizeScale(double x)
 {
     _scale = x;
+}
+
+
+inline int Model::getLastParameterUpdated()
+{
+    return _lastParameterUpdated;
 }
 
 

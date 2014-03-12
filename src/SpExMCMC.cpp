@@ -42,37 +42,6 @@ SpExMCMC::~SpExMCMC()
 }
 
 
-void SpExMCMC::setUpSpecificParameterWeights()
-{
-    _parameterWeights.push_back(_settings->getUpdateRateLambda0());
-    _parameterWeights.push_back(_settings->getUpdateRateLambdaShift());
-    _parameterWeights.push_back(_settings->getUpdateRateMu0());
-    _parameterWeights.push_back(_settings->getUpdateRateMuShift());
-}
-
-
-void SpExMCMC::updateSpecificState(int parameter)
-{
-    if (parameter == 3) {
-        _specificModel->updateLambdaInitMH();
-    } else if (parameter == 4) {
-        _specificModel->updateLambdaShiftMH();
-    } else if (parameter == 5) {
-        _specificModel->updateMuInitMH();
-    } else if (parameter == 6) {
-        _specificModel->updateMuShiftMH();
-    } else if (parameter == 7) {
-        // Update time variable partition (TODO: Is this being used?)
-        log() << "Should update isTimeVariable\n";
-        _specificModel->setAcceptLastUpdate(1);
-    } else {
-        // Should never get here
-        log(Error) << "Bad parameter to update\n";
-        std::exit(1);
-    }
-}
-
-
 void SpExMCMC::outputSpecificEventDataHeaders()
 {
     _eventDataOutputStream << ",lambdainit,lambdashift,muinit,mushift\n";

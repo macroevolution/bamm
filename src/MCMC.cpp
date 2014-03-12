@@ -52,91 +52,18 @@ MCMC::~MCMC()
 
 void MCMC::run()
 {
-    setUpdateWeights();
-
-    // TODO: Might be better to put this in model initialization
-    for (int i = 0; i < _settings->getInitialNumberEvents(); i++) {
-        _model->addEventToTree();
-    }
-
     log() << "\nRunning MCMC chain for "
           << _numGenerations << " generations.\n";
 
     log() << "\n";
     outputHeaders();
 
-    int parameterToUpdate = 0;
     for (_generation = 0; _generation < _numGenerations; _generation++) {
-        parameterToUpdate = chooseRandomParameter();
-        updateState(parameterToUpdate);
+        _model->proposeNewState();
+
+        outputAcceptanceInfo();
         outputData(_generation);
     }
-}
-
-
-void MCMC::setUpdateWeights()
-{
-    setUpParameterWeights();
-
-    double sumWeights = _parameterWeights[0];
-    for (SizeType i = 1; i < _parameterWeights.size(); i++) {
-        sumWeights += _parameterWeights[i];
-        _parameterWeights[i] += _parameterWeights[i - 1];
-    }
-
-    for (SizeType i = 0; i < _parameterWeights.size(); i++) {
-        _parameterWeights[i] /= sumWeights;
-    }
-}
-
-
-void MCMC::setUpParameterWeights()
-{
-    _parameterWeights.push_back(_settings->getUpdateRateEventNumber());
-    _parameterWeights.push_back(_settings->getUpdateRateEventPosition());
-    _parameterWeights.push_back(_settings->getUpdateRateEventRate());
-
-    // Defined by concrete subclass
-    setUpSpecificParameterWeights();
-}
-
-
-int MCMC::chooseRandomParameter()
-{
-    double r = _rng->uniformRv();
-
-    for (SizeType i = 0; i < _parameterWeights.size(); i++) {
-        if (r < _parameterWeights[i]) {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-
-void MCMC::updateState(int parameter)
-{
-    if (parameter == 0) {
-        _model->changeNumberOfEventsMH();
-    } else if (parameter == 1) {
-        _model->moveEventMH();
-    } else if (parameter == 2) {
-        _model->updateEventRateMH();
-    } else if (parameter > 2) {
-        // Defined in concrete subclass
-        updateSpecificState(parameter);
-    } else {
-        // Should never get here
-        log(Error) << "Bad parameter to update\n";
-        std::exit(1);
-    }
-
-    int accepted = _model->getAcceptLastUpdate();
-    outputAcceptanceInfo(parameter, accepted == 1);
-
-    // Reset to unmodified value
-    _model->setAcceptLastUpdate(-1);
 }
 
 
@@ -234,7 +161,11 @@ void MCMC::outputStdOutData()
 }
 
 
-void MCMC::outputAcceptanceInfo(int param, bool accepted)
+void MCMC::outputAcceptanceInfo()
 {
+    int param = _model->getLastParameterUpdated();
+    int accepted = _model->getAcceptLastUpdate();
+    _model->setAcceptLastUpdate(-1);
+
     _acceptanceInfoStream << param << "," << (accepted ? 1 : 0) << std::endl;
 }

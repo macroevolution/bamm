@@ -49,6 +49,18 @@ Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
 }
 
 
+// This method needs to be called by the derived class
+void Model::finishConstruction()
+{
+    calculateUpdateWeights();
+
+    int initialNumberOfEvents = _settings->getInitialNumberEvents();
+    for (int i = 0; i < initialNumberOfEvents; i++) {
+        addEventToTree();
+    }
+}
+
+
 Model::~Model()
 {
     EventSet::iterator it;
@@ -186,6 +198,71 @@ void Model::forwardSetHistoriesRecursive(Node* p)
             forwardSetHistoriesRecursive(p->getRtDesc());
         }
     }
+}
+
+
+void Model::calculateUpdateWeights()
+{
+    initializeUpdateWeights();
+
+    // Add all weights
+    double sumWeights = 0.0;
+    for (int i = 0; i < (int)_updateWeights.size(); i++) {
+        sumWeights += _updateWeights[i];
+    }
+
+    // Calculate cumulative weights
+    for (int i = 1; i < (int)_updateWeights.size(); i++) {
+        _updateWeights[i] += _updateWeights[i - 1];
+    }
+
+    // Normalize by the sum of all weights
+    for (int i = 0; i < (int)_updateWeights.size(); i++) {
+        _updateWeights[i] /= sumWeights;
+    }
+}
+
+
+void Model::initializeUpdateWeights()
+{
+    _updateWeights.push_back(_settings->getUpdateRateEventNumber());
+    _updateWeights.push_back(_settings->getUpdateRateEventPosition());
+    _updateWeights.push_back(_settings->getUpdateRateEventRate());
+
+    // Defined by derived class
+    initializeSpecificUpdateWeights();
+}
+
+
+void Model::proposeNewState()
+{
+    int parameterToUpdate = chooseParameterToUpdate();
+    _lastParameterUpdated = parameterToUpdate;
+
+    if (parameterToUpdate == 0) {
+        changeNumberOfEventsMH();
+    } else if (parameterToUpdate == 1) {
+        moveEventMH();
+    } else if (parameterToUpdate == 2) {
+        updateEventRateMH();
+    } else {
+        // Defined by derived class
+        proposeSpecificNewState(parameterToUpdate);
+    }
+}
+
+
+int Model::chooseParameterToUpdate()
+{
+    double r = _rng->uniformRv();
+
+    for (int i = 0; i < (int)_updateWeights.size(); i++) {
+        if (r < _updateWeights[i]) {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 
