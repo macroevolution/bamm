@@ -15,7 +15,7 @@ class MCMC
 public:
 
     MCMC(Model& model, int numberOfGenerations, DataWriter& dataWriter);
-    virtual ~MCMC();
+    ~MCMC();
 
     void run();
 
