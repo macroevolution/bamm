@@ -28,6 +28,7 @@ SET(BAMM_SRC
     src/Autotune.cpp
     src/BranchEvent.cpp
     src/BranchHistory.cpp
+    src/DataWriter.cpp
     src/FastSimulatePrior.cpp
     src/Log.cpp
     src/MCMC.cpp
@@ -38,11 +39,11 @@ SET(BAMM_SRC
     src/Settings.cpp
     src/SettingsParameter.cpp
     src/SpExBranchEvent.cpp
-    src/SpExMCMC.cpp
+    src/SpExDataWriter.cpp
     src/SpExModel.cpp
     src/Stat.cpp
     src/TraitBranchEvent.cpp
-    src/TraitMCMC.cpp
+    src/TraitDataWriter.cpp
     src/TraitModel.cpp
     src/Tree.cpp
     src/main.cpp)

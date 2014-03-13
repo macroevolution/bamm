@@ -8,16 +8,15 @@
 #include "Tree.h"
 #include "Node.h"
 #include "MbRandom.h"
+#include "MCMC.h"
 #include "SpExModel.h"
-#include "SpExMCMC.h"
-#include "TraitMCMC.h"
 #include "Settings.h"
 #include "TraitModel.h"
 #include "Autotune.h"
 #include "FastSimulatePrior.h"
-
-
 #include "Prior.h"
+#include "SpExDataWriter.h"
+#include "TraitDataWriter.h"
 
 
 void printAbout();
@@ -120,22 +119,22 @@ int main (int argc, char* argv[])
             (mySettings.getMinCladeSizeForShift());
         intree.setTreeMap(intree.getRoot());
 
-        if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
-            SpExModel myModel(&myRNG, &intree, &mySettings, &myPrior);
-        } else if (mySettings.getInitializeModel() && mySettings.getAutotune()){
-            SpExModel myModel(&myRNG, &intree, &mySettings, &myPrior);
-            Autotune myTuneObject(&myRNG, &myModel, &mySettings);
-        } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC()) {
-            SpExModel myModel(&myRNG, &intree, &mySettings, &myPrior);
-            SpExMCMC myMCMC(&myRNG, &myModel, &mySettings);
-            myMCMC.run();
-        } else {
-            log(Error) << "Unsupported option in main.\n";
-            std::exit(1);
-        }
-        
+        if (mySettings.getInitializeModel()) {
+            SpExModel model(&myRNG, &intree, &mySettings, &myPrior);
 
-        
+            if (mySettings.getRunMCMC()) {
+                int numberOfGenerations = mySettings.getNGENS();
+                SpExDataWriter dataWriter(mySettings, model);
+                MCMC mcmc(model, numberOfGenerations, dataWriter);
+                mcmc.run();
+            }
+
+            // TODO: Is this doing anything
+            if (mySettings.getAutotune()) {
+                Autotune autotune(&myRNG, &model, &mySettings);
+            }
+        }
+
     } else if (mySettings.getModeltype() == "trait") {
         log(Message) << "\nModel type: Trait\n";
         
@@ -150,20 +149,21 @@ int main (int argc, char* argv[])
         intree.getPhenotypesMissingLatent(mySettings.getTraitFile());
         intree.initializeTraitValues();
         
-        if (mySettings.getInitializeModel() && !mySettings.getRunMCMC()) {
-            TraitModel myModel(&myRNG, &intree, &mySettings, &myPrior);
-        } else if (mySettings.getInitializeModel() && mySettings.getRunMCMC() &&
-                !mySettings.getAutotune()) {
-            TraitModel myModel(&myRNG, &intree, &mySettings, &myPrior);
-            TraitMCMC myMCMC(&myRNG, &myModel, &mySettings);
-            myMCMC.run();
-        } else if (mySettings.getInitializeModel() && mySettings.getAutotune()){
-            log(Error) << "Autotune option not yet supported for phenotypic "
-                "(trait) analysis.\n";
-            std::exit(1);
-        } else {
-            log(Error) << "Invalid run settings specified in main.\n";
-            std::exit(1);
+        if (mySettings.getInitializeModel()) {
+            TraitModel model(&myRNG, &intree, &mySettings, &myPrior);
+
+            if (mySettings.getRunMCMC()) {
+                int numberOfGenerations = mySettings.getNGENS();
+                TraitDataWriter dataWriter(mySettings, model);
+                MCMC mcmc(model, numberOfGenerations, dataWriter);
+                mcmc.run();
+            }
+
+            if (mySettings.getAutotune()) {
+                log(Error) << "Autotune option not yet supported for "
+                    << "phenotypic (trait) analysis.\n";
+                std::exit(1);
+            }
         }
     }
 

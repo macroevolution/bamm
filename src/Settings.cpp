@@ -174,8 +174,8 @@ void Settings::initializeSpeciationExtinctionSettings()
 	addParameter("segLength", "0.0");
 
     // Output
-    addParameter("lambdaOutfile", "lambda_rates.txt", NotRequired);
-    addParameter("muOutfile", "mu_rates.txt", NotRequired);
+    addParameter("lambdaOutfile", "lambda_rates.txt", NotRequired, Deprecated);
+    addParameter("muOutfile", "mu_rates.txt", NotRequired, Deprecated);
 
     // Parameter update rates
     addParameter("updateRateLambda0", "0.0");
@@ -213,7 +213,7 @@ void Settings::initializeTraitSettings()
     addParameter("traitPriorMax", "0.0", NotRequired);
 
     // Output
-    addParameter("betaOutfile", "beta_rates.txt", NotRequired);
+    addParameter("betaOutfile", "beta_rates.txt", NotRequired, Deprecated);
 
     // Parameter update rates
     addParameter("updateRateBeta0", "0.0");
