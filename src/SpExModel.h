@@ -2,6 +2,10 @@
 #define SP_EX_MODEL_H
 
 #include "Model.h"
+#include "LambdaInitProposal.h"
+#include "LambdaShiftProposal.h"
+#include "MuInitProposal.h"
+#include "MuShiftProposal.h"
 #include <iosfwd>
 
 class Tree;
@@ -10,6 +14,7 @@ class MbRandom;
 class Settings;
 class Prior;
 class BranchEvent;
+class Proposal;
 
 
 class SpExModel : public Model
@@ -20,13 +25,7 @@ public:
     SpExModel(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior);
 
     virtual double computeLogLikelihood();
-    
     virtual double computeLogPrior();
-
-    void updateLambdaInitMH();
-    void updateLambdaShiftMH();
-    void updateMuInitMH();
-    void updateMuShiftMH();
 
 	// Methods for auto-tuning
 	void setUpdateLambdaInitScale(double x);
@@ -39,7 +38,7 @@ private:
 
     virtual void initializeSpecificUpdateWeights();
 
-    virtual void proposeSpecificNewState(int parameter);
+    virtual Proposal* getSpecificProposal(int parameter);
     
     virtual void readModelSpecificParameters(std::ifstream& inputFile);
     virtual void setRootEventWithReadParameters();
@@ -55,6 +54,11 @@ private:
 
     virtual void getSpecificEventDataString
         (std::stringstream& ss, BranchEvent* event);
+
+    LambdaInitProposal _lambdaInitProposal;
+    LambdaShiftProposal _lambdaShiftProposal;
+    MuInitProposal _muInitProposal;
+    MuShiftProposal _muShiftProposal;
 
     double _updateLambdaInitScale;
     double _updateLambdaShiftScale;

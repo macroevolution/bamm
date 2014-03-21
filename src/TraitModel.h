@@ -10,6 +10,7 @@ class MbRandom;
 class Settings;
 class Prior;
 class BranchEvent;
+class Proposal;
 
 
 class TraitModel : public Model
@@ -37,7 +38,7 @@ private:
     virtual void setRootEventWithReadParameters();
 
     void initializeSpecificUpdateWeights();
-    virtual void proposeSpecificNewState(int parameter);
+    virtual Proposal* getSpecificProposal(int parameter);
 
     virtual BranchEvent* newBranchEventWithReadParameters(Node* x, double time);
     virtual BranchEvent* newBranchEventWithRandomParameters(double x);

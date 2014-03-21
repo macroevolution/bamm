@@ -13,8 +13,12 @@
 #include <cstdlib>
 
 
+// TODO: pointers not necessary; make references
 Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
-    _rng(rng), _tree(tree), _settings(settings), _prior(prior)
+    _rng(rng), _tree(tree), _settings(settings), _prior(prior),
+    _eventNumberProposal(*rng, *settings, *this),
+    _moveEventProposal(*rng, *settings, *this),
+    _eventRateProposal(*rng, *settings, *this, *prior)
 {
     // Reduce weird autocorrelation of values at start by calling RNG
     // a few times. TODO: Why is there a weird autocorrelation?
@@ -37,6 +41,8 @@ Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
     _rejectCount = 0;
     _acceptLast = -1;
 
+    _proposalFail = false;
+
     _lastDeletedEventMapTime = 0;
 
     _logQRatioJump = 0.0;
@@ -51,12 +57,13 @@ Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
 
 // This method needs to be called by the derived class
 void Model::finishConstruction()
+
 {
     calculateUpdateWeights();
 
     int initialNumberOfEvents = _settings->getInitialNumberEvents();
     for (int i = 0; i < initialNumberOfEvents; i++) {
-        addEventToTree();
+        addRandomEventToTree();
     }
 }
 
@@ -236,19 +243,29 @@ void Model::initializeUpdateWeights()
 
 void Model::proposeNewState()
 {
+    _proposalFail = false;
+
     int parameterToUpdate = chooseParameterToUpdate();
     _lastParameterUpdated = parameterToUpdate;
 
+    Proposal* proposal = NULL;
+
     if (parameterToUpdate == 0) {
-        changeNumberOfEventsMH();
+        proposal = &_eventNumberProposal;
     } else if (parameterToUpdate == 1) {
-        moveEventMH();
+        proposal = &_moveEventProposal;
     } else if (parameterToUpdate == 2) {
-        updateEventRateMH();
+        proposal = &_eventRateProposal;
     } else {
         // Defined by derived class
-        proposeSpecificNewState(parameterToUpdate);
+        proposal = getSpecificProposal(parameterToUpdate);
     }
+
+    if (proposal != NULL) {
+        proposal->propose();
+    }
+
+    _lastProposal = proposal;
 }
 
 
@@ -266,24 +283,19 @@ int Model::chooseParameterToUpdate()
 }
 
 
-void Model::addEventToTree()
+BranchEvent* Model::addRandomEventToTree()
 {
     double aa = _tree->getRoot()->getMapStart();
     double bb = _tree->getTotalMapLength();
     double x = _rng->uniformRv(aa, bb);
                 
-    addEventToTree(x);
+    BranchEvent* newEvent = newBranchEventWithRandomParameters(x);
+    return addEventToTree(newEvent);
 }
 
 
-// Adds event to tree based on reference map value
-// - Adds to branch history set
-// - Inserts into _eventCollection
-
-void Model::addEventToTree(double x)
+BranchEvent* Model::addEventToTree(BranchEvent* newEvent)
 {
-    BranchEvent* newEvent = newBranchEventWithRandomParameters(x);
-            
     // Add the event to the branch history.
     // Always done after event is added to tree.
     newEvent->getEventNode()->getBranchHistory()->
@@ -294,129 +306,34 @@ void Model::addEventToTree(double x)
     setMeanBranchParameters();
                             
     _lastEventModified = newEvent;
+
+    return newEvent;
 }
 
 
-// TODO: ctr is not doing anything
-BranchEvent* Model::chooseEventAtRandom()
-{
-    int numEvents = (int)_eventCollection.size();
+BranchEvent* Model::chooseEventAtRandom(bool includeRoot)
+{   
+    EventSet& events = _eventCollection;
+    int numberOfEvents = (int)events.size();
 
-    if (numEvents == 0) {
-        log(Error) << "Number of events is zero.\n";
-        std::exit(1);
+    int eventIndex = 0;
+    if (includeRoot) {
+        eventIndex = _rng->sampleInteger(0, numberOfEvents);
+    } else {
+        eventIndex = _rng->sampleInteger(0, numberOfEvents - 1);
     }
-
-    int ctr = 0;
-    double xx = _rng->uniformRv();
-    int chosen = (int)(xx * (double)numEvents);
-
-    EventSet::iterator sit = _eventCollection.begin();
-
-    for (int i = 0; i < chosen; i++) {
-        ++sit;
-        ctr++;
+    
+    if (eventIndex == numberOfEvents) {
+        return getRootEvent();
+    } else {
+        EventSet::iterator it = events.begin();
+        std::advance(it, eventIndex);
+        return *it;
     }
-
-    return *sit;
 }
 
 
-void Model::eventLocalMove(void)
-{
-    eventMove(true);
-}
-
-
-void Model::eventGlobalMove(void)
-{
-    eventMove(false);
-}
-
-
-// If events are on tree: choose event at random,
-// move locally (or globally) and forward set branch histories etc.
-// Should also store previous event information to revert to previous
-
-// If parameter local == true, does a local move;
-// otherwise, it does a global move
-
-void Model::eventMove(bool local)
-{
-    if (getNumberOfEvents() > 0) {
-        // The event to be moved
-        BranchEvent* chosenEvent = chooseEventAtRandom();
-
-        // This is the event preceding the chosen event:
-        // histories should be set forward from here.
-        BranchEvent* previousEvent = chosenEvent->getEventNode()->
-            getBranchHistory()->getLastEvent(chosenEvent);
-
-        // Set this history variable in case move is rejected
-        _lastEventModified = chosenEvent;
-
-        chosenEvent->getEventNode()->getBranchHistory()->
-            popEventOffBranchHistory(chosenEvent);
-
-        if (local) {
-            // Get step size for move
-            double step = _rng->uniformRv(0, _scale) - 0.5 * _scale;
-            chosenEvent->moveEventLocal(step);
-        } else {
-            chosenEvent->moveEventGlobal();
-        }
-
-        chosenEvent->getEventNode()->getBranchHistory()->
-            addEventToBranchHistory(chosenEvent);
-
-        // Get last event from the theEventNode, forward set its history.
-        // Then go to the "moved" event and forward set its history.
-
-        forwardSetBranchHistories(previousEvent);
-        forwardSetBranchHistories(chosenEvent);
-    }
-
-    setMeanBranchParameters();
-}
-
-
-// Used to reset position of event if move is rejected
-
-void Model::revertMovedEventToPrevious()
-{
-    // Get last event from position of event to be removed
-    BranchEvent* newLastEvent = _lastEventModified->getEventNode()->
-        getBranchHistory()->getLastEvent(_lastEventModified);
-
-    // Pop event off its new position
-    _lastEventModified->getEventNode()->getBranchHistory()->
-        popEventOffBranchHistory(_lastEventModified);
-
-    // Reset nodeptr, reset mapTime
-    _lastEventModified->revertOldMapPosition();
-
-    // Now reset forward from _lastEventModified (new position)
-    // and from newLastEvent, which holds 'last' event before old position
-    _lastEventModified->getEventNode()->getBranchHistory()->
-        addEventToBranchHistory(_lastEventModified);
-
-    // Forward set from new position
-    forwardSetBranchHistories(newLastEvent);
-
-    // Forward set from event immediately rootwards from previous position
-    forwardSetBranchHistories(_lastEventModified);
-
-    // Set _lastEventModified to NULL because it has already been reset.
-    // Future implementations should check whether this is NULL
-    // before attempting to use it to set event
-
-    _lastEventModified = NULL;
-
-    setMeanBranchParameters();
-}
-
-
-void Model::deleteEventFromTree(BranchEvent* be)
+BranchEvent* Model::removeEventFromTree(BranchEvent* be)
 {
     if (be ==_rootEvent) {
         log(Error) << "Can't delete root event.\n";
@@ -455,21 +372,21 @@ void Model::deleteEventFromTree(BranchEvent* be)
         std::exit(1);
     }
 
-    delete be;
-
     forwardSetBranchHistories(newLastEvent);
 
     setMeanBranchParameters();
+
+    return be;
 }
 
 
-void Model::deleteRandomEventFromTree()
+BranchEvent* Model::removeRandomEventFromTree()
 {
     int numEvents = (int)_eventCollection.size();
 
     // Can only delete event if more than root node present.
     if (numEvents == 0) {
-        return;
+        return NULL;
     }
 
     int counter = 0;
@@ -479,245 +396,11 @@ void Model::deleteRandomEventFromTree()
     EventSet::iterator it;
     for (it = _eventCollection.begin(); it != _eventCollection.end(); ++it) {
         if (counter++ == chosen) {
-            deleteEventFromTree(*it);
-            break;
+            return removeEventFromTree(*it);
         }
     }
-}
 
-
-void Model::restoreLastDeletedEvent()
-{   
-    // Use constructor for speciation and extinction
-    BranchEvent* newEvent = newBranchEventFromLastDeletedEvent();
-
-    // Add the event to the branch history.
-    // Always done after event is added to tree.
-    newEvent->getEventNode()->getBranchHistory()->
-        addEventToBranchHistory(newEvent);
-
-    _eventCollection.insert(newEvent);
-
-    // Event is now inserted into branch history;
-    // however, branch histories must be updated.
-    forwardSetBranchHistories(newEvent);
-
-    setMeanBranchParameters();
-}
-
-
-void Model::changeNumberOfEventsMH()
-{
-    bool addEvent = _rng->uniformRv() < 0.5;
-    if (addEvent || _eventCollection.size() == 0) {
-        addEventMH();
-    } else {
-        removeEventMH();
-    }
-}
-
-
-void Model::addEventMH()
-{
-    double oldLogLikelihood = getCurrentLogLikelihood();
-    double oldLogPrior = computeLogPrior();
-
-    int K = (int)_eventCollection.size();
-    double qRatio = (K > 0) ? 1.0 : 0.5;
-
-    addEventToTree();
-    setMeanBranchParameters();
-
-    double logLikelihood = computeLogLikelihood();
-    double logPrior = computeLogPrior();
-
-    double logHR = computeEventGainLogHR(K, logLikelihood, oldLogLikelihood,
-        logPrior, oldLogPrior, qRatio);
-
-    bool acceptMove = false;
-    double logLikelihoodRatio = logLikelihood - oldLogLikelihood;
-    if (!std::isinf(logLikelihoodRatio)) {  // TODO: When is this ever inifinte?
-        acceptMove = acceptMetropolisHastings(logHR);
-    }
-
-    bool isValidConfig = isEventConfigurationValid(_lastEventModified);
-    if (acceptMove && isValidConfig) {
-        setCurrentLogLikelihood(logLikelihood);
-        _acceptCount++;
-        _acceptLast = 1;
-    } else {
-        deleteEventFromTree(_lastEventModified);
-        setMeanBranchParameters();
-        _rejectCount++;
-        _acceptLast = 0;
-    }
-}
-
-
-double Model::computeEventGainLogHR(double K, double logLikelihood,
-    double oldLogLikelihood, double logPrior, double oldLogPrior, double qRatio)
-{
-    double logLikelihoodRatio = logLikelihood - oldLogLikelihood;
-    double logPriorRatio = logPrior - oldLogPrior + std::log(_eventRate) - std::log(K + 1.0);
-
-    double logQratio = std::log(qRatio) - _logQRatioJump;
-    
-    double logHR = computeLogHastingsRatio(logLikelihoodRatio, logPriorRatio, logQratio);
-    
-    return logHR;
-}
-
-
-void Model::removeEventMH()
-{
-    double oldLogLikelihood = getCurrentLogLikelihood();
-    double oldLogPrior = computeLogPrior();
-
-    int K = (int)_eventCollection.size();
-    double qRatio = (K != 1) ? 1.0 : 2.0;
-
-    deleteRandomEventFromTree();
-    setMeanBranchParameters();
-
-    double logLikelihood = computeLogLikelihood();
-    double logPrior = computeLogPrior();
-
-    // First get prior ratio:
-    double logHR = computeEventLossLogHR(K, logLikelihood, oldLogLikelihood,
-        logPrior, oldLogPrior, qRatio);
-
-    double logLikelihoodRatio = logLikelihood - oldLogLikelihood;
-    bool acceptMove = false;
-    if (!std::isinf(logLikelihoodRatio)) {
-        acceptMove = acceptMetropolisHastings(logHR);
-    }
-
-    if (acceptMove) {
-        setCurrentLogLikelihood(logLikelihood);
-        _acceptCount++;
-        _acceptLast = 1;
-    } else {
-        restoreLastDeletedEvent();
-        _rejectCount++;
-        _acceptLast = 0;
-    }
-}
-
-
-double Model::computeEventLossLogHR(double K, double logLikelihood,
-    double oldLogLikelihood, double logPrior, double oldLogPrior, double qRatio)
-{
-
-    double logLikelihoodRatio = logLikelihood - oldLogLikelihood;
-    
-    // This is probability of going from K to K - 1
-    // So, prior ratio includes (K / eventRate)
-    
-    double logPriorRatio = logPrior - oldLogPrior + std::log(K) - std::log(_eventRate);
-    
-    // For our purposes here, qRatio will include both the proposal ratio
-    // and the jumping density of the bijection between parameter spaces
-    
-    double logQratio = std::log(qRatio) + _logQRatioJump;
-    
-    double logHR = computeLogHastingsRatio(logLikelihoodRatio, logPriorRatio, logQratio);
-    
-    return logHR;
-}
-
-
-void Model::moveEventMH()
-{
-    // Consider proposal rejected (can't move nonexistent event)
-    if (_eventCollection.size() == 0) {
-        _rejectCount++;
-        _acceptLast = 0;
-        return;
-    }
-
-    double localMoveProb = _localGlobalMoveRatio / (1 + _localGlobalMoveRatio);
-
-    bool isLocalMove = _rng->uniformRv() < localMoveProb;
-
-    if (isLocalMove) {
-        // Local move, with event drawn at random
-        eventLocalMove();
-    } else {
-        eventGlobalMove();
-    }
-
-    setMeanBranchParameters();
-
-    double logLikelihood = computeLogLikelihood();
-    double logLikelihoodRatio = logLikelihood - getCurrentLogLikelihood();
-    
-    double logHR = computeLogHastingsRatio(logLikelihoodRatio, (double)0.0, double(0.0));
-    
-
-    bool isValid = isEventConfigurationValid(_lastEventModified);
-
-    bool acceptMove = false;
-    if (!std::isinf(logLikelihoodRatio) && isValid) {
-        acceptMove = acceptMetropolisHastings(logHR);
-    }
-
-    if (acceptMove) {
-        setCurrentLogLikelihood(logLikelihood);
-        _acceptCount++;
-        _acceptLast = 1;
-    } else {
-        revertMovedEventToPrevious();
-        setMeanBranchParameters();
-        _rejectCount++;
-        _acceptLast = 0;
-    }
-}
-
-
-/*
-   Metropolis-Hastings step to update Poisson event rate.
-   Note that changing this rate does not affect the likelihood,
-   so the priors and qratio determine acceptance rate.
-*/
-
-void Model::updateEventRateMH()
-{
-    double oldEventRate = getEventRate();
-
-    double cterm = std::exp(_updateEventRateScale * (_rng->uniformRv() - 0.5));
-    setEventRate(cterm * oldEventRate);
-
-    double logPriorRatio = _prior->poissonRatePrior(getEventRate());
-    logPriorRatio -= _prior->poissonRatePrior(oldEventRate);
-
-    double logProposalRatio = std::log(cterm);
-    
-    double logHR = computeLogHastingsRatio((double)0.0, logPriorRatio, logProposalRatio);
-    
-    bool acceptMove = acceptMetropolisHastings(logHR);
-
-    if (acceptMove) {
-        _acceptCount++;
-        _acceptLast = 1;
-    } else {
-        setEventRate(oldEventRate);
-        _rejectCount++;
-        _acceptLast = 0;
-    }
-}
-
-
-// The original code used here as a template from MrBayes is not correct:
-// It was raising the entire numerator of the Hastings Ratio
-// to the specified temperature, but temperature should only
-// be used for the ratio of posterior probabilities
-// WAS:     double r = safeExponentiation( Model::MhColdness * lnR );
-// with MhColdness equal to chain temperature (0 < MhColdness <= 1)
-
-bool Model::acceptMetropolisHastings(double lnR)
-{
-    double r = safeExponentiation( lnR );
-    return _rng->uniformRv() < r;
+    return NULL;
 }
 
 
@@ -771,6 +454,43 @@ bool Model::isEventConfigurationValid(BranchEvent* be)
     }
 
     return isValidConfig;
+}
+
+
+void Model::acceptProposal()
+{
+    if (_lastProposal != NULL) {
+        _lastProposal->accept();
+        _acceptCount++;
+        _acceptLast = 1;
+    } else {
+        _acceptLast = -1;
+    }
+}
+
+
+void Model::rejectProposal()
+{
+    if (_lastProposal != NULL) {
+        _lastProposal->reject();
+        _rejectCount++;
+        _acceptLast = 0;
+    } else {
+        _acceptLast = -1;
+    }
+}
+
+
+double Model::acceptanceRatio()
+{
+    if (_proposalFail) {
+        return 0.0;
+    }
+
+    double logRatioSum =
+        _temperatureMH * (_logLikelihoodRatio + _logPriorRatio) + _logQRatio;
+
+    return std::min(1.0, std::exp(logRatioSum));
 }
 
 

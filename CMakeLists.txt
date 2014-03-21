@@ -25,17 +25,24 @@ SET(GIT_COMMIT_ID "$(shell git rev-parse HEAD)")
 ADD_DEFINITIONS(-DGIT_COMMIT_ID=\"${GIT_COMMIT_ID}\")
 
 SET(BAMM_SRC
-    src/Autotune.cpp
     src/BranchEvent.cpp
     src/BranchHistory.cpp
     src/DataWriter.cpp
+    src/EventNumberProposal.cpp
+    src/EventRateProposal.cpp
     src/FastSimulatePrior.cpp
+    src/LambdaInitProposal.cpp
+    src/LambdaShiftProposal.cpp
     src/Log.cpp
     src/MCMC.cpp
     src/MbRandom.cpp
     src/Model.cpp
+    src/MoveEventProposal.cpp
+    src/MuInitProposal.cpp
+    src/MuShiftProposal.cpp
     src/Node.cpp
     src/Prior.cpp
+    src/Proposal.cpp
     src/Settings.cpp
     src/SettingsParameter.cpp
     src/SpExBranchEvent.cpp

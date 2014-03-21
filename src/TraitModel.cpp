@@ -106,8 +106,10 @@ void TraitModel::initializeSpecificUpdateWeights()
 }
 
 
-void TraitModel::proposeSpecificNewState(int parameter)
+Proposal* TraitModel::getSpecificProposal(int parameter)
 {
+    return NULL;
+/*
     if (parameter == 3) {
         updateBetaMH();
     } else if (parameter == 4) {
@@ -119,6 +121,7 @@ void TraitModel::proposeSpecificNewState(int parameter)
         log(Error) << "Bad parameter to update.\n";
         std::exit(1);
     }
+*/
 }
 
 
@@ -253,7 +256,9 @@ void TraitModel::updateBetaMH(void)
     
     double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
 
-    bool acceptMove = acceptMetropolisHastings(logHR);
+    // Commented out until Proposal is finished
+    // bool acceptMove = acceptMetropolisHastings(logHR);
+    bool acceptMove = true;
     
     //  std::cout << getGeneration() << "\tL1: " << startLH << "\tL2: " << getCurrentLogLikelihood() << std::endl;
     
@@ -329,7 +334,9 @@ void TraitModel::updateBetaShiftMH(void)
     
     double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
     
-    const bool acceptMove = acceptMetropolisHastings(logHR);
+    // Commented out until Proposal is finished
+    // bool acceptMove = acceptMetropolisHastings(logHR);
+    bool acceptMove = true;
     
     if (acceptMove == true) {
         
@@ -384,7 +391,9 @@ void TraitModel::updateNodeStateMH(void)
  
     double logHR = computeLogHastingsRatio(likeRatio, LogPriorRatio, logProposalRatio);
     
-    bool acceptMove = acceptMetropolisHastings(logHR);
+    // Commented out until Proposal is finished
+    // bool acceptMove = acceptMetropolisHastings(logHR);
+    bool acceptMove = true;
 
     // Here we do prior calculation to avoid computing infinity...
     if (newstate > _settings->getTraitPriorMax() ||
@@ -441,7 +450,9 @@ void TraitModel::updateNodeStateMH(Node* xnode)
 
     double logHR = computeLogHastingsRatio(likeRatio, LogPriorRatio, logProposalRatio);
 
-    bool acceptMove = acceptMetropolisHastings(logHR);
+    // Commented out until Proposal is finished
+    // bool acceptMove = acceptMetropolisHastings(logHR);
+    bool acceptMove = true;
 
     // Here we do prior calculation to avoid computing infinity...
     if (newstate > _settings->getTraitPriorMax() ||

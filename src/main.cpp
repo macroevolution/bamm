@@ -12,7 +12,7 @@
 #include "SpExModel.h"
 #include "Settings.h"
 #include "TraitModel.h"
-#include "Autotune.h"
+//#include "Autotune.h"
 #include "FastSimulatePrior.h"
 #include "Prior.h"
 #include "SpExDataWriter.h"
@@ -125,14 +125,15 @@ int main (int argc, char* argv[])
             if (mySettings.getRunMCMC()) {
                 int numberOfGenerations = mySettings.getNGENS();
                 SpExDataWriter dataWriter(mySettings, model);
-                MCMC mcmc(model, numberOfGenerations, dataWriter);
+                MCMC mcmc(myRNG, model, numberOfGenerations, dataWriter);
                 mcmc.run();
             }
-
+/*
             // TODO: Is this doing anything
             if (mySettings.getAutotune()) {
                 Autotune autotune(&myRNG, &model, &mySettings);
             }
+*/
         }
 
     } else if (mySettings.getModeltype() == "trait") {
@@ -155,15 +156,16 @@ int main (int argc, char* argv[])
             if (mySettings.getRunMCMC()) {
                 int numberOfGenerations = mySettings.getNGENS();
                 TraitDataWriter dataWriter(mySettings, model);
-                MCMC mcmc(model, numberOfGenerations, dataWriter);
+                MCMC mcmc(myRNG, model, numberOfGenerations, dataWriter);
                 mcmc.run();
             }
-
+/*
             if (mySettings.getAutotune()) {
                 log(Error) << "Autotune option not yet supported for "
                     << "phenotypic (trait) analysis.\n";
                 std::exit(1);
             }
+*/
         }
     }
 

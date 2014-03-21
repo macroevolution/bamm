@@ -2,6 +2,9 @@
 #define MODEL_H
 
 
+#include "EventNumberProposal.h"
+#include "MoveEventProposal.h"
+#include "EventRateProposal.h"
 #include "BranchEvent.h"
 
 #include <vector>
@@ -13,14 +16,15 @@ class Tree;
 class Settings;
 class Prior;
 class Node;
+class Proposal;
 
+
+typedef std::set<BranchEvent*, BranchEvent::PtrCompare> EventSet;
 
 class Model
 {
 
 public:
-
-    typedef std::set<BranchEvent*, BranchEvent::PtrCompare> EventSet;
 
     Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior);
     virtual ~Model();
@@ -49,30 +53,51 @@ public:
     void setCurrentLogLikelihood(double x);
     double getCurrentLogLikelihood();
 
+    void setProposedLogLikelihood(double proposedLogLikelihood);
+
     virtual double computeLogLikelihood() = 0;
     virtual double computeLogPrior() = 0;
+
+    void setLogLikelihoodRatio(double logLikelihoodRatio);
+    void setLogPriorRatio(double logPriorRatio);
+    void setLogQRatio(double logQRatio);
 
     void initializeModelFromEventDataFile();
 
     int getNumberOfEvents();
     BranchEvent* getRootEvent();
 
+    EventSet& events();
+
     void proposeNewState();
+    void acceptProposal();
+    void rejectProposal();
 
-    void changeNumberOfEventsMH();
-    void moveEventMH();
-    void updateEventRateMH();
+    void setProposalFail(bool fail);
 
-    void addEventToTree();
-    void addEventToTree(double x);
+    BranchEvent* chooseEventAtRandom(bool includeRoot = false);
 
-    void deleteEventFromTree(BranchEvent* be);
-    void deleteRandomEventFromTree();
+    // These functions take a branch event and recursively update
+    // the branch histories for all nodes going toward the tips
+    void forwardSetBranchHistories(BranchEvent* x);
+    void forwardSetHistoriesRecursive(Node* p);
+
+    BranchEvent* addRandomEventToTree();
+    BranchEvent* addEventToTree(BranchEvent* newEvent);
+
+    BranchEvent* removeEventFromTree(BranchEvent* be);
+    BranchEvent* removeRandomEventFromTree();
+
+    virtual void setMeanBranchParameters() = 0;
 
     void getEventDataString(std::stringstream& ss, int generation);
 
     double getModelTemperatureMH(void);
     void setModelTemperatureMH(double x);
+
+    double logQRatioJump();
+
+    double acceptanceRatio();
     
 protected:
 
@@ -80,40 +105,15 @@ protected:
     void initializeUpdateWeights();
     virtual void initializeSpecificUpdateWeights() = 0;
 
-    BranchEvent* chooseEventAtRandom();
-
     int chooseParameterToUpdate();
 
-    virtual void proposeSpecificNewState(int parameter) = 0;
-
-    void addEventMH();
-    void removeEventMH();
-
-    void revertMovedEventToPrevious();
-    void restoreLastDeletedEvent();
-
-    double computeEventGainLogHR(double K, double logLikelihood,
-        double oldLogLikelihood, double logPrior, double oldLogPrior,
-            double qRatio);
-
-    double computeEventLossLogHR(double K, double logLikelihood,
-        double oldLogLikelihood, double logPrior, double oldLogPrior,
-            double qRatio);
+    virtual Proposal* getSpecificProposal(int parameter) = 0;
 
     double computeLogHastingsRatio(double logLikRatio,
         double logPriorRatio, double logQratio);
 
-    void eventMove(bool local);
-    void eventLocalMove();
-    void eventGlobalMove();
-
     bool acceptMetropolisHastings(double lnR);
     bool isEventConfigurationValid(BranchEvent* be);
-
-    // These functions take a branch event and recursively update
-    // the branch histories for all nodes going toward the tips
-    void forwardSetBranchHistories(BranchEvent* x);
-    void forwardSetHistoriesRecursive(Node* p);
 
     double safeExponentiation(double x);
 
@@ -123,7 +123,6 @@ protected:
     virtual void setRootEventWithReadParameters() = 0;
     virtual BranchEvent* newBranchEventWithReadParameters
         (Node* x, double time) = 0;
-    virtual void setMeanBranchParameters() = 0;
 
     virtual BranchEvent* newBranchEventWithRandomParameters(double x) = 0;
 
@@ -140,8 +139,14 @@ protected:
     Settings* _settings;
     Prior* _prior;
 
+    EventNumberProposal _eventNumberProposal;
+    MoveEventProposal _moveEventProposal;
+    EventRateProposal _eventRateProposal;
+
     std::vector<double> _updateWeights;
     int _lastParameterUpdated;
+
+    Proposal* _lastProposal;
 
     // Parameters for MCMC proposals
     double _scale;    // scale for moving event
@@ -153,10 +158,18 @@ protected:
 
     double _logLikelihood;
 
+    double _logLikelihoodRatio;
+    double _logPriorRatio;
+    double _logQRatio;
+
+    double _proposedLogLikelihood;
+
     int _acceptCount;
     int _rejectCount;
     int _acceptLast;    // true if last generation was accept; false otherwise
     // 0 = last was rejected; 1 = accepted; -1 = not set.
+
+    bool _proposalFail;
 
     EventSet _eventCollection;
     BranchEvent* _rootEvent;
@@ -191,6 +204,12 @@ inline void Model::setMoveSizeScale(double x)
 inline int Model::getLastParameterUpdated()
 {
     return _lastParameterUpdated;
+}
+
+
+inline EventSet& Model::events()
+{
+    return _eventCollection;
 }
 
 
@@ -236,6 +255,12 @@ inline void Model::setAcceptLastUpdate(int x)
 }
 
 
+inline void Model::setProposalFail(bool fail)
+{
+    _proposalFail = fail;
+}
+
+
 inline int Model::getNumberOfEvents()
 {
     return (int)_eventCollection.size();
@@ -259,20 +284,48 @@ inline double Model::getCurrentLogLikelihood()
     return _logLikelihood;
 }
 
+
+inline void Model::setLogLikelihoodRatio(double logLikelihoodRatio)
+{
+    _logLikelihoodRatio = logLikelihoodRatio;
+}
+
+
+inline void Model::setLogPriorRatio(double logPriorRatio)
+{
+    _logPriorRatio = logPriorRatio;
+}
+
+
+inline void Model::setLogQRatio(double logQRatio)
+{
+    _logQRatio = logQRatio;
+}
+
+
+inline void Model::setProposedLogLikelihood(double proposedLogLikelihood)
+{
+    _proposedLogLikelihood = proposedLogLikelihood;
+}
+
+
 inline double Model::getModelTemperatureMH()
 {
     return _temperatureMH;
 }
 
 
-inline double Model::computeLogHastingsRatio(double logLikRatio,
-                                            double logPriorRatio, double logQratio)
+inline double Model::logQRatioJump()
 {
-    return (_temperatureMH * (logLikRatio + logPriorRatio) + logQratio);
-    
+    return _logQRatioJump;
 }
 
 
+inline double Model::computeLogHastingsRatio
+    (double logLikRatio, double logPriorRatio, double logQratio)
+{
+    return (_temperatureMH * (logLikRatio + logPriorRatio) + logQratio);
+}
 
 
 #endif

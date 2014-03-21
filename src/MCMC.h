@@ -6,6 +6,7 @@
 #include <string>
 #include <fstream>
 
+class MbRandom;
 class Model;
 class DataWriter;
 
@@ -14,14 +15,17 @@ class MCMC
 {
 public:
 
-    MCMC(Model& model, int numberOfGenerations, DataWriter& dataWriter);
+    MCMC(MbRandom& rng, Model& model, int numberOfGenerations,
+        DataWriter& dataWriter);
     ~MCMC();
 
     void run();
 
 protected:
 
+    MbRandom& _rng;
     Model& _model;
+
     int _numberOfGenerations;
     DataWriter& _dataWriter;
 };

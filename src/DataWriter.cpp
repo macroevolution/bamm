@@ -149,5 +149,5 @@ void DataWriter::writeAcceptanceData()
     int accepted = _model.getAcceptLastUpdate();
     _model.setAcceptLastUpdate(-1);
 
-    _acceptanceOutputStream << param << "," << (accepted ? 1 : 0) << std::endl;
+    _acceptanceOutputStream << param << "," << accepted << std::endl;
 }

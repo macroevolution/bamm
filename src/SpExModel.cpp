@@ -42,7 +42,11 @@
 
 
 SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
-    Model(ranptr, tp, sp, pr)
+    Model(ranptr, tp, sp, pr),
+    _lambdaInitProposal(*ranptr, *sp, *this, *pr),
+    _lambdaShiftProposal(*ranptr, *sp, *this, *pr),
+    _muInitProposal(*ranptr, *sp, *this, *pr),
+    _muShiftProposal(*ranptr, *sp, *this, *pr)
 {
     // Initialize MCMC proposal/tuning parameters
     _updateLambdaInitScale = _settings->getUpdateLambdaInitScale();
@@ -115,16 +119,16 @@ void SpExModel::initializeSpecificUpdateWeights()
 }
 
 
-void SpExModel::proposeSpecificNewState(int parameter)
+Proposal* SpExModel::getSpecificProposal(int parameter)
 {
     if (parameter == 3) {
-        updateLambdaInitMH();
+        return &_lambdaInitProposal;
     } else if (parameter == 4) {
-        updateLambdaShiftMH();
+        return &_lambdaShiftProposal;
     } else if (parameter == 5) {
-        updateMuInitMH();
+        return &_muInitProposal;
     } else if (parameter == 6) {
-        updateMuShiftMH();
+        return &_muShiftProposal;
     } else {
         // Should never get here
         log(Error) << "Bad parameter to update.\n";
@@ -174,6 +178,7 @@ BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
     double newMu = _prior->generateMuInitFromPrior();
     double newMuShift = _prior->generateMuShiftFromPrior();
  
+    // TODO: This needs to be refactored somewhere else
     // Computes the jump density for the addition of new parameters.
     _logQRatioJump = 0.0;    // Set to zero to clear previous values
     _logQRatioJump = _prior->lambdaInitPrior(newLam);
@@ -225,326 +230,8 @@ BranchEvent* SpExModel::newBranchEventFromLastDeletedEvent()
 }
 
 
-void SpExModel::updateLambdaInitMH(void)
-{
-
-    //int n_events = _eventCollection.size() + 1;
-    int toUpdate =_rng->sampleInteger(0, (int)_eventCollection.size());
-    SpExBranchEvent* be = static_cast<SpExBranchEvent*>(_rootEvent);
-
-    if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
-        for (int i = 1; i < toUpdate; i++)
-            myIt++;
-
-        be = static_cast<SpExBranchEvent*>(*myIt);
-    }
-
-    double oldRate = be->getLamInit();
-    double cterm = exp( _updateLambdaInitScale * (_rng->uniformRv() - 0.5) );
-
-    be->setLamInit(cterm * oldRate);
-
-#ifdef NO_DATA
-    double PropLnLik = 0;
-#else
-
-    _tree->setNodeSpeciationParameters();
-    _tree->setNodeExtinctionParameters();
-    
-    //_tree->setMeanBranchSpeciation();
-    //_tree->setMeanBranchExtinction();
-
-    double PropLnLik = computeLogLikelihood();
-
-#endif
-
-    double logPriorRatio = 0.0;
-    if (be == _rootEvent){
-        logPriorRatio = _prior->lambdaInitRootPrior(be->getLamInit());
-        logPriorRatio -= _prior->lambdaInitRootPrior(oldRate);
-    } else {
-        logPriorRatio = _prior->lambdaInitPrior(be->getLamInit());
-        logPriorRatio -= _prior->lambdaInitPrior(oldRate);
-    }
-
-    double LogProposalRatio = log(cterm);
-    double likeRatio = PropLnLik - getCurrentLogLikelihood();
-
-    double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
-
-    bool acceptMove = false;
-    if (std::isinf(likeRatio) ) {
-
-    } else
-        acceptMove = acceptMetropolisHastings(logHR);
-
-
-    if (acceptMove == true) {
-
-        setCurrentLogLikelihood(PropLnLik);
-        _acceptCount++;
-        _acceptLast = 1;
-    } else {
-
-        // revert to previous state
-        be->setLamInit(oldRate);
-
-        _tree->setNodeSpeciationParameters();
-        _tree->setNodeExtinctionParameters();
-        
-        //_tree->setMeanBranchSpeciation();
-        //_tree->setMeanBranchExtinction();
-
-        _acceptLast = 0;
-        _rejectCount++;
-    }
-}
-
-void SpExModel::updateLambdaShiftMH(void)
-{
-
-    //int n_events = _eventCollection.size() + 1;
-    int toUpdate =_rng->sampleInteger(0, (int)_eventCollection.size());
-    SpExBranchEvent* be = static_cast<SpExBranchEvent*>(_rootEvent);
-
-    if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
-        for (int i = 1; i < toUpdate; i++)
-            myIt++;
-
-        be = static_cast<SpExBranchEvent*>(*myIt);
-    }
-
-    double oldLambdaShift = be->getLamShift();
-    double newLambdaShift = oldLambdaShift +_rng->normalRv((double)0.0,
-                            _updateLambdaShiftScale);
-    be->setLamShift(newLambdaShift);
-
-
-#ifdef NO_DATA
-    double PropLnLik = 0;
-#else
-
-    _tree->setNodeSpeciationParameters();
-    _tree->setNodeExtinctionParameters();
-    
-    //_tree->setMeanBranchSpeciation();
-    //_tree->setMeanBranchExtinction();
-
-    double PropLnLik = computeLogLikelihood();
-
-#endif
-
-    double logPriorRatio = 0.0;
-    if (be == _rootEvent){
-        logPriorRatio = _prior->lambdaShiftRootPrior(be->getLamShift());
-        logPriorRatio -= _prior->lambdaShiftRootPrior(oldLambdaShift);
-    } else {
-        logPriorRatio = _prior->lambdaShiftPrior(be->getLamShift());
-        logPriorRatio -= _prior->lambdaShiftPrior(oldLambdaShift);
-    }
-
-    double LogProposalRatio = 0.0;
-
-    double likeRatio = PropLnLik - getCurrentLogLikelihood();
-
-    double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
-
-    bool acceptMove = false;
-    if (std::isinf(likeRatio) ) {
-
-    } else
-        acceptMove = acceptMetropolisHastings(logHR);
-
-
-
-    if (acceptMove == true) {
-
-        setCurrentLogLikelihood(PropLnLik);
-        _acceptCount++;
-        _acceptLast = 1;
-    } else {
-
-        // revert to previous state
-        be->setLamShift(oldLambdaShift);
-
-        _tree->setNodeSpeciationParameters();
-        _tree->setNodeExtinctionParameters();
-        
-        //_tree->setMeanBranchSpeciation();
-        //_tree->setMeanBranchExtinction();
-
-        _acceptLast = 0;
-        _rejectCount++;
-    }
-}
-
-
-void SpExModel::updateMuInitMH(void)
-{
-
-    //int n_events = _eventCollection.size() + 1;
-    int toUpdate =_rng->sampleInteger(0, (int)_eventCollection.size());
-    SpExBranchEvent* be = static_cast<SpExBranchEvent*>(_rootEvent);
-
-    if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
-        for (int i = 1; i < toUpdate; i++)
-            myIt++;
-
-        be = static_cast<SpExBranchEvent*>(*myIt);
-    }
-
-    double oldRate = be->getMuInit();
-    double cterm = exp( _updateMuInitScale * (_rng->uniformRv() - 0.5) );
-
-    be->setMuInit(cterm * oldRate);
-
-#ifdef NO_DATA
-    double PropLnLik = 0;
-#else
-    
-    _tree->setNodeSpeciationParameters();
-    _tree->setNodeExtinctionParameters();
-    
-    //_tree->setMeanBranchSpeciation();
-    //_tree->setMeanBranchExtinction();
-
-    double PropLnLik = computeLogLikelihood();
-
-#endif
-
-    double logPriorRatio = 0.0;
-    if (be == _rootEvent){
-        logPriorRatio = _prior->muInitRootPrior(be->getMuInit());
-        logPriorRatio -= _prior->muInitRootPrior(oldRate);
-    } else {
-        logPriorRatio = _prior->muInitPrior(be->getMuInit());
-        logPriorRatio -= _prior->muInitPrior(oldRate);
-    }
-
-    double LogProposalRatio = log(cterm);
-
-    double likeRatio = PropLnLik - getCurrentLogLikelihood();
-
-    double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
-
-    bool acceptMove = false;
-    if (std::isinf(likeRatio) ) {
-
-    } else
-        acceptMove = acceptMetropolisHastings(logHR);
-
-
-    if (acceptMove == true) {
-
-        setCurrentLogLikelihood(PropLnLik);
-        _acceptCount++;
-        _acceptLast = 1;
-    } else {
-
-        // revert to previous state
-        be->setMuInit(oldRate);
-
-        _tree->setNodeSpeciationParameters();
-        _tree->setNodeExtinctionParameters();
-        
-        //_tree->setMeanBranchSpeciation();
-        //_tree->setMeanBranchExtinction();
-
-        _acceptLast = 0;
-        _rejectCount++;
-    }
-}
-
-
-void SpExModel::updateMuShiftMH(void)
-{
-
-    //int n_events = _eventCollection.size() + 1;
-    int toUpdate =_rng->sampleInteger(0, (int)_eventCollection.size());
-    SpExBranchEvent* be = static_cast<SpExBranchEvent*>(_rootEvent);
-
-    if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
-        for (int i = 1; i < toUpdate; i++)
-            myIt++;
-
-        be = static_cast<SpExBranchEvent*>(*myIt);
-    }
-
-    double oldMuShift = be->getMuShift();
-    double newMuShift = oldMuShift +_rng->normalRv((double)0.0,
-                        _updateMuShiftScale);
-
-    be->setMuShift(newMuShift);
-
-#ifdef NO_DATA
-    double PropLnLik = 0;
-#else
-
-    _tree->setNodeSpeciationParameters();
-    _tree->setNodeExtinctionParameters();
-    
-    //_tree->setMeanBranchSpeciation();
-    //_tree->setMeanBranchExtinction();
-
-    double PropLnLik = computeLogLikelihood();
-
-#endif
-
-    double logPriorRatio = 0.0;
-    if (be == _rootEvent){
-        logPriorRatio = _prior->muShiftRootPrior(be->getMuShift());
-        logPriorRatio -= _prior->muShiftRootPrior(oldMuShift);
-    } else {
-        logPriorRatio = _prior->muShiftPrior(be->getMuShift());
-        logPriorRatio -= _prior->muShiftPrior(oldMuShift);
-    } 
-
-    double LogProposalRatio = 0.0;
-    
-    double likeRatio = PropLnLik - getCurrentLogLikelihood();
-
-    double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
- 
-    bool acceptMove = false;
-
-
-
-    if (std::isinf(likeRatio) ) {
-
-    } else
-        acceptMove = acceptMetropolisHastings(logHR);
-
-
-    if (acceptMove == true) {
-
-        setCurrentLogLikelihood(PropLnLik);
-        _acceptCount++;
-        _acceptLast = 1;
-
-    } else {
-
-        // revert to previous state
-        be->setMuShift(oldMuShift);
-
-        _tree->setNodeSpeciationParameters();
-        _tree->setNodeExtinctionParameters();
-        
-        //_tree->setMeanBranchSpeciation();
-        //_tree->setMeanBranchExtinction();
-
-        _acceptLast = 0;
-        _rejectCount++;
-    }
-}
-
-
 double SpExModel::computeLogLikelihood()
 {
-
     return computeLogLikelihoodByInterval();
 }
 
