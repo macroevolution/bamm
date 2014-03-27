@@ -2,6 +2,9 @@
 #define TRAIT_MODEL_H
 
 #include "Model.h"
+#include "BetaInitProposal.h"
+#include "BetaShiftProposal.h"
+
 #include <iosfwd>
 
 class Tree;
@@ -25,8 +28,6 @@ public:
 
     virtual double computeLogPrior();
 
-    void updateBetaMH();
-    void updateBetaShiftMH();
     void updateNodeStateMH();
     void updateNodeStateMH(Node* xnode);
 
@@ -52,7 +53,9 @@ private:
     virtual void getSpecificEventDataString
         (std::stringstream& ss, BranchEvent* event);
 
-    double _updateBetaScale;
+    BetaInitProposal _betaInitProposal;
+    BetaShiftProposal _betaShiftProposal;
+
     double _updateBetaShiftScale;
     double _updateNodeStateScale;
 

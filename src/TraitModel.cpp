@@ -32,11 +32,10 @@
 
 
 TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
-    Prior* prior) : Model(rng, tree, settings, prior)
+    Prior* prior) : Model(rng, tree, settings, prior),
+    _betaInitProposal(*rng, *settings, *this, *prior),
+    _betaShiftProposal(*rng, *settings, *this, *prior)
 {
-    _updateBetaScale = _settings->getUpdateBetaInitScale();
-    _updateBetaShiftScale = _settings->getUpdateBetaShiftScale();
-
     // Node state scale is relative to the standard deviation
     // of the trait values (located in the tree terminal nodes)
     double sd_traits = Stat::standard_deviation(_tree->traitValues());
@@ -108,20 +107,18 @@ void TraitModel::initializeSpecificUpdateWeights()
 
 Proposal* TraitModel::getSpecificProposal(int parameter)
 {
-    return NULL;
-/*
     if (parameter == 3) {
-        updateBetaMH();
+        return &_betaInitProposal;
     } else if (parameter == 4) {
-        updateBetaShiftMH();
-    } else if (parameter == 5) {
+        return &_betaShiftProposal;
+/*    } else if (parameter == 5) {
         updateNodeStateMH();
+*/
     } else {
         // Should never get here
-        log(Error) << "Bad parameter to update.\n";
-        std::exit(1);
+//        log(Warning) << "Bad parameter to update.\n";
+        return NULL;
     }
-*/
 }
 
 
@@ -209,151 +206,6 @@ BranchEvent* TraitModel::newBranchEventFromLastDeletedEvent()
     return newEvent;
 }
 
-
-void TraitModel::updateBetaMH(void)
-{
-    int toUpdate = _rng->sampleInteger(0, (int)_eventCollection.size());
-    
-    TraitBranchEvent* be = static_cast<TraitBranchEvent*>(_rootEvent);
-    
-    if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
-        for (int i = 1; i < toUpdate; i++)
-            myIt++;
-        
-        be = static_cast<TraitBranchEvent*>(*myIt);
-    }
-    
-    
-    double oldRate = be->getBetaInit();
-    double cterm = exp( _updateBetaScale * (_rng->uniformRv() - 0.5) );
-    be->setBetaInit(cterm * oldRate);
-    _tree->setMeanBranchTraitRates();
-    
-#ifdef NO_DATA
-    double PropLnLik = 0;
-#else
-    
-    double PropLnLik = computeLogLikelihood();
-    
-#endif
-
-    double logPriorRatio = 0.0;
-    if (be == _rootEvent){
-        logPriorRatio = _prior->betaInitRootPrior(be->getBetaInit());
-        logPriorRatio -= _prior->betaInitRootPrior(oldRate);
-    } else {
-        logPriorRatio = _prior->betaInitPrior(be->getBetaInit());
-        logPriorRatio -= _prior->betaInitPrior(oldRate);
-    }
-
-    
-    
-    
-    double LogProposalRatio = log(cterm);
-    
-    double likeRatio = PropLnLik - getCurrentLogLikelihood();
-    
-    double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
-
-    // Commented out until Proposal is finished
-    // bool acceptMove = acceptMetropolisHastings(logHR);
-    bool acceptMove = true;
-    
-    //  std::cout << getGeneration() << "\tL1: " << startLH << "\tL2: " << getCurrentLogLikelihood() << std::endl;
-    
-    
-    if (acceptMove == true) {
-        //std::cout << "accept: " << oldRate << "\t" << be->getBetaInit() << std::endl;
-        setCurrentLogLikelihood(PropLnLik);
-        _acceptCount++;
-        _acceptLast = 1;
-        
-    } else {
-        
-        be->setBetaInit(oldRate);
-        _tree->setMeanBranchTraitRates();
-        _acceptLast = 0;
-        _rejectCount++;
-        
-    }
-    
-    /*if (!acceptMove){
-     std::cout << std::endl;
-     std::cout << startLL << "\tCurr: " << getCurrentLogLikelihood() << "\tcalc: " << computeLogLikelihood() << std::endl;
-     }*/
-}
-
-
-void TraitModel::updateBetaShiftMH(void)
-{
-    int toUpdate = _rng->sampleInteger(0, (int)_eventCollection.size());
-    
-    TraitBranchEvent* be = static_cast<TraitBranchEvent*>(_rootEvent);
-    
-    if (toUpdate > 0) {
-        std::set<BranchEvent*>::iterator myIt = _eventCollection.begin();
-        for (int i = 1; i < toUpdate; i++)
-            myIt++;
-        
-        be = static_cast<TraitBranchEvent*>(*myIt);
-    }
-    
-    double oldShift = be->getBetaShift();
-    double newShift = oldShift + _rng->normalRv((double)0.0, _updateBetaShiftScale);
-    
-
-#ifdef NEGATIVE_SHIFT_PARAM
-    
-    newShift = -fabs(newShift);
-    
-#endif
-    
-    be->setBetaShift(newShift);
-    _tree->setMeanBranchTraitRates();
-    
-#ifdef NO_DATA
-    double PropLnLik = 0;
-#else
-    double PropLnLik = computeLogLikelihood();
-    
-#endif
-
-    double logPriorRatio = 0.0;
-    if (be == _rootEvent){
-        logPriorRatio = _prior->betaShiftRootPrior(be->getBetaShift());
-        logPriorRatio -= _prior->betaShiftRootPrior(oldShift);
-    } else {
-        logPriorRatio = _prior->betaShiftPrior(be->getBetaShift());
-        logPriorRatio -= _prior->betaShiftPrior(oldShift);
-    }
-
-    double LogProposalRatio = 0.0;
-    
-    double likeRatio = PropLnLik - getCurrentLogLikelihood();
-    
-    double logHR = computeLogHastingsRatio(likeRatio, logPriorRatio, LogProposalRatio);
-    
-    // Commented out until Proposal is finished
-    // bool acceptMove = acceptMetropolisHastings(logHR);
-    bool acceptMove = true;
-    
-    if (acceptMove == true) {
-        
-        setCurrentLogLikelihood(PropLnLik);
-        _acceptCount++;
-        _acceptLast = 1;
-        
-    } else {
-        
-        // revert to previous state
-        be->setBetaShift(oldShift);
-        _tree->setMeanBranchTraitRates();
-        _acceptLast = 0;
-        _rejectCount++;
-        
-    }
-}
 
 void TraitModel::updateNodeStateMH(void)
 {
