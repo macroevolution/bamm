@@ -33,6 +33,8 @@ protected:
     virtual void setProposedParameterValue() = 0;
     virtual void revertToOldParameterValue() = 0;
 
+    virtual void updateParameterOnTree() = 0;
+
     virtual double computeLogLikelihoodRatio();
     virtual double computeLogPriorRatio();
     virtual double computeRootLogPriorRatio();

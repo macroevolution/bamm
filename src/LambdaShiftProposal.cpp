@@ -3,6 +3,7 @@
 #include "Settings.h"
 #include "Model.h"
 #include "Prior.h"
+#include "Tree.h"
 #include "SpExBranchEvent.h"
 
 
@@ -35,6 +36,13 @@ void LambdaShiftProposal::setProposedParameterValue()
 void LambdaShiftProposal::revertToOldParameterValue()
 {
     static_cast<SpExBranchEvent*>(_event)->setLamShift(_currentParameterValue);
+}
+
+
+void LambdaShiftProposal::updateParameterOnTree()
+{   
+    _tree->setNodeSpeciationParameters();
+    _tree->setNodeExtinctionParameters();
 }
 
 

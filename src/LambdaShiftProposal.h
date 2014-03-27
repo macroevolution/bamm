@@ -25,6 +25,8 @@ private:
     virtual void setProposedParameterValue();
     virtual void revertToOldParameterValue();
 
+    virtual void updateParameterOnTree();
+
     virtual double computeRootLogPriorRatio();
     virtual double computeNonRootLogPriorRatio();
 

@@ -24,8 +24,7 @@ void EventParameterProposal::propose()
     _proposedParameterValue = computeNewParameterValue();
     setProposedParameterValue();
 
-    _tree->setNodeSpeciationParameters();
-    _tree->setNodeExtinctionParameters();
+    updateParameterOnTree();
 
     _proposedLogLikelihood = _model.computeLogLikelihood();
 }
@@ -40,9 +39,7 @@ void EventParameterProposal::accept()
 void EventParameterProposal::reject()
 {
     revertToOldParameterValue();
-
-    _tree->setNodeSpeciationParameters();
-    _tree->setNodeExtinctionParameters();
+    updateParameterOnTree();
 }
 
 

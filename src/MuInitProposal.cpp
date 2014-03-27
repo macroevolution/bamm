@@ -3,6 +3,7 @@
 #include "Settings.h"
 #include "Model.h"
 #include "Prior.h"
+#include "Tree.h"
 #include "SpExBranchEvent.h"
 
 
@@ -36,6 +37,13 @@ void MuInitProposal::setProposedParameterValue()
 void MuInitProposal::revertToOldParameterValue()
 {
     static_cast<SpExBranchEvent*>(_event)->setMuInit(_currentParameterValue);
+}
+
+
+void MuInitProposal::updateParameterOnTree()
+{   
+    _tree->setNodeSpeciationParameters();
+    _tree->setNodeExtinctionParameters();
 }
 
 
