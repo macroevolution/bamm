@@ -57,16 +57,16 @@ void NodeStateProposal::propose()
 
     double currentTriadLogLikelihood =
         _model.computeTriadLikelihoodTraits(_node);
-    _currentLogLikelihood = _model.computeLogLikelihood();
+    _currentLogLikelihood = _model.getCurrentLogLikelihood();
     _currentNodeState = _node->getTraitValue();
 
-    _proposedNodeState = _rng.uniformRv
+    _proposedNodeState = _currentNodeState + _rng.uniformRv
         (-_updateNodeStateScale, _updateNodeStateScale);
     _node->setTraitValue(_proposedNodeState);
 
     double proposedTriadLogLikelihood =
         _model.computeTriadLikelihoodTraits(_node);
-    _proposedLogLikelihood = _model.computeLogLikelihood() -
+    _proposedLogLikelihood = _currentLogLikelihood -
         currentTriadLogLikelihood + proposedTriadLogLikelihood;
 }
 
