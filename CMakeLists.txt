@@ -44,6 +44,7 @@ SET(BAMM_SRC
     src/MuInitProposal.cpp
     src/MuShiftProposal.cpp
     src/Node.cpp
+    src/NodeStateProposal.cpp
     src/Prior.cpp
     src/Proposal.cpp
     src/Settings.cpp

@@ -34,15 +34,9 @@
 TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
     Prior* prior) : Model(rng, tree, settings, prior),
     _betaInitProposal(*rng, *settings, *this, *prior),
-    _betaShiftProposal(*rng, *settings, *this, *prior)
+    _betaShiftProposal(*rng, *settings, *this, *prior),
+    _nodeStateProposal(*rng, *settings, *this)
 {
-    // Node state scale is relative to the standard deviation
-    // of the trait values (located in the tree terminal nodes)
-    double sd_traits = Stat::standard_deviation(_tree->traitValues());
-    _updateNodeStateScale = _settings->getUpdateNodeStateScale() * sd_traits;
-
-    setMinMaxTraitPriors();
-
 #ifdef NEGATIVE_SHIFT_PARAM
     // Constrain beta shift to be zero or less than zero.
     if (_settings->getBetaShiftInit() > 0) {
@@ -111,12 +105,11 @@ Proposal* TraitModel::getSpecificProposal(int parameter)
         return &_betaInitProposal;
     } else if (parameter == 4) {
         return &_betaShiftProposal;
-/*    } else if (parameter == 5) {
-        updateNodeStateMH();
-*/
+    } else if (parameter == 5) {
+        return &_nodeStateProposal;
     } else {
         // Should never get here
-//        log(Warning) << "Bad parameter to update.\n";
+        log(Warning) << "Bad parameter to update.\n";
         return NULL;
     }
 }
@@ -204,124 +197,6 @@ BranchEvent* TraitModel::newBranchEventFromLastDeletedEvent()
     newEvent->setBetaShift(_lastDeletedEventBetaShift);
 
     return newEvent;
-}
-
-
-void TraitModel::updateNodeStateMH(void)
-{
-
-    Node* xnode = _tree->chooseInternalNodeAtRandom();
-
-#ifdef NO_DATA
-
-#else
-    double oldTriadLogLik = computeTriadLikelihoodTraits(xnode);
-
-#endif
-
-    double oldstate = xnode->getTraitValue();
-    double newstate = oldstate +
-        _rng->uniformRv(-1.0 * _updateNodeStateScale, _updateNodeStateScale);
-    xnode->setTraitValue(newstate);
-
-#ifdef NO_DATA
-    double PropLnLik = 0.0;
-#else
-    // Compute triad likelihood
-    double newTriadLoglik = computeTriadLikelihoodTraits(xnode);
-    double PropLnLik = getCurrentLogLikelihood() - oldTriadLogLik + newTriadLoglik;
-
-#endif
-
-    // set to zero for now...flat prior, unifor (see below).
-    double LogPriorRatio = 0.0;
-
-
-    double logProposalRatio = 0.0; // proposal ratio for uniform = 1.0
-
-    double likeRatio = PropLnLik - getCurrentLogLikelihood();
- 
-    double logHR = computeLogHastingsRatio(likeRatio, LogPriorRatio, logProposalRatio);
-    
-    // Commented out until Proposal is finished
-    // bool acceptMove = acceptMetropolisHastings(logHR);
-    bool acceptMove = true;
-
-    // Here we do prior calculation to avoid computing infinity...
-    if (newstate > _settings->getTraitPriorMax() ||
-            newstate < _settings->getTraitPriorMin())
-        acceptMove = false;
-    if (acceptMove == true) {
-        //continue
-        setCurrentLogLikelihood(PropLnLik);
-        _acceptCount++;
-        _acceptLast = 1;
-
-    } else {
-        xnode->setTraitValue(oldstate);
-
-        _rejectCount++;
-        _acceptLast = 0;
-    }
-}
-
-
-void TraitModel::updateNodeStateMH(Node* xnode)
-{
-
-#ifdef NO_DATA
-
-#else
-    double oldTriadLogLik = computeTriadLikelihoodTraits(xnode);
-
-#endif
-
-    double oldstate = xnode->getTraitValue();
-    double newstate = oldstate + _rng->uniformRv((-1.0 *
-                      _settings->getUpdateNodeStateScale()), _settings->getUpdateNodeStateScale());
-    xnode->setTraitValue(newstate);
-
-#ifdef NO_DATA
-    double PropLnLik = 0.0;
-#else
-    // Compute triad likelihood
-    double newTriadLoglik = computeTriadLikelihoodTraits(xnode);
-    double PropLnLik = getCurrentLogLikelihood() - oldTriadLogLik + newTriadLoglik;
-
-
-
-#endif
-
-    // set to zero for now...flat prior, unifor (see below).
-    double LogPriorRatio = 0.0;
-
-
-    double logProposalRatio = 0.0; // proposal ratio for uniform = 1.0
-
-    double likeRatio = PropLnLik - getCurrentLogLikelihood();
-
-    double logHR = computeLogHastingsRatio(likeRatio, LogPriorRatio, logProposalRatio);
-
-    // Commented out until Proposal is finished
-    // bool acceptMove = acceptMetropolisHastings(logHR);
-    bool acceptMove = true;
-
-    // Here we do prior calculation to avoid computing infinity...
-    if (newstate > _settings->getTraitPriorMax() ||
-            newstate < _settings->getTraitPriorMin())
-        acceptMove = false;
-    if (acceptMove == true) {
-        //continue
-        setCurrentLogLikelihood(PropLnLik);
-        _acceptCount++;
-        _acceptLast = 1;
-
-    } else {
-        xnode->setTraitValue(oldstate);
-
-        _rejectCount++;
-        _acceptLast = 0;
-    }
 }
 
 
@@ -431,9 +306,6 @@ double TraitModel::computeTriadLikelihoodTraits(Node* x)
 }
 
 
-
-
-
 double TraitModel::computeLogPrior(void)
 {
 #ifdef NEGATIVE_SHIFT_PARAM
@@ -475,30 +347,4 @@ void TraitModel::getSpecificEventDataString
 
     ss << be->getBetaInit() << ","
     << be->getBetaShift();
-}
-
-
-void TraitModel::setMinMaxTraitPriors(void)
-{
-    int nnodes = _tree->getNumberOfNodes();
-    std::vector<double> tvec;
-    for (int i = 0; i < nnodes; i++) {
-        Node* xnode = _tree->getNodeFromDownpassSeq(i);
-        if (xnode->getTraitValue() != 0)
-            tvec.push_back(xnode->getTraitValue());
-    }
-
-    std::sort(tvec.begin(), tvec.end());
-
-    // std::cout << "Min: " << tvec[0] << "\tMax: " << tvec[(tvec.size() - 1)] << std::endl;
-
-    // Default here will be to use observed range +/- 20%
-    double rg = tvec[(tvec.size() - 1)] - tvec[0];
-    double minprior = tvec[0] - (0.2 * rg);
-    double maxprior = tvec[(tvec.size() - 1)] + (0.2 * rg);
-
-    log() << "\nMin and max phenotype limits set using observed data: \n"
-          << "\t\tMin: " << minprior << "\tMax: " << maxprior << "\n";
-    _settings->setTraitPriorMin(minprior);
-    _settings->setTraitPriorMax(maxprior);
 }

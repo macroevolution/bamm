@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "BetaInitProposal.h"
 #include "BetaShiftProposal.h"
+#include "NodeStateProposal.h"
 
 #include <iosfwd>
 
@@ -28,11 +29,6 @@ public:
 
     virtual double computeLogPrior();
 
-    void updateNodeStateMH();
-    void updateNodeStateMH(Node* xnode);
-
-    void setMinMaxTraitPriors();
-
 private:
 
     virtual void readModelSpecificParameters(std::ifstream& inputFile);
@@ -55,9 +51,7 @@ private:
 
     BetaInitProposal _betaInitProposal;
     BetaShiftProposal _betaShiftProposal;
-
-    double _updateBetaShiftScale;
-    double _updateNodeStateScale;
+    NodeStateProposal _nodeStateProposal;
 
     double _lastDeletedEventBetaInit;;
     double _lastDeletedEventBetaShift;
