@@ -60,22 +60,11 @@ private:
     MuInitProposal _muInitProposal;
     MuShiftProposal _muShiftProposal;
 
-    double _updateLambdaInitScale;
-    double _updateLambdaShiftScale;
-    double _updateMuInitScale;
-    double _updateMuShiftScale;
-
     // Root event parameters
     double _lambdaInit0;
     double _lambdaShift0;
     double _muInit0;
     double _muShift0;
-
-    // Priors
-    double _lambdaInitPrior;
-    double _lambdaShiftPrior;
-    double _muInitPrior;
-    double _muShiftPrior;
 
     double _lastDeletedEventLambdaInit;
     double _lastDeletedEventLambdaShift;
@@ -91,24 +80,6 @@ private:
 
     double _extinctionProbMax;
 };
-
-
-inline void SpExModel::setUpdateLambdaInitScale(double x)
-{
-	_updateLambdaInitScale = x;
-}
-
-
-inline void SpExModel::setUpdateMuInitScale(double x)
-{
-	_updateMuInitScale = x;
-}
-
-
-inline void SpExModel::setUpdateLambdaShiftScale(double x)
-{
-	_updateLambdaShiftScale = x;
-}
 
 
 #endif

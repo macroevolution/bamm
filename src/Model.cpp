@@ -25,23 +25,12 @@ Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
     for (int i = 0; i < 100; i++)
         _rng->uniformRv();
 
-    // Event location scale is relative to the maximum root-to-tip length
-    _scale = _settings->getUpdateEventLocationScale() *
-        _tree->maxRootToTipLength();
-
-    _updateEventRateScale = _settings->getUpdateEventRateScale();
-    _localGlobalMoveRatio = _settings->getLocalGlobalMoveRatio();
-    
-    _poissonRatePrior = _settings->getPoissonRatePrior();
-
     // Initialize event rate to generate expected number of prior events
     _eventRate = 1 / _settings->getPoissonRatePrior();
 
     _acceptCount = 0;
     _rejectCount = 0;
     _acceptLast = -1;
-
-    _proposalFail = false;
 
     _lastDeletedEventMapTime = 0;
 
@@ -243,8 +232,6 @@ void Model::initializeUpdateWeights()
 
 void Model::proposeNewState()
 {
-    _proposalFail = false;
-
     int parameterToUpdate = chooseParameterToUpdate();
     _lastParameterUpdated = parameterToUpdate;
 

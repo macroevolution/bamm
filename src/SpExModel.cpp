@@ -48,23 +48,11 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
     _muInitProposal(*ranptr, *sp, *this, *pr),
     _muShiftProposal(*ranptr, *sp, *this, *pr)
 {
-    // Initialize MCMC proposal/tuning parameters
-    _updateLambdaInitScale = _settings->getUpdateLambdaInitScale();
-    _updateMuInitScale = _settings->getUpdateMuInitScale();
-    _updateLambdaShiftScale = _settings->getUpdateLambdaShiftScale();
-    _updateMuShiftScale = _settings->getUpdateMuShiftScale();
-
     // Initial values
     _lambdaInit0 = _settings->getLambdaInit0();
     _lambdaShift0 = _settings->getLambdaShift0();
     _muInit0 = _settings->getMuInit0();
     _muShift0 = _settings->getMuShift0();
-
-    // For Poisson process
-    _lambdaInitPrior = _settings->getLambdaInitPrior();
-    _lambdaShiftPrior = _settings->getLambdaShiftPrior();
-    _muInitPrior = _settings->getMuInitPrior();
-    _muShiftPrior = _settings->getMuShiftPrior();
 
     // Parameter for splitting branch into pieces for numerical computation
     _segLength = _settings->getSegLength() * _tree->maxRootToTipLength();
@@ -83,8 +71,6 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
 
     _tree->setNodeSpeciationParameters();
     _tree->setNodeExtinctionParameters();
-    //_tree->setMeanBranchSpeciation();
-    //_tree->setMeanBranchExtinction();
 
     // Initialize by previous event histories
     if (_settings->getLoadEventData()) {

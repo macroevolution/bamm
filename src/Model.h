@@ -33,12 +33,6 @@ public:
 
     Tree* getTreePtr();
 
-    void setMoveSizeScale(double x);
-    void setUpdateEventRateScale(double x);
-
-    double getPoissonRatePrior();
-    void setPoissonRatePrior(double x);
-
     double getEventRate();
     void setEventRate(double x);
 
@@ -72,8 +66,6 @@ public:
     void proposeNewState();
     void acceptProposal();
     void rejectProposal();
-
-    void setProposalFail(bool fail);
 
     BranchEvent* chooseEventAtRandom(bool includeRoot = false);
 
@@ -149,12 +141,6 @@ protected:
 
     Proposal* _lastProposal;
 
-    // Parameters for MCMC proposals
-    double _scale;    // scale for moving event
-    double _updateEventRateScale;
-    double _localGlobalMoveRatio;
-
-    double _poissonRatePrior;
     double _eventRate;    // Poisson rate
 
     double _logLikelihood;
@@ -169,8 +155,6 @@ protected:
     int _rejectCount;
     int _acceptLast;    // true if last generation was accept; false otherwise
     // 0 = last was rejected; 1 = accepted; -1 = not set.
-
-    bool _proposalFail;
 
     EventSet _eventCollection;
     BranchEvent* _rootEvent;
@@ -196,12 +180,6 @@ inline Tree* Model::getTreePtr()
 }
 
 
-inline void Model::setMoveSizeScale(double x)
-{
-    _scale = x;
-}
-
-
 inline int Model::getLastParameterUpdated()
 {
     return _lastParameterUpdated;
@@ -211,24 +189,6 @@ inline int Model::getLastParameterUpdated()
 inline EventSet& Model::events()
 {
     return _eventCollection;
-}
-
-
-inline void Model::setUpdateEventRateScale(double x)
-{
-    _updateEventRateScale = x;
-}
-
-
-inline double Model::getPoissonRatePrior()
-{
-    return _poissonRatePrior;
-}
-
-
-inline void Model::setPoissonRatePrior(double x)
-{
-    _poissonRatePrior = x;
 }
 
 
@@ -253,12 +213,6 @@ inline int Model::getAcceptLastUpdate()
 inline void Model::setAcceptLastUpdate(int x)
 {
     _acceptLast = x;
-}
-
-
-inline void Model::setProposalFail(bool fail)
-{
-    _proposalFail = fail;
 }
 
 
@@ -319,13 +273,6 @@ inline double Model::getTemperatureMH()
 inline double Model::logQRatioJump()
 {
     return _logQRatioJump;
-}
-
-
-inline double Model::computeLogHastingsRatio
-    (double logLikRatio, double logPriorRatio, double logQratio)
-{
-    return (_temperatureMH * (logLikRatio + logPriorRatio) + logQratio);
 }
 
 
