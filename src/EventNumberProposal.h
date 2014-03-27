@@ -19,23 +19,22 @@ class EventNumberProposal : public Proposal
 
 public:
 
-    EventNumberProposal(MbRandom& rng, Settings& settings, Model& model);
+    EventNumberProposal(MbRandom& rng, Model& model);
+
+    virtual void propose();
+    virtual void accept();
+    virtual void reject();
+
+    virtual double acceptanceRatio();
 
 private:
-
-    virtual void saveCurrentState();
-    virtual void proposeNewState();
-    void proposeAddEvent();
-    void proposeRemoveEvent();
 
     double computeLogLikelihoodRatio();
     double computeLogPriorRatio();
     double computeLogQRatio();
 
-    void specificAccept();
-    void specificReject();
-    void rejectAddEvent();
-    void rejectRemoveEvent();
+    MbRandom& _rng;
+    Model& _model;
 
     int _currentEventCount;
     double _currentLogLikelihood;

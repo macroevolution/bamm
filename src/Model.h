@@ -92,12 +92,14 @@ public:
 
     void getEventDataString(std::stringstream& ss, int generation);
 
-    double getModelTemperatureMH(void);
-    void setModelTemperatureMH(double x);
+    double getTemperatureMH(void);
+    void setTemperatureMH(double x);
 
     double logQRatioJump();
 
     double acceptanceRatio();
+
+    bool isEventConfigurationValid(BranchEvent* be);
     
 protected:
 
@@ -113,7 +115,6 @@ protected:
         double logPriorRatio, double logQratio);
 
     bool acceptMetropolisHastings(double lnR);
-    bool isEventConfigurationValid(BranchEvent* be);
 
     double safeExponentiation(double x);
 
@@ -309,7 +310,7 @@ inline void Model::setProposedLogLikelihood(double proposedLogLikelihood)
 }
 
 
-inline double Model::getModelTemperatureMH()
+inline double Model::getTemperatureMH()
 {
     return _temperatureMH;
 }

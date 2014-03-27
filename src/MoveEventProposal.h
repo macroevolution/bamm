@@ -16,17 +16,19 @@ public:
 
     MoveEventProposal(MbRandom& rng, Settings& settings, Model& model);
 
+    virtual void propose();
+    virtual void accept();
+    virtual void reject();
+
+    virtual double acceptanceRatio();
+
 private:
 
-    virtual void saveCurrentState();
-    virtual void proposeNewState();
-
     virtual double computeLogLikelihoodRatio();
-    virtual double computeLogPriorRatio();
-    virtual double computeLogQRatio();
 
-    virtual void specificAccept();
-    virtual void specificReject();
+    MbRandom& _rng;
+    Settings& _settings;
+    Model& _model;
 
     double _localToGlobalMoveRatio;
     double _scale;

@@ -131,8 +131,8 @@ Proposal* SpExModel::getSpecificProposal(int parameter)
         return &_muShiftProposal;
     } else {
         // Should never get here
-        log(Error) << "Bad parameter to update.\n";
-        std::exit(1);
+        log(Warning) << "Bad parameter to update.\n";
+        return NULL;
     }
 }
 

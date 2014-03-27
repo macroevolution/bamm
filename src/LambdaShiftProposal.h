@@ -2,16 +2,15 @@
 #define LAMBDA_SHIFT_PROPOSAL_H
 
 
-#include "Proposal.h"
+#include "EventParameterProposal.h"
 
 class MbRandom;
 class Settings;
 class Model;
 class Prior;
-class SpExBranchEvent;
 
 
-class LambdaShiftProposal : public Proposal
+class LambdaShiftProposal : public EventParameterProposal
 {
 public:
 
@@ -20,25 +19,14 @@ public:
 
 private:
 
-    virtual void saveCurrentState();
-    virtual void proposeNewState();
+    virtual double getCurrentParameterValue();
+    virtual double computeNewParameterValue();
 
-    double computeLogLikelihoodRatio();
-    double computeLogPriorRatio();
-    double computeLogQRatio();
+    virtual void setProposedParameterValue();
+    virtual void revertToOldParameterValue();
 
-    void specificAccept();
-    void specificReject();
-
-    Prior& _prior;
-
-    SpExBranchEvent* _event;
-
-    double _currentLambdaShift;
-    double _proposedLambdaShift;
-
-    double _currentLogLikelihood;
-    double _proposedLogLikelihood;
+    virtual double computeRootLogPriorRatio();
+    virtual double computeNonRootLogPriorRatio();
 
     double _updateLambdaShiftScale;
 };

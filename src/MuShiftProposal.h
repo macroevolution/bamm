@@ -2,16 +2,15 @@
 #define MU_SHIFT_PROPOSAL_H
 
 
-#include "Proposal.h"
+#include "EventParameterProposal.h"
 
 class MbRandom;
 class Settings;
 class Model;
 class Prior;
-class SpExBranchEvent;
 
 
-class MuShiftProposal : public Proposal
+class MuShiftProposal : public EventParameterProposal
 {
 public:
 
@@ -20,25 +19,14 @@ public:
 
 private:
 
-    virtual void saveCurrentState();
-    virtual void proposeNewState();
+    virtual double getCurrentParameterValue();
+    virtual double computeNewParameterValue();
 
-    double computeLogLikelihoodRatio();
-    double computeLogPriorRatio();
-    double computeLogQRatio();
+    virtual void setProposedParameterValue();
+    virtual void revertToOldParameterValue();
 
-    void specificAccept();
-    void specificReject();
-
-    Prior& _prior;
-
-    SpExBranchEvent* _event;
-
-    double _currentMuShift;
-    double _proposedMuShift;
-
-    double _currentLogLikelihood;
-    double _proposedLogLikelihood;
+    virtual double computeRootLogPriorRatio();
+    virtual double computeNonRootLogPriorRatio();
 
     double _updateMuShiftScale;
 };

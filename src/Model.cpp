@@ -16,7 +16,7 @@
 // TODO: pointers not necessary; make references
 Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
     _rng(rng), _tree(tree), _settings(settings), _prior(prior),
-    _eventNumberProposal(*rng, *settings, *this),
+    _eventNumberProposal(*rng, *this),
     _moveEventProposal(*rng, *settings, *this),
     _eventRateProposal(*rng, *settings, *this, *prior)
 {
@@ -483,14 +483,11 @@ void Model::rejectProposal()
 
 double Model::acceptanceRatio()
 {
-    if (_proposalFail) {
+    if (_lastProposal == NULL) {
         return 0.0;
     }
 
-    double logRatioSum =
-        _temperatureMH * (_logLikelihoodRatio + _logPriorRatio) + _logQRatio;
-
-    return std::min(1.0, std::exp(logRatioSum));
+    return _lastProposal->acceptanceRatio();
 }
 
 
@@ -558,7 +555,7 @@ double Model::safeExponentiation(double x)
 }
 
 
-void Model::setModelTemperatureMH(double x)
+void Model::setTemperatureMH(double x)
 {
     if ((x >= 0) && (x <= 1.0)) {
         _temperatureMH = x;

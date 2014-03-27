@@ -1,64 +1,78 @@
 #include "EventNumberProposal.h"
 #include "MbRandom.h"
 #include "Model.h"
-#include "Node.h"
-#include "BranchHistory.h"
 
 
-EventNumberProposal::EventNumberProposal
-    (MbRandom& rng, Settings& settings, Model& model) :
-        Proposal(rng, settings, model)
+EventNumberProposal::EventNumberProposal(MbRandom& rng, Model& model) :
+    _rng(rng), _model(model)
 {
 }
 
 
-void EventNumberProposal::saveCurrentState()
+void EventNumberProposal::propose()
 {
     _currentEventCount = _model.getNumberOfEvents();
     _currentLogLikelihood = _model.getCurrentLogLikelihood();
     _currentLogPrior = _model.computeLogPrior();
-}
 
+    bool shouldAddEvent = (_currentEventCount == 0) || (_rng.uniformRv() < 0.5);
 
-void EventNumberProposal::proposeNewState()
-{
-    bool shouldAddEvent = _rng.uniformRv() < 0.5;
-    if (shouldAddEvent || _model.getNumberOfEvents() == 0) {
+    if (shouldAddEvent) {
+        _lastEventChanged = _model.addRandomEventToTree();
         _lastProposal = AddEvent;
-        proposeAddEvent();
     } else {
+        _lastEventChanged = _model.removeRandomEventFromTree();
         _lastProposal = RemoveEvent;
-        proposeRemoveEvent();
     }
-}
 
-
-void EventNumberProposal::proposeAddEvent()
-{
-    _lastEventChanged = _model.addRandomEventToTree();
     _model.setMeanBranchParameters();
 
-    _proposedEventCount = _currentEventCount + 1;
+    _proposedEventCount = _model.getNumberOfEvents();
     _proposedLogLikelihood = _model.computeLogLikelihood();
     _proposedLogPrior = _model.computeLogPrior();
 }
 
 
-void EventNumberProposal::proposeRemoveEvent()
+void EventNumberProposal::accept()
 {
-    // Flag proposal for rejection if there are no events to remove
-    if (_currentEventCount == 0) {
-        _model.setProposalFail(true);
-    } else {
-        _model.setProposalFail(false);
+    if (_lastProposal == RemoveEvent) {
+        if (_lastEventChanged != NULL) {
+            delete _lastEventChanged;
+            _lastEventChanged = NULL;
+        }
     }
 
-    _lastEventChanged = _model.removeRandomEventFromTree();
-    _model.setMeanBranchParameters();
+    _model.setCurrentLogLikelihood(_proposedLogLikelihood);
+}
 
-    _proposedEventCount = _currentEventCount - 1;
-    _proposedLogLikelihood = _model.computeLogLikelihood();
-    _proposedLogPrior = _model.computeLogPrior();
+
+void EventNumberProposal::reject()
+{
+    if (_lastProposal == AddEvent) {
+        _model.removeEventFromTree(_lastEventChanged);
+        delete _lastEventChanged;
+        _lastEventChanged = NULL;
+    } else if (_lastProposal == RemoveEvent) {
+        _model.addEventToTree(_lastEventChanged);
+    }
+}
+
+
+double EventNumberProposal::acceptanceRatio()
+{
+    if (_lastProposal == AddEvent &&
+        !_model.isEventConfigurationValid(_lastEventChanged)) {
+        return 0.0;
+    }
+
+    double logLikelihoodRatio = computeLogLikelihoodRatio();
+    double logPriorRatio = computeLogPriorRatio();
+    double logQRatio = computeLogQRatio();
+
+    double t = _model.getTemperatureMH();
+    double logRatio = t * (logLikelihoodRatio + logPriorRatio) + logQRatio;
+
+    return std::min(1.0, std::exp(logRatio));
 }
 
 
@@ -91,56 +105,4 @@ double EventNumberProposal::computeLogQRatio()
         double logQRatio = (_currentEventCount != 1) ? 0.0 : 0.69314718055995;
         return logQRatio + _model.logQRatioJump();
     }
-}
-
-
-void EventNumberProposal::specificAccept()
-{
-    if (_lastProposal == RemoveEvent) {
-        if (_lastEventChanged != NULL) {
-            delete _lastEventChanged;
-            _lastEventChanged = NULL;
-        }
-    }
-
-    _model.setCurrentLogLikelihood(_proposedLogLikelihood);
-}
-
-
-void EventNumberProposal::specificReject()
-{
-    if (_lastProposal == AddEvent) {
-        rejectAddEvent();
-    } else if (_lastProposal == RemoveEvent) {
-        rejectRemoveEvent();
-    }
-}
-
-
-void EventNumberProposal::rejectAddEvent()
-{
-    _model.removeEventFromTree(_lastEventChanged);
-
-    delete _lastEventChanged;
-    _lastEventChanged = NULL;
-
-    _model.setMeanBranchParameters();
-}
-
-
-void EventNumberProposal::rejectRemoveEvent()
-{
-    _model.addEventToTree(_lastEventChanged);
-
-    // Add event to branch history
-    _lastEventChanged->getEventNode()->getBranchHistory()->
-        addEventToBranchHistory(_lastEventChanged);
-
-    _model.events().insert(_lastEventChanged);
-
-    // Event is inserted into branch history,
-    // but branch histories must be updated
-    _model.forwardSetBranchHistories(_lastEventChanged);
-
-    _model.setMeanBranchParameters();
 }

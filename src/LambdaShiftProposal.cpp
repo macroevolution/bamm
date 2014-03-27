@@ -4,77 +4,49 @@
 #include "Model.h"
 #include "Prior.h"
 #include "SpExBranchEvent.h"
-#include "Tree.h"
 
 
 LambdaShiftProposal::LambdaShiftProposal
     (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
-        Proposal(rng, settings, model), _prior(prior)
+        EventParameterProposal(rng, settings, model, prior)
 {
-    _updateLambdaShiftScale = settings.getUpdateLambdaShiftScale();
+    _updateLambdaShiftScale = _settings.getUpdateLambdaShiftScale();
 }
 
 
-void LambdaShiftProposal::saveCurrentState()
+double LambdaShiftProposal::getCurrentParameterValue()
 {
-    _event = static_cast<SpExBranchEvent*>(_model.chooseEventAtRandom(true));
-
-    _currentLambdaShift = _event->getLamShift();
-    _currentLogLikelihood = _model.getCurrentLogLikelihood();
+    return static_cast<SpExBranchEvent*>(_event)->getLamShift();
 }
 
 
-void LambdaShiftProposal::proposeNewState()
+double LambdaShiftProposal::computeNewParameterValue()
 {
-    _proposedLambdaShift = _currentLambdaShift +
-        _rng.normalRv(0.0, _updateLambdaShiftScale);
-    _event->setLamShift(_proposedLambdaShift);
-
-    _model.getTreePtr()->setNodeSpeciationParameters();
-    _model.getTreePtr()->setNodeExtinctionParameters();
-
-    _proposedLogLikelihood = _model.computeLogLikelihood();
+    return _currentParameterValue + _rng.normalRv(0.0, _updateLambdaShiftScale);
 }
 
 
-double LambdaShiftProposal::computeLogLikelihoodRatio()
+void LambdaShiftProposal::setProposedParameterValue()
 {
-    return _proposedLogLikelihood - _currentLogLikelihood;
+    static_cast<SpExBranchEvent*>(_event)->setLamShift(_proposedParameterValue);
 }
 
 
-double LambdaShiftProposal::computeLogPriorRatio()
+void LambdaShiftProposal::revertToOldParameterValue()
 {
-    double logPriorRatio = 0.0;
-
-    if (_event == _model.getRootEvent()) {
-        logPriorRatio = _prior.lambdaShiftRootPrior(_proposedLambdaShift) -
-            _prior.lambdaShiftRootPrior(_currentLambdaShift);
-    } else {
-        logPriorRatio = _prior.lambdaShiftPrior(_proposedLambdaShift) -
-            _prior.lambdaShiftPrior(_currentLambdaShift);
-    }
-
-    return logPriorRatio;
+    static_cast<SpExBranchEvent*>(_event)->setLamShift(_currentParameterValue);
 }
 
 
-double LambdaShiftProposal::computeLogQRatio()
+double LambdaShiftProposal::computeRootLogPriorRatio()
 {
-    return 0.0;
+    return _prior.lambdaShiftRootPrior(_proposedParameterValue) -
+           _prior.lambdaShiftRootPrior(_currentParameterValue);
 }
 
 
-void LambdaShiftProposal::specificAccept()
+double LambdaShiftProposal::computeNonRootLogPriorRatio()
 {
-    _model.setCurrentLogLikelihood(_proposedLogLikelihood);
-}
-
-
-void LambdaShiftProposal::specificReject()
-{
-    _event->setLamShift(_currentLambdaShift);
-
-    _model.getTreePtr()->setNodeSpeciationParameters();
-    _model.getTreePtr()->setNodeExtinctionParameters();
+    return _prior.lambdaShiftPrior(_proposedParameterValue) -
+           _prior.lambdaShiftPrior(_currentParameterValue);
 }

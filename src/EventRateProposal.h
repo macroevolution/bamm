@@ -17,21 +17,25 @@ public:
     EventRateProposal(MbRandom& rng, Settings& settings, Model& model,
         Prior& prior);
 
+    virtual void propose();
+    virtual void accept();
+    virtual void reject();
+
+    virtual double acceptanceRatio();
+
 private:
 
-    virtual void saveCurrentState();
-    virtual void proposeNewState();
+    double computeLogLikelihoodRatio();
+    double computeLogPriorRatio();
+    double computeLogQRatio();
 
-    virtual double computeLogLikelihoodRatio();
-    virtual double computeLogPriorRatio();
-    virtual double computeLogQRatio();
-
-    void specificAccept();
-    void specificReject();
-
+    MbRandom& _rng;
+    Settings& _settings;
+    Model& _model;
     Prior& _prior;
 
     double _updateEventRateScale;
+
     double _currentEventRate;
     double _proposedEventRate;
 

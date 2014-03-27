@@ -4,77 +4,49 @@
 #include "Model.h"
 #include "Prior.h"
 #include "SpExBranchEvent.h"
-#include "Tree.h"
 
 
 MuShiftProposal::MuShiftProposal
     (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
-        Proposal(rng, settings, model), _prior(prior)
+        EventParameterProposal(rng, settings, model, prior)
 {
-    _updateMuShiftScale = settings.getUpdateMuShiftScale();
+    _updateMuShiftScale = _settings.getUpdateMuShiftScale();
 }
 
 
-void MuShiftProposal::saveCurrentState()
+double MuShiftProposal::getCurrentParameterValue()
 {
-    _event = static_cast<SpExBranchEvent*>(_model.chooseEventAtRandom(true));
-
-    _currentMuShift = _event->getMuShift();
-    _currentLogLikelihood = _model.getCurrentLogLikelihood();
+    return static_cast<SpExBranchEvent*>(_event)->getMuShift();
 }
 
 
-void MuShiftProposal::proposeNewState()
+double MuShiftProposal::computeNewParameterValue()
 {
-    _proposedMuShift = _currentMuShift +
-        _rng.normalRv(0.0, _updateMuShiftScale);
-    _event->setMuShift(_proposedMuShift);
-
-    _model.getTreePtr()->setNodeSpeciationParameters();
-    _model.getTreePtr()->setNodeExtinctionParameters();
-
-    _proposedLogLikelihood = _model.computeLogLikelihood();
+    return _currentParameterValue + _rng.normalRv(0.0, _updateMuShiftScale);
 }
 
 
-double MuShiftProposal::computeLogLikelihoodRatio()
+void MuShiftProposal::setProposedParameterValue()
 {
-    return _proposedLogLikelihood - _currentLogLikelihood;
+    static_cast<SpExBranchEvent*>(_event)->setMuShift(_proposedParameterValue);
 }
 
 
-double MuShiftProposal::computeLogPriorRatio()
+void MuShiftProposal::revertToOldParameterValue()
 {
-    double logPriorRatio = 0.0;
-
-    if (_event == _model.getRootEvent()) {
-        logPriorRatio = _prior.muShiftRootPrior(_proposedMuShift) -
-            _prior.muShiftRootPrior(_currentMuShift);
-    } else {
-        logPriorRatio = _prior.muShiftPrior(_proposedMuShift) -
-            _prior.muShiftPrior(_currentMuShift);
-    }
-
-    return logPriorRatio;
+    static_cast<SpExBranchEvent*>(_event)->setMuShift(_currentParameterValue);
 }
 
 
-double MuShiftProposal::computeLogQRatio()
+double MuShiftProposal::computeRootLogPriorRatio()
 {
-    return 0.0;
+    return _prior.muShiftRootPrior(_proposedParameterValue) -
+           _prior.muShiftRootPrior(_currentParameterValue);
 }
 
 
-void MuShiftProposal::specificAccept()
+double MuShiftProposal::computeNonRootLogPriorRatio()
 {
-    _model.setCurrentLogLikelihood(_proposedLogLikelihood);
-}
-
-
-void MuShiftProposal::specificReject()
-{
-    _event->setMuShift(_currentMuShift);
-
-    _model.getTreePtr()->setNodeSpeciationParameters();
-    _model.getTreePtr()->setNodeExtinctionParameters();
+    return _prior.muShiftPrior(_proposedParameterValue) -
+           _prior.muShiftPrior(_currentParameterValue);
 }

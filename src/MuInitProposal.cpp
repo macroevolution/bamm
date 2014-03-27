@@ -4,77 +4,56 @@
 #include "Model.h"
 #include "Prior.h"
 #include "SpExBranchEvent.h"
-#include "Tree.h"
 
 
 MuInitProposal::MuInitProposal
     (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
-        Proposal(rng, settings, model), _prior(prior)
+        EventParameterProposal(rng, settings, model, prior)
 {
-    _updateMuInitScale = settings.getUpdateMuInitScale();
+    _updateMuInitScale = _settings.getUpdateMuInitScale();
 }
 
 
-void MuInitProposal::saveCurrentState()
+double MuInitProposal::getCurrentParameterValue()
 {
-    _event = static_cast<SpExBranchEvent*>(_model.chooseEventAtRandom(true));
-
-    _currentMuInit = _event->getMuInit();
-    _currentLogLikelihood = _model.getCurrentLogLikelihood();
+    return static_cast<SpExBranchEvent*>(_event)->getMuInit();
 }
 
 
-void MuInitProposal::proposeNewState()
+double MuInitProposal::computeNewParameterValue()
 {
     _cterm = std::exp(_updateMuInitScale * (_rng.uniformRv() - 0.5));
-    _proposedMuInit = _cterm * _currentMuInit;
-    _event->setMuInit(_proposedMuInit);
-
-    _model.getTreePtr()->setNodeSpeciationParameters();
-    _model.getTreePtr()->setNodeExtinctionParameters();
-
-    _proposedLogLikelihood = _model.computeLogLikelihood();
+    return _cterm * _currentParameterValue;
 }
 
 
-double MuInitProposal::computeLogLikelihoodRatio()
+void MuInitProposal::setProposedParameterValue()
 {
-    return _proposedLogLikelihood - _currentLogLikelihood;
+    static_cast<SpExBranchEvent*>(_event)->setMuInit(_proposedParameterValue);
 }
 
 
-double MuInitProposal::computeLogPriorRatio()
+void MuInitProposal::revertToOldParameterValue()
 {
-    double logPriorRatio = 0.0;
+    static_cast<SpExBranchEvent*>(_event)->setMuInit(_currentParameterValue);
+}
 
-    if (_event == _model.getRootEvent()) {
-        logPriorRatio = _prior.muInitRootPrior(_proposedMuInit) -
-            _prior.muInitRootPrior(_currentMuInit);
-    } else {
-        logPriorRatio = _prior.muInitPrior(_proposedMuInit) -
-            _prior.muInitPrior(_currentMuInit);
-    }
 
-    return logPriorRatio;
+double MuInitProposal::computeRootLogPriorRatio()
+{
+    return _prior.muInitRootPrior(_proposedParameterValue) -
+           _prior.muInitRootPrior(_currentParameterValue);
+}
+
+
+double MuInitProposal::computeNonRootLogPriorRatio()
+{
+    return _prior.muInitPrior(_proposedParameterValue) -
+           _prior.muInitPrior(_currentParameterValue);
 }
 
 
 double MuInitProposal::computeLogQRatio()
 {
     return std::log(_cterm);
-}
-
-
-void MuInitProposal::specificAccept()
-{
-    _model.setCurrentLogLikelihood(_proposedLogLikelihood);
-}
-
-
-void MuInitProposal::specificReject()
-{
-    _event->setMuInit(_currentMuInit);
-
-    _model.getTreePtr()->setNodeSpeciationParameters();
-    _model.getTreePtr()->setNodeExtinctionParameters();
 }

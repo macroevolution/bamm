@@ -2,16 +2,15 @@
 #define MU_INIT_PROPOSAL_H
 
 
-#include "Proposal.h"
+#include "EventParameterProposal.h"
 
 class MbRandom;
 class Settings;
 class Model;
 class Prior;
-class SpExBranchEvent;
 
 
-class MuInitProposal : public Proposal
+class MuInitProposal : public EventParameterProposal
 {
 public:
 
@@ -20,29 +19,18 @@ public:
 
 private:
 
-    virtual void saveCurrentState();
-    virtual void proposeNewState();
+    virtual double getCurrentParameterValue();
+    virtual double computeNewParameterValue();
 
-    double computeLogLikelihoodRatio();
-    double computeLogPriorRatio();
-    double computeLogQRatio();
+    virtual void setProposedParameterValue();
+    virtual void revertToOldParameterValue();
 
-    void specificAccept();
-    void specificReject();
-
-    Prior& _prior;
-
-    SpExBranchEvent* _event;
-
-    double _currentMuInit;
-    double _proposedMuInit;
-
-    double _currentLogLikelihood;
-    double _proposedLogLikelihood;
-
-    double _cterm;
+    virtual double computeRootLogPriorRatio();
+    virtual double computeNonRootLogPriorRatio();
+    virtual double computeLogQRatio();
 
     double _updateMuInitScale;
+    double _cterm;
 };
 
 

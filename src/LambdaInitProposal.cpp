@@ -4,77 +4,56 @@
 #include "Model.h"
 #include "Prior.h"
 #include "SpExBranchEvent.h"
-#include "Tree.h"
 
 
 LambdaInitProposal::LambdaInitProposal
     (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
-        Proposal(rng, settings, model), _prior(prior)
+        EventParameterProposal(rng, settings, model, prior)
 {
-    _updateLambdaInitScale = settings.getUpdateLambdaInitScale();
+    _updateLambdaInitScale = _settings.getUpdateLambdaInitScale();
 }
 
 
-void LambdaInitProposal::saveCurrentState()
+double LambdaInitProposal::getCurrentParameterValue()
 {
-    _event = static_cast<SpExBranchEvent*>(_model.chooseEventAtRandom(true));
-
-    _currentLambdaInit = _event->getLamInit();
-    _currentLogLikelihood = _model.getCurrentLogLikelihood();
+    return static_cast<SpExBranchEvent*>(_event)->getLamInit();
 }
 
 
-void LambdaInitProposal::proposeNewState()
+double LambdaInitProposal::computeNewParameterValue()
 {
     _cterm = std::exp(_updateLambdaInitScale * (_rng.uniformRv() - 0.5));
-    _proposedLambdaInit = _cterm * _currentLambdaInit;
-    _event->setLamInit(_proposedLambdaInit);
-
-    _model.getTreePtr()->setNodeSpeciationParameters();
-    _model.getTreePtr()->setNodeExtinctionParameters();
-
-    _proposedLogLikelihood = _model.computeLogLikelihood();
+    return _cterm * _currentParameterValue;
 }
 
 
-double LambdaInitProposal::computeLogLikelihoodRatio()
+void LambdaInitProposal::setProposedParameterValue()
 {
-    return _proposedLogLikelihood - _currentLogLikelihood;
+    static_cast<SpExBranchEvent*>(_event)->setLamInit(_proposedParameterValue);
 }
 
 
-double LambdaInitProposal::computeLogPriorRatio()
+void LambdaInitProposal::revertToOldParameterValue()
 {
-    double logPriorRatio = 0.0;
+    static_cast<SpExBranchEvent*>(_event)->setLamInit(_currentParameterValue);
+}
 
-    if (_event == _model.getRootEvent()) {
-        logPriorRatio = _prior.lambdaInitRootPrior(_proposedLambdaInit) -
-            _prior.lambdaInitRootPrior(_currentLambdaInit);
-    } else {
-        logPriorRatio = _prior.lambdaInitPrior(_proposedLambdaInit) -
-            _prior.lambdaInitPrior(_currentLambdaInit);
-    }
 
-    return logPriorRatio;
+double LambdaInitProposal::computeRootLogPriorRatio()
+{
+    return _prior.lambdaInitRootPrior(_proposedParameterValue) -
+           _prior.lambdaInitRootPrior(_currentParameterValue);
+}
+
+
+double LambdaInitProposal::computeNonRootLogPriorRatio()
+{
+    return _prior.lambdaInitPrior(_proposedParameterValue) -
+           _prior.lambdaInitPrior(_currentParameterValue);
 }
 
 
 double LambdaInitProposal::computeLogQRatio()
 {
     return std::log(_cterm);
-}
-
-
-void LambdaInitProposal::specificAccept()
-{
-    _model.setCurrentLogLikelihood(_proposedLogLikelihood);
-}
-
-
-void LambdaInitProposal::specificReject()
-{
-    _event->setLamInit(_currentLambdaInit);
-
-    _model.getTreePtr()->setNodeSpeciationParameters();
-    _model.getTreePtr()->setNodeExtinctionParameters();
 }

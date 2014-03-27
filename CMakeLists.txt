@@ -29,6 +29,7 @@ SET(BAMM_SRC
     src/BranchHistory.cpp
     src/DataWriter.cpp
     src/EventNumberProposal.cpp
+    src/EventParameterProposal.cpp
     src/EventRateProposal.cpp
     src/FastSimulatePrior.cpp
     src/LambdaInitProposal.cpp

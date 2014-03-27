@@ -7,29 +7,43 @@
 
 EventRateProposal::EventRateProposal
     (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
-        Proposal(rng, settings, model), _prior(prior)
+        _rng(rng), _settings(settings), _model(model), _prior(prior)
 {
     _updateEventRateScale = _settings.getUpdateEventRateScale();
 }
 
 
-void EventRateProposal::saveCurrentState()
+void EventRateProposal::propose()
 {
     _currentEventRate = _model.getEventRate();
-}
 
-
-void EventRateProposal::proposeNewState()
-{
     _cterm = std::exp(_updateEventRateScale * (_rng.uniformRv() - 0.5));
     _proposedEventRate = _cterm * _currentEventRate;
+
     _model.setEventRate(_proposedEventRate);
 }
 
 
-double EventRateProposal::computeLogLikelihoodRatio()
+void EventRateProposal::accept()
 {
-    return 0.0;
+}
+
+
+void EventRateProposal::reject()
+{
+    _model.setEventRate(_currentEventRate);
+}
+
+
+double EventRateProposal::acceptanceRatio()
+{
+    double logPriorRatio = computeLogPriorRatio();
+    double logQRatio = computeLogQRatio();
+
+    double t = _model.getTemperatureMH();
+    double logRatio = t * logPriorRatio + logQRatio;
+
+    return std::min(1.0, std::exp(logRatio));
 }
 
 
@@ -43,15 +57,4 @@ double EventRateProposal::computeLogPriorRatio()
 double EventRateProposal::computeLogQRatio()
 {
     return std::log(_cterm);
-}
-
-
-void EventRateProposal::specificAccept()
-{
-}
-
-
-void EventRateProposal::specificReject()
-{
-    _model.setEventRate(_currentEventRate);
 }

@@ -9,7 +9,7 @@
 
 MoveEventProposal::MoveEventProposal
     (MbRandom& rng, Settings& settings, Model& model) :
-        Proposal(rng, settings, model)
+        _rng(rng), _settings(settings), _model(model)
 {
     _localToGlobalMoveRatio = _settings.getLocalGlobalMoveRatio();
     _scale = _settings.getUpdateEventLocationScale() *
@@ -17,7 +17,7 @@ MoveEventProposal::MoveEventProposal
 }
 
 
-void MoveEventProposal::saveCurrentState()
+void MoveEventProposal::propose()
 {
     _currentEventCount = _model.getNumberOfEvents();
     if (_currentEventCount == 0) {
@@ -26,17 +26,6 @@ void MoveEventProposal::saveCurrentState()
 
     _event = _model.chooseEventAtRandom();
     _currentLogLikelihood = _model.getCurrentLogLikelihood();
-}
-
-
-void MoveEventProposal::proposeNewState()
-{
-    if (_currentEventCount == 0) {
-        _model.setProposalFail(true);
-        return;
-    } else {
-        _model.setProposalFail(false);
-    }
 
     // This is the event preceding the chosen event;
     // histories should be set forward from here
@@ -67,31 +56,17 @@ void MoveEventProposal::proposeNewState()
 }
 
 
-double MoveEventProposal::computeLogLikelihoodRatio()
+void MoveEventProposal::accept()
 {
-    return _proposedLogLikelihood - _currentLogLikelihood;
-}
+    if (_currentEventCount == 0) {
+        return;
+    }
 
-
-double MoveEventProposal::computeLogPriorRatio()
-{
-    return 0.0;
-}
-
-
-double MoveEventProposal::computeLogQRatio()
-{
-    return 0.0;
-}
-
-
-void MoveEventProposal::specificAccept()
-{
     _model.setCurrentLogLikelihood(_proposedLogLikelihood);
 }
 
 
-void MoveEventProposal::specificReject()
+void MoveEventProposal::reject()
 {
     if (_currentEventCount == 0) {
         return;
@@ -116,4 +91,29 @@ void MoveEventProposal::specificReject()
     _model.forwardSetBranchHistories(lastEvent);
     _model.forwardSetBranchHistories(_event);
     _model.setMeanBranchParameters();
+}
+
+
+double MoveEventProposal::acceptanceRatio()
+{
+    if (_currentEventCount == 0) {
+        return 0.0;
+    }
+
+    if (!_model.isEventConfigurationValid(_event)) {
+        return 0.0;
+    }
+
+    double logLikelihoodRatio = computeLogLikelihoodRatio();
+
+    double t = _model.getTemperatureMH();
+    double logRatio = t * logLikelihoodRatio;
+
+    return std::min(1.0, std::exp(logRatio));
+}
+
+
+double MoveEventProposal::computeLogLikelihoodRatio()
+{
+    return _proposedLogLikelihood - _currentLogLikelihood;
 }
