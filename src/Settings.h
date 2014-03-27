@@ -165,7 +165,7 @@ public:
 
     std::string getTraitFile() const;
 
-    double getUpdateBetaScale() const;
+    double getUpdateBetaInitScale() const;
     double getUpdateNodeStateScale() const;
     double getUpdateBetaShiftScale() const;
     double getBetaInit() const;
@@ -533,7 +533,7 @@ inline std::string Settings::getTraitFile() const
 }
 
 
-inline double Settings::getUpdateBetaScale() const
+inline double Settings::getUpdateBetaInitScale() const
 {
     return _parameters.at("updateBetaScale").value<double>();
 }

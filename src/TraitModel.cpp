@@ -34,7 +34,7 @@
 TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
     Prior* prior) : Model(rng, tree, settings, prior)
 {
-    _updateBetaScale = _settings->getUpdateBetaScale();
+    _updateBetaScale = _settings->getUpdateBetaInitScale();
     _updateBetaShiftScale = _settings->getUpdateBetaShiftScale();
 
     // Node state scale is relative to the standard deviation
