@@ -708,6 +708,7 @@ void Tree::buildTreeFromNewickString(std::string ts)
     //std::cout << "in build tree..." << std::endl;
 
     bool readingBL = false;
+    bool readingInternalNodeName = false;
     Node* p = NULL;
 
     //int nextInterNode = _ntaxa;
@@ -743,6 +744,7 @@ void Tree::buildTreeFromNewickString(std::string ts)
             }
             p = q;
             readingBL = false;
+            readingInternalNodeName = false;
         } else if (c == ')') {
             if (p->getAnc() == NULL) {
                 std::cerr << "ERROR: tree std::string";
@@ -751,6 +753,7 @@ void Tree::buildTreeFromNewickString(std::string ts)
                 p = p->getAnc();
             }
             readingBL = false;
+            readingInternalNodeName = true;
         } else if (c == ',') {
             if (p->getAnc() == NULL) {
                 std::cerr << "ERROR: tree std::string";
@@ -759,8 +762,10 @@ void Tree::buildTreeFromNewickString(std::string ts)
                 p = p->getAnc();
             }
             readingBL = false;
+            readingInternalNodeName = false;
         } else if (c == ':') {
             readingBL = true;
+            readingInternalNodeName = false;
         } else if (c == ';') {
             // done with tree
             break;
@@ -770,7 +775,9 @@ void Tree::buildTreeFromNewickString(std::string ts)
                 s += ts[i++];
             }
             i--;
-            if (readingBL == false) {
+            if (readingInternalNodeName) {
+                p->setName(s);
+            } else if (readingBL == false) {
                 // set tip name
 
                 //q = &nodes[taxCounter];
