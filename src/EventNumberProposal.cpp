@@ -50,6 +50,7 @@ void EventNumberProposal::reject()
 {
     if (_lastProposal == AddEvent) {
         _model.removeEventFromTree(_lastEventChanged);
+        _model.setMeanBranchParameters();
         delete _lastEventChanged;
         _lastEventChanged = NULL;
     } else if (_lastProposal == RemoveEvent) {
@@ -86,10 +87,10 @@ double EventNumberProposal::computeLogPriorRatio()
 {
     if (_lastProposal == AddEvent) {
         return _proposedLogPrior - _currentLogPrior +
-            std::log(_model.getEventRate()) - std::log(_proposedEventCount);
+            std::log(_model.getEventRate()) - std::log(_currentEventCount + 1);
     } else {
         return _proposedLogPrior - _currentLogPrior +
-            std::log(_proposedEventCount) - std::log(_model.getEventRate());
+            std::log(_currentEventCount) - std::log(_model.getEventRate());
     }
 }
 
