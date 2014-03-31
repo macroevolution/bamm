@@ -25,7 +25,8 @@ void MCMC::run()
     for (int generation = 0; generation < _numberOfGenerations; generation++) {
         _model.proposeNewState();
 
-        if (_rng.uniformRv() < _model.acceptanceRatio()) {
+        double acceptanceRatio = _model.acceptanceRatio();
+        if (_rng.uniformRv() < acceptanceRatio) {
             _model.acceptProposal();
         } else {
             _model.rejectProposal();
