@@ -738,7 +738,7 @@ void Tree::buildTreeFromNewickString(std::string ts)
                 } else if (p->getRtDesc() == NULL) {
                     p->setRtDesc(q);
                 } else {
-                    std::cerr << "ERROR: tree std::string";
+                    log(Error) << "Tree contains at least one polytomy.\n";
                     exit(1);
                 }
             }
