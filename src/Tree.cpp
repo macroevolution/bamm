@@ -2070,7 +2070,7 @@ void Tree::assertBranchLengthsArePositiveRecurse(Node* node)
     }
 
     assertBranchLengthsArePositiveRecurse(node->getLfDesc());
-    assertBranchLengthsArePositiveRecurse(node->getLfDesc());
+    assertBranchLengthsArePositiveRecurse(node->getRtDesc());
 }
 
 
