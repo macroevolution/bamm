@@ -222,7 +222,7 @@
 <p><tt class="docutils literal"><span class="pre">prior.threshold</span></tt> is now a copy of our phylogenetic tree, but where each branch is the marginal probability threshold for distinguishing between <strong>core</strong> and <strong>non-core</strong> shifts. To compute the credible set, we do:</p>
 <div class="highlight-python"><pre>&gt; data(events.primates)
 &gt; edata &lt;- getEventData(primates, events.primates, burnin=0.1, type ='trait')
-&gt; css &lt;- credibleShiftSet(edata, threshold = priors)</pre>
+&gt; css &lt;- credibleShiftSet(edata, threshold = prior.threshold)</pre>
 </div>
 <p>And we can view and plot the results with two other BAMMtools functions: <tt class="docutils literal"><span class="pre">summary.credibleshiftset</span></tt> and <tt class="docutils literal"><span class="pre">plot.credibleshiftset</span></tt>.</p>
 </div>
@@ -298,9 +298,19 @@
  
       </ul>
     </div>
+
     <div class="footer">
         &copy; Copyright 2014 BAMM Team.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-49579863-1', 'bamm-project.org');
+ga('send', 'pageview');
+</script>
+
   </body>
 </html>

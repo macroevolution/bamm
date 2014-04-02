@@ -1,6 +1,5 @@
 
 library(BAMMtools);
-library(RColorBrewer);
 
 
 #
@@ -37,6 +36,6 @@ for (i in 1:length(ixx)) {
 	index <- ixx[i];
 	
 	eventsub <- subsetEventData(bammdata, index=index);
-	plot.bammdata(eventsub, method='polar', pal= colschemes[[i]], multi=T);
-	addBAMMshifts(eventsub, method='polar', index=1, col='white', bg='black', cex=4, multi=T);
+	plot.bammdata(eventsub, method='polar', pal= colschemes[[i]], par.reset=FALSE);
+	addBAMMshifts(eventsub, method='polar', index=1, col='white', bg='black', cex=4, par.reset=FALSE);
 }
