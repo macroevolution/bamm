@@ -105,6 +105,7 @@ void Settings::initializeGlobalSettings()
     addParameter("simulatePriorShifts", "1", NotRequired);
     addParameter("numberGenerations", "0");
     addParameter("seed", "-1", NotRequired);
+    addParameter("validateEventConfiguration", "0", NotRequired);
 
     // MCMC tuning
     addParameter("updateEventLocationScale", "0.0");

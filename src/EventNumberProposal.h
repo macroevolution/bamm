@@ -5,6 +5,7 @@
 #include "Proposal.h"
 
 class MbRandom;
+class Settings;
 class Model;
 class BranchEvent;
 
@@ -19,7 +20,7 @@ class EventNumberProposal : public Proposal
 
 public:
 
-    EventNumberProposal(MbRandom& rng, Model& model);
+    EventNumberProposal(MbRandom& rng, Settings& settings, Model& model);
 
     virtual void propose();
     virtual void accept();
@@ -35,6 +36,8 @@ private:
 
     MbRandom& _rng;
     Model& _model;
+
+    bool _validateEventConfiguration;
 
     int _currentEventCount;
     double _currentLogLikelihood;

@@ -14,6 +14,8 @@ MoveEventProposal::MoveEventProposal
     _localToGlobalMoveRatio = _settings.getLocalGlobalMoveRatio();
     _scale = _settings.getUpdateEventLocationScale() *
         _model.getTreePtr()->maxRootToTipLength();
+
+    _validateEventConfiguration = _settings.getValidateEventConfiguration();
 }
 
 
@@ -100,7 +102,8 @@ double MoveEventProposal::acceptanceRatio()
         return 0.0;
     }
 
-    if (!_model.isEventConfigurationValid(_event)) {
+    if (_validateEventConfiguration &&
+            !_model.isEventConfigurationValid(_event)) {
         return 0.0;
     }
 

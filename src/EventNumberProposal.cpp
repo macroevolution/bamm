@@ -1,11 +1,13 @@
 #include "EventNumberProposal.h"
 #include "MbRandom.h"
+#include "Settings.h"
 #include "Model.h"
 
 
-EventNumberProposal::EventNumberProposal(MbRandom& rng, Model& model) :
-    _rng(rng), _model(model)
+EventNumberProposal::EventNumberProposal
+    (MbRandom& rng, Settings& settings, Model& model) : _rng(rng), _model(model)
 {
+    _validateEventConfiguration = settings.getValidateEventConfiguration();
 }
 
 
@@ -61,8 +63,8 @@ void EventNumberProposal::reject()
 
 double EventNumberProposal::acceptanceRatio()
 {
-    if (_lastProposal == AddEvent &&
-        !_model.isEventConfigurationValid(_lastEventChanged)) {
+    if (_validateEventConfiguration && _lastProposal == AddEvent &&
+            !_model.isEventConfigurationValid(_lastEventChanged)) {
         return 0.0;
     }
 

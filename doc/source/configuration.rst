@@ -80,6 +80,14 @@ General
     filenames.
     If ``0``, do not run if output files already exist with identical filenames.
 
+``validateEventConfiguration``
+    If ``1``, rejects proposals that cause a branch and both of its direct
+    descendants to have at least one event. Such event configuration may cause
+    the parameters of the parent event to change to unrealistic values.
+    If ``0``, no such proposals are immediately rejected.
+    The default value is ``0``.
+
+
 Priors
 ......
 

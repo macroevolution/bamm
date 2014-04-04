@@ -33,6 +33,8 @@ private:
     double _localToGlobalMoveRatio;
     double _scale;
 
+    bool _validateEventConfiguration;
+
     BranchEvent* _event;
 
     int _currentEventCount;
