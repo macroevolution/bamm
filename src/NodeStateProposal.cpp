@@ -1,3 +1,5 @@
+#include <cstdlib>
+#include <algorithm>
 #include "NodeStateProposal.h"
 #include "MbRandom.h"
 #include "Settings.h"
