@@ -1,5 +1,3 @@
-#include <cstdlib>
-#include <algorithm>
 #include "NodeStateProposal.h"
 #include "MbRandom.h"
 #include "Settings.h"
@@ -8,6 +6,9 @@
 #include "Tree.h"
 #include "Node.h"
 #include "Stat.h"
+
+#include <cstdlib>
+#include <algorithm>
 
 
 NodeStateProposal::NodeStateProposal
