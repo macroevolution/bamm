@@ -11,7 +11,7 @@ MuInitProposal::MuInitProposal
     (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
         EventParameterProposal(rng, settings, model, prior)
 {
-    _updateMuInitScale = _settings.getUpdateMuInitScale();
+    _updateMuInitScale = _settings.get<double>("updateMuInitScale");
 }
 
 

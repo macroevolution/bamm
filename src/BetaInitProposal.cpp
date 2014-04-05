@@ -11,7 +11,7 @@ BetaInitProposal::BetaInitProposal
     (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
         EventParameterProposal(rng, settings, model, prior)
 {
-    _updateBetaInitScale = _settings.getUpdateBetaInitScale();
+    _updateBetaInitScale = _settings.get<double>("updateBetaScale");
 }
 
 

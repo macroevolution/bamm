@@ -26,7 +26,7 @@ Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
         _rng->uniformRv();
 
     // Initialize event rate to generate expected number of prior events
-    _eventRate = 1 / _settings->getPoissonRatePrior();
+    _eventRate = 1 / _settings->get<double>("poissonRatePrior");
 
     _acceptCount = 0;
     _rejectCount = 0;
@@ -50,7 +50,7 @@ void Model::finishConstruction()
 {
     calculateUpdateWeights();
 
-    int initialNumberOfEvents = _settings->getInitialNumberEvents();
+    int initialNumberOfEvents = _settings->get<int>("initialNumberEvents");
     for (int i = 0; i < initialNumberOfEvents; i++) {
         addRandomEventToTree();
     }
@@ -68,7 +68,7 @@ Model::~Model()
 
 void Model::initializeModelFromEventDataFile()
 {
-    std::string inputFileName(_settings->getEventDataInfile());
+    std::string inputFileName(_settings->get("eventDataInfile"));
     std::ifstream inputFile(inputFileName.c_str());
 
     if (!inputFile.good()) {
@@ -221,9 +221,9 @@ void Model::calculateUpdateWeights()
 
 void Model::initializeUpdateWeights()
 {
-    _updateWeights.push_back(_settings->getUpdateRateEventNumber());
-    _updateWeights.push_back(_settings->getUpdateRateEventPosition());
-    _updateWeights.push_back(_settings->getUpdateRateEventRate());
+    _updateWeights.push_back(_settings->get<double>("updateRateEventNumber"));
+    _updateWeights.push_back(_settings->get<double>("updateRateEventPosition"));
+    _updateWeights.push_back(_settings->get<double>("updateRateEventRate"));
 
     // Defined by derived class
     initializeSpecificUpdateWeights();

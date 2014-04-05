@@ -186,7 +186,7 @@ void Settings::initializeSpeciationExtinctionSettings()
 
     // Maximum value of extinction probability on branch that will be tolerated:
     // to avoid numerical overflow issues (especially rounding to 1)
-    addParameter("ExtinctionProbMax", "0.999", NotRequired);
+    addParameter("extinctionProbMax", "0.999", NotRequired);
 }
 
 
@@ -364,7 +364,7 @@ void Settings::checkAllSettingsAreUserDefined() const
 
 void Settings::checkAllOutputFilesAreWriteable() const
 {
-    if (!getOverwrite()) {
+    if (!get<bool>("overwrite")) {
         if (anyOutputFileExists()) {
             exitWithErrorOutputFileExists();
         }
@@ -375,22 +375,23 @@ void Settings::checkAllOutputFilesAreWriteable() const
 bool Settings::anyOutputFileExists() const
 {
     // Global output files
-    if (fileExists(getRunInfoFilename()) ||
-        fileExists(getMCMCoutfile())     ||
-        fileExists(getEventDataOutfile())) {
+    if (fileExists(get("runInfoFilename")) ||
+        fileExists(get("mcmcOutfile"))     ||
+        fileExists(get("eventDataOutfile"))) {
         return true;
     }
 
-    if (getWriteMeanBranchLengthTrees()) {
+    if (get<bool>("writeMeanBranchLengthTrees")) {
         // Speciation/extinction output files
-        if (getModeltype() == "speciationextinction") {
-            if (fileExists(getLambdaOutfile()) || fileExists(getMuOutfile())) {
+        if (get("modeltype") == "speciationextinction") {
+            if (fileExists(get("lambdaOutfile")) ||
+                fileExists(get("muOutfile"))) {
                 return true;
             }
 
         // Trait output files
-        } else if (getModeltype() == "trait") {
-            if (fileExists(getBetaOutfile())) {
+        } else if (get("modeltype") == "trait") {
+            if (fileExists(get("betaOutfile"))) {
                 return true;
             }
         }

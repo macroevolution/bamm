@@ -7,7 +7,8 @@
 EventNumberProposal::EventNumberProposal
     (MbRandom& rng, Settings& settings, Model& model) : _rng(rng), _model(model)
 {
-    _validateEventConfiguration = settings.getValidateEventConfiguration();
+    _validateEventConfiguration =
+        settings.get<bool>("validateEventConfiguration");
 }
 
 

@@ -11,7 +11,7 @@ MuShiftProposal::MuShiftProposal
     (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
         EventParameterProposal(rng, settings, model, prior)
 {
-    _updateMuShiftScale = _settings.getUpdateMuShiftScale();
+    _updateMuShiftScale = _settings.get<double>("updateMuShiftScale");
 }
 
 

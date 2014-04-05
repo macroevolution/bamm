@@ -11,11 +11,12 @@ MoveEventProposal::MoveEventProposal
     (MbRandom& rng, Settings& settings, Model& model) :
         _rng(rng), _settings(settings), _model(model)
 {
-    _localToGlobalMoveRatio = _settings.getLocalGlobalMoveRatio();
-    _scale = _settings.getUpdateEventLocationScale() *
+    _localToGlobalMoveRatio = _settings.get<double>("localGlobalMoveRatio");
+    _scale = _settings.get<double>("updateEventLocationScale") *
         _model.getTreePtr()->maxRootToTipLength();
 
-    _validateEventConfiguration = _settings.getValidateEventConfiguration();
+    _validateEventConfiguration =
+        _settings.get<bool>("validateEventConfiguration");
 }
 
 

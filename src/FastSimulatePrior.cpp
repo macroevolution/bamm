@@ -29,14 +29,14 @@ FastSimulatePrior::FastSimulatePrior(MbRandom* ranptr, Settings* sp)
     
     _generations = 0;
 
-    _eventRate = 1 / sttings->getPoissonRatePrior();
+    _eventRate = 1 / sttings->get<double>("poissonRatePrior");
     
-    _updateEventRateScale = sttings->getUpdateEventRateScale();
+    _updateEventRateScale = sttings->get<double>("updateEventRateScale");
     
-    _poissonRatePrior = sttings->getPoissonRatePrior();
+    _poissonRatePrior = sttings->get<double>("poissonRatePrior");
     _numberEvents = 0;
     
-    _outfileName = sttings->getPriorOutputFileName();
+    _outfileName = sttings->get("priorOutputFileName");
     
 
     // Open streams for writing
@@ -48,14 +48,14 @@ FastSimulatePrior::FastSimulatePrior(MbRandom* ranptr, Settings* sp)
     std::cout << "Progress: 0% ";
     std::cout.flush();
     
-    int fints = (int)round(sp->getNGENS() / 32);
+    int fints = (int)round(sp->get<int>("numberGenerations") / 32);
     
     
-    for (int i = 0; i < sp->getNGENS(); i++){
+    for (int i = 0; i < sp->get<int>("numberGenerations"); i++){
                 
         updateState();
     
-        if ((i % sp->getMCMCwriteFreq()) == 0){
+        if ((i % sp->get<int>("mcmcWriteFreq")) == 0){
             writeStateTofile();
         }
         

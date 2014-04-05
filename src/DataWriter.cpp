@@ -10,13 +10,13 @@ DataWriter::DataWriter(Settings& settings, Model& model) :
     _model(model),
     _streamsInitialized(false),
     _headersWritten(false),
-    _mcmcOutputFileName(settings.getMCMCoutfile()), // TODO: Rename method
-    _eventOutputFileName(settings.getEventDataOutfile()),
-    _acceptanceOutputFileName(settings.getAcceptanceInfoFileName()),
-    _outputAcceptanceInfo(settings.getOutputAcceptanceInfo()),
-    _mcmcOutputFreq(settings.getMCMCwriteFreq()),
-    _eventOutputFreq(settings.getEventDataWriteFreq()),
-    _stdoutOutputFreq(settings.getPrintFreq())
+    _mcmcOutputFileName(settings.get("mcmcOutfile")), // TODO: Rename method
+    _eventOutputFileName(settings.get("eventDataOutfile")),
+    _acceptanceOutputFileName(settings.get("acceptanceInfoFileName")),
+    _outputAcceptanceInfo(settings.get<bool>("outputAcceptanceInfo")),
+    _mcmcOutputFreq(settings.get<int>("mcmcWriteFreq")),
+    _eventOutputFreq(settings.get<int>("eventDataWriteFreq")),
+    _stdoutOutputFreq(settings.get<int>("printFreq"))
 {
 }
 

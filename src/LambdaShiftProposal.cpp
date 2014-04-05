@@ -11,7 +11,7 @@ LambdaShiftProposal::LambdaShiftProposal
     (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
         EventParameterProposal(rng, settings, model, prior)
 {
-    _updateLambdaShiftScale = _settings.getUpdateLambdaShiftScale();
+    _updateLambdaShiftScale = _settings.get<double>("updateLambdaShiftScale");
 }
 
 

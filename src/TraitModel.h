@@ -53,6 +53,8 @@ private:
     BetaShiftProposal _betaShiftProposal;
     NodeStateProposal _nodeStateProposal;
 
+    bool _sampleFromPriorOnly;
+
     double _lastDeletedEventBetaInit;;
     double _lastDeletedEventBetaShift;
 

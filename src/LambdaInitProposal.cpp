@@ -11,7 +11,7 @@ LambdaInitProposal::LambdaInitProposal
     (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
         EventParameterProposal(rng, settings, model, prior)
 {
-    _updateLambdaInitScale = _settings.getUpdateLambdaInitScale();
+    _updateLambdaInitScale = _settings.get<double>("updateLambdaInitScale");
 }
 
 

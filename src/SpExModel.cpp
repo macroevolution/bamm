@@ -49,13 +49,16 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
     _muShiftProposal(*ranptr, *sp, *this, *pr)
 {
     // Initial values
-    _lambdaInit0 = _settings->getLambdaInit0();
-    _lambdaShift0 = _settings->getLambdaShift0();
-    _muInit0 = _settings->getMuInit0();
-    _muShift0 = _settings->getMuShift0();
+    _lambdaInit0 = _settings->get<double>("lambdaInit0");
+    _lambdaShift0 = _settings->get<double>("lambdaShift0");
+    _muInit0 = _settings->get<double>("muInit0");
+    _muShift0 = _settings->get<double>("muShift0");
+
+    _sampleFromPriorOnly = _settings->get<bool>("sampleFromPriorOnly");
 
     // Parameter for splitting branch into pieces for numerical computation
-    _segLength = _settings->getSegLength() * _tree->maxRootToTipLength();
+    _segLength =
+        _settings->get<double>("segLength") * _tree->maxRootToTipLength();
    
     BranchEvent* x =  new SpExBranchEvent
         (_lambdaInit0, _lambdaShift0, _muInit0, _muShift0,
@@ -73,12 +76,12 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
     _tree->setNodeExtinctionParameters();
 
     // Initialize by previous event histories
-    if (_settings->getLoadEventData()) {
+    if (_settings->get<bool>("loadEventData")) {
         log() << "\nLoading model data from file.\n";
         initializeModelFromEventDataFile();
     }
 
-    _extinctionProbMax = _settings->getExtinctionProbMax();
+    _extinctionProbMax = _settings->get<double>("extinctionProbMax");
 
     setCurrentLogLikelihood(computeLogLikelihood());
 
@@ -89,7 +92,7 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
     }
 
     log() << "\nInitial log-likelihood: " << getCurrentLogLikelihood() << "\n";
-    if (_settings->getSampleFromPriorOnly())
+    if (_sampleFromPriorOnly)
         log() << "Note that you have chosen to sample from prior only.\n";
 
     Model::finishConstruction();
@@ -98,10 +101,10 @@ SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
 
 void SpExModel::initializeSpecificUpdateWeights()
 {
-    _updateWeights.push_back(_settings->getUpdateRateLambda0());
-    _updateWeights.push_back(_settings->getUpdateRateLambdaShift());
-    _updateWeights.push_back(_settings->getUpdateRateMu0());
-    _updateWeights.push_back(_settings->getUpdateRateMuShift());
+    _updateWeights.push_back(_settings->get<double>("updateRateLambda0"));
+    _updateWeights.push_back(_settings->get<double>("updateRateLambdaShift"));
+    _updateWeights.push_back(_settings->get<double>("updateRateMu0"));
+    _updateWeights.push_back(_settings->get<double>("updateRateMuShift"));
 }
 
 
@@ -230,7 +233,7 @@ double SpExModel::computeLogLikelihoodByInterval()
     double LnL = 0.0;
 
 
-    if (_settings->getSampleFromPriorOnly())
+    if (_sampleFromPriorOnly)
         return 0.0;
 
     int numNodes = _tree->getNumberOfNodes();

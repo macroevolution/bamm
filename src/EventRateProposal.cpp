@@ -9,7 +9,7 @@ EventRateProposal::EventRateProposal
     (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
         _rng(rng), _settings(settings), _model(model), _prior(prior)
 {
-    _updateEventRateScale = _settings.getUpdateEventRateScale();
+    _updateEventRateScale = _settings.get<double>("updateEventRateScale");
 }
 
 

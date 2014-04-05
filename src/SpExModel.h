@@ -66,6 +66,8 @@ private:
     double _muInit0;
     double _muShift0;
 
+    bool _sampleFromPriorOnly;
+
     double _lastDeletedEventLambdaInit;
     double _lastDeletedEventLambdaShift;
     double _lastDeletedEventMuInit;

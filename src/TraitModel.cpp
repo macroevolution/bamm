@@ -46,9 +46,11 @@ TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
     }
 #endif
     
-    BranchEvent* x = new TraitBranchEvent
-        (_settings->getBetaInit(), _settings->getBetaShiftInit(),
-            _tree->getRoot(), _tree, _rng, 0);
+    _sampleFromPriorOnly = _settings->get<bool>("sampleFromPriorOnly");
+
+    BranchEvent* x = new TraitBranchEvent(_settings->get<double>("betaInit"),
+        _settings->get<double>("betaShiftInit"),
+        _tree->getRoot(), _tree, _rng, 0);
     _rootEvent = x;
     _lastEventModified = x;
 
@@ -56,7 +58,7 @@ TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
         static_cast<TraitBranchEvent*>(_rootEvent);
 
     log() << "\nRoot beta: " << traitRootEvent->getBetaInit() << "\t"
-          << _settings->getBetaInit() << "\t"
+          << _settings->get<double>("betaInit") << "\t"
           << "Shift: " << traitRootEvent->getBetaShift() << "\n";
 
     // Set NodeEvent of root node equal to the _rootEvent:
@@ -67,9 +69,9 @@ TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
 
     _tree->setMeanBranchTraitRates();
 
-    if (_settings->getLoadEventData()) {
+    if (_settings->get<bool>("loadEventData")) {
         log() << "\nLoading model data from file: "
-              << _settings->getEventDataInfile() << "\n";
+              << _settings->get("eventDataInfile") << "\n";
         initializeModelFromEventDataFile();
     }
 
@@ -83,7 +85,7 @@ TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
     }
 
     log() << "\nInitial log-likelihood: " << getCurrentLogLikelihood() << "\n";
-    if (_settings->getSampleFromPriorOnly()) {
+    if (_sampleFromPriorOnly) {
         log() << "Note that you have chosen to sample from prior only.\n";
     }
 
@@ -93,9 +95,9 @@ TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
 
 void TraitModel::initializeSpecificUpdateWeights()
 {
-    _updateWeights.push_back(_settings->getUpdateRateBeta0());
-    _updateWeights.push_back(_settings->getUpdateRateBetaShift());
-    _updateWeights.push_back(_settings->getUpdateRateNodeState());
+    _updateWeights.push_back(_settings->get<double>("updateRateBeta0"));
+    _updateWeights.push_back(_settings->get<double>("updateRateBetaShift"));
+    _updateWeights.push_back(_settings->get<double>("updateRateNodeState"));
 }
 
 
@@ -207,7 +209,7 @@ double TraitModel::computeLogLikelihood()
 
     //Node * tmpnode = _tree->getRoot()->getLfDesc();
 
-    if (_settings->getSampleFromPriorOnly())
+    if (_sampleFromPriorOnly)
         return 0.0;
 
 #ifdef NO_DATA
@@ -251,7 +253,7 @@ double TraitModel::computeTriadLikelihoodTraits(Node* x)
 {
 
 
-    if (_settings->getSampleFromPriorOnly())
+    if (_sampleFromPriorOnly)
         return 0.0;
 
 #ifdef DEBUG

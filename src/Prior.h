@@ -69,8 +69,49 @@ public:
 
 private:
     
-    MbRandom *ranPtr;
-    Settings *sttings;
+    MbRandom *_rng;
+
+    // Initial parameters
+    double _lambdaInit0;
+    double _muInit0;
+    double _betaInit;
+
+    // Shift parameters
+    double _lambdaShift0;
+    double _muShift0;
+    double _betaShiftInit;
+
+    // Priors (non-root) for initial parameters
+    double _lambdaInitPrior;
+    double _muInitPrior;
+    double _betaInitPrior;
+
+    // Priors (non-root) for shift parameters
+    double _lambdaShiftPrior;
+    double _muShiftPrior;
+    double _betaShiftPrior;
+
+    // Root priors for initial parameters
+    double _lambdaInitRootPrior;
+    double _muInitRootPrior;
+    double _betaInitRootPrior;
+
+    // Root priors for shift parameters
+    double _lambdaShiftRootPrior;
+    double _muShiftRootPrior;
+    double _betaShiftRootPrior;
+
+    // Update rate for initial parameters
+    double _updateRateLambda0;
+    double _updateRateMu0;
+    double _updateRateBeta0;
+
+    // Update rate for shift parameters
+    double _updateRateLambdaShift;
+    double _updateRateMuShift;
+    double _updateRateBetaShift;
+
+    double _poissonRatePrior;
 };
 
 

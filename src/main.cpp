@@ -12,7 +12,6 @@
 #include "SpExModel.h"
 #include "Settings.h"
 #include "TraitModel.h"
-//#include "Autotune.h"
 #include "FastSimulatePrior.h"
 #include "Prior.h"
 #include "SpExDataWriter.h"
@@ -75,7 +74,8 @@ int main (int argc, char* argv[])
     // Load settings from control file
     Settings mySettings(controlFilename, commandLineParameters);
 
-    MbRandom myRNG(mySettings.getSeed());
+    int seed = mySettings.get<int>("seed");
+    MbRandom myRNG(seed);
 
     Prior myPrior(&myRNG, &mySettings);
     
@@ -84,92 +84,80 @@ int main (int argc, char* argv[])
         commandLine += std::string(" ") + argv[i];
     }
 
-    std::ofstream runInfoFile(mySettings.getRunInfoFilename().c_str());
+    std::ofstream runInfoFile(mySettings.get("runInfoFilename").c_str());
     log(Message, runInfoFile) << "Command line: " << commandLine << "\n";
 
     //log(Message, runInfoFile) << "Git commit id: " << GIT_COMMIT_ID << "\n";
-    if (mySettings.getSeed() == -1) {
-        log(Message) << "Random seed (clock): " << myRNG.getSeed() << "\n";
-        log(Message, runInfoFile) << "Random seed (clock): " <<
-            myRNG.getSeed() << "\n";
+    if (seed == -1) {
+        log(Message) << "Random seed (clock): " << seed << "\n";
+        log(Message, runInfoFile) << "Random seed (clock): " << seed << "\n";
     } else {
-        log(Message) << "Random seed: " << myRNG.getSeed() << "\n";
-        log(Message, runInfoFile) << "Random seed: " << myRNG.getSeed() << "\n";
+        log(Message) << "Random seed: " << seed << "\n";
+        log(Message, runInfoFile) << "Random seed: " << seed << "\n";
     }
     log(Message, runInfoFile) << "Start time: " << currentTime() << "\n";
 
-    if (mySettings.getModeltype() == "speciationextinction") {
+    if (mySettings.get("modeltype") == "speciationextinction") {
         log(Message) << "\nModel type: Speciation/Extinction\n";
 
         mySettings.printCurrentSettings(runInfoFile);
 
-        std::string treefile = mySettings.getTreeFilename();
+        std::string treefile = mySettings.get("treefile");
         Tree intree(treefile, &myRNG);
 
-        if (mySettings.getUseGlobalSamplingProbability()) {
+        if (mySettings.get<bool>("useGlobalSamplingProbability")) {
             intree.initializeSpeciationExtinctionModel
-                (mySettings.getGlobalSamplingFraction());
+                (mySettings.get<double>("globalSamplingFraction"));
         } else {
             // TODO: Code should be supported for this but need to check
             intree.initializeSpeciationExtinctionModel
-                (mySettings.getSampleProbsFilename());
+                (mySettings.get("sampleProbsFilename"));
         }
         
         intree.setCanNodeHoldEventByDescCount
-            (mySettings.getMinCladeSizeForShift());
+            (mySettings.get<int>("minCladeSizeForShift"));
         intree.setTreeMap(intree.getRoot());
 
-        if (mySettings.getInitializeModel()) {
+        if (mySettings.get<bool>("initializeModel")) {
             SpExModel model(&myRNG, &intree, &mySettings, &myPrior);
 
-            if (mySettings.getRunMCMC()) {
-                int numberOfGenerations = mySettings.getNGENS();
+            if (mySettings.get<bool>("runMCMC")) {
+                int numberOfGenerations =
+                    mySettings.get<int>("numberGenerations");
                 SpExDataWriter dataWriter(mySettings, model);
                 MCMC mcmc(myRNG, model, numberOfGenerations, dataWriter);
                 mcmc.run();
             }
-/*
-            // TODO: Is this doing anything
-            if (mySettings.getAutotune()) {
-                Autotune autotune(&myRNG, &model, &mySettings);
-            }
-*/
         }
 
-    } else if (mySettings.getModeltype() == "trait") {
+    } else if (mySettings.get("modeltype") == "trait") {
         log(Message) << "\nModel type: Trait\n";
         
         mySettings.printCurrentSettings(runInfoFile);
 
-        std::string treefile = mySettings.getTreeFilename();
+        std::string treefile = mySettings.get("treefile");
         Tree intree(treefile, &myRNG);
 
         intree.setAllNodesCanHoldEvent();
         intree.setTreeMap(intree.getRoot());
 
-        intree.getPhenotypesMissingLatent(mySettings.getTraitFile());
+        intree.getPhenotypesMissingLatent(mySettings.get("traitfile"));
         intree.initializeTraitValues();
         
-        if (mySettings.getInitializeModel()) {
+        if (mySettings.get<bool>("initializeModel")) {
             TraitModel model(&myRNG, &intree, &mySettings, &myPrior);
 
-            if (mySettings.getRunMCMC()) {
-                int numberOfGenerations = mySettings.getNGENS();
+            if (mySettings.get<bool>("runMCMC")) {
+                int numberOfGenerations =
+                    mySettings.get<int>("numberGenerations");
                 TraitDataWriter dataWriter(mySettings, model);
                 MCMC mcmc(myRNG, model, numberOfGenerations, dataWriter);
                 mcmc.run();
             }
-/*
-            if (mySettings.getAutotune()) {
-                log(Error) << "Autotune option not yet supported for "
-                    << "phenotypic (trait) analysis.\n";
-                std::exit(1);
-            }
-*/
         }
     }
 
-    if (mySettings.getSimulatePriorShifts()){
+    if (mySettings.get<bool>("simulatePriorShifts")){
         FastSimulatePrior fsp(&myRNG, &mySettings);
     }
 

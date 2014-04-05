@@ -19,12 +19,13 @@ NodeStateProposal::NodeStateProposal
     // Node state scale is relative to the standard deviation
     // of the trait values (located in the tree terminal nodes)
     double sd_traits = Stat::standard_deviation(_tree->traitValues());
-    _updateNodeStateScale = _settings.getUpdateNodeStateScale() * sd_traits;
+    _updateNodeStateScale =
+        _settings.get<double>("updateNodeStateScale") * sd_traits;
+
+    _priorMin = _settings.get<double>("traitPriorMin");
+    _priorMax = _settings.get<double>("traitPriorMax");
 
     updateMinMaxTraitPriorSettings();
-
-    _priorMin = _settings.getTraitPriorMin();
-    _priorMax = _settings.getTraitPriorMax();
 }
 
 
@@ -43,14 +44,11 @@ void NodeStateProposal::updateMinMaxTraitPriorSettings()
 
     // Default here will be to use observed range +/- 20%
     double rg = tvec[(tvec.size() - 1)] - tvec[0];
-    double minprior = tvec[0] - (0.2 * rg);
-    double maxprior = tvec[(tvec.size() - 1)] + (0.2 * rg);
+    _priorMin = tvec[0] - (0.2 * rg);
+    _priorMax = tvec[(tvec.size() - 1)] + (0.2 * rg);
 
     log() << "\nMin and max phenotype limits set using observed data:\n"
-          << "\t\tMin: " << minprior << "\tMax: " << maxprior << "\n";
-
-    _settings.setTraitPriorMin(minprior);
-    _settings.setTraitPriorMax(maxprior);
+          << "\t\tMin: " << _priorMin << "\tMax: " << _priorMax << "\n";
 }
 
 
