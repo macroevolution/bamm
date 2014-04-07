@@ -40,6 +40,8 @@ private:
     double _priorMin;
     double _priorMax;
 
+    bool _minMaxTraitPriorUpdated;
+
     double _currentNodeState;
     double _proposedNodeState;
 

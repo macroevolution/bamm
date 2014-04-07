@@ -25,7 +25,9 @@ NodeStateProposal::NodeStateProposal
     _priorMin = _settings.get<double>("traitPriorMin");
     _priorMax = _settings.get<double>("traitPriorMax");
 
-    updateMinMaxTraitPriorSettings();
+    // Min and max trait priors must be updated later,
+    // after tree is initialized during model construction
+    _minMaxTraitPriorUpdated = false;
 }
 
 
@@ -54,6 +56,11 @@ void NodeStateProposal::updateMinMaxTraitPriorSettings()
 
 void NodeStateProposal::propose()
 {
+    if (!_minMaxTraitPriorUpdated) {
+        updateMinMaxTraitPriorSettings();
+        _minMaxTraitPriorUpdated = true;
+    }
+
     _node = _tree->chooseInternalNodeAtRandom();
 
     double currentTriadLogLikelihood =

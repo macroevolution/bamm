@@ -5,17 +5,20 @@
 #include <ctime>
 #include <cstdlib>
 
+#include "MbRandom.h"
+#include "Settings.h"
+#include "Prior.h"
 #include "Tree.h"
 #include "Node.h"
-#include "MbRandom.h"
 #include "MCMC.h"
+#include "ModelFactory.h"
+#include "SpExModelFactory.h"
 #include "SpExModel.h"
-#include "Settings.h"
-#include "TraitModel.h"
-#include "FastSimulatePrior.h"
-#include "Prior.h"
 #include "SpExDataWriter.h"
+#include "TraitModelFactory.h"
+#include "TraitModel.h"
 #include "TraitDataWriter.h"
+#include "FastSimulatePrior.h"
 
 
 void printAbout();
@@ -79,8 +82,6 @@ int main (int argc, char* argv[])
     MbRandom rng(seed);
     seed = rng.getSeed();    // Get actual seed in case it is based on clock
 
-    Prior prior(&rng, &settings);
-
     std::ofstream runInfoFile(settings.get("runInfoFilename").c_str());
     log(Message, runInfoFile) << "Command line: "
         << buildCommandLine(argc, argv) << "\n";
@@ -89,41 +90,38 @@ int main (int argc, char* argv[])
     log(Message, runInfoFile) << "Start time: " << currentTime() << "\n";
     
     log(Message) << "Random seed: " << seed << "\n";
+    settings.printCurrentSettings(runInfoFile);
 
-    if (settings.get("modeltype") == "speciationextinction") {
+    ModelFactory* modelFactory = NULL;
+
+    std::string modelType = settings.get("modeltype");
+    if (modelType == "speciationextinction") {
         log(Message) << "\nModel type: Speciation/Extinction\n";
-
-        settings.printCurrentSettings(runInfoFile);
-
-        if (settings.get<bool>("initializeModel")) {
-            SpExModel model(&rng, &settings, &prior);
-
-            if (settings.get<bool>("runMCMC")) {
-                int numberOfGenerations =
-                    settings.get<int>("numberGenerations");
-                SpExDataWriter dataWriter(settings, model);
-                MCMC mcmc(rng, model, numberOfGenerations, dataWriter);
-                mcmc.run();
-            }
-        }
-
-    } else if (settings.get("modeltype") == "trait") {
+        modelFactory = new SpExModelFactory();
+    } else if (modelType == "trait") {
         log(Message) << "\nModel type: Trait\n";
-        
-        settings.printCurrentSettings(runInfoFile);
-
-        if (settings.get<bool>("initializeModel")) {
-            TraitModel model(&rng, &settings, &prior);
-
-            if (settings.get<bool>("runMCMC")) {
-                int numberOfGenerations =
-                    settings.get<int>("numberGenerations");
-                TraitDataWriter dataWriter(settings, model);
-                MCMC mcmc(rng, model, numberOfGenerations, dataWriter);
-                mcmc.run();
-            }
-        }
+        modelFactory = new TraitModelFactory();
+    } else {
+        log(Error) << "\nUnrecognized model\n";
+        std::exit(1);
     }
+
+    Prior prior(&rng, &settings);
+
+    if (settings.get<bool>("initializeModel")) {
+        Model* model = modelFactory->createModel(rng, settings, prior);
+        if (settings.get<bool>("runMCMC")) {
+            int numberOfGenerations = settings.get<int>("numberGenerations");
+            DataWriter* dataWriter =
+                modelFactory->createDataWriter(settings, *model);
+            MCMC mcmc(rng, *model, numberOfGenerations, *dataWriter);
+            mcmc.run();
+            delete dataWriter;
+        }
+        delete model;
+    }
+
+    delete modelFactory;
 
     if (settings.get<bool>("simulatePriorShifts")){
         FastSimulatePrior fsp(&rng, &settings);
