@@ -72,19 +72,19 @@ int main (int argc, char* argv[])
     }
 
     // Load settings from control file
-    Settings mySettings(controlFilename, commandLineParameters);
+    Settings settings(controlFilename, commandLineParameters);
 
-    int seed = mySettings.get<int>("seed");
-    MbRandom myRNG(seed);
+    int seed = settings.get<int>("seed");
+    MbRandom rng(seed);
 
-    Prior myPrior(&myRNG, &mySettings);
+    Prior prior(&rng, &settings);
     
     std::string commandLine(argv[0]);
     for (int i = 1; i < argc; i++) {
         commandLine += std::string(" ") + argv[i];
     }
 
-    std::ofstream runInfoFile(mySettings.get("runInfoFilename").c_str());
+    std::ofstream runInfoFile(settings.get("runInfoFilename").c_str());
     log(Message, runInfoFile) << "Command line: " << commandLine << "\n";
 
     //log(Message, runInfoFile) << "Git commit id: " << GIT_COMMIT_ID << "\n";
@@ -97,68 +97,68 @@ int main (int argc, char* argv[])
     }
     log(Message, runInfoFile) << "Start time: " << currentTime() << "\n";
 
-    if (mySettings.get("modeltype") == "speciationextinction") {
+    if (settings.get("modeltype") == "speciationextinction") {
         log(Message) << "\nModel type: Speciation/Extinction\n";
 
-        mySettings.printCurrentSettings(runInfoFile);
+        settings.printCurrentSettings(runInfoFile);
 
-        std::string treefile = mySettings.get("treefile");
-        Tree intree(treefile, &myRNG);
+        std::string treefile = settings.get("treefile");
+        Tree intree(treefile, &rng);
 
-        if (mySettings.get<bool>("useGlobalSamplingProbability")) {
+        if (settings.get<bool>("useGlobalSamplingProbability")) {
             intree.initializeSpeciationExtinctionModel
-                (mySettings.get<double>("globalSamplingFraction"));
+                (settings.get<double>("globalSamplingFraction"));
         } else {
             // TODO: Code should be supported for this but need to check
             intree.initializeSpeciationExtinctionModel
-                (mySettings.get("sampleProbsFilename"));
+                (settings.get("sampleProbsFilename"));
         }
         
         intree.setCanNodeHoldEventByDescCount
-            (mySettings.get<int>("minCladeSizeForShift"));
+            (settings.get<int>("minCladeSizeForShift"));
         intree.setTreeMap(intree.getRoot());
 
-        if (mySettings.get<bool>("initializeModel")) {
-            SpExModel model(&myRNG, &intree, &mySettings, &myPrior);
+        if (settings.get<bool>("initializeModel")) {
+            SpExModel model(&rng, &intree, &settings, &prior);
 
-            if (mySettings.get<bool>("runMCMC")) {
+            if (settings.get<bool>("runMCMC")) {
                 int numberOfGenerations =
-                    mySettings.get<int>("numberGenerations");
-                SpExDataWriter dataWriter(mySettings, model);
-                MCMC mcmc(myRNG, model, numberOfGenerations, dataWriter);
+                    settings.get<int>("numberGenerations");
+                SpExDataWriter dataWriter(settings, model);
+                MCMC mcmc(rng, model, numberOfGenerations, dataWriter);
                 mcmc.run();
             }
         }
 
-    } else if (mySettings.get("modeltype") == "trait") {
+    } else if (settings.get("modeltype") == "trait") {
         log(Message) << "\nModel type: Trait\n";
         
-        mySettings.printCurrentSettings(runInfoFile);
+        settings.printCurrentSettings(runInfoFile);
 
-        std::string treefile = mySettings.get("treefile");
-        Tree intree(treefile, &myRNG);
+        std::string treefile = settings.get("treefile");
+        Tree intree(treefile, &rng);
 
         intree.setAllNodesCanHoldEvent();
         intree.setTreeMap(intree.getRoot());
 
-        intree.getPhenotypesMissingLatent(mySettings.get("traitfile"));
+        intree.getPhenotypesMissingLatent(settings.get("traitfile"));
         intree.initializeTraitValues();
         
-        if (mySettings.get<bool>("initializeModel")) {
-            TraitModel model(&myRNG, &intree, &mySettings, &myPrior);
+        if (settings.get<bool>("initializeModel")) {
+            TraitModel model(&rng, &intree, &settings, &prior);
 
-            if (mySettings.get<bool>("runMCMC")) {
+            if (settings.get<bool>("runMCMC")) {
                 int numberOfGenerations =
-                    mySettings.get<int>("numberGenerations");
-                TraitDataWriter dataWriter(mySettings, model);
-                MCMC mcmc(myRNG, model, numberOfGenerations, dataWriter);
+                    settings.get<int>("numberGenerations");
+                TraitDataWriter dataWriter(settings, model);
+                MCMC mcmc(rng, model, numberOfGenerations, dataWriter);
                 mcmc.run();
             }
         }
     }
 
-    if (mySettings.get<bool>("simulatePriorShifts")){
-        FastSimulatePrior fsp(&myRNG, &mySettings);
+    if (settings.get<bool>("simulatePriorShifts")){
+        FastSimulatePrior fsp(&rng, &settings);
     }
 
     log(Message, runInfoFile) << "End time: " << currentTime() << "\n";
