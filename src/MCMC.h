@@ -2,33 +2,31 @@
 #define MCMC_H
 
 
-#include <vector>
-#include <string>
-#include <fstream>
-
 class MbRandom;
 class Model;
-class DataWriter;
 
 
 class MCMC
 {
 public:
 
-    MCMC(MbRandom& rng, Model& model, int numberOfGenerations,
-        DataWriter& dataWriter);
+    MCMC(MbRandom& rng, Model& model);
     ~MCMC();
 
-    void run();
+    void run(int generations);
+    Model& model();
 
 protected:
 
     MbRandom& _rng;
     Model& _model;
-
-    int _numberOfGenerations;
-    DataWriter& _dataWriter;
 };
+
+
+inline Model& MCMC::model()
+{
+    return _model;
+}
 
 
 #endif

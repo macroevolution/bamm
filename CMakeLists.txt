@@ -38,6 +38,7 @@ SET(BAMM_SRC
     src/LambdaShiftProposal.cpp
     src/Log.cpp
     src/MCMC.cpp
+    src/MetropolisCoupledMCMC.cpp
     src/MbRandom.cpp
     src/Model.cpp
     src/MoveEventProposal.cpp

@@ -1,13 +1,9 @@
 #include "MCMC.h"
 #include "MbRandom.h"
 #include "Model.h"
-#include "DataWriter.h"
-#include "Log.h"
 
 
-MCMC::MCMC(MbRandom& rng, Model& model, int numberOfGenerations,
-    DataWriter& dataWriter) : _rng(rng), _model(model),
-    _numberOfGenerations(numberOfGenerations), _dataWriter(dataWriter)
+MCMC::MCMC(MbRandom& rng, Model& model) : _rng(rng), _model(model)
 {
 }
 
@@ -17,12 +13,9 @@ MCMC::~MCMC()
 }
 
 
-void MCMC::run()
+void MCMC::run(int generations)
 {
-    log() << "\nRunning MCMC chain for "
-          << _numberOfGenerations << " generations.\n";
-
-    for (int generation = 0; generation < _numberOfGenerations; generation++) {
+    for (int g = 0; g < generations; g++) {
         _model.proposeNewState();
 
         double acceptanceRatio = _model.acceptanceRatio();
@@ -31,7 +24,5 @@ void MCMC::run()
         } else {
             _model.rejectProposal();
         }
-
-        _dataWriter.writeData(generation);
     }
 }

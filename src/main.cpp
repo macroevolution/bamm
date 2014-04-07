@@ -106,19 +106,16 @@ int main (int argc, char* argv[])
         std::exit(1);
     }
 
+    // TODO: Why is prior created here? Create by whoever uses it.
     Prior prior(&rng, &settings);
 
     if (settings.get<bool>("initializeModel")) {
-        Model* model = modelFactory->createModel(rng, settings, prior);
+        // Model is initialized with MetropolisCoupledMCMC
+        MetropolisCoupledMCMC mc3(rng, settings, prior, modelFactory);
+
         if (settings.get<bool>("runMCMC")) {
-            int numberOfGenerations = settings.get<int>("numberGenerations");
-            DataWriter* dataWriter =
-                modelFactory->createDataWriter(settings, *model);
-            MCMC mcmc(rng, *model, numberOfGenerations, *dataWriter);
-            mcmc.run();
-            delete dataWriter;
+            mc3.run();
         }
-        delete model;
     }
 
     delete modelFactory;
