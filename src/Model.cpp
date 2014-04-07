@@ -14,8 +14,9 @@
 
 
 // TODO: pointers not necessary; make references
-Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
-    _rng(rng), _tree(tree), _settings(settings), _prior(prior),
+Model::Model(MbRandom* rng, Settings* settings, Prior* prior) :
+    _rng(rng), _settings(settings), _prior(prior),
+    _tree(new Tree(_settings->get("treefile"), _rng)),
     _eventNumberProposal(*rng, *settings, *this),
     _moveEventProposal(*rng, *settings, *this),
     _eventRateProposal(*rng, *settings, *this, *prior)
@@ -46,7 +47,6 @@ Model::Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior) :
 
 // This method needs to be called by the derived class
 void Model::finishConstruction()
-
 {
     calculateUpdateWeights();
 
@@ -63,6 +63,8 @@ Model::~Model()
     for (it = _eventCollection.begin(); it != _eventCollection.end(); ++it) {
         delete *it;
     }
+
+    delete _tree;
 }
 
 

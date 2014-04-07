@@ -31,12 +31,18 @@
 #include "Stat.h"
 
 
-TraitModel::TraitModel(MbRandom* rng, Tree* tree, Settings* settings,
-    Prior* prior) : Model(rng, tree, settings, prior),
+TraitModel::TraitModel(MbRandom* rng, Settings* settings, Prior* prior) :
+    Model(rng, settings, prior),
     _betaInitProposal(*rng, *settings, *this, *prior),
     _betaShiftProposal(*rng, *settings, *this, *prior),
     _nodeStateProposal(*rng, *settings, *this)
 {
+    // Initialize tree
+    _tree->setAllNodesCanHoldEvent();
+    _tree->setTreeMap(_tree->getRoot());
+    _tree->getPhenotypesMissingLatent(_settings->get("traitfile"));
+    _tree->initializeTraitValues();
+
 #ifdef NEGATIVE_SHIFT_PARAM
     // Constrain beta shift to be zero or less than zero.
     if (_settings->getBetaShiftInit() > 0) {

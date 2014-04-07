@@ -19,6 +19,7 @@
 
 
 void printAbout();
+std::string buildCommandLine(int argc, char* argv[]);
 const char* currentTime();
 void exitWithMessageUsage();
 void exitWithErrorUnknownArgument(const std::string& arg);
@@ -76,50 +77,26 @@ int main (int argc, char* argv[])
 
     int seed = settings.get<int>("seed");
     MbRandom rng(seed);
+    seed = rng.getSeed();    // Get actual seed in case it is based on clock
 
     Prior prior(&rng, &settings);
-    
-    std::string commandLine(argv[0]);
-    for (int i = 1; i < argc; i++) {
-        commandLine += std::string(" ") + argv[i];
-    }
 
     std::ofstream runInfoFile(settings.get("runInfoFilename").c_str());
-    log(Message, runInfoFile) << "Command line: " << commandLine << "\n";
-
+    log(Message, runInfoFile) << "Command line: "
+        << buildCommandLine(argc, argv) << "\n";
     //log(Message, runInfoFile) << "Git commit id: " << GIT_COMMIT_ID << "\n";
-    if (seed == -1) {
-        log(Message) << "Random seed (clock): " << seed << "\n";
-        log(Message, runInfoFile) << "Random seed (clock): " << seed << "\n";
-    } else {
-        log(Message) << "Random seed: " << seed << "\n";
-        log(Message, runInfoFile) << "Random seed: " << seed << "\n";
-    }
+    log(Message, runInfoFile) << "Random seed: " << seed << "\n";
     log(Message, runInfoFile) << "Start time: " << currentTime() << "\n";
+    
+    log(Message) << "Random seed: " << seed << "\n";
 
     if (settings.get("modeltype") == "speciationextinction") {
         log(Message) << "\nModel type: Speciation/Extinction\n";
 
         settings.printCurrentSettings(runInfoFile);
 
-        std::string treefile = settings.get("treefile");
-        Tree intree(treefile, &rng);
-
-        if (settings.get<bool>("useGlobalSamplingProbability")) {
-            intree.initializeSpeciationExtinctionModel
-                (settings.get<double>("globalSamplingFraction"));
-        } else {
-            // TODO: Code should be supported for this but need to check
-            intree.initializeSpeciationExtinctionModel
-                (settings.get("sampleProbsFilename"));
-        }
-        
-        intree.setCanNodeHoldEventByDescCount
-            (settings.get<int>("minCladeSizeForShift"));
-        intree.setTreeMap(intree.getRoot());
-
         if (settings.get<bool>("initializeModel")) {
-            SpExModel model(&rng, &intree, &settings, &prior);
+            SpExModel model(&rng, &settings, &prior);
 
             if (settings.get<bool>("runMCMC")) {
                 int numberOfGenerations =
@@ -135,17 +112,8 @@ int main (int argc, char* argv[])
         
         settings.printCurrentSettings(runInfoFile);
 
-        std::string treefile = settings.get("treefile");
-        Tree intree(treefile, &rng);
-
-        intree.setAllNodesCanHoldEvent();
-        intree.setTreeMap(intree.getRoot());
-
-        intree.getPhenotypesMissingLatent(settings.get("traitfile"));
-        intree.initializeTraitValues();
-        
         if (settings.get<bool>("initializeModel")) {
-            TraitModel model(&rng, &intree, &settings, &prior);
+            TraitModel model(&rng, &settings, &prior);
 
             if (settings.get<bool>("runMCMC")) {
                 int numberOfGenerations =
@@ -186,6 +154,18 @@ void printAbout()
 |                                                                          |\n\
 +--------------------------------------------------------------------------+\n\
 \n";
+}
+
+
+std::string buildCommandLine(int argc, char* argv[])
+{
+    // String together the command-line arguments
+    std::string commandLine(argv[0]);
+    for (int i = 1; i < argc; i++) {
+        commandLine += std::string(" ") + argv[i];
+    }
+
+    return commandLine;
 }
 
 

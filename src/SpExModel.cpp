@@ -41,13 +41,26 @@
 #define JUMP_VARIANCE_NORMAL 0.05
 
 
-SpExModel::SpExModel(MbRandom* ranptr, Tree* tp, Settings* sp, Prior* pr) :
-    Model(ranptr, tp, sp, pr),
+SpExModel::SpExModel(MbRandom* ranptr, Settings* sp, Prior* pr) :
+    Model(ranptr, sp, pr),
     _lambdaInitProposal(*ranptr, *sp, *this, *pr),
     _lambdaShiftProposal(*ranptr, *sp, *this, *pr),
     _muInitProposal(*ranptr, *sp, *this, *pr),
     _muShiftProposal(*ranptr, *sp, *this, *pr)
 {
+    // Initialize tree
+    if (_settings->get<bool>("useGlobalSamplingProbability")) {
+        _tree->initializeSpeciationExtinctionModel
+            (_settings->get<double>("globalSamplingFraction"));
+    } else {
+        _tree->initializeSpeciationExtinctionModel
+            (_settings->get("sampleProbsFilename"));
+    }
+
+    _tree->setCanNodeHoldEventByDescCount
+        (_settings->get<int>("minCladeSizeForShift"));
+    _tree->setTreeMap(_tree->getRoot());
+
     // Initial values
     _lambdaInit0 = _settings->get<double>("lambdaInit0");
     _lambdaShift0 = _settings->get<double>("lambdaShift0");

@@ -8,7 +8,6 @@
 #include "MuShiftProposal.h"
 #include <iosfwd>
 
-class Tree;
 class Node;
 class MbRandom;
 class Settings;
@@ -22,7 +21,7 @@ class SpExModel : public Model
 
 public:
 
-    SpExModel(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior);
+    SpExModel(MbRandom* rng, Settings* settings, Prior* prior);
 
     virtual double computeLogLikelihood();
     virtual double computeLogPrior();

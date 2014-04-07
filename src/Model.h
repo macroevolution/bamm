@@ -26,7 +26,7 @@ class Model
 
 public:
 
-    Model(MbRandom* rng, Tree* tree, Settings* settings, Prior* prior);
+    Model(MbRandom* rng, Settings* settings, Prior* prior);
     virtual ~Model();
 
     void finishConstruction();
@@ -128,9 +128,9 @@ protected:
         (std::stringstream& ss, BranchEvent* event) = 0;
 
     MbRandom* _rng;
-    Tree* _tree;
     Settings* _settings;
     Prior* _prior;
+    Tree* _tree;
 
     EventNumberProposal _eventNumberProposal;
     MoveEventProposal _moveEventProposal;
