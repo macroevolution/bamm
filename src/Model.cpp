@@ -14,12 +14,12 @@
 
 
 // TODO: pointers not necessary; make references
-Model::Model(MbRandom* rng, Settings* settings, Prior* prior) :
-    _rng(rng), _settings(settings), _prior(prior),
+Model::Model(MbRandom* rng, Settings* settings) :
+    _rng(rng), _settings(settings), _prior(_rng, _settings),
     _tree(new Tree(_settings->get("treefile"), _rng)),
     _eventNumberProposal(*rng, *settings, *this),
     _moveEventProposal(*rng, *settings, *this),
-    _eventRateProposal(*rng, *settings, *this, *prior)
+    _eventRateProposal(*rng, *settings, *this, _prior)
 {
     // Reduce weird autocorrelation of values at start by calling RNG
     // a few times. TODO: Why is there a weird autocorrelation?
@@ -490,46 +490,6 @@ void Model::resetMHAcceptanceParameters()
 {
     _acceptCount = 0;
     _rejectCount = 0;
-}
-
-
-//  Write event data to file for all events "on" tree
-//  at a given point in the MCMC chain
-    
-void Model::getEventDataString(std::stringstream& ss, int generation)
-{   
-    ss << generation << ",";
-    
-    BranchEvent* be = _rootEvent;
-    Node* xl = _tree->getRoot()->getRandomLeftTipNode();
-    Node* xr = _tree->getRoot()->getRandomRightTipNode();
-    ss << xl->getName() << ","
-       << xr->getName() << ","
-       << be->getAbsoluteTime() << ",";
-    
-    // Implemented in derived class
-    getSpecificEventDataString(ss, be);
-
-    if (_eventCollection.size() == 0) {
-        return;
-    }
-    
-    EventSet::iterator it;
-    for (it = _eventCollection.begin(); it != _eventCollection.end(); ++it) {
-        ss << "\n" << generation << ",";
-        be = *it;
-        if (be->getEventNode()->getLfDesc() == NULL) {
-            ss << be->getEventNode()->getName() << "," << "NA" << ",";
-        } else {
-            Node* xl = be->getEventNode()->getRandomLeftTipNode();
-            Node* xr = be->getEventNode()->getRandomRightTipNode();
-            ss << xl->getName() << "," << xr->getName() << ",";
-        }
-        ss << be->getAbsoluteTime() << ",";
-
-        // Implemented in derived class
-        getSpecificEventDataString(ss, be);
-    }
 }
 
 

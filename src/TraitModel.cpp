@@ -31,10 +31,10 @@
 #include "Stat.h"
 
 
-TraitModel::TraitModel(MbRandom* rng, Settings* settings, Prior* prior) :
-    Model(rng, settings, prior),
-    _betaInitProposal(*rng, *settings, *this, *prior),
-    _betaShiftProposal(*rng, *settings, *this, *prior),
+TraitModel::TraitModel(MbRandom* rng, Settings* settings) :
+    Model(rng, settings),
+    _betaInitProposal(*rng, *settings, *this, _prior),
+    _betaShiftProposal(*rng, *settings, *this, _prior),
     _nodeStateProposal(*rng, *settings, *this)
 {
     // Initialize tree
@@ -155,8 +155,8 @@ void TraitModel::setMeanBranchParameters()
 BranchEvent* TraitModel::newBranchEventWithRandomParameters(double x)
 {
     // Sample beta and beta shift from prior
-    double newbeta = _prior->generateBetaInitFromPrior();
-    double newBetaShift = _prior->generateBetaShiftFromPrior();
+    double newbeta = _prior.generateBetaInitFromPrior();
+    double newBetaShift = _prior.generateBetaShiftFromPrior();
     
 #ifdef NEGATIVE_SHIFT_PARAM
     newBetaShift = -fabs(newBetaShift);
@@ -167,8 +167,8 @@ BranchEvent* TraitModel::newBranchEventWithRandomParameters(double x)
     
     _logQRatioJump = 0.0;
     
-    _logQRatioJump += _prior->betaInitPrior(newbeta);
-    _logQRatioJump += dens_term + _prior->betaShiftPrior(newBetaShift);
+    _logQRatioJump += _prior.betaInitPrior(newbeta);
+    _logQRatioJump += dens_term + _prior.betaShiftPrior(newBetaShift);
     
     return new TraitBranchEvent(newbeta, newBetaShift,
         _tree->mapEventToTree(x), _tree, _rng, x);
@@ -188,8 +188,8 @@ double TraitModel::calculateLogQRatioJump()
 {
     double _logQRatioJump = 0.0;
     
-    _logQRatioJump = _prior->betaInitPrior(_lastDeletedEventBetaInit);
-    _logQRatioJump += _prior->betaShiftPrior(_lastDeletedEventBetaShift);
+    _logQRatioJump = _prior.betaInitPrior(_lastDeletedEventBetaInit);
+    _logQRatioJump += _prior.betaShiftPrior(_lastDeletedEventBetaShift);
 
     return _logQRatioJump;
 }
@@ -326,22 +326,22 @@ double TraitModel::computeLogPrior(void)
 
     TraitBranchEvent* re = static_cast<TraitBranchEvent*>(_rootEvent);
     
-    logPrior += _prior->betaInitRootPrior(re->getBetaInit());
-    logPrior += dens_term + _prior->betaShiftRootPrior(re->getBetaShift());
+    logPrior += _prior.betaInitRootPrior(re->getBetaInit());
+    logPrior += dens_term + _prior.betaShiftRootPrior(re->getBetaShift());
 
     for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
          i != _eventCollection.end(); ++i) {
 
         TraitBranchEvent* event = static_cast<TraitBranchEvent*>(*i);
         
-        logPrior += _prior->betaInitPrior(event->getBetaInit());
-        logPrior += dens_term + _prior->betaShiftPrior(event->getBetaShift());
+        logPrior += _prior.betaInitPrior(event->getBetaInit());
+        logPrior += dens_term + _prior.betaShiftPrior(event->getBetaShift());
         
     }
     
     // and prior on number of events:
     
-    logPrior += _prior->poissonRatePrior(getEventRate());
+    logPrior += _prior.poissonRatePrior(getEventRate());
     
     return logPrior;
     

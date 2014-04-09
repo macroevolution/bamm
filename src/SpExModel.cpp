@@ -41,12 +41,12 @@
 #define JUMP_VARIANCE_NORMAL 0.05
 
 
-SpExModel::SpExModel(MbRandom* ranptr, Settings* sp, Prior* pr) :
-    Model(ranptr, sp, pr),
-    _lambdaInitProposal(*ranptr, *sp, *this, *pr),
-    _lambdaShiftProposal(*ranptr, *sp, *this, *pr),
-    _muInitProposal(*ranptr, *sp, *this, *pr),
-    _muShiftProposal(*ranptr, *sp, *this, *pr)
+SpExModel::SpExModel(MbRandom* ranptr, Settings* sp) :
+    Model(ranptr, sp),
+    _lambdaInitProposal(*ranptr, *sp, *this, _prior),
+    _lambdaShiftProposal(*ranptr, *sp, *this, _prior),
+    _muInitProposal(*ranptr, *sp, *this, _prior),
+    _muShiftProposal(*ranptr, *sp, *this, _prior)
 {
     // Initialize tree
     if (_settings->get<bool>("useGlobalSamplingProbability")) {
@@ -175,18 +175,18 @@ void SpExModel::setMeanBranchParameters()
 
 BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
 {
-    double newLam = _prior->generateLambdaInitFromPrior();
-    double newLambdaShift = _prior->generateLambdaShiftFromPrior();
-    double newMu = _prior->generateMuInitFromPrior();
-    double newMuShift = _prior->generateMuShiftFromPrior();
+    double newLam = _prior.generateLambdaInitFromPrior();
+    double newLambdaShift = _prior.generateLambdaShiftFromPrior();
+    double newMu = _prior.generateMuInitFromPrior();
+    double newMuShift = _prior.generateMuShiftFromPrior();
  
     // TODO: This needs to be refactored somewhere else
     // Computes the jump density for the addition of new parameters.
     _logQRatioJump = 0.0;    // Set to zero to clear previous values
-    _logQRatioJump = _prior->lambdaInitPrior(newLam);
-    _logQRatioJump += _prior->lambdaShiftPrior(newLambdaShift);
-    _logQRatioJump += _prior->muInitPrior(newMu);
-    _logQRatioJump += _prior->muShiftPrior(newMuShift);
+    _logQRatioJump = _prior.lambdaInitPrior(newLam);
+    _logQRatioJump += _prior.lambdaShiftPrior(newLambdaShift);
+    _logQRatioJump += _prior.muInitPrior(newMu);
+    _logQRatioJump += _prior.muShiftPrior(newMuShift);
     
     return new SpExBranchEvent(newLam, newLambdaShift, newMu,
         newMuShift, _tree->mapEventToTree(x), _tree, _rng, x);
@@ -208,10 +208,10 @@ double SpExModel::calculateLogQRatioJump()
 {
     double _logQRatioJump = 0.0;
     
-    _logQRatioJump = _prior->lambdaInitPrior(_lastDeletedEventLambdaInit);
-    _logQRatioJump += _prior->lambdaShiftPrior(_lastDeletedEventLambdaShift);
-    _logQRatioJump += _prior->muInitPrior(_lastDeletedEventMuInit);
-    _logQRatioJump += _prior->muShiftPrior(_lastDeletedEventMuShift);
+    _logQRatioJump = _prior.lambdaInitPrior(_lastDeletedEventLambdaInit);
+    _logQRatioJump += _prior.lambdaShiftPrior(_lastDeletedEventLambdaShift);
+    _logQRatioJump += _prior.muInitPrior(_lastDeletedEventMuInit);
+    _logQRatioJump += _prior.muShiftPrior(_lastDeletedEventMuShift);
 
     return _logQRatioJump;
 }
@@ -453,35 +453,23 @@ double SpExModel::computeLogPrior()
 
     SpExBranchEvent* rootEvent = static_cast<SpExBranchEvent*>(_rootEvent);
 
-    logPrior += _prior->lambdaInitRootPrior(rootEvent->getLamInit());
-    logPrior += _prior->lambdaShiftRootPrior(rootEvent->getLamShift());
-    logPrior += _prior->muInitRootPrior(rootEvent->getMuInit());
-    logPrior += _prior->muShiftRootPrior(rootEvent->getMuShift());
+    logPrior += _prior.lambdaInitRootPrior(rootEvent->getLamInit());
+    logPrior += _prior.lambdaShiftRootPrior(rootEvent->getLamShift());
+    logPrior += _prior.muInitRootPrior(rootEvent->getMuInit());
+    logPrior += _prior.muShiftRootPrior(rootEvent->getMuShift());
 
     EventSet::iterator it;
     for (it = _eventCollection.begin(); it != _eventCollection.end(); ++it) {
         SpExBranchEvent* event = static_cast<SpExBranchEvent*>(*it);
 
-        logPrior += _prior->lambdaInitPrior(event->getLamInit());
-        logPrior += _prior->lambdaShiftPrior(event->getLamShift());
-        logPrior += _prior->muInitPrior(event->getMuInit());
-        logPrior += _prior->muShiftPrior(event->getMuShift());
+        logPrior += _prior.lambdaInitPrior(event->getLamInit());
+        logPrior += _prior.lambdaShiftPrior(event->getLamShift());
+        logPrior += _prior.muInitPrior(event->getMuInit());
+        logPrior += _prior.muShiftPrior(event->getMuShift());
     }
 
     // Here's prior density on the event rate
-    logPrior += _prior->poissonRatePrior(_eventRate);
+    logPrior += _prior.poissonRatePrior(_eventRate);
     
     return logPrior;
-}
-
-
-void SpExModel::getSpecificEventDataString
-    (std::stringstream& ss, BranchEvent* event)
-{
-    SpExBranchEvent* be = static_cast<SpExBranchEvent*>(event);
-
-    ss << be->getLamInit() << ","
-       << be->getLamShift() << ","
-       << be->getMuInit() << ","
-       << be->getMuShift();
 }

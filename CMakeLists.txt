@@ -29,7 +29,8 @@ SET(BAMM_SRC
     src/BetaShiftProposal.cpp
     src/BranchEvent.cpp
     src/BranchHistory.cpp
-    src/DataWriter.cpp
+    src/ChainSwapDataWriter.cpp
+    src/EventDataWriter.cpp
     src/EventNumberProposal.cpp
     src/EventParameterProposal.cpp
     src/EventRateProposal.cpp
@@ -38,6 +39,7 @@ SET(BAMM_SRC
     src/LambdaShiftProposal.cpp
     src/Log.cpp
     src/MCMC.cpp
+    src/MCMCDataWriter.cpp
     src/MetropolisCoupledMCMC.cpp
     src/MbRandom.cpp
     src/Model.cpp
@@ -51,11 +53,12 @@ SET(BAMM_SRC
     src/Settings.cpp
     src/SettingsParameter.cpp
     src/SpExBranchEvent.cpp
-    src/SpExDataWriter.cpp
+    src/SpExEventDataWriter.cpp
     src/SpExModel.cpp
     src/Stat.cpp
+    src/StdOutDataWriter.cpp
     src/TraitBranchEvent.cpp
-    src/TraitDataWriter.cpp
+    src/TraitEventDataWriter.cpp
     src/TraitModel.cpp
     src/Tree.cpp
     src/main.cpp)

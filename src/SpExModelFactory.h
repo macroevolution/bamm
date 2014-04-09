@@ -4,10 +4,10 @@
 
 #include "ModelFactory.h"
 #include "SpExModel.h"
-#include "SpExDataWriter.h"
+#include "SpExEventDataWriter.h"
 
 class Model;
-class DataWriter;
+class EventDataWriter;
 
 class MbRandom;
 class Settings;
@@ -20,24 +20,22 @@ public:
 
     virtual ~SpExModelFactory() {}
 
-    virtual Model* createModel
-        (MbRandom& rng, Settings& settings, Prior& prior) const;
-    virtual DataWriter* createDataWriter
-        (Settings& settings, Model& model) const;
+    virtual Model* createModel(MbRandom& rng, Settings& settings) const;
+    virtual EventDataWriter* createEventDataWriter(Settings& settings) const;
 };
 
 
 inline Model* SpExModelFactory::createModel
-    (MbRandom& rng, Settings& settings, Prior& prior) const
+    (MbRandom& rng, Settings& settings) const
 {
-    return new SpExModel(&rng, &settings, &prior);
+    return new SpExModel(&rng, &settings);
 }
 
 
-inline DataWriter* SpExModelFactory::createDataWriter
-    (Settings& settings, Model& model) const
+inline EventDataWriter* SpExModelFactory::createEventDataWriter
+    (Settings& settings) const
 {
-    return new SpExDataWriter(settings, static_cast<SpExModel&>(model));
+    return new SpExEventDataWriter(settings);
 }
 
 

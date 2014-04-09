@@ -48,9 +48,6 @@ void NodeStateProposal::updateMinMaxTraitPriorSettings()
     double rg = tvec[(tvec.size() - 1)] - tvec[0];
     _priorMin = tvec[0] - (0.2 * rg);
     _priorMax = tvec[(tvec.size() - 1)] + (0.2 * rg);
-
-    log() << "\nMin and max phenotype limits set using observed data:\n"
-          << "\t\tMin: " << _priorMin << "\tMax: " << _priorMax << "\n";
 }
 
 

@@ -3,29 +3,33 @@
 
 
 class MbRandom;
+class Settings;
 class Model;
+class ModelFactory;
 
 
 class MCMC
 {
 public:
 
-    MCMC(MbRandom& rng, Model& model);
+    MCMC(MbRandom& rng, Settings& settings, ModelFactory& modelFactory);
     ~MCMC();
 
     void run(int generations);
+    void step();
+
     Model& model();
 
 protected:
 
     MbRandom& _rng;
-    Model& _model;
+    Model* _model;
 };
 
 
 inline Model& MCMC::model()
 {
-    return _model;
+    return *_model;
 }
 
 

@@ -2,6 +2,7 @@
 #define MODEL_H
 
 
+#include "Prior.h"
 #include "EventNumberProposal.h"
 #include "MoveEventProposal.h"
 #include "EventRateProposal.h"
@@ -14,7 +15,6 @@
 class MbRandom;
 class Tree;
 class Settings;
-class Prior;
 class Node;
 class Proposal;
 
@@ -26,7 +26,7 @@ class Model
 
 public:
 
-    Model(MbRandom* rng, Settings* settings, Prior* prior);
+    Model(MbRandom* rng, Settings* settings);
     virtual ~Model();
 
     void finishConstruction();
@@ -82,8 +82,6 @@ public:
 
     virtual void setMeanBranchParameters() = 0;
 
-    void getEventDataString(std::stringstream& ss, int generation);
-
     double getTemperatureMH(void);
     void setTemperatureMH(double x);
 
@@ -124,12 +122,11 @@ protected:
 
     virtual BranchEvent* newBranchEventFromLastDeletedEvent() = 0;
 
-    virtual void getSpecificEventDataString
-        (std::stringstream& ss, BranchEvent* event) = 0;
-
     MbRandom* _rng;
     Settings* _settings;
-    Prior* _prior;
+
+    Prior _prior;
+
     Tree* _tree;
 
     EventNumberProposal _eventNumberProposal;

@@ -3,7 +3,7 @@
 
 
 class Model;
-class DataWriter;
+class EventDataWriter;
 
 class MbRandom;
 class Settings;
@@ -16,10 +16,9 @@ public:
 
     virtual ~ModelFactory() {}
 
-    virtual Model* createModel
-        (MbRandom& rng, Settings& settings, Prior& prior) const = 0;
-    virtual DataWriter* createDataWriter
-        (Settings& settings, Model& model) const = 0;
+    virtual Model* createModel(MbRandom& rng, Settings& settings) const = 0;
+    virtual EventDataWriter* createEventDataWriter
+        (Settings& settings) const = 0;
 };
 
 

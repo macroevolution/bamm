@@ -11,7 +11,6 @@
 class Node;
 class MbRandom;
 class Settings;
-class Prior;
 class BranchEvent;
 class Proposal;
 
@@ -21,7 +20,7 @@ class TraitModel : public Model
 
 public:
 
-    TraitModel(MbRandom* rng, Settings* settings, Prior* prior);
+    TraitModel(MbRandom* rng, Settings* settings);
 
     virtual double computeLogLikelihood();
     virtual double computeTriadLikelihoodTraits(Node* x);

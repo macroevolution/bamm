@@ -38,8 +38,6 @@ Prior::Prior(MbRandom* rng, Settings* settings) : _rng(rng)
     }
 
     _poissonRatePrior = settings->get<double>("poissonRatePrior");
-    
-    std::cout << "Initialized class Prior object\n\n" << std::endl;
 }
 
 

@@ -112,6 +112,12 @@ void Settings::initializeGlobalSettings()
     addParameter("updateEventRateScale", "0.0");
     addParameter("localGlobalMoveRatio", "0.0");
 
+    // Metropolis-coupled MCMC
+    addParameter("numberOfChains", "1");
+    addParameter("deltaT", "0.1");
+    addParameter("swapPeriod", "1000");
+    addParameter("chainSwapFileName", "chain_swap.txt", NotRequired);
+
     // Priors
     addParameter("poissonRatePrior", "0.0");
 
@@ -129,6 +135,8 @@ void Settings::initializeGlobalSettings()
     addParameter("printFreq", "0");
     addParameter("overwrite", "0", NotRequired);
     addParameter("writeMeanBranchLengthTrees", "0", NotRequired);
+
+    addParameter("acceptanceResetFreq", "1000");
 
     // Parameter update rates
     addParameter("updateRateEventNumber", "0.0");

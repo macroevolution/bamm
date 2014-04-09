@@ -19,6 +19,7 @@
 #include "TraitModel.h"
 #include "TraitDataWriter.h"
 #include "FastSimulatePrior.h"
+#include "MetropolisCoupledMCMC.h"
 
 
 void printAbout();
@@ -106,12 +107,9 @@ int main (int argc, char* argv[])
         std::exit(1);
     }
 
-    // TODO: Why is prior created here? Create by whoever uses it.
-    Prior prior(&rng, &settings);
-
     if (settings.get<bool>("initializeModel")) {
         // Model is initialized with MetropolisCoupledMCMC
-        MetropolisCoupledMCMC mc3(rng, settings, prior, modelFactory);
+        MetropolisCoupledMCMC mc3(rng, settings, modelFactory);
 
         if (settings.get<bool>("runMCMC")) {
             mc3.run();

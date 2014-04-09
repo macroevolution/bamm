@@ -11,7 +11,6 @@
 class Node;
 class MbRandom;
 class Settings;
-class Prior;
 class BranchEvent;
 class Proposal;
 
@@ -21,7 +20,7 @@ class SpExModel : public Model
 
 public:
 
-    SpExModel(MbRandom* rng, Settings* settings, Prior* prior);
+    SpExModel(MbRandom* rng, Settings* settings);
 
     virtual double computeLogLikelihood();
     virtual double computeLogPrior();
@@ -50,9 +49,6 @@ private:
     virtual void setDeletedEventParameters(BranchEvent* be);
 
     virtual double calculateLogQRatioJump();
-
-    virtual void getSpecificEventDataString
-        (std::stringstream& ss, BranchEvent* event);
 
     LambdaInitProposal _lambdaInitProposal;
     LambdaShiftProposal _lambdaShiftProposal;
