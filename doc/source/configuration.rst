@@ -129,6 +129,16 @@ MCMC Simulation
     can be reconstructed from this output. See :ref:`bammtools`
     for more information on working with this output format.
 
+``outputAcceptanceInfo``
+    If ``1``, outputs whether each proposal was accepted.
+    The number identifying the proposal matches the one in the code.
+    The default value is ``0`` (i.e., do not output this information).
+
+``acceptanceInfoFileName``
+    The path of the file to which to write whether each proposal was accepted.
+    ``outputAcceptedInfo`` must be set to ``1`` for this information to be
+    written. The default value is ``acceptance_info.txt``.
+
 ``updateEventLocationScale``
     Scale parameter for updating local moves of events on the tree.
     This defines the width of the sliding window proposal. This parameter
