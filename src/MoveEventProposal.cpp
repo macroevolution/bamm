@@ -108,6 +108,10 @@ double MoveEventProposal::acceptanceRatio()
         return 0.0;
     }
 
+    if (std::isnan(_proposedLogLikelihood)) {
+        return 0.0;
+    }
+
     double logLikelihoodRatio = computeLogLikelihoodRatio();
 
     double t = _model.getTemperatureMH();

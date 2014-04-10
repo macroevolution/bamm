@@ -16,7 +16,7 @@
 // TODO: pointers not necessary; make references
 Model::Model(MbRandom* rng, Settings* settings) :
     _rng(rng), _settings(settings), _prior(_rng, _settings),
-    _tree(new Tree(_settings->get("treefile"), _rng)),
+    _tree(new Tree(*_settings, _rng)),
     _eventNumberProposal(*rng, *settings, *this),
     _moveEventProposal(*rng, *settings, *this),
     _eventRateProposal(*rng, *settings, *this, _prior)

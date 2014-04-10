@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <algorithm>
 
+#include "Settings.h"
 #include "Tree.h"
 #include "Node.h"
 #include "BranchHistory.h"
@@ -32,8 +33,9 @@ Tree::~Tree(void)
 }
 
 
-Tree::Tree(std::string fname, MbRandom* rnptr)
+Tree::Tree(Settings& settings, MbRandom* rnptr)
 {
+    std::string fname = settings.get("treefile");
     ranPtr = rnptr;
 
     std::ifstream treefile(fname.c_str());
@@ -108,6 +110,27 @@ Tree::Tree(std::string fname, MbRandom* rnptr)
         if ((*i)->getCanHoldEvent()) {
             ct++;
         }
+    }
+
+    // Initialize tree according to model type
+    // TODO: This should be handled in a better way
+    if (settings.get("modeltype") == "speciationextinction") {
+        if (settings.get<bool>("useGlobalSamplingProbability")) {
+            initializeSpeciationExtinctionModel
+                (settings.get<double>("globalSamplingFraction"));
+        } else {
+            initializeSpeciationExtinctionModel
+                (settings.get("sampleProbsFilename"));
+        }
+
+        setCanNodeHoldEventByDescCount
+            (settings.get<int>("minCladeSizeForShift"));
+        setTreeMap(getRoot());
+    } else if (settings.get("modeltype") == "trait") {
+        setAllNodesCanHoldEvent();
+        setTreeMap(getRoot());
+        getPhenotypesMissingLatent(settings.get("traitfile"));
+        initializeTraitValues();
     }
 }
 

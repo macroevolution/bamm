@@ -5,6 +5,7 @@
 #include <set>
 #include <vector>
 
+class Settings;
 class MbRandom;
 class branchEvent;
 class eventSet;
@@ -85,7 +86,7 @@ private:
 
 public:
 
-    Tree(std::string fname, MbRandom* rnptr);
+    Tree(Settings& settings, MbRandom* rnptr);
 
     Tree();
     ~Tree();

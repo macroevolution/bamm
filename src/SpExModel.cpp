@@ -48,19 +48,6 @@ SpExModel::SpExModel(MbRandom* ranptr, Settings* sp) :
     _muInitProposal(*ranptr, *sp, *this, _prior),
     _muShiftProposal(*ranptr, *sp, *this, _prior)
 {
-    // Initialize tree
-    if (_settings->get<bool>("useGlobalSamplingProbability")) {
-        _tree->initializeSpeciationExtinctionModel
-            (_settings->get<double>("globalSamplingFraction"));
-    } else {
-        _tree->initializeSpeciationExtinctionModel
-            (_settings->get("sampleProbsFilename"));
-    }
-
-    _tree->setCanNodeHoldEventByDescCount
-        (_settings->get<int>("minCladeSizeForShift"));
-    _tree->setTreeMap(_tree->getRoot());
-
     // Initial values
     _lambdaInit0 = _settings->get<double>("lambdaInit0");
     _lambdaShift0 = _settings->get<double>("lambdaShift0");

@@ -37,12 +37,6 @@ TraitModel::TraitModel(MbRandom* rng, Settings* settings) :
     _betaShiftProposal(*rng, *settings, *this, _prior),
     _nodeStateProposal(*rng, *settings, *this)
 {
-    // Initialize tree
-    _tree->setAllNodesCanHoldEvent();
-    _tree->setTreeMap(_tree->getRoot());
-    _tree->getPhenotypesMissingLatent(_settings->get("traitfile"));
-    _tree->initializeTraitValues();
-
 #ifdef NEGATIVE_SHIFT_PARAM
     // Constrain beta shift to be zero or less than zero.
     if (_settings->getBetaShiftInit() > 0) {
