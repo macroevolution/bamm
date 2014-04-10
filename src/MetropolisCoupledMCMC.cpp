@@ -8,6 +8,7 @@
 #include "StdOutDataWriter.h"
 #include "MCMCDataWriter.h"
 #include "EventDataWriter.h"
+#include "AcceptanceDataWriter.h"
 #include "ChainSwapDataWriter.h"
 
 
@@ -15,7 +16,7 @@ MetropolisCoupledMCMC::MetropolisCoupledMCMC
     (MbRandom& rng, Settings& settings, ModelFactory* modelFactory) :
         _rng(rng), _settings(settings), _modelFactory(modelFactory),
         _stdOutDataWriter(_settings), _mcmcDataWriter(_settings),
-        _chainSwapDataWriter(_settings)
+        _acceptanceDataWriter(_settings), _chainSwapDataWriter(_settings)
 {
     // Total number of generations to run for each chain
     _nGenerations = _settings.get<int>("numberGenerations");
@@ -92,6 +93,7 @@ void MetropolisCoupledMCMC::runChains(int genStart, int genEnd)
                 _stdOutDataWriter.writeData(g, *_chains[i]);
                 _mcmcDataWriter.writeData(g, *_chains[i]);
                 _eventDataWriter->writeData(g, _chains[i]->model());
+                _acceptanceDataWriter.writeData(*_chains[i]);
 
                 if (g % _acceptanceResetFreq == 0) {
                     _chains[i]->model().resetMHAcceptanceParameters();

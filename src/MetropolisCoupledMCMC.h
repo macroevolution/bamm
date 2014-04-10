@@ -4,6 +4,7 @@
 
 #include "StdOutDataWriter.h"
 #include "MCMCDataWriter.h"
+#include "AcceptanceDataWriter.h"
 #include "ChainSwapDataWriter.h"
 #include <vector>
 
@@ -67,6 +68,7 @@ private:
     StdOutDataWriter _stdOutDataWriter;
     MCMCDataWriter _mcmcDataWriter;
     EventDataWriter* _eventDataWriter;
+    AcceptanceDataWriter _acceptanceDataWriter;
     ChainSwapDataWriter _chainSwapDataWriter;
 
     int _acceptanceResetFreq;

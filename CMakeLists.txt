@@ -25,6 +25,7 @@ SET(GIT_COMMIT_ID "$(shell git rev-parse HEAD)")
 ADD_DEFINITIONS(-DGIT_COMMIT_ID=\"${GIT_COMMIT_ID}\")
 
 SET(BAMM_SRC
+    src/AcceptanceDataWriter.cpp
     src/BetaInitProposal.cpp
     src/BetaShiftProposal.cpp
     src/BranchEvent.cpp
