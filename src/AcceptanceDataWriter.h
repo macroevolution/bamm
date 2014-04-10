@@ -25,6 +25,8 @@ private:
     void writeHeader();
     std::string header();
 
+    bool _shouldOutputData;
+
     std::string _outputFileName;
     std::ofstream _outputStream;
 };

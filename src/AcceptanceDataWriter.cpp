@@ -7,8 +7,13 @@
 
 
 AcceptanceDataWriter::AcceptanceDataWriter(Settings& settings) :
+    _shouldOutputData(settings.get<bool>("outputAcceptanceInfo")),
     _outputFileName(settings.get("acceptanceInfoFileName"))
 {
+    if (!_shouldOutputData) {
+        return;
+    }
+
     initializeStream();
     writeHeader();
 }
@@ -40,6 +45,10 @@ AcceptanceDataWriter::~AcceptanceDataWriter()
 
 void AcceptanceDataWriter::writeData(MCMC& mcmc)
 {
+    if (!_shouldOutputData) {
+        return;
+    }
+
     Model& model = mcmc.model();
     _outputStream << model.getLastParameterUpdated() << ","
                   << model.getAcceptLastUpdate()     << std::endl;
