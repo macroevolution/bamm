@@ -8,6 +8,7 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include <cstdlib>
 
 
 typedef std::pair<std::string, SettingsParameter> Parameter;
