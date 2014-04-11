@@ -64,10 +64,6 @@ void EventNumberProposal::reject()
 
 double EventNumberProposal::acceptanceRatio()
 {
-    if (std::isnan(_proposedLogLikelihood)){
-        return 0.0;
-    }
-
     if (_validateEventConfiguration && _lastProposal == AddEvent &&
             !_model.isEventConfigurationValid(_lastEventChanged)) {
         return 0.0;
