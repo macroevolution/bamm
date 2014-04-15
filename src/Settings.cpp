@@ -310,6 +310,7 @@ void Settings::attachPrefixToOutputFiles()
           "eventDataOutfile",
           "priorOutputFileName",
           "acceptanceInfoFileName",
+          "chainSwapFileName",
           "lambdaOutfile",
           "muOutfile",
           "betaOutfile" };
