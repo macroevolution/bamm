@@ -1321,7 +1321,7 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
         std::exit(1);
     }
 
-    std::cout << "Reading sampling fractions from file <<" << fname << ">>\n";
+    log() << "Reading sampling fractions from file <<" << fname << ">>...\n";
 
     std::vector<std::string> stringvec;
     std::vector<std::string> spnames;
@@ -1330,7 +1330,7 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
 
     std::string tempstring;
 
-    // First number in file is sampling probability for "backbone" of the tree.
+    // First number in file is sampling probability for "backbone" of the tree
     getline(infile, tempstring, '\n');
     double backboneSampProb = std::atof(tempstring.c_str());
     double backboneInitial = 1.0 - backboneSampProb;
@@ -1364,6 +1364,15 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
         if (eof) {
             log(Error) << "Sampling probability file is not formatted "
                        << "properly.\nPlease see the documentation.\n";
+            std::exit(1);
+        }
+
+        if (sfrac <= 0.0 || sfrac > 1.0) {
+            log(Error) << "In line with species <<" << spname << ">> and "
+                       << "family name\n<<" << spfamily << ">>, "
+                       << "sampling fraction must be greater than 0 and less\n"
+                       << "than or equal to 1. This error may also occur if\n"
+                       << "the input line is not formatted properly.\n";
             std::exit(1);
         }
 
