@@ -85,6 +85,7 @@ double MetropolisCoupledMCMC::calculateTemperature(int i, double deltaT) const
 
 void MetropolisCoupledMCMC::runChains(int genStart, int genEnd)
 {
+    #pragma omp parallel for
     for (int i = 0; i < (int)_chains.size(); i++) {
         for (int g = genStart; g < genEnd; g++) {
             _chains[i]->step();
