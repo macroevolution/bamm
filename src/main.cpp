@@ -14,10 +14,8 @@
 #include "ModelFactory.h"
 #include "SpExModelFactory.h"
 #include "SpExModel.h"
-#include "SpExDataWriter.h"
 #include "TraitModelFactory.h"
 #include "TraitModel.h"
-#include "TraitDataWriter.h"
 #include "FastSimulatePrior.h"
 #include "MetropolisCoupledMCMC.h"
 
