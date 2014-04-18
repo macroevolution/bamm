@@ -4,7 +4,7 @@
 
 #include "EventParameterProposal.h"
 
-class MbRandom;
+class Random;
 class Settings;
 class Model;
 class Prior;
@@ -14,7 +14,7 @@ class LambdaInitProposal : public EventParameterProposal
 {
 public:
 
-    LambdaInitProposal(MbRandom& rng, Settings& settings, Model& model,
+    LambdaInitProposal(Random& random, Settings& settings, Model& model,
         Prior& prior);
 
 private:

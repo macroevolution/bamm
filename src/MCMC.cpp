@@ -1,13 +1,15 @@
 #include "MCMC.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Model.h"
 #include "ModelFactory.h"
 
+#include <climits>
 
-MCMC::MCMC(MbRandom& rng, Settings& settings, ModelFactory& modelFactory) :
-    _rng(rng)
+
+MCMC::MCMC(Random& seeder, Settings& settings, ModelFactory& modelFactory) :
+    _random(seeder.uniformInteger(0, INT_MAX))
 {
-    _model = modelFactory.createModel(_rng, settings);
+    _model = modelFactory.createModel(_random, settings);
 }
 
 
@@ -30,7 +32,7 @@ void MCMC::step()
     _model->proposeNewState();
 
     double acceptanceRatio = _model->acceptanceRatio();
-    if (_rng.uniformRv() < acceptanceRatio) {
+    if (_random.trueWithProbability(acceptanceRatio)) {
         _model->acceptProposal();
     } else {
         _model->rejectProposal();

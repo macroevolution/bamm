@@ -5,7 +5,7 @@
 
 class Tree;
 class Node;
-class MbRandom;
+class Random;
 
 
 class SpExBranchEvent : public BranchEvent
@@ -22,7 +22,7 @@ public:
 
     // constructors, depending on whether you want trait rate or lambda/mu
     SpExBranchEvent(double speciation, double lamshift, double extinction,
-        double mushift, Node* x, Tree* tp, MbRandom*rp, double map);
+        double mushift, Node* x, Tree* tp, Random& random, double map);
     virtual ~SpExBranchEvent() {};
 
     void   setLamInit(double x);

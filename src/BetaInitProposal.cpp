@@ -1,5 +1,5 @@
 #include "BetaInitProposal.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
 #include "Model.h"
 #include "Prior.h"
@@ -8,8 +8,8 @@
 
 
 BetaInitProposal::BetaInitProposal
-    (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
-        EventParameterProposal(rng, settings, model, prior)
+    (Random& random, Settings& settings, Model& model, Prior& prior) :
+        EventParameterProposal(random, settings, model, prior)
 {
     _updateBetaInitScale = _settings.get<double>("updateBetaScale");
 }
@@ -23,7 +23,7 @@ double BetaInitProposal::getCurrentParameterValue()
 
 double BetaInitProposal::computeNewParameterValue()
 {
-    _cterm = std::exp(_updateBetaInitScale * (_rng.uniformRv() - 0.5));
+    _cterm = std::exp(_updateBetaInitScale * (_random.uniform() - 0.5));
     return _cterm * _currentParameterValue;
 }
 

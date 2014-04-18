@@ -12,7 +12,7 @@
 #include <set>
 #include <iosfwd>
 
-class MbRandom;
+class Random;
 class Tree;
 class Settings;
 class Node;
@@ -26,7 +26,7 @@ class Model
 
 public:
 
-    Model(MbRandom* rng, Settings* settings);
+    Model(Random& random, Settings* settings);
     virtual ~Model();
 
     void finishConstruction();
@@ -122,7 +122,7 @@ protected:
 
     virtual BranchEvent* newBranchEventFromLastDeletedEvent() = 0;
 
-    MbRandom* _rng;
+    Random& _random;
     Settings* _settings;
 
     Prior _prior;

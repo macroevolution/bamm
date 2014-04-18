@@ -9,7 +9,7 @@
 #include <iosfwd>
 
 class Node;
-class MbRandom;
+class Random;
 class Settings;
 class BranchEvent;
 class Proposal;
@@ -20,7 +20,7 @@ class SpExModel : public Model
 
 public:
 
-    SpExModel(MbRandom* rng, Settings* settings);
+    SpExModel(Random& rng, Settings* settings);
 
     virtual double computeLogLikelihood();
     virtual double computeLogPrior();

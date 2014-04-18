@@ -8,7 +8,7 @@
 #include "ChainSwapDataWriter.h"
 #include <vector>
 
-class MbRandom;
+class Random;
 class Settings;
 class ModelFactory;
 class MCMC;
@@ -21,7 +21,7 @@ class MetropolisCoupledMCMC
 public:
 
     MetropolisCoupledMCMC
-        (MbRandom& rng, Settings& settings, ModelFactory* modelFactory);
+        (Random& random, Settings& settings, ModelFactory* modelFactory);
     ~MetropolisCoupledMCMC();
 
     void run();
@@ -44,7 +44,7 @@ private:
         double log_post_1, double log_post_2) const;
     void swapTemperature(int chain_1, int chain_2);
 
-    MbRandom& _rng;
+    Random& _random;
     Settings& _settings;
     ModelFactory* _modelFactory;
 

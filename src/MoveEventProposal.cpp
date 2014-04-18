@@ -1,5 +1,5 @@
 #include "MoveEventProposal.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
 #include "Model.h"
 #include "Node.h"
@@ -8,8 +8,8 @@
 
 
 MoveEventProposal::MoveEventProposal
-    (MbRandom& rng, Settings& settings, Model& model) :
-        _rng(rng), _settings(settings), _model(model)
+    (Random& random, Settings& settings, Model& model) :
+        _random(random), _settings(settings), _model(model)
 {
     _localToGlobalMoveRatio = _settings.get<double>("localGlobalMoveRatio");
     _scale = _settings.get<double>("updateEventLocationScale") *
@@ -42,8 +42,8 @@ void MoveEventProposal::propose()
         (1 + _localToGlobalMoveRatio);
 
     // Choose to move locally or globally
-    if (_rng.uniformRv() < localMoveProb) {
-        double step = _rng.uniformRv(0, _scale) - 0.5 * _scale;
+    if (_random.trueWithProbability(localMoveProb)) {
+        double step = _random.uniform(0, _scale) - 0.5 * _scale;
         _event->moveEventLocal(step);
     } else {
         _event->moveEventGlobal();

@@ -14,19 +14,14 @@
 #include <iomanip>
 #include <cstdlib>
 
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
+#include "Stat.h"
 
-FastSimulatePrior::FastSimulatePrior(MbRandom* ranptr, Settings* sp)
+
+FastSimulatePrior::FastSimulatePrior(Random& random, Settings* sp) :
+    _random(random), sttings(sp)
 {
-    
-    ran = ranptr;    
-    sttings = sp;
-    
-    for (int i =0; i <= 1000; i++){
-        ran->uniformRv();
-    }
-    
     _generations = 0;
 
     _eventRate = 1 / sttings->get<double>("poissonRatePrior");
@@ -98,13 +93,13 @@ void FastSimulatePrior::updateEventRateMH()
 
     double oldEventRate = getEventRate();
     
-    double cterm = exp( _updateEventRateScale * (ran->uniformRv() - 0.5) );
+    double cterm = exp( _updateEventRateScale * (_random.uniform() - 0.5) );
     setEventRate(cterm * oldEventRate);
     
-    double LogPriorRatio = ran->lnExponentialPdf(_poissonRatePrior,
-                                                 getEventRate()) - ran->lnExponentialPdf(_poissonRatePrior, oldEventRate);
+    double LogPriorRatio =
+        Stat::lnExponentialPDF(getEventRate(), _poissonRatePrior) -
+        Stat::lnExponentialPDF(oldEventRate, _poissonRatePrior);
     double logProposalRatio = log(cterm);
-    
     
     double logHR = LogPriorRatio + logProposalRatio;
     const bool acceptMove = acceptMetropolisHastings(logHR);
@@ -127,7 +122,7 @@ void FastSimulatePrior::changeNumberOfEventsMH()
     // Current number of events on the tree, not counting root state:
     double K = (double)(_numberEvents);
     
-    bool gain = (ran->uniformRv() <= 0.5);
+    bool gain = _random.trueWithProbability(0.5);
     if (K == 0) {
         // set event to gain IF on boundary
         gain = true;
@@ -208,14 +203,11 @@ void FastSimulatePrior::updateState()
 bool FastSimulatePrior::acceptMetropolisHastings(const double lnR)
 {
     const double r = exp(lnR);
-    return (ran->uniformRv() < r);
+    return _random.trueWithProbability(r);
 }
 
 
 void FastSimulatePrior::writeHeaderToOutputFile()
 {
     _fspOutStream << "generation,N_shifts,eventRate" << std::endl;
-
 }
-
-

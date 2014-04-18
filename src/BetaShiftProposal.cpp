@@ -1,5 +1,5 @@
 #include "BetaShiftProposal.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
 #include "Model.h"
 #include "Prior.h"
@@ -8,8 +8,8 @@
 
 
 BetaShiftProposal::BetaShiftProposal
-    (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
-        EventParameterProposal(rng, settings, model, prior)
+    (Random& random, Settings& settings, Model& model, Prior& prior) :
+        EventParameterProposal(random, settings, model, prior)
 {
     _updateBetaShiftScale = _settings.get<double>("updateBetaShiftScale");
 }
@@ -23,7 +23,7 @@ double BetaShiftProposal::getCurrentParameterValue()
 
 double BetaShiftProposal::computeNewParameterValue()
 {
-    return _currentParameterValue + _rng.normalRv(0.0, _updateBetaShiftScale);
+    return _currentParameterValue + _random.normal(0.0, _updateBetaShiftScale);
 }
 
 

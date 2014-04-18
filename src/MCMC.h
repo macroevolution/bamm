@@ -2,7 +2,8 @@
 #define MCMC_H
 
 
-class MbRandom;
+#include "Random.h"
+
 class Settings;
 class Model;
 class ModelFactory;
@@ -12,7 +13,7 @@ class MCMC
 {
 public:
 
-    MCMC(MbRandom& rng, Settings& settings, ModelFactory& modelFactory);
+    MCMC(Random& seeder, Settings& settings, ModelFactory& modelFactory);
     ~MCMC();
 
     void run(int generations);
@@ -22,7 +23,9 @@ public:
 
 protected:
 
-    MbRandom& _rng;
+    // MCMC has its own random generator, using the seeder
+    // (another random generator) to seed it
+    Random _random;
     Model* _model;
 };
 

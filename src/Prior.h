@@ -8,14 +8,14 @@
 #include <iostream>
 
 class Settings;
-class MbRandom;
+class Random;
 
 
 class Prior
 {
 public:
     
-    Prior(MbRandom* ran, Settings* sp);
+    Prior(Random& random, Settings* sp);
     ~Prior();
 
 /*
@@ -69,7 +69,7 @@ public:
 
 private:
     
-    MbRandom *_rng;
+    Random& _random;
 
     // Initial parameters
     double _lambdaInit0;

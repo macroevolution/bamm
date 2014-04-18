@@ -1,6 +1,6 @@
 #include "MetropolisCoupledMCMC.h"
 
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
 #include "ModelFactory.h"
 #include "MCMC.h"
@@ -13,8 +13,8 @@
 
 
 MetropolisCoupledMCMC::MetropolisCoupledMCMC
-    (MbRandom& rng, Settings& settings, ModelFactory* modelFactory) :
-        _rng(rng), _settings(settings), _modelFactory(modelFactory),
+    (Random& random, Settings& settings, ModelFactory* modelFactory) :
+        _random(random), _settings(settings), _modelFactory(modelFactory),
         _stdOutDataWriter(_settings), _mcmcDataWriter(_settings),
         _acceptanceDataWriter(_settings), _chainSwapDataWriter(_settings)
 {
@@ -71,7 +71,7 @@ void MetropolisCoupledMCMC::createChains()
 
 MCMC* MetropolisCoupledMCMC::createMCMC(int chainIndex) const
 {
-    MCMC* mcmc = new MCMC(_rng, _settings, *_modelFactory);
+    MCMC* mcmc = new MCMC(_random, _settings, *_modelFactory);
     mcmc->model().setTemperatureMH(calculateTemperature(chainIndex, _deltaT));
     return mcmc;
 }
@@ -127,23 +127,17 @@ void MetropolisCoupledMCMC::tryChainSwap(int generation)
 
 void MetropolisCoupledMCMC::chooseTwoNumbers(int* x, int* y, int from, int to)
 {
-    *x = _rng.discreteUniformRv(from, to);
+    *x = _random.uniformInteger(from, to);
 
     do {
-        *y = _rng.discreteUniformRv(from, to);
+        *y = _random.uniformInteger(from, to);
     } while (*y == *x);
 }
 
 
 bool MetropolisCoupledMCMC::acceptChainSwap(int chain_1, int chain_2) const
 {
-    return trueWithProbability(chainSwapProbability(chain_1, chain_2));
-}
-
-
-bool MetropolisCoupledMCMC::trueWithProbability(double p) const
-{
-    return _rng.uniformRv() < p;
+    return _random.trueWithProbability(chainSwapProbability(chain_1, chain_2));
 }
 
 

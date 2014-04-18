@@ -1,13 +1,13 @@
 #include "EventRateProposal.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
 #include "Model.h"
 #include "Prior.h"
 
 
 EventRateProposal::EventRateProposal
-    (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
-        _rng(rng), _settings(settings), _model(model), _prior(prior)
+    (Random& random, Settings& settings, Model& model, Prior& prior) :
+        _random(random), _settings(settings), _model(model), _prior(prior)
 {
     _updateEventRateScale = _settings.get<double>("updateEventRateScale");
 }
@@ -17,7 +17,7 @@ void EventRateProposal::propose()
 {
     _currentEventRate = _model.getEventRate();
 
-    _cterm = std::exp(_updateEventRateScale * (_rng.uniformRv() - 0.5));
+    _cterm = std::exp(_updateEventRateScale * (_random.uniform() - 0.5));
     _proposedEventRate = _cterm * _currentEventRate;
 
     _model.setEventRate(_proposedEventRate);

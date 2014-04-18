@@ -11,7 +11,6 @@
 
 #include <string>
 
-//class MbRandom;
 class branchEvent;
 class eventSet;
 class Phenotype;

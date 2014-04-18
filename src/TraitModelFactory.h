@@ -9,7 +9,7 @@
 class Model;
 class EventDataWriter;
 
-class MbRandom;
+class Random;
 class Settings;
 class Prior;
 
@@ -20,15 +20,15 @@ public:
 
     virtual ~TraitModelFactory() {}
 
-    virtual Model* createModel(MbRandom& rng, Settings& settings) const;
+    virtual Model* createModel(Random& random, Settings& settings) const;
     virtual EventDataWriter* createEventDataWriter(Settings& settings) const;
 };
 
 
 inline Model* TraitModelFactory::createModel
-    (MbRandom& rng, Settings& settings) const
+    (Random& random, Settings& settings) const
 {
-    return new TraitModel(&rng, &settings);
+    return new TraitModel(random, &settings);
 }
 
 

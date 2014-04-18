@@ -1,11 +1,12 @@
 #include "Prior.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
+#include "Stat.h"
 
 #define _UPDATE_TOL 0.0001
 
 
-Prior::Prior(MbRandom* rng, Settings* settings) : _rng(rng)
+Prior::Prior(Random& random, Settings* settings) : _random(random)
 {
     std::string modelType = settings->get("modeltype");
 
@@ -48,7 +49,7 @@ Prior::~Prior()
 
 double Prior::lambdaShiftPrior(double x)
 {
-    return _rng->lnNormalPdf(0.0, _lambdaShiftPrior, x);
+    return Stat::lnNormalPDF(x, 0.0, _lambdaShiftPrior);
 }
 
 
@@ -57,14 +58,14 @@ double Prior::generateLambdaShiftFromPrior()
     if (_updateRateLambdaShift <= _UPDATE_TOL) {
         return _lambdaShift0;
     } else {
-        return _rng->normalRv(0.0, _lambdaShiftPrior);
+        return _random.normal(0.0, _lambdaShiftPrior);
     }
 }
 
 
 double Prior::lambdaInitPrior(double x)
 {
-    return _rng->lnExponentialPdf(_lambdaInitPrior, x);
+    return Stat::lnExponentialPDF(x, _lambdaInitPrior);
 }
 
 
@@ -73,14 +74,14 @@ double Prior::generateLambdaInitFromPrior()
     if (_updateRateLambda0 <= _UPDATE_TOL) {
         return _lambdaInit0;
     } else {
-        return _rng->exponentialRv(_lambdaInitPrior);
+        return _random.exponential(_lambdaInitPrior);
     }
 }
 
 
 double Prior::muInitPrior(double x)
 {
-    return _rng->lnExponentialPdf(_muInitPrior, x);
+    return Stat::lnExponentialPDF(x, _muInitPrior);
 }
 
 
@@ -89,14 +90,14 @@ double Prior::generateMuInitFromPrior()
     if (_updateRateMu0 <= _UPDATE_TOL) {
         return _muInit0;
     } else {
-        return _rng->exponentialRv(_muInitPrior);
+        return _random.exponential(_muInitPrior);
     }
 }
 
 
 double Prior::muShiftPrior(double x)
 {
-    return _rng->lnNormalPdf(0.0, _muShiftPrior, x);
+    return Stat::lnNormalPDF(x, 0.0, _muShiftPrior);
 }
 
 
@@ -105,26 +106,26 @@ double Prior::generateMuShiftFromPrior()
     if (_updateRateMuShift <= _UPDATE_TOL) {
         return _muShift0;
     } else {
-        return _rng->normalRv(0.0, _muShiftPrior);
+        return _random.normal(0.0, _muShiftPrior);
     }
 }
 
 
 double Prior::poissonRatePrior(double x)
 {
-    return _rng->lnExponentialPdf(_poissonRatePrior, x);
+    return Stat::lnExponentialPDF(x, _poissonRatePrior);
 }
 
 
 double Prior::generatePoissonRateFromPrior()
 {
-    return _rng->exponentialRv(_poissonRatePrior);
+    return _random.exponential(_poissonRatePrior);
 }
 
 
 double Prior::betaInitPrior(double x)
 {
-    return _rng->lnExponentialPdf(_betaInitPrior, x);
+    return Stat::lnExponentialPDF(x, _betaInitPrior);
 }
 
 
@@ -133,14 +134,14 @@ double Prior::generateBetaInitFromPrior()
     if (_updateRateBeta0 <= _UPDATE_TOL) {
         return _betaInit;
     } else {
-        return _rng->exponentialRv(_betaInitPrior);
+        return _random.exponential(_betaInitPrior);
     }
 }
 
 
 double Prior::betaShiftPrior(double x)
 {
-    return _rng->lnNormalPdf(0.0, _betaShiftPrior, x);
+    return Stat::lnNormalPDF(x, 0.0, _betaShiftPrior);
 }
 
 
@@ -149,7 +150,7 @@ double Prior::generateBetaShiftFromPrior()
     if (_updateRateBetaShift <= _UPDATE_TOL) {
         return _betaShiftInit;
     } else {
-        return _rng->normalRv(0.0, _betaShiftPrior);
+        return _random.normal(0.0, _betaShiftPrior);
     }
 }
 
@@ -159,7 +160,7 @@ double Prior::lambdaInitRootPrior(double x)
     if (fabs(_lambdaInitRootPrior + 1) < _UPDATE_TOL) {
         return lambdaInitPrior(x);
     } else {
-        return _rng->lnExponentialPdf(_lambdaInitRootPrior, x);
+        return Stat::lnExponentialPDF(x, _lambdaInitRootPrior);
     }
 
 }
@@ -170,7 +171,7 @@ double Prior::lambdaShiftRootPrior(double x)
     if (fabs(_lambdaShiftRootPrior + 1) < _UPDATE_TOL) {
         return lambdaShiftPrior(x);
     } else {
-        return _rng->lnExponentialPdf(_lambdaShiftRootPrior, x);
+        return Stat::lnExponentialPDF(x, _lambdaShiftRootPrior);
     }
 }
 
@@ -180,7 +181,7 @@ double Prior::muInitRootPrior(double x)
     if (fabs(_muInitRootPrior + 1) < _UPDATE_TOL) {
         return muInitPrior(x);
     } else {
-        return _rng->lnExponentialPdf(_muInitRootPrior, x);
+        return Stat::lnExponentialPDF(x, _muInitRootPrior);
     }
 }
 
@@ -190,7 +191,7 @@ double Prior::muShiftRootPrior(double x)
     if (fabs(_muShiftRootPrior + 1) < _UPDATE_TOL) {
         return muShiftPrior(x);
     } else {
-        return _rng->lnExponentialPdf(_muShiftRootPrior, x);
+        return Stat::lnExponentialPDF(x, _muShiftRootPrior);
     }
 }
 
@@ -200,7 +201,7 @@ double Prior::betaInitRootPrior(double x)
     if (fabs(_betaInitRootPrior + 1) < _UPDATE_TOL) {
         return betaInitPrior(x);
     } else {
-        return _rng->lnExponentialPdf(_betaInitRootPrior, x);
+        return Stat::lnExponentialPDF(x, _betaInitRootPrior);
     }
 }
 
@@ -210,6 +211,6 @@ double Prior::betaShiftRootPrior(double x)
     if (fabs(_betaShiftRootPrior + 1) < _UPDATE_TOL) {
         return betaShiftPrior(x);
     } else {
-        return _rng->lnExponentialPdf(_betaShiftRootPrior, x);
+        return Stat::lnExponentialPDF(x, _betaShiftRootPrior);
     }
 }

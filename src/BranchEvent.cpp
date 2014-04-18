@@ -4,12 +4,12 @@
 #include "BranchEvent.h"
 #include "Node.h"
 #include "Tree.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Log.h"
 
 
-BranchEvent::BranchEvent(Node* x, Tree* tp, MbRandom* rp, double map) :
-    mapTime(map), nodeptr(x), treePtr(tp), ranPtr(rp),
+BranchEvent::BranchEvent(Node* x, Tree* tp, Random& random, double map) :
+    mapTime(map), nodeptr(x), treePtr(tp), _random(random),
     oldNodePtr(x), oldMapTime(map), _isEventTimeVariable(false)
 {
     if (tp->getRoot() == x) {
@@ -131,7 +131,7 @@ void BranchEvent::incrementMapPosition(double ink)
         } else if (getEventNode()->getLfDesc()->getCanHoldEvent() == true &&
                    getEventNode()->getRtDesc()->getCanHoldEvent() == true) {
             // both desc branches valid
-            double ran = ranPtr->uniformRv();
+            double ran = _random.uniform();
             if (ran <= 0.5) {
                 // left branch
                 setEventNode(getEventNode()->getLfDesc());
@@ -183,7 +183,7 @@ void BranchEvent::moveEventGlobal(void)
 
     double aa = treePtr->getRoot()->getMapStart();
     double bb = treePtr->getTotalMapLength();
-    double position = ranPtr->uniformRv(aa, bb);
+    double position = _random.uniform(aa, bb);
     setEventNode(treePtr->mapEventToTree(position));
     setMapTime(position);
     setAbsoluteTime(treePtr->getAbsoluteTimeFromMapTime(getMapTime()));

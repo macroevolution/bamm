@@ -1,5 +1,5 @@
 #include "MuInitProposal.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
 #include "Model.h"
 #include "Prior.h"
@@ -8,8 +8,8 @@
 
 
 MuInitProposal::MuInitProposal
-    (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
-        EventParameterProposal(rng, settings, model, prior)
+    (Random& random, Settings& settings, Model& model, Prior& prior) :
+        EventParameterProposal(random, settings, model, prior)
 {
     _updateMuInitScale = _settings.get<double>("updateMuInitScale");
 }
@@ -23,7 +23,7 @@ double MuInitProposal::getCurrentParameterValue()
 
 double MuInitProposal::computeNewParameterValue()
 {
-    _cterm = std::exp(_updateMuInitScale * (_rng.uniformRv() - 0.5));
+    _cterm = std::exp(_updateMuInitScale * (_random.uniform() - 0.5));
     return _cterm * _currentParameterValue;
 }
 

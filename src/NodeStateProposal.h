@@ -4,7 +4,7 @@
 
 #include "Proposal.h"
 
-class MbRandom;
+class Random;
 class Settings;
 class Model;
 class TraitModel;
@@ -16,7 +16,7 @@ class NodeStateProposal : public Proposal
 {
 public:
 
-    NodeStateProposal(MbRandom& rng, Settings& settings, Model& model);
+    NodeStateProposal(Random& random, Settings& settings, Model& model);
 
     virtual void propose();
     virtual void accept();
@@ -29,7 +29,7 @@ private:
     void updateMinMaxTraitPriorSettings();
     double computeLogLikelihoodRatio();
 
-    MbRandom& _rng;
+    Random& _random;
     Settings& _settings;
     TraitModel& _model;
 

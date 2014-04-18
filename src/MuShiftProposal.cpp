@@ -1,5 +1,5 @@
 #include "MuShiftProposal.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
 #include "Model.h"
 #include "Prior.h"
@@ -8,8 +8,8 @@
 
 
 MuShiftProposal::MuShiftProposal
-    (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
-        EventParameterProposal(rng, settings, model, prior)
+    (Random& random, Settings& settings, Model& model, Prior& prior) :
+        EventParameterProposal(random, settings, model, prior)
 {
     _updateMuShiftScale = _settings.get<double>("updateMuShiftScale");
 }
@@ -23,7 +23,7 @@ double MuShiftProposal::getCurrentParameterValue()
 
 double MuShiftProposal::computeNewParameterValue()
 {
-    return _currentParameterValue + _rng.normalRv(0.0, _updateMuShiftScale);
+    return _currentParameterValue + _random.normal(0.0, _updateMuShiftScale);
 }
 
 

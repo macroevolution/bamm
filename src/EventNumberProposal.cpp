@@ -1,11 +1,12 @@
 #include "EventNumberProposal.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
 #include "Model.h"
 
 
 EventNumberProposal::EventNumberProposal
-    (MbRandom& rng, Settings& settings, Model& model) : _rng(rng), _model(model)
+    (Random& random, Settings& settings, Model& model) :
+        _random(random), _model(model)
 {
     _validateEventConfiguration =
         settings.get<bool>("validateEventConfiguration");
@@ -18,7 +19,8 @@ void EventNumberProposal::propose()
     _currentLogLikelihood = _model.getCurrentLogLikelihood();
     _currentLogPrior = _model.computeLogPrior();
 
-    bool shouldAddEvent = (_currentEventCount == 0) || (_rng.uniformRv() < 0.5);
+    bool shouldAddEvent = (_currentEventCount == 0) ||
+        _random.trueWithProbability(0.5);
 
     if (shouldAddEvent) {
         _lastEventChanged = _model.addRandomEventToTree();

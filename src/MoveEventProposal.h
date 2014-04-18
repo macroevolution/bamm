@@ -4,7 +4,7 @@
 
 #include "Proposal.h"
 
-class MbRandom;
+class Random;
 class Settings;
 class Model;
 class BranchEvent;
@@ -14,7 +14,7 @@ class MoveEventProposal : public Proposal
 {
 public:
 
-    MoveEventProposal(MbRandom& rng, Settings& settings, Model& model);
+    MoveEventProposal(Random& random, Settings& settings, Model& model);
 
     virtual void propose();
     virtual void accept();
@@ -26,7 +26,7 @@ private:
 
     virtual double computeLogLikelihoodRatio();
 
-    MbRandom& _rng;
+    Random& _random;
     Settings& _settings;
     Model& _model;
 

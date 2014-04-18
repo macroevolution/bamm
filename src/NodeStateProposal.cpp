@@ -1,5 +1,5 @@
 #include "NodeStateProposal.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
 #include "Model.h"
 #include "TraitModel.h"
@@ -12,9 +12,9 @@
 
 
 NodeStateProposal::NodeStateProposal
-    (MbRandom& rng, Settings& settings, Model& model) :
-        _rng(rng), _settings(settings), _model(static_cast<TraitModel&>(model)),
-        _tree(model.getTreePtr())
+    (Random& random, Settings& settings, Model& model) :
+        _random(random), _settings(settings),
+        _model(static_cast<TraitModel&>(model)), _tree(model.getTreePtr())
 {
     // Node state scale is relative to the standard deviation
     // of the trait values (located in the tree terminal nodes)
@@ -65,7 +65,7 @@ void NodeStateProposal::propose()
     _currentLogLikelihood = _model.getCurrentLogLikelihood();
     _currentNodeState = _node->getTraitValue();
 
-    _proposedNodeState = _currentNodeState + _rng.uniformRv
+    _proposedNodeState = _currentNodeState + _random.uniform
         (-_updateNodeStateScale, _updateNodeStateScale);
     _node->setTraitValue(_proposedNodeState);
 

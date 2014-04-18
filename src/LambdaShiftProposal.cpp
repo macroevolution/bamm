@@ -1,5 +1,5 @@
 #include "LambdaShiftProposal.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
 #include "Model.h"
 #include "Prior.h"
@@ -8,8 +8,8 @@
 
 
 LambdaShiftProposal::LambdaShiftProposal
-    (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
-        EventParameterProposal(rng, settings, model, prior)
+    (Random& random, Settings& settings, Model& model, Prior& prior) :
+        EventParameterProposal(random, settings, model, prior)
 {
     _updateLambdaShiftScale = _settings.get<double>("updateLambdaShiftScale");
 }
@@ -23,7 +23,8 @@ double LambdaShiftProposal::getCurrentParameterValue()
 
 double LambdaShiftProposal::computeNewParameterValue()
 {
-    return _currentParameterValue + _rng.normalRv(0.0, _updateLambdaShiftScale);
+    return _currentParameterValue +
+        _random.normal(0.0, _updateLambdaShiftScale);
 }
 
 

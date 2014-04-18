@@ -1,5 +1,5 @@
 #include "LambdaInitProposal.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
 #include "Model.h"
 #include "Prior.h"
@@ -8,8 +8,8 @@
 
 
 LambdaInitProposal::LambdaInitProposal
-    (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
-        EventParameterProposal(rng, settings, model, prior)
+    (Random& random, Settings& settings, Model& model, Prior& prior) :
+        EventParameterProposal(random, settings, model, prior)
 {
     _updateLambdaInitScale = _settings.get<double>("updateLambdaInitScale");
 }
@@ -23,7 +23,7 @@ double LambdaInitProposal::getCurrentParameterValue()
 
 double LambdaInitProposal::computeNewParameterValue()
 {
-    _cterm = std::exp(_updateLambdaInitScale * (_rng.uniformRv() - 0.5));
+    _cterm = std::exp(_updateLambdaInitScale * (_random.uniform() - 0.5));
     return _cterm * _currentParameterValue;
 }
 

@@ -5,8 +5,8 @@
 #include <set>
 #include <vector>
 
+class Random;
 class Settings;
-class MbRandom;
 class branchEvent;
 class eventSet;
 class Phenotype;
@@ -49,6 +49,8 @@ private:
 
     void removeWhiteSpace(std::string& str);
 
+    Random& _random;
+
     Node* root;
     std::set<Node*> nodes;
     std::vector<Node*> downPassSeq;
@@ -56,7 +58,6 @@ private:
     // Internal node set:: for choosing random node to update state
     std::set<Node*> internalNodeSet;
 
-    MbRandom* ranPtr;
     double _startTime;
     double _tmax;
     bool _isExtant;
@@ -86,9 +87,8 @@ private:
 
 public:
 
-    Tree(Settings& settings, MbRandom* rnptr);
+    Tree(Random& random, Settings& settings);
 
-    Tree();
     ~Tree();
 
     // This function initializes eventHistory for tree,

@@ -1,5 +1,5 @@
 #include "EventParameterProposal.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
 #include "Model.h"
 #include "Prior.h"
@@ -9,8 +9,8 @@
 
 
 EventParameterProposal::EventParameterProposal
-    (MbRandom& rng, Settings& settings, Model& model, Prior& prior) :
-        _rng(rng), _settings(settings), _model(model), _prior(prior),
+    (Random& random, Settings& settings, Model& model, Prior& prior) :
+        _random(random), _settings(settings), _model(model), _prior(prior),
         _tree(_model.getTreePtr())
 {
 }

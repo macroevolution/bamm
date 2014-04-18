@@ -5,7 +5,7 @@
 #include <ctime>
 #include <cstdlib>
 
-#include "MbRandom.h"
+#include "Random.h"
 #include "Settings.h"
 #include "Prior.h"
 #include "Tree.h"
@@ -78,8 +78,8 @@ int main (int argc, char* argv[])
     Settings settings(controlFilename, commandLineParameters);
 
     int seed = settings.get<int>("seed");
-    MbRandom rng(seed);
-    seed = rng.getSeed();    // Get actual seed in case it is based on clock
+    Random random(seed);
+    seed = random.getSeed();    // Get actual seed in case it is based on clock
 
     std::ofstream runInfoFile(settings.get("runInfoFilename").c_str());
     log(Message, runInfoFile) << "Command line: "
@@ -107,7 +107,7 @@ int main (int argc, char* argv[])
 
     if (settings.get<bool>("initializeModel")) {
         // Model is initialized with MetropolisCoupledMCMC
-        MetropolisCoupledMCMC mc3(rng, settings, modelFactory);
+        MetropolisCoupledMCMC mc3(random, settings, modelFactory);
 
         if (settings.get<bool>("runMCMC")) {
             mc3.run();
@@ -117,7 +117,7 @@ int main (int argc, char* argv[])
     delete modelFactory;
 
     if (settings.get<bool>("simulatePriorShifts")){
-        FastSimulatePrior fsp(&rng, &settings);
+        FastSimulatePrior fsp(random, &settings);
     }
 
     log(Message, runInfoFile) << "End time: " << currentTime() << "\n";

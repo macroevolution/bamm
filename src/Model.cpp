@@ -1,5 +1,5 @@
 #include "Model.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Tree.h"
 #include "Settings.h"
 #include "Prior.h"
@@ -14,18 +14,13 @@
 
 
 // TODO: pointers not necessary; make references
-Model::Model(MbRandom* rng, Settings* settings) :
-    _rng(rng), _settings(settings), _prior(_rng, _settings),
-    _tree(new Tree(*_settings, _rng)),
-    _eventNumberProposal(*rng, *settings, *this),
-    _moveEventProposal(*rng, *settings, *this),
-    _eventRateProposal(*rng, *settings, *this, _prior)
+Model::Model(Random& random, Settings* settings) :
+    _random(random), _settings(settings), _prior(_random, _settings),
+    _tree(new Tree(_random, *_settings)),
+    _eventNumberProposal(random, *settings, *this),
+    _moveEventProposal(random, *settings, *this),
+    _eventRateProposal(random, *settings, *this, _prior)
 {
-    // Reduce weird autocorrelation of values at start by calling RNG
-    // a few times. TODO: Why is there a weird autocorrelation?
-    for (int i = 0; i < 100; i++)
-        _rng->uniformRv();
-
     // Initialize event rate to generate expected number of prior events
     _eventRate = 1 / _settings->get<double>("poissonRatePrior");
 
@@ -260,7 +255,7 @@ void Model::proposeNewState()
 
 int Model::chooseParameterToUpdate()
 {
-    double r = _rng->uniformRv();
+    double r = _random.uniform();
 
     for (int i = 0; i < (int)_updateWeights.size(); i++) {
         if (r < _updateWeights[i]) {
@@ -276,7 +271,7 @@ BranchEvent* Model::addRandomEventToTree()
 {
     double aa = _tree->getRoot()->getMapStart();
     double bb = _tree->getTotalMapLength();
-    double x = _rng->uniformRv(aa, bb);
+    double x = _random.uniform(aa, bb);
                 
     BranchEvent* newEvent = newBranchEventWithRandomParameters(x);
     return addEventToTree(newEvent);
@@ -307,9 +302,9 @@ BranchEvent* Model::chooseEventAtRandom(bool includeRoot)
 
     int eventIndex = 0;
     if (includeRoot) {
-        eventIndex = _rng->sampleInteger(0, numberOfEvents);
+        eventIndex = _random.uniformInteger(0, numberOfEvents);
     } else {
-        eventIndex = _rng->sampleInteger(0, numberOfEvents - 1);
+        eventIndex = _random.uniformInteger(0, numberOfEvents - 1);
     }
     
     if (eventIndex == numberOfEvents) {
@@ -379,7 +374,7 @@ BranchEvent* Model::removeRandomEventFromTree()
     }
 
     int counter = 0;
-    double xx = _rng->uniformRv();
+    double xx = _random.uniform();
     int chosen = (int)(xx * (double)numEvents);
 
     EventSet::iterator it;

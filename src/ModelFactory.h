@@ -5,7 +5,7 @@
 class Model;
 class EventDataWriter;
 
-class MbRandom;
+class Random;
 class Settings;
 class Prior;
 
@@ -16,7 +16,7 @@ public:
 
     virtual ~ModelFactory() {}
 
-    virtual Model* createModel(MbRandom& rng, Settings& settings) const = 0;
+    virtual Model* createModel(Random& random, Settings& settings) const = 0;
     virtual EventDataWriter* createEventDataWriter
         (Settings& settings) const = 0;
 };

@@ -5,7 +5,7 @@
 
 class Tree;
 class Node;
-class MbRandom;
+class Random;
 
 
 // This base class contains:
@@ -31,7 +31,7 @@ private:
     double mapTime;
     Node* nodeptr;
     Tree* treePtr;
-	MbRandom* ranPtr;
+    Random& _random;
 
     // Keep values of the old pointer and old maptime associated
     // with the event for FAST reference if a LOCAL proposal is rejected.
@@ -46,7 +46,7 @@ private:
 
 public:
 
-    BranchEvent(Node* x, Tree* tp, MbRandom*rp, double map);
+    BranchEvent(Node* x, Tree* tp, Random& random, double map);
     virtual ~BranchEvent();
 
     void   setMapTime(double x);

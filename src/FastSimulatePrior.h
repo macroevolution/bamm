@@ -15,14 +15,14 @@
 
 //Forward declarations
 class Node;
-class MbRandom;
+class Random;
 class Settings;
 
 class FastSimulatePrior
 {
 public:
     
-    FastSimulatePrior(MbRandom* ranptr, Settings* sp);
+    FastSimulatePrior(Random& random, Settings* sp);
     ~FastSimulatePrior();
     
     void updateState(void);
@@ -39,7 +39,7 @@ public:
     
 private:
 
-    MbRandom* ran;
+    Random& _random;
     Settings* sttings;
     
     double _eventRate;

@@ -19,7 +19,7 @@
 #include <limits>
 #include <algorithm>
 
-#include "MbRandom.h"
+#include "Random.h"
 #include "Node.h"
 #include "Tree.h"
 #include "BranchHistory.h"
@@ -31,11 +31,11 @@
 #include "Stat.h"
 
 
-TraitModel::TraitModel(MbRandom* rng, Settings* settings) :
-    Model(rng, settings),
-    _betaInitProposal(*rng, *settings, *this, _prior),
-    _betaShiftProposal(*rng, *settings, *this, _prior),
-    _nodeStateProposal(*rng, *settings, *this)
+TraitModel::TraitModel(Random& random, Settings* settings) :
+    Model(random, settings),
+    _betaInitProposal(random, *settings, *this, _prior),
+    _betaShiftProposal(random, *settings, *this, _prior),
+    _nodeStateProposal(random, *settings, *this)
 {
 #ifdef NEGATIVE_SHIFT_PARAM
     // Constrain beta shift to be zero or less than zero.
@@ -50,7 +50,7 @@ TraitModel::TraitModel(MbRandom* rng, Settings* settings) :
 
     BranchEvent* x = new TraitBranchEvent(_settings->get<double>("betaInit"),
         _settings->get<double>("betaShiftInit"),
-        _tree->getRoot(), _tree, _rng, 0);
+        _tree->getRoot(), _tree, _random, 0);
     _rootEvent = x;
     _lastEventModified = x;
 
@@ -136,7 +136,7 @@ void TraitModel::setRootEventWithReadParameters()
 BranchEvent* TraitModel::newBranchEventWithReadParameters(Node* x, double time)
 {
     return new TraitBranchEvent(_readBetaInit, _readBetaShift,
-        x, _tree, _rng, time);
+        x, _tree, _random, time);
 }
 
 
@@ -165,7 +165,7 @@ BranchEvent* TraitModel::newBranchEventWithRandomParameters(double x)
     _logQRatioJump += dens_term + _prior.betaShiftPrior(newBetaShift);
     
     return new TraitBranchEvent(newbeta, newBetaShift,
-        _tree->mapEventToTree(x), _tree, _rng, x);
+        _tree->mapEventToTree(x), _tree, _random, x);
 }
 
 
@@ -192,7 +192,7 @@ double TraitModel::calculateLogQRatioJump()
 BranchEvent* TraitModel::newBranchEventFromLastDeletedEvent()
 {
     TraitBranchEvent* newEvent = new TraitBranchEvent(0.0, 0.0,
-        _tree->mapEventToTree(_lastDeletedEventMapTime), _tree, _rng,
+        _tree->mapEventToTree(_lastDeletedEventMapTime), _tree, _random,
             _lastDeletedEventMapTime);
 
     newEvent->setBetaInit(_lastDeletedEventBetaInit);
@@ -229,7 +229,7 @@ double TraitModel::computeLogLikelihood()
             // change in phenotype:
             double delta = xnode->getTraitValue() - xnode->getAnc()->getTraitValue();
 
-            LnL += _rng->lnNormalPdf(0, var, delta);
+            LnL += Stat::lnNormalPDF(delta, 0.0, std::sqrt(var));
 
             //std::cout << xnode << "dz: " << delta << "\tT: " << xnode->getBrlen() << "\tRate: " << xnode->getMeanBeta();
             //std::cout << "\tLf: " << _rng->lnNormalPdf(0, var, delta) << std::endl;
@@ -271,18 +271,18 @@ double TraitModel::computeTriadLikelihoodTraits(Node* x)
 
         if (x->getLfDesc()->getCanHoldEvent() == true) {
             double delta = x->getLfDesc()->getTraitValue() - x->getTraitValue();
-            logL += _rng->lnNormalPdf(0,
-                                     (x->getLfDesc()->getBrlen() * x->getLfDesc()->getMeanBeta()), delta);
+            double var = x->getLfDesc()->getBrlen() *
+                x->getLfDesc()->getMeanBeta();
+            logL += Stat::lnNormalPDF(delta, 0.0, std::sqrt(var));
         }
 
 
         if (x->getRtDesc()->getCanHoldEvent() == true) {
             // computation for right descendant branch
             double delta = x->getRtDesc()->getTraitValue() - x->getTraitValue();
-            logL += _rng->lnNormalPdf(0,
-                                     (x->getRtDesc()->getBrlen() * x->getRtDesc()->getMeanBeta()), delta);
-
-
+            double var = x->getRtDesc()->getBrlen() *
+                x->getRtDesc()->getMeanBeta();
+            logL += Stat::lnNormalPDF(delta, 0.0, std::sqrt(var));
         }
 
 
@@ -291,12 +291,9 @@ double TraitModel::computeTriadLikelihoodTraits(Node* x)
         if (x != _tree->getRoot()) {
 
             double delta = x->getTraitValue() - x->getAnc()->getTraitValue();
-            logL += _rng->lnNormalPdf(0, (x->getBrlen() * x->getMeanBeta()), delta);
-
+            double var = x->getBrlen() * x->getMeanBeta();
+            logL += Stat::lnNormalPDF(delta, 0.0, std::sqrt(var));
         }
-
-
-
     }
 
 #ifdef DEBUG

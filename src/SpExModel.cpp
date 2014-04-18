@@ -9,7 +9,7 @@
 
 #include "SpExModel.h"
 #include "Model.h"
-#include "MbRandom.h"
+#include "Random.h"
 #include "Node.h"
 #include "Tree.h"
 #include "BranchHistory.h"
@@ -41,12 +41,11 @@
 #define JUMP_VARIANCE_NORMAL 0.05
 
 
-SpExModel::SpExModel(MbRandom* ranptr, Settings* sp) :
-    Model(ranptr, sp),
-    _lambdaInitProposal(*ranptr, *sp, *this, _prior),
-    _lambdaShiftProposal(*ranptr, *sp, *this, _prior),
-    _muInitProposal(*ranptr, *sp, *this, _prior),
-    _muShiftProposal(*ranptr, *sp, *this, _prior)
+SpExModel::SpExModel(Random& random, Settings* sp) : Model(random, sp),
+    _lambdaInitProposal(random, *sp, *this, _prior),
+    _lambdaShiftProposal(random, *sp, *this, _prior),
+    _muInitProposal(random, *sp, *this, _prior),
+    _muShiftProposal(random, *sp, *this, _prior)
 {
     // Initial values
     _lambdaInit0 = _settings->get<double>("lambdaInit0");
@@ -62,7 +61,7 @@ SpExModel::SpExModel(MbRandom* ranptr, Settings* sp) :
    
     BranchEvent* x =  new SpExBranchEvent
         (_lambdaInit0, _lambdaShift0, _muInit0, _muShift0,
-            _tree->getRoot(), _tree, _rng, 0);
+            _tree->getRoot(), _tree, _random, 0);
     _rootEvent = x;
     _lastEventModified = x;
 
@@ -149,7 +148,7 @@ void SpExModel::setRootEventWithReadParameters()
 BranchEvent* SpExModel::newBranchEventWithReadParameters(Node* x, double time)
 {
     return new SpExBranchEvent(_readLambdaInit, _readLambdaShift,
-        _readMuInit, _readMuShift, x, _tree, _rng, time);
+        _readMuInit, _readMuShift, x, _tree, _random, time);
 }
 
 
@@ -176,7 +175,7 @@ BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
     _logQRatioJump += _prior.muShiftPrior(newMuShift);
     
     return new SpExBranchEvent(newLam, newLambdaShift, newMu,
-        newMuShift, _tree->mapEventToTree(x), _tree, _rng, x);
+        newMuShift, _tree->mapEventToTree(x), _tree, _random, x);
 }
 
 
@@ -207,7 +206,7 @@ double SpExModel::calculateLogQRatioJump()
 BranchEvent* SpExModel::newBranchEventFromLastDeletedEvent()
 {
     SpExBranchEvent* newEvent = new SpExBranchEvent(0.0, 0.0, 0.0, 0.0,
-        _tree->mapEventToTree(_lastDeletedEventMapTime), _tree, _rng,
+        _tree->mapEventToTree(_lastDeletedEventMapTime), _tree, _random,
             _lastDeletedEventMapTime);
 
     newEvent->setLamInit(_lastDeletedEventLambdaInit);

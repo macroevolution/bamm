@@ -51,6 +51,7 @@ SET(BAMM_SRC
     src/NodeStateProposal.cpp
     src/Prior.cpp
     src/Proposal.cpp
+    src/Random.cpp
     src/Settings.cpp
     src/SettingsParameter.cpp
     src/SpExBranchEvent.cpp

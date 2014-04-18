@@ -6,23 +6,17 @@
 #include <iomanip>
 #include <algorithm>
 
+#include "Random.h"
 #include "Settings.h"
 #include "Tree.h"
 #include "Node.h"
 #include "BranchHistory.h"
 #include "TraitBranchEvent.h"
-#include "MbRandom.h"
 #include "Log.h"
 #include "Stat.h"
 
 
 //#define DEBUG_TIME_VARIABLE
-
-Tree::Tree(void)
-{
-
-}
-
 
 Tree::~Tree(void)
 {
@@ -33,10 +27,9 @@ Tree::~Tree(void)
 }
 
 
-Tree::Tree(Settings& settings, MbRandom* rnptr)
+Tree::Tree(Random& random, Settings& settings) : _random(random)
 {
     std::string fname = settings.get("treefile");
-    ranPtr = rnptr;
 
     std::ifstream treefile(fname.c_str());
 
@@ -332,7 +325,7 @@ void Tree::clearTempNodeArray(void)
 
 Node* Tree::getRandomNodeFromTempArray(void)
 {
-    int chosen = ranPtr->sampleInteger(0, ((int)_tempNodeSet.size() - 1));
+    int chosen = _random.uniformInteger(0, (int)_tempNodeSet.size() - 1);
     int myit = 0;
     Node* xnode = (*_tempNodeSet.begin());
 
@@ -1271,13 +1264,14 @@ void Tree::generateTraitsAllNodesBM(Node* xnode, double varx)
     if (xnode->getLfDesc() != NULL && xnode->getRtDesc() != NULL) {
         // do left:
         double vx = xnode->getLfDesc()->getBrlen() * varx;
-        double newTrait = xnode->getTraitValue() + ranPtr->normalRv((double)0.0,
-                          sqrt(vx));
+        double newTrait = xnode->getTraitValue() +
+            _random.normal(0.0, std::sqrt(vx));
         xnode->getLfDesc()->setTraitValue(newTrait);
         generateTraitsAllNodesBM(xnode->getLfDesc(), varx);
 
         vx = xnode->getRtDesc()->getBrlen() * varx;
-        newTrait = xnode->getTraitValue() + ranPtr->normalRv((double)0.0, sqrt(vx));
+        newTrait = xnode->getTraitValue() +
+            _random.normal(0.0, std::sqrt(vx));
         xnode->getRtDesc()->setTraitValue(newTrait);
         generateTraitsAllNodesBM(xnode->getRtDesc(), varx);
 
@@ -1301,7 +1295,7 @@ void Tree::generateTraitsAllNodesBM(Node* xnode, double varx)
 
 Node* Tree::chooseInternalNodeAtRandom(void)
 {
-    int snode = ranPtr->sampleInteger((int)1, (int)internalNodeSet.size());
+    int snode = _random.uniformInteger(1, (int)internalNodeSet.size());
     std::set<Node*>::iterator myIt = internalNodeSet.begin();
 
     for (int i = 1; i < snode; i++ ) {
@@ -1902,7 +1896,7 @@ void Tree::recursiveSetTraitValues(Node* x, double mn, double mx)
             x->setTraitValue(s1);
         }
     } else if (x->getIsTraitFixed() == false) {
-        x->setTraitValue(ranPtr->uniformRv(mn, mx));
+        x->setTraitValue(_random.uniform(mn, mx));
     } else {
         // Trait is fixed. Nothing to do.
     }

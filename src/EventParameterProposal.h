@@ -4,7 +4,7 @@
 
 #include "Proposal.h"
 
-class MbRandom;
+class Random;
 class Settings;
 class Model;
 class Prior;
@@ -16,7 +16,7 @@ class EventParameterProposal : public Proposal
 {
 public:
 
-    EventParameterProposal(MbRandom& rng, Settings& settings, Model& model,
+    EventParameterProposal(Random& random, Settings& settings, Model& model,
         Prior& prior);
 
     virtual void propose();
@@ -41,7 +41,7 @@ protected:
     virtual double computeNonRootLogPriorRatio();
     virtual double computeLogQRatio();
 
-    MbRandom& _rng;
+    Random& _random;
     Settings& _settings;
     Model& _model;
     Prior& _prior;

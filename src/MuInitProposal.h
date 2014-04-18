@@ -4,7 +4,7 @@
 
 #include "EventParameterProposal.h"
 
-class MbRandom;
+class Random;
 class Settings;
 class Model;
 class Prior;
@@ -14,7 +14,7 @@ class MuInitProposal : public EventParameterProposal
 {
 public:
 
-    MuInitProposal(MbRandom& rng, Settings& settings, Model& model,
+    MuInitProposal(Random& random, Settings& settings, Model& model,
         Prior& prior);
 
 private:

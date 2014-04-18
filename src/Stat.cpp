@@ -1,6 +1,11 @@
 #include "Stat.h"
+#include "MbRandom.h"
+
 #include <vector>
 #include <cmath>
+
+
+MbRandom Stat::_random;
 
 
 double Stat::standard_deviation(const std::vector<double>& values)
@@ -25,4 +30,16 @@ double Stat::variance(const std::vector<double>& values)
     }
 
     return (sum_of_squares - sum * sum / (double)n) / (double)(n - 1);
+}
+
+
+double Stat::lnNormalPDF(double x, double mean, double sd)
+{
+    return _random.lnNormalPdf(mean, sd * sd, x);
+}
+
+
+double Stat::lnExponentialPDF(double x, double rate)
+{
+    return _random.lnExponentialPdf(rate, x);
 }

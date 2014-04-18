@@ -9,7 +9,7 @@
 #include <iosfwd>
 
 class Node;
-class MbRandom;
+class Random;
 class Settings;
 class BranchEvent;
 class Proposal;
@@ -20,7 +20,7 @@ class TraitModel : public Model
 
 public:
 
-    TraitModel(MbRandom* rng, Settings* settings);
+    TraitModel(Random& rng, Settings* settings);
 
     virtual double computeLogLikelihood();
     virtual double computeTriadLikelihoodTraits(Node* x);

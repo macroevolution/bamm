@@ -4,7 +4,7 @@
 
 #include "EventParameterProposal.h"
 
-class MbRandom;
+class Random;
 class Settings;
 class Model;
 class Prior;
@@ -14,7 +14,7 @@ class MuShiftProposal : public EventParameterProposal
 {
 public:
 
-    MuShiftProposal(MbRandom& rng, Settings& settings, Model& model,
+    MuShiftProposal(Random& random, Settings& settings, Model& model,
         Prior& prior);
 
 private:
