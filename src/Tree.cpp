@@ -18,7 +18,7 @@
 
 //#define DEBUG_TIME_VARIABLE
 
-Tree::~Tree(void)
+Tree::~Tree()
 {
     //std::cout << "calling destructor" << std::endl;
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
@@ -221,7 +221,7 @@ double Tree::getAbsoluteTimeFromMapTime(double x)
 }
 
 
-void Tree::printCanHoldEventByNode(void)
+void Tree::printCanHoldEventByNode()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         std::cout << (*i) << "\tCan hold: " << (*i)->getCanHoldEvent() << "\tTips: " <<
@@ -270,7 +270,7 @@ Node* Tree::mapEventToTree(double x)
 }
 
 
-void Tree::printNodeMap(void)
+void Tree::printNodeMap()
 {
     for (std::set<Node*>::iterator i = mappableNodes.begin();
             i != mappableNodes.end(); i++) {
@@ -280,7 +280,7 @@ void Tree::printNodeMap(void)
 }
 
 
-void Tree::getDownPassSeq(void)
+void Tree::getDownPassSeq()
 {
     passDown(root);
 }
@@ -317,13 +317,13 @@ void Tree::tempNodeSetPassDown(Node* p)
 }
 
 
-void Tree::clearTempNodeArray(void)
+void Tree::clearTempNodeArray()
 {
     _tempNodeSet.clear();
 }
 
 
-Node* Tree::getRandomNodeFromTempArray(void)
+Node* Tree::getRandomNodeFromTempArray()
 {
     int chosen = _random.uniformInteger(0, (int)_tempNodeSet.size() - 1);
     int myit = 0;
@@ -340,7 +340,7 @@ Node* Tree::getRandomNodeFromTempArray(void)
 }
 
 
-void Tree::setBranchLengths(void)
+void Tree::setBranchLengths()
 {
     // Set brlens:
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
@@ -355,7 +355,7 @@ void Tree::setBranchLengths(void)
 }
 
 
-std::string Tree::getNewick(void)
+std::string Tree::getNewick()
 {
     std::stringstream ss;
     writeTree(root, ss);
@@ -383,7 +383,7 @@ void Tree::writeTree(Node* p, std::stringstream& ss)
 }
 
 
-int Tree::getNumberTips(void)
+int Tree::getNumberTips()
 {
     int count = 0;
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
@@ -395,7 +395,7 @@ int Tree::getNumberTips(void)
 }
 
 
-void Tree::setTipStatus(void)
+void Tree::setTipStatus()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         if (((*i)->getLfDesc() == NULL) && ((*i)->getRtDesc() == NULL )) {
@@ -407,7 +407,7 @@ void Tree::setTipStatus(void)
 }
 
 
-int Tree::getNumberExtantTips(void)
+int Tree::getNumberExtantTips()
 {
     setExtantStatus();
     int ntaxa = 0;
@@ -431,7 +431,7 @@ int Tree::getNumberExtantTips(void)
 */
 
 
-void Tree::setExtantStatus(void)
+void Tree::setExtantStatus()
 {
     double tx = root->getTime();
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
@@ -460,7 +460,7 @@ void Tree::setExtantStatus(void)
  This can be distinguished from setExtantStatus,
     which flags status of internal nodes as well.
  */
-void Tree::setIsLivingTipStatus(void)
+void Tree::setIsLivingTipStatus()
 {
     double TOL = 0.000001;
 
@@ -520,7 +520,7 @@ void Tree::writeNodeData(void )
 }
 
 
-void Tree::rebuildTreeNodeSet(void)
+void Tree::rebuildTreeNodeSet()
 {
     nodes.clear();
     recursivelyAddNodesToSet(root);
@@ -548,7 +548,7 @@ void Tree::recursivelyAddNodesToSet(Node* p)
 */
 
 
-void Tree::pruneExtinctTaxa(void)
+void Tree::pruneExtinctTaxa()
 {
     //assume most recent time is extant
     setExtantStatus();
@@ -675,7 +675,7 @@ void Tree::fixExtinct(Node* p)
 */
 
 
-void Tree::deleteExtinctNodes(void)
+void Tree::deleteExtinctNodes()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         // if node is leaf:
@@ -862,7 +862,7 @@ bool Tree::isValidChar(char x)
 }
 
 
-void Tree::setAge(void)
+void Tree::setAge()
 {
     // age here defined as MAX node time (node times start with 0 at root)
     double mx = 0;
@@ -890,7 +890,7 @@ void Tree::setBranchingTimes(Node* p)
 }
 
 
-std::vector<double>  Tree::getBranchingTimes(void)
+std::vector<double>  Tree::getBranchingTimes()
 {
     double TOL = 0.0000001;
     std::vector<double> btimes;
@@ -939,14 +939,14 @@ void Tree::writeMeanBranchTraitRateTree(Node* p, std::stringstream& ss)
 
  */
 
-void Tree::setNodeSpeciationParameters(void)
+void Tree::setNodeSpeciationParameters()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
         (*i)->computeAndSetNodeSpeciationParams();
     }
 }
 
-void Tree::setNodeExtinctionParameters(void)
+void Tree::setNodeExtinctionParameters()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
         (*i)->computeAndSetNodeExtinctionParams();
@@ -955,7 +955,7 @@ void Tree::setNodeExtinctionParameters(void)
 
 
 // Update both mean speciation rates on branch in addition to node speciation rate.
-void Tree::setMeanBranchSpeciation(void)
+void Tree::setMeanBranchSpeciation()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         (*i)->computeNodeBranchSpeciationParams();
@@ -965,7 +965,7 @@ void Tree::setMeanBranchSpeciation(void)
 // this will update extinction for both branch mean rates as well as
 // node-associated rates.
 
-void Tree::setMeanBranchExtinction(void)
+void Tree::setMeanBranchExtinction()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         (*i)->computeNodeBranchExtinctionParams();
@@ -973,7 +973,7 @@ void Tree::setMeanBranchExtinction(void)
 }
 
 
-void Tree::echoMeanBranchRates(void)
+void Tree::echoMeanBranchRates()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         Node* x = (*i);
@@ -983,7 +983,7 @@ void Tree::echoMeanBranchRates(void)
 }
 
 
-void Tree::echoMeanBranchTraitRates(void)
+void Tree::echoMeanBranchTraitRates()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         Node* x = (*i);
@@ -1249,7 +1249,7 @@ void Tree::getPhenotypesMissingLatent(std::string fname)
 }
 
 
-void Tree::printTraitValues(void)
+void Tree::printTraitValues()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         std::cout << (*i) << "\t" << (*i)->getIsTraitFixed() << "\t" <<
@@ -1293,7 +1293,7 @@ void Tree::generateTraitsAllNodesBM(Node* xnode, double varx)
 
  */
 
-Node* Tree::chooseInternalNodeAtRandom(void)
+Node* Tree::chooseInternalNodeAtRandom()
 {
     int snode = _random.uniformInteger(1, (int)internalNodeSet.size());
     std::set<Node*>::iterator myIt = internalNodeSet.begin();
@@ -1526,7 +1526,7 @@ void Tree::assertIsSubset(const std::vector<std::string>& list1,
 }
 
 
-void Tree::printInitialSpeciationExtinctionRates(void)
+void Tree::printInitialSpeciationExtinctionRates()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         //if ((*i)->getLfDesc() == NULL && ((*i)->getRtDesc() == NULL))
@@ -1600,7 +1600,7 @@ int Tree::countDescendantsWithValidTraitData(Node* p)
 
  */
 
-void Tree::setAllNodesCanHoldEvent(void)
+void Tree::setAllNodesCanHoldEvent()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         (*i)->setCanHoldEvent(true);
@@ -1630,7 +1630,7 @@ void Tree::setTreeMap(int ndesc)
 }
 
 
-void Tree::printTraitRange(void)
+void Tree::printTraitRange()
 {
     double mx = root->getTraitValue();
     double mn = root->getTraitValue();
@@ -1657,7 +1657,7 @@ void Tree::loadPreviousNodeStates(Tree* ostree)
 }
 
 
-double Tree::getTraitMaxTip(void)
+double Tree::getTraitMaxTip()
 {
     double ctrait = root->getTraitValue();
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
@@ -1669,7 +1669,7 @@ double Tree::getTraitMaxTip(void)
 }
 
 
-double Tree::getTraitMinTip(void)
+double Tree::getTraitMinTip()
 {
     double ctrait = root->getTraitValue();
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
@@ -1680,7 +1680,7 @@ double Tree::getTraitMinTip(void)
 }
 
 
-void Tree::printNodeBranchRates(void)
+void Tree::printNodeBranchRates()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         std::cout << (*i)->getMeanSpeciationRate() << "\t" << (*i)->getNodeLambda() << std::endl;
@@ -1688,7 +1688,7 @@ void Tree::printNodeBranchRates(void)
 }
 
 
-void Tree::printNodeTraitRates(void)
+void Tree::printNodeTraitRates()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         std::cout << (*i) << "\t" << (*i)->getMeanBeta() << std::endl;
@@ -1696,7 +1696,7 @@ void Tree::printNodeTraitRates(void)
 }
 
 
-void Tree::setMeanBranchTraitRates(void)
+void Tree::setMeanBranchTraitRates()
 {
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         computeMeanTraitRatesByNode((*i));
@@ -1832,7 +1832,7 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
  Now setting trait values to be drawn from unifom distribution defined by 2 parental values.
 
  */
-void Tree::initializeTraitValues(void)
+void Tree::initializeTraitValues()
 {
 
     std::cout << "Setting initial trait values at internal nodes" << std::endl;

@@ -25,11 +25,11 @@ public:
     FastSimulatePrior(Random& random, Settings* sp);
     ~FastSimulatePrior();
     
-    void updateState(void);
-    void changeNumberOfEventsMH(void);
-    void updateEventRateMH(void);
-    int getNumberOfEvents(void);
-    double getEventRate(void);
+    void updateState();
+    void changeNumberOfEventsMH();
+    void updateEventRateMH();
+    int getNumberOfEvents();
+    double getEventRate();
     bool acceptMetropolisHastings(const double lnR);
     
 
@@ -50,7 +50,7 @@ private:
     
     std::string _outfileName;
     
-    void incrementGeneration(void);
+    void incrementGeneration();
     void setEventRate(double x);
 
     std::ofstream _fspOutStream;

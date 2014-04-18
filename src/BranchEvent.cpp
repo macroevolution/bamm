@@ -176,7 +176,7 @@ void BranchEvent::incrementMapPosition(double ink)
 }
 
 
-void BranchEvent::moveEventGlobal(void)
+void BranchEvent::moveEventGlobal()
 {
     oldNodePtr = nodeptr;
     oldMapTime = mapTime;
@@ -198,7 +198,7 @@ void BranchEvent::setEventByMapPosition(double x)
 }
 
 
-void BranchEvent::revertOldMapPosition(void)
+void BranchEvent::revertOldMapPosition()
 {
     nodeptr = oldNodePtr;
     mapTime = oldMapTime;

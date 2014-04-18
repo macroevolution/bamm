@@ -127,7 +127,7 @@ double Node::getExponentialRate(double par_init, double shift, double tm)
 }
 
 
-int Node::getDescCount(void)
+int Node::getDescCount()
 {
     int count = 0;
     if (getLfDesc() != NULL)
@@ -137,7 +137,7 @@ int Node::getDescCount(void)
     return count;
 }
 
-Node* Node::getRandomLeftTipNode(void)
+Node* Node::getRandomLeftTipNode()
 {
 
 
@@ -154,7 +154,7 @@ Node* Node::getRandomLeftTipNode(void)
         return NULL;
 }
 
-Node* Node::getRandomRightTipNode(void)
+Node* Node::getRandomRightTipNode()
 {
 
     if (getRtDesc() != NULL) {
@@ -194,7 +194,7 @@ double Node::pathLengthToRoot()
 
 // If arg == void
 //      COMPUTE rates
-void Node::computeNodeBranchSpeciationParams(void)
+void Node::computeNodeBranchSpeciationParams()
 {
 
     BranchHistory* bh = getBranchHistory();
@@ -297,7 +297,7 @@ void Node::computeNodeBranchSpeciationParams(void)
 
 
 
-void Node::computeAndSetNodeSpeciationParams(void)
+void Node::computeAndSetNodeSpeciationParams()
 {
     BranchHistory* bh = getBranchHistory();
     // Compute speciation rate at the focal node
@@ -311,7 +311,7 @@ void Node::computeAndSetNodeSpeciationParams(void)
 
 }
 
-void Node::computeAndSetNodeExtinctionParams(void)
+void Node::computeAndSetNodeExtinctionParams()
 {
     
     BranchHistory* bh = getBranchHistory();
@@ -327,7 +327,7 @@ void Node::computeAndSetNodeExtinctionParams(void)
 }
 
 
-void Node::computeNodeBranchExtinctionParams(void)
+void Node::computeNodeBranchExtinctionParams()
 {
 
     BranchHistory* bh = getBranchHistory();

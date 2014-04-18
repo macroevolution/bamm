@@ -305,7 +305,7 @@ double TraitModel::computeTriadLikelihoodTraits(Node* x)
 }
 
 
-double TraitModel::computeLogPrior(void)
+double TraitModel::computeLogPrior()
 {
 #ifdef NEGATIVE_SHIFT_PARAM
     double dens_term = log(2.0);

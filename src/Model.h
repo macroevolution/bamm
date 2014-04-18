@@ -82,7 +82,7 @@ public:
 
     virtual void setMeanBranchParameters() = 0;
 
-    double getTemperatureMH(void);
+    double getTemperatureMH();
     void setTemperatureMH(double x);
 
     double logQRatioJump();
