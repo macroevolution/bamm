@@ -55,7 +55,7 @@ FastSimulatePrior::FastSimulatePrior(Random& random, Settings* sp) :
             writeStateTofile();
         }
         
-        if ((i % fints) == 0){
+        if (fints > 0 && (i % fints) == 0){
             
             if (i == (fints*16)){
                 std::cout << " 50% ";
