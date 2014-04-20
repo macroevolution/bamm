@@ -33,6 +33,8 @@ private:
     std::vector<double> sortValues(std::vector<double> values) const;
     int rankValue(double value, std::vector<double> sortedValues) const;
 
+    int _numberOfChains;
+
     std::string _outputFileName;
     std::ofstream _outputStream;
 };

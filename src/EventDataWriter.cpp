@@ -12,20 +12,24 @@ EventDataWriter::EventDataWriter(Settings& settings) :
     _outputFreq(settings.get<int>("eventDataWriteFreq")),
     _headerWritten(false)
 {
-    _outputStream.open(_outputFileName.c_str());
+    if (_outputFreq > 0) {
+        _outputStream.open(_outputFileName.c_str());
+    }
 }
 
 
 
 EventDataWriter::~EventDataWriter()
 {
-    _outputStream.close();
+    if (_outputFreq > 0) {
+        _outputStream.close();
+    }
 }
 
 
 void EventDataWriter::writeData(int generation, Model& model)
 {
-    if (generation % _outputFreq != 0) {
+    if (_outputFreq == 0 || generation % _outputFreq != 0) {
         return;
     }
 

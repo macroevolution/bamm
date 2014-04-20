@@ -9,10 +9,13 @@
 
 
 ChainSwapDataWriter::ChainSwapDataWriter(Settings& settings) :
+    _numberOfChains(settings.get<int>("numberOfChains")),
     _outputFileName(settings.get("chainSwapFileName"))
 {
-    initializeStream();
-    writeHeader();
+    if (_numberOfChains > 1) {
+        initializeStream();
+        writeHeader();
+    }
 }
 
 
@@ -36,7 +39,9 @@ std::string ChainSwapDataWriter::header() const
 
 ChainSwapDataWriter::~ChainSwapDataWriter()
 {
-    _outputStream.close();
+    if (_numberOfChains > 1) {
+        _outputStream.close();
+    }
 }
 
 

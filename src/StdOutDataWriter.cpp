@@ -21,12 +21,12 @@ StdOutDataWriter::~StdOutDataWriter()
 
 void StdOutDataWriter::writeData(int generation, MCMC& mcmc)
 {
-    if (!_headerWritten) {
+    if (!_headerWritten && _outputFreq > 0) {
         writeHeader();
         _headerWritten = true;
     }
 
-    if (generation % _outputFreq != 0) {
+    if (_outputFreq == 0 || generation % _outputFreq != 0) {
         return;
     }
 

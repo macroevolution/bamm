@@ -107,7 +107,8 @@ void MetropolisCoupledMCMC::runChains(int genStart, int genEnd)
 
 void MetropolisCoupledMCMC::tryChainSwap(int generation)
 {
-    if ((_chains.size() == 1) || (generation % _swapPeriod != 0)) {
+    if ((_chains.size() == 1) || (_swapPeriod == 0) ||
+            (generation % _swapPeriod != 0)) {
         return;
     }
 

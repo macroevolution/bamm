@@ -10,12 +10,10 @@ AcceptanceDataWriter::AcceptanceDataWriter(Settings& settings) :
     _shouldOutputData(settings.get<bool>("outputAcceptanceInfo")),
     _outputFileName(settings.get("acceptanceInfoFileName"))
 {
-    if (!_shouldOutputData) {
-        return;
+    if (_shouldOutputData) {
+        initializeStream();
+        writeHeader();
     }
-
-    initializeStream();
-    writeHeader();
 }
 
 
@@ -39,7 +37,9 @@ std::string AcceptanceDataWriter::header()
 
 AcceptanceDataWriter::~AcceptanceDataWriter()
 {
-    _outputStream.close();
+    if (_shouldOutputData) {
+        _outputStream.close();
+    }
 }
 
 

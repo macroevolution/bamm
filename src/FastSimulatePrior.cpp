@@ -50,7 +50,8 @@ FastSimulatePrior::FastSimulatePrior(Random& random, Settings* sp) :
                 
         updateState();
     
-        if ((i % sp->get<int>("mcmcWriteFreq")) == 0){
+        int mcmcWriteFreq = sp->get<int>("mcmcWriteFreq");
+        if (mcmcWriteFreq > 0 && (i % mcmcWriteFreq) == 0){
             writeStateTofile();
         }
         

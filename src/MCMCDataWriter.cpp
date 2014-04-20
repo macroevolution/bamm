@@ -10,8 +10,10 @@ MCMCDataWriter::MCMCDataWriter(Settings& settings) :
     _outputFileName(settings.get("mcmcOutfile")),
     _outputFreq(settings.get<int>("mcmcWriteFreq"))
 {
-    initializeStream();
-    writeHeader();
+    if (_outputFreq > 0) {
+        initializeStream();
+        writeHeader();
+    }
 }
 
 
@@ -35,13 +37,15 @@ std::string MCMCDataWriter::header()
 
 MCMCDataWriter::~MCMCDataWriter()
 {
-    _outputStream.close();
+    if (_outputFreq > 0) {
+        _outputStream.close();
+    }
 }
 
 
 void MCMCDataWriter::writeData(int generation, MCMC& mcmc)
 {
-    if (generation % _outputFreq != 0) {
+    if (_outputFreq == 0 || generation % _outputFreq != 0) {
         return;
     }
 
