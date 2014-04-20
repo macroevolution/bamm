@@ -113,9 +113,9 @@ void Settings::initializeGlobalSettings()
     addParameter("localGlobalMoveRatio", "0.0");
 
     // Metropolis-coupled MCMC
-    addParameter("numberOfChains", "1");
-    addParameter("deltaT", "0.1");
-    addParameter("swapPeriod", "1000");
+    addParameter("numberOfChains", "1", NotRequired);
+    addParameter("deltaT", "0.1", NotRequired);
+    addParameter("swapPeriod", "1000", NotRequired);
     addParameter("chainSwapFileName", "chain_swap.txt", NotRequired);
 
     // Priors
