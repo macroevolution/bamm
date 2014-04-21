@@ -5,6 +5,7 @@
 #include <ctime>
 #include <cstdlib>
 
+#include "MbRandom.h"
 #include "Random.h"
 #include "Settings.h"
 #include "Prior.h"
@@ -77,7 +78,7 @@ int main (int argc, char* argv[])
     // Load settings from control file
     Settings settings(controlFilename, commandLineParameters);
 
-    int seed = settings.get<int>("seed");
+    int seed = settings.get<long int>("seed");
     Random random(seed);
     seed = random.getSeed();    // Get actual seed in case it is based on clock
 

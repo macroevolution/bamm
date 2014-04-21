@@ -31,6 +31,8 @@ private:
 
     // Mutable allows const methods to call methods in MbRandom
     mutable MbRandom _rng;
+
+    unsigned long int _seed;
 };
 
 

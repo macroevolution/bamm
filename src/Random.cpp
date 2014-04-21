@@ -1,13 +1,15 @@
 #include "Random.h"
 
 
-Random::Random()
+// For the default constructor, initialize the MbRandom object first
+// for it to generate a seed based on the clock, then assign it internally
+Random::Random() : _rng(), _seed(_rng.getSeed())
 {
     warmUp();
 }
 
 
-Random::Random(unsigned long int seed) : _rng((long int)seed)
+Random::Random(unsigned long int seed) : _rng((long int)seed), _seed(seed)
 {
     warmUp();
 }
@@ -22,15 +24,9 @@ void Random::warmUp()
 }
 
 
-void Random::setSeed(unsigned long int seed)
-{
-    _rng.setSeed((long int)seed);
-}
-
-
 unsigned long int Random::getSeed() const
 {
-    return (unsigned long int)_rng.getSeed();
+    return _seed;
 }
 
 
