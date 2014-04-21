@@ -1181,43 +1181,43 @@ void Tree::getPhenotypes(std::string fname)
 
 
 // This and the function above could be combined into one -- JWB
-void Tree::getPhenotypesMissingLatent(std::string fname)
+void Tree::getPhenotypesMissingLatent(std::string fileName)
 {
-    std::ifstream infile(fname.c_str());
-    log() << "\nReading phenotypes from file <" << fname.c_str() << ">\n";
-    std::vector<std::string> stringvec;
-    std::vector<std::string> spnames;
-    std::vector<double> traits;
+    std::ifstream inputFile(fileName.c_str());
 
-    if (!infile.good()) {
-        log(Error) << "Error reading file.\n";
+    if (!inputFile) {
+        log(Error) << "Could not read trait values from file "
+            << "<<" << fileName << ">>.\n";
         std::exit(1);
     }
 
-    while (infile) {
-        std::string tempstring;
-        getline(infile, tempstring, '\t');
-        //std::cout << tempstring << "\n" << std::endl;
-        spnames.push_back(tempstring);
-        getline(infile, tempstring, '\n');
-        traits.push_back(atof(tempstring.c_str()));
+    log() << "Reading traits from file <<" << fileName << ">>.\n";
 
-        // this OK?
-        if (infile.peek() == EOF) {
-            break;
-        }
+    std::vector<std::string> speciesNames;
+    std::vector<double> traitValues;
+
+    std::string speciesName;
+    double traitValue;
+
+    while (inputFile >> speciesName) {
+        inputFile >> traitValue;
+
+        speciesNames.push_back(speciesName);
+        traitValues.push_back(traitValue);
     }
 
+    inputFile.close();
+
+    log() << "Read " << traitValues.size() << " species with trait data.\n";
+
     int missingTerminalCount = 0;
-    infile.close();
-    log() << "Read " << traits.size() << " species with trait data.\n";
 
     // iterate over nodes...
     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
         if ((*i)->getLfDesc() == NULL && (*i)->getRtDesc() == NULL ) {
-            for (std::vector<std::string>::size_type k = 0; k < spnames.size(); k++) {
-                if ((*i)->getName() == spnames[k]) {
-                    (*i)->setTraitValue(traits[k]);
+            for (int k = 0; k < (int)speciesNames.size(); k++) {
+                if ((*i)->getName() == speciesNames[k]) {
+                    (*i)->setTraitValue(traitValues[k]);
                     (*i)->setIsTraitFixed(true);
                 }
             }
@@ -1235,16 +1235,6 @@ void Tree::getPhenotypesMissingLatent(std::string fname)
                      << " > species.\n"
                      << "These will be treated as latent variables in "
                      << "analysis\n";
-    }
-
-    int count2 = 0;
-    int count3 = 0;
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
-        if ((*i)->getIsTraitFixed()) {
-            count2++;
-        } else {
-            count3++;
-        }
     }
 }
 
