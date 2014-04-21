@@ -117,6 +117,10 @@ eventDataWriteFreq = 5000
 printFreq = 1000
 # Prints MCMC status to screen every printFreq generations.
 
+acceptanceResetFreq = 1000
+# Specifies the frequency in which to reset the acceptance rate calculation.
+# The acceptance rate is output to both the MCMC data file and the screen.
+
 # outName = BAMM
 # Name of analysis (output files will be prefixed with this)
 # if commented out, no prefix will be used
