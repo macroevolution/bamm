@@ -6,8 +6,10 @@
 #include <climits>
 
 
+// Choose a random number up to INT_MAX - 1, not INT_MAX,
+// because MbRandom adds 1 internally, causing an overflow
 MCMC::MCMC(Random& seeder, Settings& settings, ModelFactory& modelFactory) :
-    _random(seeder.uniformInteger(0, INT_MAX))
+    _random(seeder.uniformInteger(0, INT_MAX - 1))
 {
     _model = modelFactory.createModel(_random, settings);
 }
