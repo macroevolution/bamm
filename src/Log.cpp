@@ -65,3 +65,17 @@ std::ostream& log(LogType logType, std::ostream& out)
 {
     return Log::instance().outputStream(logType, out);
 }
+
+
+void exitWithMessage(const std::string& message)
+{
+    log() << message << std::endl;
+    std::exit(0);
+}
+
+
+void exitWithError(const std::string& message)
+{
+    log(Error) << message << std::endl;
+    std::exit(1);
+}

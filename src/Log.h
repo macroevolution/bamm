@@ -2,6 +2,7 @@
 #define LOG_H
 
 #include <iostream>
+#include <string>
 
 
 #define TEXT_COLOR_DEFAULT "\x1b[39m"    // Default color (gray)
@@ -43,6 +44,9 @@ private:
 std::ostream& log(LogType logType = Message);
 std::ostream& log(std::ostream& out);
 std::ostream& log(LogType logType, std::ostream& out);
+
+void exitWithMessage(const std::string& message);
+void exitWithError(const std::string& message);
 
 
 #endif
