@@ -21,7 +21,9 @@ ADD_DEFINITIONS(${CXX_DEBUG_FLAGS}
                 ${CXX_ARCHITECTURE_FLAGS})
 
 # Set Git commit id
-SET(GIT_COMMIT_ID "$(shell git rev-parse HEAD)")
+EXECUTE_PROCESS(COMMAND "git" "rev-parse" "HEAD"
+    OUTPUT_VARIABLE GIT_COMMIT_ID
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
 ADD_DEFINITIONS(-DGIT_COMMIT_ID=\"${GIT_COMMIT_ID}\")
 
 SET(BAMM_SRC
@@ -31,6 +33,7 @@ SET(BAMM_SRC
     src/BranchEvent.cpp
     src/BranchHistory.cpp
     src/ChainSwapDataWriter.cpp
+    src/CommandLineProcessor.cpp
     src/EventDataWriter.cpp
     src/EventNumberProposal.cpp
     src/EventParameterProposal.cpp
