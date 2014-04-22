@@ -79,7 +79,7 @@ int main (int argc, char* argv[])
     Settings settings(controlFilename, commandLineParameters);
 
     int seed = settings.get<long int>("seed");
-    Random random(seed);
+    Random random = (seed > 0) ? Random(seed) : Random();
     seed = random.getSeed();    // Get actual seed in case it is based on clock
 
     std::ofstream runInfoFile(settings.get("runInfoFilename").c_str());
