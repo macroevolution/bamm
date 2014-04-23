@@ -1,5 +1,4 @@
 #include "gtest/gtest.h"
-
 #include "Node.h"
 
 
@@ -70,8 +69,4 @@ TEST(NodeTest, Construction)
     delete rightNode;
     delete leftNode;
     delete node;
-}
-
-TEST(NodeTest, Construction)
-{
 }

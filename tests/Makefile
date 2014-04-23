@@ -1,4 +1,4 @@
-CXX_COMPILER = clang++
+CXX_COMPILER = g++
 CXX_FLAGS =
 
 src_dir = ~/projects/bamm/src/
