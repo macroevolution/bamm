@@ -34,6 +34,7 @@ void Node::init(int x)
     _isTip = false;
     _isExtant = false;
     _isConstant = false;
+    _tipDescCount = 0;
 
     _mapStart = 0.0;
     _mapEnd = 0.0;
