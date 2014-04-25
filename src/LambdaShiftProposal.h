@@ -17,6 +17,8 @@ public:
     LambdaShiftProposal(Random& random, Settings& settings, Model& model,
         Prior& prior);
 
+    virtual double acceptanceRatio();
+
 private:
 
     virtual double getCurrentParameterValue();

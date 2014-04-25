@@ -18,11 +18,14 @@ private:
     double _muInit;    // Initial Mu rate at event
     double _muShift;   // magnitude & direction of mu shift
 
+    bool _isTimeVariable;
+
 public:
 
     // constructors, depending on whether you want trait rate or lambda/mu
     SpExBranchEvent(double speciation, double lamshift, double extinction,
-        double mushift, Node* x, Tree* tp, Random& random, double map);
+        double mushift, bool isTimeVariable, Node* x, Tree* tp, Random& random,
+        double map);
     virtual ~SpExBranchEvent() {};
 
     void   setLamInit(double x);
@@ -37,6 +40,8 @@ public:
     void   setMuShift(double x);
     double getMuShift();
 
+    void setTimeVariable(bool isTimeVariable);
+    bool isTimeVariable();
 };
 
 
@@ -85,6 +90,18 @@ inline void SpExBranchEvent::setMuShift(double x)
 inline double SpExBranchEvent::getMuShift()
 {
     return _muShift;
+}
+
+
+inline void SpExBranchEvent::setTimeVariable(bool isTimeVariable)
+{
+    _isTimeVariable = isTimeVariable;
+}
+
+
+inline bool SpExBranchEvent::isTimeVariable()
+{
+    return _isTimeVariable;
 }
 
 

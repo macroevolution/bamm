@@ -1,9 +1,9 @@
 #ifndef BRANCH_EVENT_H
 #define BRANCH_EVENT_H
 
+#include "Tree.h"
 #include "Log.h"
 
-class Tree;
 class Node;
 class Random;
 
@@ -57,6 +57,8 @@ public:
 
     void   setAbsoluteTime(double x);
     double getAbsoluteTime();
+
+    double getTimeToTip();
 
     void incrementMapPosition(double ink);
     void moveEventLocal(double stepsize);
@@ -117,6 +119,12 @@ inline void BranchEvent::setAbsoluteTime(double x)
 inline double BranchEvent::getAbsoluteTime()
 {
     return _absTime;
+}
+
+
+inline double BranchEvent::getTimeToTip()
+{
+    return treePtr->getTreeLength() - _absTime;
 }
 
 

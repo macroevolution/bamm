@@ -41,6 +41,7 @@ SET(BAMM_SRC
     src/FastSimulatePrior.cpp
     src/LambdaInitProposal.cpp
     src/LambdaShiftProposal.cpp
+    src/LambdaTimeModeProposal.cpp
     src/Log.cpp
     src/MCMC.cpp
     src/MCMCDataWriter.cpp

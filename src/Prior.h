@@ -36,6 +36,8 @@ public:
     
     double muInitPrior(double);
     double generateMuInitFromPrior(); 
+
+    bool generateIsTimeVariableFromPrior();
     
     double poissonRatePrior(double);
     double generatePoissonRateFromPrior();
@@ -100,6 +102,9 @@ private:
     double _lambdaShiftRootPrior;
     double _muShiftRootPrior;
     double _betaShiftRootPrior;
+
+    // Time variable/constant prior
+    double _lambdaIsTimeVariablePrior;
 
     // Update rate for initial parameters
     double _updateRateLambda0;

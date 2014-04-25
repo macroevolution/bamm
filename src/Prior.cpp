@@ -23,6 +23,8 @@ Prior::Prior(Random& random, Settings* settings) : _random(random)
         _muInitRootPrior = settings->get<double>("muInitRootPrior");
         _lambdaShiftRootPrior = settings->get<double>("lambdaShiftRootPrior");
         _muShiftRootPrior = settings->get<double>("muShiftRootPrior");
+        _lambdaIsTimeVariablePrior =
+            settings->get<double>("lambdaIsTimeVariablePrior");
         _updateRateLambda0 = settings->get<double>("updateRateLambda0");
         _updateRateMu0 = settings->get<double>("updateRateMu0");
         _updateRateLambdaShift = settings->get<double>("updateRateLambdaShift");
@@ -108,6 +110,12 @@ double Prior::generateMuShiftFromPrior()
     } else {
         return _random.normal(0.0, _muShiftPrior);
     }
+}
+
+
+bool Prior::generateIsTimeVariableFromPrior()
+{
+    return _random.trueWithProbability(_lambdaIsTimeVariablePrior);
 }
 
 

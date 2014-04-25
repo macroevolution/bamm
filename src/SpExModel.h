@@ -6,6 +6,8 @@
 #include "LambdaShiftProposal.h"
 #include "MuInitProposal.h"
 #include "MuShiftProposal.h"
+#include "LambdaTimeModeProposal.h"
+
 #include <iosfwd>
 
 class Node;
@@ -54,12 +56,14 @@ private:
     LambdaShiftProposal _lambdaShiftProposal;
     MuInitProposal _muInitProposal;
     MuShiftProposal _muShiftProposal;
+    LambdaTimeModeProposal _lambdaTimeModeProposal;
 
     // Root event parameters
     double _lambdaInit0;
     double _lambdaShift0;
     double _muInit0;
     double _muShift0;
+    bool _initialLambdaIsTimeVariable;
 
     bool _sampleFromPriorOnly;
 
@@ -67,6 +71,7 @@ private:
     double _lastDeletedEventLambdaShift;
     double _lastDeletedEventMuInit;
     double _lastDeletedEventMuShift;
+    double _lastDeletedEventTimeVariable;
 
     double _segLength;
 

@@ -100,6 +100,9 @@ muInitPrior = 1.0
 muInitRootPrior = 5.0
 # Prior on the initial mu value for the root process
 
+lambdaIsTimeVariablePrior = 1.0
+# Prior (probability) of the time mode being time-variable
+
 ###################################
 # MCMC SIMULATION SETTINGS & OUTPUT OPTIONS
 
@@ -178,6 +181,10 @@ updateRateLambdaShift = 1
 updateRateMu0 = 1
 # Relative frequency of MCMC moves that change the extinction rate for a given event
 
+updateRateLambdaTimeMode = 0
+# Relative frequency of MCMC moves that change the time mode (time-constant
+# or time-variable)
+
 localGlobalMoveRatio = 10.0
 # Ratio of local to global moves of events 
 
@@ -192,6 +199,9 @@ lambdaShift0 = 0
 
 muInit0 = .005
 # Initial value of extinction (at the root)
+
+lambdaIsTimeVariable = 1
+# Initial time mode for lambda (1 is time-variable, 0 is time-constant)
 
 initialNumberEvents = 0
 # Initial number of non-root processes

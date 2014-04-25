@@ -15,6 +15,16 @@ LambdaShiftProposal::LambdaShiftProposal
 }
 
 
+double LambdaShiftProposal::acceptanceRatio()
+{
+    if (static_cast<SpExBranchEvent*>(_event)->isTimeVariable()) {
+        return EventParameterProposal::acceptanceRatio();
+    } else {
+        return 0.0;
+    }
+}
+
+
 double LambdaShiftProposal::getCurrentParameterValue()
 {
     return static_cast<SpExBranchEvent*>(_event)->getLamShift();

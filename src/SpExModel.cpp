@@ -45,13 +45,15 @@ SpExModel::SpExModel(Random& random, Settings* sp) : Model(random, sp),
     _lambdaInitProposal(random, *sp, *this, _prior),
     _lambdaShiftProposal(random, *sp, *this, _prior),
     _muInitProposal(random, *sp, *this, _prior),
-    _muShiftProposal(random, *sp, *this, _prior)
+    _muShiftProposal(random, *sp, *this, _prior),
+    _lambdaTimeModeProposal(random, *sp, *this)
 {
     // Initial values
     _lambdaInit0 = _settings->get<double>("lambdaInit0");
     _lambdaShift0 = _settings->get<double>("lambdaShift0");
     _muInit0 = _settings->get<double>("muInit0");
     _muShift0 = _settings->get<double>("muShift0");
+    _initialLambdaIsTimeVariable = _settings->get<bool>("lambdaIsTimeVariable");
 
     _sampleFromPriorOnly = _settings->get<bool>("sampleFromPriorOnly");
 
@@ -59,9 +61,9 @@ SpExModel::SpExModel(Random& random, Settings* sp) : Model(random, sp),
     _segLength =
         _settings->get<double>("segLength") * _tree->maxRootToTipLength();
    
-    BranchEvent* x =  new SpExBranchEvent
-        (_lambdaInit0, _lambdaShift0, _muInit0, _muShift0,
-            _tree->getRoot(), _tree, _random, 0);
+    BranchEvent* x =  new SpExBranchEvent(_lambdaInit0, _lambdaShift0,
+        _muInit0, _muShift0, _initialLambdaIsTimeVariable,
+        _tree->getRoot(), _tree, _random, 0);
     _rootEvent = x;
     _lastEventModified = x;
 
@@ -104,6 +106,8 @@ void SpExModel::initializeSpecificUpdateWeights()
     _updateWeights.push_back(_settings->get<double>("updateRateLambdaShift"));
     _updateWeights.push_back(_settings->get<double>("updateRateMu0"));
     _updateWeights.push_back(_settings->get<double>("updateRateMuShift"));
+    _updateWeights.push_back
+        (_settings->get<double>("updateRateLambdaTimeMode"));
 }
 
 
@@ -117,6 +121,8 @@ Proposal* SpExModel::getSpecificProposal(int parameter)
         return &_muInitProposal;
     } else if (parameter == 6) {
         return &_muShiftProposal;
+    } else if (parameter == 7) {
+        return &_lambdaTimeModeProposal;
     } else {
         // Should never get here
         log(Warning) << "Bad parameter to update.\n";
@@ -131,6 +137,7 @@ void SpExModel::readModelSpecificParameters(std::ifstream &inputFile)
     inputFile >> _readLambdaShift;
     inputFile >> _readMuInit;
     inputFile >> _readMuShift;
+    // TODO: Add time variable/constant
 }
 
 
@@ -142,13 +149,15 @@ void SpExModel::setRootEventWithReadParameters()
     rootEvent->setLamShift(_readLambdaShift);
     rootEvent->setMuInit(_readMuInit);
     rootEvent->setMuShift(_readMuShift);
+    // TODO: Add time variable/constant
 }
 
 
 BranchEvent* SpExModel::newBranchEventWithReadParameters(Node* x, double time)
 {
+    // TODO: Fix reading of parameters (for now, send true for time-variable)
     return new SpExBranchEvent(_readLambdaInit, _readLambdaShift,
-        _readMuInit, _readMuShift, x, _tree, _random, time);
+        _readMuInit, _readMuShift, true, x, _tree, _random, time);
 }
 
 
@@ -165,17 +174,21 @@ BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
     double newLambdaShift = _prior.generateLambdaShiftFromPrior();
     double newMu = _prior.generateMuInitFromPrior();
     double newMuShift = _prior.generateMuShiftFromPrior();
+    bool newIsTimeVariable = _prior.generateIsTimeVariableFromPrior();
  
     // TODO: This needs to be refactored somewhere else
     // Computes the jump density for the addition of new parameters.
     _logQRatioJump = 0.0;    // Set to zero to clear previous values
     _logQRatioJump = _prior.lambdaInitPrior(newLam);
-    _logQRatioJump += _prior.lambdaShiftPrior(newLambdaShift);
+    if (newIsTimeVariable) {
+        _logQRatioJump += _prior.lambdaShiftPrior(newLambdaShift);
+    }
     _logQRatioJump += _prior.muInitPrior(newMu);
     _logQRatioJump += _prior.muShiftPrior(newMuShift);
     
     return new SpExBranchEvent(newLam, newLambdaShift, newMu,
-        newMuShift, _tree->mapEventToTree(x), _tree, _random, x);
+        newMuShift, newIsTimeVariable, _tree->mapEventToTree(x),
+        _tree, _random, x);
 }
 
 
@@ -187,6 +200,7 @@ void SpExModel::setDeletedEventParameters(BranchEvent* be)
     _lastDeletedEventLambdaShift = event->getLamShift();
     _lastDeletedEventMuInit = event->getMuInit();
     _lastDeletedEventMuShift = event->getMuShift();
+    _lastDeletedEventTimeVariable = event->isTimeVariable();
 }
 
 
@@ -195,6 +209,7 @@ double SpExModel::calculateLogQRatioJump()
     double _logQRatioJump = 0.0;
     
     _logQRatioJump = _prior.lambdaInitPrior(_lastDeletedEventLambdaInit);
+    // TODO: Should something be checked for time variable/constant?
     _logQRatioJump += _prior.lambdaShiftPrior(_lastDeletedEventLambdaShift);
     _logQRatioJump += _prior.muInitPrior(_lastDeletedEventMuInit);
     _logQRatioJump += _prior.muShiftPrior(_lastDeletedEventMuShift);
@@ -205,16 +220,11 @@ double SpExModel::calculateLogQRatioJump()
 
 BranchEvent* SpExModel::newBranchEventFromLastDeletedEvent()
 {
-    SpExBranchEvent* newEvent = new SpExBranchEvent(0.0, 0.0, 0.0, 0.0,
+    return new SpExBranchEvent(_lastDeletedEventLambdaInit,
+        _lastDeletedEventLambdaShift, _lastDeletedEventMuInit,
+        _lastDeletedEventMuShift, _lastDeletedEventTimeVariable,
         _tree->mapEventToTree(_lastDeletedEventMapTime), _tree, _random,
-            _lastDeletedEventMapTime);
-
-    newEvent->setLamInit(_lastDeletedEventLambdaInit);
-    newEvent->setLamShift(_lastDeletedEventLambdaShift);
-    newEvent->setMuInit(_lastDeletedEventMuInit);
-    newEvent->setMuShift(_lastDeletedEventMuShift);
-
-    return newEvent;
+        _lastDeletedEventMapTime);
 }
 
 
@@ -224,13 +234,9 @@ double SpExModel::computeLogLikelihood()
 }
 
 
-
 double SpExModel::computeLogLikelihoodByInterval()
 {
-
-
     double LnL = 0.0;
-
 
     if (_sampleFromPriorOnly)
         return 0.0;
@@ -440,7 +446,9 @@ double SpExModel::computeLogPrior()
     SpExBranchEvent* rootEvent = static_cast<SpExBranchEvent*>(_rootEvent);
 
     logPrior += _prior.lambdaInitRootPrior(rootEvent->getLamInit());
-    logPrior += _prior.lambdaShiftRootPrior(rootEvent->getLamShift());
+    if (rootEvent->isTimeVariable()) {
+        logPrior += _prior.lambdaShiftRootPrior(rootEvent->getLamShift());
+    }
     logPrior += _prior.muInitRootPrior(rootEvent->getMuInit());
     logPrior += _prior.muShiftRootPrior(rootEvent->getMuShift());
 
@@ -449,7 +457,9 @@ double SpExModel::computeLogPrior()
         SpExBranchEvent* event = static_cast<SpExBranchEvent*>(*it);
 
         logPrior += _prior.lambdaInitPrior(event->getLamInit());
-        logPrior += _prior.lambdaShiftPrior(event->getLamShift());
+        if (event->isTimeVariable()) {
+            logPrior += _prior.lambdaShiftPrior(event->getLamShift());
+        }
         logPrior += _prior.muInitPrior(event->getMuInit());
         logPrior += _prior.muShiftPrior(event->getMuShift());
     }

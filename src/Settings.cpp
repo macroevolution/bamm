@@ -170,6 +170,7 @@ void Settings::initializeSpeciationExtinctionSettings()
     addParameter("lambdaShift0", "0.0");
     addParameter("muInit0", "0.0");
     addParameter("muShift0", "0.0", NotRequired);
+    addParameter("lambdaIsTimeVariable", "1");
 
     // Priors
     addParameter("lambdaInitPrior", "0.0");
@@ -180,6 +181,7 @@ void Settings::initializeSpeciationExtinctionSettings()
     addParameter("lambdaShiftRootPrior", "-1.0", NotRequired);
     addParameter("muInitRootPrior", "-1.0", NotRequired);
     addParameter("muShiftRootPrior", "-1.0", NotRequired);
+    addParameter("lambdaIsTimeVariablePrior", "0.5");
 	addParameter("segLength", "0.0");
 
     // Output
@@ -191,6 +193,7 @@ void Settings::initializeSpeciationExtinctionSettings()
     addParameter("updateRateLambdaShift", "0.0");
     addParameter("updateRateMu0", "0.0");
     addParameter("updateRateMuShift", "0.0", NotRequired);
+    addParameter("updateRateLambdaTimeMode", "0.0");
 
     // Maximum value of extinction probability on branch that will be tolerated:
     // to avoid numerical overflow issues (especially rounding to 1)
