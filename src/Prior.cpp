@@ -49,7 +49,7 @@ Prior::~Prior()
 
 double Prior::lambdaShiftPrior(double x)
 {
-    return Stat::lnNormalPDF(x, 0.0, _lambdaShiftPrior);
+    return Stat::lnNormalPDF(x, 0.0, std::sqrt(_lambdaShiftPrior));
 }
 
 
@@ -97,7 +97,7 @@ double Prior::generateMuInitFromPrior()
 
 double Prior::muShiftPrior(double x)
 {
-    return Stat::lnNormalPDF(x, 0.0, _muShiftPrior);
+    return Stat::lnNormalPDF(x, 0.0, std::sqrt(_muShiftPrior));
 }
 
 
@@ -141,7 +141,7 @@ double Prior::generateBetaInitFromPrior()
 
 double Prior::betaShiftPrior(double x)
 {
-    return Stat::lnNormalPDF(x, 0.0, _betaShiftPrior);
+    return Stat::lnNormalPDF(x, 0.0, std::sqrt(_betaShiftPrior));
 }
 
 
