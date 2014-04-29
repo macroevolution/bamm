@@ -10,6 +10,7 @@
 #include "Settings.h"
 #include "Tree.h"
 #include "Node.h"
+#include "NewickTreeReader.h"
 #include "BranchHistory.h"
 #include "TraitBranchEvent.h"
 #include "Log.h"
@@ -711,128 +712,25 @@ void Tree::setTaxonCountFromNewickString(std::string ts)
 }
 
 
-/*
- Rewrite this one to build node array as we go along
- through std::string
- */
-
-
-/*I think this works...*/
-
 void Tree::buildTreeFromNewickString(std::string ts)
 {
-    //std::cout << "in build tree..." << std::endl;
+    std::istringstream isstream(ts);
+    _treeReader.read(isstream, *this);
 
-    bool readingBL = false;
-    bool readingInternalNodeName = false;
-    Node* p = NULL;
-
-    //int nextInterNode = _ntaxa;
-    //int taxCounter = 0;
-    //int nodecounter = 0;
-    //std::set<Node*>::iterator NodeIterator = nodes.begin();
-
-    for (std::string::size_type i = 0; i < ts.size(); i++) {
-        char c = ts[i];
-        //std::cout << c << std::endl;
-        if (c == '(') {
-            //q = &nodes[nextInterNode++];
-            Node* q = new Node;
-            nodes.insert(q);
-
-            //q = *NodeIterator++;
-            //std::cout << ++nodecounter << '\t' << p << '\t' << q << std::endl;
-
-            if (p == NULL) {
-                p = q;
-                root = p;
-            } else {
-                //std::cout << p->getLfDesc() << "\t" << p->getRtDesc() << std::endl;
-                q->setAnc(p);
-                if (p->getLfDesc() == NULL) {
-                    p->setLfDesc(q);
-                } else if (p->getRtDesc() == NULL) {
-                    p->setRtDesc(q);
-                } else {
-                    log(Error) << "Tree contains at least one polytomy.\n";
-                    exit(1);
-                }
-            }
-            p = q;
-            readingBL = false;
-            readingInternalNodeName = false;
-        } else if (c == ')') {
-            if (p->getAnc() == NULL) {
-                log(Error) << "Ancestor is NULL after reading )\n";
-                exit(1);
-            } else {
-                p = p->getAnc();
-            }
-            readingBL = false;
-            readingInternalNodeName = true;
-        } else if (c == ',') {
-            if (p->getAnc() == NULL) {
-                log(Error) << "Ancestor is NULL after reading ,\n";
-                exit(1);
-            } else {
-                p = p->getAnc();
-            }
-            readingBL = false;
-            readingInternalNodeName = false;
-        } else if (c == ':') {
-            readingBL = true;
-            readingInternalNodeName = false;
-        } else if (c == ';') {
-            // done with tree
-            break;
-        } else {
-            std::string s = "";
-            while (isValidChar(ts[i])) {
-                s += ts[i++];
-            }
-            i--;
-            if (readingInternalNodeName) {
-                p->setName(s);
-            } else if (readingBL == false) {
-                // set tip name
-
-                //q = &nodes[taxCounter];
-                //q = *NodeIterator++;
-                //std::cout << ++nodecounter << std::endl;
-                Node* q = new Node();
-                nodes.insert(q);
-
-                if (p == NULL) {
-                    log(Error) << "Problem adding a tip to the tree\n";
-                    exit(1);
-                } else {
-                    q->setAnc(p);
-                    if (p->getLfDesc() == NULL) {
-                        p->setLfDesc(q);
-                    } else if (p->getRtDesc() == NULL) {
-                        p->setRtDesc(q);
-                    } else {
-                        log(Error) << "Tree contains at least one polytomy.\n";
-                        exit(1);
-                    }
-                }
-                p = q;
-                p->setName(s);
-                p->setIsTip(true);
-                //taxCounter++;
-            } else {
-                // read in bl
-                double v = 0.0;
-                std::istringstream buf(s);
-                buf >> v;
-                p->setBrlen(v);
-                //p->setSimmedBrLen(v);
-            }
-        }
-    }
+    addNodes(root);
     setStartTime(0);
     setNodeTimes(root);
     setAge();
+}
+
+
+void Tree::addNodes(Node* node)
+{
+    if (node != NULL) {
+        nodes.insert(node);
+        addNodes(node->getLfDesc());
+        addNodes(node->getRtDesc());
+    }
 }
 
 /* sets time of each node*/

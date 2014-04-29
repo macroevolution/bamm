@@ -50,6 +50,7 @@ SET(BAMM_SRC
     src/MoveEventProposal.cpp
     src/MuInitProposal.cpp
     src/MuShiftProposal.cpp
+    src/NewickTreeReader.cpp
     src/Node.cpp
     src/NodeStateProposal.cpp
     src/Prior.cpp

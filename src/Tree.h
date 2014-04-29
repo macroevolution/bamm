@@ -1,6 +1,8 @@
 #ifndef TREE_H
 #define TREE_H
 
+#include "NewickTreeReader.h"
+
 #include <string>
 #include <set>
 #include <vector>
@@ -48,6 +50,7 @@ private:
                         const std::string& list2Name);
 
     void removeWhiteSpace(std::string& str);
+    void addNodes(Node* node);
 
     Random& _random;
 
@@ -84,6 +87,8 @@ private:
     double _totalMapLength;
 
     std::set<Node*> _tempNodeSet;
+
+    NewickTreeReader _treeReader;
 
 public:
 
@@ -128,6 +133,7 @@ public:
     double getTmax();
 
     Node* getRoot();
+    void setRoot(Node* rootNode);
 
     std::string getNewick();
     void   writeTree(Node* p, std::stringstream& ss);
@@ -282,6 +288,12 @@ inline double Tree::getTmax()
 inline Node* Tree::getRoot()
 {
     return root;
+}
+
+
+inline void Tree::setRoot(Node* rootNode)
+{
+    root = rootNode;
 }
 
 
