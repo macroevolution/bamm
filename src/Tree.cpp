@@ -763,7 +763,7 @@ void Tree::buildTreeFromNewickString(std::string ts)
             readingInternalNodeName = false;
         } else if (c == ')') {
             if (p->getAnc() == NULL) {
-                std::cerr << "ERROR: tree std::string";
+                log(Error) << "Ancestor is NULL after reading )\n";
                 exit(1);
             } else {
                 p = p->getAnc();
@@ -772,7 +772,7 @@ void Tree::buildTreeFromNewickString(std::string ts)
             readingInternalNodeName = true;
         } else if (c == ',') {
             if (p->getAnc() == NULL) {
-                std::cerr << "ERROR: tree std::string";
+                log(Error) << "Ancestor is NULL after reading ,\n";
                 exit(1);
             } else {
                 p = p->getAnc();
@@ -803,7 +803,7 @@ void Tree::buildTreeFromNewickString(std::string ts)
                 nodes.insert(q);
 
                 if (p == NULL) {
-                    std::cerr << "ERROR: Problem adding a tip to the tree" << std::endl;
+                    log(Error) << "Problem adding a tip to the tree\n";
                     exit(1);
                 } else {
                     q->setAnc(p);
