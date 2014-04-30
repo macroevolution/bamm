@@ -105,6 +105,7 @@ private:
 
     // Time variable/constant prior
     double _lambdaIsTimeVariablePrior;
+    bool _lambdaIsTimeVariable;
 
     // Update rate for initial parameters
     double _updateRateLambda0;

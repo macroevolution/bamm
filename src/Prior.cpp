@@ -29,6 +29,7 @@ Prior::Prior(Random& random, Settings* settings) : _random(random)
         _updateRateMu0 = settings->get<double>("updateRateMu0");
         _updateRateLambdaShift = settings->get<double>("updateRateLambdaShift");
         _updateRateMuShift = settings->get<double>("updateRateMuShift");
+        _lambdaIsTimeVariable = settings->get<bool>("lambdaIsTimeVariable");
     } else if (modelType == "trait") {
         _betaInit = settings->get<double>("betaInit");
         _betaShiftInit = settings->get<double>("betaShiftInit");
@@ -51,16 +52,24 @@ Prior::~Prior()
 
 double Prior::lambdaShiftPrior(double x)
 {
-    return Stat::lnNormalPDF(x, 0.0, std::sqrt(_lambdaShiftPrior));
+    if (_lambdaIsTimeVariable) {
+        return Stat::lnNormalPDF(x, 0.0, std::sqrt(_lambdaShiftPrior));
+    } else {
+        return 0.0;
+    }
 }
 
 
 double Prior::generateLambdaShiftFromPrior()
 {
-    if (_updateRateLambdaShift <= _UPDATE_TOL) {
-        return _lambdaShift0;
+    if (_lambdaIsTimeVariable) {
+        if (_updateRateLambdaShift <= _UPDATE_TOL) {
+            return _lambdaShift0;
+        } else {
+            return _random.normal(0.0, _lambdaShiftPrior);
+        }
     } else {
-        return _random.normal(0.0, _lambdaShiftPrior);
+        return 0.0;
     }
 }
 
@@ -115,7 +124,11 @@ double Prior::generateMuShiftFromPrior()
 
 bool Prior::generateIsTimeVariableFromPrior()
 {
-    return _random.trueWithProbability(_lambdaIsTimeVariablePrior);
+    if (_lambdaIsTimeVariable) {
+        return _random.trueWithProbability(_lambdaIsTimeVariablePrior);
+    } else {
+        return false;
+    }
 }
 
 
@@ -176,10 +189,14 @@ double Prior::lambdaInitRootPrior(double x)
 
 double Prior::lambdaShiftRootPrior(double x)
 {
-    if (fabs(_lambdaShiftRootPrior + 1) < _UPDATE_TOL) {
-        return lambdaShiftPrior(x);
+    if (_lambdaIsTimeVariable) {
+        if (fabs(_lambdaShiftRootPrior + 1) < _UPDATE_TOL) {
+            return lambdaShiftPrior(x);
+        } else {
+            return Stat::lnExponentialPDF(x, _lambdaShiftRootPrior);
+        }
     } else {
-        return Stat::lnExponentialPDF(x, _lambdaShiftRootPrior);
+        return 0.0;
     }
 }
 
