@@ -1794,7 +1794,7 @@ void Tree::recursiveSetTraitValues(Node* x, double mn, double mx)
 // Returns pointer to node of mrca of 2 taxa, with names
 //  A and B.
 
-Node* Tree::getNodeMRCA(std::string A, std::string B)
+Node* Tree::getNodeMRCA(const std::string& A, const std::string& B)
 {
     //std::cout << "MRCA of " << A << "\t" << B << std::endl;
 
@@ -1852,7 +1852,7 @@ void Tree::passUpFillTempNodeArray(Node* x)
 }
 
 
-Node* Tree::getNodeByName(std::string A)
+Node* Tree::getNodeByName(const std::string& A)
 {
     Node* x = root;
     int count = 0;

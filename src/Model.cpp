@@ -7,6 +7,7 @@
 #include "BranchEvent.h"
 #include "BranchHistory.h"
 #include "Log.h"
+#include "Tools.h"
 
 #include <string>
 #include <fstream>
@@ -63,39 +64,59 @@ Model::~Model()
 }
 
 
-void Model::initializeModelFromEventDataFile()
+void Model::initializeModelFromEventDataFile(const std::string& fileName)
 {
-    std::string inputFileName(_settings->get("eventDataInfile"));
-    std::ifstream inputFile(inputFileName.c_str());
+    std::ifstream inputFile(fileName.c_str());
 
-    if (!inputFile.good()) {
-        log(Error) << "<<" << inputFileName << ">> is a bad file name.\n";
+    if (!inputFile) {
+        log(Error) << "Could not read event data file "
+            << "<<" << fileName << ">>.\n";
         std::exit(1);
     }
 
-    log() << "Initializing model from <<" << inputFileName << ">>\n";
+    log() << "Initializing model from <<" << fileName << ">>...\n";
 
-    std::string species1;
-    std::string species2;
-    double eTime;
+    std::vector<std::string> lines;
+    std::string line;
+
+    while (std::getline(inputFile, line)) {
+        lines.push_back(line);
+    }
+
+    inputFile.close();
 
     int eventCount = 0;
-    while (inputFile) {
-        inputFile >> species1;
-        inputFile >> species2;
-        inputFile >> eTime;
+    int prevGeneration = 0;
 
-        // Read the model-specific parameters
-        readModelSpecificParameters(inputFile);
+    // The relevant events are at the bottom of the file (last generation)
+    for (int i = lines.size() - 1; i != -1; --i) {
+        const std::vector<std::string>& tokens = split_string(lines[i], ',');
 
-        // TODO: Might need to getline here to read last \n
+        // Get the generation, but if it differs from previous, stop
+        int gen = convert_string<int>(tokens[0]);
+        if (prevGeneration == 0) {
+            prevGeneration = gen;
+        } else {
+            if (gen != prevGeneration) {
+                break;
+            }
+        }
+
+        std::string species_1 = tokens[1];
+        std::string species_2 = tokens[2];
+        double eventTime = convert_string<double>(tokens[3]);
+
+        std::vector<std::string> parameters;
+        for (int i = 4; i < (int)tokens.size(); ++i) {
+            parameters.push_back(tokens[i]);
+        }
 
         Node* x = NULL;
         
-        if ((species1 != "NA") && (species2 != "NA")) {
-            x = _tree->getNodeMRCA(species1.c_str(), species2.c_str());
-        } else if ((species1 != "NA") && (species2 == "NA")) {
-            x = _tree->getNodeByName(species1.c_str());
+        if ((species_1 != "NA") && (species_2 != "NA")) {
+            x = _tree->getNodeMRCA(species_1, species_2);
+        } else if ((species_1 != "NA") && (species_2 == "NA")) {
+            x = _tree->getNodeByName(species_1);
         } else {
             log(Error) << "Either both species are NA or the second species "
                 << "is NA\nwhile reading the event data file.";
@@ -104,13 +125,13 @@ void Model::initializeModelFromEventDataFile()
 
         if (x == _tree->getRoot()) {
             // Set the root event with model-specific parameters
-            setRootEventWithReadParameters();
+            setRootEventWithReadParameters(parameters);
         } else {
-            double deltaT = x->getTime() - eTime;
+            double deltaT = x->getTime() - eventTime;
             double newMapTime = x->getMapStart() + deltaT;
 
             BranchEvent* newEvent =
-                newBranchEventWithReadParameters(x, newMapTime);
+                newBranchEventWithReadParameters(x, newMapTime, parameters);
             newEvent->getEventNode()->getBranchHistory()->
                 addEventToBranchHistory(newEvent);
 
@@ -121,8 +142,6 @@ void Model::initializeModelFromEventDataFile()
 
         eventCount++;
     }
-
-    inputFile.close();
 
     log() << "Read a total of " << eventCount << " events.\n";
     log() << "Added " << _eventCollection.size() << " "

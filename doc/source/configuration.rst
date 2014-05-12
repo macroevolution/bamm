@@ -62,10 +62,21 @@ General
     This is necessary to compute the Bayes factor.
 
 ``loadEventData``
-    If ``1``, load the event data from a file.
+    If ``1``, load a previous event state (event locations and parameter
+    values) from a file. This allows a run to be continued even after a
+    previous run has finished. The file format is identical to that of the
+    default output file ``event_data.txt``. Only the data from the last
+    generation will be processed if the file contains data for multiple
+    generations. For example, to load the data from a previous run, copy the
+    output event file (``event_data.txt``) to something like
+    ``event_data_in.txt`` and use this file in the ``eventDataInfile`` option
+    (below). Note that ``event_data.txt`` will be overwritten by the new run
+    (unless you change its name in the configuration file), so if you'd like to
+    keep those data, copy the file to a new one.
 
 ``eventDataInfile``
-    The file path of the event data (used only if ``loadEventData = 1``).
+    The file path of the event data to be loaded (used only if ``loadEventData
+    = 1``).
 
 ``initializeModel``
     If ``1``, initializes MCMC.

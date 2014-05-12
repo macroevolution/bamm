@@ -56,7 +56,7 @@ public:
     void setLogPriorRatio(double logPriorRatio);
     void setLogQRatio(double logQRatio);
 
-    void initializeModelFromEventDataFile();
+    void initializeModelFromEventDataFile(const std::string& fileName);
 
     int getNumberOfEvents();
     BranchEvent* getRootEvent();
@@ -110,10 +110,10 @@ protected:
 
     // Pure virtual methods to be implemented by derived classes
 
-    virtual void readModelSpecificParameters(std::ifstream& inputFile) = 0;
-    virtual void setRootEventWithReadParameters() = 0;
+    virtual void setRootEventWithReadParameters
+        (const std::vector<std::string>& parameters) = 0;
     virtual BranchEvent* newBranchEventWithReadParameters
-        (Node* x, double time) = 0;
+        (Node* x, double time, const std::vector<std::string>& parameters) = 0;
 
     virtual BranchEvent* newBranchEventWithRandomParameters(double x) = 0;
 

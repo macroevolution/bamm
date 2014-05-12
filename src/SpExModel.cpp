@@ -17,8 +17,8 @@
 #include "SpExBranchEvent.h"
 #include "Settings.h"
 #include "Log.h"
-
 #include "Prior.h"
+#include "Tools.h"
 
 #define NO_DATA
 #undef NO_DATA
@@ -76,8 +76,7 @@ SpExModel::SpExModel(Random& random, Settings* sp) : Model(random, sp),
 
     // Initialize by previous event histories
     if (_settings->get<bool>("loadEventData")) {
-        log() << "\nLoading model data from file.\n";
-        initializeModelFromEventDataFile();
+        initializeModelFromEventDataFile(_settings->get("eventDataInfile"));
     }
 
     _extinctionProbMax = _settings->get<double>("extinctionProbMax");
@@ -125,30 +124,54 @@ Proposal* SpExModel::getSpecificProposal(int parameter)
 }
 
 
-void SpExModel::readModelSpecificParameters(std::ifstream &inputFile)
-{
-    inputFile >> _readLambdaInit;
-    inputFile >> _readLambdaShift;
-    inputFile >> _readMuInit;
-    inputFile >> _readMuShift;
-}
-
-
-void SpExModel::setRootEventWithReadParameters()
+void SpExModel::setRootEventWithReadParameters
+    (const std::vector<std::string>& parameters)
 {
     SpExBranchEvent* rootEvent = static_cast<SpExBranchEvent*>(_rootEvent);
 
-    rootEvent->setLamInit(_readLambdaInit);
-    rootEvent->setLamShift(_readLambdaShift);
-    rootEvent->setMuInit(_readMuInit);
-    rootEvent->setMuShift(_readMuShift);
+    rootEvent->setLamInit(lambdaInitParameter(parameters));
+    rootEvent->setLamShift(lambdaShiftParameter(parameters));
+    rootEvent->setMuInit(muInitParameter(parameters));
+    rootEvent->setMuShift(muShiftParameter(parameters));
 }
 
 
-BranchEvent* SpExModel::newBranchEventWithReadParameters(Node* x, double time)
+BranchEvent* SpExModel::newBranchEventWithReadParameters
+    (Node* x, double time, const std::vector<std::string>& parameters)
 {
-    return new SpExBranchEvent(_readLambdaInit, _readLambdaShift,
-        _readMuInit, _readMuShift, x, _tree, _random, time);
+    double lambdaInit = lambdaInitParameter(parameters);
+    double lambdaShift = lambdaShiftParameter(parameters);
+    double muInit = muInitParameter(parameters);
+    double muShift = muShiftParameter(parameters);
+
+    return new SpExBranchEvent(lambdaInit, lambdaShift,
+        muInit, muShift, x, _tree, _random, time);
+}
+
+
+double SpExModel::lambdaInitParameter
+    (const std::vector<std::string>& parameters)
+{
+    return convert_string<double>(parameters[0]);
+}
+
+
+double SpExModel::lambdaShiftParameter
+    (const std::vector<std::string>& parameters)
+{
+    return convert_string<double>(parameters[1]);
+}
+
+
+double SpExModel::muInitParameter(const std::vector<std::string>& parameters)
+{
+    return convert_string<double>(parameters[2]);
+}
+
+
+double SpExModel::muShiftParameter(const std::vector<std::string>& parameters)
+{
+    return convert_string<double>(parameters[3]);
 }
 
 

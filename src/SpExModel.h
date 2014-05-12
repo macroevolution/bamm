@@ -1,12 +1,16 @@
 #ifndef SP_EX_MODEL_H
 #define SP_EX_MODEL_H
 
+
 #include "Model.h"
 #include "LambdaInitProposal.h"
 #include "LambdaShiftProposal.h"
 #include "MuInitProposal.h"
 #include "MuShiftProposal.h"
+
 #include <iosfwd>
+#include <vector>
+#include <string>
 
 class Node;
 class Random;
@@ -38,10 +42,16 @@ private:
 
     virtual Proposal* getSpecificProposal(int parameter);
     
-    virtual void readModelSpecificParameters(std::ifstream& inputFile);
-    virtual void setRootEventWithReadParameters();
+    virtual void setRootEventWithReadParameters
+        (const std::vector<std::string>& parameters);
+    virtual BranchEvent* newBranchEventWithReadParameters
+        (Node* x, double time, const std::vector<std::string>& parameters);
 
-    virtual BranchEvent* newBranchEventWithReadParameters(Node* x, double time);
+    double lambdaInitParameter(const std::vector<std::string>& parameters);
+    double lambdaShiftParameter(const std::vector<std::string>& parameters);
+    double muInitParameter(const std::vector<std::string>& parameters);
+    double muShiftParameter(const std::vector<std::string>& parameters);
+
     virtual BranchEvent* newBranchEventWithRandomParameters(double x);
     virtual BranchEvent* newBranchEventFromLastDeletedEvent();
 

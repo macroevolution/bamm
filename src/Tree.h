@@ -228,9 +228,9 @@ public:
 
     void computeMeanTraitRatesByNode(Node* x);
 
-    Node* getNodeMRCA(std::string A, std::string B);
+    Node* getNodeMRCA(const std::string& A, const std::string& B);
     void  passUpFillTempNodeArray(Node* x);
-    Node* getNodeByName(std::string A);
+    Node* getNodeByName(const std::string& A);
 
     void printNodeTraitRates();
 

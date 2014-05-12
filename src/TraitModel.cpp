@@ -29,6 +29,7 @@
 #include "Log.h"
 #include "Prior.h"
 #include "Stat.h"
+#include "Tools.h"
 
 
 TraitModel::TraitModel(Random& random, Settings* settings) :
@@ -70,9 +71,7 @@ TraitModel::TraitModel(Random& random, Settings* settings) :
     _tree->setMeanBranchTraitRates();
 
     if (_settings->get<bool>("loadEventData")) {
-        log() << "\nLoading model data from file: "
-              << _settings->get("eventDataInfile") << "\n";
-        initializeModelFromEventDataFile();
+        initializeModelFromEventDataFile(_settings->get("eventDataInfile"));
     }
 
     setCurrentLogLikelihood(computeLogLikelihood());
@@ -117,26 +116,36 @@ Proposal* TraitModel::getSpecificProposal(int parameter)
 }
 
 
-void TraitModel::readModelSpecificParameters(std::ifstream &inputFile)
-{
-    inputFile >> _readBetaInit;
-    inputFile >> _readBetaShift;
-}
-
-
-void TraitModel::setRootEventWithReadParameters()
+void TraitModel::setRootEventWithReadParameters
+    (const std::vector<std::string>& parameters)
 {
     TraitBranchEvent* rootEvent = static_cast<TraitBranchEvent*>(_rootEvent);
 
-    rootEvent->setBetaInit(_readBetaInit);
-    rootEvent->setBetaShift(_readBetaShift);
+    rootEvent->setBetaInit(betaInitParameter(parameters));
+    rootEvent->setBetaShift(betaShiftParameter(parameters));
 }
 
 
-BranchEvent* TraitModel::newBranchEventWithReadParameters(Node* x, double time)
+BranchEvent* TraitModel::newBranchEventWithReadParameters
+    (Node* x, double time, const std::vector<std::string>& parameters)
 {
-    return new TraitBranchEvent(_readBetaInit, _readBetaShift,
-        x, _tree, _random, time);
+    double betaInit = betaInitParameter(parameters);
+    double betaShift = betaShiftParameter(parameters);
+
+    return new TraitBranchEvent(betaInit, betaShift, x, _tree, _random, time);
+}
+
+
+double TraitModel::betaInitParameter(const std::vector<std::string>& parameters)
+{
+    return convert_string<double>(parameters[0]);
+}
+
+
+double TraitModel::betaShiftParameter
+    (const std::vector<std::string>& parameters)
+{
+    return convert_string<double>(parameters[1]);
 }
 
 
