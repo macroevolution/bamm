@@ -24,7 +24,7 @@ class SpExModel : public Model
 
 public:
 
-    SpExModel(Random& rng, Settings* settings);
+    SpExModel(Random& rng, Settings& settings);
 
     virtual double computeLogLikelihood();
     virtual double computeLogPrior();

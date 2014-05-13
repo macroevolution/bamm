@@ -14,16 +14,15 @@
 #include <cstdlib>
 
 
-// TODO: pointers not necessary; make references
-Model::Model(Random& random, Settings* settings) :
-    _random(random), _settings(settings), _prior(_random, _settings),
-    _tree(new Tree(_random, *_settings)),
-    _eventNumberProposal(random, *settings, *this),
-    _moveEventProposal(random, *settings, *this),
-    _eventRateProposal(random, *settings, *this, _prior)
+Model::Model(Random& random, Settings& settings) :
+    _random(random), _settings(settings), _prior(_random, &_settings),
+    _tree(new Tree(_random, _settings)),
+    _eventNumberProposal(random, settings, *this),
+    _moveEventProposal(random, settings, *this),
+    _eventRateProposal(random, settings, *this, _prior)
 {
     // Initialize event rate to generate expected number of prior events
-    _eventRate = 1 / _settings->get<double>("poissonRatePrior");
+    _eventRate = 1 / _settings.get<double>("poissonRatePrior");
 
     _acceptCount = 0;
     _rejectCount = 0;
@@ -46,7 +45,7 @@ void Model::finishConstruction()
 {
     calculateUpdateWeights();
 
-    int initialNumberOfEvents = _settings->get<int>("initialNumberEvents");
+    int initialNumberOfEvents = _settings.get<int>("initialNumberEvents");
     for (int i = 0; i < initialNumberOfEvents; i++) {
         addRandomEventToTree();
     }
@@ -237,9 +236,9 @@ void Model::calculateUpdateWeights()
 
 void Model::initializeUpdateWeights()
 {
-    _updateWeights.push_back(_settings->get<double>("updateRateEventNumber"));
-    _updateWeights.push_back(_settings->get<double>("updateRateEventPosition"));
-    _updateWeights.push_back(_settings->get<double>("updateRateEventRate"));
+    _updateWeights.push_back(_settings.get<double>("updateRateEventNumber"));
+    _updateWeights.push_back(_settings.get<double>("updateRateEventPosition"));
+    _updateWeights.push_back(_settings.get<double>("updateRateEventRate"));
 
     // Defined by derived class
     initializeSpecificUpdateWeights();

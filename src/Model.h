@@ -26,7 +26,7 @@ class Model
 
 public:
 
-    Model(Random& random, Settings* settings);
+    Model(Random& random, Settings& settings);
     virtual ~Model();
 
     void finishConstruction();
@@ -123,7 +123,7 @@ protected:
     virtual BranchEvent* newBranchEventFromLastDeletedEvent() = 0;
 
     Random& _random;
-    Settings* _settings;
+    Settings& _settings;
 
     Prior _prior;
 

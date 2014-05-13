@@ -41,23 +41,24 @@
 #define JUMP_VARIANCE_NORMAL 0.05
 
 
-SpExModel::SpExModel(Random& random, Settings* sp) : Model(random, sp),
-    _lambdaInitProposal(random, *sp, *this, _prior),
-    _lambdaShiftProposal(random, *sp, *this, _prior),
-    _muInitProposal(random, *sp, *this, _prior),
-    _muShiftProposal(random, *sp, *this, _prior)
+SpExModel::SpExModel(Random& random, Settings& settings) :
+    Model(random, settings),
+    _lambdaInitProposal(random, settings, *this, _prior),
+    _lambdaShiftProposal(random, settings, *this, _prior),
+    _muInitProposal(random, settings, *this, _prior),
+    _muShiftProposal(random, settings, *this, _prior)
 {
     // Initial values
-    _lambdaInit0 = _settings->get<double>("lambdaInit0");
-    _lambdaShift0 = _settings->get<double>("lambdaShift0");
-    _muInit0 = _settings->get<double>("muInit0");
-    _muShift0 = _settings->get<double>("muShift0");
+    _lambdaInit0 = _settings.get<double>("lambdaInit0");
+    _lambdaShift0 = _settings.get<double>("lambdaShift0");
+    _muInit0 = _settings.get<double>("muInit0");
+    _muShift0 = _settings.get<double>("muShift0");
 
-    _sampleFromPriorOnly = _settings->get<bool>("sampleFromPriorOnly");
+    _sampleFromPriorOnly = _settings.get<bool>("sampleFromPriorOnly");
 
     // Parameter for splitting branch into pieces for numerical computation
     _segLength =
-        _settings->get<double>("segLength") * _tree->maxRootToTipLength();
+        _settings.get<double>("segLength") * _tree->maxRootToTipLength();
    
     BranchEvent* x =  new SpExBranchEvent
         (_lambdaInit0, _lambdaShift0, _muInit0, _muShift0,
@@ -75,11 +76,11 @@ SpExModel::SpExModel(Random& random, Settings* sp) : Model(random, sp),
     _tree->setNodeExtinctionParameters();
 
     // Initialize by previous event histories
-    if (_settings->get<bool>("loadEventData")) {
-        initializeModelFromEventDataFile(_settings->get("eventDataInfile"));
+    if (_settings.get<bool>("loadEventData")) {
+        initializeModelFromEventDataFile(_settings.get("eventDataInfile"));
     }
 
-    _extinctionProbMax = _settings->get<double>("extinctionProbMax");
+    _extinctionProbMax = _settings.get<double>("extinctionProbMax");
 
     setCurrentLogLikelihood(computeLogLikelihood());
 
@@ -99,10 +100,10 @@ SpExModel::SpExModel(Random& random, Settings* sp) : Model(random, sp),
 
 void SpExModel::initializeSpecificUpdateWeights()
 {
-    _updateWeights.push_back(_settings->get<double>("updateRateLambda0"));
-    _updateWeights.push_back(_settings->get<double>("updateRateLambdaShift"));
-    _updateWeights.push_back(_settings->get<double>("updateRateMu0"));
-    _updateWeights.push_back(_settings->get<double>("updateRateMuShift"));
+    _updateWeights.push_back(_settings.get<double>("updateRateLambda0"));
+    _updateWeights.push_back(_settings.get<double>("updateRateLambdaShift"));
+    _updateWeights.push_back(_settings.get<double>("updateRateMu0"));
+    _updateWeights.push_back(_settings.get<double>("updateRateMuShift"));
 }
 
 

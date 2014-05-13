@@ -28,7 +28,7 @@ public:
 inline Model* TraitModelFactory::createModel
     (Random& random, Settings& settings) const
 {
-    return new TraitModel(random, &settings);
+    return new TraitModel(random, settings);
 }
 
 

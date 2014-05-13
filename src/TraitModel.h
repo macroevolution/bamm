@@ -23,7 +23,7 @@ class TraitModel : public Model
 
 public:
 
-    TraitModel(Random& rng, Settings* settings);
+    TraitModel(Random& rng, Settings& settings);
 
     virtual double computeLogLikelihood();
     virtual double computeTriadLikelihoodTraits(Node* x);
