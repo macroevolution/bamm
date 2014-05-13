@@ -6,6 +6,7 @@
 #include <string>
 #include <set>
 #include <vector>
+#include <iosfwd>
 
 class Random;
 class Settings;
@@ -26,6 +27,10 @@ class Tree
 {
 
 private:
+
+    double calculateTreeLength();
+    void setInternalNodeSet();
+    void setNodeTipCounts();
 
     std::vector<double> terminalPathLengthsToRoot();
     void storeTerminalPathLengthsToRootRecurse
@@ -49,13 +54,12 @@ private:
                         const std::vector<std::string>& list2,
                         const std::string& list2Name);
 
-    void removeWhiteSpace(std::string& str);
     void addNodes(Node* node);
 
     Random& _random;
 
     Node* root;
-    std::set<Node*> nodes;
+    std::vector<Node*> _preOrderNodes;
     std::vector<Node*> downPassSeq;
 
     // Internal node set:: for choosing random node to update state
@@ -75,7 +79,7 @@ private:
     void setTipStatus();
 
     // This is the total treelength: also used in mapping events to tree
-    double treelength;
+    double _treeLength;
 
     // This is a pointer to an object that stores
     // all events that happened.
@@ -149,8 +153,7 @@ public:
     void writeNodeData();
     void setBranchLengths();
     void deleteExtinctNodes();
-    void buildTreeFromNewickString(std::string ts);
-    void setTaxonCountFromNewickString(std::string ts);
+    void readTree(std::istream& treeFileStream);
     bool isValidChar(char x);
 
     void setNodeTimes(Node* p);
@@ -169,7 +172,6 @@ public:
     void getPhenotypes(std::string fname);
     void getPhenotypesMissingLatent(std::string fname);
 
-    void  printTraitValues();
     void  initializeTraitValues();
     void  recursiveSetTraitValues(Node* x, double mn, double mx);
     Node* chooseInternalNodeAtRandom();
@@ -234,8 +236,6 @@ public:
 
     void printNodeTraitRates();
 
-    void printCanHoldEventByNode();
-
     void echoMeanBranchTraitRates();
 
     std::vector<Node*> terminalNodes();
@@ -245,7 +245,7 @@ public:
 
 inline double Tree::getTreeLength()
 {
-    return treelength;
+    return _treeLength;
 }
 
 

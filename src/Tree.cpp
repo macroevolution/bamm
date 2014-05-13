@@ -1,11 +1,3 @@
-#include <cstdlib>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <cmath>
-#include <iomanip>
-#include <algorithm>
-
 #include "Random.h"
 #include "Settings.h"
 #include "Tree.h"
@@ -16,42 +8,24 @@
 #include "Log.h"
 #include "Stat.h"
 
-
-//#define DEBUG_TIME_VARIABLE
-
-Tree::~Tree()
-{
-    //std::cout << "calling destructor" << std::endl;
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
-        delete (*i);
-    }
-}
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <cmath>
+#include <iomanip>
+#include <algorithm>
 
 
 Tree::Tree(Random& random, Settings& settings) : _random(random)
 {
-    std::string fname = settings.get("treefile");
+    std::string treeFileName = settings.get("treefile");
+    std::ifstream treeFileStream(treeFileName.c_str());
 
-    std::ifstream treefile(fname.c_str());
+    log() << "\nReading tree from file <" << treeFileName << ">.\n";
 
-    log() << "\nReading tree from file <" << fname << ">.\n";
-
-    if (!treefile.good()) {
-        log(Error) << "Invalid file name for phylogenetic tree\n";
-        std::exit(1);
-    }
-
-    // Read entire file into tree string (except new line character)
-    std::stringstream buffer;
-    buffer << treefile.rdbuf();
-    std::string treestring;
-    getline(buffer, treestring);
-    treefile.close();
-
-    removeWhiteSpace(treestring);
-
-    setTaxonCountFromNewickString(treestring);
-    buildTreeFromNewickString(treestring);
+    readTree(treeFileStream);
+    _ntaxa = terminalNodes().size();
 
     // Check tree integrity
     assertTreeRootBranchLengthIsZero();
@@ -65,14 +39,6 @@ Tree::Tree(Random& random, Settings& settings) : _random(random)
     // Output stuff here
     log() << "Tree contains " << getNumberTips() << " taxa.\n";
 
-    // counting tips for trial...
-    int sum = 0;
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
-        sum += (int)(*i)->getIsTip();
-    }
-
-    // initialize treelength:
-    treelength = 0.0;
     _totalMapLength = 0.0;
 
     // Set node times (with 0 at root):
@@ -80,31 +46,10 @@ Tree::Tree(Random& random, Settings& settings) : _random(random)
     setAge();
     setBranchingTimes(root);
 
+    _treeLength = calculateTreeLength();
 
-    // Need to set treelength:
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
-        treelength += (*i)->getBrlen();
-    }
-
-    // Setting internal node set:
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
-        if ( (*i)->getLfDesc() != NULL && (*i)->getRtDesc() != NULL ) {
-            internalNodeSet.insert((*i));
-        }
-    }
-
-    // Set tip counts for each node.
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
-        int dcount = getDescTipCount((*i));
-        (*i)->setTipDescCount(dcount);
-    }
-
-    int ct = 0;
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
-        if ((*i)->getCanHoldEvent()) {
-            ct++;
-        }
-    }
+    setInternalNodeSet();
+    setNodeTipCounts();
 
     // Initialize tree according to model type
     // TODO: This should be handled in a better way
@@ -129,11 +74,43 @@ Tree::Tree(Random& random, Settings& settings) : _random(random)
 }
 
 
-void Tree::removeWhiteSpace(std::string& str)
+double Tree::calculateTreeLength()
 {
-    str.erase(remove(str.begin(), str.end(), ' '), str.end());
+    double treeLength = 0.0;
+
+    for (int i = 0; i < (int)_preOrderNodes.size(); ++i) {
+        treeLength += _preOrderNodes[i]->getBrlen();
+    }
+
+    return treeLength;
 }
 
+
+void Tree::setInternalNodeSet()
+{
+    for (int i = 0; i < (int)_preOrderNodes.size(); ++i) {
+        if (_preOrderNodes[i]->isInternal()) {
+            internalNodeSet.insert(_preOrderNodes[i]);
+        }
+    }
+}
+
+
+void Tree::setNodeTipCounts()
+{
+    for (int i = 0; i < (int)_preOrderNodes.size(); ++i) {
+        int count = getDescTipCount(_preOrderNodes[i]);
+        _preOrderNodes[i]->setTipDescCount(count);
+    }
+}
+
+
+Tree::~Tree()
+{
+    for (int i = 0; i < (int)_preOrderNodes.size(); ++i) {
+        delete _preOrderNodes[i];
+    }
+}
 
 /* Tree map goes from low to high, tipwise (e.g.,
  smaller values closer to root of tree
@@ -199,15 +176,9 @@ double Tree::getAbsoluteTimeFromMapTime(double x)
 {
     double abstime = 0.0;
     bool done = false;
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if (x >= (*i)->getMapStart()  && x < (*i)->getMapEnd()) {
-
-            // Very serious bug, fixed 9.15.2012
-            //double delta = (*i)->getMapEnd() - x;
-            //abstime = (*i)->getTime() - delta;
-            //done = true;
-            // code above should be inverting event positions on branch.
-
             double delta = x - (*i)->getMapStart(); // difference in times...
             abstime = (*i)->getTime() - delta;
             done = true;
@@ -219,15 +190,6 @@ double Tree::getAbsoluteTimeFromMapTime(double x)
         throw;
     }
     return abstime;
-}
-
-
-void Tree::printCanHoldEventByNode()
-{
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
-        std::cout << (*i) << "\tCan hold: " << (*i)->getCanHoldEvent() << "\tTips: " <<
-             (*i)->getTipDescCount() << std::endl;
-    }
 }
 
 
@@ -344,7 +306,8 @@ Node* Tree::getRandomNodeFromTempArray()
 void Tree::setBranchLengths()
 {
     // Set brlens:
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i) == root) {
             double timeX = (*i)->getTime() - _startTime;
             (*i)->setBrlen( timeX );
@@ -387,7 +350,8 @@ void Tree::writeTree(Node* p, std::stringstream& ss)
 int Tree::getNumberTips()
 {
     int count = 0;
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ( (*i)->getDescCount() == 0 ) {
             count++;
         }
@@ -398,7 +362,8 @@ int Tree::getNumberTips()
 
 void Tree::setTipStatus()
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if (((*i)->getLfDesc() == NULL) && ((*i)->getRtDesc() == NULL )) {
             (*i)->setIsTip(true);
         } else {
@@ -412,7 +377,8 @@ int Tree::getNumberExtantTips()
 {
     setExtantStatus();
     int ntaxa = 0;
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if (((*i)->getLfDesc() == NULL) && ((*i)->getExtantStatus() == 1) ) {
             ntaxa++;
         }
@@ -435,12 +401,14 @@ int Tree::getNumberExtantTips()
 void Tree::setExtantStatus()
 {
     double tx = root->getTime();
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i)->getTime() > tx) {
             tx = (*i)->getTime();
         }
     }
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i)->getLfDesc() != NULL && (*i)->getRtDesc() != NULL) {
             (*i)->setExtantStatus(1);
         } else {
@@ -467,13 +435,15 @@ void Tree::setIsLivingTipStatus()
 
     // Get maximum age.
     double tx = root->getTime();
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i)->getTime() > tx) {
             tx = (*i)->getTime();
         }
     }
 
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i)->getLfDesc() == NULL && (*i)->getRtDesc() == NULL) {
             double test = abs((*i)->getTime() - tx );
             if (test < TOL) {
@@ -488,42 +458,9 @@ void Tree::setIsLivingTipStatus()
 }
 
 
-void Tree::writeNodeData(void )
-{
-    int wsize = 15;
-    std::ofstream myfile;
-    myfile.open("NodeData.txt");
-    myfile << "index" << std::setw(wsize) << "LDindex" << std::setw(wsize);
-    myfile << "RDindex" << std::setw(wsize) << "Node" << std::setw(wsize);
-    myfile << "LDesc" << std::setw(wsize) << "RDesc" << std::setw(wsize);
-    myfile << "anc" << std::setw(wsize) << "time" << std::endl;
-
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
-
-        myfile << (*i)->getIndex() << std::setw(wsize);
-
-        if ( (*i)->getLfDesc() != 0 ) {
-            myfile << (*i)->getLfDesc()->getIndex() << "\t";
-            myfile << (*i)->getRtDesc()->getIndex() << "\t";
-        } else {
-            myfile << -1 << "\t";
-            myfile << -1 << "\t";
-        }
-
-        myfile << (*i) << std::setw(wsize);
-        myfile << (*i)->getRtDesc() << std::setw(wsize);
-        myfile << (*i)->getLfDesc() << std::setw(wsize);
-        myfile << (*i)->getAnc() << std::setw(wsize);
-        myfile << (*i)->getTime() << std::setw(wsize);
-        myfile << std::endl;
-    }
-    myfile.close();
-}
-
-
 void Tree::rebuildTreeNodeSet()
 {
-    nodes.clear();
+    _preOrderNodes.clear();
     recursivelyAddNodesToSet(root);
 }
 
@@ -531,7 +468,7 @@ void Tree::rebuildTreeNodeSet()
 void Tree::recursivelyAddNodesToSet(Node* p)
 {
     if (p != NULL) {
-        nodes.insert(p);
+        _preOrderNodes.push_back(p);
         recursivelyAddNodesToSet(p->getLfDesc());
         recursivelyAddNodesToSet(p->getRtDesc());
     }
@@ -555,9 +492,7 @@ void Tree::pruneExtinctTaxa()
     setExtantStatus();
     fixExtinct(root);
 
-    //std::cout << nodes.size() << std::endl;
     rebuildTreeNodeSet();
-    //std::cout << nodes.size() << std::endl;
 
     setBranchLengths();
 }
@@ -678,7 +613,8 @@ void Tree::fixExtinct(Node* p)
 
 void Tree::deleteExtinctNodes()
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         // if node is leaf:
         std::cout << (*i)->getIndex() << std::endl;
         if ((*i)->getLfDesc() == NULL && (*i)->getRtDesc() == NULL) {
@@ -699,23 +635,14 @@ void Tree::deleteExtinctNodes()
 }
 
 
-void Tree::setTaxonCountFromNewickString(std::string ts)
+void Tree::readTree(std::istream& treeFileStream)
 {
-    int count = 0;
-    for (std::string::size_type i = 0; i < ts.size(); i++) {
-        char c = ts[i];
-        if (c == ',') {
-            count++;
-        }
+    if (!treeFileStream.good()) {
+        log(Error) << "Invalid file name for phylogenetic tree\n";
+        std::exit(1);
     }
-    _ntaxa = count + 1;
-}
 
-
-void Tree::buildTreeFromNewickString(std::string ts)
-{
-    std::istringstream isstream(ts);
-    _treeReader.read(isstream, *this);
+    _treeReader.read(treeFileStream, *this);
 
     addNodes(root);
     setStartTime(0);
@@ -727,7 +654,7 @@ void Tree::buildTreeFromNewickString(std::string ts)
 void Tree::addNodes(Node* node)
 {
     if (node != NULL) {
-        nodes.insert(node);
+        _preOrderNodes.push_back(node);
         addNodes(node->getLfDesc());
         addNodes(node->getRtDesc());
     }
@@ -764,7 +691,8 @@ void Tree::setAge()
 {
     // age here defined as MAX node time (node times start with 0 at root)
     double mx = 0;
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i)->getTime() == 0) {
             setNodeTimes(root);
         }
@@ -795,7 +723,8 @@ std::vector<double>  Tree::getBranchingTimes()
 
     //std::cout << "age :" << _age << std::endl;
 
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); i++) {
         double tmp = _age - (*i)->getTime();
         //std::cout << "Time: " << (*i)->getTime() << "\t" << tmp << std::endl;
 
@@ -839,14 +768,16 @@ void Tree::writeMeanBranchTraitRateTree(Node* p, std::stringstream& ss)
 
 void Tree::setNodeSpeciationParameters()
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i){
         (*i)->computeAndSetNodeSpeciationParams();
     }
 }
 
 void Tree::setNodeExtinctionParameters()
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i){
         (*i)->computeAndSetNodeExtinctionParams();
     }
 }
@@ -855,7 +786,8 @@ void Tree::setNodeExtinctionParameters()
 // Update both mean speciation rates on branch in addition to node speciation rate.
 void Tree::setMeanBranchSpeciation()
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         (*i)->computeNodeBranchSpeciationParams();
     }
 }
@@ -865,7 +797,8 @@ void Tree::setMeanBranchSpeciation()
 
 void Tree::setMeanBranchExtinction()
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         (*i)->computeNodeBranchExtinctionParams();
     }
 }
@@ -873,7 +806,8 @@ void Tree::setMeanBranchExtinction()
 
 void Tree::echoMeanBranchRates()
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         Node* x = (*i);
         std::cout << x << "\t" << x->getMeanSpeciationRate() << "\t" <<
              x->getMeanExtinctionRate() << "\t" << x->getNodeLambda() << std::endl;
@@ -883,7 +817,8 @@ void Tree::echoMeanBranchRates()
 
 void Tree::echoMeanBranchTraitRates()
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         Node* x = (*i);
         std::cout << x->getName() << "\t" << x->getMeanBeta() << std::endl;
     }
@@ -1058,8 +993,8 @@ void Tree::getPhenotypes(std::string fname)
 
     log() << "Read " << traits.size() << " species with trait data\n";
 
-    // iterate over nodes...
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i)->getLfDesc() == NULL && (*i)->getRtDesc() == NULL ) {
             for (std::vector<std::string>::size_type k = 0; k < spnames.size(); k++) {
                 if ((*i)->getName() == spnames[k]) {
@@ -1110,8 +1045,8 @@ void Tree::getPhenotypesMissingLatent(std::string fileName)
 
     int missingTerminalCount = 0;
 
-    // iterate over nodes...
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i)->getLfDesc() == NULL && (*i)->getRtDesc() == NULL ) {
             for (int k = 0; k < (int)speciesNames.size(); k++) {
                 if ((*i)->getName() == speciesNames[k]) {
@@ -1133,15 +1068,6 @@ void Tree::getPhenotypesMissingLatent(std::string fileName)
                      << " > species.\n"
                      << "These will be treated as latent variables in "
                      << "analysis\n";
-    }
-}
-
-
-void Tree::printTraitValues()
-{
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
-        std::cout << (*i) << "\t" << (*i)->getIsTraitFixed() << "\t" <<
-             (*i)->getTraitValue() << std::endl;
     }
 }
 
@@ -1206,8 +1132,8 @@ void Tree::initializeSpeciationExtinctionModel(double sampFrac)
     double  speciationInit = sampFrac;
     double  extinctionInit = (double)1 - sampFrac;
 
-    for (std::set<Node*>::iterator myIt = nodes.begin(); myIt != nodes.end();
-            myIt++) {
+    for (std::vector<Node*>::iterator myIt = _preOrderNodes.begin();
+            myIt != _preOrderNodes.end(); ++myIt) {
         if ((*myIt)->getLfDesc() == NULL && (*myIt)->getRtDesc() == NULL) {
             (*myIt)->setDinit(speciationInit);
             (*myIt)->setEinit(extinctionInit);
@@ -1341,49 +1267,13 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
         }
     }
 
-    /*
-
-    // Part 2. Do the initialization for terminals.
-    int counter = 0;
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
-        if ((*i)->getLfDesc() == NULL && (*i)->getRtDesc() == NULL ){
-            for (int k = 0; k < spnames.size(); k++){
-                if ((*i)->getName() == spnames[k]){
-
-                    double Einit = (double)1 - sfracs[k];
-                    double Dinit = sfracs[k];
-
-                    (*i)->setEinit(Einit);
-                    (*i)->setDinit(Dinit);
-                    counter++;
-                }
-
-            }
-            if((*i)->getEinit() == -1){
-                std::cout << ((*i)->getName()) << std::endl;
-            }
-        }
-    }
-    */
-
-    /*
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
-        Node * x = (*i);
-        std::cout << x->getLfDesc() << "\t" << x->getEtip() << "\t" << x->getCladeName() << std::endl;
-        //std::cout << x->getName() << "\t" << x->getEinit() << "\t" << x->getEtip() << "\t" << x->getCladeName() << "\t";
-        std::cout << std::endl;
-    }
-    */
-
     int tcount = 0;
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         Node* x = (*i);
         if (x->getEtip() < 0) {
             tcount++;
         }
-        //std::cout << x->getLfDesc() << "\t" << x->getEtip() << "\t" << x->getCladeName() << std::endl;
-        //std::cout << x->getName() << "\t" << x->getEinit() << "\t" << x->getEtip() << "\t" << x->getCladeName() << "\t";
-        //std::cout << std::endl;
     }
     std::cout << "Set a total of < " << counter << " > tips nodes for Ei & Di" << std::endl;
     std::cout << "Failed to set < " << tcount << " > internal node eTip values" << std::endl;
@@ -1416,10 +1306,10 @@ void Tree::assertIsSubset(const std::vector<std::string>& list1,
 
 void Tree::printInitialSpeciationExtinctionRates()
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
-        //if ((*i)->getLfDesc() == NULL && ((*i)->getRtDesc() == NULL))
-        std::cout << (*i) << "\t" << (*i)->getDinit() << "\t" << (*i)->getEinit()  << "\t"
-             << (*i)->getBrlen() << std::endl;
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
+        std::cout << (*i) << "\t" << (*i)->getDinit() << "\t"
+            << (*i)->getEinit()  << "\t" << (*i)->getBrlen() << std::endl;
     }
 }
 
@@ -1436,8 +1326,8 @@ void Tree::printInitialSpeciationExtinctionRates()
 
 void Tree::setCanNodeBeMapped(int ndesc)
 {
-    for (std::set<Node*>::iterator myIt = nodes.begin(); myIt != nodes.end();
-            myIt++) {
+    for (std::vector<Node*>::iterator myIt = _preOrderNodes.begin();
+            myIt != _preOrderNodes.end(); ++myIt) {
         int dcount = countDescendantsWithValidTraitData((*myIt));
         if (dcount >= ndesc) {
             (*myIt)->setCanHoldEvent(true);
@@ -1490,7 +1380,8 @@ int Tree::countDescendantsWithValidTraitData(Node* p)
 
 void Tree::setAllNodesCanHoldEvent()
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         (*i)->setCanHoldEvent(true);
         mappableNodes.insert((*i));
     }
@@ -1499,7 +1390,8 @@ void Tree::setAllNodesCanHoldEvent()
 
 void Tree::setCanNodeHoldEventByDescCount(int x)
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i)->getTipDescCount() >= x) {
             (*i)->setCanHoldEvent(true);
             mappableNodes.insert((*i));
@@ -1522,7 +1414,8 @@ void Tree::printTraitRange()
 {
     double mx = root->getTraitValue();
     double mn = root->getTraitValue();
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         double ctrait = (*i)->getTraitValue();
         if (ctrait < mn) {
             mn = ctrait;
@@ -1548,7 +1441,8 @@ void Tree::loadPreviousNodeStates(Tree* ostree)
 double Tree::getTraitMaxTip()
 {
     double ctrait = root->getTraitValue();
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i)->getLfDesc() == NULL && (*i)->getTraitValue() > ctrait ) {
             ctrait = (*i)->getTraitValue();
         }
@@ -1560,7 +1454,8 @@ double Tree::getTraitMaxTip()
 double Tree::getTraitMinTip()
 {
     double ctrait = root->getTraitValue();
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i)->getLfDesc() == NULL && (*i)->getTraitValue() < ctrait )
             ctrait = (*i)->getTraitValue();
     }
@@ -1570,7 +1465,8 @@ double Tree::getTraitMinTip()
 
 void Tree::printNodeBranchRates()
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         std::cout << (*i)->getMeanSpeciationRate() << "\t" << (*i)->getNodeLambda() << std::endl;
     }
 }
@@ -1578,7 +1474,8 @@ void Tree::printNodeBranchRates()
 
 void Tree::printNodeTraitRates()
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         std::cout << (*i) << "\t" << (*i)->getMeanBeta() << std::endl;
     }
 }
@@ -1586,9 +1483,9 @@ void Tree::printNodeTraitRates()
 
 void Tree::setMeanBranchTraitRates()
 {
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         computeMeanTraitRatesByNode((*i));
-        //std::cout  << (*i) << "\t" << (*i)->getMeanBeta() << "\t" << (*i)->getBranchHistory()->getAncestralNodeEvent() << std::endl;
     }
 }
 
@@ -1730,7 +1627,8 @@ void Tree::initializeTraitValues()
     double mx = 0;
     bool set = false;
 
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i)->getIsTraitFixed()) {
             if (set == false) {
                 mn = (*i)->getTraitValue();
@@ -1745,21 +1643,6 @@ void Tree::initializeTraitValues()
         }
     }
     recursiveSetTraitValues(root, mn, mx);
-
-    /*
-
-     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
-     std::cout << (*i) << "\tFixed" << (*i)->getIsTraitFixed() << "\tValue: " << (*i)->getTraitValue() << std::endl;
-     }
-     */
-    /*
-
-     for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++){
-     if ((*i)->getIsTraitFixed() == false){
-     (*i)->setTraitValue( ranPtr->uniformRv(mn, mx) );
-     }
-     }
-     */
 }
 
 
@@ -1804,7 +1687,8 @@ Node* Tree::getNodeMRCA(const std::string& A, const std::string& B)
     bool Bgood = false;
 
     clearTempNodeArray();
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i)->getName() == A) {
             nodeA = (*i);
             Agood = true;
@@ -1856,7 +1740,8 @@ Node* Tree::getNodeByName(const std::string& A)
 {
     Node* x = root;
     int count = 0;
-    for (std::set<Node*>::iterator i = nodes.begin(); i != nodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); ++i) {
         if ((*i)->getName() == A) {
             count++;
             x = (*i);
