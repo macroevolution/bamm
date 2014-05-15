@@ -19,12 +19,7 @@
 
 Tree::Tree(Random& random, Settings& settings) : _random(random)
 {
-    std::string treeFileName = settings.get("treefile");
-    std::ifstream treeFileStream(treeFileName.c_str());
-
-    log() << "\nReading tree from file <" << treeFileName << ">.\n";
-
-    readTree(treeFileStream);
+    readTree(settings.get("treefile"));
 
     setPreOrderNodes(root);
     setPostOrderNodes(root);
@@ -640,15 +635,18 @@ void Tree::deleteExtinctNodes()
 }
 
 
-void Tree::readTree(std::istream& treeFileStream)
+void Tree::readTree(const std::string& treeFileName)
 {
+    std::ifstream treeFileStream(treeFileName.c_str());
+
+    log() << "\nReading tree from file <" << treeFileName << ">.\n";
+
     if (!treeFileStream.good()) {
         log(Error) << "Invalid file name for phylogenetic tree\n";
         std::exit(1);
     }
 
     _treeReader.read(treeFileStream, *this);
-
 }
 
 

@@ -150,7 +150,7 @@ public:
     void writeNodeData();
     void setBranchLengths();
     void deleteExtinctNodes();
-    void readTree(std::istream& treeFileStream);
+    void readTree(const std::string& treeFileName);
     bool isValidChar(char x);
 
     void setNodeTimes(Node* p);
