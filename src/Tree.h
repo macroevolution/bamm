@@ -69,7 +69,6 @@ private:
     double _startTime;
     double _tmax;
     bool _isExtant;
-    int _ntaxa;
     void recursivelyAddNodesToSet(Node* p);
     void rebuildTreeNodeSet();
     double _age; // time to root node, from present

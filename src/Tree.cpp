@@ -25,7 +25,6 @@ Tree::Tree(Random& random, Settings& settings) : _random(random)
     log() << "\nReading tree from file <" << treeFileName << ">.\n";
 
     readTree(treeFileStream);
-    _ntaxa = terminalNodes().size();
 
     setPreOrderNodes(root);
     setPostOrderNodes(root);
