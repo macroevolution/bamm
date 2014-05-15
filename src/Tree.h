@@ -153,7 +153,7 @@ public:
     void readTree(const std::string& treeFileName);
     bool isValidChar(char x);
 
-    void setNodeTimes(Node* p);
+    void setNodeTimes();
     void setBranchingTimes(Node* p);
 
     double getAge();

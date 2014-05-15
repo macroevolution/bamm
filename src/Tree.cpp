@@ -24,8 +24,8 @@ Tree::Tree(Random& random, Settings& settings) : _random(random)
     setPreOrderNodes(root);
     setPostOrderNodes(root);
 
-    setStartTime(0);
-    setNodeTimes(root);
+    setStartTime(0.0);
+    setNodeTimes();
     setAge();
 
     // Check tree integrity
@@ -650,19 +650,16 @@ void Tree::readTree(const std::string& treeFileName)
 }
 
 
-/* sets time of each node*/
-
-void Tree::setNodeTimes(Node* p)
+void Tree::setNodeTimes()
 {
-    if (p == root) {
-        p->setTime(0);
-    } else {
-        double x = p->getBrlen() + p->getAnc()->getTime();
-        p->setTime(x);
+    // Handle the root node (the first element in a pre-order traversal)
+    if (getNumberOfNodes() > 0) {
+        _preOrderNodes[0]->setTime(0.0);
     }
-    if (p->getLfDesc() != NULL && p->getRtDesc() != NULL) {
-        setNodeTimes(p->getLfDesc());
-        setNodeTimes(p->getRtDesc());
+    
+    for (int i = 1; i < (int)_preOrderNodes.size(); ++i) {
+        Node* node = _preOrderNodes[i];
+        node->setTime(node->getBrlen() + node->getAnc()->getTime());
     }
 }
 
@@ -683,9 +680,6 @@ void Tree::setAge()
     double mx = 0;
     for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
             i != _preOrderNodes.end(); ++i) {
-        if ((*i)->getTime() == 0) {
-            setNodeTimes(root);
-        }
         if ((*i)->getTime() > mx) {
             mx = (*i)->getTime();
         }
