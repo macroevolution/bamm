@@ -228,8 +228,9 @@ double TraitModel::computeLogLikelihood()
 
     // iterate over non-root nodes and compute LnL
 
+    const std::vector<Node*>& postOrderNodes = _tree->postOrderNodes();
     for (int i = 0; i < numNodes; i++) {
-        Node* xnode = _tree->getNodeFromDownpassSeq(i);
+        Node* xnode = postOrderNodes[i];
         if ( (xnode != _tree->getRoot()) && (xnode->getCanHoldEvent() == true) ) {
 
 

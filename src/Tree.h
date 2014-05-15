@@ -28,6 +28,9 @@ class Tree
 
 private:
 
+    void setPreOrderNodes(Node* node);
+    void setPostOrderNodes(Node* node);
+
     double calculateTreeLength();
     void setInternalNodeSet();
     void setNodeTipCounts();
@@ -54,13 +57,11 @@ private:
                         const std::vector<std::string>& list2,
                         const std::string& list2Name);
 
-    void addNodes(Node* node);
-
     Random& _random;
 
     Node* root;
     std::vector<Node*> _preOrderNodes;
-    std::vector<Node*> downPassSeq;
+    std::vector<Node*> _postOrderNodes;
 
     // Internal node set:: for choosing random node to update state
     std::set<Node*> internalNodeSet;
@@ -74,8 +75,6 @@ private:
     double _age; // time to root node, from present
 
     void setIsLivingTipStatus();
-    void getDownPassSeq();
-    void passDown(Node* p);
     void setTipStatus();
 
     // This is the total treelength: also used in mapping events to tree
@@ -117,9 +116,8 @@ public:
 
     double getAbsoluteTimeFromMapTime(double x);
 
-    Node* getDownPassNode(int i);
     int   getNumberOfNodes();
-    Node* getNodeFromDownpassSeq(int i);
+    const std::vector<Node*>& postOrderNodes();
 
     // Count number of descendant nodes from a given node
     int getDescNodeCount(Node* p);
@@ -218,8 +216,6 @@ public:
 
     void setCanNodeBeMapped(int ndesc);
 
-    void loadPreviousNodeStates(Tree* ostree);
-
     // Functions for random access of nodes from temporary nodeset array
     void  setTempInternalNodeArray(Node* p);
     void  tempNodeSetPassDown(Node* p);
@@ -249,21 +245,15 @@ inline double Tree::getTreeLength()
 }
 
 
-inline Node* Tree::getDownPassNode(int i)
-{
-    return downPassSeq[i];
-}
-
-
 inline int Tree::getNumberOfNodes()
 {
-    return (int)downPassSeq.size();
+    return (int)_preOrderNodes.size();
 }
 
 
-inline Node* Tree::getNodeFromDownpassSeq(int i)
+inline const std::vector<Node*>& Tree::postOrderNodes()
 {
-    return downPassSeq[i];
+    return _postOrderNodes;
 }
 
 

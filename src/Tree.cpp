@@ -27,6 +27,13 @@ Tree::Tree(Random& random, Settings& settings) : _random(random)
     readTree(treeFileStream);
     _ntaxa = terminalNodes().size();
 
+    setPreOrderNodes(root);
+    setPostOrderNodes(root);
+
+    setStartTime(0);
+    setNodeTimes(root);
+    setAge();
+
     // Check tree integrity
     assertTreeRootBranchLengthIsZero();
     assertTreeIsBifurcating();
@@ -34,16 +41,11 @@ Tree::Tree(Random& random, Settings& settings) : _random(random)
     assertTreeIsUltrametric();
     assertTipsHaveUniqueNames();
 
-    getDownPassSeq();
-
     // Output stuff here
     log() << "Tree contains " << getNumberTips() << " taxa.\n";
 
     _totalMapLength = 0.0;
 
-    // Set node times (with 0 at root):
-    setNodeTimes(root);
-    setAge();
     setBranchingTimes(root);
 
     _treeLength = calculateTreeLength();
@@ -101,6 +103,26 @@ void Tree::setNodeTipCounts()
     for (int i = 0; i < (int)_preOrderNodes.size(); ++i) {
         int count = getDescTipCount(_preOrderNodes[i]);
         _preOrderNodes[i]->setTipDescCount(count);
+    }
+}
+
+
+void Tree::setPreOrderNodes(Node* node)
+{
+    if (node != NULL) {
+        _preOrderNodes.push_back(node);
+        setPreOrderNodes(node->getLfDesc());
+        setPreOrderNodes(node->getRtDesc());
+    }
+}
+
+
+void Tree::setPostOrderNodes(Node* node)
+{
+    if (node != NULL) {
+        setPostOrderNodes(node->getLfDesc());
+        setPostOrderNodes(node->getRtDesc());
+        _postOrderNodes.push_back(node);
     }
 }
 
@@ -239,22 +261,6 @@ void Tree::printNodeMap()
             i != mappableNodes.end(); i++) {
         std::cout << (*i) << "\t" << (*i)->getAnc() << "\t" << (*i)->getMapStart() << "\t"
              << (*i)->getMapEnd() << std::endl;
-    }
-}
-
-
-void Tree::getDownPassSeq()
-{
-    passDown(root);
-}
-
-
-void Tree::passDown(Node* p)
-{
-    if (p != NULL) {
-        passDown(p->getLfDesc());
-        passDown(p->getRtDesc());
-        downPassSeq.push_back(p);
     }
 }
 
@@ -644,21 +650,8 @@ void Tree::readTree(std::istream& treeFileStream)
 
     _treeReader.read(treeFileStream, *this);
 
-    addNodes(root);
-    setStartTime(0);
-    setNodeTimes(root);
-    setAge();
 }
 
-
-void Tree::addNodes(Node* node)
-{
-    if (node != NULL) {
-        _preOrderNodes.push_back(node);
-        addNodes(node->getLfDesc());
-        addNodes(node->getRtDesc());
-    }
-}
 
 /* sets time of each node*/
 
@@ -1223,8 +1216,8 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
     crossValidateSpecies(spnames);
 
     int counter = 0;
-    for (std::vector<Node*>::iterator i = downPassSeq.begin();
-            i != downPassSeq.end(); i++) {
+    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
+            i != _preOrderNodes.end(); i++) {
 
         if ((*i)->getLfDesc() == NULL && (*i)->getRtDesc() == NULL ) {
             for (std::vector<std::string>::size_type k = 0; k < spnames.size(); k++) {
@@ -1425,16 +1418,6 @@ void Tree::printTraitRange()
         }
     }
     std::cout << "Min trait value < " << mn << " >\tMax value < " << mx << " >" << std::endl;
-}
-
-
-void Tree::loadPreviousNodeStates(Tree* ostree)
-{
-    std::cout << "ostree read into loadpreviousstates" << std::endl;
-    for (std::vector<Node*>::size_type i = 0; i < downPassSeq.size(); i++) {
-        double cstate = ostree->getNodeFromDownpassSeq(i)->getBrlen();
-        getNodeFromDownpassSeq(i)->setTraitValue(cstate);
-    }
 }
 
 

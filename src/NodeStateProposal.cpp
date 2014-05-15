@@ -35,8 +35,10 @@ void NodeStateProposal::updateMinMaxTraitPriorSettings()
 {
     int nnodes = _tree->getNumberOfNodes();
     std::vector<double> tvec;
+
+    const std::vector<Node*>& postOrderNodes = _tree->postOrderNodes();
     for (int i = 0; i < nnodes; i++) {
-        Node* xnode = _tree->getNodeFromDownpassSeq(i);
+        Node* xnode = postOrderNodes[i];
         if (xnode->getTraitValue() != 0) {
             tvec.push_back(xnode->getTraitValue());
         }

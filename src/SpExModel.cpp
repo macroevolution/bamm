@@ -265,9 +265,9 @@ double SpExModel::computeLogLikelihoodByInterval()
     double rootEleft = 0.0;
     double rootEright = 0.0;
 
-
+    const std::vector<Node*>& postOrderNodes = _tree->postOrderNodes();
     for (int i = 0; i < numNodes; i++) {
-        Node* xnode = _tree->getNodeFromDownpassSeq(i);
+        Node* xnode = postOrderNodes[i];
         if (xnode->getLfDesc() != NULL && xnode->getRtDesc() != NULL) {
             // NOT tip, but MUST ultimately be root.
 
