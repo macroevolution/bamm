@@ -2,6 +2,7 @@
 #define TREE_H
 
 #include "NewickTreeReader.h"
+#include "Node.h"
 
 #include <string>
 #include <set>
@@ -21,6 +22,13 @@ class Node;
 // The variance of the root-to-tip lengths must be less than
 // this value for the tree to be considered ultrametric
 #define ULTRAMETRIC_TOLERANCE 1e-6
+
+
+// Comparison function used in Tree::setAge()
+inline bool compareNodeTime(Node* i, Node* j)
+{
+    return i->getTime() < j->getTime();
+}
 
 
 class Tree

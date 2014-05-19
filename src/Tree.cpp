@@ -676,15 +676,9 @@ bool Tree::isValidChar(char x)
 
 void Tree::setAge()
 {
-    // age here defined as MAX node time (node times start with 0 at root)
-    double mx = 0;
-    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
-            i != _preOrderNodes.end(); ++i) {
-        if ((*i)->getTime() > mx) {
-            mx = (*i)->getTime();
-        }
-    }
-    _age = mx;
+    Node* nodeWithMaxTime = *std::max_element
+        (_preOrderNodes.begin(), _preOrderNodes.end(), compareNodeTime);
+    _age = nodeWithMaxTime->getTime();
 }
 
 

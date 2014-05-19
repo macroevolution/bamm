@@ -28,4 +28,10 @@ template<typename T> T convert_string(const std::string& str)
 }
 
 
+template<typename T> T sqr(const T& x)
+{
+    return x * x;
+}
+
+
 #endif
