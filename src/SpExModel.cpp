@@ -244,217 +244,140 @@ BranchEvent* SpExModel::newBranchEventFromLastDeletedEvent()
 
 double SpExModel::computeLogLikelihood()
 {
-    return computeLogLikelihoodByInterval();
-}
-
-
-
-double SpExModel::computeLogLikelihoodByInterval()
-{
-
-
-    double LnL = 0.0;
-
-
     if (_sampleFromPriorOnly)
         return 0.0;
 
-    int numNodes = _tree->getNumberOfNodes();
+    double logLikelihood = 0.0;
 
-    // LEft and right extinction probabilities for root node
-    double rootEleft = 0.0;
-    double rootEright = 0.0;
+    int numNodes = _tree->getNumberOfNodes();
 
     const std::vector<Node*>& postOrderNodes = _tree->postOrderNodes();
     for (int i = 0; i < numNodes; i++) {
-        Node* xnode = postOrderNodes[i];
-        if (xnode->getLfDesc() != NULL && xnode->getRtDesc() != NULL) {
-            // NOT tip, but MUST ultimately be root.
+        Node* node = postOrderNodes[i];
+        if (node->isInternal()) {
+            logLikelihood += computeSpExProbBranch(node->getLfDesc());
+            logLikelihood += computeSpExProbBranch(node->getRtDesc());
 
-            // Do left descendant:
-            Node* ldesc = xnode->getLfDesc();
-
-            double lDinit = ldesc->getDinit();
-            double lEinit = ldesc->getEinit();
-            double starttime = ldesc->getBrlen();
-            double endtime = ldesc->getBrlen();
-
-            double LtotalT = 0.0; // what is this doing?
-
-            double curLam = 0.0;
-
-            while (starttime > 0) {
-                //std::cout << starttime << "\t" << endtime << std::endl;
-                starttime -= _segLength;
-                if (starttime < 0)
-                    starttime = 0.0;
-                double deltaT = endtime - starttime;
-
-                LtotalT += deltaT;
-
-                curLam = ldesc->computeSpeciationRateIntervalRelativeTime(starttime, endtime);
-
-                double curMu = ldesc->computeExtinctionRateIntervalRelativeTime(starttime,
-                               endtime);
-
-                double numL = 0.0;
-                double denomL = 0.0;
-
-
-                numL = (exp( deltaT * (curMu - curLam)) * lDinit * ((curLam - curMu) *
-                        (curLam - curMu) ) );
-                denomL = ( curLam - (lEinit * curLam) + (exp(deltaT * (curMu - curLam)) *
-                           (lEinit * curLam - curMu)));
-
-                lDinit = (numL / (denomL * denomL));
-                LnL += log(lDinit);
-                lDinit = 1.0;
-
-
-                double Enum = (1 - lEinit) * (curLam - curMu);
-                double Edenom =  (1 - lEinit) * curLam - (exp((curMu - curLam) * (deltaT))) *
-                                 (curMu - curLam * lEinit);
-
-                lEinit = 1.0 - (Enum / Edenom);
-
-
-                endtime = starttime; // reset starttime to old endtime
+            // Does not include root node, so it is conditioned
+            // on basal speciation event occurring:
+            if (node != _tree->getRoot()) {
+                logLikelihood  += log(node->getNodeLambda());
+                node->setDinit(1.0);
             }
+        }
+    }
 
-            // this is to get node speciation rate using approximations
-            //   to correspond to fact that branch likelihoods themselves are computed
-            //      using approximations.
-
-            curLam = 0.0;
-
-            // Setting extinction prob at root node IF xnode is the root
-            if (xnode == _tree->getRoot())
-                rootEleft = lEinit;
-
-            // Compute speciation for right descendant
-            // Do right descendant:
-            Node* rdesc = xnode->getRtDesc();
-
-            double rDinit = rdesc->getDinit();
-            double rEinit = rdesc->getEinit();
-
-            starttime = rdesc->getBrlen();
-            endtime = rdesc->getBrlen();
-
-            double RtotalT = 0.0;
-
-            while (starttime > 0) {
-
-                starttime -= _segLength;
-                if (starttime < 0)
-                    starttime = 0.0;
-                double deltaT = endtime - starttime;
-
-                RtotalT += deltaT;
-
-                curLam = rdesc->computeSpeciationRateIntervalRelativeTime(starttime, endtime);
-
-                double curMu = rdesc->computeExtinctionRateIntervalRelativeTime(starttime,
-                               endtime);
-
-                double numL = 0.0;
-                double denomL = 0.0;
-
-                numL = (exp( deltaT * (curMu - curLam)) * rDinit * ((curLam - curMu) *
-                        (curLam - curMu) ) );
-                denomL = ( curLam - (rEinit * curLam) + (exp(deltaT * (curMu - curLam)) *
-                           (rEinit * curLam - curMu)));
-
-                rDinit = (numL / (denomL * denomL));
-                LnL += log(rDinit);
-                rDinit = 1.0;
-
-                double Enum = 0.0;
-                double Edenom = 0.0;
-
-                Enum = (1 - rEinit) * (curLam - curMu);
-                Edenom =  (1 - rEinit) * curLam - (exp((curMu - curLam) * (deltaT))) *
-                          (curMu - curLam * rEinit);
-
-
-                rEinit = 1.0 - (Enum / Edenom);
-
-
-
-                endtime = starttime; // reset starttime to old endtime
-
-
-            }
-
-            // ########################## What to use as Einit for start of NEXT downstream branch?
-            // At this point, lEinit is actually the lEinit for the parent node:
-            //  Here, we will  (as of 9.1.2012) arbitrarily take this to be the LEFT extinction value:
-            xnode->setEinit(lEinit);
-
-            // ######## But alternatively, we could do:
-            // Like the above, but now we randomly resolve this. We choose at RANDOM whether to use the right or left Evalue.
-            // as we don't know which descendant represents the "parent" state.
-
-            /*          ***************
-            if _rng->uniformRv() <= 0.5){
-                xnode->setEinit(lEinit);
-            }else{
-                xnode->setEinit(rEinit);
-            }
-                        ****************        */
-            
-
-            // Clearly a problem if extinction values approaching/equaling 1.0
-            // If so, set to -Inf, leading to automatic rejection of state
-
-            if (lEinit > _extinctionProbMax || rEinit > _extinctionProbMax) {
-                return -INFINITY;
-            }
-
-
-            if (xnode == _tree->getRoot())
-                rootEright = rEinit;
-            // rDinit at this point should be FINAL value:
-            // save as new variable, to keep clear:
-
-            /* SHould be abele to ignore all of these calculations for the root node:
-             Must also compute speciation rate for focal node. THis is a critical step.
-
-             Since we are using approximations for the calculations on branches, we should set node speciation
-             rate to be equivalent. Currently, I am not doing this - just computing exact rates
-             at nodes.
-            */
-
-            if (xnode != _tree->getRoot()) {
-
-                // Does not include root node, so it is conditioned on basal speciation event occurring:
-
-                LnL  += log(xnode->getNodeLambda());
-
-                xnode->setDinit(1.0);
-
-
-            }
-
-
-
-        } // IF not tip
-
-    } // FOR each node in set
-
-
-
-    // 09.15.2012
-    // To CONDITION, uncomment the line below:
-    // Or, if UNCOMMENTED, comment the line to NOT condition on survival
-    LnL -= (log(1 - rootEleft) + log(1 -
-                                     rootEright)); // replacement to above for condiioning.
-
-
-    return LnL;
+    return logLikelihood;
 }
 
 
+double SpExModel::computeSpExProbBranch(Node* node)
+{
+    double logLikelihood = 0.0;
+
+    double D0 = node->getDinit();    // Initial speciation probability
+    double E0 = node->getEinit();    // Initial extinction probability
+
+    double startTime = node->getBrlen();
+    double endTime = node->getBrlen();
+
+    while (startTime > 0) {
+        startTime -= _segLength;
+        if (startTime < 0) {
+            startTime = 0.0;
+        }
+
+        double deltaT = endTime - startTime;
+
+        double curLam = node->computeSpeciationRateIntervalRelativeTime
+            (startTime, endTime);
+
+        double curMu = node->computeExtinctionRateIntervalRelativeTime
+            (startTime, endTime);
+
+        double spProb = 0.0;
+        double exProb = 0.0;
+
+        // Compute speciation and extinction probabilities and store them
+        // in spProb and exProb (through reference passing)
+        computeSpExProb(spProb, exProb, curLam, curMu, D0, E0, deltaT);
+
+        logLikelihood += std::log(spProb);
+
+        D0 = 1.0;
+        E0 = exProb;
+
+        endTime = startTime;
+    }
+
+    // What to use as E0 for the start of next downstream branch?
+    // At this point, E0 is actually the E0 for the parent node.
+    // Here, we will arbitrarily take this to be the left extinction value
+    Node* parent = node->getAnc();
+    if (node == parent->getLfDesc()) {
+        parent->setEinit(E0);
+    }
+
+    // Clearly a problem if extinction values approaching/equaling 1.0
+    // If so, set to -Inf, leading to automatic rejection of state
+    if (E0 > _extinctionProbMax) {
+        return -INFINITY;
+    }
+
+    // To CONDITION on survival, uncomment the line below;
+    // or to NOT condition on survival, comment the line below
+    if (parent == _tree->getRoot()) {
+        logLikelihood -= std::log(1.0 - E0);
+    }
+
+    return logLikelihood;
+}
+
+
+// If we let
+//
+//     M = mu - lam
+//     L = lam * (1.0 - E0)
+//     E = e^(M * deltaT)
+//     m = E * M
+//     d = L * (1 - E) - m
+//
+// then the speciation equation from PLoS paper
+//
+//                    e^((mu - lam) * deltaT) * D0 * (lam - u)^2
+//     D(t) = --------------------------------------------------------------
+//            [lam - lam * E0 + e^((mu - lam) * deltaT) * (E0 * lam - mu)]^2
+//
+// becomes
+//
+//            D0 * m
+//     D(t) = ------
+//              d^2
+//
+// and the extinction equation
+//
+//                               (1 - E0) * (lam - mu)
+//     E(t) = 1 - ----------------------------------------------------------
+//                (1 - E0) * lam - e^(-(lam - mu) * deltaT) * (mu - lam * E0)
+//
+// becomes
+//
+//                (1 - E0) * M
+//     E(t) = 1 + ------------
+//                      d
+
+void SpExModel::computeSpExProb(double& spProb, double& exProb,
+    double lambda, double mu, double D0, double E0, double deltaT)
+{
+    double M = mu - lambda;
+    double L = lambda * (1.0 - E0);
+    double E = std::exp(M * deltaT);
+    double m = E * M;
+    double d = L * (1.0 - E) - m;
+
+    spProb = (D0 * m * M) / sqr(d);
+    exProb = 1.0 + (1.0 - E0) * M / d;
+}
 
 
 double SpExModel::computeLogPrior()

@@ -36,8 +36,6 @@ public:
 
 private:
 
-    double computeLogLikelihoodByInterval();
-
     virtual void initializeSpecificUpdateWeights();
 
     virtual Proposal* getSpecificProposal(int parameter);
@@ -57,6 +55,10 @@ private:
 
     virtual void setMeanBranchParameters();
     virtual void setDeletedEventParameters(BranchEvent* be);
+
+    double computeSpExProbBranch(Node* node);
+    void computeSpExProb(double& spProb, double& exProb,
+        double lambda, double mu, double D0, double E0, double deltaT);
 
     virtual double calculateLogQRatioJump();
 
