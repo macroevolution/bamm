@@ -154,6 +154,38 @@ MCMC Simulation
 ``localGlobalMoveRatio``
     Ratio of local to global moves of events.
 
+Metropolis Coupled MCMC
+.......................
+
+The Metropolis coupled MCMC implementation in BAMM is based on a
+"global exchange scheme" for synchronization as described in
+Altekar et al (2004) Parallel Metropolis coupled Markov chain
+Monte Carlo for Bayesian phylogenetic inference.
+
+``numberOfChains``
+    Number of Markov chains to run. The default value is ``1``.
+
+``deltaT``
+    Temperature increment parameter. This value should be > 0.
+    The temperature for the :math:`i`-th chain is calculated as
+    :math:`1 / [1 + \Delta T \times (i - 1)]`.
+    The default value is ``0.1``.
+
+``swapPeriod``
+    Number of generations in which to propose a chain swap.
+    The default value is ``1000``.
+
+``chainSwapFileName``
+    Name of the file in which to output data about each chain swap proposal.
+    The format of each line is
+    ``[generation],[rank_1],[rank_2],[swap_accepted]``
+    where ``[generation]`` is the generation when the swap proposal was made,
+    ``[rank_1]`` and ``[rank_2]`` are the chains that were chosen
+    (chain 1 is the coldest, chain 2 is the second coldest, and so on),
+    and ``[swap_accepted]`` is whether the swap was made.
+    The default value is ``chain_swap.txt``.
+
+
 Parameter Update Rates
 ......................
 
@@ -207,12 +239,17 @@ Priors
 ``lambdaShiftPrior``
     Prior on the the lambda shift parameter (standard deviation of the normal
     distribution) for the speciation rate. The mean of the distribution
-    is fixed at zero, which is equal to a constant rate diversification process. 
+    is fixed at zero, which is equal to a constant rate diversification process.
     Applies to non-root events.
 
 ``lambdaShiftRootPrior`` 
 	Prior on the lambda shift parameter for the root process.
-	
+
+``lambdaIsTimeVariablePrior``
+    Prior on the time mode for the speciation rate.
+    This prior is the probability that the speciation rate for a new event
+    is time-variable (i.e., time-dependent) vs. constant through time.
+
 ``muInitPrior``
     Prior on the extinction rate (rate paramater of the exponential
     distribution). Applies to non-root events.
@@ -260,6 +297,11 @@ Starting Parameters
     If ``0``, speciation rates will not change through time.
     A negative value implies decreasing rates through time.
 
+``lambdaIsTimeVariable``
+    Initial time mode of the speciation rate for the root event.
+    If ``1``, the speciation rate is time-variable (i.e., time-dependent).
+    If ``0``, the speciation rate is constant through time.
+
 ``muInit0``
     Initial extinction rate at the root.
 
@@ -273,6 +315,11 @@ Parameter Update Rates
 ``updateRateLambdaShift``
     Relative frequency of MCMC moves that change the exponential shift parameter
     of a speciation rate associated with an event.
+
+``updateRateLambdaTimeMode``
+    Relative frequency of MCMC moves that change whether the speciation rate
+    for an event is time-variable (i.e., time-dependent)
+    or constant through time.
 
 ``updateRateMu0``
     Relative frequency of MCMC moves that change the extinction rate for a given
