@@ -99,7 +99,7 @@ traitPriorMax = 0
 ###################################
 # MCMC SIMULATION SETTINGS & OUTPUT OPTIONS
 
-numberGenerations = 100000
+numberOfGenerations = 100000
 # Generations to perform MCMC simulation.
 
 mcmcWriteFreq = 5000

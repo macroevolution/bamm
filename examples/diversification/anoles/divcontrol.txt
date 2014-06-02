@@ -103,7 +103,7 @@ muInitRootPrior = 5.0
 ###################################
 # MCMC SIMULATION SETTINGS & OUTPUT OPTIONS
 
-numberGenerations = 10000
+numberOfGenerations = 10000
 # Generations to perform MCMC simulation.
 
 mcmcWriteFreq = 1000
@@ -216,3 +216,6 @@ segLength = 0.02
 # (e.g., you have a branch of length < 0.5 in the preceding example)
 # BAMM will not break the branch into segments but use the mean 
 # rate across the entire branch. See Documentation for more information on this.
+
+lambdaIsTimeVariablePrior = 0.5
+updateRateLambdaTimeMode = 1
