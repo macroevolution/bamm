@@ -1,12 +1,15 @@
 #ifndef TRAIT_MODEL_H
 #define TRAIT_MODEL_H
 
+
 #include "Model.h"
 #include "BetaInitProposal.h"
 #include "BetaShiftProposal.h"
 #include "NodeStateProposal.h"
 
 #include <iosfwd>
+#include <vector>
+#include <string>
 
 class Node;
 class Random;
@@ -20,7 +23,7 @@ class TraitModel : public Model
 
 public:
 
-    TraitModel(Random& rng, Settings* settings);
+    TraitModel(Random& rng, Settings& settings);
 
     virtual double computeLogLikelihood();
     virtual double computeTriadLikelihoodTraits(Node* x);
@@ -29,13 +32,17 @@ public:
 
 private:
 
-    virtual void readModelSpecificParameters(std::ifstream& inputFile);
-    virtual void setRootEventWithReadParameters();
-
     void initializeSpecificUpdateWeights();
     virtual Proposal* getSpecificProposal(int parameter);
 
-    virtual BranchEvent* newBranchEventWithReadParameters(Node* x, double time);
+    virtual void setRootEventWithReadParameters
+        (const std::vector<std::string>& parameters);
+    virtual BranchEvent* newBranchEventWithReadParameters
+        (Node* x, double time, const std::vector<std::string>& parameters);
+
+    double betaInitParameter(const std::vector<std::string>& parameters);
+    double betaShiftParameter(const std::vector<std::string>& parameters);
+
     virtual BranchEvent* newBranchEventWithRandomParameters(double x);
     virtual BranchEvent* newBranchEventFromLastDeletedEvent();
 

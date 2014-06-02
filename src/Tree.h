@@ -2,10 +2,12 @@
 #define TREE_H
 
 #include "NewickTreeReader.h"
+#include "Node.h"
 
 #include <string>
 #include <set>
 #include <vector>
+#include <iosfwd>
 
 class Random;
 class Settings;
@@ -22,10 +24,24 @@ class Node;
 #define ULTRAMETRIC_TOLERANCE 1e-6
 
 
+// Comparison function used in Tree::setAge()
+inline bool compareNodeTime(Node* i, Node* j)
+{
+    return i->getTime() < j->getTime();
+}
+
+
 class Tree
 {
 
 private:
+
+    void setPreOrderNodes(Node* node);
+    void setPostOrderNodes(Node* node);
+
+    double calculateTreeLength();
+    void setInternalNodeSet();
+    void setNodeTipCounts();
 
     std::vector<double> terminalPathLengthsToRoot();
     void storeTerminalPathLengthsToRootRecurse
@@ -49,14 +65,11 @@ private:
                         const std::vector<std::string>& list2,
                         const std::string& list2Name);
 
-    void removeWhiteSpace(std::string& str);
-    void addNodes(Node* node);
-
     Random& _random;
 
     Node* root;
-    std::set<Node*> nodes;
-    std::vector<Node*> downPassSeq;
+    std::vector<Node*> _preOrderNodes;
+    std::vector<Node*> _postOrderNodes;
 
     // Internal node set:: for choosing random node to update state
     std::set<Node*> internalNodeSet;
@@ -64,18 +77,15 @@ private:
     double _startTime;
     double _tmax;
     bool _isExtant;
-    int _ntaxa;
     void recursivelyAddNodesToSet(Node* p);
     void rebuildTreeNodeSet();
     double _age; // time to root node, from present
 
     void setIsLivingTipStatus();
-    void getDownPassSeq();
-    void passDown(Node* p);
     void setTipStatus();
 
     // This is the total treelength: also used in mapping events to tree
-    double treelength;
+    double _treeLength;
 
     // This is a pointer to an object that stores
     // all events that happened.
@@ -113,9 +123,8 @@ public:
 
     double getAbsoluteTimeFromMapTime(double x);
 
-    Node* getDownPassNode(int i);
     int   getNumberOfNodes();
-    Node* getNodeFromDownpassSeq(int i);
+    const std::vector<Node*>& postOrderNodes();
 
     // Count number of descendant nodes from a given node
     int getDescNodeCount(Node* p);
@@ -149,11 +158,10 @@ public:
     void writeNodeData();
     void setBranchLengths();
     void deleteExtinctNodes();
-    void buildTreeFromNewickString(std::string ts);
-    void setTaxonCountFromNewickString(std::string ts);
+    void readTree(const std::string& treeFileName);
     bool isValidChar(char x);
 
-    void setNodeTimes(Node* p);
+    void setNodeTimes();
     void setBranchingTimes(Node* p);
 
     double getAge();
@@ -169,7 +177,6 @@ public:
     void getPhenotypes(std::string fname);
     void getPhenotypesMissingLatent(std::string fname);
 
-    void  printTraitValues();
     void  initializeTraitValues();
     void  recursiveSetTraitValues(Node* x, double mn, double mx);
     Node* chooseInternalNodeAtRandom();
@@ -216,8 +223,6 @@ public:
 
     void setCanNodeBeMapped(int ndesc);
 
-    void loadPreviousNodeStates(Tree* ostree);
-
     // Functions for random access of nodes from temporary nodeset array
     void  setTempInternalNodeArray(Node* p);
     void  tempNodeSetPassDown(Node* p);
@@ -228,13 +233,11 @@ public:
 
     void computeMeanTraitRatesByNode(Node* x);
 
-    Node* getNodeMRCA(std::string A, std::string B);
+    Node* getNodeMRCA(const std::string& A, const std::string& B);
     void  passUpFillTempNodeArray(Node* x);
-    Node* getNodeByName(std::string A);
+    Node* getNodeByName(const std::string& A);
 
     void printNodeTraitRates();
-
-    void printCanHoldEventByNode();
 
     void echoMeanBranchTraitRates();
 
@@ -245,25 +248,19 @@ public:
 
 inline double Tree::getTreeLength()
 {
-    return treelength;
-}
-
-
-inline Node* Tree::getDownPassNode(int i)
-{
-    return downPassSeq[i];
+    return _treeLength;
 }
 
 
 inline int Tree::getNumberOfNodes()
 {
-    return (int)downPassSeq.size();
+    return (int)_preOrderNodes.size();
 }
 
 
-inline Node* Tree::getNodeFromDownpassSeq(int i)
+inline const std::vector<Node*>& Tree::postOrderNodes()
 {
-    return downPassSeq[i];
+    return _postOrderNodes;
 }
 
 

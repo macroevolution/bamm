@@ -1,6 +1,7 @@
 #ifndef SP_EX_MODEL_H
 #define SP_EX_MODEL_H
 
+
 #include "Model.h"
 #include "LambdaInitProposal.h"
 #include "LambdaShiftProposal.h"
@@ -9,6 +10,8 @@
 #include "LambdaTimeModeProposal.h"
 
 #include <iosfwd>
+#include <vector>
+#include <string>
 
 class Node;
 class Random;
@@ -22,7 +25,7 @@ class SpExModel : public Model
 
 public:
 
-    SpExModel(Random& rng, Settings* settings);
+    SpExModel(Random& rng, Settings& settings);
 
     virtual double computeLogLikelihood();
     virtual double computeLogPrior();
@@ -34,21 +37,29 @@ public:
 
 private:
 
-    double computeLogLikelihoodByInterval();
-
     virtual void initializeSpecificUpdateWeights();
 
     virtual Proposal* getSpecificProposal(int parameter);
     
-    virtual void readModelSpecificParameters(std::ifstream& inputFile);
-    virtual void setRootEventWithReadParameters();
+    virtual void setRootEventWithReadParameters
+        (const std::vector<std::string>& parameters);
+    virtual BranchEvent* newBranchEventWithReadParameters
+        (Node* x, double time, const std::vector<std::string>& parameters);
 
-    virtual BranchEvent* newBranchEventWithReadParameters(Node* x, double time);
+    double lambdaInitParameter(const std::vector<std::string>& parameters);
+    double lambdaShiftParameter(const std::vector<std::string>& parameters);
+    double muInitParameter(const std::vector<std::string>& parameters);
+    double muShiftParameter(const std::vector<std::string>& parameters);
+
     virtual BranchEvent* newBranchEventWithRandomParameters(double x);
     virtual BranchEvent* newBranchEventFromLastDeletedEvent();
 
     virtual void setMeanBranchParameters();
     virtual void setDeletedEventParameters(BranchEvent* be);
+
+    double computeSpExProbBranch(Node* node);
+    void computeSpExProb(double& spProb, double& exProb,
+        double lambda, double mu, double D0, double E0, double deltaT);
 
     virtual double calculateLogQRatioJump();
 

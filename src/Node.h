@@ -117,6 +117,8 @@ public:
     void setIsTip(bool x);
     bool getIsTip();
 
+    bool isInternal();
+
     void setIsConstant(bool x);
     bool getIsConstant();
 

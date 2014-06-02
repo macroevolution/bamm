@@ -65,6 +65,7 @@ SET(BAMM_SRC
     src/SpExModel.cpp
     src/Stat.cpp
     src/StdOutDataWriter.cpp
+    src/Tools.cpp
     src/TraitBranchEvent.cpp
     src/TraitEventDataWriter.cpp
     src/TraitModel.cpp

@@ -666,3 +666,9 @@ double Node::computeExtinctionRateIntervalRelativeTime(double tstart,
 
     return rate;
 }
+
+
+bool Node::isInternal()
+{
+    return (getLfDesc() != NULL) && (getRtDesc() != NULL);
+}

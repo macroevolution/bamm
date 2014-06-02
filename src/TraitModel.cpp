@@ -29,27 +29,28 @@
 #include "Log.h"
 #include "Prior.h"
 #include "Stat.h"
+#include "Tools.h"
 
 
-TraitModel::TraitModel(Random& random, Settings* settings) :
+TraitModel::TraitModel(Random& random, Settings& settings) :
     Model(random, settings),
-    _betaInitProposal(random, *settings, *this, _prior),
-    _betaShiftProposal(random, *settings, *this, _prior),
-    _nodeStateProposal(random, *settings, *this)
+    _betaInitProposal(random, settings, *this, _prior),
+    _betaShiftProposal(random, settings, *this, _prior),
+    _nodeStateProposal(random, settings, *this)
 {
 #ifdef NEGATIVE_SHIFT_PARAM
     // Constrain beta shift to be zero or less than zero.
-    if (_settings->getBetaShiftInit() > 0) {
+    if (_settings.getBetaShiftInit() > 0) {
         log(Error) << "Initial value of beta shift (betaShiftInit) cannot be\n"
             << "positive. This parameter is constrained to negative values\n";
         std::exit(1);
     }
 #endif
     
-    _sampleFromPriorOnly = _settings->get<bool>("sampleFromPriorOnly");
+    _sampleFromPriorOnly = _settings.get<bool>("sampleFromPriorOnly");
 
-    BranchEvent* x = new TraitBranchEvent(_settings->get<double>("betaInit"),
-        _settings->get<double>("betaShiftInit"),
+    BranchEvent* x = new TraitBranchEvent(_settings.get<double>("betaInit"),
+        _settings.get<double>("betaShiftInit"),
         _tree->getRoot(), _tree, _random, 0);
     _rootEvent = x;
     _lastEventModified = x;
@@ -58,7 +59,7 @@ TraitModel::TraitModel(Random& random, Settings* settings) :
         static_cast<TraitBranchEvent*>(_rootEvent);
 
     log() << "\nRoot beta: " << traitRootEvent->getBetaInit() << "\t"
-          << _settings->get<double>("betaInit") << "\t"
+          << _settings.get<double>("betaInit") << "\t"
           << "Shift: " << traitRootEvent->getBetaShift() << "\n";
 
     // Set NodeEvent of root node equal to the _rootEvent:
@@ -69,10 +70,8 @@ TraitModel::TraitModel(Random& random, Settings* settings) :
 
     _tree->setMeanBranchTraitRates();
 
-    if (_settings->get<bool>("loadEventData")) {
-        log() << "\nLoading model data from file: "
-              << _settings->get("eventDataInfile") << "\n";
-        initializeModelFromEventDataFile();
+    if (_settings.get<bool>("loadEventData")) {
+        initializeModelFromEventDataFile(_settings.get("eventDataInfile"));
     }
 
     setCurrentLogLikelihood(computeLogLikelihood());
@@ -95,9 +94,9 @@ TraitModel::TraitModel(Random& random, Settings* settings) :
 
 void TraitModel::initializeSpecificUpdateWeights()
 {
-    _updateWeights.push_back(_settings->get<double>("updateRateBeta0"));
-    _updateWeights.push_back(_settings->get<double>("updateRateBetaShift"));
-    _updateWeights.push_back(_settings->get<double>("updateRateNodeState"));
+    _updateWeights.push_back(_settings.get<double>("updateRateBeta0"));
+    _updateWeights.push_back(_settings.get<double>("updateRateBetaShift"));
+    _updateWeights.push_back(_settings.get<double>("updateRateNodeState"));
 }
 
 
@@ -117,26 +116,36 @@ Proposal* TraitModel::getSpecificProposal(int parameter)
 }
 
 
-void TraitModel::readModelSpecificParameters(std::ifstream &inputFile)
-{
-    inputFile >> _readBetaInit;
-    inputFile >> _readBetaShift;
-}
-
-
-void TraitModel::setRootEventWithReadParameters()
+void TraitModel::setRootEventWithReadParameters
+    (const std::vector<std::string>& parameters)
 {
     TraitBranchEvent* rootEvent = static_cast<TraitBranchEvent*>(_rootEvent);
 
-    rootEvent->setBetaInit(_readBetaInit);
-    rootEvent->setBetaShift(_readBetaShift);
+    rootEvent->setBetaInit(betaInitParameter(parameters));
+    rootEvent->setBetaShift(betaShiftParameter(parameters));
 }
 
 
-BranchEvent* TraitModel::newBranchEventWithReadParameters(Node* x, double time)
+BranchEvent* TraitModel::newBranchEventWithReadParameters
+    (Node* x, double time, const std::vector<std::string>& parameters)
 {
-    return new TraitBranchEvent(_readBetaInit, _readBetaShift,
-        x, _tree, _random, time);
+    double betaInit = betaInitParameter(parameters);
+    double betaShift = betaShiftParameter(parameters);
+
+    return new TraitBranchEvent(betaInit, betaShift, x, _tree, _random, time);
+}
+
+
+double TraitModel::betaInitParameter(const std::vector<std::string>& parameters)
+{
+    return convert_string<double>(parameters[0]);
+}
+
+
+double TraitModel::betaShiftParameter
+    (const std::vector<std::string>& parameters)
+{
+    return convert_string<double>(parameters[1]);
 }
 
 
@@ -219,8 +228,9 @@ double TraitModel::computeLogLikelihood()
 
     // iterate over non-root nodes and compute LnL
 
+    const std::vector<Node*>& postOrderNodes = _tree->postOrderNodes();
     for (int i = 0; i < numNodes; i++) {
-        Node* xnode = _tree->getNodeFromDownpassSeq(i);
+        Node* xnode = postOrderNodes[i];
         if ( (xnode != _tree->getRoot()) && (xnode->getCanHoldEvent() == true) ) {
 
 

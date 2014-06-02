@@ -28,7 +28,7 @@ public:
 inline Model* SpExModelFactory::createModel
     (Random& random, Settings& settings) const
 {
-    return new SpExModel(random, &settings);
+    return new SpExModel(random, settings);
 }
 
 
