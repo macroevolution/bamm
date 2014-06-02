@@ -13,6 +13,7 @@
 #include <fstream>
 #include <iosfwd>
 #include <vector>
+#include <cmath>
 
 //Forward declarations
 class Node;
@@ -46,6 +47,8 @@ public:
     void writeHeaderToOutputFile();
     
 private:
+
+    int round(double x);
 
     Random& _random;
     Settings* sttings;
@@ -86,6 +89,13 @@ private:
     
     
 };
+
+
+inline int FastSimulatePrior::round(double x)
+{
+    return std::ceil(x - 0.5);
+}
+
 
 inline void FastSimulatePrior::setEventRate(double x)
 {

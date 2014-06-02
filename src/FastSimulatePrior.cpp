@@ -14,7 +14,6 @@
 #include <iomanip>
 #include <cstdlib>
 #include <vector>
-#include <cmath>
 
 #include "Random.h"
 #include "Settings.h"
@@ -121,10 +120,12 @@ void FastSimulatePrior::fastSimulatePriorOldWay()
     
     
     
-    int fints = (int)std::round((double)sttings->get<double>("fastSimulatePrior_Generations") / (double)32);
+    int fints =
+        round(sttings->get<double>("fastSimulatePrior_Generations") / 32.0);
 
     double burnin = sttings->get<double>("fastSimulatePrior_BurnIn");
-    int samplestart = (int)std::round(burnin * sttings->get<double>("fastSimulatePrior_Generations"));
+    int samplestart =
+        round(burnin * sttings->get<double>("fastSimulatePrior_Generations"));
     
     // Burnin phase:
     for (int i = 0; i < samplestart; i++){
@@ -218,11 +219,11 @@ void FastSimulatePrior::changeNumberOfEventsMH(int min, int max)
     if (gain) {
         
         double qratio = 1.0;
-        if (K == min & max != (K + 1)) {
+        if (K == min && max != (K + 1)) {
             // event count at minimum but upper bound is greater.
             // can only propose gains.
             qratio = 0.5;
-        } else if (K == (max - 1) & K != min){
+        } else if (K == (max - 1) && K != min){
             qratio = 2.0;
         }
         
@@ -260,9 +261,9 @@ void FastSimulatePrior::changeNumberOfEventsMH(int min, int max)
     } else {
         
         double qratio = 1.0; // if loss, can only be qratio of 1.0
-        if (K  == (min + 1) & K != max ){
+        if (K  == (min + 1) && K != max ){
             qratio = 2.0;
-        }else if (K == max & (K - 1) != min) {
+        }else if (K == max && (K - 1) != min) {
             qratio = 0.5;
         }
 
