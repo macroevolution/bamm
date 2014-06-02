@@ -12,11 +12,13 @@
 #include <string>
 #include <fstream>
 #include <iosfwd>
+#include <vector>
 
 //Forward declarations
 class Node;
 class Random;
 class Settings;
+class EventCountLog;
 
 class FastSimulatePrior
 {
@@ -26,13 +28,19 @@ public:
     ~FastSimulatePrior();
     
     void updateState();
+    void updateState(int min, int max);
     void changeNumberOfEventsMH();
+    void changeNumberOfEventsMH(int min, int max);
+    
     void updateEventRateMH();
     int getNumberOfEvents();
     double getEventRate();
     bool acceptMetropolisHastings(const double lnR);
     
 
+    void fastSimulatePriorOldWay();
+    void fastSimulatePriorExperimental();
+    
 // Output settings:
 //    void writeStateToFile();
     void writeHeaderToOutputFile();
@@ -60,7 +68,23 @@ private:
     void writeStateToStream(std::ostream& outStream);
     void exitWithErrorOutputFileExists();
 
+    
+    
+    /**** New params May 23 2014 ****/
+    
+    // Track event proposals: additions and subtractions.
+    std::vector<EventCountLog*> _TrackingVector;
+    
+    void writeTransitionProbsToFile();
+    void writePriorProbsToFile_Experimental();
+    void writePriorProbsToFile_OldWay();
 
+    int _maxEvents;
+    int _intervalGens;
+    
+    // End new params
+    
+    
 };
 
 inline void FastSimulatePrior::setEventRate(double x)
