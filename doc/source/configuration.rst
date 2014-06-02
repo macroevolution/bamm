@@ -301,11 +301,6 @@ Starting Parameters
     If ``0``, speciation rates will not change through time.
     A negative value implies decreasing rates through time.
 
-``lambdaIsTimeVariable``
-    Initial time mode of the speciation rate for the root event.
-    If ``1``, the speciation rate is time-variable (i.e., time-dependent).
-    If ``0``, the speciation rate is constant through time.
-
 ``muInit0``
     Initial extinction rate at the root.
 

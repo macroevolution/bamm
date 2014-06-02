@@ -53,7 +53,7 @@ SpExModel::SpExModel(Random& random, Settings* sp) : Model(random, sp),
     _lambdaShift0 = _settings->get<double>("lambdaShift0");
     _muInit0 = _settings->get<double>("muInit0");
     _muShift0 = _settings->get<double>("muShift0");
-    _initialLambdaIsTimeVariable = _settings->get<bool>("lambdaIsTimeVariable");
+    _initialLambdaIsTimeVariable = _lambdaShift0 != 0.0;
 
     _sampleFromPriorOnly = _settings->get<bool>("sampleFromPriorOnly");
 
@@ -171,10 +171,14 @@ void SpExModel::setMeanBranchParameters()
 BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
 {
     double newLam = _prior.generateLambdaInitFromPrior();
-    double newLambdaShift = _prior.generateLambdaShiftFromPrior();
     double newMu = _prior.generateMuInitFromPrior();
     double newMuShift = _prior.generateMuShiftFromPrior();
     bool newIsTimeVariable = _prior.generateIsTimeVariableFromPrior();
+
+    double newLambdaShift = 0.0;
+    if (newIsTimeVariable) {
+        newLambdaShift = _prior.generateLambdaShiftFromPrior();
+    }
  
     // TODO: This needs to be refactored somewhere else
     // Computes the jump density for the addition of new parameters.

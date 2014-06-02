@@ -185,7 +185,6 @@ void Settings::initializeSpeciationExtinctionSettings()
     addParameter("lambdaShift0", "0.0");
     addParameter("muInit0", "0.0");
     addParameter("muShift0", "0.0", NotRequired);
-    addParameter("lambdaIsTimeVariable", "1");
 
     // Priors
     addParameter("lambdaInitPrior", "0.0");
