@@ -34,6 +34,7 @@ SET(BAMM_SRC
     src/BranchHistory.cpp
     src/ChainSwapDataWriter.cpp
     src/CommandLineProcessor.cpp
+    src/EventCountLog.cpp
     src/EventDataWriter.cpp
     src/EventNumberProposal.cpp
     src/EventParameterProposal.cpp

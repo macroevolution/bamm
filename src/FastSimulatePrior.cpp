@@ -14,6 +14,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <vector>
+#include <cmath>
 
 #include "Random.h"
 #include "Settings.h"
@@ -120,7 +121,7 @@ void FastSimulatePrior::fastSimulatePriorOldWay()
     
     
     
-    int fints = (int)round((double)sttings->get<double>("fastSimulatePrior_Generations") / (double)32);
+    int fints = (int)std::round((double)sttings->get<double>("fastSimulatePrior_Generations") / (double)32);
 
     double burnin = sttings->get<double>("fastSimulatePrior_BurnIn");
     int samplestart = (int)std::round(burnin * sttings->get<double>("fastSimulatePrior_Generations"));
@@ -417,7 +418,7 @@ void FastSimulatePrior::writeTransitionProbsToFile()
     
     _priorfile << "count,prop_loss,accept_loss,prop_gain,accept_gain" << std::endl;
     
-    for (int i = 0; i < _TrackingVector.size(); i++){
+    for (int i = 0; i < (int)_TrackingVector.size(); i++){
         _priorfile << _TrackingVector[i]->getEventCount() << ",";
         _priorfile << _TrackingVector[i]->getSubtractProposeCount() << ",";
         _priorfile << _TrackingVector[i]->getSubtractAcceptCount() << ",";
@@ -469,7 +470,7 @@ void FastSimulatePrior::writePriorProbsToFile_Experimental()
     int threshold_acc = 1;
     int maxx = 0;
     
-    for (int i = 1; i < _TrackingVector.size(); i++){
+    for (int i = 1; i < (int)_TrackingVector.size(); i++){
         // Here need to check if counts are sufficient large to get non-zeros.
         bool c1 = _TrackingVector[i]->getAddProposeCount() < threshold_prop;
         bool c2 = _TrackingVector[i]->getSubtractProposeCount() < threshold_prop;
@@ -484,7 +485,7 @@ void FastSimulatePrior::writePriorProbsToFile_Experimental()
     
     std::vector<double> relprob;
     std::vector<double> cumsumlog;
-    for (int i = 0; i < _TrackingVector.size(); i++){
+    for (int i = 0; i < (int)_TrackingVector.size(); i++){
         relprob.push_back(0.0);
         cumsumlog.push_back(0.0);
     }
