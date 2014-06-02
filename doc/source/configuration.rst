@@ -139,6 +139,10 @@ MCMC Simulation
     ``outputAcceptedInfo`` must be set to ``1`` for this information to be
     written. The default value is ``acceptance_info.txt``.
 
+``acceptanceResetFreq``
+    Frequency in which to reset the acceptance information.
+    The default value is ``1000``.
+
 ``updateEventLocationScale``
     Scale parameter for updating local moves of events on the tree.
     This defines the width of the sliding window proposal. This parameter
