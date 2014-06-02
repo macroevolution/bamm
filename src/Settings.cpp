@@ -103,7 +103,7 @@ void Settings::initializeGlobalSettings()
     addParameter("eventDataInfile", "event_data_in.txt", NotRequired);
     addParameter("initializeModel", "0");
     addParameter("simulatePriorShifts", "1", NotRequired);
-    addParameter("numberGenerations", "0");
+    addParameter("numberOfGenerations", "0");
     addParameter("seed", "-1", NotRequired);
     addParameter("validateEventConfiguration", "1", NotRequired);
 

@@ -19,7 +19,7 @@ MetropolisCoupledMCMC::MetropolisCoupledMCMC
         _acceptanceDataWriter(_settings), _chainSwapDataWriter(_settings)
 {
     // Total number of generations to run for each chain
-    _nGenerations = _settings.get<int>("numberGenerations");
+    _nGenerations = _settings.get<int>("numberOfGenerations");
 
     // MC3 settings
     _nChains = _settings.get<int>("numberOfChains");
