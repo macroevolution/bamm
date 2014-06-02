@@ -126,7 +126,7 @@ void Settings::initializeGlobalSettings()
     addParameter("runInfoFilename", "run_info.txt", NotRequired);
     addParameter("mcmcOutfile", "mcmc_out.txt", NotRequired);
     addParameter("eventDataOutfile", "event_data.txt", NotRequired);
-    addParameter("priorOutputFileName", "shiftPrior_mcmc_out.txt", NotRequired);
+    addParameter("priorOutputFileName", "prior_probs.txt", NotRequired);
 
     addParameter("branchRatesWriteFreq", "0", NotRequired);
     addParameter("mcmcWriteFreq", "0");
@@ -148,6 +148,21 @@ void Settings::initializeGlobalSettings()
     addParameter("autotune", "0", NotRequired);
     addParameter("outputAcceptanceInfo", "0", NotRequired);
     addParameter("acceptanceInfoFileName", "acceptance_info.txt", NotRequired);
+    
+    // TODO: New params May 30 2014, need documented
+    addParameter("maxNumberEvents", "500", NotRequired);
+    addParameter("priorSim_IntervalGenerations", "5000", NotRequired);
+    addParameter("fastSimulatePrior_Generations", "5000000", NotRequired);
+    addParameter("fastSimulatePrior_SampleFreq", "50", NotRequired);
+    addParameter("fastSimulatePriorExperimental", "0", NotRequired);
+    addParameter("fastSimulatePrior_BurnIn", "0.05", NotRequired);
+    
+    // maxNumberEvents = for fastSimulatePriorExperimental, maximum number of events...
+    // priorSims_intervalGenerations = number of generations per model pair
+    // fastSimulatePrior_Generations = sampling gens for simulation of prior
+    // fastSimulatePrior_SampleFreq = sampling frequency for fastSimulation of prior
+    // fastSimulatePrior_BurnIn = fraction of samples to be discarded as burnin.
+    
 }
 
 
