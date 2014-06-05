@@ -420,7 +420,7 @@ Parameter Update Rates
 ......................
 
 ``updateRateBeta0``
-    Relative freuency of moves that change the initial phenotypic rate
+    Relative frequency of moves that change the initial phenotypic rate
     associated with an event.
 
 ``updateRateBetaShift``
