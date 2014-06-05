@@ -36,6 +36,7 @@ TraitModel::TraitModel(Random& random, Settings& settings) :
     Model(random, settings),
     _betaInitProposal(random, settings, *this, _prior),
     _betaShiftProposal(random, settings, *this, _prior),
+    _betaTimeModeProposal(random, settings, *this),
     _nodeStateProposal(random, settings, *this)
 {
 #ifdef NEGATIVE_SHIFT_PARAM
@@ -46,21 +47,17 @@ TraitModel::TraitModel(Random& random, Settings& settings) :
         std::exit(1);
     }
 #endif
-    
+
     _sampleFromPriorOnly = _settings.get<bool>("sampleFromPriorOnly");
 
-    BranchEvent* x = new TraitBranchEvent(_settings.get<double>("betaInit"),
-        _settings.get<double>("betaShiftInit"),
-        _tree->getRoot(), _tree, _random, 0);
+    double betaInit = _settings.get<double>("betaInit");
+    double betaShiftInit = _settings.get<double>("betaShiftInit");
+    bool isTimeVariable = betaShiftInit != 0.0;
+
+    BranchEvent* x = new TraitBranchEvent(betaInit, betaShiftInit,
+        isTimeVariable, _tree->getRoot(), _tree, _random, 0);
     _rootEvent = x;
     _lastEventModified = x;
-
-    TraitBranchEvent* traitRootEvent =
-        static_cast<TraitBranchEvent*>(_rootEvent);
-
-    log() << "\nRoot beta: " << traitRootEvent->getBetaInit() << "\t"
-          << _settings.get<double>("betaInit") << "\t"
-          << "Shift: " << traitRootEvent->getBetaShift() << "\n";
 
     // Set NodeEvent of root node equal to the _rootEvent:
     _tree->getRoot()->getBranchHistory()->setNodeEvent(_rootEvent);
@@ -97,6 +94,7 @@ void TraitModel::initializeSpecificUpdateWeights()
     _updateWeights.push_back(_settings.get<double>("updateRateBeta0"));
     _updateWeights.push_back(_settings.get<double>("updateRateBetaShift"));
     _updateWeights.push_back(_settings.get<double>("updateRateNodeState"));
+    _updateWeights.push_back(_settings.get<double>("updateRateBetaTimeMode"));
 }
 
 
@@ -108,6 +106,8 @@ Proposal* TraitModel::getSpecificProposal(int parameter)
         return &_betaShiftProposal;
     } else if (parameter == 5) {
         return &_nodeStateProposal;
+    } else if (parameter == 6) {
+        return &_betaTimeModeProposal;
     } else {
         // Should never get here
         log(Warning) << "Bad parameter to update.\n";
@@ -132,7 +132,9 @@ BranchEvent* TraitModel::newBranchEventWithReadParameters
     double betaInit = betaInitParameter(parameters);
     double betaShift = betaShiftParameter(parameters);
 
-    return new TraitBranchEvent(betaInit, betaShift, x, _tree, _random, time);
+    // TODO: Return true for now for time-variable
+    return new TraitBranchEvent(betaInit, betaShift, true,
+            x, _tree, _random, time);
 }
 
 
@@ -160,6 +162,7 @@ BranchEvent* TraitModel::newBranchEventWithRandomParameters(double x)
     // Sample beta and beta shift from prior
     double newbeta = _prior.generateBetaInitFromPrior();
     double newBetaShift = _prior.generateBetaShiftFromPrior();
+    bool newIsTimeVariable = _prior.generateBetaIsTimeVariableFromPrior();
     
 #ifdef NEGATIVE_SHIFT_PARAM
     newBetaShift = -fabs(newBetaShift);
@@ -171,9 +174,11 @@ BranchEvent* TraitModel::newBranchEventWithRandomParameters(double x)
     _logQRatioJump = 0.0;
     
     _logQRatioJump += _prior.betaInitPrior(newbeta);
-    _logQRatioJump += dens_term + _prior.betaShiftPrior(newBetaShift);
+    if (newIsTimeVariable) {
+        _logQRatioJump += dens_term + _prior.betaShiftPrior(newBetaShift);
+    }
     
-    return new TraitBranchEvent(newbeta, newBetaShift,
+    return new TraitBranchEvent(newbeta, newBetaShift, newIsTimeVariable,
         _tree->mapEventToTree(x), _tree, _random, x);
 }
 
@@ -184,6 +189,7 @@ void TraitModel::setDeletedEventParameters(BranchEvent* be)
 
     _lastDeletedEventBetaInit = event->getBetaInit();
     _lastDeletedEventBetaShift = event->getBetaShift();
+    _lastDeletedEventTimeVariable = event->isTimeVariable();
 }
 
 
@@ -200,14 +206,10 @@ double TraitModel::calculateLogQRatioJump()
 
 BranchEvent* TraitModel::newBranchEventFromLastDeletedEvent()
 {
-    TraitBranchEvent* newEvent = new TraitBranchEvent(0.0, 0.0,
+    return new TraitBranchEvent(_lastDeletedEventBetaInit,
+        _lastDeletedEventBetaShift, _lastDeletedEventTimeVariable,
         _tree->mapEventToTree(_lastDeletedEventMapTime), _tree, _random,
-            _lastDeletedEventMapTime);
-
-    newEvent->setBetaInit(_lastDeletedEventBetaInit);
-    newEvent->setBetaShift(_lastDeletedEventBetaShift);
-
-    return newEvent;
+        _lastDeletedEventMapTime);
 }
 
 
@@ -328,7 +330,9 @@ double TraitModel::computeLogPrior()
     TraitBranchEvent* re = static_cast<TraitBranchEvent*>(_rootEvent);
     
     logPrior += _prior.betaInitRootPrior(re->getBetaInit());
-    logPrior += dens_term + _prior.betaShiftRootPrior(re->getBetaShift());
+    if (re->isTimeVariable()) {
+        logPrior += dens_term + _prior.betaShiftRootPrior(re->getBetaShift());
+    }
 
     for (std::set<BranchEvent*>::iterator i = _eventCollection.begin();
          i != _eventCollection.end(); ++i) {
@@ -336,7 +340,10 @@ double TraitModel::computeLogPrior()
         TraitBranchEvent* event = static_cast<TraitBranchEvent*>(*i);
         
         logPrior += _prior.betaInitPrior(event->getBetaInit());
-        logPrior += dens_term + _prior.betaShiftPrior(event->getBetaShift());
+        if (event->isTimeVariable()) {
+            logPrior += dens_term +
+                _prior.betaShiftPrior(event->getBetaShift());
+        }
         
     }
     

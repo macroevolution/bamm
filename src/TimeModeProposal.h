@@ -38,6 +38,8 @@ protected:
     virtual void setEventParameters(BranchEvent* event,
         double initParam, double rateParam, bool isTimeVariable) = 0;
 
+    virtual void setModelParameters() = 0;
+
     virtual double rateParameterFromPrior() = 0;
 
     void makeTimeConstant(BranchEvent* event);

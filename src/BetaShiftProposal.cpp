@@ -15,6 +15,16 @@ BetaShiftProposal::BetaShiftProposal
 }
 
 
+double BetaShiftProposal::acceptanceRatio()
+{
+    if (static_cast<TraitBranchEvent*>(_event)->isTimeVariable()) {
+        return EventParameterProposal::acceptanceRatio();
+    } else {
+        return 0.0;
+    }
+}
+
+
 double BetaShiftProposal::getCurrentParameterValue()
 {
     return static_cast<TraitBranchEvent*>(_event)->getBetaShift();

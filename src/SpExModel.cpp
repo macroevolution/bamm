@@ -196,7 +196,7 @@ BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
     double newLam = _prior.generateLambdaInitFromPrior();
     double newMu = _prior.generateMuInitFromPrior();
     double newMuShift = _prior.generateMuShiftFromPrior();
-    bool newIsTimeVariable = _prior.generateIsTimeVariableFromPrior();
+    bool newIsTimeVariable = _prior.generateLambdaIsTimeVariableFromPrior();
 
     double newLambdaShift = 0.0;
     if (newIsTimeVariable) {

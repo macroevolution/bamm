@@ -1,5 +1,5 @@
-#ifndef LAMBDA_TIME_MODE_PROPOSAL_H
-#define LAMBDA_TIME_MODE_PROPOSAL_H
+#ifndef BETA_TIME_MODE_PROPOSAL_H
+#define BETA_TIME_MODE_PROPOSAL_H
 
 
 #include "TimeModeProposal.h"
@@ -9,11 +9,11 @@ class Settings;
 class Model;
 
 
-class LambdaTimeModeProposal : public TimeModeProposal
+class BetaTimeModeProposal : public TimeModeProposal
 {
 public:
 
-    LambdaTimeModeProposal(Random& random, Settings& settings, Model& model);
+    BetaTimeModeProposal(Random& random, Settings& settings, Model& model);
 
 protected:
 

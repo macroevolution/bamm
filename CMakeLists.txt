@@ -30,6 +30,7 @@ SET(BAMM_SRC
     src/AcceptanceDataWriter.cpp
     src/BetaInitProposal.cpp
     src/BetaShiftProposal.cpp
+    src/BetaTimeModeProposal.cpp
     src/BranchEvent.cpp
     src/BranchHistory.cpp
     src/ChainSwapDataWriter.cpp

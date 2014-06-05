@@ -36,9 +36,7 @@ void TimeModeProposal::propose()
         _lastTimeModeProposal = TimeVariable;
     }
 
-    // TODO: Probably depends on whether it's diversification vs. trait
-    _tree->setNodeSpeciationParameters();
-    _tree->setNodeExtinctionParameters();
+    setModelParameters();
 
     _proposedLogLikelihood = _model.computeLogLikelihood();
     _proposedLogPrior = _model.computeLogPrior();
@@ -166,9 +164,7 @@ void TimeModeProposal::reject()
     setEventParameters(_event, _currentInitParam, _currentRateParam,
         _currentIsTimeVariable);
 
-    // TODO: Probably change this for beta
-    _tree->setNodeSpeciationParameters();
-    _tree->setNodeExtinctionParameters();
+    setModelParameters();
 }
 
 

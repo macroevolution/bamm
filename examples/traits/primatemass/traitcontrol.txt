@@ -204,3 +204,5 @@ initialNumberEvents = 0
 #
 #
 
+betaIsTimeVariablePrior = 0.5
+updateRateBetaTimeMode = 1

@@ -44,6 +44,13 @@ void LambdaTimeModeProposal::setEventParameters(BranchEvent* event,
 }
 
 
+void LambdaTimeModeProposal::setModelParameters()
+{
+    _tree->setNodeSpeciationParameters();
+    _tree->setNodeExtinctionParameters();
+}
+
+
 double LambdaTimeModeProposal::rateParameterFromPrior()
 {
     return _prior.generateLambdaShiftFromPrior();

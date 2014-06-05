@@ -6,7 +6,8 @@ class Tree;
 
 
 TraitBranchEvent::TraitBranchEvent(double beta, double shift,
-        Node* x, Tree* tp, Random& random, double map) :
-    BranchEvent(x, tp, random, map), _betaInit(beta), _betaShift(shift)
+    bool isTimeVariable, Node* x, Tree* tp, Random& random, double map) :
+        BranchEvent(x, tp, random, map),
+        _betaInit(beta), _betaShift(shift), _isTimeVariable(isTimeVariable)
 {
 }
