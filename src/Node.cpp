@@ -66,65 +66,65 @@ void Node::init(int x)
 }
 
 
-double Node::integrateExponentialRateFunction(double par_init, double shift, double t1, double t2)
+// The equation for lambda through time, lam(t), is
+//
+//                 /  lam0 (2 - e^(-kt))    k > 0
+//                |
+//     lam(t) =  <    lam0 e^(kt)           k < 0
+//                |
+//                 \  lam0                  k = 0
+//
+// where lam0 is the initial lambda, k is the rate parameter, and t is time.
+// The definite integral, named "Lam" here, is calculated as
+//
+//            t2
+//           /
+//     Lam = | lam(t) dt
+//           /
+//            t1
+//
+// where t1 and t2 are the times bounding the integral.
+// Solving this definite integral results in
+//
+//             /  lam0 [2(t2 - t1) + (1/k)(e^(-k*t2) - e^(-k*t1))]   k > 0
+//            |
+//            |   lam0
+//     Lam = <    ---- [e^(k*t2) - e^(k*t1)]                         k < 0
+//            |    k
+//            |
+//             \  lam0 * (t2 - t1)                                   k = 0
+
+double Node::integrateExponentialRateFunction
+    (double init, double shift, double t1, double t2)
 {
-
-    double x = 0.0;
-
-#ifdef _NEW_RATEFUNCTION
-    
-    if (shift == 0){
-        
-        x += (t2 - t1) * par_init;
-        
-    }else if (shift > 0){
-        
-        shift *= -1.0;
-        x += (2 * par_init * t2) - (2 * par_init * t1);
-        x += (par_init / shift) * (exp(shift * t2) - exp(shift * t1));
-        
-    }else{
-        
-        x += (par_init / shift) * (exp(shift * t2) - exp(shift * t1));
-    
+    if (shift < 0) {
+        return (init / shift) * (std::exp(shift * t2) - std::exp(shift * t1));
+    } else if (shift > 0) {
+        return init * (2 * (t2 - t1) + (1.0 / shift) *
+            (std::exp(-shift * t2) - std::exp(-shift * t1)));
+    } else {
+        return init * (t2 - t1);
     }
-
-#else
-    
-    if (shift == 0){
-        x += (t2 - t1) * par_init;   
-    }else{
-       x += (par_init / shift) * (exp(shift * t2) - exp(shift * t1));
-    }
-    
-    
-#endif
-    
-    return x;
-
 }
 
 
-double Node::getExponentialRate(double par_init, double shift, double tm)
+// The equation for lambda through time, lam(t), is
+//
+//                 /  lam0 (2 - e^(-kt))    k > 0
+//                |   
+//     lam(t) =  <    lam0 e^(kt)           k < 0
+//                |
+//                 \  lam0                  k = 0
+
+double Node::getExponentialRate(double init, double shift, double t)
 {
-
-    double rate = 0.0;
-    
-#ifdef _NEW_RATEFUNCTION
-    if (shift > 0){
-        shift *= -1.0;
-        rate = 2*par_init - (par_init * exp(shift * tm));
-    }else{
-        rate = par_init * exp(shift * tm);
+    if (shift < 0) {
+        return init * std::exp(shift * t);
+    } else if (shift > 0) {
+        return init * (2 - std::exp(-shift * t));
+    } else {
+        return init;
     }
-    
-#else
-    rate = par_init * exp(shift * tm);
-
-#endif
-    
-    return rate;
-
 }
 
 
