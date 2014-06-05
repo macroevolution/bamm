@@ -13,6 +13,7 @@ BAMM Documentation
    introduction
    bammgraph
    rateshifts   
+   time-flip
    quickstart
    settingup
    configuration
