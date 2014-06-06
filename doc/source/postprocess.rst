@@ -41,6 +41,9 @@ The sections below include:
 * **Rate-through-time analysis**
 	Analyze and plot macroevolutionary :ref:`rates through time<bammtoolsRTT>`
 
+* **Macroevolutionary cohort analysis**
+	Visualize sets of taxa with :ref:`shared rate dynamics<cohorts>`
+
 
 BAMMtools quickstart guide
 ..........................
@@ -493,7 +496,9 @@ Please see code underlying some BAMM graph gallery plots for more on working wit
  
  
 Macroevolutionary cohort analysis
----------------------------------------
+.....................................
+
+.. _cohorts:
 
 Macroevolutionary cohort analysis provides a way of summarizing the extent to which species share correlated macroevolutionary dynamics. The method is explained in this (`Systematic Biology article <http://sysbio.oxfordjournals.org/content/early/2014/04/01/sysbio.syu025>`_). The basic idea is to visualize the pairwise probabilities that any two species share a common macroevolutionary rate regime. The first step is to generate a cohort matrix, which contains the pairwise probabilities of shared macroevolutionary dynamics. This is then passed to the ``cohorts`` function, which generates the plot::
 
@@ -505,7 +510,7 @@ Macroevolutionary cohort analysis provides a way of summarizing the extent to wh
 
 
 Cumulative shift probabilities
----------------------------------------
+..............................
 
 The *cumulative shift probability tree* shows the cumulative probability, on each branch, that a shift occurred somewhere between the focal branch and the root of the tree. This option is a potentially useful complement to cohort analysis. The occurrence of such a shift implies that evolutionary dynamics on the focal branch are decoupled from the "background" diversification or trait evolutionary process at the root of the tree. We can compute and plot the cumulative shift probability tree as follows::
 
