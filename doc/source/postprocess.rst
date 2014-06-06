@@ -85,6 +85,8 @@ The *bammdata* object is the core of most analyses discussed below. This is a co
 	
 *edata* is now a "BAMM-data" object, which has all the attributes of a class "phylo" object, plus many more. Please be patient with *getEventData* - this function can take some time to run for large datasets. 
 
+**Note**: The function ``getEventData`` incurs significant memory overhead in R. It will likely give you trouble with trying to process more than 2000 samples. See :ref:`graph gallery<howmanyevents>` for more information on how often to sample. Most importantly, never try to read in all of your event data without first doing a trial run to get a feeling for how long it will take. You can read in a subset of your samples with the ``nsamples`` option in ``getEventData``. 
+
 .. _convergence:
 
 Assessing MCMC convergence
@@ -116,7 +118,7 @@ In general, we want these to be at least 200 (and 200 is on the low side, but mi
 
 As an additional test for convergence, we recommend analyzing multiple independent BAMM runs. You can test whether the runs are converging on similar distributions by analyzing the branch-specific marginal rate shift probabilities (see ``marginalShiftProbsTree``). 
  
-If you are having trouble with convergence, please see the section on :ref:`troubleshooting convergence issues<convergenceproblems>`. 
+If you are having trouble with convergence, please see the section on :ref:`troubleshooting convergence issues<convergenceproblems>`.  
 
 
 
@@ -489,10 +491,16 @@ You can also include- and exclude nodes from the calculation of the rate-through
 	
 Please see code underlying some BAMM graph gallery plots for more on working with these objects. For example, the code linked :ref:`here<rttwhale>` demonstrates how you can directly work with the rate matrices for extremely flexible plotting options.
  
+ 
 Macroevolutionary cohort analysis
 ---------------------------------------
 
+Macroevolutionary cohort analysis provides a way of summarizing the extent to which species share correlated macroevolutionary dynamics. The method is explained in this (`Systematic Biology article <http://sysbio.oxfordjournals.org/content/early/2014/04/01/sysbio.syu025>`_). The basic idea is to visualize the pairwise probabilities that any two species share a common macroevolutionary rate regime. The first step is to generate a cohort matrix, which contains the pairwise probabilities of shared macroevolutionary dynamics. This is then passed to the ``cohorts`` function, which generates the plot::
 
+	> data(events.whales, whales)
+	> edata <- getEventData(whales, events.whales, burnin=0.1)
+	> cmat <- getCohortMatrix(edata)
+	> cohorts(cmat, edata)
 
 
 
