@@ -133,6 +133,15 @@ in R. You can potentially color branches by their marginal shift probabilities, 
 But don't get hung up on the fact that your shift probabilities are less than 0.95. Even *very* strongly supported rate heterogeneity will generally be associated with marginal shift probabilities < 0.95. As discussed :ref:`here<whalemarg1>`, you can (and often will) have exceptionally strong evidence for rate heterogeneity even if any given branch has marginal shift probabilities that do not appear particularly high. **Marginal shift probabilities tell you very little about the probability of rate heterogeneity in your dataset**. In principle, you could have high confidence that your data were shaped by a very large number of rate shifts, but at the same time find that no single branch has a marginal probability exceeding 0.10. 
 
 
+.. _bayesfactorbranches:
+
+Bayes factors as evidence for rate shifts
+---------------------------------------------
+
+
+
+
+
 .. _coreshifts:
 
 Identifying the distinct shift configurations
