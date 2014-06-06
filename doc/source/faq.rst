@@ -51,7 +51,7 @@ We have since come to recognize that this model is not ideal, because it is high
 We thus modified the exponential change function to make it symmetric. For *k < 0*, we use the exponential change function defined above. For *k > 0*, we use the function
 
 .. math::
-	\lambda(t) = \lambda_{0} (2 - e^{k t})
+	\lambda(t) = \lambda_{0} (2 - e^{-k t})
 	
 If *k > 0*, this function asymptotically approaches the limiting value :math:`2\lambda_{0}`. 
 
