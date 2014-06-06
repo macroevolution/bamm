@@ -16,10 +16,20 @@ How much data does it need?
 **Not much**. There is no general rule here, but if your dataset is large enough to consider doing any other sort of diversification analysis, then it is probably large enough for BAMM. The whale diversification analysis shown in the :ref:`graph gallery<bammgraph>` uses a time-calibrated tree with 89 tips. We've had good success using BAMM on trees that are considerably smaller than this. 
 
 
+
+
 How often should I sample the chain?
 ------------------------------------
+
+.. _howmanyevents:
+
 Your first consideration should be: for how long should I run the chain? The answer to this question has a lot to do with how quickly the chain converges and how well it samples the posterior. We suggest that there is little advantage in going to more than 5000 samples from the posterior, and potentially large costs: for large datasets, sampling too frequently with BAMM can literally generate gigabytes of highly autocorrelated and mostly-unusable output. Moreover, due to memory issues with R, BAMMtools cannot handle output files of that size. So, pick a chain length (e.g., :math:`10^7` generations), and then specify a sample frequency that should give you somewhere between 500 and 5000 samples from the posterior after burnin. 
 
+
+How many generations should I expect to run BAMM for?
+-----------------------------------------------
+
+This section is just to provide some ballpark numbers and general guidelines. For relatively small datasets (< 1000 taxa), you may observe good performance with less than 10 million generations. For datasets in the thousands of taxa, don't be surprised if you need 100 million or more generations to adequately sample the posterior. BAMM 2.0 includes Metropolis coupling (MC3), which we have found to considerably boost performance. See documentation on this feature to ensure that you are using it to its full potential.
 
 
 What extensions are underway for BAMM?
