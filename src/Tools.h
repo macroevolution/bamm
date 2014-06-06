@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <cstdlib>
 
 
 std::vector<std::string> split_string(const std::string& str, char delim);

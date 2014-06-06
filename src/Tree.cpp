@@ -1201,8 +1201,8 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
     crossValidateSpecies(spnames);
 
     int counter = 0;
-    for (std::vector<Node*>::iterator i = _preOrderNodes.begin();
-            i != _preOrderNodes.end(); i++) {
+    for (std::vector<Node*>::iterator i = _postOrderNodes.begin();
+            i != _postOrderNodes.end(); i++) {
 
         if ((*i)->getLfDesc() == NULL && (*i)->getRtDesc() == NULL ) {
             for (std::vector<std::string>::size_type k = 0; k < spnames.size(); k++) {
