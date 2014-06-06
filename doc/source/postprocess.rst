@@ -277,7 +277,19 @@ From the above plot, we can see that a single rate shift configuration has a hig
 
 Here, we have generated a phylorate plot for the best overall shift configuration and manually added the corresponding rate shifts for this configuration. This should match the first plot from the panel of plots we obtained with ``plot.credibleshiftset``. 
 
-We could also have done this another way, by using the function ``subsetEventData`` on the credible shift set to pull out any of the relevant shift configurations from the posterior::
+Related to this, we could have pulled out any *specific sample* from a particular shift configuration for plotting using the ``credibleShiftSet`` object. The assignments of individual samples to specific shift configurations are stored in the ``indices`` component of the ``credibleshiftset`` object. This is a list, and you can access the full vector of the *most-probable* shift configuration as follows::
+
+	> css <- css <- credibleShiftSet(edata, priorshifts, set.limit = 0.95)
+	> css$indices[[1]] 
+	
+The samples that can be assigned to the second most-probable shift configuration can be identified by ``css$indices[[2]]``, and the indices for the k'th most-probable configuration are ``css$indices[[k]]``. You could plot any specific sample from any shift configuration as follows by first pulling out the relevant sample index, then using ``subsetEventData``::
+
+	> index <- css$indices[[1]][5]
+	> rsample <- subsetEventData(edata, index=index)
+	> plot.bammdata(rsample)
+	> addBAMMshifts(rsample, cex=2)
+	
+In the example above, we've pulled out the 5'th sample that was assigned to the most-probable shift configuration. 
 
 	> first <- subsetEventData(css, index=1)
 	> second <- subsetEventData(css, index = 2)
@@ -285,9 +297,7 @@ We could also have done this another way, by using the function ``subsetEventDat
 	> plot.bammdata(second)
 	> addBAMMshifts(second, cex=2)
 
-The ``index`` argument to ``subsetEventData`` indicates the rank of the shift configuration you want to extract. E.g., ``index = 4`` pulls out the shift configuration with the 4'th highest posterior probability.
-
-For some datasets with large numbers of taxa and rate shifts (e.g., trees with thousands of taxa), all shift configurations may have low probability. There are simply too many parameters in the model to allow a single shift configuration to dominate the credible set. An alternative approach is to extract the shift configuration that maximizes the marginal probability of rate shifts along individual branches. This is very similar to the idea of a *maximum clade credibility tree* in phylogenetic analysis. BAMM has a function *maximumShiftCredibility* for extracting this shift configuration::
+**Alternative to the credible shift set for summarizing the overall best shift configuration:** For some datasets with large numbers of taxa and rate shifts (e.g., trees with thousands of taxa), all shift configurations may have low probability. There are simply too many parameters in the model to allow a single shift configuration to dominate the credible set. An alternative approach is to extract the shift configuration that maximizes the marginal probability of rate shifts along individual branches. This is very similar to the idea of a *maximum clade credibility tree* in phylogenetic analysis. BAMM has a function *maximumShiftCredibility* for extracting this shift configuration::
 
 	> msc.set <- maximumShiftCredibility(edata, maximize='product')
 
@@ -297,14 +307,14 @@ A number of samples from the posterior potentially have identical credibility sc
 	> plot.bammdata(msc.config, lwd=2)
 	> addBAMMshifts(msc.config, cex = 2)
 
-In this case, the maximum shift credibility configuration closely matches the MAP shift configuration. 
+In this case, the maximum shift credibility configuration closely matches the MAP shift configuration. But for most datasets, **we recommend** using ``credibleShiftSet`` and not ``maximumShiftCredibility``. 
 
 Viewing some random shift configurations
 ----------------------------------------
 To give you some intuition for the distinct shift configurations in your dataset, we have included a function to plot random samples from the posterior and the associated shifts. Here, we will plot random samples from the posterior that are assignable to one of the distinct shift configurations that we have identified::
 
-
-	> dsc <- distinctShiftConfigurations(edata, threshold=0.01)
+	> priorshifts <- getBranchShiftPriors(whales, prior.whales)
+	> dsc <- distinctShiftConfigurations(edata, priorshifts, BFcriterion = 5)
 	> # Here is one random sample with the BEST shift configuration
 	> plot.bammshifts(dsc, edata, rank=1, legend=F)
 	> # Here is another (read the label text):
@@ -350,20 +360,32 @@ BAMMtools enables the user to summarize *marginal shift probabilities*. This is 
 	> marg_probs <- marginalShiftProbsTree(edata)
 	> plot.phylo(marg_probs)
 	
-The variable *marg_probs* becomes a copy of our phylogenetic tree, but where each branch length has been transformed into the corresponding marginal shift probability. The marginal shift probabilities can be a little misleading, because we might have relatively low confidence in precisely which branch a shift occurred on, but nonetheless have extremely high confidence that a shift occurred *somewhere* in the vicinity. The *cumulative shift probability tree* shows the cumulative probability, on each branch, that a shift occurred somewhere between the focal branch and the root of the tree. The occurrence of such a shift implies that evolutionary dynamics on the focal branch are decoupled from the "background" diversification or trait evolutionary process at the root of the tree. We can compute and plot the cumulative shift probability tree as follows::
+The variable *marg_probs* becomes a copy of our phylogenetic tree, but where each branch length has been transformed into the corresponding marginal shift probability. The marginal shift probabilities can be a little misleading, because we might have relatively low confidence in precisely which branch a shift occurred on, but nonetheless have extremely high confidence that a shift occurred *somewhere* in the vicinity. More importantly, the marginal shift probabilities don't accurately account for the expected number of shifts that would occur in the data under the prior alone (again, see :ref:`this section<rateshifts>` for more on this). This is a major issue and we have recently overhauled BAMMtools to use a measure of evidence for rate shifts that is largely independent of the prior: the **Bayes factor**. 
 
-	> cst <- cumulativeShiftProbsTree(edata)
-	> plot.phylo(cst)
+Bayes factors for rate shifts
+---------------------------------------
 
-Or, showing shift probs in color::
+As explained :ref:`here<bayesfactorbranches>`, we can compute the Bayes factors associated with a shift on a particular branch. Despite numerous difficulties associated with computing Bayes factors more generally, it is straightforward and natural in this context to compute them. To be clear, are now advocating a very different use of Bayes factors than we described previously on :ref:`this page<bayesfactors>`. Now, we are computing the Bayes factor associated with a rate shift on a particular branch of our phylogeny. This provides us with a robust measure of evidence for a rate shift on a particular branch that is effectively independent of the effects of whatever prior parameter we placed on the number of shift events. 
 
-	> cst <- cumulativeShiftProbsTree(edata)
-	> edgecols <- rep('black', length(mytree$edge.length))
-	> is_highprobshift <- cst$edge.length >= 0.95
-	> edgecols[ is_highprobshift ] <- "red"
-	> plot.phylo(mytree, edge.color = edgecols)
+To compute the Bayes factors for the *topological location* of rate shifts on our tree, we first compute the probability of a rate shift on each branch of our phylogeny under the prior alone::
+
+	> priorshifts <- getBranchShiftPriors(edata, prior.whales)
+
+This object is a copy of our phylogeny, but where the length of each branch is equal to the prior probability of a rate shift. This is the expected probability that our statistical model would find a rate shift on a particular branch **even if there is no variation in diversification rate** across our tree. We can then use these prior probabilities to compute the Bayes factor associated with a rate shift on each branch of the phylogeny::
+
+	> bftree <- bayesFactorBranches(edata, priorshifts)
 	
-And this should plot your tree (*mytree*) such that all branches with cumulative shift probabilities of 0.95 or higher are identified in red. See also the example in the :ref:`BAMM graph gallery<cst>`.  	
+This is now a copy of our phylogenetic tree where each branch is replaced with the Bayes factor evidence for a rate shift on that branch. We can plot this tree to view the relative support for a rate shift on each branch with ``plot.phylo`` :: 
+
+	> plot.phylo(bftree, cex=0.2)
+	
+For the whales, you can see that a single branch has overwhelming evidence for a rate shift, with a Bayes factor > 700 in favor of a rate shift (see ``max(bftree$edge.length))``. If you want to get the specific node associated with the highest overall Bayes factor, you could do::
+
+	> edgemax <- which(bftree$edge.length == max(bftree$edge.length))
+	> bftree$edge[edgemax ,2] 
+	> # this should give node 141 for the whales...
+	
+Use of Bayes factors in this context has many advantages. Suppose that you have two branches, one of which is very short and the other of which is very long. Under the prior alone, you'd expect a higher marginal probability of a rate shift on the long branch. In fact, the relative probability of a shift on the longer branch should be exactly equal to the ratio of the branch lengths. Now, imagine that both branches have a marginal shift probability of 0.8. The Bayes factor analysis of shift probabilities would find much stronger evidence for a rate shift on the short branch, because it is it has a *lower prior probability of a shift*. This tells us that there's actually more evidence for a shift on the short branch, because the data contained enough evidence to actually push the posterior further away from the prior, relative to the long branch.
 
 
 Clade-specific evolutionary rates
@@ -386,14 +408,14 @@ Estimating clade-specific rates with BAMMtools is straightforward. To compute th
 	
 To compute rates for **a specific clade**, just specify the node you'd like to compute the mean rate for. In the whales example, node 140 is the node number of the dolphin clade (you can find identify node numbers using ``plot.phylo`` and ``nodelabels`` from the ``ape`` package). We can estimate the mean of the marginal density of speciation rates for dolphins as follows::
 
-	> dolphinrates <- getCladeRates(edata, node=140)	
+	> dolphinrates <- getCladeRates(edata, node=141)	
 	> mean(dolphinrates$lambda)
 
 which should be a bit higher than the overall rate, an effect that you can clearly visualize in some of the sample :ref:`phylorate plots for whales<whalemarg1>` (or just generate your own, with ``plot.bammdata(ed)``).
 
 You can also use the ``node`` argument to ``getCladeRates`` to **exclude** all the descendants of a particular node, thus computing the mean rate only for the *background* lineages. This is extremely useful in the present example. We have an evolutionary rate estimate for dolphins, and good evidence that their diversification dynamics are different from the background rate. We can thus compute a mean rate for *non-dolphin whales*, as follows::
 
-	> nondolphinrate <- getCladeRates(edata, node = 140, nodetype = "exclude")
+	> nondolphinrate <- getCladeRates(edata, node = 141, nodetype = "exclude")
 	> mean(nondolphinrate$lambda)
 	> quantile(nondolphinrate$lambda, c(0.05, 0.95))
 	
@@ -467,4 +489,47 @@ You can also include- and exclude nodes from the calculation of the rate-through
 	
 Please see code underlying some BAMM graph gallery plots for more on working with these objects. For example, the code linked :ref:`here<rttwhale>` demonstrates how you can directly work with the rate matrices for extremely flexible plotting options.
  
+Macroevolutionary cohort analysis
+---------------------------------------
+
+
+
+
+
+Cumulative shift probabilities
+---------------------------------------
+
+The *cumulative shift probability tree* shows the cumulative probability, on each branch, that a shift occurred somewhere between the focal branch and the root of the tree. This option is a potentially useful complement to cohort analysis. The occurrence of such a shift implies that evolutionary dynamics on the focal branch are decoupled from the "background" diversification or trait evolutionary process at the root of the tree. We can compute and plot the cumulative shift probability tree as follows::
+
+	> cst <- cumulativeShiftProbsTree(edata)
+	> plot.phylo(cst)
+
+Or, showing shift probs in color::
+
+	> cst <- cumulativeShiftProbsTree(edata)
+	> edgecols <- rep('black', length(mytree$edge.length))
+	> is_highprobshift <- cst$edge.length >= 0.95
+	> edgecols[ is_highprobshift ] <- "red"
+	> plot.phylo(mytree, edge.color = edgecols)
+	
+And this should plot your tree (*mytree*) such that all branches with cumulative shift probabilities of 0.95 or higher are identified in red. See also the example in the :ref:`BAMM graph gallery<cst>`.  	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
