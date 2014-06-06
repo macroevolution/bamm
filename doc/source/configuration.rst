@@ -408,19 +408,19 @@ Priors
 
 ``traitPriorMin``
     User-defined minimum value for the uniform density on the distribution
-    of ancestral charater states. Only used if
+    of ancestral character states. Only used if
     ``useObservedMinMaxAsTraitPriors = 0``.
 
 ``traitPriorMax``
     User-defined maximum value for the uniform density on the distribution
-    of ancestral charater states. Only used if
+    of ancestral character states. Only used if
     ``useObservedMinMaxAsTraitPriors = 0``.
     
 Parameter Update Rates
 ......................
 
 ``updateRateBeta0``
-    Relative freuency of moves that change the initial phenotypic rate
+    Relative frequency of moves that change the initial phenotypic rate
     associated with an event.
 
 ``updateRateBetaShift``

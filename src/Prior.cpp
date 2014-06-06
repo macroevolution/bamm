@@ -36,6 +36,8 @@ Prior::Prior(Random& random, Settings* settings) : _random(random)
         _betaShiftPrior = settings->get<double>("betaShiftPrior");
         _betaInitRootPrior = settings->get<double>("betaInitRootPrior");
         _betaShiftRootPrior = settings->get<double>("betaShiftRootPrior");
+        _betaIsTimeVariablePrior =
+            settings->get<double>("betaIsTimeVariablePrior");
         _updateRateBeta0 = settings->get<double>("updateRateBeta0");
         _updateRateBetaShift = settings->get<double>("updateRateBetaShift");
     }
@@ -113,7 +115,7 @@ double Prior::generateMuShiftFromPrior()
 }
 
 
-bool Prior::generateIsTimeVariableFromPrior()
+bool Prior::generateLambdaIsTimeVariableFromPrior()
 {
     return _random.trueWithProbability(_lambdaIsTimeVariablePrior);
 }
@@ -160,6 +162,12 @@ double Prior::generateBetaShiftFromPrior()
     } else {
         return _random.normal(0.0, _betaShiftPrior);
     }
+}
+
+
+bool Prior::generateBetaIsTimeVariableFromPrior()
+{
+    return _random.trueWithProbability(_betaIsTimeVariablePrior);
 }
 
 

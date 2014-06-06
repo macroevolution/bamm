@@ -234,6 +234,7 @@ void Settings::initializeTraitSettings()
     addParameter("betaShiftPrior", "0.0");
     addParameter("betaInitRootPrior", "-1.0", NotRequired);
     addParameter("betaShiftRootPrior", "-1.0", NotRequired);
+    addParameter("betaIsTimeVariablePrior", "0.5");
     addParameter("useObservedMinMaxAsTraitPriors", "1");
     addParameter("traitPriorMin", "0.0", NotRequired);
     addParameter("traitPriorMax", "0.0", NotRequired);
@@ -245,6 +246,7 @@ void Settings::initializeTraitSettings()
     addParameter("updateRateBeta0", "0.0");
     addParameter("updateRateBetaShift", "0.0");
     addParameter("updateRateNodeState", "0.0");
+    addParameter("updateRateBetaTimeMode", "0.0");
 }
 
 

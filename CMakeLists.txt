@@ -30,6 +30,7 @@ SET(BAMM_SRC
     src/AcceptanceDataWriter.cpp
     src/BetaInitProposal.cpp
     src/BetaShiftProposal.cpp
+    src/BetaTimeModeProposal.cpp
     src/BranchEvent.cpp
     src/BranchHistory.cpp
     src/ChainSwapDataWriter.cpp
@@ -65,6 +66,7 @@ SET(BAMM_SRC
     src/SpExModel.cpp
     src/Stat.cpp
     src/StdOutDataWriter.cpp
+    src/TimeModeProposal.cpp
     src/Tools.cpp
     src/TraitBranchEvent.cpp
     src/TraitEventDataWriter.cpp

@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "BetaInitProposal.h"
 #include "BetaShiftProposal.h"
+#include "BetaTimeModeProposal.h"
 #include "NodeStateProposal.h"
 
 #include <iosfwd>
@@ -56,12 +57,14 @@ private:
 
     BetaInitProposal _betaInitProposal;
     BetaShiftProposal _betaShiftProposal;
+    BetaTimeModeProposal _betaTimeModeProposal;
     NodeStateProposal _nodeStateProposal;
 
     bool _sampleFromPriorOnly;
 
     double _lastDeletedEventBetaInit;;
     double _lastDeletedEventBetaShift;
+    bool _lastDeletedEventTimeVariable;
 
     // Here are several variables that track the previous
     // state. At some point, these should have their own class

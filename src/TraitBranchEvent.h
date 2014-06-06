@@ -15,11 +15,12 @@ private:
 
     double _betaInit;  // initial beta value.
     double _betaShift; // temporal shift parameter of trait evolution rate.
+    bool _isTimeVariable;
 
 public:
 
     // constructors, depending on whether you want trait rate or lambda/mu
-    TraitBranchEvent(double beta, double shift,
+    TraitBranchEvent(double beta, double shift, bool isTimeVariable,
             Node* x, Tree* tp, Random& random, double map);
     virtual ~TraitBranchEvent() {};
 
@@ -29,6 +30,8 @@ public:
     void   setBetaShift(double x);
     double getBetaShift();
 
+    void setTimeVariable(bool isTimeVariable);
+    bool isTimeVariable();
 };
 
 
@@ -53,6 +56,18 @@ inline void TraitBranchEvent::setBetaShift(double x)
 inline double TraitBranchEvent::getBetaShift()
 {
     return _betaShift;
+}
+
+
+inline void TraitBranchEvent::setTimeVariable(bool isTimeVariable)
+{
+    _isTimeVariable = isTimeVariable;
+}
+
+
+inline bool TraitBranchEvent::isTimeVariable()
+{
+    return _isTimeVariable;
 }
 
 
