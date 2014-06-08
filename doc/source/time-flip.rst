@@ -123,49 +123,83 @@ from a time-constant event to a time-variable event is
 
 .. math::
 
-    \text{min}\left\{ 1, \cfrac{f(\lambda_0, k)\pi(\lambda_0, k)}
-        {f(\lambda)\pi(\lambda)}
-        \left| \cfrac{\partial (\lambda_0, k)}{\partial (\lambda, u)} \right|
+    \text{min}\left\{ 1, \cfrac{f(\lambda_0, k)}{f(\lambda)} \times
+        \cfrac{\pi(\lambda_0, k)}{\pi(\lambda)} \times
+        \cfrac{q(\lambda | \lambda_0, k)}{q(\lambda_0, k | \lambda)q(u)} \times
+        \left| \cfrac{\partial g(\lambda, u)}{\partial (\lambda, u)} \right|
     \right\}
 
 where :math:`f(\lambda)` and :math:`\pi(\lambda)`
-are the posterior and prior probabilities with the time-contant event,
+are the posterior and prior probabilities for the time-contant event,
 :math:`f(\lambda_0, k)` and :math:`\pi(\lambda_0, k)`
-are the posterior and prior probabilities with the time-variable event, and
-:math:`\left| \cfrac{\partial (\lambda_0, k)}{\partial (\lambda, u)} \right|`
+are the posterior and prior probabilities for the time-variable event,
+:math:`q(\lambda | \lambda_0, k)` is the probability of proposing
+a move to parameter :math:`\lambda` given that the current
+parameters are :math:`\lambda_0` and :math:`k`,
+:math:`q(\lambda_0, k | \lambda)` is the probability of the reverse move,
+:math:`q(u)` is the probability density of the random variable :math:`u`, and
+:math:`\left| \cfrac{\partial g(\lambda, u)}{\partial (\lambda, u)} \right|`
 is the determinant of the Jacobian matrix for the transition from a
-time-constant event to a time-variable event.
-The determinant of this Jacobian matrix is
+time-constant event to a time-variable event,
+using the mapping function :math:`g`:
 
 .. math::
 
-    \left| \cfrac{\partial (\lambda_0, k)}{\partial (\lambda, u)} \right| =
+    \left[ \begin{array}{c}
+        \lambda_0 \\
+        k
+    \end{array} \right] =
+    g(\lambda, u) =
+    \left[ \begin{array}{c}
+        g_1(\lambda, u) \\
+        g_2(\lambda, u)
+    \end{array} \right]
+
+where
+
+.. math::
+
+    g_1(\lambda, u) =
+    \renewcommand\arraystretch{2.3}
+    \left\{ \begin{array}{lr}
+        \cfrac{\lambda uT}{e^{uT} - 1}        & \text{if } u < 0 \\
+        \cfrac{\lambda uT}{2uT + e^{-uT} - 1} & \text{if } u > 0 \\
+        \lambda                               & \text{if } u = 0
+    \end{array} \right.
+
+and :math:`g_2(\lambda, u) = u`.
+The value :math:`u` is a random number taken from the prior distribution
+of :math:`k`.
+The determinant of the Jacobian matrix is therefore
+
+.. math::
+
+    \left| \cfrac{\partial g(\lambda, u)}{\partial (\lambda, u)} \right| =
     \renewcommand\arraystretch{2.3}
     \left| \begin{array}{cc}
-        \cfrac{\partial \lambda_0}{\partial \lambda} &
-        \cfrac{\partial \lambda_0}{\partial u} \\
-        \cfrac{\partial k}{\partial \lambda} &
-        \cfrac{\partial k}{\partial u}
+        \cfrac{\partial g_1(\lambda, u)}{\partial \lambda} &
+        \cfrac{\partial g_1(\lambda, u)}{\partial u} \\
+        \cfrac{\partial g_2(\lambda, u)}{\partial \lambda} &
+        \cfrac{\partial g_2(\lambda, u)}{\partial u}
     \end{array} \right| =
     \renewcommand\arraystretch{1.6}
     \left| \begin{array}{cc}
-        \cfrac{\partial \lambda_0}{\partial \lambda} &
-        \cfrac{\partial \lambda_0}{\partial u} \\
+        \cfrac{\partial g_1(\lambda, u)}{\partial \lambda} &
+        \cfrac{\partial g_1(\lambda, u)}{\partial u} \\
         0 & 1
     \end{array} \right| =
-    \cfrac{\partial \lambda_0}{\partial \lambda}
+    \cfrac{\partial g_1(\lambda, u)}{\partial \lambda}
 
-From the equation above for :math:`\lambda_0` and equating
-:math:`\lambda = \bar{\lambda}`, we obtain
+This partial derivative is easy to calculate:
 
 .. math::
 
-    \cfrac{\partial \lambda_0}{\partial \lambda} =
+    \cfrac{\partial g_1(\lambda, u)}{\partial \lambda} =
     \renewcommand\arraystretch{2.3}
     \left\{ \begin{array}{lr}
-        \cfrac{kT}{e^{kT} - 1}        & \text{if } k < 0 \\
-        \cfrac{kT}{2kT + e^{-kT} - 1} & \text{if } k > 0 \\
-        1                             & \text{if } k = 0
+        \cfrac{uT}{e^{uT} - 1}        & \text{if } u < 0 \\
+        \cfrac{uT}{2uT + e^{-uT} - 1} & \text{if } u > 0 \\
+        1                             & \text{if } u = 0
     \end{array}
     \right.
 
@@ -174,12 +208,12 @@ from a time-variable event to a time-constant event is
 
 .. math::
 
-    \text{min}\left\{ 1, \cfrac{f(\lambda)\pi(\lambda)}
-        {f(\lambda_0, k)\pi(\lambda_0, k)}
-        \left| \cfrac{\partial(\lambda_0, k)}{\partial(\lambda, u)}\right|^{-1}
+    \text{min}\left\{ 1,
+        \cfrac{f(\lambda)}{f(\lambda_0, k)} \times
+        \cfrac{\pi(\lambda)}{\pi(\lambda_0, k)} \times
+        \cfrac{q(\lambda_0, k | \lambda)q(u)} {q(\lambda | \lambda_0, k)} \times
+        \left|\cfrac{\partial g(\lambda_0,u)}{\partial(\lambda,u)}\right|^{-1}
     \right\}
-
-which can be computed in the same way as described above.
 
 Time-flip proposal options
 --------------------------
@@ -190,5 +224,5 @@ and ``updateRateBetaTimeMode`` for the diversification
 and phenotypic evolution models, respectively.
 When a new event is added to the tree, the probability that it is a
 time-variable event is defined by ``lambdaIsTimeVariablePrior``.
-The root event is assumed to be time-constant if ``lambdaShift0`` is 0;
+The initial root event is assumed to be time-constant if ``lambdaShift0`` is 0;
 otherwise, it is time-variable.
