@@ -2,9 +2,7 @@ Time-flip proposal: Time-constant and time-variable shifts
 ==========================================================
 
 BAMM 2.0 introduces the concept of the "time-flip" proposal.
-Previously, all shift events in BAMM were time-variable
-(i.e., vary through time).
-A time-variable shift event models speciation rate as
+Previously, the default model in BAMM assumed that all shift events in BAMM led to a distinct time-varying speciation (or phenotypic evolution) process. A time-variable shift event models speciation rate as
 
 .. math::
 
@@ -21,29 +19,9 @@ where :math:`\lambda_0` is the initial speciation rate,
 :math:`k` is the rate parameter for the speciation rate,
 and :math:`t` is the time since the shift event began.
 
-One problem in estimating the speciation rate through time
-is that the statistical power provided by a tree is lower
-at the start of the tree than at the end of the tree.
-This is because there are fewer branches at the start of a tree
-than at the end.
-As a result, the initial speciation rate (:math:`\lambda_0`)
-is more free to vary than the speciation rate at the end of the tree.
-The value of :math:`k` is forced to compensate
-for an inaccurate :math:`\lambda_0`.
-This problem is compounded if the prior on :math:`\lambda_0`
-does not match the true initial speciation rate.
+We have found that this default assumption can lead to biased inference on speciation (or phenotypic evolutionary rates) in some areas of parameter space. In BAMM 2.0, we do not force rate shift events to be time-varying (as in BAMM 1.0) or constant through time (as in MEDUSA). Rather, we allow diversification submodels to "flip" between time-constant and time-variable rate modes. With this formulation, rate shifts will lead to a constant-rate diversification process unless the data contains sufficient evidence for temporally varying macroevolutionary rate dynamics. A given rate partition in the data can toggle between time-varying and constant-rate models in proportion to the posterior probability that the true process includes rate variation through time. We have found that this model substantially improves the performance of BAMM. 
 
-If the true speciation rate of the phylogeny being analyzed
-is constant through time, :math:`\lambda_0` should be estimated
-as the speciation rate and :math:`k` should be estimated as 0.
-However, :math:`\lambda_0` is often estimated inaccurately
-due to the problem described above.
-As a result, :math:`k` will be forced to be different than 0
-in order for the speciation rate at the end to be accurate.
-Our tests show that there is some bias in the estimation
-of :math:`\lambda_0` and :math:`k` for time-constant trees.
-
-Therefore, we introduced a "time-flip" proposal,
+The mechanics of the updated BAMM model entail the concept of "time-flip" proposal,
 which flips the time mode of a randomly-chosen shift event
 from/to time-variable and time-constant modes.
 A time-constant shift event models speciation as
@@ -226,3 +204,16 @@ When a new event is added to the tree, the probability that it is a
 time-variable event is defined by ``lambdaIsTimeVariablePrior``.
 The initial root event is assumed to be time-constant if ``lambdaShift0`` is 0;
 otherwise, it is time-variable.
+
+Eliminating the time-flip proposal mode
+-----------------------------------------
+
+To constrain BAMM such that all diversification shifts lead to time-varying processes only, **do this....**
+
+To constrain BAMM such that all diversification shifts lead to time-constant diversification processes only, **do this....**
+
+
+
+
+
+
