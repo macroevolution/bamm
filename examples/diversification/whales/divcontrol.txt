@@ -80,22 +80,13 @@ lambdaInitPrior = 1.0
 # Prior (rate parameter of exponential) on the initial lambda value for rate
 # regimes
 
-lambdaInitRootPrior = 1.0
-# Prior on initial lambda value for the root process
-
 lambdaShiftPrior = 0.05
 # Prior (std dev of normal) on lambda shift parameter for rate regimes
 # You cannot adjust the mean of this distribution (fixed at zero, which is
 # equal to a constant rate diversification process)
 
-lambdaShiftRootPrior = 0.05
-# Prior on the lambda shift parameter of the root process
-
 muInitPrior = 1.0
 # Prior (rate parameter of exponential) on extinction rates  
-
-muInitRootPrior = 1.0
-# Prior on the initial mu value for the root process
 
 lambdaIsTimeVariablePrior = 0.5
 # Prior (probability) of the time mode being time-variable (vs. time-constant)
@@ -202,11 +193,33 @@ lambdaInit0 = 0.032
 lambdaShift0 = 0
 # Initial shift parameter for the root process
 
-muInit0 = .005
+muInit0 = 0.005
 # Initial value of extinction (at the root)
 
 initialNumberEvents = 0
 # Initial number of non-root processes
+
+
+################################################################################
+# METROPOLIS COUPLED MCMC
+################################################################################
+
+numberOfChains = 4
+# Number of Markov chains to run
+
+deltaT = 0.01
+# Temperature increment parameter. This value should be > 0
+# The temperature for the i-th chain is calculated as 1 / [1 + deltaT * (i - 1)]
+
+swapPeriod = 1000
+# Number of generations in which to propose a chain swap
+
+chainSwapFileName = chain_swap.txt
+# File name in which to output data about each chain swap proposal.
+# The format of each line is [generation],[rank_1],[rank_2],[swap_accepted]
+# where [generation] is the generation in which the swap proposal was made,
+# [rank_1] and [rank_2] are the chains that were chosen, and [swap_accepted] is
+# whether the swap was made. The cold chain has a rank of 1.
  
 
 ################################################################################
@@ -228,25 +241,3 @@ segLength = 0.02
 # If the value is greater than the branch length (e.g., you have a branch of
 # length < 0.5 in the preceding example) BAMM will not break the branch into
 # segments but use the mean rate across the entire branch.
-
-
-################################################################################
-# METROPOLIS COUPLED MCMC
-################################################################################
-
-numberOfChains = 1
-# Number of Markov chains to run
-
-deltaT = 0.01
-# Temperature increment parameter. This value should be > 0
-# The temperature for the i-th chain is calculated as 1 / [1 + deltaT * (i - 1)]
-
-swapPeriod = 1000
-# Number of generations in which to propose a chain swap
-
-chainSwapFileName = chain_swap.txt
-# File name in which to output data about each chain swap proposal.
-# The format of each line is [generation],[rank_1],[rank_2],[swap_accepted]
-# where [generation] is the generation in which the swap proposal was made,
-# [rank_1] and [rank_2] are the chains that were chosen, and [swap_accepted] is
-# whether the swap was made. The cold chain has a rank of 1.
