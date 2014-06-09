@@ -27,7 +27,7 @@ Your first consideration should be: for how long should I run the chain? The ans
 
 
 How many generations should I expect to run BAMM for?
------------------------------------------------
+------------------------------------------------------
 
 This section is just to provide some ballpark numbers and general guidelines. For relatively small datasets (< 1000 taxa), you may observe good performance with less than 10 million generations. For datasets in the thousands of taxa, don't be surprised if you need 100 million or more generations to adequately sample the posterior. BAMM 2.0 includes Metropolis coupling (MC3), which we have found to considerably boost performance. See documentation on this feature to ensure that you are using it to its full potential.
 
