@@ -9,11 +9,13 @@ How do I cite BAMM?
 
 The primary methodological description of the full BAMM model was published in *PLoS ONE*. A link to the paper is `available here <http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543>`_ 
 
-This paper contains a description of the model, the reversible jump MCMC implementation, a comprehensive performance evaluation, and an empirical application. An earlier paper used a related implementation that assumed constant rates of diversification through time within evolutionary rate regimes (`Rabosky et al. 2013 <http://www.nature.com/ncomms/2013/130606/ncomms2958/full/ncomms2958.html>`_).
+This paper contains a description of the model, the reversible jump MCMC implementation, a comprehensive performance evaluation, and an empirical application. An earlier paper used a related implementation that assumed constant rates of diversification through time within evolutionary rate regimes (`Rabosky et al. 2013 <http://www.nature.com/ncomms/2013/130606/ncomms2958/full/ncomms2958.html>`_). 
+
+If you use BAMMtools for analysis and visualization of BAMM results, you should cite the `BAMMtools package <http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12199/abstract>`_ .
 
 How much data does it need?
 ---------------------------
-**Not much**. There is no general rule here, but if your dataset is large enough to consider doing any other sort of diversification analysis, then it is probably large enough for BAMM. The whale diversification analysis shown in the :ref:`graph gallery<bammgraph>` uses a time-calibrated tree with 89 tips. We've had good success using BAMM on trees that are considerably smaller than this. 
+**Not much**. There is no general rule here, but if your dataset is large enough to consider doing any other sort of diversification analysis, then it is probably large enough for BAMM. The whale diversification analysis shown in the :ref:`graph gallery<bammgraphs>` uses a time-calibrated tree with 89 tips. We've had good success using BAMM on trees that are considerably smaller than this. 
 
 
 
@@ -27,7 +29,7 @@ Your first consideration should be: for how long should I run the chain? The ans
 
 
 How many generations should I expect to run BAMM for?
------------------------------------------------
+------------------------------------------------------
 
 This section is just to provide some ballpark numbers and general guidelines. For relatively small datasets (< 1000 taxa), you may observe good performance with less than 10 million generations. For datasets in the thousands of taxa, don't be surprised if you need 100 million or more generations to adequately sample the posterior. BAMM 2.0 includes Metropolis coupling (MC3), which we have found to considerably boost performance. See documentation on this feature to ensure that you are using it to its full potential.
 
@@ -57,6 +59,7 @@ If *k > 0*, this function asymptotically approaches the limiting value :math:`2\
 
 This has the nice property that the function :math:`\lambda(t)` is symmetric about the line :math:`x = \lambda_{0}`, for positive and negative values of k with the same absolute value.
 
+Note that in BAMM v2.0, the model allows "flipping" between time-constant and time-varying diversification modes. The theory underlying this new proposal class is described :ref:`here <timefliptheory>`. Hence, the model does not assume that diversification shifts result in a new time-varying diversification process, but allows for such processes if they are supported by the data.
 
 	
 
@@ -65,7 +68,7 @@ How can BAMM detect diversity-dependent changes in speciation rates?
 
 BAMM models the dynamics of speciation and extinction within rate regimes using an exponential change function described in the preceding section. Theoretically, a linear *diversity-dependent* change in speciation rates through time leaves a signal in molecular phylogenies that is virtually indistinguishable from an exponential *time-dependent* change in rates. Our analyses of simulated datasets suggest that these two types of models are not distinguishable in practice. 
 
-We have conducted extensive performance evaluations where we have simulated datasets under formal *diversity-dependent* scenarios, then used BAMM to reconstruct the number of macroevolutionary rate regimes as well as the dynamics of speciation and extinction through time. Our simulations indicate that BAMM can estimate both the number of distinct macroevolutionary regimes, as well as the underlying evolutionary rates, even though we are using the exponential approximation to the diversity-dependent process. We have published these results **here** (non-functional link).
+We have conducted extensive performance evaluations where we have simulated datasets under formal *diversity-dependent* scenarios, then used BAMM to reconstruct the number of macroevolutionary rate regimes as well as the dynamics of speciation and extinction through time. Our simulations indicate that BAMM can estimate both the number of distinct macroevolutionary regimes, as well as the underlying evolutionary rates, even though we are using the exponential approximation to the diversity-dependent process. We have published these results `here <http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543>`_ .
  
 It is (vastly) more efficient computationally to work with the exponential change model than the formal diversity-dependent model, and calculations of single likelihoods on phylogenies can be many orders of magnitude faster with the exponential approximation than with the formal diversity-dependent model. The multi-process explorations of macroevolutionary dynamics that are possible with BAMM wouldn't really be feasible without the ability to quickly compute likelihoods. 
  
