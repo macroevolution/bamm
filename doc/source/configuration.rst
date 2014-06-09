@@ -112,7 +112,7 @@ Priors
 MCMC Simulation
 ...............
 
-``numberGenerations``
+``numberOfGenerations``
     Number of MCMC generations to run.
 
 ``mcmcWriteFreq``
@@ -248,17 +248,11 @@ Priors
     Prior on the inital lambda (rate parameter of the exponential distribution)
     for the speciation rate. Applies to all non-root events.
     
-``lambdaInitRootPrior``
-	Prior on the initial lambda value at the root of the tree
-	
 ``lambdaShiftPrior``
     Prior on the the lambda shift parameter (standard deviation of the normal
     distribution) for the speciation rate. The mean of the distribution
     is fixed at zero, which is equal to a constant rate diversification process.
     Applies to non-root events.
-
-``lambdaShiftRootPrior`` 
-	Prior on the lambda shift parameter for the root process.
 
 ``lambdaIsTimeVariablePrior``
     Prior on the time mode for the speciation rate.
@@ -269,9 +263,6 @@ Priors
     Prior on the extinction rate (rate paramater of the exponential
     distribution). Applies to non-root events.
     
-``muInitRootPrior``
-	Prior on the initial mu value for the root process.
-
 ``segLength``
     The "grain" of the likelihood calculations. It approximates the
     continuous-time change in diversification rates by breaking each branch
@@ -358,7 +349,7 @@ General
 MCMC Tuning
 ...........
 
-``updateBetaScale``
+``updateBetaInitScale``
     Scale operator for proportional shrinking/expanding move to update
     the initial phenotypic rate for rate regimes.
 
@@ -389,17 +380,14 @@ Priors
     Parameter (rate) of the prior (exponential) on the inital phenotypic
     evolutionary rate associated with regimes, for non-root events.
 
-``betaInitRootPrior``
-    Parameter (rate) of the prior (exponential) on the inital phenotypic
-    evolutionary rate associated with regimes for the root event.
-
 ``betaShiftPrior``
     Parameter (stdandard deviation) of the prior (normal) on the rate-change
     parameter for non-root events.
 
-``betaShiftRootPrior``
-    Parameter (stdandard deviation) of the prior (normal) on the rate-change
-    parameter for the root event.
+``betaIsTimeVariablePrior``
+    Prior on the time mode for the phenotypic evolution rate.
+    This prior is the probability that the phenotypic rate for a new event
+    is time-variable (i.e., time-dependent) vs. constant through time.
 
 ``useObservedMinMaxAsTraitPriors``
     If ``1``, puts a uniform prior density on the distribution of ancestral
@@ -426,6 +414,11 @@ Parameter Update Rates
 ``updateRateBetaShift``
     Relative frequency of moves that change the exponential shift parameter
     of a phenotypic rate associated with an event.
+
+``updateRateBetaTimeMode``
+    Relative frequency of MCMC moves that change whether
+    the phenotypic evolution rate for an event is time-variable
+    (i.e., time-dependent) or constant through time.
 
 ``updateRateNodeState``
     Relative frequency of moves update the value of ancestral character stats.
