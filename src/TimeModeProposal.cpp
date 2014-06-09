@@ -4,6 +4,7 @@
 #include "Tree.h"
 #include "BranchEvent.h"
 
+#include <algorithm>
 #include <cmath>
 
 class Random;

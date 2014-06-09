@@ -4,6 +4,8 @@
 #include "Model.h"
 #include "Prior.h"
 
+#include <algorithm>
+
 
 EventRateProposal::EventRateProposal
     (Random& random, Settings& settings, Model& model, Prior& prior) :

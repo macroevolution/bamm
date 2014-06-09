@@ -3,6 +3,8 @@
 #include "Settings.h"
 #include "Model.h"
 
+#include <algorithm>
+
 
 EventNumberProposal::EventNumberProposal
     (Random& random, Settings& settings, Model& model) :

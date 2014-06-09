@@ -11,6 +11,8 @@
 #include "AcceptanceDataWriter.h"
 #include "ChainSwapDataWriter.h"
 
+#include <algorithm>
+
 
 MetropolisCoupledMCMC::MetropolisCoupledMCMC
     (Random& random, Settings& settings, ModelFactory* modelFactory) :

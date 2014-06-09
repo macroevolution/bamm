@@ -5,6 +5,7 @@
 #include "Prior.h"
 #include "Tree.h"
 
+#include <algorithm>
 #include <cmath>
 
 

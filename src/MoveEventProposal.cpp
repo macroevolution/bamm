@@ -6,6 +6,8 @@
 #include "BranchHistory.h"
 #include "Tree.h"
 
+#include <algorithm>
+
 
 MoveEventProposal::MoveEventProposal
     (Random& random, Settings& settings, Model& model) :
