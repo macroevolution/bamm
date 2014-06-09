@@ -221,7 +221,7 @@ void Settings::initializeTraitSettings()
     addParameter("traitfile", "traits.txt");
 
     // MCMC tuning
-    addParameter("updateBetaScale", "0.0");
+    addParameter("updateBetaInitScale", "0.0");
     addParameter("updateNodeStateScale", "0.0");
     addParameter("updateBetaShiftScale", "0.0");
 
