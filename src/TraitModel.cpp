@@ -52,7 +52,20 @@ TraitModel::TraitModel(Random& random, Settings& settings) :
 
     double betaInit = _settings.get<double>("betaInit");
     double betaShiftInit = _settings.get<double>("betaShiftInit");
-    bool isTimeVariable = betaShiftInit != 0.0;
+
+    bool isTimeVariable = false;
+    double timeVarPrior = _settings.get<double>("betaIsTimeVariablePrior");
+    if (timeVarPrior == 0.0) {
+        isTimeVariable = false;
+        if (betaShiftInit != 0.0) {
+            exitWithError("betaShiftInit needs to be 0.0 if "
+                "betaIsTimeVariablePrior is also 0.0");
+        }
+    } else if (timeVarPrior == 1.0) {
+        isTimeVariable = true;
+    } else {
+        isTimeVariable = betaShiftInit != 0.0;
+    }
 
     BranchEvent* x = new TraitBranchEvent(betaInit, betaShiftInit,
         isTimeVariable, _tree->getRoot(), _tree, _random, 0);

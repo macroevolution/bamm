@@ -54,7 +54,19 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
     _lambdaShift0 = _settings.get<double>("lambdaShift0");
     _muInit0 = _settings.get<double>("muInit0");
     _muShift0 = _settings.get<double>("muShift0");
-    _initialLambdaIsTimeVariable = _lambdaShift0 != 0.0;
+
+    double timeVarPrior = _settings.get<double>("lambdaIsTimeVariablePrior");
+    if (timeVarPrior == 0.0) {
+        _initialLambdaIsTimeVariable = false;
+        if (_lambdaShift0 != 0.0) {
+            exitWithError("lambdaShift0 needs to be 0.0 if "
+                "lambdaIsTimeVariablePrior is also 0.0");
+        }
+    } else if (timeVarPrior == 1.0) {
+        _initialLambdaIsTimeVariable = true;
+    } else {
+        _initialLambdaIsTimeVariable = _lambdaShift0 != 0.0;
+    }
 
     _sampleFromPriorOnly = _settings.get<bool>("sampleFromPriorOnly");
 
