@@ -1,0 +1,313 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>4. Time-flip proposal: Time-constant and time-variable shifts &mdash; bamm 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="bamm 1.0 documentation" href="index.html" />
+    <link rel="next" title="5. Quick-start guide to BAMM" href="quickstart.html" />
+    <link rel="prev" title="3. Rate Shifts on Phylogenies: Theoretical Background" href="rateshifts.html" /> 
+  </head>
+  <body>
+<div class="pageheader">
+    <img src="_static/bamm-header.png" /img>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="quickstart.html" title="5. Quick-start guide to BAMM"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="rateshifts.html" title="3. Rate Shifts on Phylogenies: Theoretical Background"
+             accesskey="P">previous</a> |</li>
+<li><a href="index.html">Home</a>&nbsp;|</li>
+<li><a href="download.html">Download</a>&nbsp;|</li>
+<li><a href="documentation.html">Documentation</a>&nbsp;|</li>
+<li><a href="contact_us.html">Contact Us</a></li>
+ 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="documentation.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4. Time-flip proposal: Time-constant and time-variable shifts</a><ul>
+<li><a class="reference internal" href="#calculation-of-parameters-after-a-time-flip">4.1. Calculation of parameters after a time-flip</a></li>
+<li><a class="reference internal" href="#acceptance-probability-for-a-time-flip-proposal">4.2. Acceptance probability for a time-flip proposal</a></li>
+<li><a class="reference internal" href="#time-flip-proposal-options">4.3. Time-flip proposal options</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="rateshifts.html"
+                        title="previous chapter">3. Rate Shifts on Phylogenies: Theoretical Background</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="quickstart.html"
+                        title="next chapter">5. Quick-start guide to BAMM</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/time-flip.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="time-flip-proposal-time-constant-and-time-variable-shifts">
+<h1>4. Time-flip proposal: Time-constant and time-variable shifts<a class="headerlink" href="#time-flip-proposal-time-constant-and-time-variable-shifts" title="Permalink to this headline">¶</a></h1>
+<p>BAMM 2.0 introduces the concept of the &#8220;time-flip&#8221; proposal.
+Previously, the default model in BAMM assumed that all shift events in BAMM led to a distinct time-varying speciation (or phenotypic evolution) process. A time-variable shift event models speciation rate as</p>
+<div class="math">
+<p><img src="_images/math/23328eecfe101b16f27930936bd7c0c3a4bb1213.png" alt="\renewcommand\arraystretch{1.3}
+\lambda(t) = \left\{
+    \begin{array}{lr}
+        \lambda_0 e^{kt}        &amp; \text{if } k &lt; 0   \\
+        \lambda_0 (2 - e^{-kt}) &amp; \text{if } k &gt; 0 \\
+        \lambda_0               &amp; \text{if } k = 0
+    \end{array}
+\right."/></p>
+</div><p>where <img class="math" src="_images/math/a10cdaf5867f9d9fce3b12992c03c93a2da509c5.png" alt="\lambda_0"/> is the initial speciation rate,
+<img class="math" src="_images/math/8c325612684d41304b9751c175df7bcc0f61f64f.png" alt="k"/> is the rate parameter for the speciation rate,
+and <img class="math" src="_images/math/e0d2bf360290fd61d1c1557e763f2622363b3d35.png" alt="t"/> is the time since the shift event began.</p>
+<p>We have found that this default assumption can lead to biased inference on speciation (or phenotypic evolutionary rates) in some areas of parameter space. In BAMM 2.0, we do not force rate shift events to be time-varying (as in BAMM 1.0) or constant through time (as in MEDUSA). Rather, we allow diversification submodels to &#8220;flip&#8221; between time-constant and time-variable rate modes. With this formulation, rate shifts will lead to a constant-rate diversification process unless the data contains sufficient evidence for temporally varying macroevolutionary rate dynamics. A given rate partition in the data can toggle between time-varying and constant-rate models in proportion to the posterior probability that the true process includes rate variation through time. We have found that this model substantially improves the performance of BAMM.</p>
+<p>The mechanics of the updated BAMM model entail the concept of &#8220;time-flip&#8221; proposal,
+which flips the time mode of a randomly-chosen shift event
+from/to time-variable and time-constant modes.
+A time-constant shift event models speciation as</p>
+<div class="math">
+<p><img src="_images/math/9edc74b070fa2353ac261adc621f5e4909cdc51e.png" alt="\lambda(t) = \lambda"/></p>
+</div><p>where <img class="math" src="_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/> is the constant speciation rate.
+With this model, the bias in the initial speciation rate is reduced
+because it is not controlled by a separate parameter (<img class="math" src="_images/math/a10cdaf5867f9d9fce3b12992c03c93a2da509c5.png" alt="\lambda_0"/>).
+Instead, the entire speciation rate across the tree is controlled
+by a single parameter (<img class="math" src="_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/>).</p>
+<p>Because the rate function is the same for both the diversification model
+(<img class="math" src="_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/>) and the phenotypic evolution model (<img class="math" src="_images/math/fdb63b9e51abe6bbb16acfb5d7b773ddbb5bf4a8.png" alt="\beta"/>),
+this discussion will focus on the diversification model.</p>
+<div class="section" id="calculation-of-parameters-after-a-time-flip">
+<h2>4.1. Calculation of parameters after a time-flip<a class="headerlink" href="#calculation-of-parameters-after-a-time-flip" title="Permalink to this headline">¶</a></h2>
+<p>When flipping between time-constant and time-variable modes,
+the rate function parameters are modified such that
+the mean speciation rate through time is the same for both modes
+(the time starts at the event location and ends at the tip of the tree).</p>
+<p>If the chosen shift event is time-variable and the proposal to flip
+the mode to time-constant is accepted, then the new speciation rate
+is set to the mean value of the old speciation rate
+(calculated from the time the event started until the tip of the tree):</p>
+<div class="math">
+<p><img src="_images/math/f11567bd460d94c9695d2fe9f52236b0344722b8.png" alt="\bar{\lambda} = \frac{1}{T} \int\limits_0^T \lambda (t) dt"/></p>
+</div><p>where <img class="math" src="_images/math/2554b6496c3b678897e9b060ef00aa9f0a7d7ece.png" alt="T"/> is the time elapsed since the beginning of the shift event.
+The solution to this integral is</p>
+<div class="math">
+<p><img src="_images/math/29038c2a95a9908aa4984829e22441463bb8e745.png" alt="\renewcommand\arraystretch{2.3}
+\bar{\lambda} = \left\{
+    \begin{array}{lr}
+        \cfrac{\lambda _{0}}{kT} (e^{kT} - 1)        &amp; \text{if } k &lt; 0 \\
+        \cfrac{\lambda _{0}}{kT} (2kT + e^{-kT} - 1) &amp; \text{if } k &gt; 0 \\
+        \lambda _{0}                                 &amp; \text{if } k = 0
+    \end{array}
+\right."/></p>
+</div><p>If the chosen shift event is time-constant and the proposal to flip
+the mode to time-variable is accepted, then the <img class="math" src="_images/math/8c325612684d41304b9751c175df7bcc0f61f64f.png" alt="k"/> parameter is chosen
+from its prior distribution. The <img class="math" src="_images/math/e9ed9a13df4ef02cc94f17939619a359c858e341.png" alt="\lambda _{0}"/> parameter
+is calculated from the mean <img class="math" src="_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/> (above equation).
+Solving for <img class="math" src="_images/math/e9ed9a13df4ef02cc94f17939619a359c858e341.png" alt="\lambda _{0}"/> gives</p>
+<div class="math">
+<p><img src="_images/math/05537aac67db9b15e65aed6750f0bd2bd03f7588.png" alt="\renewcommand\arraystretch{2.3}
+\lambda _{0} = \left\{
+    \begin{array}{lr}
+        \cfrac{\bar{\lambda}kT}{e^{kT} - 1}        &amp; \text{if } k &lt; 0 \\
+        \cfrac{\bar{\lambda}kT}{2kT + e^{-kT} - 1} &amp; \text{if } k &gt; 0 \\
+        \bar{\lambda}                              &amp; \text{if } k = 0
+    \end{array}
+\right."/></p>
+</div><p>where <img class="math" src="_images/math/edfdd2892aa23e8fad80d83075560f1477a10c86.png" alt="\bar{\lambda}"/> is taken from the speciation rate
+for the time-constant event.</p>
+</div>
+<div class="section" id="acceptance-probability-for-a-time-flip-proposal">
+<h2>4.2. Acceptance probability for a time-flip proposal<a class="headerlink" href="#acceptance-probability-for-a-time-flip-proposal" title="Permalink to this headline">¶</a></h2>
+<p>The acceptance probability for a time-flip proposal
+from a time-constant event to a time-variable event is</p>
+<div class="math">
+<p><img src="_images/math/d2ddf4f4fc7c67829d0ac2327104f901aba1c460.png" alt="\text{min}\left\{ 1, \cfrac{f(\lambda_0, k)}{f(\lambda)} \times
+    \cfrac{\pi(\lambda_0, k)}{\pi(\lambda)} \times
+    \cfrac{q(\lambda | \lambda_0, k)}{q(\lambda_0, k | \lambda)q(u)} \times
+    \left| \cfrac{\partial g(\lambda, u)}{\partial (\lambda, u)} \right|
+\right\}"/></p>
+</div><p>where <img class="math" src="_images/math/d94c74a5825878639310fba2a1aa17b5cabe20c9.png" alt="f(\lambda)"/> and <img class="math" src="_images/math/73ac2b549ffff4aa651b22bbb2cbe3e4bb5f8b85.png" alt="\pi(\lambda)"/>
+are the posterior and prior probabilities for the time-contant event,
+<img class="math" src="_images/math/dfc5ea6f2d563bc6cb4addc3ca0541517ee556f9.png" alt="f(\lambda_0, k)"/> and <img class="math" src="_images/math/913fb1ee9ae08b568ed6ccc53cd61eca8f801432.png" alt="\pi(\lambda_0, k)"/>
+are the posterior and prior probabilities for the time-variable event,
+<img class="math" src="_images/math/a88125cf9cbebbc093d5e359b6d99b5aac5eba69.png" alt="q(\lambda | \lambda_0, k)"/> is the probability of proposing
+a move to parameter <img class="math" src="_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/> given that the current
+parameters are <img class="math" src="_images/math/a10cdaf5867f9d9fce3b12992c03c93a2da509c5.png" alt="\lambda_0"/> and <img class="math" src="_images/math/8c325612684d41304b9751c175df7bcc0f61f64f.png" alt="k"/>,
+<img class="math" src="_images/math/521f097cee1c86fb7accd4a0cf827c6e42e9129f.png" alt="q(\lambda_0, k | \lambda)"/> is the probability of the reverse move,
+<img class="math" src="_images/math/12844c96f8541e199a09ee8806603866f384c3ed.png" alt="q(u)"/> is the probability density of the random variable <img class="math" src="_images/math/9ad99798ec4c38e165cf517cb9e02b1c9e824103.png" alt="u"/>, and
+<img class="math" src="_images/math/39ec2d57b1210b2d8c05701c3556faf660e9a3b2.png" alt="\left| \cfrac{\partial g(\lambda, u)}{\partial (\lambda, u)} \right|"/>
+is the determinant of the Jacobian matrix for the transition from a
+time-constant event to a time-variable event,
+using the mapping function <img class="math" src="_images/math/311cabda3a9b09f0dde217303ca9d1cd9201dcf6.png" alt="g"/>:</p>
+<div class="math">
+<p><img src="_images/math/278100053b1def34e095e0d9a8d019d9e7c62705.png" alt="\left[ \begin{array}{c}
+    \lambda_0 \\
+    k
+\end{array} \right] =
+g(\lambda, u) =
+\left[ \begin{array}{c}
+    g_1(\lambda, u) \\
+    g_2(\lambda, u)
+\end{array} \right]"/></p>
+</div><p>where</p>
+<div class="math">
+<p><img src="_images/math/fcd19f2f7b7ca1d119350e5d5b28f5754395283f.png" alt="g_1(\lambda, u) =
+\renewcommand\arraystretch{2.3}
+\left\{ \begin{array}{lr}
+    \cfrac{\lambda uT}{e^{uT} - 1}        &amp; \text{if } u &lt; 0 \\
+    \cfrac{\lambda uT}{2uT + e^{-uT} - 1} &amp; \text{if } u &gt; 0 \\
+    \lambda                               &amp; \text{if } u = 0
+\end{array} \right."/></p>
+</div><p>and <img class="math" src="_images/math/deff4d57c9bdaaac9a3025e478418510830c51c9.png" alt="g_2(\lambda, u) = u"/>.
+The value <img class="math" src="_images/math/9ad99798ec4c38e165cf517cb9e02b1c9e824103.png" alt="u"/> is a random number taken from the prior distribution
+of <img class="math" src="_images/math/8c325612684d41304b9751c175df7bcc0f61f64f.png" alt="k"/>.
+The determinant of the Jacobian matrix is therefore</p>
+<div class="math">
+<p><img src="_images/math/af29d8be8f4070c7c08630f9d0b221528741c432.png" alt="\left| \cfrac{\partial g(\lambda, u)}{\partial (\lambda, u)} \right| =
+\renewcommand\arraystretch{2.3}
+\left| \begin{array}{cc}
+    \cfrac{\partial g_1(\lambda, u)}{\partial \lambda} &amp;
+    \cfrac{\partial g_1(\lambda, u)}{\partial u} \\
+    \cfrac{\partial g_2(\lambda, u)}{\partial \lambda} &amp;
+    \cfrac{\partial g_2(\lambda, u)}{\partial u}
+\end{array} \right| =
+\renewcommand\arraystretch{1.6}
+\left| \begin{array}{cc}
+    \cfrac{\partial g_1(\lambda, u)}{\partial \lambda} &amp;
+    \cfrac{\partial g_1(\lambda, u)}{\partial u} \\
+    0 &amp; 1
+\end{array} \right| =
+\cfrac{\partial g_1(\lambda, u)}{\partial \lambda}"/></p>
+</div><p>This partial derivative is easy to calculate:</p>
+<div class="math">
+<p><img src="_images/math/180b757a563eb72c9c83d44a19aedee7173670d9.png" alt="\cfrac{\partial g_1(\lambda, u)}{\partial \lambda} =
+\renewcommand\arraystretch{2.3}
+\left\{ \begin{array}{lr}
+    \cfrac{uT}{e^{uT} - 1}        &amp; \text{if } u &lt; 0 \\
+    \cfrac{uT}{2uT + e^{-uT} - 1} &amp; \text{if } u &gt; 0 \\
+    1                             &amp; \text{if } u = 0
+\end{array}
+\right."/></p>
+</div><p>The acceptance probability for a time-flip proposal
+from a time-variable event to a time-constant event is</p>
+<div class="math">
+<p><img src="_images/math/d5be299cebfd4de221b809fa777498e6f16ebd0b.png" alt="\text{min}\left\{ 1,
+    \cfrac{f(\lambda)}{f(\lambda_0, k)} \times
+    \cfrac{\pi(\lambda)}{\pi(\lambda_0, k)} \times
+    \cfrac{q(\lambda_0, k | \lambda)q(u)} {q(\lambda | \lambda_0, k)} \times
+    \left|\cfrac{\partial g(\lambda_0,u)}{\partial(\lambda,u)}\right|^{-1}
+\right\}"/></p>
+</div></div>
+<div class="section" id="time-flip-proposal-options">
+<h2>4.3. Time-flip proposal options<a class="headerlink" href="#time-flip-proposal-options" title="Permalink to this headline">¶</a></h2>
+<p>The frequency in which a time-flip proposal occurs,
+relative to other proposals, is given by <tt class="docutils literal"><span class="pre">updateRateLambdaTimeMode</span></tt>
+and <tt class="docutils literal"><span class="pre">updateRateBetaTimeMode</span></tt> for the diversification
+and phenotypic evolution models, respectively.
+When a new event is added to the tree, the probability that it is a
+time-variable event is defined by <tt class="docutils literal"><span class="pre">lambdaIsTimeVariablePrior</span></tt>.
+The initial root event is assumed to be time-constant if <tt class="docutils literal"><span class="pre">lambdaShift0</span></tt> is 0;
+otherwise, it is time-variable.</p>
+<p>To constrain BAMM such that all diversification shifts lead to
+time-varying processes only, set:</p>
+<div class="highlight-python"><pre>lambdaIsTimeVariablePrior = 1
+updateRateLambdaTimeMode = 0
+lambdaShift0 = # Set it to a value that is not 0</pre>
+</div>
+<p>To constrain BAMM such that all diversification shifts lead to time-constant
+diversification processes only, set:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">lambdaIsTimeVariablePrior</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">updateRateLambdaTimeMode</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">lambdaShift0</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>Make similar adjustments to the corresponding <em>beta</em> options for
+the phenotypic evolution model type.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="quickstart.html" title="5. Quick-start guide to BAMM"
+             >next</a></li>
+        <li class="right" >
+          <a href="rateshifts.html" title="3. Rate Shifts on Phylogenies: Theoretical Background"
+             >previous</a> |</li>
+<li><a href="index.html">Home</a>&nbsp;|</li>
+<li><a href="download.html">Download</a>&nbsp;|</li>
+<li><a href="documentation.html">Documentation</a>&nbsp;|</li>
+<li><a href="contact_us.html">Contact Us</a></li>
+ 
+      </ul>
+    </div>
+
+    <div class="footer">
+        &copy; Copyright 2014 BAMM Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    </div>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-49579863-1', 'bamm-project.org');
+ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

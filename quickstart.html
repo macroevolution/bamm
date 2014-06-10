@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>4. Quick-start guide to BAMM &mdash; bamm 1.0 documentation</title>
+    <title>5. Quick-start guide to BAMM &mdash; bamm 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 1.0 documentation" href="index.html" />
-    <link rel="next" title="5. Setting Up BAMM" href="settingup.html" />
-    <link rel="prev" title="3. Rate Shifts on Phylogenies: Theoretical Background" href="rateshifts.html" /> 
+    <link rel="next" title="6. Setting Up BAMM" href="settingup.html" />
+    <link rel="prev" title="4. Time-flip proposal: Time-constant and time-variable shifts" href="time-flip.html" /> 
   </head>
   <body>
 <div class="pageheader">
@@ -36,10 +36,10 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="settingup.html" title="5. Setting Up BAMM"
+          <a href="settingup.html" title="6. Setting Up BAMM"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="rateshifts.html" title="3. Rate Shifts on Phylogenies: Theoretical Background"
+          <a href="time-flip.html" title="4. Time-flip proposal: Time-constant and time-variable shifts"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -52,24 +52,24 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">4. Quick-start guide to BAMM</a><ul>
-<li><a class="reference internal" href="#control-file">4.1. Control file</a></li>
-<li><a class="reference internal" href="#speciation-extinction-analyses">4.2. Speciation-extinction analyses</a><ul>
-<li><a class="reference internal" href="#incomplete-taxon-sampling">4.2.1. Incomplete taxon sampling</a></li>
+<li><a class="reference internal" href="#">5. Quick-start guide to BAMM</a><ul>
+<li><a class="reference internal" href="#control-file">5.1. Control file</a></li>
+<li><a class="reference internal" href="#speciation-extinction-analyses">5.2. Speciation-extinction analyses</a><ul>
+<li><a class="reference internal" href="#incomplete-taxon-sampling">5.2.1. Incomplete taxon sampling</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#phenotypic-evolution">4.3. Phenotypic evolution</a></li>
-<li><a class="reference internal" href="#bamm-output-brief">4.4. BAMM output: brief</a></li>
+<li><a class="reference internal" href="#phenotypic-evolution">5.3. Phenotypic evolution</a></li>
+<li><a class="reference internal" href="#bamm-output-brief">5.4. BAMM output: brief</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="rateshifts.html"
-                        title="previous chapter">3. Rate Shifts on Phylogenies: Theoretical Background</a></p>
+  <p class="topless"><a href="time-flip.html"
+                        title="previous chapter">4. Time-flip proposal: Time-constant and time-variable shifts</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="settingup.html"
-                        title="next chapter">5. Setting Up BAMM</a></p>
+                        title="next chapter">6. Setting Up BAMM</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/quickstart.txt"
@@ -97,7 +97,7 @@
           <div class="body">
             
   <div class="section" id="quick-start-guide-to-bamm">
-<span id="quickstart"></span><h1>4. Quick-start guide to BAMM<a class="headerlink" href="#quick-start-guide-to-bamm" title="Permalink to this headline">¶</a></h1>
+<span id="quickstart"></span><h1>5. Quick-start guide to BAMM<a class="headerlink" href="#quick-start-guide-to-bamm" title="Permalink to this headline">¶</a></h1>
 <p>This section assumes you have a compiled version of <strong>BAMM</strong> in a directory on your computer (see <a class="reference internal" href="settingup.html#bammsetup"><em>Setting Up BAMM</em></a> for installation). This is a <strong>quick-start</strong> guide: we will provide guidance for some general parameter settings that should get BAMM running on your dataset, but you should explore the <a class="reference external" href="configuration.html">Configuration</a> page in more detail to optimize performance.</p>
 <p>BAMM can be used to model speciation-extinction rates and phenotypic evolutionary rates across phylogenetic trees. To run a speciation-extinciont analysis on your dataset, you need the following (easiest if all in the same directory):</p>
 <ul class="simple">
@@ -116,14 +116,14 @@ min(v$edge.length)</pre>
 </div>
 <p>If all of those checks are good, we can move on.</p>
 <div class="section" id="control-file">
-<h2>4.1. Control file<a class="headerlink" href="#control-file" title="Permalink to this headline">¶</a></h2>
+<h2>5.1. Control file<a class="headerlink" href="#control-file" title="Permalink to this headline">¶</a></h2>
 <p>To run <tt class="docutils literal"><span class="pre">bamm</span></tt>, you must always specify a <em>control file</em>. The control file contains all of the settings necessary to run the program on your dataset, including the name(s) of the input files you seek to analyze. The easiest way to run BAMM is to place the control file, and all files to be analyzed (e.g., the phylogeny) in the same directory as the <strong>BAMM</strong> application. If your control file is named <tt class="docutils literal"><span class="pre">myControlFile.txt</span></tt>, you would run BAMM as follows (on the OSX operating system):</p>
 <div class="highlight-python"><pre>./bamm -c myControlFile.txt</pre>
 </div>
 <p>On Windows machines, you would run:</p>
 <div class="highlight-python"><pre>bamm -c myControlFile.txt</pre>
 </div>
-<p>You may download example control files (or if you have the development repository, it is located in the directory <tt class="docutils literal"><span class="pre">examples/</span></tt> ). Use these as a template for setting up your own analyses. The control file is simply a text file with a set of parameter names, followed by the &#8220;equals&#8221; sign (=), followed by the parameter value. Anything on a line of the control file to the right of a pound sign (#) will be ignored by the program (e.g., it is considered a <em>comment</em>). Part of your control file might look like this:</p>
+<p>You may <a class="reference external" href="http://bamm-project.org/download.html">download</a> example control files (or if you have the development repository, it is located in the directory <tt class="docutils literal"><span class="pre">examples/</span></tt> ). Use these as a template for setting up your own analyses. The control file is simply a text file with a set of parameter names, followed by the &#8220;equals&#8221; sign (=), followed by the parameter value. Anything on a line of the control file to the right of a pound sign (#) will be ignored by the program (e.g., it is considered a <em>comment</em>). Part of your control file might look like this:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># This line is a comment. It will not be read by BAMM</span>
 <span class="n">modeltype</span> <span class="o">=</span> <span class="n">speciationextinction</span>
 <span class="n">treefile</span> <span class="o">=</span> <span class="n">myPhylogeny</span><span class="o">.</span><span class="n">tre</span>
@@ -139,49 +139,49 @@ min(v$edge.length)</pre>
 <p>There are many possible settings that can be tweaked in BAMM. The next two sections give you a simple recipe for running the program on your data, depending on whether you are analyzing speciation-extinction rates or phenotypic evolutionary rates. <strong>There is no guarantee that these settings will work for your dataset</strong>.</p>
 </div>
 <div class="section" id="speciation-extinction-analyses">
-<span id="speciationextinctionquick"></span><h2>4.2. Speciation-extinction analyses<a class="headerlink" href="#speciation-extinction-analyses" title="Permalink to this headline">¶</a></h2>
-<p>You must have an ultrametric phylogenetic tree. For optimal performance with the <em>quick-start</em> settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file linked <a class="reference download internal" href="_downloads/template_diversification.txt"><tt class="xref download docutils literal"><span class="pre">here</span> <span class="pre">(template_diversification.txt)</span></tt></a>. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data. Here&#8217;s an example <a class="reference download internal" href="_downloads/whaletree.txt"><tt class="xref download docutils literal"><span class="pre">phylogenetic</span> <span class="pre">tree</span> <span class="pre">of</span> <span class="pre">whales</span></tt></a> that is used elsewhere in this documentation.</p>
+<span id="speciationextinctionquick"></span><h2>5.2. Speciation-extinction analyses<a class="headerlink" href="#speciation-extinction-analyses" title="Permalink to this headline">¶</a></h2>
+<p>You must have an ultrametric phylogenetic tree. For optimal performance with the <em>quick-start</em> settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file <a class="reference download internal" href="_downloads/template_diversification.txt"><tt class="xref download docutils literal"><span class="pre">template_diversification.txt</span></tt></a>. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data. Here&#8217;s an example <a class="reference download internal" href="_downloads/whaletree.txt"><tt class="xref download docutils literal"><span class="pre">phylogenetic</span> <span class="pre">tree</span> <span class="pre">of</span> <span class="pre">whales</span></tt></a> that is used elsewhere in this documentation.</p>
 <p>If you open the template file, you&#8217;ll see that there are extensive comments. For each parameter in the BAMM control file, we&#8217;ve included a brief description on the line following the parameter. For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">modeltype</span> <span class="o">=</span> <span class="n">speciationextinction</span>
-<span class="c"># Specify speciationextinction or trait analysis</span>
+<span class="c"># Specify &quot;speciationextinction&quot; or &quot;trait&quot; analysis</span>
 </pre></div>
 </div>
 <p>This tells us what parameter <tt class="docutils literal"><span class="pre">modeltype</span></tt> does. It specifies the type of analysis (here, a speciation-extinction analysis). If we wanted to do a phenotypic evolutionary analysis, we would have set <tt class="docutils literal"><span class="pre">modeltype</span> <span class="pre">=</span> <span class="pre">trait</span></tt>.</p>
 <p>There are only a handful of parameters in the template file that you need to set explicitly in order to run BAMM. These are currently defined with the following symbol: <tt class="docutils literal"><span class="pre">%%%%</span></tt>. For example, you see the following immediately after <tt class="docutils literal"><span class="pre">modeltype</span></tt>:</p>
 <div class="highlight-python"><pre>treefile = %%%%
-# Location of phylogenetic tree to be analyzed</pre>
+# File name of the phylogenetic tree to be analyzed</pre>
 </div>
 <p>This is where you specify the name of your phylogenetic tree. For example, <tt class="docutils literal"><span class="pre">treefile</span> <span class="pre">=</span> <span class="pre">mytree.tre</span></tt>. The other parameters we will force you to define explicitly have to do with output. This parameter block looks like this in the template:</p>
-<div class="highlight-python"><pre>numberGenerations = %%%%
+<div class="highlight-python"><pre>    numberOfGenerations = %%%%
 
-mcmcWriteFreq = %%%%
+    mcmcWriteFreq = %%%%
 
-eventDataWriteFreq = %%%%
+    eventDataWriteFreq = %%%%
 
-printFreq = %%%%</pre>
+    printFreq = %%%%
+
+acceptanceResetFreq = %%%%</pre>
 </div>
-<p><tt class="docutils literal"><span class="pre">numberGenerations</span></tt> is the number of simulation steps you want in your MCMC analysis. <tt class="docutils literal"><span class="pre">printfreq</span></tt> is the frequency that BAMM will write some simple information to the screen so you can track the progress of the run. <tt class="docutils literal"><span class="pre">mcmcWriteFreq</span></tt> and <tt class="docutils literal"><span class="pre">eventDataWriteFreq</span></tt> tells BAMM how often to write the two basic types of output to file.</p>
+<p><tt class="docutils literal"><span class="pre">numberOfGenerations</span></tt> is the number of simulation steps you want in your MCMC analysis. <tt class="docutils literal"><span class="pre">printFreq</span></tt> is the frequency that BAMM will write some simple information to the screen so you can track the progress of the run. <tt class="docutils literal"><span class="pre">mcmcWriteFreq</span></tt> and <tt class="docutils literal"><span class="pre">eventDataWriteFreq</span></tt> tells BAMM how often to write the two basic types of output to file.</p>
 <p>BAMM generates two types of output. The first is a file containing basic attributes of the MCMC chain as you sample it at particular timepoints. This includes: the log-likelihood of the data under the current parameters, the number of diversification shifts in the current state, the log-prior density of the current parameters, and a moving-window average of the acceptance rate for the MCMC simulation. The second type of output is the <em>event data</em>. This is the real stuff of interest. It contains all parameters associated with the macroevolutionary rate regimes and is used for all the subsequent analyses of evolutionary rates.</p>
 <p>You can set these parameters to whatever you want. However, please remember that you will be working with the <em>event data file</em> in R, which is a bit limited on memory. As a rough guide, we suggest choosing a value for <tt class="docutils literal"><span class="pre">eventDataWriteFreq</span></tt> that gives at least 1000 samples from the posterior, but we also don&#8217;t see much advantage to having more than 5000.</p>
+<p><tt class="docutils literal"><span class="pre">acceptanceResetFreq</span></tt> specifies the frequency (in generations) in which
+to reset the acceptance and rejection counts for reporting.
+Its value should be a divisor of <tt class="docutils literal"><span class="pre">mcmcWriteFreq</span></tt>.</p>
 <p>For starters, you should try a simple run with settings like this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">numberGenerations</span> <span class="o">=</span> <span class="mi">5000</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">numberOfGenerations</span> <span class="o">=</span> <span class="mi">5000</span>
 <span class="n">mcmcWriteFreq</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">eventDataWriteFreq</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">printFreq</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">acceptanceResetFreq</span> <span class="o">=</span> <span class="mi">1000</span>
 </pre></div>
 </div>
 <p>You&#8217;ll want to increase all of these once you are sure the program is correctly loading your data etc, but it&#8217;s a good first check.</p>
 <p>One other block of parameters can be critical to BAMM performance: the priors that you place on your evolutionary rate parameters. The prior block in your control file looks similar to this (ignoring most comments in the template file):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># PRIORS</span>
-<span class="c"># &lt;START prior block &gt;</span>
-<span class="n">poissonRatePrior</span> <span class="o">=</span> <span class="mf">1.0</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">poissonRatePrior</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="n">lambdaInitPrior</span> <span class="o">=</span> <span class="mf">1.0</span>
-<span class="n">lambdaInitRootPrior</span> <span class="o">=</span> <span class="mf">5.0</span>
 <span class="n">lambdaShiftPrior</span> <span class="o">=</span> <span class="mf">0.05</span>
-<span class="n">lambdaShiftRootPrior</span> <span class="o">=</span> <span class="mf">0.05</span>
 <span class="n">muInitPrior</span> <span class="o">=</span> <span class="mf">1.0</span>
-<span class="n">muInitRootPrior</span> <span class="o">=</span> <span class="mf">5.0</span>
-<span class="c"># &lt;END prior block &gt;</span>
 </pre></div>
 </div>
 <p>These priors may work for your dataset. They may also be extremely inadequate. To this end, we have included a function in the BAMMtools package to help you choose appropriate prior values. The function, <tt class="docutils literal"><span class="pre">setBAMMpriors</span></tt>, will automatically generate a prior block as a text file that you can copy and paste over the prior block in the template file. To do this, you need to install BAMMtools (see <a class="reference external" href="postprocess.html">here</a>), and you need your phylogenetic tree. Assuming you have a phylogenetic tree file <tt class="docutils literal"><span class="pre">my_tree.tre</span></tt>, you can generate the prior block with:</p>
@@ -190,23 +190,21 @@ printFreq = %%%%</pre>
 </div>
 <p>and the relevant output file will be generated in your working directory. See the help file (<tt class="docutils literal"><span class="pre">?setBAMMpriors</span></tt>) for more information. To be clear: this does not optimize priors to your dataset. It simply chooses a set of priors that we have found to be reasonable for most datasets and scales the distributions based on the age (root depth) of your tree. A more complete explanation <a class="reference internal" href="advanced.html#ratepriors"><em>can be found here</em></a>.</p>
 <div class="section" id="incomplete-taxon-sampling">
-<h3>4.2.1. Incomplete taxon sampling<a class="headerlink" href="#incomplete-taxon-sampling" title="Permalink to this headline">¶</a></h3>
+<h3>5.2.1. Incomplete taxon sampling<a class="headerlink" href="#incomplete-taxon-sampling" title="Permalink to this headline">¶</a></h3>
 <p>For speciation-extinction analyses BAMM can analytically account for incomplete taxon sampling that might otherwise bias results. You can even correct for <em>non-random</em> taxon sampling. An explanation of how to account for both random and non-random taxon sampling is found <a class="reference internal" href="advanced.html#incompsampling"><em>here</em></a>.</p>
 </div>
 </div>
 <div class="section" id="phenotypic-evolution">
-<span id="phenotypicquick"></span><h2>4.3. Phenotypic evolution<a class="headerlink" href="#phenotypic-evolution" title="Permalink to this headline">¶</a></h2>
+<span id="phenotypicquick"></span><h2>5.3. Phenotypic evolution<a class="headerlink" href="#phenotypic-evolution" title="Permalink to this headline">¶</a></h2>
 <p>This section is redundant with the preceding section on <strong>speciation-extinction</strong>, with a few differences.</p>
-<p>You must have an ultrametric phylogenetic tree. For optimal performance with the <em>quick-start</em> settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file linked <a class="reference download internal" href="_downloads/template_trait.txt"><tt class="xref download docutils literal"><span class="pre">here</span> <span class="pre">(template_trait.txt)</span></tt></a>. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data.</p>
+<p>You must have an ultrametric phylogenetic tree. For optimal performance with the <em>quick-start</em> settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file <a class="reference download internal" href="_downloads/template_trait.txt"><tt class="xref download docutils literal"><span class="pre">template_trait.txt</span></tt></a>. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data.</p>
 <p>If you open the template file, you&#8217;ll see that there are extensive comments. For each parameter in the BAMM control file, we&#8217;ve included a brief description on the line following the parameter. For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">modeltype</span> <span class="o">=</span> <span class="n">trait</span>
-<span class="c"># Specify speciationextinction or trait analysis</span>
 </pre></div>
 </div>
 <p>This tells us what parameter <cite>modeltype</cite> does. It specifies the type of analysis (here, a phenotypic evolution analysis). If we wanted to do a speciation-extinction analysis, we would have set <cite>modeltype = speciationextinction</cite>.</p>
 <p>There are only a handful of parameters in the template file that you need to set explicitly in order to run BAMM. These are currently defined with the following symbol: <cite>%%%%</cite>. For example, you see the following immediately after <cite>modeltype</cite>:</p>
-<div class="highlight-python"><pre>treefile = %%%%
-# Location of phylogenetic tree to be analyzed</pre>
+<div class="highlight-python"><pre>treefile = %%%%</pre>
 </div>
 <p>This is where you specify the name of your phylogenetic tree. For example, <tt class="docutils literal"><span class="pre">treefile</span> <span class="pre">=</span> <span class="pre">mytree.tre</span></tt>. Since we are analyzing phenotypes, we also need to specify the location of the trait data, which we do here:</p>
 <div class="highlight-python"><pre>traitfile = %%%%</pre>
@@ -219,28 +217,29 @@ mcmcWriteFreq = %%%%
 
 eventDataWriteFreq = %%%%
 
-printFreq = %%%%</pre>
+printFreq = %%%%
+
+acceptanceResetFreq = %%%%</pre>
 </div>
-<p><tt class="docutils literal"><span class="pre">numberGenerations</span></tt> is the number of simulation steps you want in your MCMC analysis. <tt class="docutils literal"><span class="pre">printfreq</span></tt> is the frequency that BAMM will write some simple information to the screen so you can track the progress of the run. <tt class="docutils literal"><span class="pre">mcmcWriteFreq</span></tt> and <tt class="docutils literal"><span class="pre">eventDataWriteFreq</span></tt> tells BAMM how often to write the two basic types of output to file. BAMM generates two types of output. The first is a file containing basic attributes of the MCMC chain as you sample it at particular timepoints. This includes: the log-likelihood of the data under the current parameters, the number of diversification shifts in the current state, the log-prior density of the current parameters, and a moving-window average of the acceptance rate for the MCMC simulation. The second type of output is the <em>event data</em>. This is the real stuff of interest. It all parameters associated with the macroevolutionary rate regimes and is used for all the subsequent analyses of evolutionary rates.</p>
+<p><tt class="docutils literal"><span class="pre">numberOfGenerations</span></tt> is the number of simulation steps you want in your MCMC analysis. <tt class="docutils literal"><span class="pre">printFreq</span></tt> is the frequency that BAMM will write some simple information to the screen so you can track the progress of the run. <tt class="docutils literal"><span class="pre">mcmcWriteFreq</span></tt> and <tt class="docutils literal"><span class="pre">eventDataWriteFreq</span></tt> tells BAMM how often to write the two basic types of output to file. BAMM generates two types of output. The first is a file containing basic attributes of the MCMC chain as you sample it at particular timepoints. This includes: the log-likelihood of the data under the current parameters, the number of diversification shifts in the current state, the log-prior density of the current parameters, and a moving-window average of the acceptance rate for the MCMC simulation. The second type of output is the <em>event data</em>. This is the real stuff of interest. It all parameters associated with the macroevolutionary rate regimes and is used for all the subsequent analyses of evolutionary rates.
+<tt class="docutils literal"><span class="pre">acceptanceResetFreq</span></tt> specifies the frequency (in generations) in which
+to reset the acceptance and rejection counts for reporting.
+Its value should be a divisor of <tt class="docutils literal"><span class="pre">mcmcWriteFreq</span></tt>.</p>
 <p>You can set these parameters to whatever you want. However, please remember that you will be working with the <em>event data file</em> in R, which is a bit limited on memory. As a rough guide, we suggest choosing a value for <tt class="docutils literal"><span class="pre">eventDataWriteFreq</span></tt> that gives at least 1000 samples from the posterior, but we also don&#8217;t see much advantage to having more than 5000.</p>
 <p>For starters, you should try a simple run with settings like this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">numberGenerations</span> <span class="o">=</span> <span class="mi">5000</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">numberOfGenerations</span> <span class="o">=</span> <span class="mi">5000</span>
 <span class="n">mcmcWriteFreq</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">eventDataWriteFreq</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">printFreq</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">acceptanceResetFreq</span> <span class="o">=</span> <span class="mi">1000</span>
 </pre></div>
 </div>
-<p>You&#8217;ll want to increase all of these once you are sure the program is correctly loading your data etc, but it&#8217;s a good first check.</p>
+<p>You&#8217;ll want to increase most of these once you are sure the program is correctly loading your data etc, but it&#8217;s a good first check.</p>
 <p>As for the speciation-extinction models, the priors you place on phenotypic evolutionary parameters can have a substantial impact on BAMM performance. The prior block in your (trait) template control file looks similar to this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># PRIORS</span>
-<span class="c"># &lt;START prior block &gt;</span>
-<span class="n">poissonRatePrior</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">poissonRatePrior</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">betaInitPrior</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">betaShiftPrior</span> <span class="o">=</span> <span class="mf">0.05</span>
-<span class="n">betaInitRootPrior</span> <span class="o">=</span> <span class="mf">5.0</span>
-<span class="n">betaShiftRootPrior</span> <span class="o">=</span> <span class="mf">0.05</span>
 <span class="n">useObservedMinMaxAsTraitPriors</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="c"># &lt;END prior block &gt;</span>
 </pre></div>
 </div>
 <p>These priors may work for your dataset, but they may also be very poor choices: it really depends on the scale of your tree (e.g., depth of the tree) and the variances in your trait values. The function <tt class="docutils literal"><span class="pre">setBAMMpriors</span></tt> (BAMMtools) will automatically generate a prior block as a text file that you can copy and paste over the prior block in the template file. This new set of priors is matched to the &#8220;scale&#8221; of your data. To do this, you need to install BAMMtools (see <a class="reference external" href="postprocess.html">here</a>), and you need your phylogenetic tree. Assuming you have a phylogenetic tree file <tt class="docutils literal"><span class="pre">my_tree.tre</span></tt> and a trait dataset <tt class="docutils literal"><span class="pre">my_traitfile.txt</span></tt>, you can generate the prior block with:</p>
@@ -250,13 +249,16 @@ printFreq = %%%%</pre>
 <p>and the relevant output file will be generated in your working directory. See the help file (<tt class="docutils literal"><span class="pre">?setBAMMpriors</span></tt>) for more information. To be clear: this does not optimize priors to your dataset. It simply chooses a set of priors that we have found to be reasonable for most datasets and scales the distributions based on the age (root depth) of your tree and the variance of your trait data. A more complete explanation <a class="reference internal" href="advanced.html#ratepriors"><em>can be found here</em></a>.</p>
 </div>
 <div class="section" id="bamm-output-brief">
-<h2>4.4. BAMM output: brief<a class="headerlink" href="#bamm-output-brief" title="Permalink to this headline">¶</a></h2>
+<h2>5.4. BAMM output: brief<a class="headerlink" href="#bamm-output-brief" title="Permalink to this headline">¶</a></h2>
 <p>BAMM generates multiple types of output files. These (usually) include:</p>
 <ul class="simple">
 <li>The <tt class="docutils literal"><span class="pre">run_info.txt</span></tt> file, containing a summary of your parameters/settings</li>
 <li>An <tt class="docutils literal"><span class="pre">mcmc_out.txt</span></tt> or equivalent file, containing raw MCMC information useful in diagnosing convergence</li>
 <li>An <tt class="docutils literal"><span class="pre">event_data.txt</span></tt> file or equivalent, containing all of evolutionary rate parameters and their topological mappings</li>
 <li>A <tt class="docutils literal"><span class="pre">prior.txt</span></tt> file or equivalent, giving the prior expectation on the number of shift events (this is optional and can be turned off).</li>
+<li>A <tt class="docutils literal"><span class="pre">chain_swap.txt</span></tt> file, containing data about each chain swap proposal
+(when a proposal occured, which chains might be swapped,
+and whether the swap was accepted).</li>
 </ul>
 <p>In general, the post-BAMM workflow consists of:</p>
 <ol class="arabic simple">
@@ -279,10 +281,10 @@ printFreq = %%%%</pre>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="settingup.html" title="5. Setting Up BAMM"
+          <a href="settingup.html" title="6. Setting Up BAMM"
              >next</a></li>
         <li class="right" >
-          <a href="rateshifts.html" title="3. Rate Shifts on Phylogenies: Theoretical Background"
+          <a href="time-flip.html" title="4. Time-flip proposal: Time-constant and time-variable shifts"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>

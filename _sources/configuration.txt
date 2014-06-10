@@ -62,10 +62,21 @@ General
     This is necessary to compute the Bayes factor.
 
 ``loadEventData``
-    If ``1``, load the event data from a file.
+    If ``1``, load a previous event state (event locations and parameter
+    values) from a file. This allows a run to be continued even after a
+    previous run has finished. The file format is identical to that of the
+    default output file ``event_data.txt``. Only the data from the last
+    generation will be processed if the file contains data for multiple
+    generations. For example, to load the data from a previous run, copy the
+    output event file (``event_data.txt``) to something like
+    ``event_data_in.txt`` and use this file in the ``eventDataInfile`` option
+    (below). Note that ``event_data.txt`` will be overwritten by the new run
+    (unless you change its name in the configuration file), so if you'd like to
+    keep those data, copy the file to a new one.
 
 ``eventDataInfile``
-    The file path of the event data (used only if ``loadEventData = 1``).
+    The file path of the event data to be loaded (used only if ``loadEventData
+    = 1``).
 
 ``initializeModel``
     If ``1``, initializes MCMC.
@@ -80,6 +91,14 @@ General
     filenames.
     If ``0``, do not run if output files already exist with identical filenames.
 
+``validateEventConfiguration``
+    If ``1``, rejects proposals that cause a branch and both of its direct
+    descendants to have at least one event. Such event configuration may cause
+    the parameters of the parent event to change to unrealistic values.
+    If ``0``, no such proposals are immediately rejected.
+    The default value is ``0``.
+
+
 Priors
 ......
 
@@ -93,7 +112,7 @@ Priors
 MCMC Simulation
 ...............
 
-``numberGenerations``
+``numberOfGenerations``
     Number of MCMC generations to run.
 
 ``mcmcWriteFreq``
@@ -121,6 +140,20 @@ MCMC Simulation
     can be reconstructed from this output. See :ref:`bammtools`
     for more information on working with this output format.
 
+``outputAcceptanceInfo``
+    If ``1``, outputs whether each proposal was accepted.
+    The number identifying the proposal matches the one in the code.
+    The default value is ``0`` (i.e., do not output this information).
+
+``acceptanceInfoFileName``
+    The path of the file to which to write whether each proposal was accepted.
+    ``outputAcceptedInfo`` must be set to ``1`` for this information to be
+    written. The default value is ``acceptance_info.txt``.
+
+``acceptanceResetFreq``
+    Frequency in which to reset the acceptance information.
+    The default value is ``1000``.
+
 ``updateEventLocationScale``
     Scale parameter for updating local moves of events on the tree.
     This defines the width of the sliding window proposal. This parameter
@@ -135,6 +168,38 @@ MCMC Simulation
 
 ``localGlobalMoveRatio``
     Ratio of local to global moves of events.
+
+Metropolis Coupled MCMC
+.......................
+
+The Metropolis coupled MCMC implementation in BAMM is based on a
+"global exchange scheme" for synchronization as described in
+Altekar et al (2004) Parallel Metropolis coupled Markov chain
+Monte Carlo for Bayesian phylogenetic inference.
+
+``numberOfChains``
+    Number of Markov chains to run. The default value is ``1``.
+
+``deltaT``
+    Temperature increment parameter. This value should be > 0.
+    The temperature for the :math:`i`-th chain is calculated as
+    :math:`1 / [1 + \Delta T \times (i - 1)]`.
+    The default value is ``0.1``.
+
+``swapPeriod``
+    Number of generations in which to propose a chain swap.
+    The default value is ``1000``.
+
+``chainSwapFileName``
+    Name of the file in which to output data about each chain swap proposal.
+    The format of each line is
+    ``[generation],[rank_1],[rank_2],[swap_accepted]``
+    where ``[generation]`` is the generation when the swap proposal was made,
+    ``[rank_1]`` and ``[rank_2]`` are the chains that were chosen
+    (chain 1 is the coldest, chain 2 is the second coldest, and so on),
+    and ``[swap_accepted]`` is whether the swap was made.
+    The default value is ``chain_swap.txt``.
+
 
 Parameter Update Rates
 ......................
@@ -183,25 +248,21 @@ Priors
     Prior on the inital lambda (rate parameter of the exponential distribution)
     for the speciation rate. Applies to all non-root events.
     
-``lambdaInitRootPrior``
-	Prior on the initial lambda value at the root of the tree
-	
 ``lambdaShiftPrior``
     Prior on the the lambda shift parameter (standard deviation of the normal
     distribution) for the speciation rate. The mean of the distribution
-    is fixed at zero, which is equal to a constant rate diversification process. 
+    is fixed at zero, which is equal to a constant rate diversification process.
     Applies to non-root events.
 
-``lambdaShiftRootPrior`` 
-	Prior on the lambda shift parameter for the root process.
-	
+``lambdaIsTimeVariablePrior``
+    Prior on the time mode for the speciation rate.
+    This prior is the probability that the speciation rate for a new event
+    is time-variable (i.e., time-dependent) vs. constant through time.
+
 ``muInitPrior``
     Prior on the extinction rate (rate paramater of the exponential
     distribution). Applies to non-root events.
     
-``muInitRootPrior``
-	Prior on the initial mu value for the root process.
-
 ``segLength``
     The "grain" of the likelihood calculations. It approximates the
     continuous-time change in diversification rates by breaking each branch
@@ -256,6 +317,11 @@ Parameter Update Rates
     Relative frequency of MCMC moves that change the exponential shift parameter
     of a speciation rate associated with an event.
 
+``updateRateLambdaTimeMode``
+    Relative frequency of MCMC moves that change whether the speciation rate
+    for an event is time-variable (i.e., time-dependent)
+    or constant through time.
+
 ``updateRateMu0``
     Relative frequency of MCMC moves that change the extinction rate for a given
     event.
@@ -283,7 +349,7 @@ General
 MCMC Tuning
 ...........
 
-``updateBetaScale``
+``updateBetaInitScale``
     Scale operator for proportional shrinking/expanding move to update
     the initial phenotypic rate for rate regimes.
 
@@ -314,17 +380,14 @@ Priors
     Parameter (rate) of the prior (exponential) on the inital phenotypic
     evolutionary rate associated with regimes, for non-root events.
 
-``betaInitRootPrior``
-    Parameter (rate) of the prior (exponential) on the inital phenotypic
-    evolutionary rate associated with regimes for the root event.
-
 ``betaShiftPrior``
     Parameter (stdandard deviation) of the prior (normal) on the rate-change
     parameter for non-root events.
 
-``betaShiftRootPrior``
-    Parameter (stdandard deviation) of the prior (normal) on the rate-change
-    parameter for the root event.
+``betaIsTimeVariablePrior``
+    Prior on the time mode for the phenotypic evolution rate.
+    This prior is the probability that the phenotypic rate for a new event
+    is time-variable (i.e., time-dependent) vs. constant through time.
 
 ``useObservedMinMaxAsTraitPriors``
     If ``1``, puts a uniform prior density on the distribution of ancestral
@@ -333,24 +396,29 @@ Priors
 
 ``traitPriorMin``
     User-defined minimum value for the uniform density on the distribution
-    of ancestral charater states. Only used if
+    of ancestral character states. Only used if
     ``useObservedMinMaxAsTraitPriors = 0``.
 
 ``traitPriorMax``
     User-defined maximum value for the uniform density on the distribution
-    of ancestral charater states. Only used if
+    of ancestral character states. Only used if
     ``useObservedMinMaxAsTraitPriors = 0``.
     
 Parameter Update Rates
 ......................
 
 ``updateRateBeta0``
-    Relative freuency of moves that change the initial phenotypic rate
+    Relative frequency of moves that change the initial phenotypic rate
     associated with an event.
 
 ``updateRateBetaShift``
     Relative frequency of moves that change the exponential shift parameter
     of a phenotypic rate associated with an event.
+
+``updateRateBetaTimeMode``
+    Relative frequency of MCMC moves that change whether
+    the phenotypic evolution rate for an event is time-variable
+    (i.e., time-dependent) or constant through time.
 
 ``updateRateNodeState``
     Relative frequency of moves update the value of ancestral character stats.
