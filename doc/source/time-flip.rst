@@ -205,15 +205,19 @@ time-variable event is defined by ``lambdaIsTimeVariablePrior``.
 The initial root event is assumed to be time-constant if ``lambdaShift0`` is 0;
 otherwise, it is time-variable.
 
-Eliminating the time-flip proposal mode
------------------------------------------
+To constrain BAMM such that all diversification shifts lead to
+time-varying processes only, set::
 
-To constrain BAMM such that all diversification shifts lead to time-varying processes only, **do this....**
+    lambdaIsTimeVariablePrior = 1
+    updateRateLambdaTimeMode = 0
+    lambdaShift0 = # Set it to a value that is not 0
 
-To constrain BAMM such that all diversification shifts lead to time-constant diversification processes only, **do this....**
+To constrain BAMM such that all diversification shifts lead to time-constant
+diversification processes only, set::
 
+    lambdaIsTimeVariablePrior = 0
+    updateRateLambdaTimeMode = 0
+    lambdaShift0 = 0
 
-
-
-
-
+Make similar adjustments to the corresponding *beta* options for
+the phenotypic evolution model type.
