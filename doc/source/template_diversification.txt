@@ -88,7 +88,7 @@ lambdaShiftPrior = 0.05
 muInitPrior = 1.0
 # Prior (rate parameter of exponential) on extinction rates  
 
-lambdaIsTimeVariablePrior = 0.5
+lambdaIsTimeVariablePrior = 1
 # Prior (probability) of the time mode being time-variable (vs. time-constant)
 
 
@@ -175,7 +175,7 @@ updateRateMu0 = 1
 # Relative frequency of MCMC moves that change the extinction rate for a given
 # event
 
-updateRateLambdaTimeMode = 1
+updateRateLambdaTimeMode = 0
 # Relative frequency of MCMC moves that flip the time mode
 # (time-constant <=> time-variable)
 

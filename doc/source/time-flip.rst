@@ -1,5 +1,10 @@
+.. _timefliptheory:
+
 Time-flip proposal: Time-constant and time-variable shifts
 ==========================================================
+
+**Note: The time-flip proposal is still being tested for reliability,
+so it is currently turned off in the template and example control files.**
 
 BAMM 2.0 introduces the concept of the "time-flip" proposal.
 Previously, the default model in BAMM assumed that all shift events in BAMM led to a distinct time-varying speciation (or phenotypic evolution) process. A time-variable shift event models speciation rate as
@@ -200,17 +205,18 @@ The frequency in which a time-flip proposal occurs,
 relative to other proposals, is given by ``updateRateLambdaTimeMode``
 and ``updateRateBetaTimeMode`` for the diversification
 and phenotypic evolution models, respectively.
-When a new event is added to the tree, the probability that it is a
-time-variable event is defined by ``lambdaIsTimeVariablePrior``.
-The initial root event is assumed to be time-constant if ``lambdaShift0`` is 0;
+When a new event is added to the tree, the probability that it is time-variable
+is defined by ``lambdaIsTimeVariablePrior`` (or ``betaIsTimeVariablePrior``).
+If the probability that an event is time-variable is between 0 and 1,
+the initial root event is assumed to be time-constant if ``lambdaShift0`` is 0;
 otherwise, it is time-variable.
+A similar assumption is made for ``betaShiftInit``.
 
 To constrain BAMM such that all diversification shifts lead to
 time-varying processes only, set::
 
     lambdaIsTimeVariablePrior = 1
     updateRateLambdaTimeMode = 0
-    lambdaShift0 = # Set it to a value that is not 0
 
 To constrain BAMM such that all diversification shifts lead to time-constant
 diversification processes only, set::

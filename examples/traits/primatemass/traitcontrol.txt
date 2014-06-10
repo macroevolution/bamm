@@ -90,7 +90,7 @@ traitPriorMax = 0
 # User-defined maximum value for the uniform density on the distribution of
 # ancestral character states. Only used if useObservedMinMaxAsTraitPriors = 0.
 
-betaIsTimeVariablePrior = 0.5
+betaIsTimeVariablePrior = 1
 # Prior (probability) of the time mode being time-variable (vs. time-constant)
 
 
@@ -182,7 +182,7 @@ updateRateNodeState = 25
 # you should update this much more often than you update the event-associated
 # parameters.
 
-updateRateBetaTimeMode = 1
+updateRateBetaTimeMode = 0
 # Relative frequency of MCMC moves that flip the time mode
 # (time-constant <=> time-variable)
 
