@@ -106,7 +106,8 @@ example data files for diversification and phenotypic evolution analysis.</p>
 <div class="section" id="download-bammtools">
 <h1>Download BAMMtools<a class="headerlink" href="#download-bammtools" title="Permalink to this headline">¶</a></h1>
 <p>BAMMtools will soon be available on CRAN. For now, you can download the full
-package here: <a class="reference external" href="http://www-personal.umich.edu/~carlosja/BAMMtools_2.0.0.tar.gz">BAMMtools_2.0.0.tar.gz</a></p>
+package here: <a class="reference external" href="http://www-personal.umich.edu/~carlosja/BAMMtools_2.0.0.tar.gz">BAMMtools_2.0.0.tar.gz</a>
+or (for Windows users) <a class="reference external" href="http://www-personal.umich.edu/~carlosja/BAMMtools_2.0.0.zip">BAMMtools_2.0.0.zip</a>.</p>
 <p>You can install this in R in several ways. On Mac OS X, you can open the
 Terminal application, navigate to a directory containing the
 BAMMtools_2.0.0.tar.gz file, and type &#8220;R CMD INSTALL BAMMtools_2.0.0.tar.gz&#8221;.
@@ -114,6 +115,13 @@ Or you can launch the R GUI and go to Packages &amp; Data -&gt; Package
 Installer -&gt; Local Source Package, and use the dialog box to navigate to
 the BAMMtools_2.0.0.tar.gz file. It should now behave like any other package
 you&#8217;ve installed in R, and you can load it with &#8220;library(BAMMtools)&#8221;.</p>
+<p>On Windows, first you need to uncompress the zip file
+so that you obtain a single directory called &#8220;BAMMtools&#8221;.
+Then, download and install
+<a class="reference external" href="http://cran.r-project.org/bin/windows/Rtools">Rtools</a> using RGui.
+Next, install and load the R package &#8220;devtools&#8221; in RGui.
+Finally, run <tt class="docutils literal"><span class="pre">install(choose.dir())</span></tt> and choose the &#8220;BAMMtools&#8221; directory.
+To start using BAMMtools, run <tt class="docutils literal"><span class="pre">library(BAMMtools)</span></tt> as with any other package.</p>
 </div>
 <div class="section" id="download-bamm-source-files">
 <h1>Download BAMM Source Files<a class="headerlink" href="#download-bamm-source-files" title="Permalink to this headline">¶</a></h1>
