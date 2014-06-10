@@ -1,3 +1,37 @@
+2014-06-09  Carlos Anderson  carlosjanderson@gmail.com
+
+        Update: Example control files were updated for BAMM 2.0.0.
+
+2014-06-05  Carlos Anderson  carlosjanderson@gmail.com
+
+        Feature: Time-flip proposal was added for phenotypic evolution.
+
+2014-06-02  Carlos Anderson  carlosjanderson@gmail.com
+
+        Change: When the exponential rate parameter k > 0, use the symmetrical
+        rate function of k < 0.
+
+2014-04-25  Carlos Anderson  carlosjanderson@gmail.com
+
+        Feature: Time-flip proposal was added for diversification model.
+
+2014-04-16  Carlos Anderson  carlosjanderson@gmail.com
+
+        Enhancement: Multiple Markov chains can run in parallel using OpenMP.
+
+2014-04-09  Carlos Anderson  carlosjanderson@gmail.com
+
+        Feature: More than one Markov chain can be created using Metropolis
+        coupled MCMC.
+
+2014-03-29  Carlos Anderson  carlosjanderson@gmail.com
+
+        Enhancement: Internal node names are allowed in the tree file.
+
+2014-03-12  Carlos Anderson  carlosjanderson@gmail.com
+
+        Bug fix: Detection of negative branches was not done correctly.
+
 2014-02-27  Dan Rabosky  dan.rabosky@gmail.com
 
         Change: Previously, numerical tolerance parameter MAX_E_PROB was
