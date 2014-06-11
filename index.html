@@ -106,9 +106,6 @@ questions and answers.</li>
 <div class="section" id="major-changes">
 <h1>Major changes<a class="headerlink" href="#major-changes" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li>Implementation of a flip model (see <a class="reference internal" href="time-flip.html#timefliptheory"><em>Time-flip proposal: Time-constant and time-variable shifts</em></a>) for rate shifts. Rate shifts are not assumed to lead to either time-constant processes (as in the previous BAMM version) or time-constant processes (as in MEDUSA); rather, a new class of reversible jump moves allows diversification dynamics to toggle between time-constant and time-variable modes.
-<strong>Note: The time-flip proposal is still being tested for reliability,
-so it is currently turned off in the template and example control files.</strong></li>
 <li>Metropolis coupling (MC3) implemented by default to facilitate convergence (automatically run in parallel if you have OpenMP). The MC3 is described <a class="reference internal" href="mc3.html#mc3"><em>here</em></a>.</li>
 <li>Comprehensive overhaul of BAMM&#8217;s C++ core for transparency and extensibility</li>
 <li>BAMMtools 2.0 uses branch-specific Bayes factors to identify credible sets of <a class="reference internal" href="rateshifts.html#rateshifts"><em>shift configurations</em></a></li>
