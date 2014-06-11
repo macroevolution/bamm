@@ -4,7 +4,8 @@ Time-flip proposal: Time-constant and time-variable shifts
 ==========================================================
 
 **Note: The time-flip proposal is still being tested for reliability,
-so it is currently turned off in the template and example control files.**
+so it is currently turned off in the template and example control files.
+It is available but is not the default. It is currently under development.**
 
 BAMM 2.0 introduces the concept of the "time-flip" proposal.
 Previously, the default model in BAMM assumed that all shift events in BAMM led to a distinct time-varying speciation (or phenotypic evolution) process. A time-variable shift event models speciation rate as
