@@ -1,0 +1,54 @@
+Settings
+
+- configuration group (MCMC operators, priors, etc)
+  - name of group (string)
+  - settings included
+
+- there can be global settings under a group, in which the group
+  is also defined in specific settings
+
+- no configuration hierarchies
+  - there are subtype with specific settings
+
+---------------
+type = diversification
+# General settings
+numberOfGenerations = 10000
+seqLength = 0.02
+# Priors
+lambdaPrior = 2
+----------------
+type = trait
+# General settings
+numberOfGenerations = 10000
+# Priors
+betaPrior = 2
+----------------
+
+SettingsType
+  - name
+  - groups
+
+SettingsGroup
+  - name
+  - parameters
+
+SettingsParameter
+  - name
+  - defaultValue
+  - required
+  - helpText
+  - deprecated
+  - deprecatedText
+
+type = SettingsType("diversification")
+group = SettingsGroup("General Settings")
+// fill with parameters
+type.addGroup(group)
+
+void addParameter(...) {
+  type = findTypeByName(typeName)
+  group = findGroupByName(type, groupName)
+  type.addParameter(...)
+  group.addParameter(...)
+}
