@@ -89,9 +89,14 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
     _tree->setNodeSpeciationParameters();
     _tree->setNodeExtinctionParameters();
 
-    // Initialize by previous event histories
+    // Initialize by previous event histories (or from initial event number)
     if (_settings.get<bool>("loadEventData")) {
         initializeModelFromEventDataFile(_settings.get("eventDataInfile"));
+    } else {
+        int initialNumberOfEvents = _settings.get<int>("initialNumberEvents");
+        for (int i = 0; i < initialNumberOfEvents; i++) {
+            addRandomEventToTree();
+        }
     }
 
     _extinctionProbMax = _settings.get<double>("extinctionProbMax");

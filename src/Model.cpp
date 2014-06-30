@@ -44,11 +44,6 @@ Model::Model(Random& random, Settings& settings) :
 void Model::finishConstruction()
 {
     calculateUpdateWeights();
-
-    int initialNumberOfEvents = _settings.get<int>("initialNumberEvents");
-    for (int i = 0; i < initialNumberOfEvents; i++) {
-        addRandomEventToTree();
-    }
 }
 
 
