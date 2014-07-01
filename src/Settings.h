@@ -25,6 +25,8 @@ public:
         const std::vector<UserParameter>& commandLineParameters);
 
     template<typename T> void set(const std::string& name, const T& value);
+    template<typename T> void setIfNotUserDefined
+        (const std::string& name, const T& value);
 
     std::string get(const std::string& name) const;
     template<typename T> T get(const std::string& name) const;
@@ -91,6 +93,16 @@ inline void Settings::set(const std::string& name, const T& value)
     } else {
         log(Error) << "Parameter <<" << name << ">> does not exist.\n";
         std::exit(1);
+    }
+}
+
+
+template<typename T>
+inline void Settings::setIfNotUserDefined
+    (const std::string& name, const T& value)
+{
+    if (!isUserDefined(name)) {
+        set(name, value);
     }
 }
 
