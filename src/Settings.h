@@ -29,6 +29,8 @@ public:
     std::string get(const std::string& name) const;
     template<typename T> T get(const std::string& name) const;
 
+    bool isUserDefined(const std::string& name) const;
+
     void printCurrentSettings(std::ostream& out = std::cout) const;
 
 private:
@@ -105,6 +107,18 @@ inline T Settings::get(const std::string& name) const
     ParameterMap::const_iterator it = _parameters.find(name);
     if (it != _parameters.end()) {
         return (it->second).value<T>();
+    } else {
+        log(Error) << "Parameter <<" << name << ">> does not exist.\n";
+        std::exit(1);
+    }
+}
+
+
+inline bool Settings::isUserDefined(const std::string& name) const
+{
+    ParameterMap::const_iterator it = _parameters.find(name);
+    if (it != _parameters.end()) {
+        return (it->second).isUserDefined();
     } else {
         log(Error) << "Parameter <<" << name << ">> does not exist.\n";
         std::exit(1);
