@@ -119,7 +119,7 @@ void Settings::initializeGlobalSettings()
     addParameter("chainSwapFileName", "chain_swap.txt", NotRequired);
 
     // Priors
-    addParameter("poissonRatePrior", "0.0");
+    addParameter("poissonRatePrior", "0.0", NotRequired);
 
     // Output
     addParameter("outName", "", NotRequired);
