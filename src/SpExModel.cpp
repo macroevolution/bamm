@@ -104,9 +104,8 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
     setCurrentLogLikelihood(computeLogLikelihood());
 
     if (std::isinf(getCurrentLogLikelihood())) {
-        log(Error) << "Initial log-likelihood is infinity.\n"
+        log(Warning) << "Initial log-likelihood is infinity.\n"
             << "Please check your initial parameter values.\n";
-        std::exit(1);
     }
 
     log() << "\nInitial log-likelihood: " << getCurrentLogLikelihood() << "\n";
