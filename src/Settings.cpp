@@ -181,9 +181,9 @@ void Settings::initializeSpeciationExtinctionSettings()
     addParameter("minCladeSizeForShift", "1", NotRequired);
 
     // Starting parameters
-    addParameter("lambdaInit0", "0.0");
-    addParameter("lambdaShift0", "0.0");
-    addParameter("muInit0", "0.0");
+    addParameter("lambdaInit0", "0.0", NotRequired);
+    addParameter("lambdaShift0", "0.0", NotRequired);
+    addParameter("muInit0", "0.0", NotRequired);
     addParameter("muShift0", "0.0", NotRequired);
 
     // Priors
