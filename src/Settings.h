@@ -24,6 +24,8 @@ public:
     Settings(const std::string& controlFilename,
         const std::vector<UserParameter>& commandLineParameters);
 
+    template<typename T> void set(const std::string& name, const T& value);
+
     std::string get(const std::string& name) const;
     template<typename T> T get(const std::string& name) const;
 
@@ -76,6 +78,19 @@ private:
     // Parameters read from the command line
     std::vector<UserParameter> _commandLineParameters;
 };
+
+
+template<typename T>
+inline void Settings::set(const std::string& name, const T& value)
+{
+    ParameterMap::iterator it = _parameters.find(name);
+    if (it != _parameters.end()) {
+        (it->second).setValue(value);
+    } else {
+        log(Error) << "Parameter <<" << name << ">> does not exist.\n";
+        std::exit(1);
+    }
+}
 
 
 inline std::string Settings::get(const std::string& name) const
