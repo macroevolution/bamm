@@ -1667,6 +1667,11 @@ Node* Tree::getNodeMRCA(const std::string& A, const std::string& B)
         }
     }
 
+    // MRCA between the same nodes is just the node
+    if (nodeA == nodeB) {
+        return nodeA;
+    }
+
     if (!Agood | !Bgood) {
         log(Error) << "Invalid nodes " << A << " and " << B
             << " sent to Tree::getNodeMRCA(...)\n";
