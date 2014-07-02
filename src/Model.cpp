@@ -120,18 +120,14 @@ void Model::initializeModelFromEventDataFile(const std::string& fileName)
         if (x == _tree->getRoot()) {
             // Set the root event with model-specific parameters
             setRootEventWithReadParameters(parameters);
+            setMeanBranchParameters();
         } else {
             double deltaT = x->getTime() - eventTime;
             double newMapTime = x->getMapStart() + deltaT;
 
             BranchEvent* newEvent =
                 newBranchEventWithReadParameters(x, newMapTime, parameters);
-            newEvent->getEventNode()->getBranchHistory()->
-                addEventToBranchHistory(newEvent);
-
-            _eventCollection.insert(newEvent);
-            forwardSetBranchHistories(newEvent);
-            setMeanBranchParameters();
+            addEventToTree(newEvent);
         }
 
         eventCount++;
