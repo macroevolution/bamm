@@ -1,11 +1,13 @@
 #include "CommandLineProcessor.h"
 #include "Settings.h"
 #include "Random.h"
+#include "Tree.h"
 #include "ModelFactory.h"
 #include "SpExModelFactory.h"
 #include "TraitModelFactory.h"
 #include "FastSimulatePrior.h"
 #include "MetropolisCoupledMCMC.h"
+#include "SettingsInitializer.h"
 #include "Log.h"
 
 #include <iostream>
@@ -17,6 +19,7 @@
 
 
 void printAboutBox();
+void autoInitializeSettings(Settings& settings);
 std::string buildCommandLine(int argc, char* argv[]);
 const char* currentTime();
 ModelFactory* createModelFactory(const std::string& modelType);
@@ -35,6 +38,9 @@ int main (int argc, char* argv[])
     Random random = (seed > 0) ? Random(seed) : Random();
     seed = random.getSeed();    // Get actual seed in case it is based on clock
     log(Message) << "Random seed: " << seed << "\n";
+
+    // Auto-initialize some settings (priors, initial values, etc)
+    autoInitializeSettings(settings);
 
     // Setup "run info" file and print current settings
     std::ofstream runInfoFile(settings.get("runInfoFilename").c_str());
@@ -87,6 +93,22 @@ void printAboutBox()
 |   See LICENSE for details.                                           |\n\
 |                                                                      |\n\
 +----------------------------------------------------------------------+\n\n";
+}
+
+
+void autoInitializeSettings(Settings& settings)
+{
+    log() << "Auto-initializing unset parameters... Ignore warnings.\n";
+
+    SettingsInitializer settingsInit(settings);
+
+    if (settings.get("modeltype") == "speciationextinction") {
+        settingsInit.initializeSpExSettings();
+    } else {    // Should be trait model
+        settingsInit.initializeTraitSettings();
+    }
+
+    log() << "Done auto-initializing.\n";
 }
 
 
