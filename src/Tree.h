@@ -242,7 +242,7 @@ public:
     void echoMeanBranchTraitRates();
 
     std::vector<Node*> terminalNodes();
-    std::vector<double> traitValues();
+    std::vector<double> traitValues();    // in the order of terminalNodes()
 };
 
 
