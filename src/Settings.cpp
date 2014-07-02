@@ -226,12 +226,12 @@ void Settings::initializeTraitSettings()
     addParameter("updateBetaShiftScale", "0.0");
 
     // Starting parameters
-    addParameter("betaInit", "0.0");
-    addParameter("betaShiftInit", "0.0");
+    addParameter("betaInit", "0.0", NotRequired);
+    addParameter("betaShiftInit", "0.0", NotRequired);
 
     // Priors
-    addParameter("betaInitPrior", "0.0");
-    addParameter("betaShiftPrior", "0.0");
+    addParameter("betaInitPrior", "0.0", NotRequired);
+    addParameter("betaShiftPrior", "0.0", NotRequired);
     addParameter("betaInitRootPrior", "-1.0", NotRequired);
     addParameter("betaShiftRootPrior", "-1.0", NotRequired);
     addParameter("betaIsTimeVariablePrior", "0.5");
