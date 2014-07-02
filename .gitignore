@@ -16,12 +16,12 @@
 build
 
 # Default output files
-mcmc_out*
-event_data*
-run_info*
-shiftPrior*
-chain_swap*
-prior_probs*
+*mcmc_out*
+*event_data*
+*run_info*
+*shiftPrior*
+*chain_swap*
+*prior_probs*
 
 # Other junk
 .DS_Store
