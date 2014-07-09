@@ -58,14 +58,10 @@ Next, install and load the R package "devtools" in RGui.
 Finally, run ``install(choose.dir())`` and choose the "BAMMtools" directory.
 To start using BAMMtools, run ``library(BAMMtools)`` as with any other package.
 
-
 Download BAMM Source Files
 ==========================
 
-`bamm-2.0.0.tar.gz
-<http://www-personal.umich.edu/~carlosja/bamm-2.0.0.tar.gz>`_
-
-Or access the development source files (or contribute) from our
+Access the development source files from our
 `GitHub page <https://github.com/macroevolution/bamm>`_.
 
 BAMM Changes
@@ -77,7 +73,7 @@ Read important changes to BAMM since its release:
 Previous Versions
 =================
 
-You may download previous versions of the binaries, source, and examples
+You may download previous versions of the binaries and examples
 for BAMM and the source code for BAMMtools using the following links:
 
 `bamm-1.0.0-MacOSX.tar.gz
@@ -94,7 +90,3 @@ for BAMM and the source code for BAMMtools using the following links:
 
 `BAMMtools_1.0.1.tar.gz
 <http://www-personal.umich.edu/~carlosja/BAMMtools_1.0.1.tar.gz>`_
-
-`bamm-1.0.0.tar.gz
-<http://www-personal.umich.edu/~carlosja/bamm-1.0.0.tar.gz>`_
-(source code)

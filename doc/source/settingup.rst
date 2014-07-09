@@ -3,18 +3,11 @@
 Setting Up BAMM
 ===============
 
-The following instructions assume you are running ``bash`` or a similar
-Unix shell. In Linux and Mac OS X systems, ``bash`` is the default shell
-when you open the Terminal application.
-For Windows users, we recommend you use `Cygwin <http://www.cygwin.com/>`_,
-where ``bash`` is also the default shell.
+Installation from Executable
+----------------------------
 
-Installation From Binary
-------------------------
-
-The compressed file you downloaded containing the binary file
-contains only the executable program.
-We strongly recommend that you also download the examples
+The compressed file you downloaded contains the executable program only.
+We recommend that you also download the example files
 to use as templates for the control files necessary to run BAMM.
 Go to the `Download <http://bamm-project.org/download.html>`_ page
 to download the examples.
@@ -23,17 +16,18 @@ OS X
 ....
 
 1. `Download <http://bamm-project.org/download.html>`_ the Mac OS X
-   tar.gz file containing the binary file for BAMM.
+   tar.gz file containing the executable file for BAMM.
 
 2. This file is a compressed tar.gz file. To uncompress it,
-   run the following command from the directory in which BAMM was downloaded
+   open the Terminal application and run the following command
+   from the directory in which BAMM was downloaded
    (the actual version of BAMM may be different)::
 
        tar -xzf bamm-1.0.0-MacOSX.tar.gz
 
    This will uncompress the single file ``bamm`` into the current directory.
 
-3. You may copy the file ``bamm`` to any directory in your system.
+3. You may copy or move the file ``bamm`` to any directory in your system.
    See below and the `Quick-start guide to BAMM
    <http://bamm-project.org/quickstart.html>`_
    to learn how to configure and run BAMM.
@@ -42,60 +36,58 @@ Windows
 .......
 
 1. `Download <http://bamm-project.org/download.html>`_ the Windows .zip file
-   containing the binary file and required library files for BAMM.
+   containing the executable file and required library files for BAMM.
 
 2. This file is a compressed zip file. Extract the contents of the zip file
-   and move it to a location you can access from the command-line.
+   and move them to a location you can access from the command-line.
 
-3. Open the command-line in Windows by clicking on the Start button
+3. Open the command-line program in Windows by clicking on the Start button
    and typing "cmd" in the search text box. Use the ``cd`` command
    to go to the directory where BAMM is located.
    See below and the `Quick-start guide to BAMM
    <http://bamm-project.org/quickstart.html>`_
    to learn how to configure and run BAMM.
    
-Installation From Source
+Installation from Source
 ------------------------
 
-Use this option to compile and install BAMM from its source files.
+The following instructions assume you are running ``bash`` or a similar
+Unix shell. In Linux and Mac OS X systems, ``bash`` is the default shell
+when you open the Terminal application.
+We also assume you have `Git <http://git-scm.com>`_ and
+`CMake <http://www.cmake.org>`_ installed.
 
-1. `Download <http://bamm-project.org/download.html>`_ the latest available
-   version of the BAMM source files.
+#. Get the latest version of BAMM::
 
-2. This file is compressed as a tar.gz file. To uncompress it,
-   run the following command from the directory in which BAMM was downloaded
-   (the actual version of BAMM may be different)::
+       git clone https://github.com/macroevolution/bamm.git
 
-       tar -xzf bamm-1.0.0.tar.gz
-
-   This will create the directory bamm-1.0.0.
+   This will create the directory ``bamm`` in your current directory.
    
-3. Verify that you have `CMake <http://www.cmake.org>`_ installed::
-
-       which cmake
-
-   If the location of the CMake program appears (e.g., ``/usr/bin/cmake``),
-   you have CMake installed. You will also need a C++ compiler,
-   such as `GCC <http://gcc.gnu.org/>`_ or `Clang <http://clang.llvm.org/>`_.
-
-4. Go into the bamm-1.0.0 directory and create a build directory where
+#. Go into the ``bamm`` directory and create a build directory where
    the final executable will be created, then go into that directory::
    
        mkdir build
        cd build
 
-5. Run ``cmake``, and if successful, run ``make``::
+#. Run ``cmake``, and if successful, run ``make``::
 
        cmake ..
        make -j
 
    The ``-j`` option will compile in parallel.
+   If you'd like to use Clang for OpenMP support
+   (see http://clang-omp.github.io), you will likely need to tell
+   CMake to use that version of Clang::
 
-6. You can run ``bamm`` from this directory, or you may wish to install it
+       cmake -DCMAKE_CXX_COMPILER=clang++ ..
+       make -j
+
+#. You can run ``bamm`` from this directory, or you may wish to install it
    in a more permanent location::
 
        sudo make install
 
+   You may now run ``bamm`` from any directory in your system.
    See below and the `Quick-start guide to BAMM
    <http://bamm-project.org/quickstart.html>`_
    to learn how to configure and run BAMM.
