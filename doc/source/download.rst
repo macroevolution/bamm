@@ -68,11 +68,11 @@ Download BAMM Source Files
 Or access the development source files (or contribute) from our
 `GitHub page <https://github.com/macroevolution/bamm>`_.
 
-Change Log
-==========
+BAMM Changes
+============
 
-Read important changes to BAMM since its pre-release:
-`ChangeLog.txt <ChangeLog.txt>`_.
+Read important changes to BAMM since its release:
+`BAMM Changes <changes.html>`_
 
 Previous Versions
 =================
