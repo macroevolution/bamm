@@ -18,6 +18,7 @@ Model::Model(Random& random, Settings& settings) :
     _random(random), _settings(settings), _prior(_random, &_settings),
     _tree(new Tree(_random, _settings)),
     _eventNumberProposal(random, settings, *this),
+    _eventNumberForBranchProposal(random, settings, *this),
     _moveEventProposal(random, settings, *this),
     _eventRateProposal(random, settings, *this, _prior)
 {
@@ -228,6 +229,8 @@ void Model::calculateUpdateWeights()
 void Model::initializeUpdateWeights()
 {
     _updateWeights.push_back(_settings.get<double>("updateRateEventNumber"));
+    _updateWeights.push_back
+        (_settings.get<double>("updateRateEventNumberForBranch"));
     _updateWeights.push_back(_settings.get<double>("updateRateEventPosition"));
     _updateWeights.push_back(_settings.get<double>("updateRateEventRate"));
 
@@ -246,8 +249,10 @@ void Model::proposeNewState()
     if (parameterToUpdate == 0) {
         proposal = &_eventNumberProposal;
     } else if (parameterToUpdate == 1) {
-        proposal = &_moveEventProposal;
+        proposal = &_eventNumberForBranchProposal;
     } else if (parameterToUpdate == 2) {
+        proposal = &_moveEventProposal;
+    } else if (parameterToUpdate == 3) {
         proposal = &_eventRateProposal;
     } else {
         // Defined by derived class
@@ -283,6 +288,20 @@ BranchEvent* Model::addRandomEventToTree()
     double x = _random.uniform(aa, bb);
                 
     BranchEvent* newEvent = newBranchEventWithRandomParameters(x);
+    return addEventToTree(newEvent);
+}
+
+
+BranchEvent* Model::addRandomEventToTreeOnRandomBranch()
+{
+    Node* randomNode = _tree->getRandomNonRootNode();
+
+    double mapStart = randomNode->getMapStart();
+    double mapEnd = randomNode->getMapEnd();
+
+    double randomMapPoint = _random.uniform(mapStart, mapEnd);
+    BranchEvent* newEvent = newBranchEventWithRandomParameters(randomMapPoint);
+
     return addEventToTree(newEvent);
 }
 

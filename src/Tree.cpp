@@ -303,6 +303,14 @@ Node* Tree::getRandomNodeFromTempArray()
 }
 
 
+Node* Tree::getRandomNonRootNode()
+{
+    // Start at index = 1 because the root is at index = 0
+    int randomIndex = _random.uniformInteger(1, _preOrderNodes.size() - 1);
+    return _preOrderNodes[randomIndex];
+}
+
+
 void Tree::setBranchLengths()
 {
     // Set brlens:

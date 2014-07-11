@@ -119,13 +119,13 @@ void TraitModel::initializeSpecificUpdateWeights()
 
 Proposal* TraitModel::getSpecificProposal(int parameter)
 {
-    if (parameter == 3) {
+    if (parameter == 4) {
         return &_betaInitProposal;
-    } else if (parameter == 4) {
-        return &_betaShiftProposal;
     } else if (parameter == 5) {
-        return &_nodeStateProposal;
+        return &_betaShiftProposal;
     } else if (parameter == 6) {
+        return &_nodeStateProposal;
+    } else if (parameter == 7) {
         return &_betaTimeModeProposal;
     } else {
         // Should never get here

@@ -39,6 +39,7 @@ SET(BAMM_SRC
     src/EventCountLog.cpp
     src/EventDataWriter.cpp
     src/EventNumberProposal.cpp
+    src/EventNumberForBranchProposal.cpp
     src/EventParameterProposal.cpp
     src/EventRateProposal.cpp
     src/FastSimulatePrior.cpp

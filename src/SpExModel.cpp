@@ -130,15 +130,15 @@ void SpExModel::initializeSpecificUpdateWeights()
 
 Proposal* SpExModel::getSpecificProposal(int parameter)
 {
-    if (parameter == 3) {
+    if (parameter == 4) {
         return &_lambdaInitProposal;
-    } else if (parameter == 4) {
-        return &_lambdaShiftProposal;
     } else if (parameter == 5) {
-        return &_muInitProposal;
+        return &_lambdaShiftProposal;
     } else if (parameter == 6) {
-        return &_muShiftProposal;
+        return &_muInitProposal;
     } else if (parameter == 7) {
+        return &_muShiftProposal;
+    } else if (parameter == 8) {
         return &_lambdaTimeModeProposal;
     } else {
         // Should never get here

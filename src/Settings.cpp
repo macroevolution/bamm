@@ -140,6 +140,7 @@ void Settings::initializeGlobalSettings()
 
     // Parameter update rates
     addParameter("updateRateEventNumber", "0.0");
+    addParameter("updateRateEventNumberForBranch", "0.0", NotRequired);
     addParameter("updateRateEventPosition", "0.0");
     addParameter("updateRateEventRate", "0.0");
     addParameter("initialNumberEvents", "0");

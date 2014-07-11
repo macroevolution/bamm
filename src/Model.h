@@ -4,6 +4,7 @@
 
 #include "Prior.h"
 #include "EventNumberProposal.h"
+#include "EventNumberForBranchProposal.h"
 #include "MoveEventProposal.h"
 #include "EventRateProposal.h"
 #include "BranchEvent.h"
@@ -75,6 +76,7 @@ public:
     void forwardSetHistoriesRecursive(Node* p);
 
     BranchEvent* addRandomEventToTree();
+    BranchEvent* addRandomEventToTreeOnRandomBranch();
     BranchEvent* addEventToTree(BranchEvent* newEvent);
 
     BranchEvent* removeEventFromTree(BranchEvent* be);
@@ -130,6 +132,7 @@ protected:
     Tree* _tree;
 
     EventNumberProposal _eventNumberProposal;
+    EventNumberForBranchProposal _eventNumberForBranchProposal;
     MoveEventProposal _moveEventProposal;
     EventRateProposal _eventRateProposal;
 

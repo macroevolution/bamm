@@ -229,6 +229,8 @@ public:
     void  clearTempNodeArray();
     Node* getRandomNodeFromTempArray();
 
+    Node* getRandomNonRootNode();
+
     void printNodeBranchRates();
 
     void computeMeanTraitRatesByNode(Node* x);
