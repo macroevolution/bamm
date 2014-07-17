@@ -8,9 +8,7 @@ Metropolis coupled Markov chain Monte Carlo [|MC3|]
 ===================================================
 
 The Markov chain Monte Carlo (MCMC) method implemented in BAMM
-estimates the posterior probability of the model configuration
-that most likely explains the phylogenetic data.
-Before version 2.0.0, BAMM used a single Markov chain
+estimates the posterior probability distribution of diversification models that best describe a particular phylogenetic dataset. Before version 2.0.0, BAMM used a single Markov chain
 to explore the landscape of models and their parameter values.
 A single chain, however, may get stuck in local optima,
 which results in less mixing and more time needed for convergence.
@@ -34,7 +32,7 @@ As a result, a chain that is stuck in a local optimum
 may immediately jump to another area of the landscape.
 
 The implementation of |MC3| in BAMM follows that described in
-`Altkar et al. 2004
+`Altekar et al. 2004
 <http://bioinformatics.oxfordjournals.org/content/20/3/407.full.pdf>`_.
 For each chain :math:`i`, its temperature :math:`\beta_i` is set to
 :math:`\beta_i = [1 + \Delta T \times (i - 1)]^{-1}`,
@@ -46,7 +44,7 @@ Note that the value of :math:`\Delta T` should be greater than 0
 and chosen such that the probability of accepting a swap
 is between 20% and 60% (Altekar et al. 2004).
 
-The temperature of for each chain :math:`i` goes into the calculation
+The temperature of each chain :math:`i` goes into the calculation
 of the acceptance probability for a within-model proposal
 (i.e., not involving changes in the dimensionality of the model):
 
