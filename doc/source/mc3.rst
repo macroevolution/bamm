@@ -80,16 +80,59 @@ After a certain number of generations, two randomly chosen chains
         \left(\cfrac{f(\theta_j)}{f(\theta_k)}\right)^{\beta_k}
     \right\}
 
+.. |MC4| replace:: (MC)\ :sup:`4`
+
+Multi-core Metropolis coupled MCMC [|MC4|]
+------------------------------------------
+
+Using a single CPU, the amount of time a run takes to finish
+scales linearly with the number of chains.
+Because chains are mostly independent from each other,
+except when two chains are chosen to swap states,
+they may be set up to run on different CPUs in parallel.
+BAMM implements this parallelization using `OpenMP <http://openmp.org/>`_.
+OpenMP is a software library that provides the functionality
+required to allow each chain to run on a different CPU
+(assuming there are enough available CPUs).
+
+To enable OpenMP support in BAMM under Linux,
+the OpenMP library must be installed in your computer
+and BAMM must be compiled and linked from source.
+The compilation and linking with the OpenMP library
+is done automatically with CMake, typically using the GCC compiler.
+In Mac OS X, the OpenMP library must also be installed in your computer.
+However, Clang does not support OpenMP,
+so a special version of Clang, `OpenMP/Clang <http://clang-omp.github.io>`_,
+must be compiled from source and installed.
+In Windows, the downloadable zip file with the BAMM executable
+includes the OpenMP library, so no re-compilation is necessary.
+
+
 |MC3| settings in BAMM
 ----------------------
 
-The number of chains to use is specified with ``numberOfChains``.
+There are four settings in BAMM that control the behavior of |MC3|.
+They are in the template and example control files
+under the heading ``METROPOLIS COUPLED MCMC``.
+The number of Markov chains to use is specified with ``numberOfChains``.
 The :math:`\Delta T` value is specified with ``deltaT``.
 The number of generations between chain swap proposals
 is specified with ``swapPeriod``.
-BAMM will output to a file named in ``chainSwapFileName``
-(the default is ``chain_swap.txt``)
+BAMM will output to a file (``chain_swap.txt`` by default)
 the generation in which a swap proposal occurred,
 the ranking of the two chains chosen
 (1 is the cold chain, 2 is the first heated chain, etc.),
 and whether the swap was accepted.
+The file to which to output these data is specified with ``chainSwapFileName``.
+
+Our preliminary tests show that four chains produces good MCMC mixing.
+The :math:`\Delta T` value should be set such that the probability
+of accepting a chain swap proposal is between 20% and 60%.
+For small to medium sized trees (< 1,000 taxa),
+we have found that :math:`\Delta T = 0.1` works well.
+For large trees, :math:`\Delta T = 0.05`
+or :math:`\Delta T = 0.01` works better.
+We have not examined the effects of the swap period in detail,
+but in terms of run time,
+the smaller the swap period, the longer the run takes to complete.
+A swap period of 1000 has worked for us.
