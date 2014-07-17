@@ -8,7 +8,9 @@ Metropolis coupled Markov chain Monte Carlo [|MC3|]
 ===================================================
 
 The Markov chain Monte Carlo (MCMC) method implemented in BAMM
-estimates the posterior probability distribution of diversification models that best describe a particular phylogenetic dataset. Before version 2.0.0, BAMM used a single Markov chain
+estimates the posterior probability distribution of diversification models
+that best describe a particular phylogenetic dataset.
+Before version 2.0.0, BAMM used a single Markov chain
 to explore the landscape of models and their parameter values.
 A single chain, however, may get stuck in local optima,
 which results in less mixing and more time needed for convergence.
