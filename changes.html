@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>BAMM Changes &mdash; bamm 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="bamm 1.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+<div class="pageheader">
+    <img src="_static/bamm-header.png" /img>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+<li><a href="index.html">Home</a>&nbsp;|</li>
+<li><a href="download.html">Download</a>&nbsp;|</li>
+<li><a href="documentation.html">Documentation</a>&nbsp;|</li>
+<li><a href="contact_us.html">Contact Us</a></li>
+ 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="documentation.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">BAMM Changes</a><ul>
+<li><a class="reference internal" href="#id1">2.1.0</a></li>
+<li><a class="reference internal" href="#id2">2.0.0</a><ul>
+<li><a class="reference internal" href="#new-features-and-enhancements">New features and enhancements</a></li>
+<li><a class="reference internal" href="#bug-fixes">Bug fixes</a></li>
+<li><a class="reference internal" href="#other-changes">Other changes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id3">1.0.0</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/changes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="bamm-changes">
+<h1>BAMM Changes<a class="headerlink" href="#bamm-changes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>2.1.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p><em>July 21, 2014</em></p>
+<ul class="simple">
+<li>Add proposal to change the number of events
+by picking a random branch rather than a random location<ul>
+<li>To use this proposal, add the setting <tt class="docutils literal"><span class="pre">updateRateEventNumberForBranch</span></tt>
+and give it a value greater than 0 (e.g., 0.1)</li>
+<li>It is recommended that the setting <tt class="docutils literal"><span class="pre">updateRateEventNumber</span></tt>
+be set to 0 when this new proposal is used</li>
+</ul>
+</li>
+<li>Fix log-likelihood calculation when loading event data
+or adding initial events</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>2.0.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p><em>June 11, 2014</em></p>
+<div class="section" id="new-features-and-enhancements">
+<h3>New features and enhancements<a class="headerlink" href="#new-features-and-enhancements" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Metropolis-coupled MCMC<ul>
+<li>Implementation from Altekar et al 2004
+(<em>Parallel Metropolis coupled Markov chain Monte Carlo
+for Bayesian phylogenetic inference</em>)</li>
+<li>In the control file, specify the number of chains with <tt class="docutils literal"><span class="pre">numberOfChains</span></tt>,
+the temperature increment parameter (delta T) with <tt class="docutils literal"><span class="pre">deltaT</span></tt>,
+and the number of generations to wait for each chain swap proposal
+with <tt class="docutils literal"><span class="pre">swapPeriod</span></tt></li>
+<li>Supports running chains in parallel with OpenMP</li>
+<li>Output acceptance information for chain swaps to the file
+specified by <tt class="docutils literal"><span class="pre">chainSwapFileName</span></tt></li>
+</ul>
+</li>
+<li>Time-flip proposal<ul>
+<li>Allows shift events to change from time-variable to time-constant
+and vice versa</li>
+<li>Enable this proposal with <tt class="docutils literal"><span class="pre">updateRateLambdaTimeMode</span></tt> for the
+speciation/extinction model type and with <tt class="docutils literal"><span class="pre">updateRateBetaTimeMode</span></tt>
+for the trait model type</li>
+</ul>
+</li>
+<li>Command-line options<ul>
+<li>Change any setting at the command-line; for example, to change
+the number of generations to 1000, add <tt class="docutils literal"><span class="pre">--numberOfGenerations</span> <span class="pre">1000</span></tt>
+as a command-line option</li>
+<li>Any setting in the control file can be changed, and the new value
+specified at the command-line has precedence over that in the control file</li>
+</ul>
+</li>
+<li>Use different rate functions for the rate parameter <em>k</em> &gt; 0 and for <em>k</em> &lt; 0;
+when <em>k</em> &gt; 0, use the symmetrical function of <em>k</em> &lt; 0</li>
+<li>Accept tree files with internal node names</li>
+<li>Display better error messages related to reading a tree</li>
+</ul>
+</div>
+<div class="section" id="bug-fixes">
+<h3>Bug fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Properly prefix file names if it includes a directory</li>
+<li>Fix detection of negative branches</li>
+<li>Fix simulating prior distributions for small number of generations</li>
+</ul>
+</div>
+<div class="section" id="other-changes">
+<h3>Other changes<a class="headerlink" href="#other-changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">numberGenerations</span></tt> is now <tt class="docutils literal"><span class="pre">numberOfGenerations</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">updateBetaScale</span></tt> is now <tt class="docutils literal"><span class="pre">updateBetaInitScale</span></tt></li>
+<li>Update example control files for this version of BAMM</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>1.0.0<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p><em>March 5, 2014</em></p>
+<ul class="simple">
+<li>Initial release</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+<li><a href="index.html">Home</a>&nbsp;|</li>
+<li><a href="download.html">Download</a>&nbsp;|</li>
+<li><a href="documentation.html">Documentation</a>&nbsp;|</li>
+<li><a href="contact_us.html">Contact Us</a></li>
+ 
+      </ul>
+    </div>
+
+    <div class="footer">
+        &copy; Copyright 2014 BAMM Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    </div>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-49579863-1', 'bamm-project.org');
+ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

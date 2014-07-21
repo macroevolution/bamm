@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>8. Analyzing BAMM output with BAMMtools &mdash; bamm 1.0 documentation</title>
+    <title>7. Analyzing BAMM output with BAMMtools &mdash; bamm 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 1.0 documentation" href="index.html" />
-    <link rel="next" title="9. Advanced analysis options" href="advanced.html" />
-    <link rel="prev" title="7. Configuration" href="configuration.html" /> 
+    <link rel="next" title="8. Time-flip proposal: Time-constant and time-variable shifts" href="time-flip.html" />
+    <link rel="prev" title="6. Configuration" href="configuration.html" /> 
   </head>
   <body>
 <div class="pageheader">
@@ -36,10 +36,10 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="advanced.html" title="9. Advanced analysis options"
+          <a href="time-flip.html" title="8. Time-flip proposal: Time-constant and time-variable shifts"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="configuration.html" title="7. Configuration"
+          <a href="configuration.html" title="6. Configuration"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -52,44 +52,44 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">8. Analyzing BAMM output with BAMMtools</a><ul>
-<li><a class="reference internal" href="#brief">8.1. Brief</a></li>
-<li><a class="reference internal" href="#bammtools-quickstart-guide">8.2. BAMMtools quickstart guide</a></li>
-<li><a class="reference internal" href="#bamm-output-and-the-bammdata-object">8.3. BAMM output and the <em>bammdata</em> object</a><ul>
-<li><a class="reference internal" href="#bamm-output">8.3.1. BAMM output</a></li>
-<li><a class="reference internal" href="#the-bammdata-object">8.3.2. The <em>bammdata</em> object</a></li>
+<li><a class="reference internal" href="#">7. Analyzing BAMM output with BAMMtools</a><ul>
+<li><a class="reference internal" href="#brief">7.1. Brief</a></li>
+<li><a class="reference internal" href="#bammtools-quickstart-guide">7.2. BAMMtools quickstart guide</a></li>
+<li><a class="reference internal" href="#bamm-output-and-the-bammdata-object">7.3. BAMM output and the <em>bammdata</em> object</a><ul>
+<li><a class="reference internal" href="#bamm-output">7.3.1. BAMM output</a></li>
+<li><a class="reference internal" href="#the-bammdata-object">7.3.2. The <em>bammdata</em> object</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#assessing-mcmc-convergence">8.4. Assessing MCMC convergence</a></li>
-<li><a class="reference internal" href="#analysis-of-rate-shifts">8.5. Analysis of rate shifts</a><ul>
-<li><a class="reference internal" href="#how-many-rate-shifts">8.5.1. How many rate shifts?</a></li>
+<li><a class="reference internal" href="#assessing-mcmc-convergence">7.4. Assessing MCMC convergence</a></li>
+<li><a class="reference internal" href="#analysis-of-rate-shifts">7.5. Analysis of rate shifts</a><ul>
+<li><a class="reference internal" href="#how-many-rate-shifts">7.5.1. How many rate shifts?</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#bayes-factors-for-model-comparison">8.6. Bayes factors for model comparison</a><ul>
-<li><a class="reference internal" href="#mean-phylorate-plot">8.6.1. Mean phylorate plot</a></li>
-<li><a class="reference internal" href="#bayesian-credible-sets-of-shift-configurations">8.6.2. Bayesian credible sets of shift configurations</a></li>
-<li><a class="reference internal" href="#finding-the-single-best-shift-configuration">8.6.3. Finding the single <em>best</em> shift configuration</a></li>
-<li><a class="reference internal" href="#viewing-some-random-shift-configurations">8.6.4. Viewing some random shift configurations</a></li>
-<li><a class="reference internal" href="#plotting-rate-shifts-using-plot-phylo">8.6.5. Plotting rate shifts using <tt class="docutils literal"><span class="pre">plot.phylo</span></tt></a></li>
-<li><a class="reference internal" href="#marginal-shift-probabilities">8.6.6. Marginal shift probabilities</a></li>
-<li><a class="reference internal" href="#bayes-factors-for-rate-shifts">8.6.7. Bayes factors for rate shifts</a></li>
+<li><a class="reference internal" href="#bayes-factors-for-model-comparison">7.6. Bayes factors for model comparison</a><ul>
+<li><a class="reference internal" href="#mean-phylorate-plot">7.6.1. Mean phylorate plot</a></li>
+<li><a class="reference internal" href="#bayesian-credible-sets-of-shift-configurations">7.6.2. Bayesian credible sets of shift configurations</a></li>
+<li><a class="reference internal" href="#finding-the-single-best-shift-configuration">7.6.3. Finding the single <em>best</em> shift configuration</a></li>
+<li><a class="reference internal" href="#viewing-some-random-shift-configurations">7.6.4. Viewing some random shift configurations</a></li>
+<li><a class="reference internal" href="#plotting-rate-shifts-using-plot-phylo">7.6.5. Plotting rate shifts using <tt class="docutils literal"><span class="pre">plot.phylo</span></tt></a></li>
+<li><a class="reference internal" href="#marginal-shift-probabilities">7.6.6. Marginal shift probabilities</a></li>
+<li><a class="reference internal" href="#bayes-factors-for-rate-shifts">7.6.7. Bayes factors for rate shifts</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#clade-specific-evolutionary-rates">8.7. Clade-specific evolutionary rates</a></li>
-<li><a class="reference internal" href="#branch-tip-specific-evolutionary-rates">8.8. Branch &amp; tip-specific evolutionary rates</a></li>
-<li><a class="reference internal" href="#rate-through-time-analysis">8.9. Rate-through-time analysis</a></li>
-<li><a class="reference internal" href="#macroevolutionary-cohort-analysis">8.10. Macroevolutionary cohort analysis</a></li>
-<li><a class="reference internal" href="#cumulative-shift-probabilities">8.11. Cumulative shift probabilities</a></li>
+<li><a class="reference internal" href="#clade-specific-evolutionary-rates">7.7. Clade-specific evolutionary rates</a></li>
+<li><a class="reference internal" href="#branch-tip-specific-evolutionary-rates">7.8. Branch &amp; tip-specific evolutionary rates</a></li>
+<li><a class="reference internal" href="#rate-through-time-analysis">7.9. Rate-through-time analysis</a></li>
+<li><a class="reference internal" href="#macroevolutionary-cohort-analysis">7.10. Macroevolutionary cohort analysis</a></li>
+<li><a class="reference internal" href="#cumulative-shift-probabilities">7.11. Cumulative shift probabilities</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="configuration.html"
-                        title="previous chapter">7. Configuration</a></p>
+                        title="previous chapter">6. Configuration</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="advanced.html"
-                        title="next chapter">9. Advanced analysis options</a></p>
+  <p class="topless"><a href="time-flip.html"
+                        title="next chapter">8. Time-flip proposal: Time-constant and time-variable shifts</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/postprocess.txt"
@@ -117,10 +117,10 @@
           <div class="body">
             
   <div class="section" id="analyzing-bamm-output-with-bammtools">
-<span id="bammtools"></span><h1>8. Analyzing BAMM output with BAMMtools<a class="headerlink" href="#analyzing-bamm-output-with-bammtools" title="Permalink to this headline">¶</a></h1>
+<span id="bammtools"></span><h1>7. Analyzing BAMM output with BAMMtools<a class="headerlink" href="#analyzing-bamm-output-with-bammtools" title="Permalink to this headline">¶</a></h1>
 <p><strong>Note: documentation for BAMM and BAMMtools 2.0 is still under construction; some sections may be incomplete</strong></p>
 <div class="section" id="brief">
-<h2>8.1. Brief<a class="headerlink" href="#brief" title="Permalink to this headline">¶</a></h2>
+<h2>7.1. Brief<a class="headerlink" href="#brief" title="Permalink to this headline">¶</a></h2>
 <p>The R package <strong>BAMMtools</strong> contains almost everything you need to analyze and visualize evolutionary rate dynamics from BAMM output. You will need to install this package. To install BAMMtools, type the following in your R console:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">install</span><span class="o">.</span><span class="n">packages</span><span class="p">(</span><span class="s">&quot;BAMMtools&quot;</span><span class="p">)</span>
 </pre></div>
@@ -186,7 +186,7 @@
 </ul>
 </div>
 <div class="section" id="bammtools-quickstart-guide">
-<h2>8.2. BAMMtools quickstart guide<a class="headerlink" href="#bammtools-quickstart-guide" title="Permalink to this headline">¶</a></h2>
+<h2>7.2. BAMMtools quickstart guide<a class="headerlink" href="#bammtools-quickstart-guide" title="Permalink to this headline">¶</a></h2>
 <p id="workflow">This is a quickstart guide to some of the analyses discussed below (and many more are possible). Additional ideas are illustrated in the R code samples available on the <a class="reference internal" href="bammgraph.html#bammgraphs"><em>BAMM graph gallery</em></a>, and the <strong>BAMMtools</strong> package contains functions for a number of additional analyses.</p>
 <ul class="simple">
 <li>Test for convergence using the MCMC output with the <tt class="docutils literal"><span class="pre">coda</span></tt> package for R</li>
@@ -202,15 +202,15 @@
 </ul>
 </div>
 <div class="section" id="bamm-output-and-the-bammdata-object">
-<h2>8.3. BAMM output and the <em>bammdata</em> object<a class="headerlink" href="#bamm-output-and-the-bammdata-object" title="Permalink to this headline">¶</a></h2>
+<h2>7.3. BAMM output and the <em>bammdata</em> object<a class="headerlink" href="#bamm-output-and-the-bammdata-object" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="bamm-output">
-<span id="bammoutput"></span><h3>8.3.1. BAMM output<a class="headerlink" href="#bamm-output" title="Permalink to this headline">¶</a></h3>
+<span id="bammoutput"></span><h3>7.3.1. BAMM output<a class="headerlink" href="#bamm-output" title="Permalink to this headline">¶</a></h3>
 <p>BAMM generates three primary output files. The first is the <em>mcmc data file</em>, which contains several pieces of information about the MCMC simulation that may be useful in diagnosing convergence. The most important pieces of information from this file are the number of shift events, the log-likelihood of the data, and the log-prior probability of the data, for each sample from the posterior.</p>
 <p>The second is the <em>event data file</em>, which contains all of the actual model parameters. Each sample from the posterior can be described with complete knowledge of all of the shift events on the tree, including their location and evolutionary rate parameters. The <em>event data file</em> is just a long list of all the shift events and associated parameters that were sampled, as well as the MCMC generation in which they were sampled. <strong>You will not directly do anything with this file</strong>. BAMMtools has a function for extracting all the relevant information from the file and for mapping the rate shift configurations to phylogenetic trees. A detailed explanation of the event data file <a class="reference internal" href="advanced.html#eventdatafile"><em>can be found here</em></a>.</p>
 <p>Finally, BAMM will (optionally) generate a second MCMC output file that contains the results of a prior-only simulation. This file can be used to reconstruct the prior distribution of the number of shift events and is important for the estimation of Bayes factors.</p>
 </div>
 <div class="section" id="the-bammdata-object">
-<h3>8.3.2. The <em>bammdata</em> object<a class="headerlink" href="#the-bammdata-object" title="Permalink to this headline">¶</a></h3>
+<h3>7.3.2. The <em>bammdata</em> object<a class="headerlink" href="#the-bammdata-object" title="Permalink to this headline">¶</a></h3>
 <p>The <em>bammdata</em> object is the core of most analyses discussed below. This is a complex data structure that includes a phylogenetic tree and a mapping of all macroevolutionary rate parameters sampled using BAMM. Many of the methods in BAMMtools operate directly on objects of class <em>bammdata</em>. This object is created in R using the BAMMtools function <tt class="docutils literal"><span class="pre">getEventData</span></tt>. Here&#8217;s sample code where we create the bammdata object (assume your phylogeny is in a file <em>mytree.tre</em>, and your event data file from a BAMM run is in file <em>bammrun_eventdata.txt</em>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">library</span><span class="p">(</span><span class="n">BAMMtools</span><span class="p">)</span>
 <span class="n">tree</span> <span class="o">&lt;-</span> <span class="n">read</span><span class="o">.</span><span class="n">tree</span><span class="p">(</span><span class="s">&quot;mytree.tre&quot;</span><span class="p">)</span>
@@ -222,7 +222,7 @@
 </div>
 </div>
 <div class="section" id="assessing-mcmc-convergence">
-<span id="convergence"></span><h2>8.4. Assessing MCMC convergence<a class="headerlink" href="#assessing-mcmc-convergence" title="Permalink to this headline">¶</a></h2>
+<span id="convergence"></span><h2>7.4. Assessing MCMC convergence<a class="headerlink" href="#assessing-mcmc-convergence" title="Permalink to this headline">¶</a></h2>
 <p id="bammconverge">The first question after running any MCMC simuluation should always be: <em>did my run converge?</em> While it may be difficult to prove convergence in an absolute sense, there are a few simple checks you can do. First, you can plot the log-likelihood trace of your MCMC output file:</p>
 <div class="highlight-python"><pre>mcmcout &lt;- read.csv("mcmc_out.txt", header=T)
 plot(mcmcout$logLik ~ mcmcout$generation)
@@ -246,11 +246,11 @@ effectiveSize(postburn$logLik)</pre>
 <p>If you are having trouble with convergence, please see the section on <a class="reference internal" href="troubleshooting.html#convergenceproblems"><em>troubleshooting convergence issues</em></a>.</p>
 </div>
 <div class="section" id="analysis-of-rate-shifts">
-<h2>8.5. Analysis of rate shifts<a class="headerlink" href="#analysis-of-rate-shifts" title="Permalink to this headline">¶</a></h2>
+<h2>7.5. Analysis of rate shifts<a class="headerlink" href="#analysis-of-rate-shifts" title="Permalink to this headline">¶</a></h2>
 <p id="numbershifts">In the BAMM framework, many different shift configurations may be (more-or-less) equally plausible. BAMM samples shift configurations in proportion to their posterior probability. In principle, this means that each sample from your posterior contains a potentially unique configuration of regime shift events.</p>
 <p>A conceptual discussion of the meaning of rate shifts is included in this documentation and it is <strong>strongly recommended</strong> that you <a class="reference internal" href="rateshifts.html#rateshifts"><em>read this section before continuing</em></a>. Approaches that identify a single best shift configuration (e.g., stepwise AIC, or other approaches that simply maximize the likelihood) are inherently limited by their assumption that the model with the best information theoretic score (AIC etc) is <strong>the</strong> model, given the candidate set of models. However, for most real datasets, the best rate shift configuration is merely one of a large number of possible rate shift configurations that have similar probabilities. The BAMM philosophy is largely oriented around addressing this. To understand the following examples, you must understand what we mean by <strong>distinct shift configurations</strong>, <strong>credible sets of rate shift configurations</strong>, and <strong>marginal shift probabilities</strong>. These are also defined <a class="reference internal" href="glossary.html#glossary"><em>in the glossary</em></a>.</p>
 <div class="section" id="how-many-rate-shifts">
-<h3>8.5.1. How many rate shifts?<a class="headerlink" href="#how-many-rate-shifts" title="Permalink to this headline">¶</a></h3>
+<h3>7.5.1. How many rate shifts?<a class="headerlink" href="#how-many-rate-shifts" title="Permalink to this headline">¶</a></h3>
 <p>The first step in the analysis of BAMM output is to ask some basic questions about the number of macroevolutionary rate regimes on our phylogenetic tree. We can do this directly using the post-burn <em>MCMC output file</em>. Here, we&#8217;ll compute the posterior probabilities of models sampled using BAMM:</p>
 <div class="highlight-python"><pre>post_probs &lt;- table(postburn$N_shifts) / nrow(postburn)</pre>
 </div>
@@ -274,7 +274,7 @@ effectiveSize(postburn$logLik)</pre>
 </div>
 </div>
 <div class="section" id="bayes-factors-for-model-comparison">
-<h2>8.6. Bayes factors for model comparison<a class="headerlink" href="#bayes-factors-for-model-comparison" title="Permalink to this headline">¶</a></h2>
+<h2>7.6. Bayes factors for model comparison<a class="headerlink" href="#bayes-factors-for-model-comparison" title="Permalink to this headline">¶</a></h2>
 <p id="bayesfactors">There is a critical issue that arises in model comparisons using BAMM: inferences on the posterior distribution of models are not independent of the prior. This is generally not an issue if you are using a conservative prior (<tt class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">1</span></tt>, for example), because a model with zero rate shifts will have a high prior probability. However, if you set <tt class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">0.1</span></tt> (or some other value &lt; 1), your expected number of diversification shifts under the prior alone will increase. Hence, simply by manipulating the prior, you can potentially achieve a posterior distribution that is quite different from zero, even in the absence of diversification rate heterogeneity.</p>
 <p>The solution that we advocate is to explicitly compare the evidence for models with at least one diversification shift to the evidence for the <em>null</em> model. Formally, there isn&#8217;t really a null model in BAMM, but for our purposes, it makes sense to think about model with zero rate shifts as the null hypothesis. In a Bayesian framework, we can do this by computing the Bayes factor associated with two models. This is computed as</p>
 <div class="math">
@@ -320,7 +320,7 @@ effectiveSize(postburn$logLik)</pre>
 <p>This tells us that a model with a single diversification shift is the best overall model, at least by comparison to the null model with zero shifts. Bayes factors greater than 20 generally imply substantial evidence for one model over another; values greater than 50 are <em>very strong</em> evidence in favor of the numerator model. Here, it&#8217;s pretty clear that a model with a single rate shift is much, much better than a model that lacks rate shifts.</p>
 <p>Occasionally, you may encounter a dataset where the posterior probability of the null model is so low that it cannot be estimated (e.g., it is never sampled during simulation of the posterior). Likewise, the prior probability of the models with high posterior probability might be very (i.e., inestimably) low, depending on your value for <cite>poissonRatePrior</cite>. In this case, you will not be able to compute a Bayes factor. However, you can explicitly show the posterior and prior distributions recovered through your analysis to make it clear that the posterior distribution is shifted relative to the prior. We are actively working on strategies to address the problem of model selection when the posterior and/or prior probabilities approach zero.</p>
 <div class="section" id="mean-phylorate-plot">
-<h3>8.6.1. Mean phylorate plot<a class="headerlink" href="#mean-phylorate-plot" title="Permalink to this headline">¶</a></h3>
+<h3>7.6.1. Mean phylorate plot<a class="headerlink" href="#mean-phylorate-plot" title="Permalink to this headline">¶</a></h3>
 <p>The remainder of this section will use one of the example datasets included with BAMMtools. You should be able to run this code directly:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">library</span><span class="p">(</span><span class="n">BAMMtools</span><span class="p">)</span>
 <span class="n">data</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
@@ -346,7 +346,7 @@ effectiveSize(postburn$logLik)</pre>
 </div>
 </div>
 <div class="section" id="bayesian-credible-sets-of-shift-configurations">
-<h3>8.6.2. Bayesian credible sets of shift configurations<a class="headerlink" href="#bayesian-credible-sets-of-shift-configurations" title="Permalink to this headline">¶</a></h3>
+<h3>7.6.2. Bayesian credible sets of shift configurations<a class="headerlink" href="#bayesian-credible-sets-of-shift-configurations" title="Permalink to this headline">¶</a></h3>
 <p>BAMM enables us to identify the 95% credible set of distinct shift configurations (for more on distinct shift configurations, see <a class="reference internal" href="rateshifts.html#rateshifts"><em>here</em></a>). Each sample from the posterior simulated using BAMM is a potentially unique configuration of rate shifts and parameters across a phylogeny. The <em>95% credible set</em> is the set of distinct shift configurations that account for 95% of the probability of the data. First, we need to estimate the expected frequency of observing rate shifts on each branch under the prior. We won&#8217;t worry about why we are doing this for the moment; you can read more <a class="reference internal" href="rateshifts.html#coreshifts"><em>here</em></a>. <strong>New in BAMMtools 2.0, core shifts are identified based on an explicit Bayes factor criterion.</strong> Please read the special documentation on core and non-core shifts, because this is a confusing topic.</p>
 <p>To plot the credible shift set, we need the <strong>simulated prior distribution</strong> on the number of rate shifts (this is generated by default by BAMM). We have included an example of this file in BAMMtools.:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># Load the prior data on whales</span>
@@ -373,7 +373,7 @@ effectiveSize(postburn$logLik)</pre>
 <p>The text above each phylorate plot gives the posterior probability of each shift configuration. Because many samples from the posterior can be assigned to each distinct shift configuration, the phylorate plots generated by <tt class="docutils literal"><span class="pre">plot.credibleshiftset</span></tt> are model-averaged mean rate parameters across all samples assignable to a given configuration. The shifts themselves are indicated with circles on branches (red = rate acceleration, blue = rate slowdown).</p>
 </div>
 <div class="section" id="finding-the-single-best-shift-configuration">
-<h3>8.6.3. Finding the single <em>best</em> shift configuration<a class="headerlink" href="#finding-the-single-best-shift-configuration" title="Permalink to this headline">¶</a></h3>
+<h3>7.6.3. Finding the single <em>best</em> shift configuration<a class="headerlink" href="#finding-the-single-best-shift-configuration" title="Permalink to this headline">¶</a></h3>
 <p>From the above plot, we can see that a single rate shift configuration has a higher posterior probability than any other. This shift configuration is the one with the <em>maximum a posteriori</em> (MAP) probability. This is one estimate of the overall best rate set of rate shifts given our data. If you are to show a single set of rate shifts on a phylogeny for publication, this would be a good one to go with:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">priorshifts</span> <span class="o">&lt;-</span> <span class="n">getBranchShiftPriors</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">prior</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
 <span class="n">best</span> <span class="o">&lt;-</span> <span class="n">getBestShiftConfiguration</span><span class="p">(</span><span class="n">edata</span><span class="p">,</span> <span class="n">threshold</span> <span class="o">=</span> <span class="n">priorshifts</span><span class="p">)</span>
@@ -411,7 +411,7 @@ addBAMMshifts(msc.config, cex = 2)</pre>
 <p>In this case, the maximum shift credibility configuration closely matches the MAP shift configuration. But for most datasets, <strong>we recommend</strong> using <tt class="docutils literal"><span class="pre">credibleShiftSet</span></tt> and not <tt class="docutils literal"><span class="pre">maximumShiftCredibility</span></tt>.</p>
 </div>
 <div class="section" id="viewing-some-random-shift-configurations">
-<h3>8.6.4. Viewing some random shift configurations<a class="headerlink" href="#viewing-some-random-shift-configurations" title="Permalink to this headline">¶</a></h3>
+<h3>7.6.4. Viewing some random shift configurations<a class="headerlink" href="#viewing-some-random-shift-configurations" title="Permalink to this headline">¶</a></h3>
 <p>To give you some intuition for the distinct shift configurations in your dataset, we have included a function to plot random samples from the posterior and the associated shifts. Here, we will plot random samples from the posterior that are assignable to one of the distinct shift configurations that we have identified:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">priorshifts</span> <span class="o">&lt;-</span> <span class="n">getBranchShiftPriors</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">prior</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
 <span class="n">dsc</span> <span class="o">&lt;-</span> <span class="n">distinctShiftConfigurations</span><span class="p">(</span><span class="n">edata</span><span class="p">,</span> <span class="n">priorshifts</span><span class="p">,</span> <span class="n">BFcriterion</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
@@ -430,7 +430,7 @@ addBAMMshifts(msc.config, cex = 2)</pre>
 <p>You can see that, in each case, the same <strong>distinct shift configuration</strong> is being plotted, but a different sample. Hence, you should notice that the actual positions of shifts will move around.</p>
 </div>
 <div class="section" id="plotting-rate-shifts-using-plot-phylo">
-<h3>8.6.5. Plotting rate shifts using <tt class="docutils literal"><span class="pre">plot.phylo</span></tt><a class="headerlink" href="#plotting-rate-shifts-using-plot-phylo" title="Permalink to this headline">¶</a></h3>
+<h3>7.6.5. Plotting rate shifts using <tt class="docutils literal"><span class="pre">plot.phylo</span></tt><a class="headerlink" href="#plotting-rate-shifts-using-plot-phylo" title="Permalink to this headline">¶</a></h3>
 <p>We will also cover how you can visualize rate shifts using <tt class="docutils literal"><span class="pre">plot.phylo</span></tt> and associated functions from the <strong>ape</strong> package. As we did previously, we can visualize just a single rate shift configuration from our <em>bamm-data</em> object:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">mysample</span> <span class="o">&lt;-</span> <span class="mi">25</span>  <span class="c"># this is the sample we&#39;ll plot</span>
 </pre></div>
@@ -451,7 +451,7 @@ addBAMMshifts(msc.config, cex = 2)</pre>
 <p>In general, the BAMMtools plotting functions are better for visualizing shift configurations and rates along trees. However, understanding how to move between <strong>BAMMtools</strong> and <strong>ape</strong> can potentially facilitate a number of advanced data visualizations.</p>
 </div>
 <div class="section" id="marginal-shift-probabilities">
-<h3>8.6.6. Marginal shift probabilities<a class="headerlink" href="#marginal-shift-probabilities" title="Permalink to this headline">¶</a></h3>
+<h3>7.6.6. Marginal shift probabilities<a class="headerlink" href="#marginal-shift-probabilities" title="Permalink to this headline">¶</a></h3>
 <p>BAMMtools enables the user to summarize <em>marginal shift probabilities</em>. This is nothing more than the marginal probability that each branch contains a shift event (see <a class="reference internal" href="rateshifts.html#rateshifts"><em>here</em></a> for why these can be difficult to interpret). The next few lines of code will compute the marginal shift probabilities for each branch, then plot a new phylogenetic tree where the branch lengths are scaled by the probability that they contain a shift event:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">marg_probs</span> <span class="o">&lt;-</span> <span class="n">marginalShiftProbsTree</span><span class="p">(</span><span class="n">edata</span><span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">phylo</span><span class="p">(</span><span class="n">marg_probs</span><span class="p">)</span>
@@ -460,7 +460,7 @@ addBAMMshifts(msc.config, cex = 2)</pre>
 <p>The variable <em>marg_probs</em> becomes a copy of our phylogenetic tree, but where each branch length has been transformed into the corresponding marginal shift probability. The marginal shift probabilities can be a little misleading, because we might have relatively low confidence in precisely which branch a shift occurred on, but nonetheless have extremely high confidence that a shift occurred <em>somewhere</em> in the vicinity. More importantly, the marginal shift probabilities don&#8217;t accurately account for the expected number of shifts that would occur in the data under the prior alone (again, see <a class="reference internal" href="rateshifts.html#rateshifts"><em>this section</em></a> for more on this). This is a major issue and we have recently overhauled BAMMtools to use a measure of evidence for rate shifts that is largely independent of the prior: the <strong>Bayes factor</strong>.</p>
 </div>
 <div class="section" id="bayes-factors-for-rate-shifts">
-<h3>8.6.7. Bayes factors for rate shifts<a class="headerlink" href="#bayes-factors-for-rate-shifts" title="Permalink to this headline">¶</a></h3>
+<h3>7.6.7. Bayes factors for rate shifts<a class="headerlink" href="#bayes-factors-for-rate-shifts" title="Permalink to this headline">¶</a></h3>
 <p>As explained <a class="reference internal" href="rateshifts.html#bayesfactorbranches"><em>here</em></a>, we can compute the Bayes factors associated with a shift on a particular branch. Despite numerous difficulties associated with computing Bayes factors more generally, it is straightforward and natural in this context to compute them. To be clear, are now advocating a very different use of Bayes factors than we described previously on <a class="reference internal" href="#bayesfactors"><em>this page</em></a>. Now, we are computing the Bayes factor associated with a rate shift on a particular branch of our phylogeny. This provides us with a robust measure of evidence for a rate shift on a particular branch that is effectively independent of the effects of whatever prior parameter we placed on the number of shift events.</p>
 <p>To compute the Bayes factors for the <em>topological location</em> of rate shifts on our tree, we first compute the probability of a rate shift on each branch of our phylogeny under the prior alone:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">priorshifts</span> <span class="o">&lt;-</span> <span class="n">getBranchShiftPriors</span><span class="p">(</span><span class="n">edata</span><span class="p">,</span> <span class="n">prior</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
@@ -483,7 +483,7 @@ bftree$edge[edgemax ,2]
 </div>
 </div>
 <div class="section" id="clade-specific-evolutionary-rates">
-<h2>8.7. Clade-specific evolutionary rates<a class="headerlink" href="#clade-specific-evolutionary-rates" title="Permalink to this headline">¶</a></h2>
+<h2>7.7. Clade-specific evolutionary rates<a class="headerlink" href="#clade-specific-evolutionary-rates" title="Permalink to this headline">¶</a></h2>
 <p id="claderates">Estimating clade-specific rates with BAMMtools is straightforward. To compute the overall rate of speciation, extinction, or trait evolution, you can use the function <tt class="docutils literal"><span class="pre">getCladeRates</span></tt>, which computes the average rate for the focal clade. Here we will use an example from the <tt class="docutils literal"><span class="pre">whales</span></tt> example dataset that is included with BAMMtools:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">library</span><span class="p">(</span><span class="n">BAMMtools</span><span class="p">)</span>
 <span class="n">data</span><span class="p">(</span><span class="n">whales</span><span class="p">)</span>
@@ -510,12 +510,12 @@ quantile(nondolphinrate$lambda, c(0.05, 0.95))</pre>
 <p>And you can see that the non-dolphin (background) rate is much lower than the dolphin rate. These are <em>mean time-averaged clade-specific rates</em>. If diversification rates have changed dramatically through the history of a particular clade, a single overall mean rate might not be particularly informative.</p>
 </div>
 <div class="section" id="branch-tip-specific-evolutionary-rates">
-<h2>8.8. Branch &amp; tip-specific evolutionary rates<a class="headerlink" href="#branch-tip-specific-evolutionary-rates" title="Permalink to this headline">¶</a></h2>
+<h2>7.8. Branch &amp; tip-specific evolutionary rates<a class="headerlink" href="#branch-tip-specific-evolutionary-rates" title="Permalink to this headline">¶</a></h2>
 <p id="branchrates">BAMM can estimate marginal distributions of evolutionary rates for any point in time along a phylogenetic tree (this is what the the function <tt class="docutils literal"><span class="pre">plot.bammdata</span></tt> is going to generate a phylorate plot). Sometimes, however, it is useful to have mean rates for individual branches. To pull out the mean rates for individual branches, you can use the function <tt class="docutils literal"><span class="pre">getMeanBranchLengthTree</span></tt> (see the <tt class="docutils literal"><span class="pre">?getMeanBranchLengthTree</span></tt> for help on this function). The function generates a copy of your original phylogenetic tree, but where each branch length is replaced by the mean of the marginal distribution of evolutionary rates on each branch. The function can be used to extract branch-specific mean rates of speciation, extinction, net diversification, and trait evolution.</p>
 <p>You can also estimate individual tip-specific rates. For the whale example, this is actually included as part of your bammdata object. If <tt class="docutils literal"><span class="pre">edata</span></tt> is the bammdata object for whales, the components <tt class="docutils literal"><span class="pre">edata$meanTipLambda</span></tt> and <tt class="docutils literal"><span class="pre">edata$meanTipMu</span></tt> are the relevant model-averaged mean rates of speciation and extinction at the tips of the tree.</p>
 </div>
 <div class="section" id="rate-through-time-analysis">
-<h2>8.9. Rate-through-time analysis<a class="headerlink" href="#rate-through-time-analysis" title="Permalink to this headline">¶</a></h2>
+<h2>7.9. Rate-through-time analysis<a class="headerlink" href="#rate-through-time-analysis" title="Permalink to this headline">¶</a></h2>
 <p id="bammtoolsrtt">Plotting rate-through-time curve (example <a class="reference internal" href="bammgraph.html#bammgraphgallery6"><em>here</em></a>) is trivial. BAMM&#8217;s built-in function <tt class="docutils literal"><span class="pre">plotRateThroughTime</span></tt> makes it easy to generate plots of rates through time:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">plotRateThroughTime</span><span class="p">(</span><span class="n">edata</span><span class="p">,</span> <span class="n">ratetype</span><span class="o">=</span><span class="s">&quot;speciation&quot;</span><span class="p">)</span>
 </pre></div>
@@ -567,7 +567,7 @@ tipnode2 &lt;- which(whales$tip.label == species2)</pre>
 <p>Please see code underlying some BAMM graph gallery plots for more on working with these objects.</p>
 </div>
 <div class="section" id="macroevolutionary-cohort-analysis">
-<h2>8.10. Macroevolutionary cohort analysis<a class="headerlink" href="#macroevolutionary-cohort-analysis" title="Permalink to this headline">¶</a></h2>
+<h2>7.10. Macroevolutionary cohort analysis<a class="headerlink" href="#macroevolutionary-cohort-analysis" title="Permalink to this headline">¶</a></h2>
 <p id="cohorts">Macroevolutionary cohort analysis provides a way of summarizing the extent to which species share correlated macroevolutionary dynamics. The method is explained in this (<a class="reference external" href="http://sysbio.oxfordjournals.org/content/early/2014/04/01/sysbio.syu025">Systematic Biology article</a>). The basic idea is to visualize the pairwise probabilities that any two species share a common macroevolutionary rate regime. The first step is to generate a cohort matrix, which contains the pairwise probabilities of shared macroevolutionary dynamics. This is then passed to the <tt class="docutils literal"><span class="pre">cohorts</span></tt> function, which generates the plot:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">data</span><span class="p">(</span><span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">whales</span><span class="p">)</span>
 <span class="n">edata</span> <span class="o">&lt;-</span> <span class="n">getEventData</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
@@ -578,7 +578,7 @@ tipnode2 &lt;- which(whales$tip.label == species2)</pre>
 <p>A macroevolutionary cohort matrix for whales is shown <a class="reference internal" href="bammgraph.html#bammgraphgallery4"><em>here</em></a>.</p>
 </div>
 <div class="section" id="cumulative-shift-probabilities">
-<h2>8.11. Cumulative shift probabilities<a class="headerlink" href="#cumulative-shift-probabilities" title="Permalink to this headline">¶</a></h2>
+<h2>7.11. Cumulative shift probabilities<a class="headerlink" href="#cumulative-shift-probabilities" title="Permalink to this headline">¶</a></h2>
 <p>The <em>cumulative shift probability tree</em> shows the cumulative probability, on each branch, that a shift occurred somewhere between the focal branch and the root of the tree. This option is a potentially useful complement to cohort analysis. The occurrence of such a shift implies that evolutionary dynamics on the focal branch are decoupled from the &#8220;background&#8221; diversification or trait evolutionary process at the root of the tree. We can compute and plot the cumulative shift probability tree as follows:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">cst</span> <span class="o">&lt;-</span> <span class="n">cumulativeShiftProbsTree</span><span class="p">(</span><span class="n">edata</span><span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">phylo</span><span class="p">(</span><span class="n">cst</span><span class="p">)</span>
@@ -605,10 +605,10 @@ plot.phylo(mytree, edge.color = edgecols)</pre>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="advanced.html" title="9. Advanced analysis options"
+          <a href="time-flip.html" title="8. Time-flip proposal: Time-constant and time-variable shifts"
              >next</a></li>
         <li class="right" >
-          <a href="configuration.html" title="7. Configuration"
+          <a href="configuration.html" title="6. Configuration"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>

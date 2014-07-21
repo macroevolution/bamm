@@ -28,19 +28,25 @@ the R package `BAMMtools <http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.1
   questions and answers.
 
 
-BAMM and BAMMtools have been updated!
-=====================================
+Recent changes
+==============
 
-We've made a number of changes - some major - to both BAMM and BAMMtools that significantly improve performance and reliability. If you have used a previous version of BAMM or BAMMtools, we recommend installing the latest version. The documentation on this site is oriented towards BAMM v2.0 and BAMMtools v2.0.
-  
-Major changes 
-========================== 
+We've made a number of changes - some major - to both BAMM and BAMMtools
+that significantly improve performance and reliability.
+If you have used a previous version of BAMM or BAMMtools,
+we recommend installing the latest version.
 
-- Metropolis coupling (MC3) implemented by default to facilitate convergence (automatically run in parallel if you have OpenMP). The MC3 is described :ref:`here <mc3>`.
+* Metropolis coupled MCMC implemented by default to facilitate convergence
+  (automatically run in parallel if you have OpenMP).
+  The MC3 is described :ref:`here <mc3>`.
 
-- Comprehensive overhaul of BAMM's C++ core for transparency and extensibility
+* Comprehensive overhaul of BAMM's C++ core for transparency
+  and extensibility
 
-- BAMMtools 2.0 uses branch-specific Bayes factors to identify credible sets of :ref:`shift configurations <rateshifts>`
+* BAMMtools 2.0 uses branch-specific Bayes factors to identify
+  credible sets of :ref:`shift configurations <rateshifts>`
+
+Please see the `Changes <changes.html>`_ page for more information.
 
 
 Support

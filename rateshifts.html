@@ -174,21 +174,26 @@
 <h3>3.4.2. Marginal shift probabilities<a class="headerlink" href="#marginal-shift-probabilities" title="Permalink to this headline">¶</a></h3>
 <p>The marginal shift probabilities on individual branches across the tree are of considerable interest. As discussed above, there are some nuances to interpreting these, because the probability associated with a shift on any particular branch is not independent of other branches in the tree. The following snippet of R code will compute the marginal shift probabilities for each branch in one of the example datasets included with BAMMtools. It is not necessary to understand (or even run) this code yet; we will cover BAMMtools in much greater depth in subsequent sections.</p>
 <p>If you don&#8217;t have BAMMtools installed and/or don&#8217;t know how to install it, you may wish to read the first few paragraphs of <a class="reference internal" href="postprocess.html#bammtools"><em>this section</em></a>. First, we load BAMMtools:</p>
-<div class="highlight-python"><pre>&gt; library(BAMMtools)</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">library</span><span class="p">(</span><span class="n">BAMMtools</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>Now, we load two datasets included with BAMMtools: a time-calibrated phylogenetic tree of living whales (<tt class="docutils literal"><span class="pre">whales</span></tt>), and an output file from our BAMM analysis (<tt class="docutils literal"><span class="pre">events.whales</span></tt>). We will load these using the <tt class="docutils literal"><span class="pre">data</span></tt> function in R:</p>
-<div class="highlight-python"><pre>&gt; data(whales)
-&gt; data(events.whales)</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">data</span><span class="p">(</span><span class="n">whales</span><span class="p">)</span>
+<span class="n">data</span><span class="p">(</span><span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>Now we convert the phylogeny and BAMM output file into a particular data object that is at the heart of BAMMtools analyses:</p>
-<div class="highlight-python"><pre>&gt; ed &lt;- getEventData(whales, events.whales, burnin=0.1)</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ed</span> <span class="o">&lt;-</span> <span class="n">getEventData</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>Object <tt class="docutils literal"><span class="pre">ed</span></tt> is now a <tt class="docutils literal"><span class="pre">bammdata</span></tt> object. Finally, we can compute the marginal shift probabilities for this phylogeny:</p>
-<div class="highlight-python"><pre>&gt; marg_probs &lt;- marginalShiftProbsTree(ed)</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">marg_probs</span> <span class="o">&lt;-</span> <span class="n">marginalShiftProbsTree</span><span class="p">(</span><span class="n">ed</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>The object <tt class="docutils literal"><span class="pre">marg_probs</span></tt> is a copy of the original phylogenetic tree, but where the branch lengths have been replaced by the branch-specific marginal shift probabilities. In other words, the length of a given branch is equal to the percentage of samples from the posterior that contain a rate shift on that particular branch.</p>
 <p>You can convey this information in several possible ways. You can directly indicate marginal shift probabilities on a phylorate plot, as shown <a class="reference internal" href="#whalemarg1"><em>here</em></a>. You can plot your <tt class="docutils literal"><span class="pre">marg_probs</span></tt> tree itself: the branches are scaled directly by probabilities, so a tree plotted in such a fashion conveys quite a bit of information (see Figure 9 from <a class="reference external" href="http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543">Rabosky 2014</a> for an example of such a plot). You could create such a plot by simply executing:</p>
-<div class="highlight-python"><pre>&gt; plot.phylo(marg_probs)</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">plot</span><span class="o">.</span><span class="n">phylo</span><span class="p">(</span><span class="n">marg_probs</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>in R. You can potentially color branches by their marginal shift probabilities, or you could add circles to each branch with a shift probability greater than some threshold.</p>
 <p>But don&#8217;t get hung up on the fact that your shift probabilities are less than 0.95. Even <em>very</em> strongly supported rate heterogeneity will generally be associated with marginal shift probabilities &lt; 0.95. As discussed <a class="reference internal" href="#whalemarg1"><em>here</em></a>, you can (and often will) have exceptionally strong evidence for rate heterogeneity even if any given branch has marginal shift probabilities that do not appear particularly high. <strong>Marginal shift probabilities tell you very little about the probability of rate heterogeneity in your dataset</strong>. In principle, you could have high confidence that your data were shaped by a very large number of rate shifts, but at the same time find that no single branch has a marginal probability exceeding 0.10.</p>
@@ -206,10 +211,10 @@
 <p>Practically speaking, if you are to set <tt class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">0.1</span></tt>, this means that <em>even without diversification rate variation in your tree</em>, you would potentially observe significant evidence for diversification rate heterogeneity if you considered posterior probabilities alone. In fact, under the prior alone (<tt class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">0.1</span></tt>), the prior probability of 0 rate shifts is approximately 0.024. This is one reason why we emphasize the utility of <a class="reference internal" href="postprocess.html#bayesfactors"><em>Bayes factors</em></a> for model selection in BAMM.</p>
 <p>There are very good reasons to <strong>not</strong> use a super-conservative prior in a BAMM analysis. The more restrictive the prior, the more difficult it will be for BAMM to achieve convergence. If you really do have evidence for 20 rate shifts in your data (typical for trees with several thousand or more tips), then using a value of <tt class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">10</span></tt> will make it very hard to find this region of parameter space. Basically, for BAMM to find rate shifts, the algorithm must be able to propose and accept new shifts. If the prior is too restrictive, you will reject most moves that increase model complexity.</p>
 <p>What this means, however, is that every branch in your tree will have a non-zero expected number of rate shifts <em>no matter what prior you choose</em>. How many rate shifts would you expect on any particular branch? The easiest way to think about this is to consider the figures above and imagine that those shift counts are smeared uniformly across the entire tree. Consider the whale dataset with <tt class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">1</span></tt>. In this case, the expected number of shifts under the prior is:</p>
-<div class="highlight-python"><pre>&gt; sum(prior.whales$N_shifts * prior.whales$prob)
-&gt; # should give roughly 0.95</pre>
+<div class="highlight-python"><pre>sum(prior.whales$N_shifts * prior.whales$prob)
+# should give roughly 0.95</pre>
 </div>
-<p>This is the average number of shifts we should observe across the whole tree under the prior. So, if the sum of all branch lengths in our tree is <em>S</em>, the expected number of shift events on any particular branch is just the branch length divided by <em>S</em>. A critical point is that under the prior, the distribution of shifts is uniform across the tree.</p>
+<p>This is the average number of shifts we should observe across the whole tree under the prior. So, if the sum of all branch lengths in our tree is <em>S</em>, the expected fraction of total shift events that should occur on a given branch is equal to the branch length divided by <em>S</em>. If your expected number of shifts under the prior is 2.0, and the sum of all branch lengths is 5.0, a branch of length 1.0 time units will, on average, contain <em>5 x 0.2 = 1</em> shift under the prior alone. A critical point is that under the prior, the distribution of shifts is uniform across the tree.</p>
 <p>This leads to one major difficulty with the interpretation of marginal shift probabilities: these probabilities will depend on the Poisson rate prior we choose for our analysis. And just as importantly, they will depend on the branch length. Because the expected number of rate shifts under the prior is uniform, we expect to observe more shifts on long branches than short branches, just by chance alone. If we want to identify the branches that have the strongest evidence for <strong>significant and substantial</strong> rate shifts, then it makes sense that we should take the prior into account when evaluating shift probabilities on individual branches.</p>
 <p>We feel that this is issue is sufficiently important that we have made addressing this challenge a major feature of BAMMtools 2.0.</p>
 </div>
@@ -218,17 +223,19 @@
 <p id="bayesfactorbranches">Our solution to the problem above is to compute a <em>Bayes factor</em> associated with evidence for a rate shift, for each branch in our phylogeny. This is a nice solution that has a natural Bayesian interpretation and accounts for the effects of the prior and branch length on our perceived evidence for a rate shift. We thank
 <a class="reference external" href="http://www.phyleaux1.lsu.edu">Jeremy Brown</a> for suggesting the use of Bayes factors in this context.</p>
 <p>Here, we will consider a worked example using the whales dataset that is distributed with BAMMtools. The basic idea is to imagine that, in the context of a BAMM analysis, each branch can be described by one of two models: either there is a rate shift on the branch, or there is no rate shift on the branch. Let&#8217;s compute the marginal shift probabilities on the whale phylogeny:</p>
-<div class="highlight-python"><pre>&gt; data(whales, prior.whales, events.whales)
-&gt; edata &lt;- getEventData(whales, events.whales, burnin=0.1)
-&gt; margprobs &lt;- marginalShiftProbsTree(edata)</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">data</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">prior</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
+<span class="n">edata</span> <span class="o">&lt;-</span> <span class="n">getEventData</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">margprobs</span> <span class="o">&lt;-</span> <span class="n">marginalShiftProbsTree</span><span class="p">(</span><span class="n">edata</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>We will now look carefully at the 3 branches with the highest marginal shift probabilities in the whale analysis. Here they are, plotted:</p>
 <div class="figure align-center" id="bayesfactorbranches1">
 <a class="reference internal image-reference" href="_images/bayesfactorbranches1.png"><img alt="_images/bayesfactorbranches1.png" src="_images/bayesfactorbranches1.png" style="width: 380px;" /></a>
 </div>
 <p>These are posterior probabilities of shifts on three individual branches (and, in ape node format, these are nodes 16, 140, and 141). But what about the prior probabilities of a rate shift on those branches? BAMMtools has a function that uses the simulated prior distribution to compute prior probability of a rate shift on any given branch (there is a short appendix <a class="reference internal" href="#appendix1"><em>here</em></a> that shows how this is done). In BAMMtools, we could just do:</p>
-<div class="highlight-python"><pre>&gt; data(prior.whales, whales)
-&gt; branch_priors &lt;- getBranchShiftPriors(whales, prior.whales)</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">data</span><span class="p">(</span><span class="n">prior</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">whales</span><span class="p">)</span>
+<span class="n">branch_priors</span> <span class="o">&lt;-</span> <span class="n">getBranchShiftPriors</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">prior</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>The object <tt class="docutils literal"><span class="pre">branch_priors</span></tt> is now a copy of our phylogenetic tree, but where each branch length is equal to the <em>prior</em> probability of a rate shift. Here are the prior probabilities for the 3 branches identified above as having elevated marginal shift probabilities:</p>
 <div class="figure align-center" id="bayesfactorbranches2">
@@ -239,10 +246,11 @@
 <div class="math">
 <p><img src="_images/math/12d26f1991037ed0ef8fbdb60c98cb16174f05df.png" alt="BF_{SHIFT} = \frac{\frac{P_S}{\pi_S}}{\frac{P_{NS}}{\pi_{NS}}} = {\frac{P_S}{(1 - P_S)}}{\frac{(1 - \pi_S)}{\pi_S}}"/></p>
 </div><p>This quantity has an appealing intuitive interpretation. It is a measure of the posterior odds of two models (shift versus no shift), normalized by their prior odds ratio. Values of 20 or so imply reasonably strong support for one model over another. One way to think about this is to imagine a scenario where the posterior probability of rate shift on a branch is 0.95, and the prior probabilities of shift and no shift are equal (<img class="math" src="_images/math/2c542b3d374f7658500cd76113faf62c0c548caf.png" alt="\pi_S = 0.5"/>). The Bayes factor in favor of a rate shift would just be 0.95 / 0.05, or 19. Because the &#8220;null model&#8221; (no rate shift) has a posterior probability of 0.05, we can (very loosely) relate this Bayes factor to a traditional p-value in classical hypothesis testing: a Bayes factor of approximately 20 corresponds approximately to a null hypothesis p-value (no shift) of 0.05. BAMMtools enables us to easily compute the Bayes factor evidence for a rate shift on each branch of our phylogeny:</p>
-<div class="highlight-python"><pre>&gt; data(prior.whales, whales, events.whales)
-&gt; edata &lt;- getEventData(whales, events.whales, burnin=0.1)
-&gt; branch_priors &lt;- getBranchShiftPriors(whales, prior.whales)
-&gt; bf &lt;- bayesFactorBranches(edata, branch_priors)</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">data</span><span class="p">(</span><span class="n">prior</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">whales</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
+<span class="n">edata</span> <span class="o">&lt;-</span> <span class="n">getEventData</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">branch_priors</span> <span class="o">&lt;-</span> <span class="n">getBranchShiftPriors</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">prior</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
+<span class="n">bf</span> <span class="o">&lt;-</span> <span class="n">bayesFactorBranches</span><span class="p">(</span><span class="n">edata</span><span class="p">,</span> <span class="n">branch_priors</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>The object <tt class="docutils literal"><span class="pre">bf</span></tt> is now a copy of our phylogenetic tree where the branch lengths have been scaled to equal the corresponding Bayes factor. Let&#8217;s go back to the whale tree and look at the Bayes factor evidence for a rate shift on the 3 branches with the highest marginal shift probability:</p>
 <div class="figure align-center" id="bayesfactorbranches3">
@@ -320,10 +328,11 @@
 <div class="math">
 <p><img src="_images/math/f4e902db9ae6ea1f141f08054ae3909942e45a87.png" alt="C = P(k) \prod_{i = 1}^{N}{p_i^{I_{i,k}}}{(1 - p_i)^{1 - I_{i,k}}}"/></p>
 </div><p>where I<sub>i,k</sub> is an indicator variable taking a value of 1 if a shift occurs on branch <em>i</em> for sample <em>k</em>, and 0 if no shift occurs in the sample. In BAMMtools, you can easily estimate the MSC configuration:</p>
-<div class="highlight-python"><pre>&gt; library(BAMMtools)
-&gt; data(primates, events.primates)
-&gt; ed &lt;- getEventData(primates, events.primates, burnin=0.1)
-&gt; msc_tree &lt;- maximumShiftCredibility(ed)</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">library</span><span class="p">(</span><span class="n">BAMMtools</span><span class="p">)</span>
+<span class="n">data</span><span class="p">(</span><span class="n">primates</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">primates</span><span class="p">)</span>
+<span class="n">ed</span> <span class="o">&lt;-</span> <span class="n">getEventData</span><span class="p">(</span><span class="n">primates</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">primates</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">msc_tree</span> <span class="o">&lt;-</span> <span class="n">maximumShiftCredibility</span><span class="p">(</span><span class="n">ed</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>We generally recommend using the MAP shift configuration (<tt class="docutils literal"><span class="pre">getBestShiftConfiguration</span></tt>) over the MSC configuration, except for very large phylogenies. Often, however, the two approaches will estimate the same shift configuration.</p>
 </div>

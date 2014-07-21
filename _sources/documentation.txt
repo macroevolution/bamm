@@ -13,11 +13,12 @@ BAMM Documentation
    introduction
    bammgraph
    rateshifts   
-   time-flip
    quickstart
    settingup
    configuration
    postprocess
+   time-flip
+   mc3
    advanced
 
    faq

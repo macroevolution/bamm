@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>6. Setting Up BAMM &mdash; bamm 1.0 documentation</title>
+    <title>5. Setting Up BAMM &mdash; bamm 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 1.0 documentation" href="index.html" />
-    <link rel="next" title="7. Configuration" href="configuration.html" />
-    <link rel="prev" title="5. Quick-start guide to BAMM" href="quickstart.html" /> 
+    <link rel="next" title="6. Configuration" href="configuration.html" />
+    <link rel="prev" title="4. Quick-start guide to BAMM" href="quickstart.html" /> 
   </head>
   <body>
 <div class="pageheader">
@@ -36,10 +36,10 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="configuration.html" title="7. Configuration"
+          <a href="configuration.html" title="6. Configuration"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="quickstart.html" title="5. Quick-start guide to BAMM"
+          <a href="quickstart.html" title="4. Quick-start guide to BAMM"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -52,24 +52,25 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">6. Setting Up BAMM</a><ul>
-<li><a class="reference internal" href="#installation-from-binary">6.1. Installation From Binary</a><ul>
-<li><a class="reference internal" href="#os-x">6.1.1. OS X</a></li>
-<li><a class="reference internal" href="#windows">6.1.2. Windows</a></li>
+<li><a class="reference internal" href="#">5. Setting Up BAMM</a><ul>
+<li><a class="reference internal" href="#installation-from-homebrew-os-x-only">5.1. Installation from Homebrew (OS X only)</a></li>
+<li><a class="reference internal" href="#installation-from-executable">5.2. Installation from Executable</a><ul>
+<li><a class="reference internal" href="#os-x">5.2.1. OS X</a></li>
+<li><a class="reference internal" href="#windows">5.2.2. Windows</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#installation-from-source">6.2. Installation From Source</a></li>
-<li><a class="reference internal" href="#running">6.3. Running</a></li>
+<li><a class="reference internal" href="#installation-from-source">5.3. Installation from Source</a></li>
+<li><a class="reference internal" href="#running">5.4. Running</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="quickstart.html"
-                        title="previous chapter">5. Quick-start guide to BAMM</a></p>
+                        title="previous chapter">4. Quick-start guide to BAMM</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="configuration.html"
-                        title="next chapter">7. Configuration</a></p>
+                        title="next chapter">6. Configuration</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/settingup.txt"
@@ -97,76 +98,85 @@
           <div class="body">
             
   <div class="section" id="setting-up-bamm">
-<span id="bammsetup"></span><h1>6. Setting Up BAMM<a class="headerlink" href="#setting-up-bamm" title="Permalink to this headline">¶</a></h1>
-<p>The following instructions assume you are running <tt class="docutils literal"><span class="pre">bash</span></tt> or a similar
-Unix shell. In Linux and Mac OS X systems, <tt class="docutils literal"><span class="pre">bash</span></tt> is the default shell
-when you open the Terminal application.
-For Windows users, we recommend you use <a class="reference external" href="http://www.cygwin.com/">Cygwin</a>,
-where <tt class="docutils literal"><span class="pre">bash</span></tt> is also the default shell.</p>
-<div class="section" id="installation-from-binary">
-<h2>6.1. Installation From Binary<a class="headerlink" href="#installation-from-binary" title="Permalink to this headline">¶</a></h2>
-<p>The compressed file you downloaded containing the binary file
-contains only the executable program.
-We strongly recommend that you also download the examples
+<span id="bammsetup"></span><h1>5. Setting Up BAMM<a class="headerlink" href="#setting-up-bamm" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation-from-homebrew-os-x-only">
+<h2>5.1. Installation from Homebrew (OS X only)<a class="headerlink" href="#installation-from-homebrew-os-x-only" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Install <a class="reference external" href="http://brew.sh">Homebrew</a>, if not installed.</p>
+</li>
+<li><p class="first">Run the following commands:</p>
+<div class="highlight-python"><pre>brew tap macroevolution/bamm
+brew install bamm</pre>
+</div>
+<p>If you&#8217;ve installed BAMM before
+but you want to upgrade to a new version, run:</p>
+<div class="highlight-python"><pre>brew update
+brew upgrade bamm</pre>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="installation-from-executable">
+<h2>5.2. Installation from Executable<a class="headerlink" href="#installation-from-executable" title="Permalink to this headline">¶</a></h2>
+<p>The compressed file you downloaded contains the executable program only.
+We recommend that you also download the example files
 to use as templates for the control files necessary to run BAMM.
 Go to the <a class="reference external" href="http://bamm-project.org/download.html">Download</a> page
 to download the examples.</p>
 <div class="section" id="os-x">
-<h3>6.1.1. OS X<a class="headerlink" href="#os-x" title="Permalink to this headline">¶</a></h3>
+<h3>5.2.1. OS X<a class="headerlink" href="#os-x" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
 <li><p class="first"><a class="reference external" href="http://bamm-project.org/download.html">Download</a> the Mac OS X
-tar.gz file containing the binary file for BAMM.</p>
+tar.gz file containing the executable file for BAMM.</p>
 </li>
 <li><p class="first">This file is a compressed tar.gz file. To uncompress it,
-run the following command from the directory in which BAMM was downloaded
+open the Terminal application and run the following command
+from the directory in which BAMM was downloaded
 (the actual version of BAMM may be different):</p>
 <div class="highlight-python"><pre>tar -xzf bamm-1.0.0-MacOSX.tar.gz</pre>
 </div>
 <p>This will uncompress the single file <tt class="docutils literal"><span class="pre">bamm</span></tt> into the current directory.</p>
 </li>
-<li><p class="first">You may copy the file <tt class="docutils literal"><span class="pre">bamm</span></tt> to any directory in your system.
+<li><p class="first">You may copy or move the file <tt class="docutils literal"><span class="pre">bamm</span></tt> to any directory in your system.
 See below and the <a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
 to learn how to configure and run BAMM.</p>
 </li>
 </ol>
+<p><strong>Note:</strong> Test that <tt class="docutils literal"><span class="pre">bamm</span></tt> will work for your system by running
+<tt class="docutils literal"><span class="pre">./bamm</span></tt> in the directory in which the program is located.</p>
 </div>
 <div class="section" id="windows">
-<h3>6.1.2. Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
+<h3>5.2.2. Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><a class="reference external" href="http://bamm-project.org/download.html">Download</a> the Windows .zip file
-containing the binary file and required library files for BAMM.</li>
+containing the executable file and required library files for BAMM.</li>
 <li>This file is a compressed zip file. Extract the contents of the zip file
-and move it to a location you can access from the command-line.</li>
-<li>Open the command-line in Windows by clicking on the Start button
+and move them to a location you can access from the command-line.
+Note that the DLL files must present together with the <tt class="docutils literal"><span class="pre">bamm.exe</span></tt> file.</li>
+<li>Open the command-line program in Windows by clicking on the Start button
 and typing &#8220;cmd&#8221; in the search text box. Use the <tt class="docutils literal"><span class="pre">cd</span></tt> command
 to go to the directory where BAMM is located.
 See below and the <a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
 to learn how to configure and run BAMM.</li>
 </ol>
+<p><strong>Note:</strong> Test that <tt class="docutils literal"><span class="pre">bamm</span></tt> will work for your system by running
+<tt class="docutils literal"><span class="pre">bamm</span></tt> in the directory in which the program is located.</p>
 </div>
 </div>
 <div class="section" id="installation-from-source">
-<h2>6.2. Installation From Source<a class="headerlink" href="#installation-from-source" title="Permalink to this headline">¶</a></h2>
-<p>Use this option to compile and install BAMM from its source files.</p>
+<h2>5.3. Installation from Source<a class="headerlink" href="#installation-from-source" title="Permalink to this headline">¶</a></h2>
+<p>The following instructions assume you are running <tt class="docutils literal"><span class="pre">bash</span></tt> or a similar
+Unix shell. In Linux and Mac OS X systems, <tt class="docutils literal"><span class="pre">bash</span></tt> is the default shell
+when you open the Terminal application.
+We also assume you have <a class="reference external" href="http://git-scm.com">Git</a> and
+<a class="reference external" href="http://www.cmake.org">CMake</a> installed.</p>
 <ol class="arabic">
-<li><p class="first"><a class="reference external" href="http://bamm-project.org/download.html">Download</a> the latest available
-version of the BAMM source files.</p>
-</li>
-<li><p class="first">This file is compressed as a tar.gz file. To uncompress it,
-run the following command from the directory in which BAMM was downloaded
-(the actual version of BAMM may be different):</p>
-<div class="highlight-python"><pre>tar -xzf bamm-1.0.0.tar.gz</pre>
+<li><p class="first">Get the latest version of BAMM:</p>
+<div class="highlight-python"><pre>git clone https://github.com/macroevolution/bamm.git</pre>
 </div>
-<p>This will create the directory bamm-1.0.0.</p>
+<p>This will create the directory <tt class="docutils literal"><span class="pre">bamm</span></tt> in your current directory.</p>
 </li>
-<li><p class="first">Verify that you have <a class="reference external" href="http://www.cmake.org">CMake</a> installed:</p>
-<div class="highlight-python"><pre>which cmake</pre>
-</div>
-<p>If the location of the CMake program appears (e.g., <tt class="docutils literal"><span class="pre">/usr/bin/cmake</span></tt>),
-you have CMake installed. You will also need a C++ compiler,
-such as <a class="reference external" href="http://gcc.gnu.org/">GCC</a> or <a class="reference external" href="http://clang.llvm.org/">Clang</a>.</p>
-</li>
-<li><p class="first">Go into the bamm-1.0.0 directory and create a build directory where
+<li><p class="first">Go into the <tt class="docutils literal"><span class="pre">bamm</span></tt> directory and create a build directory where
 the final executable will be created, then go into that directory:</p>
 <div class="highlight-python"><pre>mkdir build
 cd build</pre>
@@ -176,20 +186,27 @@ cd build</pre>
 <div class="highlight-python"><pre>cmake ..
 make -j</pre>
 </div>
-<p>The <tt class="docutils literal"><span class="pre">-j</span></tt> option will compile in parallel.</p>
+<p>The <tt class="docutils literal"><span class="pre">-j</span></tt> option will compile in parallel.
+If you&#8217;d like to use Clang for OpenMP support
+(see <a class="reference external" href="http://clang-omp.github.io">http://clang-omp.github.io</a>), you will likely need to tell
+CMake to use that version of Clang:</p>
+<div class="highlight-python"><pre>cmake -DCMAKE_CXX_COMPILER=clang++ ..
+make -j</pre>
+</div>
 </li>
 <li><p class="first">You can run <tt class="docutils literal"><span class="pre">bamm</span></tt> from this directory, or you may wish to install it
 in a more permanent location:</p>
 <div class="highlight-python"><pre>sudo make install</pre>
 </div>
-<p>See below and the <a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
+<p>You may now run <tt class="docutils literal"><span class="pre">bamm</span></tt> from any directory in your system.
+See below and the <a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
 to learn how to configure and run BAMM.</p>
 </li>
 </ol>
 </div>
 <div class="section" id="running">
-<h2>6.3. Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
-<p>To run <tt class="docutils literal"><span class="pre">bamm</span></tt>, you must always specify a <em>contol</em> file. For example,
+<h2>5.4. Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
+<p>To run <tt class="docutils literal"><span class="pre">bamm</span></tt>, you should specify a <em>contol</em> file. For example,
 if your control file is named <tt class="docutils literal"><span class="pre">divcontrol.txt</span></tt>, run the following:</p>
 <div class="highlight-python"><pre>bamm -c divcontrol.txt</pre>
 </div>
@@ -225,10 +242,10 @@ time-stamps, and a list of parameters/options and their values.</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="configuration.html" title="7. Configuration"
+          <a href="configuration.html" title="6. Configuration"
              >next</a></li>
         <li class="right" >
-          <a href="quickstart.html" title="5. Quick-start guide to BAMM"
+          <a href="quickstart.html" title="4. Quick-start guide to BAMM"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>

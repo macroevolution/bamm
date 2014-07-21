@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Metropolis-coupled Markov chain Monte Carlo (MC3) &mdash; bamm 1.0 documentation</title>
+    <title>9. Metropolis coupled Markov chain Monte Carlo [(MC)3] &mdash; bamm 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,7 +23,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 1.0 documentation" href="index.html" /> 
+    <link rel="top" title="bamm 1.0 documentation" href="index.html" />
+    <link rel="next" title="10. Advanced analysis options" href="advanced.html" />
+    <link rel="prev" title="8. Time-flip proposal: Time-constant and time-variable shifts" href="time-flip.html" /> 
   </head>
   <body>
 <div class="pageheader">
@@ -33,6 +35,12 @@
     <div class="related">
       <h3>Navigation</h3>
       <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="advanced.html" title="10. Advanced analysis options"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="time-flip.html" title="8. Time-flip proposal: Time-constant and time-variable shifts"
+             accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
 <li><a href="documentation.html">Documentation</a>&nbsp;|</li>
@@ -42,6 +50,21 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="documentation.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">9. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]</a><ul>
+<li><a class="reference internal" href="#multi-core-metropolis-coupled-mcmc-mc4">9.1. Multi-core Metropolis coupled MCMC [(MC)<sup>4</sup>]</a></li>
+<li><a class="reference internal" href="#mc3-settings-in-bamm">9.2. (MC)<sup>3</sup> settings in BAMM</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="time-flip.html"
+                        title="previous chapter">8. Time-flip proposal: Time-constant and time-variable shifts</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="advanced.html"
+                        title="next chapter">10. Advanced analysis options</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/mc3.txt"
@@ -68,8 +91,119 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="metropolis-coupled-markov-chain-monte-carlo-mc3">
-<span id="mc3"></span><h1>Metropolis-coupled Markov chain Monte Carlo (MC3)<a class="headerlink" href="#metropolis-coupled-markov-chain-monte-carlo-mc3" title="Permalink to this headline">¶</a></h1>
+  <span class="target" id="mc3"></span><div class="section" id="metropolis-coupled-markov-chain-monte-carlo-mc3">
+<h1>9. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]<a class="headerlink" href="#metropolis-coupled-markov-chain-monte-carlo-mc3" title="Permalink to this headline">¶</a></h1>
+<p>The Markov chain Monte Carlo (MCMC) method implemented in BAMM
+estimates the posterior probability distribution of diversification models
+that best describe a particular phylogenetic dataset.
+Before version 2.0.0, BAMM used a single Markov chain
+to explore the landscape of models and their parameter values.
+A single chain, however, may get stuck in local optima,
+which results in less mixing and more time needed for convergence.</p>
+<p>Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>],
+introduced in BAMM 2.0.0, increases the number of Markov chains
+that explore the landscape of models and their parameters.
+Not only are there more chains, but each one has a different <em>temperature</em>.
+The <em>cold</em> chain is the main chain and behaves as before.
+The <em>heated</em> chains explore a landscape that is flatter than
+the landscape explored by the cold chain.
+Therefore, it is easier for a heated chain to cross deep valleys
+in the landscape and not get stuck in local optima.</p>
+<p>After the chains independently explore the landscape
+for a certain number of generations,
+a proposal is made to swap the temperatures of two random chains.
+If a swap involving the cold chain is successful,
+it will cause a previously heated chain to become the main chain.
+As a result, a chain that is stuck in a local optimum
+may immediately jump to another area of the landscape.</p>
+<p>The implementation of (MC)<sup>3</sup> in BAMM follows that described in
+<a class="reference external" href="http://bioinformatics.oxfordjournals.org/content/20/3/407.full.pdf">Altekar et al. 2004</a>.
+For each chain <img class="math" src="_images/math/34857b3ba74ce5cd8607f3ebd23e9015908ada71.png" alt="i"/>, its temperature <img class="math" src="_images/math/69b7960de2d0464d76554a59404da87b450fe890.png" alt="\beta_i"/> is set to
+<img class="math" src="_images/math/3a3af71e4d3e41fdab13d9391c9faa023d72a531.png" alt="\beta_i = [1 + \Delta T \times (i - 1)]^{-1}"/>,
+where <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> is the temperature increment parameter.
+For example, if there are 4 chains and <img class="math" src="_images/math/c83402ba2c5ade45af23e6d878801292cca4db43.png" alt="\Delta T = 0.1"/>,
+the temperatures of each chain are 1, 0.9091, 0.8333, and 0.7692.
+The temperature of the cold chain is always 1.
+Note that the value of <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> should be greater than 0
+and chosen such that the probability of accepting a swap
+is between 20% and 60% (Altekar et al. 2004).</p>
+<p>The temperature of each chain <img class="math" src="_images/math/34857b3ba74ce5cd8607f3ebd23e9015908ada71.png" alt="i"/> goes into the calculation
+of the acceptance probability for a within-model proposal
+(i.e., not involving changes in the dimensionality of the model):</p>
+<div class="math">
+<p><img src="_images/math/f100118d753191c94a8b068ec64003604d6abb39.png" alt="\alpha_i = \text{min}\left\{ 1,
+    \left(
+    \cfrac{f(\theta_i')}{f(\theta_i)} \times
+    \cfrac{\pi(\theta_i')}{\pi(\theta_i)}
+    \right)^{\beta_i} \times
+    \cfrac{q(\theta_i | \theta_i')}{q(\theta_i' | \theta_i)}
+\right\}"/></p>
+</div><p>where <img class="math" src="_images/math/3523c117421a3db7f0c97a381c8fe5a6bd18d161.png" alt="\theta_i"/> and <img class="math" src="_images/math/e04c0116d617299aac5a548319bc479c3897923e.png" alt="\theta_i'"/> are parameter vectors
+corresponding to the current and proposed states for chain <img class="math" src="_images/math/34857b3ba74ce5cd8607f3ebd23e9015908ada71.png" alt="i"/>,
+<img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816437.png" alt="f"/> and <img class="math" src="_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/> are the corresponding likelihood
+and prior density functions,
+and <img class="math" src="_images/math/bb5cb996372836b4b6bbed384e4d253b77b2388f.png" alt="q(\theta_i' | \theta_i)"/> is the relative probability
+of proposing a move to parameter vector <img class="math" src="_images/math/e04c0116d617299aac5a548319bc479c3897923e.png" alt="\theta_i'"/>
+given that the current state is <img class="math" src="_images/math/3523c117421a3db7f0c97a381c8fe5a6bd18d161.png" alt="\theta_i"/>.
+A similar calculation is done for the acceptance probability for proposals
+that change the dimensionality of the model.</p>
+<p>After a certain number of generations, two randomly chosen chains
+<img class="math" src="_images/math/8122aa89ea6e80784c6513d22787ad86e36ad0cc.png" alt="j"/> and <img class="math" src="_images/math/8c325612684d41304b9751c175df7bcc0f61f64f.png" alt="k"/> are swapped with acceptance probability</p>
+<div class="math">
+<p><img src="_images/math/93b3795a99a3fb71e71f20c3cfb67cd125d7ceaf.png" alt="\alpha = \text{min}\left\{ 1,
+    \left(\cfrac{f(\theta_k)}{f(\theta_j)}\right)^{\beta_j} \times
+    \left(\cfrac{f(\theta_j)}{f(\theta_k)}\right)^{\beta_k}
+\right\}"/></p>
+</div><div class="section" id="multi-core-metropolis-coupled-mcmc-mc4">
+<h2>9.1. Multi-core Metropolis coupled MCMC [(MC)<sup>4</sup>]<a class="headerlink" href="#multi-core-metropolis-coupled-mcmc-mc4" title="Permalink to this headline">¶</a></h2>
+<p>Using a single CPU, the amount of time a run takes to finish
+scales linearly with the number of chains.
+Because chains are mostly independent from each other,
+except when two chains are chosen to swap states,
+they may be set up to run on different CPUs in parallel.
+BAMM implements this parallelization using <a class="reference external" href="http://openmp.org/">OpenMP</a>.
+OpenMP is a software library that provides the functionality
+required to allow each chain to run on a different CPU
+(assuming there are enough available CPUs).</p>
+<p>To enable OpenMP support in BAMM under Linux,
+the OpenMP library must be installed in your computer
+and BAMM must be compiled and linked from source.
+The compilation and linking with the OpenMP library
+is done automatically with CMake, typically using the GCC compiler.
+In Mac OS X, the OpenMP library must also be installed in your computer.
+However, Clang does not support OpenMP,
+so a special version of Clang, <a class="reference external" href="http://clang-omp.github.io">OpenMP/Clang</a>,
+must be compiled from source and installed.
+In Windows, the downloadable zip file with the BAMM executable
+includes the OpenMP library, so no re-compilation is necessary.</p>
+</div>
+<div class="section" id="mc3-settings-in-bamm">
+<h2>9.2. (MC)<sup>3</sup> settings in BAMM<a class="headerlink" href="#mc3-settings-in-bamm" title="Permalink to this headline">¶</a></h2>
+<p>There are four settings in BAMM that control the behavior of (MC)<sup>3</sup>.
+They are in the template and example control files
+under the heading <tt class="docutils literal"><span class="pre">METROPOLIS</span> <span class="pre">COUPLED</span> <span class="pre">MCMC</span></tt>.
+The number of Markov chains to use is specified with <tt class="docutils literal"><span class="pre">numberOfChains</span></tt>.
+The <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> value is specified with <tt class="docutils literal"><span class="pre">deltaT</span></tt>.
+The number of generations between chain swap proposals
+is specified with <tt class="docutils literal"><span class="pre">swapPeriod</span></tt>.
+BAMM will output to a file (<tt class="docutils literal"><span class="pre">chain_swap.txt</span></tt> by default)
+the generation in which a swap proposal occurred,
+the ranking of the two chains chosen
+(1 is the cold chain, 2 is the first heated chain, etc.),
+and whether the swap was accepted.
+The file to which to output these data is specified with <tt class="docutils literal"><span class="pre">chainSwapFileName</span></tt>.</p>
+<p>Our preliminary tests show that four chains produces good MCMC mixing.
+The <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> value should be set such that the probability
+of accepting a chain swap proposal is between 20% and 60%.
+For small to medium sized trees (&lt; 1,000 taxa),
+we have found that <img class="math" src="_images/math/c83402ba2c5ade45af23e6d878801292cca4db43.png" alt="\Delta T = 0.1"/> works well.
+For large trees, <img class="math" src="_images/math/945d7f173555ed9783a91fb3b9e80329f4f41f90.png" alt="\Delta T = 0.05"/>
+or <img class="math" src="_images/math/e64369d1075b11efc6db521dc5608715f1cc9748.png" alt="\Delta T = 0.01"/> works better.
+We have not examined the effects of the swap period in detail,
+but in terms of run time,
+the smaller the swap period, the longer the run takes to complete.
+A swap period of 1000 has worked for us.</p>
+</div>
 </div>
 
 
@@ -81,6 +215,12 @@
     <div class="related">
       <h3>Navigation</h3>
       <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="advanced.html" title="10. Advanced analysis options"
+             >next</a></li>
+        <li class="right" >
+          <a href="time-flip.html" title="8. Time-flip proposal: Time-constant and time-variable shifts"
+             >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
 <li><a href="documentation.html">Documentation</a>&nbsp;|</li>

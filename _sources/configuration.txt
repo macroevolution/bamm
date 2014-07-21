@@ -205,7 +205,15 @@ Parameter Update Rates
 ......................
 
 ``updateRateEventNumber``
-    Relative frequency of MCMC moves that change the number of events.
+    Relative frequency of MCMC moves that change the number of events,
+    where the location of a new event is randomly picked across the whole tree.
+
+``updateRateEventNumberForBranch``
+    Relative frequency of MCMC moves that change the number of events,
+    where the location of a new event is chosen by first
+    picking a random branch, then a random location within that branch.
+    This setting is hidden and set to 0 by default.
+    If used (i.e., set to > 0), ``updateRateEventNumber`` should be set to 0.
 
 ``updateRateEventPosition``
     Relative frequency of MCMC moves that change the location of an event
