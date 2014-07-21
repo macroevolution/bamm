@@ -3,10 +3,18 @@
 BAMM Changes
 ============
 
-2.0.1
+2.1.0
 -----
 
-*July 9, 2014*
+*July 21, 2014*
+
+* Add proposal to change the number of events
+  by picking a random branch rather than a random location
+
+  * To use this proposal, add the setting ``updateRateEventNumberForBranch``
+    and give it a value greater than 0 (e.g., 0.1)
+  * It is recommended that the setting ``updateRateEventNumber``
+    be set to 0 when this new proposal is used
 
 * Fix log-likelihood calculation when loading event data
   or adding initial events

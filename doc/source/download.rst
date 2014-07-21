@@ -3,21 +3,25 @@
 Download BAMM
 =============
 
-Installation instructions are in `Setting Up BAMM <settingup.html>`_.
+Once downloaded, see the installation instructions in
+`Setting Up BAMM <settingup.html>`_.
 
 OS X
 ----
 
-`bamm-2.0.0-MacOSX.tar.gz
-<http://www-personal.umich.edu/~carlosja/bamm-2.0.0-MacOSX.tar.gz>`_
+**Note**: See `Setting Up BAMM <settingup.html>`_ to download and install
+BAMM using Homebrew.
 
-Requires OS X 10.5 or greater.
+`bamm-2.1.0-MacOSX.tar.gz
+<http://www-personal.umich.edu/~carlosja/bamm-2.1.0-MacOSX.tar.gz>`_
+
+Requires OS X 10.7.5 or greater.
 
 Windows
 -------
 
-`bamm-2.0.0-Windows.zip
-<http://www-personal.umich.edu/~carlosja/bamm-2.0.0-Windows.zip>`_
+`bamm-2.1.0-Windows.zip
+<http://www-personal.umich.edu/~carlosja/bamm-2.1.0-Windows.zip>`_
 
 Requires Windows 7 or greater (does not run on Windows XP).
 
@@ -36,27 +40,16 @@ example data files for diversification and phenotypic evolution analysis.
 Download BAMMtools
 ==================
 
-BAMMtools will soon be available on CRAN. For now, you can download the full
-package here: `BAMMtools_2.0.0.tar.gz
-<http://www-personal.umich.edu/~carlosja/BAMMtools_2.0.0.tar.gz>`_
-or (for Windows users) `BAMMtools_2.0.0.zip
-<http://www-personal.umich.edu/~carlosja/BAMMtools_2.0.0.zip>`_.
+BAMMtools will now available on CRAN.
+Please update your BAMMtools package within R::
 
-You can install this in R in several ways. On Mac OS X, you can open the
-Terminal application, navigate to a directory containing the
-BAMMtools_2.0.0.tar.gz file, and type "R CMD INSTALL BAMMtools_2.0.0.tar.gz".
-Or you can launch the R GUI and go to Packages & Data -> Package
-Installer -> Local Source Package, and use the dialog box to navigate to
-the BAMMtools_2.0.0.tar.gz file. It should now behave like any other package
-you've installed in R, and you can load it with "library(BAMMtools)".
+    install.packages('BAMMtools')
 
-On Windows, first you need to uncompress the zip file
-so that you obtain a single directory called "BAMMtools".
-Then, download and install
-`Rtools <http://cran.r-project.org/bin/windows/Rtools>`_ using RGui.
-Next, install and load the R package "devtools" in RGui.
-Finally, run ``install(choose.dir())`` and choose the "BAMMtools" directory.
-To start using BAMMtools, run ``library(BAMMtools)`` as with any other package.
+You can check which version of BAMMtools you have installed as follows::
+
+    packageDescription('BAMMtools')
+
+and look for the ``Version`` label.
 
 Download BAMM Source Files
 ==========================
@@ -74,7 +67,13 @@ Previous Versions
 =================
 
 You may download previous versions of the binaries and examples
-for BAMM and the source code for BAMMtools using the following links:
+for BAMM using the following links:
+
+`bamm-2.0.0-MacOSX.tar.gz
+<http://www-personal.umich.edu/~carlosja/bamm-2.0.0-MacOSX.tar.gz>`_
+
+`bamm-2.0.0-Windows.zip
+<http://www-personal.umich.edu/~carlosja/bamm-2.0.0-Windows.zip>`_
 
 `bamm-1.0.0-MacOSX.tar.gz
 <http://www-personal.umich.edu/~carlosja/bamm-1.0.0-MacOSX.tar.gz>`_
@@ -87,6 +86,3 @@ for BAMM and the source code for BAMMtools using the following links:
 
 `bamm-examples-1.0.0.zip
 <http://www-personal.umich.edu/~carlosja/bamm-examples-1.0.0.zip>`_
-
-`BAMMtools_1.0.1.tar.gz
-<http://www-personal.umich.edu/~carlosja/BAMMtools_1.0.1.tar.gz>`_

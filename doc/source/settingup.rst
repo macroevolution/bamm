@@ -3,6 +3,21 @@
 Setting Up BAMM
 ===============
 
+Installation from Homebrew (OS X only)
+------------------------------------------
+
+1. Install `Homebrew <http://brew.sh>`_, if not installed.
+2. Run the following commands::
+
+       brew tap macroevolution/bamm
+       brew install bamm
+
+   If you've installed BAMM before
+   but you want to upgrade to a new version, run::
+
+       brew update
+       brew upgrade bamm
+
 Installation from Executable
 ----------------------------
 
@@ -32,6 +47,9 @@ OS X
    <http://bamm-project.org/quickstart.html>`_
    to learn how to configure and run BAMM.
 
+**Note:** Test that ``bamm`` will work for your system by running
+``./bamm`` in the directory in which the program is located.
+
 Windows
 .......
 
@@ -40,6 +58,7 @@ Windows
 
 2. This file is a compressed zip file. Extract the contents of the zip file
    and move them to a location you can access from the command-line.
+   Note that the DLL files must present together with the ``bamm.exe`` file.
 
 3. Open the command-line program in Windows by clicking on the Start button
    and typing "cmd" in the search text box. Use the ``cd`` command
@@ -47,6 +66,9 @@ Windows
    See below and the `Quick-start guide to BAMM
    <http://bamm-project.org/quickstart.html>`_
    to learn how to configure and run BAMM.
+
+**Note:** Test that ``bamm`` will work for your system by running
+``bamm`` in the directory in which the program is located.
    
 Installation from Source
 ------------------------
@@ -95,7 +117,7 @@ We also assume you have `Git <http://git-scm.com>`_ and
 Running
 -------
 
-To run ``bamm``, you must always specify a *contol* file. For example,
+To run ``bamm``, you should specify a *contol* file. For example,
 if your control file is named ``divcontrol.txt``, run the following::
 
     bamm -c divcontrol.txt
