@@ -6,8 +6,8 @@ Setting Up BAMM
 Installation from Homebrew (OS X only)
 ------------------------------------------
 
-1. Install `Homebrew <http://brew.sh>`_, if not installed.
-2. Run the following commands::
+#. Install `Homebrew <http://brew.sh>`_, if not installed.
+#. Run the following commands::
 
        brew tap macroevolution/bamm
        brew install bamm
@@ -17,6 +17,11 @@ Installation from Homebrew (OS X only)
 
        brew update
        brew upgrade bamm
+
+#. You may now run ``bamm`` from any directory in your system.
+   See :ref:`running` below and the `Quick-start guide to BAMM
+   <http://bamm-project.org/quickstart.html>`_
+   to learn how to configure and run BAMM.
 
 Installation from Executable
 ----------------------------
@@ -30,10 +35,10 @@ to download the examples.
 OS X
 ....
 
-1. `Download <http://bamm-project.org/download.html>`_ the Mac OS X
+#. `Download <http://bamm-project.org/download.html>`_ the Mac OS X
    tar.gz file containing the executable file for BAMM.
 
-2. This file is a compressed tar.gz file. To uncompress it,
+#. This file is a compressed tar.gz file. To uncompress it,
    open the Terminal application and run the following command
    from the directory in which BAMM was downloaded
    (the actual version of BAMM may be different)::
@@ -42,33 +47,37 @@ OS X
 
    This will uncompress the single file ``bamm`` into the current directory.
 
-3. You may copy or move the file ``bamm`` to any directory in your system.
-   See below and the `Quick-start guide to BAMM
+#. You may copy or move the file ``bamm`` to any directory in your system.
+   See :ref:`running` below and the `Quick-start guide to BAMM
    <http://bamm-project.org/quickstart.html>`_
    to learn how to configure and run BAMM.
 
 **Note:** Test that ``bamm`` will work for your system by running
 ``./bamm`` in the directory in which the program is located.
+If it prints out a box with general information about BAMM
+and a message on "Usage", the BAMM program is working correctly.
 
 Windows
 .......
 
-1. `Download <http://bamm-project.org/download.html>`_ the Windows .zip file
+#. `Download <http://bamm-project.org/download.html>`_ the Windows .zip file
    containing the executable file and required library files for BAMM.
 
-2. This file is a compressed zip file. Extract the contents of the zip file
+#. This file is a compressed zip file. Extract the contents of the zip file
    and move them to a location you can access from the command-line.
    Note that the DLL files must present together with the ``bamm.exe`` file.
 
-3. Open the command-line program in Windows by clicking on the Start button
+#. Open the command-line program in Windows by clicking on the Start button
    and typing "cmd" in the search text box. Use the ``cd`` command
    to go to the directory where BAMM is located.
-   See below and the `Quick-start guide to BAMM
+   See :ref:`running` below and the `Quick-start guide to BAMM
    <http://bamm-project.org/quickstart.html>`_
    to learn how to configure and run BAMM.
 
 **Note:** Test that ``bamm`` will work for your system by running
 ``bamm`` in the directory in which the program is located.
+If it prints out a box with general information about BAMM
+and a message on "Usage", the BAMM program is working correctly.
    
 Installation from Source
 ------------------------
@@ -110,9 +119,11 @@ We also assume you have `Git <http://git-scm.com>`_ and
        sudo make install
 
    You may now run ``bamm`` from any directory in your system.
-   See below and the `Quick-start guide to BAMM
+   See :ref:`running` below and the `Quick-start guide to BAMM
    <http://bamm-project.org/quickstart.html>`_
    to learn how to configure and run BAMM.
+
+.. _running:
 
 Running
 -------
