@@ -9,8 +9,7 @@ IF(NOT WIN32)
 
   # Support universal binaries (if using Clang)
   IF(APPLE AND (${CMAKE_CXX_COMPILER_ID} MATCHES Clang))
-      SET(CXX_ARCHITECTURE_FLAGS
-          "-mmacosx-version-min=10.6 -arch i386 -arch x86_64")
+      SET(CXX_ARCHITECTURE_FLAGS "-arch x86_64")
   ENDIF(APPLE AND (${CMAKE_CXX_COMPILER_ID} MATCHES Clang))
 ELSE(NOT WIN32)
   SET(CXX_WARNING_FLAGS "/W4")
