@@ -1,10 +1,7 @@
 #!/bin/bash
 
 # Print the chain swap percentage, accepted, and total for the given run
-# e.g., chain-swap-percent ./bamm -c divcontrol.txt --numberOfGenerations 1000
-# Can use all BAMM options except --outName and any option
-#     that changes the name of an output file
-# Applies a 20% burn-in
+# and for each of the specified number of chains, delta T, and swap period
 
 set -e    # Exit on any error
 set -u    # Report unbound variables
@@ -13,30 +10,127 @@ if [ $# = 0 ]
 then
     echo Prints the percentage of chain swaps accepted, the number accepted,
     echo and the number proposed \(space-delimited\) after a 20% burn-in.
-    echo Usage: chain-swap-percent [bamm_path] [bamm_options]
+    echo "Usage: chain-swap-percent --numberOfChains <value1> [<value2> ...]"
+    echo "                          --deltaT <value1> [<value2> ...]"
+    echo "                          --swapPeriod <value1> [<value2> ...]"
+    echo "                          --run <bamm_path> <bamm_args>"
     exit
 fi
 
-outName=chain-swap-percent-$RANDOM
+# Last option type for desired values
+option=none
 
-runInfoFileName=run_info.txt
-mcmcFileName=mcmc_out.txt
-eventDataFileName=event_data.txt
-chainSwapFileName=chain_swap.txt
+# Lists of desired values (empty at first)
+numberOfChains=""
+deltaT=""
+swapPeriod=""
+run=""
 
-fileNameOptions="--runInfoFilename $runInfoFileName \
-    --mcmcOutfile $mcmcFileName \
-    --eventDataOutfile $eventDataFileName \
-    --chainSwapFileName $chainSwapFileName"
+for arg in $@
+do
+    if [ $arg = "--numberOfChains" ]
+    then
+        option=numberOfChains
+    elif [ $arg == "--deltaT" ]
+    then
+        option=deltaT
+    elif [ $arg == "--swapPeriod" ]
+    then
+        option=swapPeriod
+    elif [ $arg == "--run" ]
+    then
+        option=run
+    else
+        if [ $option = numberOfChains ]
+        then
+            numberOfChains="$numberOfChains $arg"
+        elif [ $option = deltaT ]
+        then
+            deltaT="$deltaT $arg"
+        elif [ $option = swapPeriod ]
+        then
+            swapPeriod="$swapPeriod $arg"
+        elif [ $option = run ]
+        then
+            run="$run $arg"
+        fi
+    fi
+done
 
-echo 'Running BAMM to calculate chain swap percentage...'
-$@ --outName $outName $fileNameOptions > /dev/null
+# Basic error-checking
+if [ -z "$numberOfChains" ]
+then
+    echo "ERROR: No --numberOfChains specified"
+    exit
+fi
 
-realChainSwapFileName=${outName}_$chainSwapFileName
+if [ -z "$deltaT" ]
+then
+    echo "ERROR: No --deltaT specified"
+    exit
+fi
 
-Rscript -e "data = read.csv(\"$realChainSwapFileName\")\$swapAccepted; \
-            data = tail(data, 0.8 * length(data)); \
-            cat(paste(mean(data), sum(data), length(data))); \
-            cat(\"\\\n\")"
+if [ -z "$swapPeriod" ]
+then
+    echo "ERROR: No --swapPeriod specified"
+    exit
+fi
 
-rm ${outName}*
+if [ -z "$run" ]
+then
+    echo "ERROR: No --run specified"
+    exit
+fi
+
+# Print formatted header
+printf "%13s%13s%13s%13s%13s%13s\n" \
+    nChains deltaT swapPeriod swapPercent swapAccepted swapProposed
+
+# Run for every combination of number of chains, delta T, and swap period
+for nChains in $numberOfChains
+do
+    for dT in $deltaT
+    do
+        for swapP in $swapPeriod
+        do
+            outName=chain-swap-percent-$RANDOM
+
+            runInfoFileName=run_info.txt
+            mcmcFileName=mcmc_out.txt
+            eventDataFileName=event_data.txt
+            chainSwapFileName=chain_swap.txt
+
+            fileNameOptions="--runInfoFilename $runInfoFileName \
+                --mcmcOutfile $mcmcFileName \
+                --eventDataOutfile $eventDataFileName \
+                --chainSwapFileName $chainSwapFileName"
+
+            nChainsOption="--numberOfChains $nChains"
+            dTOption="--deltaT $dT"
+            swapPOption="--swapPeriod $swapP"
+
+            $run --outName $outName $fileNameOptions \
+                $nChainsOption $dTOption $swapPOption > /dev/null
+
+            realSwapFileName=${outName}_$chainSwapFileName
+
+            percent=$(Rscript -e "data = read.csv(\"$realSwapFileName\"); \
+                                  data = tail(data, 0.8 * nrow(data)); \
+                                  cat(mean(data\$swapAccepted))")
+
+            accepted=$(Rscript -e "data = read.csv(\"$realSwapFileName\"); \
+                                   data = tail(data, 0.8 * nrow(data)); \
+                                   cat(sum(data\$swapAccepted))")
+
+            proposed=$(Rscript -e "data = read.csv(\"$realSwapFileName\"); \
+                                   data = tail(data, 0.8 * nrow(data)); \
+                                   cat(nrow(data))")
+
+            # Print current options
+            printf "%13s%13s%13s%13s%13s%13s\n" \
+                $nChains $dT $swapP $percent $accepted $proposed
+
+            rm ${outName}*
+        done
+    done
+done
