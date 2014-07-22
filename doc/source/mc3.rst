@@ -136,3 +136,19 @@ We have not examined the effects of the swap period in detail,
 but in terms of run time,
 the smaller the swap period, the longer the run takes to complete.
 A swap period of 1000 has worked for us.
+
+For those using the BAMM GitHub repository,
+we have provided a bash script (OS X and Linux only), ``chain-swap-percent.sh``,
+to help determine the optimal :math:`\Delta T` value for a specific data set.
+It will print the percent acceptance of the chain swap proposals.
+This script is located in the ``tools`` directory.
+To run, first make sure you are in the directory containing your data files.
+If you would like to test :math:`\Delta T` values of 0.01, 0.05, and 0.1,
+you would run::
+
+    <bamm_path>/tools/chain-swap-percent.sh --deltaT 0.01 0.05 0.1
+        --numberOfChains 4 --swapPeriod 1000 --run bamm -c control.txt
+
+where ``<bamm_path>`` is the path to the ``bamm`` directory.
+You could also specify multiple values for ``numberOfChains``
+and ``swapPeriod``, and the script will test every combination of values.
