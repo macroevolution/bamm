@@ -10,10 +10,10 @@ if [ $# = 0 ]
 then
     echo Prints the percentage of chain swaps accepted, the number accepted,
     echo and the number proposed \(space-delimited\) after a 20% burn-in.
-    echo "Usage: chain-swap-percent --numberOfChains <value1> [<value2> ...]"
-    echo "                          --deltaT <value1> [<value2> ...]"
-    echo "                          --swapPeriod <value1> [<value2> ...]"
-    echo "                          --run <bamm_path> <bamm_args>"
+    echo "Usage: chain-swap-percent.sh --numberOfChains <value1> [<value2> ...]"
+    echo "                             --deltaT <value1> [<value2> ...]"
+    echo "                             --swapPeriod <value1> [<value2> ...]"
+    echo "                             --run <bamm_path> <bamm_args>"
     exit
 fi
 
