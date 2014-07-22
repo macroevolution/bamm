@@ -16,7 +16,7 @@
 #include <cstdlib>
 
 
-void printAboutBox();
+void printAboutInformation();
 std::string buildCommandLine(int argc, char* argv[]);
 const char* currentTime();
 ModelFactory* createModelFactory(const std::string& modelType);
@@ -24,7 +24,7 @@ ModelFactory* createModelFactory(const std::string& modelType);
 
 int main (int argc, char* argv[])
 {
-    printAboutBox();
+    printAboutInformation();
 
     // Process command-line arguments and load settings
     CommandLineProcessor commandLine(argc, argv);
@@ -70,23 +70,13 @@ int main (int argc, char* argv[])
 }
 
 
-void printAboutBox()
+void printAboutInformation()
 {
-    log(Message) << "\
-+----------------------------------------------------------------------+\n\
-|   BAMM: Bayesian Analysis of Macroevolutionary Mixtures              |\n\
-+----------------------------------------------------------------------+\n\
-|                                                                      |\n\
-|   Daniel Rabosky <drabosky@umich.edu>                                |\n\
-|   University of Michigan, Ann Arbor, MI, USA                         |\n\
-|                                                                      |\n\
-|   Authors: Carlos Anderson, Joseph Brown, Michael Grundler,          |\n\
-|            Daniel Rabosky, Jeff Shi, Pascal Title                    |\n\
-|                                                                      |\n\
-|   Copyright (C) 2012-2014 Daniel Rabosky                             |\n\
-|   See LICENSE for details.                                           |\n\
-|                                                                      |\n\
-+----------------------------------------------------------------------+\n\n";
+    log(Message) << "BAMM " << BAMM_VERSION
+        << " (" << BAMM_VERSION_DATE << ")\n"
+        << "Copyright (C) 2012-2014 Daniel Rabosky\n"
+        << "BAMM is distributed under the GNU General Public License.\n"
+        << "See http://bamm-project.org for more information.\n\n";
 }
 
 
