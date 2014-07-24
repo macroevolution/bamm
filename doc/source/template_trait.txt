@@ -120,7 +120,7 @@ eventDataWriteFreq = %%%%
 printFreq = %%%%
 # Frequency in which to print MCMC status to the screen
 
-acceptanceResetFreq = %%%%
+acceptanceResetFreq = 1000
 # Frequency in which to reset the acceptance rate calculation
 # The acceptance rate is output to both the MCMC data file and the screen
 
