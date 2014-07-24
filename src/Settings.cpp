@@ -136,7 +136,7 @@ void Settings::initializeGlobalSettings()
     addParameter("overwrite", "0", NotRequired);
     addParameter("writeMeanBranchLengthTrees", "0", NotRequired);
 
-    addParameter("acceptanceResetFreq", "1000");
+    addParameter("acceptanceResetFreq", "1000", NotRequired);
 
     // Parameter update rates
     addParameter("updateRateEventNumber", "0.0");
