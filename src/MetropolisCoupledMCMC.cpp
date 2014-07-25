@@ -12,6 +12,7 @@
 #include "ChainSwapDataWriter.h"
 
 #include <algorithm>
+#include <thread>
 
 
 MetropolisCoupledMCMC::MetropolisCoupledMCMC
@@ -87,20 +88,33 @@ double MetropolisCoupledMCMC::calculateTemperature(int i, double deltaT) const
 
 void MetropolisCoupledMCMC::runChains(int genStart, int genEnd)
 {
-    #pragma omp parallel for
+    std::vector<std::thread> chainThreads;
+    chainThreads.reserve(_chains.size());
+
     for (int i = 0; i < (int)_chains.size(); i++) {
-        for (int g = genStart; g < genEnd; g++) {
-            _chains[i]->step();
+        chainThreads.push_back(std::thread
+            {&MetropolisCoupledMCMC::runChain, this, i, genStart, genEnd});
+    }
 
-            if (i == _coldChainIndex) {
-                _stdOutDataWriter.writeData(g, *_chains[i]);
-                _mcmcDataWriter.writeData(g, *_chains[i]);
-                _eventDataWriter->writeData(g, _chains[i]->model());
-                _acceptanceDataWriter.writeData(*_chains[i]);
+    for (std::thread& chainThread : chainThreads) {
+        chainThread.join();
+    }
+}
 
-                if (g % _acceptanceResetFreq == 0) {
-                    _chains[i]->model().resetMHAcceptanceParameters();
-                }
+
+void MetropolisCoupledMCMC::runChain(int i, int genStart, int genEnd)
+{
+    for (int g = genStart; g < genEnd; g++) {
+        _chains[i]->step();
+
+        if (i == _coldChainIndex) {
+            _stdOutDataWriter.writeData(g, *_chains[i]);
+            _mcmcDataWriter.writeData(g, *_chains[i]);
+            _eventDataWriter->writeData(g, _chains[i]->model());
+            _acceptanceDataWriter.writeData(*_chains[i]);
+
+            if (g % _acceptanceResetFreq == 0) {
+                _chains[i]->model().resetMHAcceptanceParameters();
             }
         }
     }

@@ -33,6 +33,7 @@ private:
     double calculateTemperature(int i, double deltaT) const;
 
     void runChains(int genStart, int genEnd);
+    void runChain(int i, int genStart, int genEnd);
     void tryChainSwap(int generation);
 
     void chooseTwoNumbers(int* x, int* y, int from, int to);
