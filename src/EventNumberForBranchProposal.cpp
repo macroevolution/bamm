@@ -10,6 +10,8 @@ EventNumberForBranchProposal::EventNumberForBranchProposal
     (Random& random, Settings& settings, Model& model) :
         _random(random), _model(model)
 {
+    _weight = settings.get<double>("updateRateEventNumberForBranch");
+
     _validateEventConfiguration =
         settings.get<bool>("validateEventConfiguration");
 

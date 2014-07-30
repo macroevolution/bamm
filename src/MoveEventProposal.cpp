@@ -13,6 +13,8 @@ MoveEventProposal::MoveEventProposal
     (Random& random, Settings& settings, Model& model) :
         _random(random), _settings(settings), _model(model)
 {
+    _weight = _settings.get<double>("updateRateEventPosition");
+
     _localToGlobalMoveRatio = _settings.get<double>("localGlobalMoveRatio");
     _scale = _settings.get<double>("updateEventLocationScale") *
         _model.getTreePtr()->maxRootToTipLength();

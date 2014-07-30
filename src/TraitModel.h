@@ -3,10 +3,6 @@
 
 
 #include "Model.h"
-#include "BetaInitProposal.h"
-#include "BetaShiftProposal.h"
-#include "BetaTimeModeProposal.h"
-#include "NodeStateProposal.h"
 
 #include <iosfwd>
 #include <vector>
@@ -33,9 +29,6 @@ public:
 
 private:
 
-    void initializeSpecificUpdateWeights();
-    virtual Proposal* getSpecificProposal(int parameter);
-
     virtual void setRootEventWithReadParameters
         (const std::vector<std::string>& parameters);
     virtual BranchEvent* newBranchEventWithReadParameters
@@ -54,11 +47,6 @@ private:
 
     virtual void getSpecificEventDataString
         (std::stringstream& ss, BranchEvent* event);
-
-    BetaInitProposal _betaInitProposal;
-    BetaShiftProposal _betaShiftProposal;
-    BetaTimeModeProposal _betaTimeModeProposal;
-    NodeStateProposal _nodeStateProposal;
 
     bool _sampleFromPriorOnly;
 

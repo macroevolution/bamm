@@ -3,11 +3,6 @@
 
 
 #include "Model.h"
-#include "LambdaInitProposal.h"
-#include "LambdaShiftProposal.h"
-#include "MuInitProposal.h"
-#include "MuShiftProposal.h"
-#include "LambdaTimeModeProposal.h"
 
 #include <iosfwd>
 #include <vector>
@@ -37,10 +32,6 @@ public:
 
 private:
 
-    virtual void initializeSpecificUpdateWeights();
-
-    virtual Proposal* getSpecificProposal(int parameter);
-    
     virtual void setRootEventWithReadParameters
         (const std::vector<std::string>& parameters);
     virtual BranchEvent* newBranchEventWithReadParameters
@@ -62,12 +53,6 @@ private:
         double lambda, double mu, double D0, double E0, double deltaT);
 
     virtual double calculateLogQRatioJump();
-
-    LambdaInitProposal _lambdaInitProposal;
-    LambdaShiftProposal _lambdaShiftProposal;
-    MuInitProposal _muInitProposal;
-    MuShiftProposal _muShiftProposal;
-    LambdaTimeModeProposal _lambdaTimeModeProposal;
 
     // Root event parameters
     double _lambdaInit0;

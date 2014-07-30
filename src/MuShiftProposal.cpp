@@ -11,6 +11,7 @@ MuShiftProposal::MuShiftProposal
     (Random& random, Settings& settings, Model& model, Prior& prior) :
         EventParameterProposal(random, settings, model, prior)
 {
+    _weight = _settings.get<double>("updateRateMuShift");
     _updateMuShiftScale = _settings.get<double>("updateMuShiftScale");
 }
 

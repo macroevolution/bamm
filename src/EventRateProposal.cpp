@@ -11,6 +11,7 @@ EventRateProposal::EventRateProposal
     (Random& random, Settings& settings, Model& model, Prior& prior) :
         _random(random), _settings(settings), _model(model), _prior(prior)
 {
+    _weight = _settings.get<double>("updateRateEventRate");
     _updateEventRateScale = _settings.get<double>("updateEventRateScale");
 }
 

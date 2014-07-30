@@ -13,6 +13,12 @@ public:
     virtual void reject() = 0;
 
     virtual double acceptanceRatio() = 0;
+
+    double weight() const;
+
+protected:
+
+    double _weight;
 };
 
 

@@ -16,6 +16,8 @@ NodeStateProposal::NodeStateProposal
         _random(random), _settings(settings),
         _model(static_cast<TraitModel&>(model)), _tree(model.getTreePtr())
 {
+    _weight = _settings.get<double>("updateRateNodeState");
+
     // Node state scale is relative to the standard deviation
     // of the trait values (located in the tree terminal nodes)
     double sd_traits = Stat::standard_deviation(_tree->traitValues());

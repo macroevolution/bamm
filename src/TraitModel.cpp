@@ -25,6 +25,10 @@
 #include "BranchHistory.h"
 #include "BranchEvent.h"
 #include "TraitBranchEvent.h"
+#include "BetaInitProposal.h"
+#include "BetaShiftProposal.h"
+#include "BetaTimeModeProposal.h"
+#include "NodeStateProposal.h"
 #include "Settings.h"
 #include "Log.h"
 #include "Prior.h"
@@ -33,11 +37,7 @@
 
 
 TraitModel::TraitModel(Random& random, Settings& settings) :
-    Model(random, settings),
-    _betaInitProposal(random, settings, *this, _prior),
-    _betaShiftProposal(random, settings, *this, _prior),
-    _betaTimeModeProposal(random, settings, *this),
-    _nodeStateProposal(random, settings, *this)
+    Model(random, settings)
 {
 #ifdef NEGATIVE_SHIFT_PARAM
     // Constrain beta shift to be zero or less than zero.
@@ -104,34 +104,14 @@ TraitModel::TraitModel(Random& random, Settings& settings) :
         log() << "Note that you have chosen to sample from prior only.\n";
     }
 
-    Model::finishConstruction();
-}
+    // Add proposals
+    _proposals.push_back(new BetaInitProposal(random, settings, *this, _prior));
+    _proposals.push_back
+        (new BetaShiftProposal(random, settings, *this, _prior));
+    _proposals.push_back(new NodeStateProposal(random, settings, *this));
+    _proposals.push_back(new BetaTimeModeProposal(random, settings, *this));
 
-
-void TraitModel::initializeSpecificUpdateWeights()
-{
-    _updateWeights.push_back(_settings.get<double>("updateRateBeta0"));
-    _updateWeights.push_back(_settings.get<double>("updateRateBetaShift"));
-    _updateWeights.push_back(_settings.get<double>("updateRateNodeState"));
-    _updateWeights.push_back(_settings.get<double>("updateRateBetaTimeMode"));
-}
-
-
-Proposal* TraitModel::getSpecificProposal(int parameter)
-{
-    if (parameter == 4) {
-        return &_betaInitProposal;
-    } else if (parameter == 5) {
-        return &_betaShiftProposal;
-    } else if (parameter == 6) {
-        return &_nodeStateProposal;
-    } else if (parameter == 7) {
-        return &_betaTimeModeProposal;
-    } else {
-        // Should never get here
-        log(Warning) << "Bad parameter to update.\n";
-        return NULL;
-    }
+    Model::calculateUpdateWeights();
 }
 
 

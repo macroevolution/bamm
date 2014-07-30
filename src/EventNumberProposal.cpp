@@ -10,6 +10,8 @@ EventNumberProposal::EventNumberProposal
     (Random& random, Settings& settings, Model& model) :
         _random(random), _model(model)
 {
+    _weight = settings.get<double>("updateRateEventNumber");
+
     _validateEventConfiguration =
         settings.get<bool>("validateEventConfiguration");
 }

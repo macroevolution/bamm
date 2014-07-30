@@ -15,6 +15,11 @@
 #include "BranchHistory.h"
 #include "BranchEvent.h"
 #include "SpExBranchEvent.h"
+#include "LambdaInitProposal.h"
+#include "LambdaShiftProposal.h"
+#include "MuInitProposal.h"
+#include "MuShiftProposal.h"
+#include "LambdaTimeModeProposal.h"
 #include "Settings.h"
 #include "Log.h"
 #include "Prior.h"
@@ -42,12 +47,7 @@
 
 
 SpExModel::SpExModel(Random& random, Settings& settings) :
-    Model(random, settings),
-    _lambdaInitProposal(random, settings, *this, _prior),
-    _lambdaShiftProposal(random, settings, *this, _prior),
-    _muInitProposal(random, settings, *this, _prior),
-    _muShiftProposal(random, settings, *this, _prior),
-    _lambdaTimeModeProposal(random, settings, *this)
+    Model(random, settings)
 {
     // Initial values
     _lambdaInit0 = _settings.get<double>("lambdaInit0");
@@ -113,38 +113,16 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
     if (_sampleFromPriorOnly)
         log() << "Note that you have chosen to sample from prior only.\n";
 
-    Model::finishConstruction();
-}
+    // Add proposals
+    _proposals.push_back
+        (new LambdaInitProposal(random, settings, *this, _prior));
+    _proposals.push_back
+        (new LambdaShiftProposal(random, settings, *this, _prior));
+    _proposals.push_back(new MuInitProposal(random, settings, *this, _prior));
+    _proposals.push_back(new MuShiftProposal(random, settings, *this, _prior));
+    _proposals.push_back(new LambdaTimeModeProposal(random, settings, *this));
 
-
-void SpExModel::initializeSpecificUpdateWeights()
-{
-    _updateWeights.push_back(_settings.get<double>("updateRateLambda0"));
-    _updateWeights.push_back(_settings.get<double>("updateRateLambdaShift"));
-    _updateWeights.push_back(_settings.get<double>("updateRateMu0"));
-    _updateWeights.push_back(_settings.get<double>("updateRateMuShift"));
-    _updateWeights.push_back
-        (_settings.get<double>("updateRateLambdaTimeMode"));
-}
-
-
-Proposal* SpExModel::getSpecificProposal(int parameter)
-{
-    if (parameter == 4) {
-        return &_lambdaInitProposal;
-    } else if (parameter == 5) {
-        return &_lambdaShiftProposal;
-    } else if (parameter == 6) {
-        return &_muInitProposal;
-    } else if (parameter == 7) {
-        return &_muShiftProposal;
-    } else if (parameter == 8) {
-        return &_lambdaTimeModeProposal;
-    } else {
-        // Should never get here
-        log(Warning) << "Bad parameter to update.\n";
-        return NULL;
-    }
+    Model::calculateUpdateWeights();
 }
 
 

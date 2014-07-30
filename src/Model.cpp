@@ -3,6 +3,10 @@
 #include "Tree.h"
 #include "Settings.h"
 #include "Prior.h"
+#include "EventNumberProposal.h"
+#include "EventNumberForBranchProposal.h"
+#include "MoveEventProposal.h"
+#include "EventRateProposal.h"
 #include "Node.h"
 #include "BranchEvent.h"
 #include "BranchHistory.h"
@@ -16,11 +20,7 @@
 
 Model::Model(Random& random, Settings& settings) :
     _random(random), _settings(settings), _prior(_random, &_settings),
-    _tree(new Tree(_random, _settings)),
-    _eventNumberProposal(random, settings, *this),
-    _eventNumberForBranchProposal(random, settings, *this),
-    _moveEventProposal(random, settings, *this),
-    _eventRateProposal(random, settings, *this, _prior)
+    _tree(new Tree(_random, _settings))
 {
     // Initialize event rate to generate expected number of prior events
     _eventRate = 1 / _settings.get<double>("poissonRatePrior");
@@ -36,15 +36,15 @@ Model::Model(Random& random, Settings& settings) :
     // Initial setting for temperature = 1.0
     // This must be explicitly set by calling the public
     // function Model::setModelTemperature
-     
     _temperatureMH = 1.0;
-}
 
-
-// This method needs to be called by the derived class
-void Model::finishConstruction()
-{
-    calculateUpdateWeights();
+    // Add proposals
+    _proposals.push_back(new EventNumberProposal(random, settings, *this));
+    _proposals.push_back
+        (new EventNumberForBranchProposal(random, settings, *this));
+    _proposals.push_back(new MoveEventProposal(random, settings, *this));
+    _proposals.push_back
+        (new EventRateProposal(random, settings, *this, _prior));
 }
 
 
@@ -56,6 +56,11 @@ Model::~Model()
     }
 
     delete _tree;
+
+    // Delete all proposals (including those created by derived classes)
+    for (Proposal* proposal : _proposals) {
+        delete proposal;
+    }
 }
 
 
@@ -206,9 +211,12 @@ void Model::forwardSetHistoriesRecursive(Node* p)
 
 void Model::calculateUpdateWeights()
 {
-    initializeUpdateWeights();
+    // Add un-normalized weights of proposals
+    for (Proposal* proposal : _proposals) {
+        _updateWeights.push_back(proposal->weight());
+    }
 
-    // Add all weights
+    // Sum all weights
     double sumWeights = 0.0;
     for (int i = 0; i < (int)_updateWeights.size(); i++) {
         sumWeights += _updateWeights[i];
@@ -226,42 +234,13 @@ void Model::calculateUpdateWeights()
 }
 
 
-void Model::initializeUpdateWeights()
-{
-    _updateWeights.push_back(_settings.get<double>("updateRateEventNumber"));
-    _updateWeights.push_back
-        (_settings.get<double>("updateRateEventNumberForBranch"));
-    _updateWeights.push_back(_settings.get<double>("updateRateEventPosition"));
-    _updateWeights.push_back(_settings.get<double>("updateRateEventRate"));
-
-    // Defined by derived class
-    initializeSpecificUpdateWeights();
-}
-
-
 void Model::proposeNewState()
 {
     int parameterToUpdate = chooseParameterToUpdate();
     _lastParameterUpdated = parameterToUpdate;
 
-    Proposal* proposal = NULL;
-
-    if (parameterToUpdate == 0) {
-        proposal = &_eventNumberProposal;
-    } else if (parameterToUpdate == 1) {
-        proposal = &_eventNumberForBranchProposal;
-    } else if (parameterToUpdate == 2) {
-        proposal = &_moveEventProposal;
-    } else if (parameterToUpdate == 3) {
-        proposal = &_eventRateProposal;
-    } else {
-        // Defined by derived class
-        proposal = getSpecificProposal(parameterToUpdate);
-    }
-
-    if (proposal != NULL) {
-        proposal->propose();
-    }
+    Proposal* proposal = _proposals[parameterToUpdate];
+    proposal->propose();
 
     _lastProposal = proposal;
 }

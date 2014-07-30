@@ -3,10 +3,6 @@
 
 
 #include "Prior.h"
-#include "EventNumberProposal.h"
-#include "EventNumberForBranchProposal.h"
-#include "MoveEventProposal.h"
-#include "EventRateProposal.h"
 #include "BranchEvent.h"
 
 #include <vector>
@@ -29,8 +25,6 @@ public:
 
     Model(Random& random, Settings& settings);
     virtual ~Model();
-
-    void finishConstruction();
 
     Tree* getTreePtr();
 
@@ -96,12 +90,8 @@ public:
 protected:
 
     void calculateUpdateWeights();
-    void initializeUpdateWeights();
-    virtual void initializeSpecificUpdateWeights() = 0;
 
     int chooseParameterToUpdate();
-
-    virtual Proposal* getSpecificProposal(int parameter) = 0;
 
     double computeLogHastingsRatio(double logLikRatio,
         double logPriorRatio, double logQratio);
@@ -131,10 +121,7 @@ protected:
 
     Tree* _tree;
 
-    EventNumberProposal _eventNumberProposal;
-    EventNumberForBranchProposal _eventNumberForBranchProposal;
-    MoveEventProposal _moveEventProposal;
-    EventRateProposal _eventRateProposal;
+    std::vector<Proposal*> _proposals;
 
     std::vector<double> _updateWeights;
     int _lastParameterUpdated;

@@ -11,6 +11,7 @@ BetaShiftProposal::BetaShiftProposal
     (Random& random, Settings& settings, Model& model, Prior& prior) :
         EventParameterProposal(random, settings, model, prior)
 {
+    _weight = _settings.get<double>("updateRateBetaShift");
     _updateBetaShiftScale = _settings.get<double>("updateBetaShiftScale");
 }
 

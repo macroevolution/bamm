@@ -1,10 +1,10 @@
 #include "BetaTimeModeProposal.h"
 
+#include "Settings.h"
 #include "Prior.h"
 #include "TraitBranchEvent.h"
 
 class Random;
-class Settings;
 class Model;
 
 
@@ -12,6 +12,7 @@ BetaTimeModeProposal::BetaTimeModeProposal
     (Random& random, Settings& settings, Model& model)
     : TimeModeProposal(random, settings, model)
 {
+    _weight = settings.get<double>("updateRateBetaTimeMode");
 }
 
 

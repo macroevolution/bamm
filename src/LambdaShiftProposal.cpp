@@ -11,6 +11,7 @@ LambdaShiftProposal::LambdaShiftProposal
     (Random& random, Settings& settings, Model& model, Prior& prior) :
         EventParameterProposal(random, settings, model, prior)
 {
+    _weight = _settings.get<double>("updateRateLambdaShift");
     _updateLambdaShiftScale = _settings.get<double>("updateLambdaShiftScale");
 }
 

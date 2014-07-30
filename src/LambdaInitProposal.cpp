@@ -11,6 +11,7 @@ LambdaInitProposal::LambdaInitProposal
     (Random& random, Settings& settings, Model& model, Prior& prior) :
         EventParameterProposal(random, settings, model, prior)
 {
+    _weight = _settings.get<double>("updateRateLambda0");
     _updateLambdaInitScale = _settings.get<double>("updateLambdaInitScale");
 }
 

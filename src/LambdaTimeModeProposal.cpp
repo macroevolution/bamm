@@ -1,10 +1,10 @@
 #include "LambdaTimeModeProposal.h"
 
+#include "Settings.h"
 #include "Prior.h"
 #include "SpExBranchEvent.h"
 
 class Random;
-class Settings;
 class Model;
 
 
@@ -12,6 +12,7 @@ LambdaTimeModeProposal::LambdaTimeModeProposal
     (Random& random, Settings& settings, Model& model)
     : TimeModeProposal(random, settings, model)
 {
+    _weight = settings.get<double>("updateRateLambdaTimeMode");
 }
 
 
