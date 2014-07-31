@@ -112,7 +112,7 @@ void Model::initializeModelFromEventDataFile(const std::string& fileName)
         }
 
         Node* x = NULL;
-        
+
         if ((species_1 != "NA") && (species_2 != "NA")) {
             x = _tree->getNodeMRCA(species_1, species_2);
         } else if ((species_1 != "NA") && (species_2 == "NA")) {
@@ -265,7 +265,7 @@ BranchEvent* Model::addRandomEventToTree()
     double aa = _tree->getRoot()->getMapStart();
     double bb = _tree->getTotalMapLength();
     double x = _random.uniform(aa, bb);
-                
+
     BranchEvent* newEvent = newBranchEventWithRandomParameters(x);
     return addEventToTree(newEvent);
 }
@@ -291,11 +291,11 @@ BranchEvent* Model::addEventToTree(BranchEvent* newEvent)
     // Always done after event is added to tree.
     newEvent->getEventNode()->getBranchHistory()->
         addEventToBranchHistory(newEvent);
-                
+
     _eventCollection.insert(newEvent);
     forwardSetBranchHistories(newEvent);
     setMeanBranchParameters();
-                            
+
     _lastEventModified = newEvent;
 
     return newEvent;
@@ -303,7 +303,7 @@ BranchEvent* Model::addEventToTree(BranchEvent* newEvent)
 
 
 BranchEvent* Model::chooseEventAtRandom(bool includeRoot)
-{   
+{
     EventSet& events = _eventCollection;
     int numberOfEvents = (int)events.size();
 
@@ -313,7 +313,7 @@ BranchEvent* Model::chooseEventAtRandom(bool includeRoot)
     } else {
         eventIndex = _random.uniformInteger(0, numberOfEvents - 1);
     }
-    
+
     if (eventIndex == numberOfEvents) {
         return getRootEvent();
     } else {

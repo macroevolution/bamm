@@ -52,7 +52,7 @@ void LambdaShiftProposal::revertToOldParameterValue()
 
 
 void LambdaShiftProposal::updateParameterOnTree()
-{   
+{
     _tree->setNodeSpeciationParameters();
     _tree->setNodeExtinctionParameters();
 }

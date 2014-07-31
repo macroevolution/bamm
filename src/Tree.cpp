@@ -664,7 +664,7 @@ void Tree::setNodeTimes()
     if (getNumberOfNodes() > 0) {
         _preOrderNodes[0]->setTime(0.0);
     }
-    
+
     for (int i = 1; i < (int)_preOrderNodes.size(); ++i) {
         Node* node = _preOrderNodes[i];
         node->setTime(node->getBrlen() + node->getAnc()->getTime());
@@ -1246,7 +1246,7 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
                 (*i)->setEtip(backboneInitial);
             }
         }
-        
+
         if ((*i)->getCladeName() == "") {
             log(Error) << "There are unset clade names.\n";
             std::exit(1);
@@ -1487,7 +1487,7 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
             static_cast<TraitBranchEvent*>(bh->getAncestralNodeEvent());
 
         if (n_events == 0) {
-            
+
             double t1 = x->getAnc()->getTime();
             double t2 = x->getTime();
 
@@ -1500,7 +1500,7 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
 
             rate = x->integrateExponentialRateFunction(beta0, zpar, t1, t2);
             rate /= x->getBrlen();
-            
+
         } else {
 
             double tcheck = 0.0;
@@ -1516,7 +1516,7 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
             double beta0 = ancestralEvent->getBetaInit();
 
             rate = x->integrateExponentialRateFunction(beta0, zpar, t1, t2);
-            
+
             for (int k = 1; k < n_events; k++) {
 
                 t1 = 0.0;
@@ -1531,9 +1531,9 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
                 beta0 = eventAtKMinus1->getBetaInit();
 
                 rate += x->integrateExponentialRateFunction(beta0, zpar, t1, t2);
-            
+
                 tcheck += (t2 - t1);
-            
+
             }
 
             t1 = 0.0;
@@ -1545,9 +1545,9 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
 
             zpar = event->getBetaShift();
             beta0 = event->getBetaInit();
-            
+
             rate += x->integrateExponentialRateFunction(beta0, zpar, t1, t2);
-    
+
             tcheck += (t2 - t1);
 
 
@@ -1572,9 +1572,9 @@ void Tree::computeMeanTraitRatesByNode(Node* x)
 
     double init = event->getBetaInit();
     double zz = event->getBetaShift();
-    
+
     double curBeta = x->getExponentialRate(init, zz, reltime);
-    
+
 #ifdef DEBUG_TIME_VARIABLE
 
     // Try setting node speciation rates equal to mean rate on descendant branches, to see if the

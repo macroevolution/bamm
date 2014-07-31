@@ -73,7 +73,7 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
     // Parameter for splitting branch into pieces for numerical computation
     _segLength =
         _settings.get<double>("segLength") * _tree->maxRootToTipLength();
-   
+
     BranchEvent* x =  new SpExBranchEvent(_lambdaInit0, _lambdaShift0,
         _muInit0, _muShift0, _initialLambdaIsTimeVariable,
         _tree->getRoot(), _tree, _random, 0);
@@ -197,7 +197,7 @@ BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
     if (newIsTimeVariable) {
         newLambdaShift = _prior.generateLambdaShiftFromPrior();
     }
- 
+
     // TODO: This needs to be refactored somewhere else
     // Computes the jump density for the addition of new parameters.
     _logQRatioJump = 0.0;    // Set to zero to clear previous values
@@ -207,7 +207,7 @@ BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
     }
     _logQRatioJump += _prior.muInitPrior(newMu);
     _logQRatioJump += _prior.muShiftPrior(newMuShift);
-    
+
     return new SpExBranchEvent(newLam, newLambdaShift, newMu,
         newMuShift, newIsTimeVariable, _tree->mapEventToTree(x),
         _tree, _random, x);
@@ -229,7 +229,7 @@ void SpExModel::setDeletedEventParameters(BranchEvent* be)
 double SpExModel::calculateLogQRatioJump()
 {
     double _logQRatioJump = 0.0;
-    
+
     _logQRatioJump = _prior.lambdaInitPrior(_lastDeletedEventLambdaInit);
     // TODO: Should something be checked for time variable/constant?
     _logQRatioJump += _prior.lambdaShiftPrior(_lastDeletedEventLambdaShift);
@@ -415,6 +415,6 @@ double SpExModel::computeLogPrior()
 
     // Here's prior density on the event rate
     logPrior += _prior.poissonRatePrior(_eventRate);
-    
+
     return logPrior;
 }

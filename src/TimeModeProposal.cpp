@@ -60,7 +60,7 @@ void TimeModeProposal::makeTimeConstant(BranchEvent* event)
 // The equation for lambda through time, lam(t), is
 //
 //                 /  lam0 (2 - e^(-kt))    k > 0
-//                |   
+//                |
 //     lam(t) =  <    lam0 e^(kt)           k < 0
 //                |
 //                 \  lam0                  k = 0
@@ -102,7 +102,7 @@ double TimeModeProposal::computeMeanRate(double init, double k, double T)
 void TimeModeProposal::makeTimeVariable(BranchEvent* event)
 {
     double oldInitParam = initialParameter(event);
-    double newRateParam = rateParameterFromPrior(); 
+    double newRateParam = rateParameterFromPrior();
     double timeLength = event->getTimeToTip();
 
     double newInitParam =

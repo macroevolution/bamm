@@ -111,7 +111,7 @@ double Node::integrateExponentialRateFunction
 // The equation for lambda through time, lam(t), is
 //
 //                 /  lam0 (2 - e^(-kt))    k > 0
-//                |   
+//                |
 //     lam(t) =  <    lam0 e^(kt)           k < 0
 //                |
 //                 \  lam0                  k = 0
@@ -265,7 +265,7 @@ void Node::computeNodeBranchSpeciationParams()
 
             zpar = event->getLamShift();
             lam0 = event->getLamInit();
-            
+
             rate += integrateExponentialRateFunction(lam0, zpar, t1, t2);
 
             tcheck += (t2 - t1);
@@ -307,14 +307,14 @@ void Node::computeAndSetNodeSpeciationParams()
     double r_init = event->getLamInit();
     double r_shift = event->getLamShift();
     double curLam = getExponentialRate(r_init, r_shift, reltime);
-    
+
     setNodeLambda(curLam); // speciation rate for node set
 
 }
 
 void Node::computeAndSetNodeExtinctionParams()
 {
-    
+
     BranchHistory* bh = getBranchHistory();
     // Compute extinction rate at the focal node:
     SpExBranchEvent* event = static_cast<SpExBranchEvent*>(bh->getNodeEvent());
@@ -322,9 +322,9 @@ void Node::computeAndSetNodeExtinctionParams()
     double r_init = event->getMuInit();
     double r_shift = event->getMuShift();
     double curMu = getExponentialRate(r_init, r_shift, reltime);
-    
+
     setNodeMu(curMu); // extinction rate for node
-    
+
 }
 
 
@@ -351,7 +351,7 @@ void Node::computeNodeBranchExtinctionParams()
 
             double zpar = ancestralEvent->getMuShift();
             double r0 = ancestralEvent->getMuInit();
-            
+
             rate = integrateExponentialRateFunction(r0, zpar, t1, t2);
             rate /= getBrlen();
 
@@ -397,11 +397,11 @@ void Node::computeNodeBranchExtinctionParams()
 
             zpar = event->getMuShift();
             r0 = event->getMuInit();
-            
+
             rate += integrateExponentialRateFunction(r0, zpar, t1, t2);
-    
+
             tcheck += (t2 - t1);
-    
+
             // The overall mean rate across the branch:
             rate /= (getBrlen());
         }
@@ -440,10 +440,10 @@ double Node::getPointExtinction(double branchtime)
         SpExBranchEvent* event =
             static_cast<SpExBranchEvent*>(bh->getNodeEvent());
         reltime = abstime - event->getAbsoluteTime();
-        
+
         double shift = event->getMuShift();
         double init = event->getMuInit();
-        
+
         curMu = getExponentialRate(init, shift, reltime);
     } else {
         // Multi-event scenario
@@ -464,10 +464,10 @@ double Node::getPointExtinction(double branchtime)
             log(Error) << "Invalid time in Node::getPointExtinction().\n";
             std::exit(1);
         }
-        
+
         double shift = lastEvent->getMuShift();
         double init = lastEvent->getMuInit();
-        
+
         curMu = getExponentialRate(init, shift, reltime);
     }
 
@@ -504,7 +504,7 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
 
         SpExBranchEvent* lastEvent =
             static_cast<SpExBranchEvent*>(bh->getLastEvent(tstart));
-        
+
         t1 -= lastEvent->getAbsoluteTime();
         t2 -= lastEvent->getAbsoluteTime();
 
@@ -513,7 +513,7 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
 
         rate = integrateExponentialRateFunction(lam0, zpar, t1, t2);
         rate /= (t2 - t1);
-        
+
         if ((t1 < 0 ) | (t2 < t1)) {
             log(Error) << "Times are bad in "
                 "Node::computeSpeciationRateIntervalRelTime.\n";
@@ -538,9 +538,9 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
         double lam0 = be->getLamInit();
 
         rate = integrateExponentialRateFunction(lam0, zpar, trel1, trel2);
-        
+
         be = static_cast<SpExBranchEvent*>(bh->getNextEvent(tabs1));
-        
+
         for (int k = 1; k < n_events; k++) {
 
             tabs1 = be->getAbsoluteTime();
@@ -549,7 +549,7 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
             trel2 = tabs2 - tabs1;
             zpar = be->getLamShift();
             lam0 = be->getLamInit();
-            
+
             rate += integrateExponentialRateFunction(lam0, zpar, trel1, trel2);
 
             tcheck += (trel2 - trel1);
@@ -634,7 +634,7 @@ double Node::computeExtinctionRateIntervalRelativeTime(double tstart,
         double mu0 = be->getMuInit();
 
         rate = integrateExponentialRateFunction(mu0, zpar, trel1, trel2);
-    
+
         be = static_cast<SpExBranchEvent*>(bh->getNextEvent(tabs1));
         for (int k = 1; k < n_events; k++) {
             tabs1 = be->getAbsoluteTime();
@@ -643,7 +643,7 @@ double Node::computeExtinctionRateIntervalRelativeTime(double tstart,
             trel2 = tabs2 - tabs1;
             zpar = be->getMuShift();
             mu0 = be->getMuInit();
-            
+
             rate += integrateExponentialRateFunction(mu0, zpar, trel1, trel2);
 
             tcheck += (trel2 - trel1);

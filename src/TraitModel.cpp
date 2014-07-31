@@ -162,21 +162,21 @@ BranchEvent* TraitModel::newBranchEventWithRandomParameters(double x)
     double newbeta = _prior.generateBetaInitFromPrior();
     double newBetaShift = _prior.generateBetaShiftFromPrior();
     bool newIsTimeVariable = _prior.generateBetaIsTimeVariableFromPrior();
-    
+
 #ifdef NEGATIVE_SHIFT_PARAM
     newBetaShift = -fabs(newBetaShift);
     double dens_term = log(2.0);
 #else
     double dens_term = 0.0;
 #endif
-    
+
     _logQRatioJump = 0.0;
-    
+
     _logQRatioJump += _prior.betaInitPrior(newbeta);
     if (newIsTimeVariable) {
         _logQRatioJump += dens_term + _prior.betaShiftPrior(newBetaShift);
     }
-    
+
     return new TraitBranchEvent(newbeta, newBetaShift, newIsTimeVariable,
         _tree->mapEventToTree(x), _tree, _random, x);
 }
@@ -195,13 +195,13 @@ void TraitModel::setDeletedEventParameters(BranchEvent* be)
 double TraitModel::calculateLogQRatioJump()
 {
     double _logQRatioJump = 0.0;
-    
+
     _logQRatioJump = _prior.betaInitPrior(_lastDeletedEventBetaInit);
     _logQRatioJump += _prior.betaShiftPrior(_lastDeletedEventBetaShift);
 
     return _logQRatioJump;
 }
-    
+
 
 BranchEvent* TraitModel::newBranchEventFromLastDeletedEvent()
 {
@@ -323,11 +323,11 @@ double TraitModel::computeLogPrior()
 #else
     double dens_term = 0.0;
 #endif
-    
+
     double logPrior = 0.0;
 
     TraitBranchEvent* re = static_cast<TraitBranchEvent*>(_rootEvent);
-    
+
     logPrior += _prior.betaInitRootPrior(re->getBetaInit());
     if (re->isTimeVariable()) {
         logPrior += dens_term + _prior.betaShiftRootPrior(re->getBetaShift());
@@ -337,21 +337,21 @@ double TraitModel::computeLogPrior()
          i != _eventCollection.end(); ++i) {
 
         TraitBranchEvent* event = static_cast<TraitBranchEvent*>(*i);
-        
+
         logPrior += _prior.betaInitPrior(event->getBetaInit());
         if (event->isTimeVariable()) {
             logPrior += dens_term +
                 _prior.betaShiftPrior(event->getBetaShift());
         }
-        
+
     }
-    
+
     // and prior on number of events:
-    
+
     logPrior += _prior.poissonRatePrior(getEventRate());
-    
+
     return logPrior;
-    
+
 }
 
 

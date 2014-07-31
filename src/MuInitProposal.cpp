@@ -42,7 +42,7 @@ void MuInitProposal::revertToOldParameterValue()
 
 
 void MuInitProposal::updateParameterOnTree()
-{   
+{
     _tree->setNodeSpeciationParameters();
     _tree->setNodeExtinctionParameters();
 }

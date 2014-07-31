@@ -12,14 +12,14 @@
 EventCountLog::EventCountLog(int x)
 {
     _eventCount = x;
-    
+
     _addProposeCount = 0;
     _addAcceptCount = 0;
     _subtractProposeCount = 0;
     _subtractAcceptCount = 0;
 
     _inStateCount = 0;
-    
+
 }
 
 

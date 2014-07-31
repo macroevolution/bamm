@@ -52,19 +52,19 @@ void Settings::readControlFile(const std::string& controlFilename)
     if (!fileExists(controlFilename)) {
         exitWithErrorNoControlFile();
     }
-    
+
     std::ifstream controlStream(controlFilename.c_str());
-    
+
     while (!controlStream.eof()) {
         std::string line;
         getline(controlStream, line, '\n');
-        
+
         // Strip whitespace
         line.erase(std::remove_if(line.begin(), line.end(),
             (int(*)(int))isspace), line.end());
-        
+
         // Strip comments
-        std::istringstream lineStringStream(line);       
+        std::istringstream lineStringStream(line);
         std::string lineWithoutComments;
         getline(lineStringStream, lineWithoutComments, '#');
 
@@ -72,13 +72,13 @@ void Settings::readControlFile(const std::string& controlFilename)
         if (lineWithoutComments.size() == 0) {
             continue;
         }
-        
+
         // Use second getline to split by '=' characters
         std::istringstream equalsStringStream(lineWithoutComments);
         std::vector<std::string> tokens;
         std::string token;
         while (getline(equalsStringStream, token, '=')) {
-            tokens.push_back(token);        
+            tokens.push_back(token);
         }
 
         // Ensure input line is valid (two sides to an equal sign)
@@ -91,7 +91,7 @@ void Settings::readControlFile(const std::string& controlFilename)
     }
 }
 
- 
+
 void Settings::initializeGlobalSettings()
 {
     // General
@@ -131,7 +131,7 @@ void Settings::initializeGlobalSettings()
     addParameter("branchRatesWriteFreq", "0", NotRequired);
     addParameter("mcmcWriteFreq", "0");
     addParameter("eventDataWriteFreq", "0");
-    
+
     addParameter("printFreq", "0");
     addParameter("overwrite", "0", NotRequired);
     addParameter("writeMeanBranchLengthTrees", "0", NotRequired);
@@ -144,12 +144,12 @@ void Settings::initializeGlobalSettings()
     addParameter("updateRateEventPosition", "0.0");
     addParameter("updateRateEventRate", "0.0");
     addParameter("initialNumberEvents", "0");
- 
+
     // Other (TODO: Need to add documentation for these)
     addParameter("autotune", "0", NotRequired);
     addParameter("outputAcceptanceInfo", "0", NotRequired);
     addParameter("acceptanceInfoFileName", "acceptance_info.txt", NotRequired);
-    
+
     // TODO: New params May 30 2014, need documented
     addParameter("maxNumberEvents", "500", NotRequired);
     addParameter("priorSim_IntervalGenerations", "5000", NotRequired);
@@ -157,13 +157,13 @@ void Settings::initializeGlobalSettings()
     addParameter("fastSimulatePrior_SampleFreq", "50", NotRequired);
     addParameter("fastSimulatePriorExperimental", "0", NotRequired);
     addParameter("fastSimulatePrior_BurnIn", "0.05", NotRequired);
-    
+
     // maxNumberEvents = for fastSimulatePriorExperimental, maximum number of events...
     // priorSims_intervalGenerations = number of generations per model pair
     // fastSimulatePrior_Generations = sampling gens for simulation of prior
     // fastSimulatePrior_SampleFreq = sampling frequency for fastSimulation of prior
     // fastSimulatePrior_BurnIn = fraction of samples to be discarded as burnin.
-    
+
 }
 
 
@@ -465,7 +465,7 @@ void Settings::exitWithErrorInvalidLine(const std::string& line) const
 {
     log(Error) << "Invalid input line in control file.\n"
                << "Problematic line includes <<" << line << ">>\n";
-    std::exit(1);            
+    std::exit(1);
 }
 
 
