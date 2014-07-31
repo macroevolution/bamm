@@ -20,6 +20,7 @@ public:
 private:
 
     std::string usageText() const;
+    std::string versionText() const;
     std::string missingArgumentValueText() const;
     bool startsWithTwoHyphens(const std::string& str) const;
     std::string invalidArgumentNameText() const;

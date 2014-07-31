@@ -16,6 +16,10 @@ CommandLineProcessor::CommandLineProcessor(int argc, char* argv[])
             exitWithMessage(usageText());
         }
 
+        if (argName == "--version") {
+            exitWithMessage(versionText());
+        }
+
         // Every argument name must be followed by its value
         if (i + 1 == argc) {
             exitWithError(missingArgumentValueText());
@@ -48,6 +52,14 @@ std::string CommandLineProcessor::usageText() const
 {
     return "Usage: bamm -c <control-file> "
         "[--<parameter-name> <parameter-value> ...]";
+}
+
+
+std::string CommandLineProcessor::versionText() const
+{
+    // "BAMM " is in a std::string so that its operator+() is used
+    return std::string("BAMM ") + BAMM_VERSION +
+        " (" + BAMM_VERSION_DATE + ")";
 }
 
 
