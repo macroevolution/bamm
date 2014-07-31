@@ -24,11 +24,11 @@ ModelFactory* createModelFactory(const std::string& modelType);
 
 int main (int argc, char* argv[])
 {
-    printAboutInformation();
-
     // Process command-line arguments and load settings
     CommandLineProcessor commandLine(argc, argv);
     Settings settings(commandLine.controlFileName(), commandLine.parameters());
+
+    printAboutInformation();
 
     // Setup pseudorandom generator
     int seed = settings.get<long int>("seed");
