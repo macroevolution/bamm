@@ -46,7 +46,8 @@ CommandLineProcessor::CommandLineProcessor(int argc, char* argv[])
 
 std::string CommandLineProcessor::usageText() const
 {
-    return "Usage: bamm -c control-file [--parameter-name parameter-value ...]";
+    return "Usage: bamm -c <control-file> "
+        "[--<parameter-name> <parameter-value> ...]";
 }
 
 
