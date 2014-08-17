@@ -1095,7 +1095,7 @@ void Tree::generateTraitsAllNodesBM(Node* xnode, double varx)
 
 Node* Tree::chooseInternalNodeAtRandom()
 {
-    int snode = _random.uniformInteger(1, (int)internalNodeSet.size());
+    int snode = _random.uniformInteger(0, (int)internalNodeSet.size());
     std::set<Node*>::iterator myIt = internalNodeSet.begin();
 
     for (int i = 1; i < snode; i++ ) {
