@@ -40,7 +40,7 @@ private:
     void setPostOrderNodes(Node* node);
 
     double calculateTreeLength();
-    void setInternalNodeSet();
+    void setInternalNodes();
     void setNodeTipCounts();
 
     std::vector<double> terminalPathLengthsToRoot();
@@ -71,8 +71,7 @@ private:
     std::vector<Node*> _preOrderNodes;
     std::vector<Node*> _postOrderNodes;
 
-    // Internal node set:: for choosing random node to update state
-    std::set<Node*> internalNodeSet;
+    std::vector<Node*> _internalNodes;
 
     double _startTime;
     double _tmax;

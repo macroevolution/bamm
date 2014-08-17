@@ -44,7 +44,7 @@ Tree::Tree(Random& random, Settings& settings) : _random(random)
 
     _treeLength = calculateTreeLength();
 
-    setInternalNodeSet();
+    setInternalNodes();
     setNodeTipCounts();
 
     // Initialize tree according to model type
@@ -82,11 +82,11 @@ double Tree::calculateTreeLength()
 }
 
 
-void Tree::setInternalNodeSet()
+void Tree::setInternalNodes()
 {
     for (int i = 0; i < (int)_preOrderNodes.size(); ++i) {
         if (_preOrderNodes[i]->isInternal()) {
-            internalNodeSet.insert(_preOrderNodes[i]);
+            _internalNodes.push_back(_preOrderNodes[i]);
         }
     }
 }
@@ -1095,8 +1095,8 @@ void Tree::generateTraitsAllNodesBM(Node* xnode, double varx)
 
 Node* Tree::chooseInternalNodeAtRandom()
 {
-    int snode = _random.uniformInteger(0, (int)internalNodeSet.size());
-    std::set<Node*>::iterator myIt = internalNodeSet.begin();
+    int snode = _random.uniformInteger(0, (int)_internalNodes.size());
+    std::vector<Node*>::iterator myIt = _internalNodes.begin();
 
     for (int i = 1; i < snode; i++ ) {
         myIt++;
