@@ -1636,7 +1636,7 @@ void Tree::recursiveSetTraitValues(Node* x, double mn, double mx)
             //x->setTraitValue(ranPtr->uniformRv(s1, s2));
             x->setTraitValue((s1 + s2) / (double)2);
 
-        } else if (s2 > s1) {
+        } else if (s1 > s2) {
             //x->setTraitValue(ranPtr->uniformRv(s2, s1));
             x->setTraitValue((s1 + s2) / (double)2);
         } else {
