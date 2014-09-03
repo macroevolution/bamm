@@ -4,30 +4,32 @@ BAMM
 A program for multimodel inference on speciation and trait evolution.
 Please see the project's website
 ([http://bamm-project.org](http://bamm-project.org))
-for download options and documentation.
+for the full documentation.
 
 Requirements
 ------------
 
-In order to compile BAMM, you need [CMake](http://www.cmake.org)
-and a C++11 compiler.
+In order to compile BAMM,
+you need [CMake](http://www.cmake.org) and a C++11 compiler.
+You also need a Unix shell (e.g., `bash`) to run the following commands.
 
 Installation
 ------------
 
-Create a `build` directory and go in it:
+In the project's root directory,
+create a new directory called `build` and go into it:
 
     mkdir build
     cd build
 
-To build BAMM, run the following:
+To compile BAMM, run the following commands:
 
     cmake ..
     make -j
 
-The final executable will be named `bamm`. You can run `bamm` from this
-directory, or you may wish to install it in a more permanent location.
-To do this, run the following within the `build` directory:
+The final executable will be named `bamm`. You may run `bamm` from this
+directory, or you may install it in a more permanent location.
+To do this, run the following command within the `build` directory:
 
     sudo make install
 
