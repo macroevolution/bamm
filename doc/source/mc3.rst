@@ -90,22 +90,7 @@ scales linearly with the number of chains.
 Because chains are mostly independent from each other,
 except when two chains are chosen to swap states,
 they may be set up to run on different CPUs in parallel.
-BAMM implements this parallelization using `OpenMP <http://openmp.org/>`_.
-OpenMP is a software library that provides the functionality
-required to allow each chain to run on a different CPU
-(assuming there are enough available CPUs).
-
-To enable OpenMP support in BAMM under Linux,
-the OpenMP library must be installed in your computer
-and BAMM must be compiled and linked from source.
-The compilation and linking with the OpenMP library
-is done automatically with CMake, typically using the GCC compiler.
-In Mac OS X, the OpenMP library must also be installed in your computer.
-However, Clang does not support OpenMP,
-so a special version of Clang, `OpenMP/Clang <http://clang-omp.github.io>`_,
-must be compiled from source and installed.
-In Windows, the downloadable zip file with the BAMM executable
-includes the OpenMP library, so no re-compilation is necessary.
+BAMM implements this parallelization using threads in C++11.
 
 
 |MC3| settings in BAMM
