@@ -3,6 +3,23 @@
 BAMM Changes
 ============
 
+2.2.0
+-----
+
+*September 5, 2014*
+
+* Parallelism is now implemented using C++11 threads
+
+  * No dependency on OpenMP libraries
+  * Requires C++11 compiler (if building from source)
+
+* Provide a tool that helps choosing a ``deltaT`` value
+  (available from GitHub), and it is documented in :ref:`mc3`.
+
+* Add ``--version`` option in ``bamm`` and update "Usage" message
+
+* Fix bug in initialization of trait values
+
 2.1.0
 -----
 
