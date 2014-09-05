@@ -103,33 +103,6 @@ SET(MINOR ${CPACK_PACKAGE_VERSION_MINOR})
 SET(PATCH ${CPACK_PACKAGE_VERSION_PATCH})
 SET(CPACK_PACKAGE_VERSION ${MAJOR}.${MINOR}.${PATCH})
 
-# To be tested on a Windows machine
-IF(WIN32)
-    SET(CPACK_GENERATOR "NSIS")
-    SET(CPACK_NSIS_DISPLAY_NAME "BAMM")
-    SET(CPACK_NSIS_MODIFY_PATH ON)
-
-    # If this doesn't work, may need to have \\ as last part of path
-    # (see CMake book, page 158).
-    SET(RESOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/setup/NSIS")
-
-    # Set the install and uninstall icons
-    SET(CPACK_NSIS_MUI_ICON "${RESOURCE_DIR}/bamm.ico")
-    SET(CPACK_NSIS_MUI_UNIICON "${RESOURCE_DIR}/bamm.ico")
-
-    # Set the name of the project that shows up in the installer
-    SET(CPACK_NSIS_PACKAGE_NAME "BAMM ${CPACK_PACKAGE_VERSION}")
-
-    # Set the installer icon
-    SET(CPACK_PACKAGE_ICON "${RESOURCE_DIR}/bamm-installer.bmp")
-
-    # Set the text of the license agreement
-    SET(CPACK_RESOURCE_FILE_LICENSE "${RESOURCE_DIR}/license.txt")
-
-    # Set the location where the program should be installed
-    SET(CPACK_PACKAGE_INSTALL_DIRECTORY "BAMM ${CPACK_PACKAGE_VERSION}")
-ENDIF(WIN32)
-
 IF(APPLE)
     SET(CPACK_GENERATOR PackageMaker)
     SET(CPACK_PACKAGE_NAME bamm)
