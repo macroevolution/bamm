@@ -1,8 +1,6 @@
-:orphan:
+.. |MC3| replace:: (MC)\ :sup:`3`
 
 .. _mc3:
-
-.. |MC3| replace:: (MC)\ :sup:`3`
 
 Metropolis coupled Markov chain Monte Carlo [|MC3|]
 ===================================================
