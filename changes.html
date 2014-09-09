@@ -45,14 +45,15 @@
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">BAMM Changes</a><ul>
-<li><a class="reference internal" href="#id1">2.1.0</a></li>
-<li><a class="reference internal" href="#id2">2.0.0</a><ul>
+<li><a class="reference internal" href="#id1">2.2.0</a></li>
+<li><a class="reference internal" href="#id2">2.1.0</a></li>
+<li><a class="reference internal" href="#id3">2.0.0</a><ul>
 <li><a class="reference internal" href="#new-features-and-enhancements">New features and enhancements</a></li>
 <li><a class="reference internal" href="#bug-fixes">Bug fixes</a></li>
 <li><a class="reference internal" href="#other-changes">Other changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id3">1.0.0</a></li>
+<li><a class="reference internal" href="#id4">1.0.0</a></li>
 </ul>
 </li>
 </ul>
@@ -86,7 +87,22 @@
   <div class="section" id="bamm-changes">
 <h1>BAMM Changes<a class="headerlink" href="#bamm-changes" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2>2.1.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>2.2.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p><em>September 5, 2014</em></p>
+<ul class="simple">
+<li>Parallelism is now implemented using C++11 threads<ul>
+<li>No dependency on OpenMP libraries</li>
+<li>Requires C++11 compiler (if building from source)</li>
+</ul>
+</li>
+<li>Provide a tool that helps choosing a <tt class="docutils literal"><span class="pre">deltaT</span></tt> value
+(available from GitHub), and it is documented in <a class="reference internal" href="mc3.html#mc3"><em>Metropolis coupled Markov chain Monte Carlo [(MC)3]</em></a>.</li>
+<li>Add <tt class="docutils literal"><span class="pre">--version</span></tt> option in <tt class="docutils literal"><span class="pre">bamm</span></tt> and update &#8220;Usage&#8221; message</li>
+<li>Fix bug in initialization of trait values</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>2.1.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p><em>July 21, 2014</em></p>
 <ul class="simple">
 <li>Add proposal to change the number of events
@@ -101,8 +117,8 @@ be set to 0 when this new proposal is used</li>
 or adding initial events</li>
 </ul>
 </div>
-<div class="section" id="id2">
-<h2>2.0.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>2.0.0<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p><em>June 11, 2014</em></p>
 <div class="section" id="new-features-and-enhancements">
 <h3>New features and enhancements<a class="headerlink" href="#new-features-and-enhancements" title="Permalink to this headline">¶</a></h3>
@@ -159,8 +175,8 @@ when <em>k</em> &gt; 0, use the symmetrical function of <em>k</em> &lt; 0</li>
 </ul>
 </div>
 </div>
-<div class="section" id="id3">
-<h2>1.0.0<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>1.0.0<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p><em>March 5, 2014</em></p>
 <ul class="simple">
 <li>Initial release</li>

@@ -3,10 +3,31 @@
 Setting Up BAMM
 ===============
 
+Check your BAMM version
+-----------------------
+
+If you have previously downloaded or installed BAMM,
+you may check which version of BAMM you have
+using the ``--version`` option in ``bamm``::
+
+    bamm --version
+
+If ``bamm`` is not automatically found by your operating system,
+you need to specify the directory in which ``bamm`` is located::
+
+    ~/bamm/build/bamm --version
+
+The previous command assumes that ``bamm`` is located
+in the ``~/bamm/build`` directory.
+If ``bamm`` is in your current directory, you may run::
+
+    ./bamm --version
+
 Installation from Homebrew (OS X only)
 ------------------------------------------
 
 #. Install `Homebrew <http://brew.sh>`_, if not installed.
+
 #. Run the following commands::
 
        brew tap macroevolution/bamm
@@ -52,10 +73,9 @@ OS X
    <http://bamm-project.org/quickstart.html>`_
    to learn how to configure and run BAMM.
 
-**Note:** Test that ``bamm`` will work for your system by running
+**Note:** Test that ``bamm`` will run on your system by simply running
 ``./bamm`` in the directory in which the program is located.
-If it prints out a box with general information about BAMM
-and a message on "Usage", the BAMM program is working correctly.
+If it prints out a message on "Usage", the BAMM program is working correctly.
 
 Windows
 .......
@@ -74,16 +94,16 @@ Windows
    <http://bamm-project.org/quickstart.html>`_
    to learn how to configure and run BAMM.
 
-**Note:** Test that ``bamm`` will work for your system by running
-``bamm`` in the directory in which the program is located.
-If it prints out a box with general information about BAMM
-and a message on "Usage", the BAMM program is working correctly.
-   
+**Note:** Test that ``bamm`` will run on your system by simply running
+``./bamm`` in the directory in which the program is located.
+If it prints out a message on "Usage", the BAMM program is working correctly.
+
 Installation from Source
 ------------------------
 
-The following instructions assume you are running ``bash`` or a similar
-Unix shell. In Linux and Mac OS X systems, ``bash`` is the default shell
+The following instructions assume you are running ``bash``
+or a similar Unix shell.
+In Linux and Mac OS X systems, ``bash`` is the default shell
 when you open the Terminal application.
 We also assume you have `Git <http://git-scm.com>`_ and
 `CMake <http://www.cmake.org>`_ installed.
@@ -106,12 +126,6 @@ We also assume you have `Git <http://git-scm.com>`_ and
        make -j
 
    The ``-j`` option will compile in parallel.
-   If you'd like to use Clang for OpenMP support
-   (see http://clang-omp.github.io), you will likely need to tell
-   CMake to use that version of Clang::
-
-       cmake -DCMAKE_CXX_COMPILER=clang++ ..
-       make -j
 
 #. You can run ``bamm`` from this directory, or you may wish to install it
    in a more permanent location::
@@ -133,25 +147,31 @@ if your control file is named ``divcontrol.txt``, run the following::
 
     bamm -c divcontrol.txt
 
-Note that if ``bamm`` is not installed in a common location, you may need
-to run ``bamm`` from the directory in which it exists as follows::
+Note that if ``bamm`` is not installed in a common location,
+you need to specify the directory in which ``bamm`` is located::
+
+    ~/bamm/build/bamm -c divcontrol.txt
+
+The previous command assumes that ``bamm`` is located
+in the ``~/bamm/build`` directory.
+If ``bamm`` is in your current directory, you may run::
 
     ./bamm -c divcontrol.txt
 
 Any file names specified in the control file are relative to the directory
-in which ``bamm`` was called, which may not be the same location as where
-the executable ``bamm`` nor the control file reside.
+in which ``bamm`` was called, which may not be the same location where
+the executable ``bamm`` or the control file are located.
 
 Any option in the control file may be overridden in the command-line
 by prefixing the option name by ``--``, followed by the new value.
 For example, to set the seed to 1234, run::
 
-    ./bamm -c divcontrol.txt --seed 1234
+    bamm -c divcontrol.txt --seed 1234
 
 To set the initial lambda at the root of the tree to 0.05
 and the print frequency to 5000, run::
 
-    ./bamm -c divcontrol.txt --lambdaInit0 0.05 --printFreq 5000
+    bamm -c divcontrol.txt --lambdaInit0 0.05 --printFreq 5000
 
 When run, BAMM produces a file named ``run_info.txt`` that logs
 the command-line call used, the random seed, the start and end

@@ -91,8 +91,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <span class="target" id="mc3"></span><div class="section" id="metropolis-coupled-markov-chain-monte-carlo-mc3">
-<h1>9. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]<a class="headerlink" href="#metropolis-coupled-markov-chain-monte-carlo-mc3" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="metropolis-coupled-markov-chain-monte-carlo-mc3">
+<span id="mc3"></span><h1>9. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]<a class="headerlink" href="#metropolis-coupled-markov-chain-monte-carlo-mc3" title="Permalink to this headline">¶</a></h1>
 <p>The Markov chain Monte Carlo (MCMC) method implemented in BAMM
 estimates the posterior probability distribution of diversification models
 that best describe a particular phylogenetic dataset.
@@ -161,21 +161,7 @@ scales linearly with the number of chains.
 Because chains are mostly independent from each other,
 except when two chains are chosen to swap states,
 they may be set up to run on different CPUs in parallel.
-BAMM implements this parallelization using <a class="reference external" href="http://openmp.org/">OpenMP</a>.
-OpenMP is a software library that provides the functionality
-required to allow each chain to run on a different CPU
-(assuming there are enough available CPUs).</p>
-<p>To enable OpenMP support in BAMM under Linux,
-the OpenMP library must be installed in your computer
-and BAMM must be compiled and linked from source.
-The compilation and linking with the OpenMP library
-is done automatically with CMake, typically using the GCC compiler.
-In Mac OS X, the OpenMP library must also be installed in your computer.
-However, Clang does not support OpenMP,
-so a special version of Clang, <a class="reference external" href="http://clang-omp.github.io">OpenMP/Clang</a>,
-must be compiled from source and installed.
-In Windows, the downloadable zip file with the BAMM executable
-includes the OpenMP library, so no re-compilation is necessary.</p>
+BAMM implements this parallelization using threads in C++11.</p>
 </div>
 <div class="section" id="mc3-settings-in-bamm">
 <h2>9.2. (MC)<sup>3</sup> settings in BAMM<a class="headerlink" href="#mc3-settings-in-bamm" title="Permalink to this headline">¶</a></h2>
@@ -203,6 +189,20 @@ We have not examined the effects of the swap period in detail,
 but in terms of run time,
 the smaller the swap period, the longer the run takes to complete.
 A swap period of 1000 has worked for us.</p>
+<p>For those using the BAMM GitHub repository,
+we have provided a bash script (OS X and Linux only), <tt class="docutils literal"><span class="pre">chain-swap-percent.sh</span></tt>,
+to help determine the optimal <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> value for a specific data set.
+It will print the percent acceptance of the chain swap proposals.
+This script is located in the <tt class="docutils literal"><span class="pre">tools</span></tt> directory.
+To run, first make sure you are in the directory containing your data files.
+If you would like to test <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> values of 0.01, 0.05, and 0.1,
+you would run:</p>
+<div class="highlight-python"><pre>&lt;bamm_path&gt;/tools/chain-swap-percent.sh --deltaT 0.01 0.05 0.1
+    --numberOfChains 4 --swapPeriod 1000 --run bamm -c control.txt</pre>
+</div>
+<p>where <tt class="docutils literal"><span class="pre">&lt;bamm_path&gt;</span></tt> is the path to the <tt class="docutils literal"><span class="pre">bamm</span></tt> directory.
+You could also specify multiple values for <tt class="docutils literal"><span class="pre">numberOfChains</span></tt>
+and <tt class="docutils literal"><span class="pre">swapPeriod</span></tt>, and the script will test every combination of values.</p>
 </div>
 </div>
 

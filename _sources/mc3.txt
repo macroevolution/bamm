@@ -1,8 +1,6 @@
-:orphan:
+.. |MC3| replace:: (MC)\ :sup:`3`
 
 .. _mc3:
-
-.. |MC3| replace:: (MC)\ :sup:`3`
 
 Metropolis coupled Markov chain Monte Carlo [|MC3|]
 ===================================================
@@ -90,22 +88,7 @@ scales linearly with the number of chains.
 Because chains are mostly independent from each other,
 except when two chains are chosen to swap states,
 they may be set up to run on different CPUs in parallel.
-BAMM implements this parallelization using `OpenMP <http://openmp.org/>`_.
-OpenMP is a software library that provides the functionality
-required to allow each chain to run on a different CPU
-(assuming there are enough available CPUs).
-
-To enable OpenMP support in BAMM under Linux,
-the OpenMP library must be installed in your computer
-and BAMM must be compiled and linked from source.
-The compilation and linking with the OpenMP library
-is done automatically with CMake, typically using the GCC compiler.
-In Mac OS X, the OpenMP library must also be installed in your computer.
-However, Clang does not support OpenMP,
-so a special version of Clang, `OpenMP/Clang <http://clang-omp.github.io>`_,
-must be compiled from source and installed.
-In Windows, the downloadable zip file with the BAMM executable
-includes the OpenMP library, so no re-compilation is necessary.
+BAMM implements this parallelization using threads in C++11.
 
 
 |MC3| settings in BAMM
@@ -136,3 +119,19 @@ We have not examined the effects of the swap period in detail,
 but in terms of run time,
 the smaller the swap period, the longer the run takes to complete.
 A swap period of 1000 has worked for us.
+
+For those using the BAMM GitHub repository,
+we have provided a bash script (OS X and Linux only), ``chain-swap-percent.sh``,
+to help determine the optimal :math:`\Delta T` value for a specific data set.
+It will print the percent acceptance of the chain swap proposals.
+This script is located in the ``tools`` directory.
+To run, first make sure you are in the directory containing your data files.
+If you would like to test :math:`\Delta T` values of 0.01, 0.05, and 0.1,
+you would run::
+
+    <bamm_path>/tools/chain-swap-percent.sh --deltaT 0.01 0.05 0.1
+        --numberOfChains 4 --swapPeriod 1000 --run bamm -c control.txt
+
+where ``<bamm_path>`` is the path to the ``bamm`` directory.
+You could also specify multiple values for ``numberOfChains``
+and ``swapPeriod``, and the script will test every combination of values.

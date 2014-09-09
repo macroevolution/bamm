@@ -37,7 +37,6 @@ If you have used a previous version of BAMM or BAMMtools,
 we recommend installing the latest version.
 
 * Metropolis coupled MCMC implemented by default to facilitate convergence
-  (automatically run in parallel if you have OpenMP).
   The MC3 is described :ref:`here <mc3>`.
 
 * Comprehensive overhaul of BAMM's C++ core for transparency

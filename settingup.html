@@ -53,14 +53,15 @@
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">5. Setting Up BAMM</a><ul>
-<li><a class="reference internal" href="#installation-from-homebrew-os-x-only">5.1. Installation from Homebrew (OS X only)</a></li>
-<li><a class="reference internal" href="#installation-from-executable">5.2. Installation from Executable</a><ul>
-<li><a class="reference internal" href="#os-x">5.2.1. OS X</a></li>
-<li><a class="reference internal" href="#windows">5.2.2. Windows</a></li>
+<li><a class="reference internal" href="#check-your-bamm-version">5.1. Check your BAMM version</a></li>
+<li><a class="reference internal" href="#installation-from-homebrew-os-x-only">5.2. Installation from Homebrew (OS X only)</a></li>
+<li><a class="reference internal" href="#installation-from-executable">5.3. Installation from Executable</a><ul>
+<li><a class="reference internal" href="#os-x">5.3.1. OS X</a></li>
+<li><a class="reference internal" href="#windows">5.3.2. Windows</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#installation-from-source">5.3. Installation from Source</a></li>
-<li><a class="reference internal" href="#running">5.4. Running</a></li>
+<li><a class="reference internal" href="#installation-from-source">5.4. Installation from Source</a></li>
+<li><a class="reference internal" href="#running">5.5. Running</a></li>
 </ul>
 </li>
 </ul>
@@ -99,8 +100,26 @@
             
   <div class="section" id="setting-up-bamm">
 <span id="bammsetup"></span><h1>5. Setting Up BAMM<a class="headerlink" href="#setting-up-bamm" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="check-your-bamm-version">
+<h2>5.1. Check your BAMM version<a class="headerlink" href="#check-your-bamm-version" title="Permalink to this headline">¶</a></h2>
+<p>If you have previously downloaded or installed BAMM,
+you may check which version of BAMM you have
+using the <tt class="docutils literal"><span class="pre">--version</span></tt> option in <tt class="docutils literal"><span class="pre">bamm</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">bamm</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+<p>If <tt class="docutils literal"><span class="pre">bamm</span></tt> is not automatically found by your operating system,
+you need to specify the directory in which <tt class="docutils literal"><span class="pre">bamm</span></tt> is located:</p>
+<div class="highlight-python"><pre>~/bamm/build/bamm --version</pre>
+</div>
+<p>The previous command assumes that <tt class="docutils literal"><span class="pre">bamm</span></tt> is located
+in the <tt class="docutils literal"><span class="pre">~/bamm/build</span></tt> directory.
+If <tt class="docutils literal"><span class="pre">bamm</span></tt> is in your current directory, you may run:</p>
+<div class="highlight-python"><pre>./bamm --version</pre>
+</div>
+</div>
 <div class="section" id="installation-from-homebrew-os-x-only">
-<h2>5.1. Installation from Homebrew (OS X only)<a class="headerlink" href="#installation-from-homebrew-os-x-only" title="Permalink to this headline">¶</a></h2>
+<h2>5.2. Installation from Homebrew (OS X only)<a class="headerlink" href="#installation-from-homebrew-os-x-only" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
 <li><p class="first">Install <a class="reference external" href="http://brew.sh">Homebrew</a>, if not installed.</p>
 </li>
@@ -121,14 +140,14 @@ to learn how to configure and run BAMM.</p>
 </ol>
 </div>
 <div class="section" id="installation-from-executable">
-<h2>5.2. Installation from Executable<a class="headerlink" href="#installation-from-executable" title="Permalink to this headline">¶</a></h2>
+<h2>5.3. Installation from Executable<a class="headerlink" href="#installation-from-executable" title="Permalink to this headline">¶</a></h2>
 <p>The compressed file you downloaded contains the executable program only.
 We recommend that you also download the example files
 to use as templates for the control files necessary to run BAMM.
 Go to the <a class="reference external" href="http://bamm-project.org/download.html">Download</a> page
 to download the examples.</p>
 <div class="section" id="os-x">
-<h3>5.2.1. OS X<a class="headerlink" href="#os-x" title="Permalink to this headline">¶</a></h3>
+<h3>5.3.1. OS X<a class="headerlink" href="#os-x" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
 <li><p class="first"><a class="reference external" href="http://bamm-project.org/download.html">Download</a> the Mac OS X
 tar.gz file containing the executable file for BAMM.</p>
@@ -146,13 +165,12 @@ See <a class="reference internal" href="#running"><em>Running</em></a> below and
 to learn how to configure and run BAMM.</p>
 </li>
 </ol>
-<p><strong>Note:</strong> Test that <tt class="docutils literal"><span class="pre">bamm</span></tt> will work for your system by running
+<p><strong>Note:</strong> Test that <tt class="docutils literal"><span class="pre">bamm</span></tt> will run on your system by simply running
 <tt class="docutils literal"><span class="pre">./bamm</span></tt> in the directory in which the program is located.
-If it prints out a box with general information about BAMM
-and a message on &#8220;Usage&#8221;, the BAMM program is working correctly.</p>
+If it prints out a message on &#8220;Usage&#8221;, the BAMM program is working correctly.</p>
 </div>
 <div class="section" id="windows">
-<h3>5.2.2. Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
+<h3>5.3.2. Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><a class="reference external" href="http://bamm-project.org/download.html">Download</a> the Windows .zip file
 containing the executable file and required library files for BAMM.</li>
@@ -165,16 +183,16 @@ to go to the directory where BAMM is located.
 See <a class="reference internal" href="#running"><em>Running</em></a> below and the <a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
 to learn how to configure and run BAMM.</li>
 </ol>
-<p><strong>Note:</strong> Test that <tt class="docutils literal"><span class="pre">bamm</span></tt> will work for your system by running
-<tt class="docutils literal"><span class="pre">bamm</span></tt> in the directory in which the program is located.
-If it prints out a box with general information about BAMM
-and a message on &#8220;Usage&#8221;, the BAMM program is working correctly.</p>
+<p><strong>Note:</strong> Test that <tt class="docutils literal"><span class="pre">bamm</span></tt> will run on your system by simply running
+<tt class="docutils literal"><span class="pre">./bamm</span></tt> in the directory in which the program is located.
+If it prints out a message on &#8220;Usage&#8221;, the BAMM program is working correctly.</p>
 </div>
 </div>
 <div class="section" id="installation-from-source">
-<h2>5.3. Installation from Source<a class="headerlink" href="#installation-from-source" title="Permalink to this headline">¶</a></h2>
-<p>The following instructions assume you are running <tt class="docutils literal"><span class="pre">bash</span></tt> or a similar
-Unix shell. In Linux and Mac OS X systems, <tt class="docutils literal"><span class="pre">bash</span></tt> is the default shell
+<h2>5.4. Installation from Source<a class="headerlink" href="#installation-from-source" title="Permalink to this headline">¶</a></h2>
+<p>The following instructions assume you are running <tt class="docutils literal"><span class="pre">bash</span></tt>
+or a similar Unix shell.
+In Linux and Mac OS X systems, <tt class="docutils literal"><span class="pre">bash</span></tt> is the default shell
 when you open the Terminal application.
 We also assume you have <a class="reference external" href="http://git-scm.com">Git</a> and
 <a class="reference external" href="http://www.cmake.org">CMake</a> installed.</p>
@@ -194,13 +212,7 @@ cd build</pre>
 <div class="highlight-python"><pre>cmake ..
 make -j</pre>
 </div>
-<p>The <tt class="docutils literal"><span class="pre">-j</span></tt> option will compile in parallel.
-If you&#8217;d like to use Clang for OpenMP support
-(see <a class="reference external" href="http://clang-omp.github.io">http://clang-omp.github.io</a>), you will likely need to tell
-CMake to use that version of Clang:</p>
-<div class="highlight-python"><pre>cmake -DCMAKE_CXX_COMPILER=clang++ ..
-make -j</pre>
-</div>
+<p>The <tt class="docutils literal"><span class="pre">-j</span></tt> option will compile in parallel.</p>
 </li>
 <li><p class="first">You can run <tt class="docutils literal"><span class="pre">bamm</span></tt> from this directory, or you may wish to install it
 in a more permanent location:</p>
@@ -213,26 +225,31 @@ to learn how to configure and run BAMM.</p>
 </ol>
 </div>
 <div class="section" id="running">
-<span id="id6"></span><h2>5.4. Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
+<span id="id6"></span><h2>5.5. Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
 <p>To run <tt class="docutils literal"><span class="pre">bamm</span></tt>, you should specify a <em>contol</em> file. For example,
 if your control file is named <tt class="docutils literal"><span class="pre">divcontrol.txt</span></tt>, run the following:</p>
 <div class="highlight-python"><pre>bamm -c divcontrol.txt</pre>
 </div>
-<p>Note that if <tt class="docutils literal"><span class="pre">bamm</span></tt> is not installed in a common location, you may need
-to run <tt class="docutils literal"><span class="pre">bamm</span></tt> from the directory in which it exists as follows:</p>
+<p>Note that if <tt class="docutils literal"><span class="pre">bamm</span></tt> is not installed in a common location,
+you need to specify the directory in which <tt class="docutils literal"><span class="pre">bamm</span></tt> is located:</p>
+<div class="highlight-python"><pre>~/bamm/build/bamm -c divcontrol.txt</pre>
+</div>
+<p>The previous command assumes that <tt class="docutils literal"><span class="pre">bamm</span></tt> is located
+in the <tt class="docutils literal"><span class="pre">~/bamm/build</span></tt> directory.
+If <tt class="docutils literal"><span class="pre">bamm</span></tt> is in your current directory, you may run:</p>
 <div class="highlight-python"><pre>./bamm -c divcontrol.txt</pre>
 </div>
 <p>Any file names specified in the control file are relative to the directory
-in which <tt class="docutils literal"><span class="pre">bamm</span></tt> was called, which may not be the same location as where
-the executable <tt class="docutils literal"><span class="pre">bamm</span></tt> nor the control file reside.</p>
+in which <tt class="docutils literal"><span class="pre">bamm</span></tt> was called, which may not be the same location where
+the executable <tt class="docutils literal"><span class="pre">bamm</span></tt> or the control file are located.</p>
 <p>Any option in the control file may be overridden in the command-line
 by prefixing the option name by <tt class="docutils literal"><span class="pre">--</span></tt>, followed by the new value.
 For example, to set the seed to 1234, run:</p>
-<div class="highlight-python"><pre>./bamm -c divcontrol.txt --seed 1234</pre>
+<div class="highlight-python"><pre>bamm -c divcontrol.txt --seed 1234</pre>
 </div>
 <p>To set the initial lambda at the root of the tree to 0.05
 and the print frequency to 5000, run:</p>
-<div class="highlight-python"><pre>./bamm -c divcontrol.txt --lambdaInit0 0.05 --printFreq 5000</pre>
+<div class="highlight-python"><pre>bamm -c divcontrol.txt --lambdaInit0 0.05 --printFreq 5000</pre>
 </div>
 <p>When run, BAMM produces a file named <tt class="docutils literal"><span class="pre">run_info.txt</span></tt> that logs
 the command-line call used, the random seed, the start and end
