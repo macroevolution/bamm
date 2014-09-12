@@ -435,3 +435,22 @@ Parameter Update Rates
     be substantially higher than the other parameter values
     (recommended 25:1 or 50:1) because there are so many internal nodes states
     that need to be updated.
+
+Data Output
+...........
+
+``nodeStateOutfile``
+    The path of the file to which to write the node state data
+    (i.e., trait values).
+    The data are written as a tree in the Newick format,
+    where the "branch length" of each node is the node's trait value.
+    The tree includes the ancestral trait value data.
+    At each time point (see ``nodeStateWriteFreq``),
+    the current node state data are written on a new line.
+    This setting is normally hidden
+    and its default value is ``node_state.txt``.
+
+``nodeStateWriteFreq``
+    Frequency (in generations) at which to print the node state data.
+    This setting is normally hidden and its default value is ``0``
+    (i.e., do not write any node state data).

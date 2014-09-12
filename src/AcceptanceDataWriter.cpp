@@ -1,7 +1,6 @@
 #include "AcceptanceDataWriter.h"
 #include "Settings.h"
 #include "Model.h"
-#include "MCMC.h"
 
 #include <iostream>
 
@@ -43,13 +42,12 @@ AcceptanceDataWriter::~AcceptanceDataWriter()
 }
 
 
-void AcceptanceDataWriter::writeData(MCMC& mcmc)
+void AcceptanceDataWriter::writeData(Model& model)
 {
     if (!_shouldOutputData) {
         return;
     }
 
-    Model& model = mcmc.model();
     _outputStream << model.getLastParameterUpdated() << ","
                   << model.getAcceptLastUpdate()     << std::endl;
 }

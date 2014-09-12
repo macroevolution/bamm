@@ -144,7 +144,7 @@ public:
     void setRoot(Node* rootNode);
 
     std::string getNewick();
-    void   writeTree(Node* p, std::stringstream& ss);
+    void   writeTree(Node* p, std::ostream& ss);
 
     int  getNumberTips();
     int  getNumberExtantTips();
@@ -204,7 +204,7 @@ public:
     void writeNodeSpeciationTree(Node* p, std::stringstream& ss);
 
     void writeMeanBranchNetDivRateTree(Node* p, std::stringstream& ss);
-    void writeBranchPhenotypes(Node* p, std::stringstream& ss);
+    void writeBranchPhenotypes(Node* p, std::ostream& out);
 
     // speciation-extinction initialization:
 

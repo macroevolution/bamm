@@ -4,6 +4,7 @@
 
 class Model;
 class EventDataWriter;
+class ModelDataWriter;
 
 class Random;
 class Settings;
@@ -18,6 +19,8 @@ public:
 
     virtual Model* createModel(Random& random, Settings& settings) const = 0;
     virtual EventDataWriter* createEventDataWriter
+        (Settings& settings) const = 0;
+    virtual ModelDataWriter* createModelDataWriter
         (Settings& settings) const = 0;
 };
 

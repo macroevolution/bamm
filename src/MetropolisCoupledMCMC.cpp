@@ -5,10 +5,7 @@
 #include "ModelFactory.h"
 #include "MCMC.h"
 #include "Model.h"
-#include "StdOutDataWriter.h"
-#include "MCMCDataWriter.h"
-#include "EventDataWriter.h"
-#include "AcceptanceDataWriter.h"
+#include "ModelDataWriter.h"
 #include "ChainSwapDataWriter.h"
 
 #include <algorithm>
@@ -18,8 +15,7 @@
 MetropolisCoupledMCMC::MetropolisCoupledMCMC
     (Random& random, Settings& settings, ModelFactory* modelFactory) :
         _random(random), _settings(settings), _modelFactory(modelFactory),
-        _stdOutDataWriter(_settings), _mcmcDataWriter(_settings),
-        _acceptanceDataWriter(_settings), _chainSwapDataWriter(_settings)
+        _chainSwapDataWriter(_settings)
 {
     // Total number of generations to run for each chain
     _nGenerations = _settings.get<int>("numberOfGenerations");
@@ -31,8 +27,6 @@ MetropolisCoupledMCMC::MetropolisCoupledMCMC
 
     _coldChainIndex = 0;
 
-    _eventDataWriter = _modelFactory->createEventDataWriter(_settings);
-
     _acceptanceResetFreq = _settings.get<int>("acceptanceResetFreq");
 }
 
@@ -42,12 +36,15 @@ MetropolisCoupledMCMC::~MetropolisCoupledMCMC()
     for (int i = 0; i < (int)_chains.size(); i++) {
         delete _chains[i];
     }
+
+    delete _dataWriter;
 }
 
 
 void MetropolisCoupledMCMC::run()
 {
     createChains();
+    createDataWriter();
 
     log() << "\nRunning " << _chains.size() << " chains for "
           << _nGenerations << " generations.\n";
@@ -86,6 +83,12 @@ double MetropolisCoupledMCMC::calculateTemperature(int i, double deltaT) const
 }
 
 
+void MetropolisCoupledMCMC::createDataWriter()
+{
+    _dataWriter = _modelFactory->createModelDataWriter(_settings);
+}
+
+
 void MetropolisCoupledMCMC::runChains(int genStart, int genEnd)
 {
     std::vector<std::thread> chainThreads;
@@ -108,10 +111,7 @@ void MetropolisCoupledMCMC::runChain(int i, int genStart, int genEnd)
         _chains[i]->step();
 
         if (i == _coldChainIndex) {
-            _stdOutDataWriter.writeData(g, *_chains[i]);
-            _mcmcDataWriter.writeData(g, *_chains[i]);
-            _eventDataWriter->writeData(g, _chains[i]->model());
-            _acceptanceDataWriter.writeData(*_chains[i]);
+            _dataWriter->writeData(g, _chains[i]->model());
 
             if (g % _acceptanceResetFreq == 0) {
                 _chains[i]->model().resetMHAcceptanceParameters();

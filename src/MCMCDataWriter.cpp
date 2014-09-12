@@ -1,7 +1,6 @@
 #include "MCMCDataWriter.h"
 #include "Settings.h"
 #include "Model.h"
-#include "MCMC.h"
 
 #include <iostream>
 
@@ -43,13 +42,11 @@ MCMCDataWriter::~MCMCDataWriter()
 }
 
 
-void MCMCDataWriter::writeData(int generation, MCMC& mcmc)
+void MCMCDataWriter::writeData(int generation, Model& model)
 {
     if (_outputFreq == 0 || generation % _outputFreq != 0) {
         return;
     }
-
-    Model& model = mcmc.model();
 
     _outputStream << generation                      << ","
                   << model.getNumberOfEvents()       << ","

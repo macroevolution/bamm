@@ -7,7 +7,6 @@
 
 class Settings;
 class Model;
-class MCMC;
 
 
 class MCMCDataWriter
@@ -17,7 +16,7 @@ public:
     MCMCDataWriter(Settings& settings);
     ~MCMCDataWriter();
 
-    void writeData(int generation, MCMC& mcmc);
+    void writeData(int generation, Model& model);
 
 private:
 

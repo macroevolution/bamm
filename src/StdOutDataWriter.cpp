@@ -1,7 +1,6 @@
 #include "StdOutDataWriter.h"
 #include "Settings.h"
 #include "Model.h"
-#include "MCMC.h"
 
 #include <iostream>
 #include <iomanip>
@@ -19,7 +18,7 @@ StdOutDataWriter::~StdOutDataWriter()
 }
 
 
-void StdOutDataWriter::writeData(int generation, MCMC& mcmc)
+void StdOutDataWriter::writeData(int generation, Model& model)
 {
     if (!_headerWritten && _outputFreq > 0) {
         writeHeader();
@@ -29,8 +28,6 @@ void StdOutDataWriter::writeData(int generation, MCMC& mcmc)
     if (_outputFreq == 0 || generation % _outputFreq != 0) {
         return;
     }
-
-    Model& model = mcmc.model();
 
     std::cout << std::setw(12) << generation
               << std::setw(12) << model.getNumberOfEvents()

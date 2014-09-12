@@ -243,6 +243,8 @@ void Settings::initializeTraitSettings()
 
     // Output
     addParameter("betaOutfile", "beta_rates.txt", NotRequired, Deprecated);
+    addParameter("nodeStateOutfile", "node_state.txt", NotRequired);
+    addParameter("nodeStateWriteFreq", "0", NotRequired);
 
     // Parameter update rates
     addParameter("updateRateBeta0", "0.0");
@@ -329,6 +331,7 @@ void Settings::attachPrefixToOutputFiles()
         { "runInfoFilename",
           "mcmcOutfile",
           "eventDataOutfile",
+          "nodeStateOutfile",
           "priorOutputFileName",
           "acceptanceInfoFileName",
           "chainSwapFileName",

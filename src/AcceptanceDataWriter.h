@@ -7,7 +7,6 @@
 
 class Settings;
 class Model;
-class MCMC;
 
 
 class AcceptanceDataWriter
@@ -17,7 +16,7 @@ public:
     AcceptanceDataWriter(Settings& settings);
     ~AcceptanceDataWriter();
 
-    void writeData(MCMC& mcmc);
+    void writeData(Model& model);
 
 private:
 

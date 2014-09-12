@@ -2,9 +2,6 @@
 #define METROPOLIS_COUPLED_MCMC_H
 
 
-#include "StdOutDataWriter.h"
-#include "MCMCDataWriter.h"
-#include "AcceptanceDataWriter.h"
 #include "ChainSwapDataWriter.h"
 #include <vector>
 
@@ -13,7 +10,7 @@ class Settings;
 class ModelFactory;
 class MCMC;
 class Model;
-class EventDataWriter;
+class ModelDataWriter;
 
 
 class MetropolisCoupledMCMC
@@ -31,6 +28,8 @@ private:
     void createChains();
     MCMC* createMCMC(int chainIndex) const;
     double calculateTemperature(int i, double deltaT) const;
+
+    void createDataWriter();
 
     void runChains(int genStart, int genEnd);
     void runChain(int i, int genStart, int genEnd);
@@ -66,11 +65,9 @@ private:
     // Current index of the cold chain (it changes when a swap occurs)
     int _coldChainIndex;
 
-    StdOutDataWriter _stdOutDataWriter;
-    MCMCDataWriter _mcmcDataWriter;
-    EventDataWriter* _eventDataWriter;
-    AcceptanceDataWriter _acceptanceDataWriter;
     ChainSwapDataWriter _chainSwapDataWriter;
+
+    ModelDataWriter* _dataWriter;
 
     int _acceptanceResetFreq;
 };

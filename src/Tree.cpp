@@ -339,7 +339,7 @@ std::string Tree::getNewick()
 }
 
 
-void Tree::writeTree(Node* p, std::stringstream& ss)
+void Tree::writeTree(Node* p, std::ostream& ss)
 {
     if (p->getLfDesc() == NULL && p-> getRtDesc() == NULL) {
         if (p->getName() == "") {
@@ -924,20 +924,20 @@ void Tree::writeMeanBranchNetDivRateTree(Node* p, std::stringstream& ss)
 }
 
 
-void Tree::writeBranchPhenotypes(Node* p, std::stringstream& ss)
+void Tree::writeBranchPhenotypes(Node* p, std::ostream& out)
 {
     if (p->getLfDesc() == NULL && p-> getRtDesc() == NULL) {
         if (p->getName() == "") {
-            ss << p->getIndex() << ":" << p->getTraitValue();
+            out << p->getIndex() << ":" << p->getTraitValue();
         } else {
-            ss << p->getName() << ":" << p->getTraitValue();
+            out << p->getName() << ":" << p->getTraitValue();
         }
     } else {
-        ss << "(";
-        writeBranchPhenotypes(p->getLfDesc(), ss);
-        ss << ",";
-        writeBranchPhenotypes(p->getRtDesc(), ss);
-        ss << "):" << p->getTraitValue();
+        out << "(";
+        writeBranchPhenotypes(p->getLfDesc(), out);
+        out << ",";
+        writeBranchPhenotypes(p->getRtDesc(), out);
+        out << "):" << p->getTraitValue();
     }
 }
 
