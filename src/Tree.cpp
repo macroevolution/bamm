@@ -32,7 +32,9 @@ Tree::Tree(Random& random, Settings& settings) : _random(random)
     assertTreeRootBranchLengthIsZero();
     assertTreeIsBifurcating();
     assertBranchLengthsArePositive();
-    assertTreeIsUltrametric();
+    if (settings.get<bool>("checkUltrametric")) {
+        assertTreeIsUltrametric();
+    }
     assertTipsHaveUniqueNames();
 
     // Output stuff here

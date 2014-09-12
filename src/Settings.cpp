@@ -106,6 +106,7 @@ void Settings::initializeGlobalSettings()
     addParameter("numberOfGenerations", "0");
     addParameter("seed", "-1", NotRequired);
     addParameter("validateEventConfiguration", "1", NotRequired);
+    addParameter("checkUltrametric", "1", NotRequired);
 
     // MCMC tuning
     addParameter("updateEventLocationScale", "0.0");
