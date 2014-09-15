@@ -38,6 +38,7 @@ void NodeStateDataWriter::writeData(int generation, TraitModel& model)
 
     Tree& tree = *model.getTreePtr();
 
+    _outputStream << generation;
     tree.writeBranchPhenotypes(tree.getRoot(), _outputStream);
     _outputStream << ";\n";
 }

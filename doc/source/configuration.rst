@@ -446,8 +446,10 @@ Data Output
     where the "branch length" of each node is the node's trait value.
     The tree includes the ancestral trait value data.
     At each time point (see ``nodeStateWriteFreq``),
-    the current node state data are written on a new line.
-    This setting is normally hidden
+    the generation and the current node state tree are written on a new line.
+    This set of trees may be read in R using the ape library
+    (``read.tree('node_state.txt', keep.multi=T)``).
+    The setting ``nodeStateOutfile`` is normally hidden
     and its default value is ``node_state.txt``.
 
 ``nodeStateWriteFreq``
