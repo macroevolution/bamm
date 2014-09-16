@@ -60,9 +60,10 @@
 <li><a class="reference internal" href="#running">12.2. Running</a><ul>
 <li><a class="reference internal" href="#on-os-x-you-get-an-error-that-says-something-like-dyld-unknown-required-load-command-0x80000022">12.2.1. On OS X, you get an error that says something like &#8220;dyld: unknown required load command 0x80000022&#8221;</a></li>
 <li><a class="reference internal" href="#on-windows-you-get-an-error-that-says-bamm-exe-is-not-a-valid-win32-application">12.2.2. On Windows, you get an error that says &#8220;bamm.exe is not a valid Win32 application&#8221;</a></li>
-<li><a class="reference internal" href="#you-get-an-error-message-by-bamm">12.2.3. You get an error message by BAMM</a></li>
-<li><a class="reference internal" href="#basic-troubleshooting">12.2.4. Basic troubleshooting</a></li>
-<li><a class="reference internal" href="#you-get-an-operating-system-error-e-g-segmentation-fault">12.2.5. You get an operating system error (e.g., segmentation fault)</a></li>
+<li><a class="reference internal" href="#on-unix-linux-you-get-the-error-message-enable-multithreading-to-use-std-thread-operation-not-permitted">12.2.3. On Unix/Linux, you get the error message &#8220;Enable multithreading to use std::thread: Operation not permitted&#8221;</a></li>
+<li><a class="reference internal" href="#you-get-an-error-message-by-bamm">12.2.4. You get an error message by BAMM</a></li>
+<li><a class="reference internal" href="#basic-troubleshooting">12.2.5. Basic troubleshooting</a></li>
+<li><a class="reference internal" href="#you-get-an-operating-system-error-e-g-segmentation-fault">12.2.6. You get an operating system error (e.g., segmentation fault)</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#analysis">12.3. Analysis</a><ul>
@@ -138,8 +139,18 @@ Please run BAMM on OS X 10.5 or greater.</p>
 <p>This likely means that you are trying to run BAMM on an unsupported version
 of Windows (such as Windows XP). Please run BAMM on Windows 7 or greater.</p>
 </div>
+<div class="section" id="on-unix-linux-you-get-the-error-message-enable-multithreading-to-use-std-thread-operation-not-permitted">
+<h3>12.2.3. On Unix/Linux, you get the error message &#8220;Enable multithreading to use std::thread: Operation not permitted&#8221;<a class="headerlink" href="#on-unix-linux-you-get-the-error-message-enable-multithreading-to-use-std-thread-operation-not-permitted" title="Permalink to this headline">¶</a></h3>
+<p>We have found this problem with some versions of the GNU C++ compiler,
+where CMake does not properly link a required threading library.
+We are working on a solution, but in the meantime,
+you can manually compile BAMM (without using CMake) as follows:</p>
+<div class="highlight-python"><pre>g++ -DBAMM_VERSION=\"2.2.0\" -DBAMM_VERSION_DATE=\"2014-09-05\" -DGIT_COMMIT_ID=\"NA\" -pthread -std=c++11 -o bamm ../src/\*.cpp</pre>
+</div>
+<p>Make sure to run this command in an empty <tt class="docutils literal"><span class="pre">build</span></tt> directory.</p>
+</div>
 <div class="section" id="you-get-an-error-message-by-bamm">
-<h3>12.2.3. You get an error message by BAMM<a class="headerlink" href="#you-get-an-error-message-by-bamm" title="Permalink to this headline">¶</a></h3>
+<h3>12.2.4. You get an error message by BAMM<a class="headerlink" href="#you-get-an-error-message-by-bamm" title="Permalink to this headline">¶</a></h3>
 <p>Most error messages in BAMM are descriptive and therefore it should not be
 difficult to correct the problem. If BAMM cannot find the control file or
 any file specified within the control file, such as the tree file, make sure
@@ -151,7 +162,7 @@ Please go to <a class="reference external" href="http://bamm-project.org/contact
 instructions on how to contact us.</p>
 </div>
 <div class="section" id="basic-troubleshooting">
-<h3>12.2.4. Basic troubleshooting<a class="headerlink" href="#basic-troubleshooting" title="Permalink to this headline">¶</a></h3>
+<h3>12.2.5. Basic troubleshooting<a class="headerlink" href="#basic-troubleshooting" title="Permalink to this headline">¶</a></h3>
 <p>The simplest way to localize potential problems is to first try to load your
 data without doing anything else. You can do this by setting the following
 parameter in your controlfile:</p>
@@ -172,7 +183,7 @@ Go to <a class="reference external" href="http://bamm-project.org/contact_us.htm
 instructions on how to contact us.</p>
 </div>
 <div class="section" id="you-get-an-operating-system-error-e-g-segmentation-fault">
-<h3>12.2.5. You get an operating system error (e.g., segmentation fault)<a class="headerlink" href="#you-get-an-operating-system-error-e-g-segmentation-fault" title="Permalink to this headline">¶</a></h3>
+<h3>12.2.6. You get an operating system error (e.g., segmentation fault)<a class="headerlink" href="#you-get-an-operating-system-error-e-g-segmentation-fault" title="Permalink to this headline">¶</a></h3>
 <p>Other possible errors may arise, not discussed above. This may include errors
 that mention &#8220;Segmentation fault&#8221;, or &#8220;Floating point error&#8221;. Please contact
 us with information about system errors.
