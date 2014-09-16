@@ -38,6 +38,19 @@ On Windows, you get an error that says "bamm.exe is not a valid Win32 applicatio
 This likely means that you are trying to run BAMM on an unsupported version
 of Windows (such as Windows XP). Please run BAMM on Windows 7 or greater.
 
+On Unix/Linux, you get the error message "Enable multithreading to use std::thread: Operation not permitted"
+............................................................................................................
+
+We have found this problem with some versions of the GNU C++ compiler,
+where CMake does not properly link a required threading library.
+We are working on a solution, but in the meantime,
+you can manually compile BAMM (without using CMake) as follows::
+
+    g++ -DBAMM_VERSION=\"2.2.0\" -DBAMM_VERSION_DATE=\"2014-09-05\" -DGIT_COMMIT_ID=\"NA\" -pthread -std=c++11 -o bamm ../src/\*.cpp
+
+Make sure to run this command in an empty ``build`` directory.
+
+
 You get an error message by BAMM
 ................................
 
