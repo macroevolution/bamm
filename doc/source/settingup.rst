@@ -95,7 +95,7 @@ Windows
    to learn how to configure and run BAMM.
 
 **Note:** Test that ``bamm`` will run on your system by simply running
-``./bamm`` in the directory in which the program is located.
+``bamm`` in the directory in which the program is located.
 If it prints out a message on "Usage", the BAMM program is working correctly.
 
 Installation from Source
