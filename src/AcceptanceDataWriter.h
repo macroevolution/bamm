@@ -13,7 +13,7 @@ class AcceptanceDataWriter
 {
 public:
 
-    AcceptanceDataWriter(Settings& settings);
+    AcceptanceDataWriter(const Settings& settings);
     ~AcceptanceDataWriter();
 
     void writeData(Model& model);

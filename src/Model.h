@@ -10,8 +10,8 @@
 #include <iosfwd>
 
 class Random;
-class Tree;
 class Settings;
+class Tree;
 class Node;
 class Proposal;
 

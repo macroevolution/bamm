@@ -8,20 +8,10 @@
 
 
 #include "TraitModel.h"
-
-
-#include <iostream>
-#include <iomanip>
-#include <cstdlib>
-#include <sstream>
-#include <cmath>
-#include <fstream>
-#include <limits>
-#include <algorithm>
-
 #include "Random.h"
-#include "Node.h"
+#include "Settings.h"
 #include "Tree.h"
+#include "Node.h"
 #include "BranchHistory.h"
 #include "BranchEvent.h"
 #include "TraitBranchEvent.h"
@@ -29,11 +19,19 @@
 #include "BetaShiftProposal.h"
 #include "BetaTimeModeProposal.h"
 #include "NodeStateProposal.h"
-#include "Settings.h"
 #include "Log.h"
 #include "Prior.h"
 #include "Stat.h"
 #include "Tools.h"
+
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <vector>
+#include <set>
+#include <cstdlib>
+#include <sstream>
+#include <cmath>
 
 
 TraitModel::TraitModel(Random& random, Settings& settings) :
@@ -165,7 +163,7 @@ BranchEvent* TraitModel::newBranchEventWithRandomParameters(double x)
 
 #ifdef NEGATIVE_SHIFT_PARAM
     newBetaShift = -fabs(newBetaShift);
-    double dens_term = log(2.0);
+    double dens_term = std::log(2.0);
 #else
     double dens_term = 0.0;
 #endif
@@ -319,7 +317,7 @@ double TraitModel::computeTriadLikelihoodTraits(Node* x)
 double TraitModel::computeLogPrior()
 {
 #ifdef NEGATIVE_SHIFT_PARAM
-    double dens_term = log(2.0);
+    double dens_term = std::log(2.0);
 #else
     double dens_term = 0.0;
 #endif

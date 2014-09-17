@@ -1,17 +1,9 @@
-#include <iostream>
-#include <iomanip>
-#include <cstdlib>
-#include <sstream>
-#include <cmath>
-#include <fstream>
-#include <limits>
-#include <string>
-
 #include "SpExModel.h"
 #include "Model.h"
 #include "Random.h"
-#include "Node.h"
+#include "Settings.h"
 #include "Tree.h"
+#include "Node.h"
 #include "BranchHistory.h"
 #include "BranchEvent.h"
 #include "SpExBranchEvent.h"
@@ -20,27 +12,14 @@
 #include "MuInitProposal.h"
 #include "MuShiftProposal.h"
 #include "LambdaTimeModeProposal.h"
-#include "Settings.h"
 #include "Log.h"
 #include "Prior.h"
 #include "Tools.h"
 
-#define NO_DATA
-#undef NO_DATA
-
-#define RECURSIVE_NODES
-#undef RECURSIVE_NODES
-
-#define DEBUG
-#undef DEBUG
-
-#define DEBUG_TIME_VARIABLE
-
-#define ADAPTIVE_MCMC_PROPOSAL
-#undef ADAPTIVE_MCMC_PROPOSAL
-
-#define NO_TRAIT
-//#undef NO_TRAIT
+#include <cstdlib>
+#include <cmath>
+#include <vector>
+#include <string>
 
 
 #define JUMP_VARIANCE_NORMAL 0.05

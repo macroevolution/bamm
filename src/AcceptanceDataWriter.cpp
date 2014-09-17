@@ -3,9 +3,10 @@
 #include "Model.h"
 
 #include <iostream>
+#include <string>
 
 
-AcceptanceDataWriter::AcceptanceDataWriter(Settings& settings) :
+AcceptanceDataWriter::AcceptanceDataWriter(const Settings& settings) :
     _shouldOutputData(settings.get<bool>("outputAcceptanceInfo")),
     _outputFileName(settings.get("acceptanceInfoFileName"))
 {

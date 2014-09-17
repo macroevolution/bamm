@@ -1,8 +1,8 @@
 #include "Model.h"
 #include "Random.h"
-#include "Tree.h"
 #include "Settings.h"
 #include "Prior.h"
+#include "Tree.h"
 #include "EventNumberProposal.h"
 #include "EventNumberForBranchProposal.h"
 #include "MoveEventProposal.h"
@@ -10,12 +10,12 @@
 #include "Node.h"
 #include "BranchEvent.h"
 #include "BranchHistory.h"
-#include "Log.h"
 #include "Tools.h"
 
 #include <string>
 #include <fstream>
 #include <cstdlib>
+#include <vector>
 
 
 Model::Model(Random& random, Settings& settings) :
@@ -406,8 +406,9 @@ bool Model::isEventConfigurationValid(BranchEvent* be)
             lf->getBranchHistory()->getNumberOfBranchEvents() > 0) {
             // Events on both descendants of root. This fails.
             isValidConfig = false;
-        } else
+        } else {
             isValidConfig = true;
+        }
 
     } else {
         int badsum = 0;
@@ -418,11 +419,11 @@ bool Model::isEventConfigurationValid(BranchEvent* be)
 
         // Test ancestor for events on branch
 
-        if (anc == _tree->getRoot())
+        if (anc == _tree->getRoot()) {
             badsum++;
-        else if (anc->getBranchHistory()->getNumberOfBranchEvents() > 0)
+        } else if (anc->getBranchHistory()->getNumberOfBranchEvents() > 0) {
             badsum++;
-        else {
+        } else {
             // nothing
         }
 
@@ -434,11 +435,11 @@ bool Model::isEventConfigurationValid(BranchEvent* be)
         if (rt->getBranchHistory()->getNumberOfBranchEvents() > 0)
             badsum++;
 
-        if (badsum == 3)
+        if (badsum == 3) {
             isValidConfig = false;
-        else if (badsum < 3)
+        } else if (badsum < 3) {
             isValidConfig = true;
-        else {
+        } else {
             log(Error) << "Problem in Model::isEventConfigurationValid\n";
             std::exit(1);
         }
