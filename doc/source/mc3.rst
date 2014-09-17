@@ -94,6 +94,9 @@ BAMM implements this parallelization using threads in C++11.
 |MC3| settings in BAMM
 ----------------------
 
+Control file settings
+.....................
+
 There are four settings in BAMM that control the behavior of |MC3|.
 They are in the template and example control files
 under the heading ``METROPOLIS COUPLED MCMC``.
@@ -120,18 +123,57 @@ but in terms of run time,
 the smaller the swap period, the longer the run takes to complete.
 A swap period of 1000 has worked for us.
 
-For those using the BAMM GitHub repository,
-we have provided a bash script (OS X and Linux only), ``chain-swap-percent.sh``,
+Determine the best settings
+...........................
+
+In the ``tools`` directory of the BAMM GitHub repository,
+we have provided an R script, ``chainSwapPercent.R``,
+and a bash script (OS X and Linux only), ``chain-swap-percent.sh``,
 to help determine the optimal :math:`\Delta T` value for a specific data set.
-It will print the percent acceptance of the chain swap proposals.
-This script is located in the ``tools`` directory.
-To run, first make sure you are in the directory containing your data files.
-If you would like to test :math:`\Delta T` values of 0.01, 0.05, and 0.1,
-you would run::
+These scripts print out the percent acceptance of the chain swap proposals
+by testing all combinations of the given values of
+swap period, :math:`\Delta T`, and number of chains.
+Both scripts work similarly,
+so choose one or the other depending on convenience.
 
-    <bamm_path>/tools/chain-swap-percent.sh --deltaT 0.01 0.05 0.1
-        --numberOfChains 4 --swapPeriod 1000 --run bamm -c control.txt
+To use either of the scripts,
+first make sure you are in the directory containing your data files.
+We assume that the scripts are located in *~/bamm/tools*
+and that the BAMM executable can be run as ``bamm``.
+The following examples assume that you would like to test
+all combinations for the number of chains of 2, 4, and 6,
+:math:`\Delta T` of 0.01 and 0.05, and swap period of 100 and 1000.
+To use the R script, run in R::
 
-where ``<bamm_path>`` is the path to the ``bamm`` directory.
-You could also specify multiple values for ``numberOfChains``
-and ``swapPeriod``, and the script will test every combination of values.
+    source("~/bamm/tools/chainSwapPercent.R")
+    chainSwapPercent(bammPath = 'bamm', controlfile = 'divcontrol.txt',
+        nChains = c(2, 4, 6), deltaT = c(0.01, 0.05),
+        swapPeriod = c(100, 1000), nGenerations = 20000,
+        burnin = 0.2, deleteTempFiles = TRUE)
+
+This will produce the following output::
+
+      |==================================================================| 100%
+      nChains deltaT swapP percent accepted proposed
+    1       2   0.01   100 0.98125      157      160
+    2       2   0.01  1000 1.00000       16       16
+    3       2   0.05   100 0.85000      136      160
+    4       2   0.05  1000 0.87500       14       16
+    5       4   0.01   100 0.98750      158      160
+    6       4   0.01  1000 1.00000       16       16
+    7       4   0.05   100 0.88750      142      160
+    8       4   0.05  1000 0.93750       15       16
+    9       6   0.01   100 0.98125      157      160
+    10      6   0.01  1000 1.00000       16       16
+    11      6   0.05   100 0.75625      121      160
+    12      6   0.05  1000 0.93750       15       16
+
+These results may be saved into a variable by assigning the variable
+the result of the *chainSwapPercent* function.
+
+To use the bash script, run in a terminal::
+
+    ~/bamm/tools/chain-swap-percent.sh --numberOfChains 2 4 6
+        --deltaT 0.01 0.05 --swapPeriod 1000 --run bamm -c divcontrol.txt
+
+The output will be similar to that produced by the R script.
