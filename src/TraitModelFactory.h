@@ -4,11 +4,9 @@
 
 #include "ModelFactory.h"
 #include "TraitModel.h"
-#include "TraitEventDataWriter.h"
 #include "TraitDataWriter.h"
 
 class Model;
-class EventDataWriter;
 class ModelDataWriter;
 
 class Random;
@@ -23,7 +21,6 @@ public:
     virtual ~TraitModelFactory() {}
 
     virtual Model* createModel(Random& random, Settings& settings) const;
-    virtual EventDataWriter* createEventDataWriter(Settings& settings) const;
     virtual ModelDataWriter* createModelDataWriter(Settings& settings) const;
 };
 
@@ -32,13 +29,6 @@ inline Model* TraitModelFactory::createModel
     (Random& random, Settings& settings) const
 {
     return new TraitModel(random, settings);
-}
-
-
-inline EventDataWriter* TraitModelFactory::createEventDataWriter
-    (Settings& settings) const
-{
-    return new TraitEventDataWriter(settings);
 }
 
 
