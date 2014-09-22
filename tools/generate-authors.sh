@@ -7,5 +7,17 @@ echo using the script tools/generate-authors.sh.
 echo
 
 git log --format='%an' |
-    python tools/fix-authors.py | sort | uniq -c | sort -nr |
-    awk '{ for (i = 2; i <= NF; i++) printf("%s ", $i); printf("\n") }'
+    awk '{ if ($0 == "blueraleigh")
+               print "Mike Grundler"
+           else if ($0 == "Dan Rabosky")
+               print "Daniel Rabosky"
+           else if ($0 == "pascaltitle")
+               print "Pascal Title"
+           else if ($0 == "josephwb")
+               print "Joseph W. Brown"
+           else if ($0 == "SimonGreenhill")
+               print "Simon Greenhill"
+           else
+               print
+         }' | sort | uniq -c | sort -nr |
+    awk '{ $1 = ""; print }' | cut -d' ' -f2-
