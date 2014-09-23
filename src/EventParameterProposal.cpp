@@ -55,12 +55,11 @@ double EventParameterProposal::acceptanceRatio()
     double t = _model.getTemperatureMH();
     double logRatio = t * (logLikelihoodRatio + logPriorRatio) + logQRatio;
 
-    // TODO: Find a better solution where NaNs are avoided in the first place
-    if (std::isnan(logRatio)) {
+    if (std::isfinite(logRatio)) {
+        return std::min(1.0, std::exp(logRatio));
+    } else {
         return 0.0;
     }
-
-    return std::min(1.0, std::exp(logRatio));
 }
 
 

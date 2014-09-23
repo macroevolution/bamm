@@ -86,7 +86,11 @@ double EventNumberForBranchProposal::acceptanceRatio()
     double t = _model.getTemperatureMH();
     double logRatio = t * (logLikelihoodRatio + logPriorRatio) + logQRatio;
 
-    return std::min(1.0, std::exp(logRatio));
+    if (std::isfinite(logRatio)) {
+        return std::min(1.0, std::exp(logRatio));
+    } else {
+        return 0.0;
+    }
 }
 
 
