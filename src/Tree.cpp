@@ -1021,7 +1021,9 @@ void Tree::getPhenotypesMissingLatent(std::string fileName)
     double traitValue;
 
     while (inputFile >> speciesName) {
-        inputFile >> traitValue;
+        if (!(inputFile >> traitValue)) {
+            exitWithError("Invalid trait value for <" + speciesName + ">.");
+        }
 
         speciesNames.push_back(speciesName);
         traitValues.push_back(traitValue);
