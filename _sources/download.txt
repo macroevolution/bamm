@@ -40,7 +40,7 @@ example data files for diversification and phenotypic evolution analysis.
 Download BAMMtools
 ==================
 
-BAMMtools will now available on CRAN.
+BAMMtools is now available on CRAN.
 Please update your BAMMtools package within R::
 
     install.packages('BAMMtools')

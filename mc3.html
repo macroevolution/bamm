@@ -54,7 +54,11 @@
   <ul>
 <li><a class="reference internal" href="#">9. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]</a><ul>
 <li><a class="reference internal" href="#multi-core-metropolis-coupled-mcmc-mc4">9.1. Multi-core Metropolis coupled MCMC [(MC)<sup>4</sup>]</a></li>
-<li><a class="reference internal" href="#mc3-settings-in-bamm">9.2. (MC)<sup>3</sup> settings in BAMM</a></li>
+<li><a class="reference internal" href="#mc3-settings-in-bamm">9.2. (MC)<sup>3</sup> settings in BAMM</a><ul>
+<li><a class="reference internal" href="#control-file-settings">9.2.1. Control file settings</a></li>
+<li><a class="reference internal" href="#determine-the-best-settings">9.2.2. Determine the best settings</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -165,6 +169,8 @@ BAMM implements this parallelization using threads in C++11.</p>
 </div>
 <div class="section" id="mc3-settings-in-bamm">
 <h2>9.2. (MC)<sup>3</sup> settings in BAMM<a class="headerlink" href="#mc3-settings-in-bamm" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="control-file-settings">
+<h3>9.2.1. Control file settings<a class="headerlink" href="#control-file-settings" title="Permalink to this headline">¶</a></h3>
 <p>There are four settings in BAMM that control the behavior of (MC)<sup>3</sup>.
 They are in the template and example control files
 under the heading <tt class="docutils literal"><span class="pre">METROPOLIS</span> <span class="pre">COUPLED</span> <span class="pre">MCMC</span></tt>.
@@ -189,20 +195,57 @@ We have not examined the effects of the swap period in detail,
 but in terms of run time,
 the smaller the swap period, the longer the run takes to complete.
 A swap period of 1000 has worked for us.</p>
-<p>For those using the BAMM GitHub repository,
-we have provided a bash script (OS X and Linux only), <tt class="docutils literal"><span class="pre">chain-swap-percent.sh</span></tt>,
-to help determine the optimal <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> value for a specific data set.
-It will print the percent acceptance of the chain swap proposals.
-This script is located in the <tt class="docutils literal"><span class="pre">tools</span></tt> directory.
-To run, first make sure you are in the directory containing your data files.
-If you would like to test <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> values of 0.01, 0.05, and 0.1,
-you would run:</p>
-<div class="highlight-python"><pre>&lt;bamm_path&gt;/tools/chain-swap-percent.sh --deltaT 0.01 0.05 0.1
-    --numberOfChains 4 --swapPeriod 1000 --run bamm -c control.txt</pre>
 </div>
-<p>where <tt class="docutils literal"><span class="pre">&lt;bamm_path&gt;</span></tt> is the path to the <tt class="docutils literal"><span class="pre">bamm</span></tt> directory.
-You could also specify multiple values for <tt class="docutils literal"><span class="pre">numberOfChains</span></tt>
-and <tt class="docutils literal"><span class="pre">swapPeriod</span></tt>, and the script will test every combination of values.</p>
+<div class="section" id="determine-the-best-settings">
+<h3>9.2.2. Determine the best settings<a class="headerlink" href="#determine-the-best-settings" title="Permalink to this headline">¶</a></h3>
+<p>In the <tt class="docutils literal"><span class="pre">tools</span></tt> directory of the BAMM GitHub repository,
+we have provided an R script, <tt class="docutils literal"><span class="pre">chainSwapPercent.R</span></tt>,
+and a bash script (OS X and Linux only), <tt class="docutils literal"><span class="pre">chain-swap-percent.sh</span></tt>,
+to help determine the optimal <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> value for a specific data set.
+These scripts print out the percent acceptance of the chain swap proposals
+by testing all combinations of the given values of
+swap period, <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/>, and number of chains.
+Both scripts work similarly,
+so choose one or the other depending on convenience.</p>
+<p>To use either of the scripts,
+first make sure you are in the directory containing your data files.
+We assume that the scripts are located in <em>~/bamm/tools</em>
+and that the BAMM executable can be run as <tt class="docutils literal"><span class="pre">bamm</span></tt>.
+The following examples assume that you would like to test
+all combinations for the number of chains of 2, 4, and 6,
+<img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> of 0.01 and 0.05, and swap period of 100 and 1000.
+To use the R script, run in R:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">source</span><span class="p">(</span><span class="s">&quot;~/bamm/tools/chainSwapPercent.R&quot;</span><span class="p">)</span>
+<span class="n">chainSwapPercent</span><span class="p">(</span><span class="n">bammPath</span> <span class="o">=</span> <span class="s">&#39;bamm&#39;</span><span class="p">,</span> <span class="n">controlfile</span> <span class="o">=</span> <span class="s">&#39;divcontrol.txt&#39;</span><span class="p">,</span>
+    <span class="n">nChains</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">deltaT</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span>
+    <span class="n">swapPeriod</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">nGenerations</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">,</span>
+    <span class="n">burnin</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">deleteTempFiles</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will produce the following output:</p>
+<div class="highlight-python"><pre>  |==================================================================| 100%
+  nChains deltaT swapP percent accepted proposed
+1       2   0.01   100 0.98125      157      160
+2       2   0.01  1000 1.00000       16       16
+3       2   0.05   100 0.85000      136      160
+4       2   0.05  1000 0.87500       14       16
+5       4   0.01   100 0.98750      158      160
+6       4   0.01  1000 1.00000       16       16
+7       4   0.05   100 0.88750      142      160
+8       4   0.05  1000 0.93750       15       16
+9       6   0.01   100 0.98125      157      160
+10      6   0.01  1000 1.00000       16       16
+11      6   0.05   100 0.75625      121      160
+12      6   0.05  1000 0.93750       15       16</pre>
+</div>
+<p>These results may be saved into a variable by assigning the variable
+the result of the <em>chainSwapPercent</em> function.</p>
+<p>To use the bash script, run in a terminal:</p>
+<div class="highlight-python"><pre>~/bamm/tools/chain-swap-percent.sh --numberOfChains 2 4 6
+    --deltaT 0.01 0.05 --swapPeriod 1000 --run bamm -c divcontrol.txt</pre>
+</div>
+<p>The output will be similar to that produced by the R script.</p>
+</div>
 </div>
 </div>
 

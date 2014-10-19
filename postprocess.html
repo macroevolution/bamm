@@ -118,7 +118,7 @@
             
   <div class="section" id="analyzing-bamm-output-with-bammtools">
 <span id="bammtools"></span><h1>7. Analyzing BAMM output with BAMMtools<a class="headerlink" href="#analyzing-bamm-output-with-bammtools" title="Permalink to this headline">¶</a></h1>
-<p><strong>Note: documentation for BAMM and BAMMtools 2.0 is still under construction; some sections may be incomplete</strong></p>
+<p><strong>Note: documentation for BAMM and BAMMtools 2.0 is still under construction; some sections may be incomplete.</strong></p>
 <div class="section" id="brief">
 <h2>7.1. Brief<a class="headerlink" href="#brief" title="Permalink to this headline">¶</a></h2>
 <p>The R package <strong>BAMMtools</strong> contains almost everything you need to analyze and visualize evolutionary rate dynamics from BAMM output. You will need to install this package. To install BAMMtools, type the following in your R console:</p>
@@ -263,7 +263,7 @@ effectiveSize(postburn$logLik)</pre>
 </pre></div>
 </div>
 <p>In general, any model that is not included in <em>names(post_probs)</em> was so lousy that it was never even sampled. Thus, if you fail to observe a model &#8216;0&#8217; in this set, this means that you have such overwhelming evidence for diversification rate heterogeneity in your data that this model probability is effectively 0 (bear in mind that a model with name &#8216;0&#8217; is model <img class="math" src="_images/math/ae8894f3de7431ea6446c8b17ba3407f9f752ab2.png" alt="M_0"/>, or a model with no rate shifts). The probability of model &#8216;0&#8217; is the posterior probability of a model with just a single evolutionary rate dynamic (no rate shifts). We&#8217;ll discuss the use of Bayes factors in gauging model support a little further down in <a class="reference internal" href="#bayesfactors"><em>this document</em></a>, but posterior model probabilities are a valuable way of identifying the best model (or set of models).</p>
-<p>Alternatively, if have our <em>bammdata</em> object, we can summarize the posterior distribution of the number of shifts using summary methods:</p>
+<p>Alternatively, if we have our <em>bammdata</em> object, we can summarize the posterior distribution of the number of shifts using summary methods:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">library</span><span class="p">(</span><span class="n">BAMMtools</span><span class="p">)</span>
 <span class="n">tree</span> <span class="o">&lt;-</span> <span class="n">read</span><span class="o">.</span><span class="n">tree</span><span class="p">(</span><span class="s">&quot;mytree.tre&quot;</span><span class="p">)</span>
 <span class="n">edata</span> <span class="o">&lt;-</span> <span class="n">getEventData</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">eventdata</span> <span class="o">=</span> <span class="s">&quot;bammrun_eventdata.txt&quot;</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
@@ -438,7 +438,7 @@ addBAMMshifts(msc.config, cex = 2)</pre>
 <p>To get the total number of rate regimes on the tree for this sample, you can do:</p>
 <div class="highlight-python"><pre>nrow(edata$eventData[[ mysample ]])</pre>
 </div>
-<p>If there is only rate regime, then you have no rate shifts: the single rate regime starts at the root and describes the entire tree. Assuming you have more than 1, we can get the node numbers (in <strong>ape</strong> format), as follows:</p>
+<p>If there is only one rate regime, then you have no rate shifts: the single rate regime starts at the root and describes the entire tree. Assuming you have more than 1, we can get the node numbers (in <strong>ape</strong> format), as follows:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">shiftnodes</span> <span class="o">&lt;-</span> <span class="n">getShiftNodesFromIndex</span><span class="p">(</span><span class="n">edata</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">mysample</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -461,7 +461,7 @@ addBAMMshifts(msc.config, cex = 2)</pre>
 </div>
 <div class="section" id="bayes-factors-for-rate-shifts">
 <h3>7.6.7. Bayes factors for rate shifts<a class="headerlink" href="#bayes-factors-for-rate-shifts" title="Permalink to this headline">¶</a></h3>
-<p>As explained <a class="reference internal" href="rateshifts.html#bayesfactorbranches"><em>here</em></a>, we can compute the Bayes factors associated with a shift on a particular branch. Despite numerous difficulties associated with computing Bayes factors more generally, it is straightforward and natural in this context to compute them. To be clear, are now advocating a very different use of Bayes factors than we described previously on <a class="reference internal" href="#bayesfactors"><em>this page</em></a>. Now, we are computing the Bayes factor associated with a rate shift on a particular branch of our phylogeny. This provides us with a robust measure of evidence for a rate shift on a particular branch that is effectively independent of the effects of whatever prior parameter we placed on the number of shift events.</p>
+<p>As explained <a class="reference internal" href="rateshifts.html#bayesfactorbranches"><em>here</em></a>, we can compute the Bayes factors associated with a shift on a particular branch. Despite numerous difficulties associated with computing Bayes factors more generally, it is straightforward and natural in this context to compute them. To be clear, we are now advocating a very different use of Bayes factors than we described previously on <a class="reference internal" href="#bayesfactors"><em>this page</em></a>. Now, we are computing the Bayes factor associated with a rate shift on a particular branch of our phylogeny. This provides us with a robust measure of evidence for a rate shift on a particular branch that is effectively independent of the effects of whatever prior parameter we placed on the number of shift events.</p>
 <p>To compute the Bayes factors for the <em>topological location</em> of rate shifts on our tree, we first compute the probability of a rate shift on each branch of our phylogeny under the prior alone:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">priorshifts</span> <span class="o">&lt;-</span> <span class="n">getBranchShiftPriors</span><span class="p">(</span><span class="n">edata</span><span class="p">,</span> <span class="n">prior</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
 </pre></div>
@@ -479,7 +479,7 @@ addBAMMshifts(msc.config, cex = 2)</pre>
 bftree$edge[edgemax ,2]
 # this should give node 141 for the whales...</pre>
 </div>
-<p>Use of Bayes factors in this context has many advantages. Suppose that you have two branches, one of which is very short and the other of which is very long. Under the prior alone, you&#8217;d expect a higher marginal probability of a rate shift on the long branch. In fact, the relative probability of a shift on the longer branch should be exactly equal to the ratio of the branch lengths. Now, imagine that both branches have a marginal shift probability of 0.8. The Bayes factor analysis of shift probabilities would find much stronger evidence for a rate shift on the short branch, because it is it has a <em>lower prior probability of a shift</em>. This tells us that there&#8217;s actually more evidence for a shift on the short branch, because the data contained enough evidence to actually push the posterior further away from the prior, relative to the long branch.</p>
+<p>Use of Bayes factors in this context has many advantages. Suppose that you have two branches, one of which is very short and the other of which is very long. Under the prior alone, you&#8217;d expect a higher marginal probability of a rate shift on the long branch. In fact, the relative probability of a shift on the longer branch should be exactly equal to the ratio of the branch lengths. Now, imagine that both branches have a marginal shift probability of 0.8. The Bayes factor analysis of shift probabilities would find much stronger evidence for a rate shift on the short branch, because it has a <em>lower prior probability of a shift</em>. This tells us that there&#8217;s actually more evidence for a shift on the short branch, because the data contained enough evidence to actually push the posterior further away from the prior, relative to the long branch.</p>
 </div>
 </div>
 <div class="section" id="clade-specific-evolutionary-rates">
@@ -516,12 +516,12 @@ quantile(nondolphinrate$lambda, c(0.05, 0.95))</pre>
 </div>
 <div class="section" id="rate-through-time-analysis">
 <h2>7.9. Rate-through-time analysis<a class="headerlink" href="#rate-through-time-analysis" title="Permalink to this headline">¶</a></h2>
-<p id="bammtoolsrtt">Plotting rate-through-time curve (example <a class="reference internal" href="bammgraph.html#bammgraphgallery6"><em>here</em></a>) is trivial. BAMM&#8217;s built-in function <tt class="docutils literal"><span class="pre">plotRateThroughTime</span></tt> makes it easy to generate plots of rates through time:</p>
+<p id="bammtoolsrtt">Plotting a rate-through-time curve (example <a class="reference internal" href="bammgraph.html#bammgraphgallery6"><em>here</em></a>) is trivial. BAMM&#8217;s built-in function <tt class="docutils literal"><span class="pre">plotRateThroughTime</span></tt> makes it easy to generate plots of rates through time:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">plotRateThroughTime</span><span class="p">(</span><span class="n">edata</span><span class="p">,</span> <span class="n">ratetype</span><span class="o">=</span><span class="s">&quot;speciation&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>should produce a plot with density shading on confidence regions for your speciation-through-time curve. See help on this function for more details about tweaking the plot. This function can take awhile to run, because it generates a rate-through-time matrix that includes all samples in the posterior distribution.</p>
-<p>You can also use <tt class="docutils literal"><span class="pre">plotRateThroughTime</span></tt> to plot speciation through time curves for just portion of your phylogeny. We can do this by feeding a node number in to <tt class="docutils literal"><span class="pre">plotRateThroughTime</span></tt>, and the function will just compute and plot the rates for this subtree. To find a particular node number for your tree, you can plot the tree (using ape), and then plot your node numbers directly on the tree, like this:</p>
+<p>You can also use <tt class="docutils literal"><span class="pre">plotRateThroughTime</span></tt> to plot speciation through time curves for just a portion of your phylogeny. We can do this by feeding a node number in to <tt class="docutils literal"><span class="pre">plotRateThroughTime</span></tt>, and the function will just compute and plot the rates for this subtree. To find a particular node number for your tree, you can plot the tree (using ape), and then plot your node numbers directly on the tree, like this:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">plot</span><span class="o">.</span><span class="n">phylo</span><span class="p">(</span><span class="n">whales</span><span class="p">)</span>
 <span class="n">nodelabels</span><span class="p">(</span><span class="n">whales</span><span class="p">)</span>
 </pre></div>
@@ -560,7 +560,7 @@ tipnode2 &lt;- which(whales$tip.label == species2)</pre>
 <p>and to do a simple no-frills plot:</p>
 <div class="highlight-python"><pre>plot(meanTraitRate ~ rtt$times)</pre>
 </div>
-<p>You can also include- and exclude nodes from the calculation of the rate-through-time matrix (assuming you know the node to exclude or include):</p>
+<p>You can also include and exclude nodes from the calculation of the rate-through-time matrix (assuming you know the node to exclude or include):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">rtt_subtree</span> <span class="o">&lt;-</span> <span class="n">getRateThroughTimeMatrix</span><span class="p">(</span><span class="n">edata</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="n">mrca</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -568,7 +568,7 @@ tipnode2 &lt;- which(whales$tip.label == species2)</pre>
 </div>
 <div class="section" id="macroevolutionary-cohort-analysis">
 <h2>7.10. Macroevolutionary cohort analysis<a class="headerlink" href="#macroevolutionary-cohort-analysis" title="Permalink to this headline">¶</a></h2>
-<p id="cohorts">Macroevolutionary cohort analysis provides a way of summarizing the extent to which species share correlated macroevolutionary dynamics. The method is explained in this (<a class="reference external" href="http://sysbio.oxfordjournals.org/content/early/2014/04/01/sysbio.syu025">Systematic Biology article</a>). The basic idea is to visualize the pairwise probabilities that any two species share a common macroevolutionary rate regime. The first step is to generate a cohort matrix, which contains the pairwise probabilities of shared macroevolutionary dynamics. This is then passed to the <tt class="docutils literal"><span class="pre">cohorts</span></tt> function, which generates the plot:</p>
+<p id="cohorts">Macroevolutionary cohort analysis provides a way of summarizing the extent to which species share correlated macroevolutionary dynamics. The method is explained in this (<a class="reference external" href="http://sysbio.oxfordjournals.org/content/63/4/610">Systematic Biology article</a>). The basic idea is to visualize the pairwise probabilities that any two species share a common macroevolutionary rate regime. The first step is to generate a cohort matrix, which contains the pairwise probabilities of shared macroevolutionary dynamics. This is then passed to the <tt class="docutils literal"><span class="pre">cohorts</span></tt> function, which generates the plot:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">data</span><span class="p">(</span><span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">whales</span><span class="p">)</span>
 <span class="n">edata</span> <span class="o">&lt;-</span> <span class="n">getEventData</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 <span class="n">cmat</span> <span class="o">&lt;-</span> <span class="n">getCohortMatrix</span><span class="p">(</span><span class="n">edata</span><span class="p">)</span>

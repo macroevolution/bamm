@@ -76,6 +76,7 @@
 <li><a class="reference internal" href="#id6">6.4.3. Starting Parameters</a></li>
 <li><a class="reference internal" href="#id7">6.4.4. Priors</a></li>
 <li><a class="reference internal" href="#id8">6.4.5. Parameter Update Rates</a></li>
+<li><a class="reference internal" href="#data-output">6.4.6. Data Output</a></li>
 </ul>
 </li>
 </ul>
@@ -495,6 +496,27 @@ so there are a lot of parameters: this value should, in general,
 be substantially higher than the other parameter values
 (recommended 25:1 or 50:1) because there are so many internal nodes states
 that need to be updated.</dd>
+</dl>
+</div>
+<div class="section" id="data-output">
+<h3>6.4.6. Data Output<a class="headerlink" href="#data-output" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">nodeStateOutfile</span></tt></dt>
+<dd>The path of the file to which to write the node state data
+(i.e., trait values).
+The data are written as a tree in the Newick format,
+where the &#8220;branch length&#8221; of each node is the node&#8217;s trait value.
+The tree includes the ancestral trait value data.
+At each time point (see <tt class="docutils literal"><span class="pre">nodeStateWriteFreq</span></tt>),
+the generation and the current node state tree are written on a new line.
+This set of trees may be read in R using the ape library
+(<tt class="docutils literal"><span class="pre">read.tree('node_state.txt',</span> <span class="pre">keep.multi=T)</span></tt>).
+The setting <tt class="docutils literal"><span class="pre">nodeStateOutfile</span></tt> is normally hidden
+and its default value is <tt class="docutils literal"><span class="pre">node_state.txt</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">nodeStateWriteFreq</span></tt></dt>
+<dd>Frequency (in generations) at which to print the node state data.
+This setting is normally hidden and its default value is <tt class="docutils literal"><span class="pre">0</span></tt>
+(i.e., do not write any node state data).</dd>
 </dl>
 </div>
 </div>

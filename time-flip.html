@@ -112,7 +112,7 @@ Previously, the default model in BAMM assumed that all shift events in BAMM led 
 <img class="math" src="_images/math/8c325612684d41304b9751c175df7bcc0f61f64f.png" alt="k"/> is the rate parameter for the speciation rate,
 and <img class="math" src="_images/math/e0d2bf360290fd61d1c1557e763f2622363b3d35.png" alt="t"/> is the time since the shift event began.</p>
 <p>We have found that this default assumption can lead to biased inference on speciation (or phenotypic evolutionary rates) in some areas of parameter space. In BAMM 2.0, we do not force rate shift events to be time-varying (as in BAMM 1.0) or constant through time (as in MEDUSA). Rather, we allow diversification submodels to &#8220;flip&#8221; between time-constant and time-variable rate modes. With this formulation, rate shifts will lead to a constant-rate diversification process unless the data contains sufficient evidence for temporally varying macroevolutionary rate dynamics. A given rate partition in the data can toggle between time-varying and constant-rate models in proportion to the posterior probability that the true process includes rate variation through time. We have found that this model substantially improves the performance of BAMM.</p>
-<p>The mechanics of the updated BAMM model entail the concept of &#8220;time-flip&#8221; proposal,
+<p>The mechanics of the updated BAMM model entail the concept of a &#8220;time-flip&#8221; proposal,
 which flips the time mode of a randomly-chosen shift event
 from/to time-variable and time-constant modes.
 A time-constant shift event models speciation as</p>
