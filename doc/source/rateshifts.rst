@@ -4,7 +4,7 @@
 Rate Shifts on Phylogenies: Theoretical Background
 ==================================================
 
-**Note: documentation for BAMM 2.0 is still under construction; some sections may be incomplete**
+**Note: documentation for BAMM 2.0 is still under construction; some sections may be incomplete.**
 
 This section details some of the most common conceptual issues that can arise when interpreting rate shifts on phylogenetic trees. Many studies have attempted to identify ***the*** rate shifts within a given dataset. In the BAMM framework, there is no single set of independent rate shifts waiting to be identified. Rather, BAMM identifies *configurations* of rate shifts - sets of shifts that are sampled together - and enables us to compute relative probability of those configurations. Three *shift configurations* sampled with BAMM during simulation of the posterior are shown :ref:`here<bammgraphgallery2>`.
  
@@ -65,7 +65,7 @@ Is this really an issue with real datasets?
 
 We have encountered very few datasets where signal of a shift in rate dynamics along a particular branch is so strong that we can exclude alternative shift configurations with probability > 0.95. 
 
-Consider the analysis of whale diversification, which we've included as an example dataset in BAMMtools. We also use this dataset as an empirical example in the primary description of the BAMM model. The figure below shows reconstructed speciation rates through time during the whale radiation (red = fast, blue = slow) under BAMM. Overall, the model with the highest posterior probability had two rate dynamics, and a model with just a single rate dynamic had a posterior probability approach zero. The marginal (branch-specific) probabilities of a rate shift occurring on the 3 most likely branches are as follows:
+Consider the analysis of whale diversification, which we've included as an example dataset in BAMMtools. We also use this dataset as an empirical example in the primary description of the BAMM model. The figure below shows reconstructed speciation rates through time during the whale radiation (red = fast, blue = slow) under BAMM. Overall, the model with the highest posterior probability had two rate dynamics, and a model with just a single rate dynamic had a posterior probability approaching zero. The marginal (branch-specific) probabilities of a rate shift occurring on the 3 most likely branches are as follows:
  
 .. _whalemarg1:  
 .. figure:: figs/xfig3a.png
@@ -93,7 +93,7 @@ There are many types of information that can be extracted from a BAMM run. Here 
 Shift configurations sampled with BAMM
 --------------------------------------
 
-One of the most important ideas to grasp regarding BAMM is that BAMM simulates a posterior distribution of *shift configurations* on phylogenetic trees. Hence, every sample from a posterior simulated with BAMM may contain a potentially unique configuration of rate shifts. Here are 3 different shift configurations for the primates dataset included in BAMMtools. The fourth tree is a phylorate plot, showing instantaneous (marginal) phenotypic evolutionary rates at fine-grained set of points along the phylogeny. Note that the shift configurations are different for each sample from the posterior. 
+One of the most important ideas to grasp regarding BAMM is that BAMM simulates a posterior distribution of *shift configurations* on phylogenetic trees. Hence, every sample from a posterior simulated with BAMM may contain a potentially unique configuration of rate shifts. Here are 3 different shift configurations for the primates dataset included in BAMMtools. The fourth tree is a phylorate plot, showing instantaneous (marginal) phenotypic evolutionary rates at a fine-grained set of points along the phylogeny. Note that the shift configurations are different for each sample from the posterior. 
 
 .. _primateconfigs:  
 .. figure:: figs/xprimates_shiftconfigs.png
@@ -208,7 +208,7 @@ Let :math:`P_S` denote the posterior probabilities of either observing a shift o
 
 	BF_{SHIFT} = \frac{\frac{P_S}{\pi_S}}{\frac{P_{NS}}{\pi_{NS}}} = {\frac{P_S}{(1 - P_S)}}{\frac{(1 - \pi_S)}{\pi_S}}	
 
-This quantity has an appealing intuitive interpretation. It is a measure of the posterior odds of two models (shift versus no shift), normalized by their prior odds ratio. Values of 20 or so imply reasonably strong support for one model over another. One way to think about this is to imagine a scenario where the posterior probability of rate shift on a branch is 0.95, and the prior probabilities of shift and no shift are equal (:math:`\pi_S = 0.5`). The Bayes factor in favor of a rate shift would just be 0.95 / 0.05, or 19. Because the "null model" (no rate shift) has a posterior probability of 0.05, we can (very loosely) relate this Bayes factor to a traditional p-value in classical hypothesis testing: a Bayes factor of approximately 20 corresponds approximately to a null hypothesis p-value (no shift) of 0.05. BAMMtools enables us to easily compute the Bayes factor evidence for a rate shift on each branch of our phylogeny::
+This quantity has an appealing intuitive interpretation. It is a measure of the posterior odds of two models (shift versus no shift), normalized by their prior odds ratio. Values of 20 or so imply reasonably strong support for one model over another. One way to think about this is to imagine a scenario where the posterior probability of a rate shift on a branch is 0.95, and the prior probabilities of shift and no shift are equal (:math:`\pi_S = 0.5`). The Bayes factor in favor of a rate shift would just be 0.95 / 0.05, or 19. Because the "null model" (no rate shift) has a posterior probability of 0.05, we can (very loosely) relate this Bayes factor to a traditional p-value in classical hypothesis testing: a Bayes factor of approximately 20 corresponds approximately to a null hypothesis p-value (no shift) of 0.05. BAMMtools enables us to easily compute the Bayes factor evidence for a rate shift on each branch of our phylogeny::
 
 
 	data(prior.whales, whales, events.whales)
@@ -336,7 +336,7 @@ where I\ :sub:`i,k` is an indicator variable taking a value of 1 if a shift occu
 
 	library(BAMMtools)
 	data(primates, events.primates)
-	ed <- getEventData(primates, events.primates, burnin=0.1)
+	ed <- getEventData(primates, events.primates, burnin=0.1, type='trait')
 	msc_tree <- maximumShiftCredibility(ed)
 
 We generally recommend using the MAP shift configuration (``getBestShiftConfiguration``) over the MSC configuration, except for very large phylogenies. Often, however, the two approaches will estimate the same shift configuration.

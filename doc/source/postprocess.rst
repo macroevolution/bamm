@@ -3,7 +3,7 @@
 Analyzing BAMM output with BAMMtools
 ====================================
 
-**Note: documentation for BAMM and BAMMtools 2.0 is still under construction; some sections may be incomplete**
+**Note: documentation for BAMM and BAMMtools 2.0 is still under construction; some sections may be incomplete.**
 
 Brief
 .....
@@ -152,7 +152,7 @@ And to compute the posterior odds ratio for (say) two models 'X' and 'Y' (X and 
 
 In general, any model that is not included in *names(post_probs)* was so lousy that it was never even sampled. Thus, if you fail to observe a model '0' in this set, this means that you have such overwhelming evidence for diversification rate heterogeneity in your data that this model probability is effectively 0 (bear in mind that a model with name '0' is model :math:`M_0`, or a model with no rate shifts). The probability of model '0' is the posterior probability of a model with just a single evolutionary rate dynamic (no rate shifts). We'll discuss the use of Bayes factors in gauging model support a little further down in :ref:`this document<bayesfactors>`, but posterior model probabilities are a valuable way of identifying the best model (or set of models). 
 
-Alternatively, if have our *bammdata* object, we can summarize the posterior distribution of the number of shifts using summary methods::
+Alternatively, if we have our *bammdata* object, we can summarize the posterior distribution of the number of shifts using summary methods::
 
 	library(BAMMtools)
 	tree <- read.tree("mytree.tre")
@@ -345,7 +345,7 @@ To get the total number of rate regimes on the tree for this sample, you can do:
 		
 	nrow(edata$eventData[[ mysample ]]) 
 	
-If there is only rate regime, then you have no rate shifts: the single rate regime starts at the root and describes the entire tree. Assuming you have more than 1, we can get the node numbers (in **ape** format), as follows::
+If there is only one rate regime, then you have no rate shifts: the single rate regime starts at the root and describes the entire tree. Assuming you have more than 1, we can get the node numbers (in **ape** format), as follows::
 
 	shiftnodes <- getShiftNodesFromIndex(edata, index = mysample)	
  
@@ -372,7 +372,7 @@ The variable *marg_probs* becomes a copy of our phylogenetic tree, but where eac
 Bayes factors for rate shifts
 ---------------------------------------
 
-As explained :ref:`here<bayesfactorbranches>`, we can compute the Bayes factors associated with a shift on a particular branch. Despite numerous difficulties associated with computing Bayes factors more generally, it is straightforward and natural in this context to compute them. To be clear, are now advocating a very different use of Bayes factors than we described previously on :ref:`this page<bayesfactors>`. Now, we are computing the Bayes factor associated with a rate shift on a particular branch of our phylogeny. This provides us with a robust measure of evidence for a rate shift on a particular branch that is effectively independent of the effects of whatever prior parameter we placed on the number of shift events. 
+As explained :ref:`here<bayesfactorbranches>`, we can compute the Bayes factors associated with a shift on a particular branch. Despite numerous difficulties associated with computing Bayes factors more generally, it is straightforward and natural in this context to compute them. To be clear, we are now advocating a very different use of Bayes factors than we described previously on :ref:`this page<bayesfactors>`. Now, we are computing the Bayes factor associated with a rate shift on a particular branch of our phylogeny. This provides us with a robust measure of evidence for a rate shift on a particular branch that is effectively independent of the effects of whatever prior parameter we placed on the number of shift events. 
 
 To compute the Bayes factors for the *topological location* of rate shifts on our tree, we first compute the probability of a rate shift on each branch of our phylogeny under the prior alone::
 
@@ -392,7 +392,7 @@ For the whales, you can see that a single branch has overwhelming evidence for a
 	bftree$edge[edgemax ,2] 
 	# this should give node 141 for the whales...
 	
-Use of Bayes factors in this context has many advantages. Suppose that you have two branches, one of which is very short and the other of which is very long. Under the prior alone, you'd expect a higher marginal probability of a rate shift on the long branch. In fact, the relative probability of a shift on the longer branch should be exactly equal to the ratio of the branch lengths. Now, imagine that both branches have a marginal shift probability of 0.8. The Bayes factor analysis of shift probabilities would find much stronger evidence for a rate shift on the short branch, because it is it has a *lower prior probability of a shift*. This tells us that there's actually more evidence for a shift on the short branch, because the data contained enough evidence to actually push the posterior further away from the prior, relative to the long branch.
+Use of Bayes factors in this context has many advantages. Suppose that you have two branches, one of which is very short and the other of which is very long. Under the prior alone, you'd expect a higher marginal probability of a rate shift on the long branch. In fact, the relative probability of a shift on the longer branch should be exactly equal to the ratio of the branch lengths. Now, imagine that both branches have a marginal shift probability of 0.8. The Bayes factor analysis of shift probabilities would find much stronger evidence for a rate shift on the short branch, because it has a *lower prior probability of a shift*. This tells us that there's actually more evidence for a shift on the short branch, because the data contained enough evidence to actually push the posterior further away from the prior, relative to the long branch.
 
 
 Clade-specific evolutionary rates
@@ -441,13 +441,13 @@ Rate-through-time analysis
 
 .. _bammtoolsRTT:
 
-Plotting rate-through-time curve (example :ref:`here<bammgraphgallery6>`) is trivial. BAMM's built-in function ``plotRateThroughTime`` makes it easy to generate plots of rates through time::
+Plotting a rate-through-time curve (example :ref:`here<bammgraphgallery6>`) is trivial. BAMM's built-in function ``plotRateThroughTime`` makes it easy to generate plots of rates through time::
 
 	plotRateThroughTime(edata, ratetype="speciation")
 	
 should produce a plot with density shading on confidence regions for your speciation-through-time curve. See help on this function for more details about tweaking the plot. This function can take awhile to run, because it generates a rate-through-time matrix that includes all samples in the posterior distribution. 
 
-You can also use ``plotRateThroughTime`` to plot speciation through time curves for just portion of your phylogeny. We can do this by feeding a node number in to ``plotRateThroughTime``, and the function will just compute and plot the rates for this subtree. To find a particular node number for your tree, you can plot the tree (using ape), and then plot your node numbers directly on the tree, like this::
+You can also use ``plotRateThroughTime`` to plot speciation through time curves for just a portion of your phylogeny. We can do this by feeding a node number in to ``plotRateThroughTime``, and the function will just compute and plot the rates for this subtree. To find a particular node number for your tree, you can plot the tree (using ape), and then plot your node numbers directly on the tree, like this::
 
 	plot.phylo(whales)
 	nodelabels(whales)
@@ -490,7 +490,7 @@ and to do a simple no-frills plot::
 
 	plot(meanTraitRate ~ rtt$times)
 	
-You can also include- and exclude nodes from the calculation of the rate-through-time matrix (assuming you know the node to exclude or include)::
+You can also include and exclude nodes from the calculation of the rate-through-time matrix (assuming you know the node to exclude or include)::
 
 	rtt_subtree <- getRateThroughTimeMatrix(edata, node = mrca)
 	
@@ -502,7 +502,7 @@ Macroevolutionary cohort analysis
 
 .. _cohorts:
 
-Macroevolutionary cohort analysis provides a way of summarizing the extent to which species share correlated macroevolutionary dynamics. The method is explained in this (`Systematic Biology article <http://sysbio.oxfordjournals.org/content/early/2014/04/01/sysbio.syu025>`_). The basic idea is to visualize the pairwise probabilities that any two species share a common macroevolutionary rate regime. The first step is to generate a cohort matrix, which contains the pairwise probabilities of shared macroevolutionary dynamics. This is then passed to the ``cohorts`` function, which generates the plot::
+Macroevolutionary cohort analysis provides a way of summarizing the extent to which species share correlated macroevolutionary dynamics. The method is explained in this (`Systematic Biology article <http://sysbio.oxfordjournals.org/content/63/4/610>`_). The basic idea is to visualize the pairwise probabilities that any two species share a common macroevolutionary rate regime. The first step is to generate a cohort matrix, which contains the pairwise probabilities of shared macroevolutionary dynamics. This is then passed to the ``cohorts`` function, which generates the plot::
 
 	data(events.whales, whales)
 	edata <- getEventData(whales, events.whales, burnin=0.1)
