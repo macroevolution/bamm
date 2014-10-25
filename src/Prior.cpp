@@ -53,7 +53,17 @@ Prior::~Prior()
 
 double Prior::lambdaShiftPrior(double x)
 {
-    return Stat::lnNormalPDF(x, 0.0, std::sqrt(_lambdaShiftPrior));
+ 
+    
+    // NOTE: bug discovered 10.25.2014, not sure when this was introduced.
+    // was sending stdev^0.5 to lnNormalPDF rather than stdev
+    //      (Stat::lnNormalPDF takes stdev as an argument).
+    // The prior is a standard deviation, not variance
+    
+    // Bug version:
+    //return Stat::lnNormalPDF(x, 0.0, std::sqrt(_lambdaShiftPrior));
+    
+    return Stat::lnNormalPDF(x, 0.0,  _lambdaShiftPrior);
 }
 
 
@@ -101,7 +111,11 @@ double Prior::generateMuInitFromPrior()
 
 double Prior::muShiftPrior(double x)
 {
-    return Stat::lnNormalPDF(x, 0.0, std::sqrt(_muShiftPrior));
+ 
+    // Bug version: 10.25.2014
+    // see above, lambdaShiftPrior
+    //return Stat::lnNormalPDF(x, 0.0, std::sqrt(_muShiftPrior));
+    return Stat::lnNormalPDF(x, 0.0, _muShiftPrior);
 }
 
 
@@ -151,7 +165,11 @@ double Prior::generateBetaInitFromPrior()
 
 double Prior::betaShiftPrior(double x)
 {
-    return Stat::lnNormalPDF(x, 0.0, std::sqrt(_betaShiftPrior));
+
+    
+    // Bug version, fixed 10.25.2014
+    //return Stat::lnNormalPDF(x, 0.0, std::sqrt(_betaShiftPrior));
+    return Stat::lnNormalPDF(x, 0.0, _betaShiftPrior);
 }
 
 
@@ -187,6 +205,10 @@ double Prior::lambdaShiftRootPrior(double x)
     if (fabs(_lambdaShiftRootPrior + 1) < _UPDATE_TOL) {
         return lambdaShiftPrior(x);
     } else {
+        //TODO: what is going on here?
+        // lambdaShiftRootPrior has been deprecated,
+        // but why is this implemented as an exponential???
+        
         return Stat::lnExponentialPDF(x, _lambdaShiftRootPrior);
     }
 }
@@ -207,6 +229,10 @@ double Prior::muShiftRootPrior(double x)
     if (fabs(_muShiftRootPrior + 1) < _UPDATE_TOL) {
         return muShiftPrior(x);
     } else {
+        //TODO: what is going on here?
+        // muShiftRootPrior has been deprecated,
+        // but why is this implemented as an exponential???
+        
         return Stat::lnExponentialPDF(x, _muShiftRootPrior);
     }
 }
@@ -227,6 +253,9 @@ double Prior::betaShiftRootPrior(double x)
     if (fabs(_betaShiftRootPrior + 1) < _UPDATE_TOL) {
         return betaShiftPrior(x);
     } else {
+        //TODO: what is going on here?
+        // betaShiftRootPrior has been deprecated,
+        // but why is this implemented as an exponential???
         return Stat::lnExponentialPDF(x, _betaShiftRootPrior);
     }
 }
