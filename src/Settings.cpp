@@ -165,6 +165,7 @@ void Settings::initializeGlobalSettings()
     // fastSimulatePrior_SampleFreq = sampling frequency for fastSimulation of prior
     // fastSimulatePrior_BurnIn = fraction of samples to be discarded as burnin.
 
+    
 }
 
 
@@ -214,6 +215,13 @@ void Settings::initializeSpeciationExtinctionSettings()
     // Maximum value of extinction probability on branch that will be tolerated:
     // to avoid numerical overflow issues (especially rounding to 1)
     addParameter("extinctionProbMax", "0.999", NotRequired);
+    
+    
+    // Parameters for fossilBAMM
+    addParameter("preservationRateInit", "0", NotRequired);
+    addParameter("observationTime", "-1", NotRequired);
+    addParameter("numberOccurrences", "-1", NotRequired);
+    
 }
 
 

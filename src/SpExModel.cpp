@@ -34,6 +34,39 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
     _muInit0 = _settings.get<double>("muInit0");
     _muShift0 = _settings.get<double>("muShift0");
 
+    
+    // Initialize fossil preservation rate:
+    _preservationRate = _settings.get<double>("preservationRateInit");
+    
+    
+    
+    // Observation time of tree:
+    _observationTime = _settings.get<double>("observationTime");
+    if (_observationTime <= 0){
+        _observationTime = _tree->getAge();
+    }else if ( _observationTime < _tree->getAge() ){
+        std::cout << "WARNING: invalid initial observation time" << std::endl;
+        std::cout << "\t... setting observationTime to tree MAX TIME" << std::endl;
+        _observationTime = _tree->getAge();
+    }
+    
+    std::cout << "Observation time (from root): " << _observationTime << std::endl;
+    
+    // initialize occurrence count:
+    _numberOccurrences = _settings.get<double>("numberOccurrences");
+    if (_numberOccurrences > 0){
+        // Good. User-defined.
+    }else{
+        // count fossil occurrences in tree.
+        // Must be able to handle extant-only tree, eg zero value
+        std::cout << "Must have valid number of occurrences specified" << std::endl;
+        throw;
+    }
+    
+    
+    
+    //_tree->printInitialSpeciationExtinctionRates();
+     
     double timeVarPrior = _settings.get<double>("lambdaIsTimeVariablePrior");
     if (timeVarPrior == 0.0) {
         _initialLambdaIsTimeVariable = false;
@@ -229,6 +262,13 @@ BranchEvent* SpExModel::newBranchEventFromLastDeletedEvent()
 }
 
 
+// TODO: Not transparent, but this is where
+//  Di for internal nodes is being set to 1.0
+//  Also, I think an error has been introduced here.
+//  Looks like the backbone nodes are always being set to 1.0
+//  but this must be checked.
+//  Is this correctly handling the initial sampling probabilities
+//    for the backbone of the tree? Must check Ei settings.
 double SpExModel::computeLogLikelihood()
 {
     if (_sampleFromPriorOnly)
@@ -254,17 +294,73 @@ double SpExModel::computeLogLikelihood()
         }
     }
 
+    logLikelihood += computePreservationLogProb();
+    
     return logLikelihood;
 }
 
 
 double SpExModel::computeSpExProbBranch(Node* node)
 {
+   
     double logLikelihood = 0.0;
 
     double D0 = node->getDinit();    // Initial speciation probability
     double E0 = node->getEinit();    // Initial extinction probability
+    
+    // 3 scenarios:
+    //   i. node is extant tip
+    //   ii. node is fossil last occurrence, an unsampled or extinct tip
+    //   iii. node is internal. Will now treat separately.
+    //  case i and iii can be treated the same
+    
+    
+    // Test if node is extant
+    bool isExtant = (std::abs(node->getTime() - _observationTime)) < 0.00001;
+    //std::cout << node->getTime() << "\t" << isExtant << std::endl;
+    
+    /****************/
 
+    
+    if (node->getLfDesc() == NULL & node->getRtDesc() == NULL & !isExtant){
+    // case 1: node is fossil tip
+    
+        double ddt = _observationTime - node->getTime();
+        
+        double startTime = node->getBrlen() + ddt;
+        double endTime = startTime;
+        
+        while (startTime > node->getBrlen()){
+            startTime -= _segLength;
+            if (startTime < node->getBrlen() ){
+                startTime = node->getBrlen();
+            }
+            double deltaT = endTime - startTime;
+            
+            double curLam = node->computeSpeciationRateIntervalRelativeTime
+            (startTime, endTime);
+            
+            double curMu = node->computeExtinctionRateIntervalRelativeTime
+            (startTime, endTime);
+            
+            double spProb = 0.0;
+            double exProb = 0.0;
+        
+            computeSpExProb(spProb, exProb, curLam, curMu, D0, E0, deltaT);           
+            
+            E0 = exProb;
+            
+        }
+        
+        // Prob that lineage went extinct before present
+        logLikelihood += log(E0);
+        
+        // current value of E0 can now be passed on for
+        // calculation down remainder of branch (eg, the observed segement)
+ 
+    }
+    
+    
     double startTime = node->getBrlen();
     double endTime = node->getBrlen();
 
@@ -296,7 +392,7 @@ double SpExModel::computeSpExProbBranch(Node* node)
 
         endTime = startTime;
     }
-
+    
     // What to use as E0 for the start of next downstream branch?
     // At this point, E0 is actually the E0 for the parent node.
     // Here, we will arbitrarily take this to be the left extinction value
@@ -305,6 +401,7 @@ double SpExModel::computeSpExProbBranch(Node* node)
         parent->setEinit(E0);
     }
 
+    
     // Clearly a problem if extinction values approaching/equaling 1.0
     // If so, set to -Inf, leading to automatic rejection of state
     if (E0 > _extinctionProbMax) {
@@ -351,7 +448,9 @@ double SpExModel::computeSpExProbBranch(Node* node)
 //
 //                (1 - E0) * M
 //     E(t) = 1 + ------------
-//                      d
+//
+
+// TODO:: fix this equation for the fossil process
 
 void SpExModel::computeSpExProb(double& spProb, double& exProb,
     double lambda, double mu, double D0, double E0, double deltaT)
@@ -397,3 +496,14 @@ double SpExModel::computeLogPrior()
 
     return logPrior;
 }
+
+
+double SpExModel::computePreservationLogProb()
+{
+    double logLik = _numberOccurrences * std::log(_preservationRate);
+    return logLik;
+}
+
+
+
+

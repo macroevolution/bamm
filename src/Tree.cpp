@@ -1117,26 +1117,54 @@ Node* Tree::chooseInternalNodeAtRandom()
     Etip gets set for all nodes for global sampling probability
 
 */
+
+// Modified 11.23.2014 to set D0 and E0 probabilities
+//    for fossil tips (probable extinct lineages but tips)
+
+// TODO: check initialization for incomplete sampling for fossil process
 void Tree::initializeSpeciationExtinctionModel(double sampFrac)
 {
     double  speciationInit = sampFrac;
     double  extinctionInit = (double)1 - sampFrac;
 
+    
+    
     for (std::vector<Node*>::iterator myIt = _preOrderNodes.begin();
             myIt != _preOrderNodes.end(); ++myIt) {
         if ((*myIt)->getLfDesc() == NULL && (*myIt)->getRtDesc() == NULL) {
-            (*myIt)->setDinit(speciationInit);
-            (*myIt)->setEinit(extinctionInit);
+            
+            bool isExtant = (std::abs(getAge() - (*myIt)->getTime() )) <= 0.0001;
+          
+            // FOSSIL: reversing initial conditions
+            //     depending on if fossil or extant tip
+            if (isExtant){
+                (*myIt)->setDinit(speciationInit);
+                (*myIt)->setEinit(extinctionInit);
+            }else{
+                (*myIt)->setDinit(extinctionInit);
+                (*myIt)->setEinit(speciationInit);
+            }
+            
+
         }
         (*myIt)->setEtip(extinctionInit); // Set
     }
 }
 
+// This does not work with the fossil process yet.
 
 void Tree::initializeSpeciationExtinctionModel(std::string fname)
 {
+    
+    // Tree must be ultrametric to use this option
+    // TODO: this check for ultrametric must be more informative
+    
+    assertTreeIsUltrametric();
+    
     std::ifstream infile(fname.c_str());
 
+    
+    
     if (!infile.good()) {
         log(Error) << "Bad sampling fraction file.\n";
         std::exit(1);

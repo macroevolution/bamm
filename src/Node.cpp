@@ -479,8 +479,10 @@ double Node::getPointExtinction(double branchtime)
 double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
         double tstop)
 {
-
-    if ((tstart >= tstop) | (tstart < 0) | (tstop > getBrlen()) ) {
+    // For FOSSIL process, do not check if tstop > getBrlen()
+    //if ((tstart >= tstop) | (tstart < 0) | (tstop > getBrlen()) ) {
+    
+    if ((tstart >= tstop) | (tstart < 0) ) {
         std::cout << "Invalid arguments to Node::computeSPeciationRateIntervalRelativeTime"
              << std::endl;
         throw;
@@ -577,11 +579,16 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
 double Node::computeExtinctionRateIntervalRelativeTime(double tstart,
         double tstop)
 {
-    if ((tstart >= tstop) | (tstart < 0) | (tstop > getBrlen()) ) {
-        log(Error) << "Invalid arguments to "
-            "Node::computeExtinctionRateIntervalRelativeTime.\n";
-        std::exit(1);
+
+    // For FOSSIL process, do not check if tstop > getBrlen()
+    //if ((tstart >= tstop) | (tstart < 0) | (tstop > getBrlen()) ) {
+    
+    if ((tstart >= tstop) | (tstart < 0) ) {
+        std::cout << "Invalid arguments to Node::computeExtinctionRateIntervalRelativeTime"
+        << std::endl;
+        throw;
     }
+
 
     BranchHistory* bh = getBranchHistory();
 

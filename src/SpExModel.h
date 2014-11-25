@@ -24,7 +24,7 @@ public:
 
     virtual double computeLogLikelihood();
     virtual double computeLogPrior();
-
+ 
 	// Methods for auto-tuning
 	void setUpdateLambdaInitScale(double x);
 	void setUpdateMuInitScale(double x);
@@ -52,6 +52,10 @@ private:
     void computeSpExProb(double& spProb, double& exProb,
         double lambda, double mu, double D0, double E0, double deltaT);
 
+    
+    double computePreservationLogProb();
+    
+    
     virtual double calculateLogQRatioJump();
 
     // Root event parameters
@@ -77,7 +81,25 @@ private:
     double _readMuShift;
 
     double _extinctionProbMax;
+    
+    //FOSSIL
+    // Fossil preservation rate. Assume 1 value for now.
+    double _preservationRate;
+    // Time at which tree is observed, relative to root
+    double _observationTime;
+    
+    // this will change at some point
+    //   to allow greater flexibility of preservation model
+    double _numberOccurrences;
+    
 };
 
 
 #endif
+
+
+
+
+
+
+
