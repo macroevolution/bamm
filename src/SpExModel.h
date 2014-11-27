@@ -50,7 +50,7 @@ private:
 
     double computeSpExProbBranch(Node* node);
     void computeSpExProb(double& spProb, double& exProb,
-        double lambda, double mu, double D0, double E0, double deltaT);
+        double lambda, double mu, double psi, double D0, double E0, double deltaT);
 
     
     double computePreservationLogProb();

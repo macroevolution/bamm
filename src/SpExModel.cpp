@@ -282,9 +282,20 @@ double SpExModel::computeLogLikelihood()
     for (int i = 0; i < numNodes; i++) {
         Node* node = postOrderNodes[i];
         if (node->isInternal()) {
-            logLikelihood += computeSpExProbBranch(node->getLfDesc());
-            logLikelihood += computeSpExProbBranch(node->getRtDesc());
-
+            
+            
+            double LL = computeSpExProbBranch(node->getLfDesc());
+            double LR = computeSpExProbBranch(node->getRtDesc());
+            
+            std::cout << "main: " << LL << "\t" << LR << std::endl;
+            
+            logLikelihood += LL + LR;
+            
+            //logLikelihood += computeSpExProbBranch(node->getLfDesc());
+            
+ 
+            //logLikelihood += computeSpExProbBranch(node->getRtDesc());
+ 
             // Does not include root node, so it is conditioned
             // on basal speciation event occurring:
             if (node != _tree->getRoot()) {
@@ -294,7 +305,15 @@ double SpExModel::computeLogLikelihood()
         }
     }
 
+    // COMMENT
+    std::cout << "logLik final pre-pres\t" << logLikelihood << std::endl;
+
+    
     logLikelihood += computePreservationLogProb();
+ 
+    // COMMENT
+    std::cout << "logLik final post-pres\t" << logLikelihood << std::endl;
+    
     
     return logLikelihood;
 }
@@ -302,7 +321,10 @@ double SpExModel::computeLogLikelihood()
 
 double SpExModel::computeSpExProbBranch(Node* node)
 {
-   
+    // COMMENT
+    //std::cout << "NOde ID\t" << node << "isInternal: " << node->isInternal();
+    //std::cout << "Dinit: " << node->getDinit() << std::endl;
+    
     double logLikelihood = 0.0;
 
     double D0 = node->getDinit();    // Initial speciation probability
@@ -322,7 +344,7 @@ double SpExModel::computeSpExProbBranch(Node* node)
     /****************/
 
     
-    if (node->getLfDesc() == NULL & node->getRtDesc() == NULL & !isExtant){
+    if (node->isInternal() == false & isExtant == false){
     // case 1: node is fossil tip
     
         double ddt = _observationTime - node->getTime();
@@ -343,18 +365,29 @@ double SpExModel::computeSpExProbBranch(Node* node)
             double curMu = node->computeExtinctionRateIntervalRelativeTime
             (startTime, endTime);
             
+            // TODO: curPsi can be computed once we have interval-specific psi values
+            double curPsi = _preservationRate;
+            
             double spProb = 0.0;
             double exProb = 0.0;
         
-            computeSpExProb(spProb, exProb, curLam, curMu, D0, E0, deltaT);           
+            computeSpExProb(spProb, exProb, curLam, curMu, curPsi, D0, E0, deltaT);
             
             E0 = exProb;
+            
+            endTime = startTime;
             
         }
         
         // Prob that lineage went extinct before present
-        logLikelihood += log(E0);
+        // E0 could be the new D0 for the next calculation
+        //  however, we will factor this out and start with 1.0.
         
+        std::cout << "exprob\t" << E0 << std::endl;
+        
+        logLikelihood += log(E0);
+        node->setDinit(1.0);
+        D0 = 1.0;
         // current value of E0 can now be passed on for
         // calculation down remainder of branch (eg, the observed segement)
  
@@ -378,15 +411,21 @@ double SpExModel::computeSpExProbBranch(Node* node)
         double curMu = node->computeExtinctionRateIntervalRelativeTime
             (startTime, endTime);
 
+        double curPsi = _preservationRate;
+
+        
         double spProb = 0.0;
         double exProb = 0.0;
 
         // Compute speciation and extinction probabilities and store them
         // in spProb and exProb (through reference passing)
-        computeSpExProb(spProb, exProb, curLam, curMu, D0, E0, deltaT);
+        computeSpExProb(spProb, exProb, curLam, curMu, curPsi, D0, E0, deltaT);
 
         logLikelihood += std::log(spProb);
-
+        
+        // COMMENT
+        //std::cout << node << "\t" << spProb << std::endl;
+        
         D0 = 1.0;
         E0 = exProb;
 
@@ -396,11 +435,23 @@ double SpExModel::computeSpExProbBranch(Node* node)
     // What to use as E0 for the start of next downstream branch?
     // At this point, E0 is actually the E0 for the parent node.
     // Here, we will arbitrarily take this to be the left extinction value
+    // TODO: this is not correct if a downstream process occurs
+    // TODO: should have separate function to compute E0 anew at each node
+    //       at each node, should check if there are any events on path
+    //       between node and the tip; if not, just use computed value of E0
+    //       otherwise must compute it over again.
+    //       This calculation could be very inefficient if not given some thought
+    //            because for 99% of nodes, one should not have to recompute this.
+
     Node* parent = node->getAnc();
     if (node == parent->getLfDesc()) {
         parent->setEinit(E0);
     }
 
+    // COMMENT
+    std::cout << node->getBrlen() << "\t" << logLikelihood << std::endl;
+    //std::cout << "ExProb: " << E0 << "\tLogLik\t" << logLikelihood << std::endl;
+    
     
     // Clearly a problem if extinction values approaching/equaling 1.0
     // If so, set to -Inf, leading to automatic rejection of state
@@ -413,12 +464,20 @@ double SpExModel::computeSpExProbBranch(Node* node)
     if (parent == _tree->getRoot()) {
         logLikelihood -= std::log(1.0 - E0);
     }
-
+    
     return logLikelihood;
 }
 
 
-// If we let
+//  Notes for the fossil process:
+//
+//      
+//
+//
+
+////////////  Notes for the non-fossil process
+//
+//  If we let:
 //
 //     M = mu - lam
 //     L = lam * (1.0 - E0)
@@ -453,6 +512,29 @@ double SpExModel::computeSpExProbBranch(Node* node)
 // TODO:: fix this equation for the fossil process
 
 void SpExModel::computeSpExProb(double& spProb, double& exProb,
+                                double lambda, double mu, double psi, double D0, double E0, double deltaT)
+{
+    
+    double FF = lambda - mu - psi;
+    double c1 = std::abs(std::sqrt( FF * FF  + (4.0 * lambda * psi) ));
+    double c2 = (-1.0) * (FF - 2.0 * lambda * (1.0 - E0)) / c1;
+    
+    double A = std::exp((-1.0) * c1 * deltaT) * (1.0 - c2);
+    double B = c1 * (A - (1 + c2)) / (A + (1.0 + c2));
+    
+    exProb = (lambda + mu + psi + B)/ (2.0 * lambda);
+    
+    // splitting up the speciation calculation denominator:
+    
+    double X = std::exp(c1 * deltaT) * (1.0 + c2)*(1.0 + c2);
+    double Y = std::exp((-1.0) * c1 * deltaT) * (1.0 - c2) * (1.0 - c2);
+    
+    spProb = (4.0 * D0) / ( (2.0 * ( 1 - (c2 * c2)) ) + X + Y );
+
+}
+
+/*
+void SpExModel::computeSpExProb(double& spProb, double& exProb,
     double lambda, double mu, double D0, double E0, double deltaT)
 {
     double M = mu - lambda;
@@ -464,6 +546,12 @@ void SpExModel::computeSpExProb(double& spProb, double& exProb,
     spProb = (D0 * m * M) / sqr(d);
     exProb = 1.0 + (1.0 - E0) * M / d;
 }
+*/
+
+
+
+
+
 
 
 double SpExModel::computeLogPrior()

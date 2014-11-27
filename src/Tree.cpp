@@ -1132,18 +1132,24 @@ void Tree::initializeSpeciationExtinctionModel(double sampFrac)
     for (std::vector<Node*>::iterator myIt = _preOrderNodes.begin();
             myIt != _preOrderNodes.end(); ++myIt) {
         if ((*myIt)->getLfDesc() == NULL && (*myIt)->getRtDesc() == NULL) {
+
+            (*myIt)->setDinit(speciationInit);
+            (*myIt)->setEinit(extinctionInit);
             
-            bool isExtant = (std::abs(getAge() - (*myIt)->getTime() )) <= 0.0001;
+            // This line unnecessary
+            //bool isExtant = (std::abs(getAge() - (*myIt)->getTime() )) <= 0.0001;
           
-            // FOSSIL: reversing initial conditions
-            //     depending on if fossil or extant tip
-            if (isExtant){
-                (*myIt)->setDinit(speciationInit);
-                (*myIt)->setEinit(extinctionInit);
-            }else{
-                (*myIt)->setDinit(extinctionInit);
-                (*myIt)->setEinit(speciationInit);
-            }
+            // FOSSIL: initial conditions should be same as for
+            //     extant tip
+            
+            // These lines are bad logic & bad math I think
+            //if (isExtant){
+            //  (*myIt)->setDinit(speciationInit);
+            //  (*myIt)->setEinit(extinctionInit);
+            //}else{
+            //  (*myIt)->setDinit(extinctionInit);
+            //  (*myIt)->setEinit(speciationInit);
+            //}
             
 
         }
