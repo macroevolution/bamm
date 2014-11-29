@@ -217,10 +217,18 @@ void Settings::initializeSpeciationExtinctionSettings()
     addParameter("extinctionProbMax", "0.999", NotRequired);
     
     
+    
+    /********************************************************/
     // Parameters for fossilBAMM
+    
     addParameter("preservationRateInit", "0", NotRequired);
     addParameter("observationTime", "-1", NotRequired);
     addParameter("numberOccurrences", "-1", NotRequired);
+    addParameter("updateRatePreservationRate", "-1", NotRequired);
+    addParameter("updatePreservationRateScale", "1.0", NotRequired);
+    addParameter("preservationRatePrior", "1.0", NotRequired);
+    
+    /*********************************************************/
     
 }
 

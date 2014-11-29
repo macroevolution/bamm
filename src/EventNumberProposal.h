@@ -51,5 +51,5 @@ private:
     BranchEvent* _lastEventChanged;
 };
 
-
+   
 #endif

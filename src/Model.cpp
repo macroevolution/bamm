@@ -7,6 +7,8 @@
 #include "EventNumberForBranchProposal.h"
 #include "MoveEventProposal.h"
 #include "EventRateProposal.h"
+ 
+
 #include "Node.h"
 #include "BranchEvent.h"
 #include "BranchHistory.h"
@@ -45,6 +47,7 @@ Model::Model(Random& random, Settings& settings) :
     _proposals.push_back(new MoveEventProposal(random, settings, *this));
     _proposals.push_back
         (new EventRateProposal(random, settings, *this, _prior));
+
 }
 
 

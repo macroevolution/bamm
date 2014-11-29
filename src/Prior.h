@@ -50,6 +50,9 @@ public:
 
     bool generateBetaIsTimeVariableFromPrior();
     
+    double preservationRatePrior(double);
+    
+    
 // Root priors:
     
     double lambdaShiftRootPrior(double);
@@ -120,6 +123,9 @@ private:
     double _updateRateBetaShift;
 
     double _poissonRatePrior;
+    
+    double _preservationRatePrior;
+    
 };
 
 

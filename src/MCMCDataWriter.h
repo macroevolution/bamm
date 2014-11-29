@@ -26,8 +26,11 @@ private:
 
     std::string _outputFileName;
     int _outputFreq;
-
+    
     std::ofstream _outputStream;
+
+    bool _hasPreservationRate;
+
 };
 
 

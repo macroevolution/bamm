@@ -2,6 +2,12 @@
 #include "Settings.h"
 #include "Model.h"
 
+// TODO: make abstract class for MCMC datawriter with derived classes
+//                              than can handle fossils
+//  Then no more need to declare SpExModel.h here.
+
+#include "SpExModel.h"
+
 #include <iostream>
 
 
@@ -9,10 +15,20 @@ MCMCDataWriter::MCMCDataWriter(Settings& settings) :
     _outputFileName(settings.get("mcmcOutfile")),
     _outputFreq(settings.get<int>("mcmcWriteFreq"))
 {
+    
+    if (settings.get<double>("updateRatePreservationRate") > 0){
+        _hasPreservationRate = true;
+    }else{
+        _hasPreservationRate = false;
+    }
+    
+    
     if (_outputFreq > 0) {
         initializeStream();
         writeHeader();
     }
+    
+
 }
 
 
@@ -30,7 +46,11 @@ void MCMCDataWriter::writeHeader()
 
 std::string MCMCDataWriter::header()
 {
-    return "generation,N_shifts,logPrior,logLik,eventRate,acceptRate";
+    if (_hasPreservationRate){
+        return "generation,N_shifts,logPrior,logLik,eventRate,preservationRate,acceptRate";
+    }else{
+        return "generation,N_shifts,logPrior,logLik,eventRate,acceptRate";    
+    }
 }
 
 
@@ -48,10 +68,30 @@ void MCMCDataWriter::writeData(int generation, Model& model)
         return;
     }
 
-    _outputStream << generation                      << ","
-                  << model.getNumberOfEvents()       << ","
-                  << model.computeLogPrior()         << ","
-                  << model.getCurrentLogLikelihood() << ","
-                  << model.getEventRate()            << ","
-                  << model.getMHAcceptanceRate()     << std::endl;
+    if (_hasPreservationRate == false){
+        _outputStream << generation                        << ","
+                  << model.getNumberOfEvents()             << ","
+                  << model.computeLogPrior()               << ","
+                  << model.getCurrentLogLikelihood()       << ","
+                  << model.getEventRate()                  << ","
+                  << model.getMHAcceptanceRate()           << std::endl;
+    }else{
+       
+        double prate = static_cast<SpExModel*>(&model)->getPreservationRate();
+        
+        _outputStream << generation                        << ","
+        << model.getNumberOfEvents()                       << ","
+        << model.computeLogPrior()                         << ","
+        << model.getCurrentLogLikelihood()                 << ","
+        << model.getEventRate()                            << ","
+        << prate    << ","
+        << model.getMHAcceptanceRate()                     << std::endl;
+    
+    }
+    
+
 }
+
+
+
+

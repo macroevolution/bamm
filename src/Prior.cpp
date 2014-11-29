@@ -29,6 +29,12 @@ Prior::Prior(Random& random, Settings* settings) : _random(random)
         _updateRateMu0 = settings->get<double>("updateRateMu0");
         _updateRateLambdaShift = settings->get<double>("updateRateLambdaShift");
         _updateRateMuShift = settings->get<double>("updateRateMuShift");
+        
+        /***************************/
+        _preservationRatePrior = settings->get<double>("preservationRatePrior");
+        
+        
+        
     } else if (modelType == "trait") {
         _betaInit = settings->get<double>("betaInit");
         _betaShiftInit = settings->get<double>("betaShiftInit");
@@ -259,3 +265,10 @@ double Prior::betaShiftRootPrior(double x)
         return Stat::lnExponentialPDF(x, _betaShiftRootPrior);
     }
 }
+
+ 
+double Prior::preservationRatePrior(double x)
+{
+    return Stat::lnExponentialPDF(x, _preservationRatePrior);
+}
+

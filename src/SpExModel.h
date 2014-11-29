@@ -25,6 +25,9 @@ public:
     virtual double computeLogLikelihood();
     virtual double computeLogPrior();
  
+    double getPreservationRate();
+    void setPreservationRate(double x);
+    
 	// Methods for auto-tuning
 	void setUpdateLambdaInitScale(double x);
 	void setUpdateMuInitScale(double x);
@@ -93,6 +96,17 @@ private:
     double _numberOccurrences;
     
 };
+
+
+inline double SpExModel::getPreservationRate(void)
+{
+    return _preservationRate;
+}
+
+inline void SpExModel::setPreservationRate(double x)
+{
+    _preservationRate = x;
+}
 
 
 #endif

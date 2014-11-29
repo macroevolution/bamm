@@ -24,6 +24,9 @@ void EventRateProposal::propose()
     _proposedEventRate = _cterm * _currentEventRate;
 
     _model.setEventRate(_proposedEventRate);
+    
+    
+    
 }
 
 

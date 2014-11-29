@@ -12,6 +12,8 @@
 #include "MuInitProposal.h"
 #include "MuShiftProposal.h"
 #include "LambdaTimeModeProposal.h"
+#include "PreservationRateProposal.h"
+
 #include "Log.h"
 #include "Prior.h"
 #include "Tools.h"
@@ -20,7 +22,7 @@
 #include <cmath>
 #include <vector>
 #include <string>
-
+   
 
 #define JUMP_VARIANCE_NORMAL 0.05
 
@@ -133,6 +135,8 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
     _proposals.push_back(new MuInitProposal(random, settings, *this, _prior));
     _proposals.push_back(new MuShiftProposal(random, settings, *this, _prior));
     _proposals.push_back(new LambdaTimeModeProposal(random, settings, *this));
+
+    _proposals.push_back(new PreservationRateProposal(random, settings, *this, _prior));
 
     Model::calculateUpdateWeights();
 }
@@ -287,7 +291,7 @@ double SpExModel::computeLogLikelihood()
             double LL = computeSpExProbBranch(node->getLfDesc());
             double LR = computeSpExProbBranch(node->getRtDesc());
             
-            std::cout << "main: " << LL << "\t" << LR << std::endl;
+            //std::cout << "main: " << LL << "\t" << LR << std::endl;
             
             logLikelihood += LL + LR;
             
@@ -306,13 +310,13 @@ double SpExModel::computeLogLikelihood()
     }
 
     // COMMENT
-    std::cout << "logLik final pre-pres\t" << logLikelihood << std::endl;
+    //std::cout << "logLik final pre-pres\t" << logLikelihood << std::endl;
 
     
     logLikelihood += computePreservationLogProb();
  
     // COMMENT
-    std::cout << "logLik final post-pres\t" << logLikelihood << std::endl;
+    //std::cout << "logLik final post-pres\t" << logLikelihood << std::endl;
     
     
     return logLikelihood;
@@ -339,6 +343,8 @@ double SpExModel::computeSpExProbBranch(Node* node)
     
     // Test if node is extant
     bool isExtant = (std::abs(node->getTime() - _observationTime)) < 0.00001;
+    
+    // COMMENT
     //std::cout << node->getTime() << "\t" << isExtant << std::endl;
     
     /****************/
@@ -383,7 +389,8 @@ double SpExModel::computeSpExProbBranch(Node* node)
         // E0 could be the new D0 for the next calculation
         //  however, we will factor this out and start with 1.0.
         
-        std::cout << "exprob\t" << E0 << std::endl;
+        // COMMENT
+        //std::cout << "exprob\t" << E0 << std::endl;
         
         logLikelihood += log(E0);
         node->setDinit(1.0);
@@ -449,7 +456,7 @@ double SpExModel::computeSpExProbBranch(Node* node)
     }
 
     // COMMENT
-    std::cout << node->getBrlen() << "\t" << logLikelihood << std::endl;
+    //std::cout << node->getBrlen() << "\t" << logLikelihood << std::endl;
     //std::cout << "ExProb: " << E0 << "\tLogLik\t" << logLikelihood << std::endl;
     
     
@@ -509,7 +516,9 @@ double SpExModel::computeSpExProbBranch(Node* node)
 //     E(t) = 1 + ------------
 //
 
-// TODO:: fix this equation for the fossil process
+// TODO:: Full document equations.
+//          equations above are for reconstructed process only.
+//          equations as implemented allow for fossilized process.
 
 void SpExModel::computeSpExProb(double& spProb, double& exProb,
                                 double lambda, double mu, double psi, double D0, double E0, double deltaT)
