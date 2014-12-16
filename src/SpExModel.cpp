@@ -273,6 +273,11 @@ BranchEvent* SpExModel::newBranchEventFromLastDeletedEvent()
 //  but this must be checked.
 //  Is this correctly handling the initial sampling probabilities
 //    for the backbone of the tree? Must check Ei settings.
+//
+//  DLR comment 12.15.2014
+//      Not sure about above comment, looks OK to me.
+//
+
 double SpExModel::computeLogLikelihood()
 {
     if (_sampleFromPriorOnly)
@@ -410,6 +415,9 @@ double SpExModel::computeSpExProbBranch(Node* node)
             startTime = 0.0;
         }
 
+        // Important param for E0 calculations:
+        int n_events = node->getBranchHistory()->getNumberOfEventsOnInterval(startTime, endTime);
+        
         double deltaT = endTime - startTime;
 
         double curLam = node->computeSpeciationRateIntervalRelativeTime
@@ -434,7 +442,65 @@ double SpExModel::computeSpExProbBranch(Node* node)
         //std::cout << node << "\t" << spProb << std::endl;
         
         D0 = 1.0;
-        E0 = exProb;
+        
+        // E0 calculations:
+        //     See if branch event occurred on segment.
+        //     If no event occurred:
+        //         If still on branch
+        //             set next E0 to exProb
+        //         If reached end of branch:
+        //              Set E0 for parent node to exProb
+        //     If event occurred on segment:
+        //         Recompute E0 from next tstart, using
+        //           node event from ancestor
+        //         If reached end of branch:
+        //           set ancestral nodel to this new E0
+        
+        if (n_events == 0){
+            E0 = exProb;
+        }else{
+            // recompute E0.
+            // A bit of a pain as we have to
+            //   redo this from the present backwards in time, piecewise.
+            // Should be same calculation as for case above where node
+            //   is a fossil tip.
+            
+            double ddt = _observationTime - node->getTime();
+            double st = node->getBrlen() + ddt;
+            double et = st;
+            
+            E0 = node->getEtip();
+            
+            while (st > startTime){
+                
+                st -= _segLength;
+                if (st <= startTime){
+                    st = startTime;
+                }
+                double tt = et - st;
+                
+                double clam = node->computeSpeciationRateIntervalRelativeTime
+                (st, et);
+                
+                double cmu = node->computeExtinctionRateIntervalRelativeTime
+                (st, et);
+                
+                double cpsi = _preservationRate;
+                
+                double sprob = 0.0;
+                double eprob = 0.0;
+    
+                computeSpExProb(sprob, eprob, clam, cmu, cpsi, (double)1.0, E0, tt);
+                
+                E0 = eprob;
+                et = st;
+        
+            }
+            
+            
+        }
+    
+        // E0 = exProb;
 
         endTime = startTime;
     }
@@ -442,13 +508,8 @@ double SpExModel::computeSpExProbBranch(Node* node)
     // What to use as E0 for the start of next downstream branch?
     // At this point, E0 is actually the E0 for the parent node.
     // Here, we will arbitrarily take this to be the left extinction value
-    // TODO: this is not correct if a downstream process occurs
-    // TODO: should have separate function to compute E0 anew at each node
-    //       at each node, should check if there are any events on path
-    //       between node and the tip; if not, just use computed value of E0
-    //       otherwise must compute it over again.
-    //       This calculation could be very inefficient if not given some thought
-    //            because for 99% of nodes, one should not have to recompute this.
+    // Will be identical for right and left nodes at this point
+    //      e.g., E0 at parent node coming from right or left descendant
 
     Node* parent = node->getAnc();
     if (node == parent->getLfDesc()) {
@@ -469,6 +530,9 @@ double SpExModel::computeSpExProbBranch(Node* node)
     // To CONDITION on survival, uncomment the line below;
     // or to NOT condition on survival, comment the line below
     if (parent == _tree->getRoot()) {
+        
+        // TODO: E0 should probably be E0^2  in this equation
+        
         logLikelihood -= std::log(1.0 - E0);
     }
     
