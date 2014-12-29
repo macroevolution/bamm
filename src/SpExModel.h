@@ -25,13 +25,24 @@ public:
     virtual double computeLogLikelihood();
     virtual double computeLogPrior();
  
-    double getPreservationRate();
-    void setPreservationRate(double x);
-    
 	// Methods for auto-tuning
+    //   no auto-tuning yet implemented
 	void setUpdateLambdaInitScale(double x);
 	void setUpdateMuInitScale(double x);
 	void setUpdateLambdaShiftScale(double x);
+    
+    
+    // FOSSIL STUFF
+    double getPreservationRate();
+    void setPreservationRate(double x);
+    
+    bool   getHasPaleoData();
+    void   setHasPaleoData(bool x);
+    
+    void   initializeHasPaleoData();
+    
+    // Debugging likelihood function:
+    void   printNodeProbs();
 
 private:
 
@@ -93,7 +104,22 @@ private:
     
     // this will change at some point
     //   to allow greater flexibility of preservation model
-    double _numberOccurrences;
+    int     _numberOccurrences;
+    bool   _hasPaleoData;
+    
+    double _tmpvar;
+    
+    
+    
+    // Debugging
+    std::vector<double> _Dinitvec;
+    std::vector<double> _Dfinalvec;
+    std::vector<double> _Einitvec;
+    std::vector<double> _Efinalvec;
+    int nodeIndexLookup(Node* Node);
+    
+    void initializeDebugVectors();
+    void outputDebugVectors();
     
 };
 
@@ -107,6 +133,19 @@ inline void SpExModel::setPreservationRate(double x)
 {
     _preservationRate = x;
 }
+
+
+inline bool SpExModel::getHasPaleoData()
+{
+    return _hasPaleoData;
+}
+
+
+inline void SpExModel::setHasPaleoData(bool x)
+{
+    _hasPaleoData = x;
+}
+
 
 
 #endif

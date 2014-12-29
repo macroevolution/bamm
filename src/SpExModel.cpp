@@ -22,6 +22,7 @@
 #include <cmath>
 #include <vector>
 #include <string>
+#include <fstream>
    
 
 #define JUMP_VARIANCE_NORMAL 0.05
@@ -37,37 +38,16 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
     _muShift0 = _settings.get<double>("muShift0");
 
     
+    
+    // CHECK for paleontological data
+    _hasPaleoData = false;
+    
+    initializeHasPaleoData();
+    
     // Initialize fossil preservation rate:
+    //      will not be relevant if this is not paleo data.
     _preservationRate = _settings.get<double>("preservationRateInit");
     
-    
-    
-    // Observation time of tree:
-    _observationTime = _settings.get<double>("observationTime");
-    if (_observationTime <= 0){
-        _observationTime = _tree->getAge();
-    }else if ( _observationTime < _tree->getAge() ){
-        std::cout << "WARNING: invalid initial observation time" << std::endl;
-        std::cout << "\t... setting observationTime to tree MAX TIME" << std::endl;
-        _observationTime = _tree->getAge();
-    }
-    
-    std::cout << "Observation time (from root): " << _observationTime << std::endl;
-    
-    // initialize occurrence count:
-    _numberOccurrences = _settings.get<double>("numberOccurrences");
-    if (_numberOccurrences > 0){
-        // Good. User-defined.
-    }else{
-        // count fossil occurrences in tree.
-        // Must be able to handle extant-only tree, eg zero value
-        std::cout << "Must have valid number of occurrences specified" << std::endl;
-        throw;
-    }
-    
-    
-    
-    //_tree->printInitialSpeciationExtinctionRates();
      
     double timeVarPrior = _settings.get<double>("lambdaIsTimeVariablePrior");
     if (timeVarPrior == 0.0) {
@@ -88,11 +68,27 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
     _segLength =
         _settings.get<double>("segLength") * _tree->maxRootToTipLength();
 
+    
+    //// Change from BranchEvent to SpExBranchEvent:
     BranchEvent* x =  new SpExBranchEvent(_lambdaInit0, _lambdaShift0,
         _muInit0, _muShift0, _initialLambdaIsTimeVariable,
         _tree->getRoot(), _tree, _random, 0);
+    
+    
     _rootEvent = x;
     _lastEventModified = x;
+    
+    // DEBUG section
+    //SpExBranchEvent* nbe =  static_cast<SpExBranchEvent*>(x);
+    //std::cout << "Root event parameters: " << std::endl;
+    //std::cout << "\tLambda_init:    " <<  static_cast<SpExBranchEvent*>(x)->getLamInit() << std::endl;
+    //std::cout << "\tLambda_shift:   " << static_cast<SpExBranchEvent*>(x)->getLamShift() << std::endl;
+    //std::cout << "\tMu_init:        " << static_cast<SpExBranchEvent*>(x)->getMuInit() << std::endl;
+    // std::cout << "\tPres_rate:      " << _preservationRate << std::endl;
+    
+    // DEBUG
+    //initializeDebugVectors();
+    
 
     // Set NodeEvent of root node equal to the_rootEvent:
     _tree->getRoot()->getBranchHistory()->setNodeEvent(_rootEvent);
@@ -136,9 +132,70 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
     _proposals.push_back(new MuShiftProposal(random, settings, *this, _prior));
     _proposals.push_back(new LambdaTimeModeProposal(random, settings, *this));
 
-    _proposals.push_back(new PreservationRateProposal(random, settings, *this, _prior));
+    if (_hasPaleoData){
+        // Cannot set this parameter unless you have paleo data....
+        _proposals.push_back(new PreservationRateProposal(random, settings, *this, _prior));
+    }
+
 
     Model::calculateUpdateWeights();
+
+}
+
+
+// Evalates settings and tree to determine if
+// it is a valid instance of a tree with some paleontological data.
+// Sets the _hasPaleoData parameter.
+void SpExModel::initializeHasPaleoData()
+{
+    _numberOccurrences = _settings.get<int>("numberOccurrences");
+    
+    if (_numberOccurrences > 0 & _settings.get<double>("preservationRateInit") < 0.000000001){
+        std::cout << "Invalid initial settings " << std::endl;
+        std::cout << " cannot have <<numberOccurrences>> greater than 0 and " << std::endl;
+        std::cout << " <<preservationRateInit>> equal to zero. Check control file " << std::endl;
+        exit(0);
+    
+    }
+    
+    double updateRatePreservationRate = _settings.get<double>("updateRatePreservationRate");
+    
+    
+    if (_numberOccurrences == 0){
+        _hasPaleoData = false;
+        _observationTime = _tree->getAge();
+        
+        if (getTreePtr()->isUltrametric() == false){
+            std::cout << "Tree must be ultrametric if no fossil data" << std::endl;
+            std::cout << "Exiting...." << std::endl;
+            exit(0);
+        }
+ 
+        if (updateRatePreservationRate > 0.00000001){
+            std::cout << "Attempt to set preservation rate for non-paleo data" << std::endl;
+            std::cout << "This parameter will be ignored..." << std::endl;
+        }
+        
+    }else if (_numberOccurrences > 0){
+        
+        _hasPaleoData = true;
+        
+        // Observation time of tree:
+        _observationTime = _settings.get<double>("observationTime");
+        if (_observationTime <= 0){
+            _observationTime = _tree->getAge();
+        }else if ( _observationTime < _tree->getAge() ){
+            std::cout << "WARNING: invalid initial observation time" << std::endl;
+            std::cout << "\t... setting observationTime to tree MAX TIME" << std::endl;
+            _observationTime = _tree->getAge();
+        }
+        
+    }else{
+        std::cout << "Invalid number of occurrences in controlfile" << std::endl;
+        exit(0);
+    }
+    
+
 }
 
 
@@ -268,20 +325,14 @@ BranchEvent* SpExModel::newBranchEventFromLastDeletedEvent()
 
 // TODO: Not transparent, but this is where
 //  Di for internal nodes is being set to 1.0
-//  Also, I think an error has been introduced here.
-//  Looks like the backbone nodes are always being set to 1.0
-//  but this must be checked.
-//  Is this correctly handling the initial sampling probabilities
-//    for the backbone of the tree? Must check Ei settings.
-//
-//  DLR comment 12.15.2014
-//      Not sure about above comment, looks OK to me.
-//
-
+ 
 double SpExModel::computeLogLikelihood()
 {
     if (_sampleFromPriorOnly)
         return 0.0;
+
+    // DEBUG
+    //printNodeProbs();
 
     double logLikelihood = 0.0;
 
@@ -290,21 +341,14 @@ double SpExModel::computeLogLikelihood()
     const std::vector<Node*>& postOrderNodes = _tree->postOrderNodes();
     for (int i = 0; i < numNodes; i++) {
         Node* node = postOrderNodes[i];
+        
         if (node->isInternal()) {
-            
             
             double LL = computeSpExProbBranch(node->getLfDesc());
             double LR = computeSpExProbBranch(node->getRtDesc());
-            
-            //std::cout << "main: " << LL << "\t" << LR << std::endl;
-            
-            logLikelihood += LL + LR;
-            
-            //logLikelihood += computeSpExProbBranch(node->getLfDesc());
-            
- 
-            //logLikelihood += computeSpExProbBranch(node->getRtDesc());
- 
+
+            logLikelihood += (LL + LR);
+
             // Does not include root node, so it is conditioned
             // on basal speciation event occurring:
             if (node != _tree->getRoot()) {
@@ -314,15 +358,28 @@ double SpExModel::computeLogLikelihood()
         }
     }
 
-    // COMMENT
-    //std::cout << "logLik final pre-pres\t" << logLikelihood << std::endl;
+    
+    if (_hasPaleoData){
+        logLikelihood += computePreservationLogProb();  
+    }
+        
 
-    
-    logLikelihood += computePreservationLogProb();
  
-    // COMMENT
+    // DEBUG mess
     //std::cout << "logLik final post-pres\t" << logLikelihood << std::endl;
+    //std::cout << "In computeLogLikelihood; SpExModel::printNodeProbs" << std::endl;
+    //printNodeProbs();
+    //std::cout << "ommitting lambdas: " << tmpLik << "\tFull: " << logLikelihood << std::endl;
     
+    /*
+    double tmp = 0.0;
+    for (int i = 0; i < postOrderNodes.size(); i++){
+        tmp += _Dfinalvec[i];
+    }
+    std::cout << "computed from D_vec_final: " << tmp << std::endl;
+    std::cout << "ExProb: " << _tmpvar << std::endl;
+    outputDebugVectors();
+    */
     
     return logLikelihood;
 }
@@ -330,14 +387,17 @@ double SpExModel::computeLogLikelihood()
 
 double SpExModel::computeSpExProbBranch(Node* node)
 {
-    // COMMENT
-    //std::cout << "NOde ID\t" << node << "isInternal: " << node->isInternal();
-    //std::cout << "Dinit: " << node->getDinit() << std::endl;
+    // DEBUG
+    //int nodeindex = nodeIndexLookup(node);
+    //std::cout << node << "\t" << node->getRandomRightDesc() << "\t" << node->getRandomLeftDesc() << std::endl;
     
     double logLikelihood = 0.0;
 
     double D0 = node->getDinit();    // Initial speciation probability
     double E0 = node->getEinit();    // Initial extinction probability
+    
+    
+    
     
     // 3 scenarios:
     //   i. node is extant tip
@@ -347,12 +407,17 @@ double SpExModel::computeSpExProbBranch(Node* node)
     
     
     // Test if node is extant
-    bool isExtant = (std::abs(node->getTime() - _observationTime)) < 0.00001;
     
-    // COMMENT
-    //std::cout << node->getTime() << "\t" << isExtant << std::endl;
+    // TODO: This test for "extant" vs "non-extant" can be a problem,
+    //      depending on numerical error etc. There must be some sort of check.
+    //      If lineages that are EXTANT are looped through here,
+    //      you will have massively depressed log-likelihoods as it will compute
+    //      and add extinction likelihoods for extant lineages.
+    //      Problems were observed with simulated trees when the tolerance parameter
+    //      was set to 0.00001, as it was flagging many extant taxa as extinct.
     
-    /****************/
+    bool isExtant = (std::abs(node->getTime() - _observationTime)) < 0.01;
+
 
     
     if (node->isInternal() == false & isExtant == false){
@@ -394,21 +459,28 @@ double SpExModel::computeSpExProbBranch(Node* node)
         // E0 could be the new D0 for the next calculation
         //  however, we will factor this out and start with 1.0.
         
-        // COMMENT
-        //std::cout << "exprob\t" << E0 << std::endl;
-        
         logLikelihood += log(E0);
-        node->setDinit(1.0);
+
+        
+        // TODO:: the next 2 lines: why were they set? In class Tree,
+        //      check that Di and Ei values for tip nodes (extinct or extant) are set correctly.
+        //node->setDinit(1.0);
+        //node->setEinit(E0); // Why is this getting reset???
+        
         D0 = 1.0;
         // current value of E0 can now be passed on for
         // calculation down remainder of branch (eg, the observed segement)
  
     }
     
+    // DEBUG
+    //_Einitvec[nodeindex] = E0;
+    //_Dinitvec[nodeindex] = D0;
+    
     
     double startTime = node->getBrlen();
     double endTime = node->getBrlen();
-
+ 
     while (startTime > 0) {
         startTime -= _segLength;
         if (startTime < 0) {
@@ -437,9 +509,10 @@ double SpExModel::computeSpExProbBranch(Node* node)
         computeSpExProb(spProb, exProb, curLam, curMu, curPsi, D0, E0, deltaT);
 
         logLikelihood += std::log(spProb);
+
+        // DEBUG
+        //_Dfinalvec[nodeindex] += std::log(spProb);
         
-        // COMMENT
-        //std::cout << node << "\t" << spProb << std::endl;
         
         D0 = 1.0;
         
@@ -459,11 +532,16 @@ double SpExModel::computeSpExProbBranch(Node* node)
         if (n_events == 0){
             E0 = exProb;
         }else{
+    
             // recompute E0.
             // A bit of a pain as we have to
             //   redo this from the present backwards in time, piecewise.
             // Should be same calculation as for case above where node
             //   is a fossil tip.
+            // The value E0 at the end of this calculation is passed down through the
+            //   tree so one does need to recompute it.
+            
+            //TODO : doublecheck this section... make sure no variables recycled inappropriately
             
             double ddt = _observationTime - node->getTime();
             double st = node->getBrlen() + ddt;
@@ -499,8 +577,6 @@ double SpExModel::computeSpExProbBranch(Node* node)
             
             
         }
-    
-        // E0 = exProb;
 
         endTime = startTime;
     }
@@ -515,11 +591,10 @@ double SpExModel::computeSpExProbBranch(Node* node)
     if (node == parent->getLfDesc()) {
         parent->setEinit(E0);
     }
-
-    // COMMENT
-    //std::cout << node->getBrlen() << "\t" << logLikelihood << std::endl;
-    //std::cout << "ExProb: " << E0 << "\tLogLik\t" << logLikelihood << std::endl;
     
+    // DEBUG
+    //_Efinalvec[nodeindex] = E0;
+ 
     
     // Clearly a problem if extinction values approaching/equaling 1.0
     // If so, set to -Inf, leading to automatic rejection of state
@@ -529,12 +604,15 @@ double SpExModel::computeSpExProbBranch(Node* node)
 
     // To CONDITION on survival, uncomment the line below;
     // or to NOT condition on survival, comment the line below
-    if (parent == _tree->getRoot()) {
-        
+ 
+    // TODO: add conditional here to condition on survival;
+    //          but must test for paleo tree...
+    //if (node == _tree->getRoot()){
+    
         // TODO: E0 should probably be E0^2  in this equation
-        
-        logLikelihood -= std::log(1.0 - E0);
-    }
+ 
+    //   logLikelihood -= std::log(1.0 - E0);
+    //}
     
     return logLikelihood;
 }
@@ -654,6 +732,11 @@ double SpExModel::computeLogPrior()
 
     // Here's prior density on the event rate
     logPrior += _prior.poissonRatePrior(_eventRate);
+    
+    // Prior density on the preservation rate, if paleo data:
+    if (_hasPaleoData){
+        logPrior += _prior.preservationRatePrior(_preservationRate);
+    }
 
     return logPrior;
 }
@@ -661,9 +744,90 @@ double SpExModel::computeLogPrior()
 
 double SpExModel::computePreservationLogProb()
 {
-    double logLik = _numberOccurrences * std::log(_preservationRate);
+    double logLik = (double)_numberOccurrences * std::log(_preservationRate);
+
     return logLik;
 }
+
+/************************/
+// DEBUG FUNCTIONS BELOW
+
+void SpExModel::printNodeProbs()
+{
+    int numNodes = _tree->getNumberOfNodes();
+    const std::vector<Node*>& postOrderNodes = _tree->postOrderNodes();
+    for (int i = 0; i < numNodes; i++) {
+        Node* node = postOrderNodes[i];
+        std::cout << node << "\t" << node->getName() << "\t";
+        std::cout << node->getEinit() << std::endl;
+    
+    }
+
+}
+
+
+
+void SpExModel::initializeDebugVectors()
+{
+    int numNodes = _tree->getNumberOfNodes();
+    for (int i = 0; i < numNodes; i++){
+        _Dinitvec.push_back(0.0);
+        _Dfinalvec.push_back(0.0);
+        _Einitvec.push_back(0.0);
+        _Efinalvec.push_back(0.0);
+    }
+
+}
+
+int SpExModel::nodeIndexLookup(Node* node)
+{
+    int goodnode = -1;
+    int numNodes = _tree->getNumberOfNodes();
+    const std::vector<Node*>& postOrderNodes = _tree->postOrderNodes();
+    for (int i = 0; i < numNodes; i++) {
+        if (node == postOrderNodes[i]){
+            goodnode = i;
+        }
+    }
+    if (goodnode == -1){
+        std::cout << "failed to match node." << std::endl;
+        exit(0);
+    }
+    return goodnode;
+}
+
+void SpExModel::outputDebugVectors()
+{
+    
+    std::string outname = "debug_LH.txt";
+    std::ofstream outStream;
+    outStream.open(outname.c_str());
+    
+    // Write header:
+    outStream << "Rdesc,Ldesc,blen,D_init,D_final,E_init,E_final\n";
+    //outStream.close();
+ 
+    int numNodes = _tree->getNumberOfNodes();
+    const std::vector<Node*>& postOrderNodes = _tree->postOrderNodes();
+    for (int i = 0; i < numNodes; i++) {
+        Node* x = postOrderNodes[i];
+        outStream << x->getRandomRightDesc() << ",";
+        outStream << x->getRandomLeftDesc() << ",";
+        outStream << x->getBrlen() << ",";
+        outStream << _Dinitvec[i] << ",";
+        outStream << _Dfinalvec[i] << ",";
+        outStream << _Einitvec[i] << ",";
+        outStream << _Efinalvec[i] << "\n";
+        
+        // x->getRandomLeftDesc() & x->getRandomRightDesc()
+        
+    }
+    
+    outStream.close();
+    
+    
+}
+
 
 
 

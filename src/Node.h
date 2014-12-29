@@ -211,6 +211,9 @@ public:
     double getExponentialRate(double par_init, double shift, double tm);
 
 
+    std::string getRandomRightDesc();
+    std::string getRandomLeftDesc();
+    
 };
 
 

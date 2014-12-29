@@ -25,12 +25,17 @@ void MCMC::run(int generations)
 {
     for (int g = 0; g < generations; g++) {
         step();
-    }
+     }
 }
 
 
 void MCMC::step()
 {
+    //std::cout << _model->getCurrentLogLikelihood() << "\tActual: " << _model->computeLogLikelihood() << std::endl;
+    
+    //double logL = _model->computeLogLikelihood();
+    
+    
     _model->proposeNewState();
 
     double acceptanceRatio = _model->acceptanceRatio();

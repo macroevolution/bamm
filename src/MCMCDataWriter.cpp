@@ -16,7 +16,7 @@ MCMCDataWriter::MCMCDataWriter(Settings& settings) :
     _outputFreq(settings.get<int>("mcmcWriteFreq"))
 {
     
-    if (settings.get<double>("updateRatePreservationRate") > 0){
+    if (settings.get<double>("updateRatePreservationRate") >= 0.0){
         _hasPreservationRate = true;
     }else{
         _hasPreservationRate = false;

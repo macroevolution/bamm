@@ -679,3 +679,30 @@ bool Node::isInternal()
 {
     return (getLfDesc() != NULL) && (getRtDesc() != NULL);
 }
+
+
+std::string Node::getRandomRightDesc()
+{
+    Node* node = this;
+    
+    while (node->getRtDesc() != NULL){
+        node = node->getRtDesc();
+    }
+    return node->getName();
+}
+
+std::string Node::getRandomLeftDesc()
+{
+    Node* node = this;
+    
+    while (node->getLfDesc() != NULL){
+        node = node->getLfDesc();
+    }
+    return node->getName();
+
+}
+
+
+
+
+
