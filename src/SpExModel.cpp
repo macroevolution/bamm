@@ -44,6 +44,21 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
     
     initializeHasPaleoData();
     
+    int cs = _settings.get<int>("conditionOnSurvival");
+    if (cs == -1){
+        if (_hasPaleoData){
+            _conditionOnSurvival = false;
+        }else{
+            _conditionOnSurvival = true;
+        }
+    }else if (cs == 0){
+        _conditionOnSurvival = false;
+    }else if (cs == 1){
+        _conditionOnSurvival = true;
+    }else{
+        exitWithError("Invalid initial value for parameter <<conditionOnSurvivial>>");
+    }
+
     // Initialize fossil preservation rate:
     //      will not be relevant if this is not paleo data.
     _preservationRate = _settings.get<double>("preservationRateInit");
@@ -362,7 +377,6 @@ double SpExModel::computeLogLikelihood()
     if (_hasPaleoData){
         logLikelihood += computePreservationLogProb();  
     }
-        
 
  
     // DEBUG mess
@@ -607,12 +621,12 @@ double SpExModel::computeSpExProbBranch(Node* node)
  
     // TODO: add conditional here to condition on survival;
     //          but must test for paleo tree...
-    //if (node == _tree->getRoot()){
     
-        // TODO: E0 should probably be E0^2  in this equation
+    
+    if (parent == _tree->getRoot() & _conditionOnSurvival == true){
  
-    //   logLikelihood -= std::log(1.0 - E0);
-    //}
+        logLikelihood -= std::log(1.0 - E0);
+    }
     
     return logLikelihood;
 }

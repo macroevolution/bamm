@@ -107,6 +107,8 @@ private:
     int     _numberOccurrences;
     bool   _hasPaleoData;
     
+    bool   _conditionOnSurvival;
+    
     double _tmpvar;
     
     

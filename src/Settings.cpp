@@ -216,6 +216,7 @@ void Settings::initializeSpeciationExtinctionSettings()
     // to avoid numerical overflow issues (especially rounding to 1)
     addParameter("extinctionProbMax", "0.999", NotRequired);
     
+    addParameter("conditionOnSurvival", "-1", NotRequired);
     
     
     /********************************************************/
