@@ -35,7 +35,7 @@ inline Model* TraitModelFactory::createModel
 inline ModelDataWriter* TraitModelFactory::createModelDataWriter
     (Settings& settings) const
 {
-    return new TraitDataWriter(settings);
+     return new TraitDataWriter(settings);
 }
 
 

@@ -271,7 +271,7 @@ double Prior::preservationRatePrior(double x)
 {
 
     //For now, fix a flat uniform prior on this.
-    //return Stat::lnExponentialPDF(x, _preservationRatePrior);
+    //Stat::lnExponentialPDF(x, _preservationRatePrior);
     return 0.0;
 }
 

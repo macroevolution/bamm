@@ -47,14 +47,16 @@ int main (int argc, char* argv[])
 
     // Create model factory based on model type
     ModelFactory* modelFactory = createModelFactory(settings.get("modeltype"));
-
+     
     if (settings.get<bool>("initializeModel")) {
         // MetropolisCoupledMCMC will initialize model(s)
-        MetropolisCoupledMCMC mc3(random, settings, modelFactory);
-
+         MetropolisCoupledMCMC mc3(random, settings, modelFactory);
+         
         if (settings.get<bool>("runMCMC")) {
-            mc3.run();
-        }
+        
+             mc3.run();
+         }
+        
     }
 
     delete modelFactory;

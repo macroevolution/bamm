@@ -45,7 +45,7 @@ TraitModel::TraitModel(Random& random, Settings& settings) :
         std::exit(1);
     }
 #endif
-
+    
     _sampleFromPriorOnly = _settings.get<bool>("sampleFromPriorOnly");
 
     double betaInit = _settings.get<double>("betaInit");
@@ -109,7 +109,10 @@ TraitModel::TraitModel(Random& random, Settings& settings) :
     _proposals.push_back(new NodeStateProposal(random, settings, *this));
     _proposals.push_back(new BetaTimeModeProposal(random, settings, *this));
 
+ 
     Model::calculateUpdateWeights();
+ 
+    
 }
 
 

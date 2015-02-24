@@ -43,9 +43,9 @@ MetropolisCoupledMCMC::~MetropolisCoupledMCMC()
 
 void MetropolisCoupledMCMC::run()
 {
-    createChains();
+     createChains();
     createDataWriter();
-
+ 
     log() << "\nRunning " << _chains.size() << " chains for "
           << _nGenerations << " generations.\n";
 
@@ -85,7 +85,14 @@ double MetropolisCoupledMCMC::calculateTemperature(int i, double deltaT) const
 
 void MetropolisCoupledMCMC::createDataWriter()
 {
+ 
+    // TODO: THere is a bug here. IF I set fossil parameters
+    //  such as updateRatePreservationRate within the SpeciationExtinction
+    // Parameters block, this line of code will cause an error for BAMM trait
+ 
     _dataWriter = _modelFactory->createModelDataWriter(_settings);
+ 
+
 }
 
 
