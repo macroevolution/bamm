@@ -170,11 +170,11 @@ There is a critical issue that arises in model comparisons using BAMM: inference
 The solution that we advocate is to explicitly compare the evidence for models with at least one diversification shift to the evidence for the *null* model. Formally, there isn't really a null model in BAMM, but for our purposes, it makes sense to think about model with zero rate shifts as the null hypothesis. In a Bayesian framework, we can do this by computing the Bayes factor associated with two models. This is computed as 
 
 .. math::
-	BF_{ij} = {\frac{Pr(D| M_i)}{\pi{(M_i )}} } {\frac{\pi(M_j ) } {Pr(D| M_j)}}
+	BF_{ij} = {\frac{Pr(M_i | D)}{\pi{(M_i )}} } {\frac{\pi(M_j ) } {Pr(M_j | D)}}
 
 where :math:`Pr(D|M_i)` is the probability of the data given model :math:`M_i` and :math:`\pi(M_i)` is the prior probability of model :math:`M_i`. Bayes factors are notoriously difficult to compute for many applications, but they are trivial from BAMM output. 
 
-**We suggest that the overall best model from a BAMM analysis is the model with the highest Bayes factor relative to the null model**, :math:`M_0`. BAMMtools makes it easy to compute Bayes factor evidence in favor of one model relative to another.  The analysis described below assumes that you have generated an *MCMC output file* involving simulation from the **prior only**, and that you have the corresponding output file from full BAMM run. You can configure BAMM to perform a prior simulation using the BAMM control file by ensuring that `simulatePriorShifts = 1`. We have not yet identified a closed-form analytical solution to the prior distribution on the number of shifts (but we suspect that one may exist). However, it is straightforward to simulate this distribution. You can even run a BAMM analysis while *only* performing a prior simulation by setting::
+**We suggest that (usually) the overall best model from a BAMM analysis is the model with the highest Bayes factor relative to the null model**, :math:`M_0`. BAMMtools makes it easy to compute Bayes factor evidence in favor of one model relative to another.  The analysis described below assumes that you have generated an *MCMC output file* involving simulation from the **prior only**, and that you have the corresponding output file from full BAMM run. You can configure BAMM to perform a prior simulation using the BAMM control file by ensuring that `simulatePriorShifts = 1`. We have not yet identified a closed-form analytical solution to the prior distribution on the number of shifts (but we suspect that one may exist). However, it is straightforward to simulate this distribution. You can even run a BAMM analysis while *only* performing a prior simulation by setting::
 
 	simulatePriorShifts = 1
 	initializeModel = 0
