@@ -4,7 +4,6 @@
 Rate Shifts on Phylogenies: Theoretical Background
 ==================================================
 
-**Note: documentation for BAMM 2.0 is still under construction; some sections may be incomplete.**
 
 This section details some of the most common conceptual issues that can arise when interpreting rate shifts on phylogenetic trees. Many studies have attempted to identify ***the*** rate shifts within a given dataset. In the BAMM framework, there is no single set of independent rate shifts waiting to be identified. Rather, BAMM identifies *configurations* of rate shifts - sets of shifts that are sampled together - and enables us to compute relative probability of those configurations. Three *shift configurations* sampled with BAMM during simulation of the posterior are shown :ref:`here<bammgraphgallery2>`.
  

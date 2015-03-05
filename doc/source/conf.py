@@ -50,7 +50,7 @@ primary_domain = 'cpp'
 
 # General information about the project.
 project = u'bamm'
-copyright = u'2014 BAMM Team'
+copyright = u'2015 BAMM Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
