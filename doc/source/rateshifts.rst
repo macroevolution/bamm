@@ -319,7 +319,35 @@ In the toy example :ref:`above<toyshifts>`, we had evidence for rate heterogenei
 Macroevolutionary cohort analysis
 ---------------------------------------
 
-Under construction...
+In order to avoid some of the challenges associated with visualizing complex rate shift dynamics on large trees, we developed a solution that condenses the rate regime dynamics into a single graphic: the **cohort analysis**. The cohort matrix depicts the pairwise probability that any two lineages share the same macroevolutionary rate dynamics. 
+
+For each posterior sample from a BAMM analysis, a value of 1 is assigned to a pair of lineages that belong to the same rate regime, and a value of 0 is assigned if they do not. These pairwise values are then averaged across the full set of sampled shift configurations from the posterior distribution.
+
+In the following figure, we illustrate with a toy example how one moves from distinct rate shift configurations to a macroevolutionary cohort matrix. 
+
+.. _cohortExample:  
+.. figure:: figs/cohortExample.png
+   :width: 700
+   :align: center
+
+The first thing to note is that as this is a full pairwise matrix, lineages will of course always share the same rate dynamics with themselves, so there will always be blocks with a value of 1, arranged along the diagonal. Also,the top left triangle of the matrix will mirror the bottom right triangle. We will now examine the other patterns in detail. The top left block in the cohort matrix has a value of 0.4. This block represents a rate dynamic comparison between clade X and clade Z. As clade X has its own rate regime with a probability of 0.6, that means its rate parameters are decoupled from those of clade Z in 60% of the posterior distribution. Therefore, for 40% of the posterior, the two clades belong to the same rate regime, hence a value of 0.4 in the cohort matrix. We get an equivalent scenario for boxes representing the comparison of clades Y and Z. Clades X and Y, despite being sister clades, never share the same rate regime, as there is always a shift at the base of either one of those clades. Therefore, we get a value of 0 for the middle right block of the cohort matrix. 
+
+Incidentally, this illustrates that rate regimes do **not necessarily** exhibit any sort of phylogenetic signal. Since any 2 clades can potentially belong to the root regime, depending on where other shifts are located, it is entirely possible for distantly related clades to share rate regimes when closely related clades do not, as is the case for clades X and Y, vs. X and Z. 
+
+We will now look at an empirical example with the whales dataset. 
+
+.. _cohortExample2: 
+.. figure:: figs/cohort_whales.png
+   :width: 600
+   :align: center
+
+The whale dataset provides a relatively simple example of a cohort analysis. Again, blocks B and C have values of 1 because they represent comparisons of the same clades and therefore share the same rate regime. Variation in color seen within these blocks represents shifts that occurred in a relatively small number of posterior samples for lineages within these major clades.
+
+The large blue blocks A and D clearly show that across the posterior distribution of the BAMM analysis, the dolphin clade almost never shares the same rate regime as the rest of the phylogeny. 
+
+The killer whale is the lineage represented by blocks E and F. Interestingly, we see that in about 50% of the posterior, this lineage is placed within the same rate regime as the dolphin clade, and the rest of the time, it is in the root regime with beaked and baleen whales. This is why we see 2 pale lines through our cohort matrix, representing values of ~ 0.5. 
+
+
 
 
 Maximum shift credibility configuration
