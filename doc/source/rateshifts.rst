@@ -319,7 +319,7 @@ In the toy example :ref:`above<toyshifts>`, we had evidence for rate heterogenei
 Macroevolutionary cohort analysis
 ---------------------------------------
 
-In order to avoid some of the challenges associated with visualizing complex rate shift dynamics on large trees, we developed a solution that condenses the rate regime dynamics into a single graphic: the **cohort analysis**. The cohort matrix depicts the pairwise probability that any two lineages share the same macroevolutionary rate dynamics. 
+In order to avoid some of the challenges associated with visualizing complex rate shift dynamics on large trees, we developed a solution that condenses the rate regime dynamics into a single graphic: the **cohort analysis**. The cohort matrix depicts the pairwise probability that any two lineages share the same macroevolutionary rate dynamics. The cohort matrix method is fully explained in this (`Systematic Biology article <http://sysbio.oxfordjournals.org/content/63/4/610>`_).
 
 For each posterior sample from a BAMM analysis, a value of 1 is assigned to a pair of lineages that belong to the same rate regime, and a value of 0 is assigned if they do not. These pairwise values are then averaged across the full set of sampled shift configurations from the posterior distribution.
 
@@ -329,6 +329,10 @@ In the following figure, we illustrate with a toy example how one moves from dis
 .. figure:: figs/cohortExample.png
    :width: 700
    :align: center
+
+In this example, we have three clades with varying diversity. This diversity pattern is explained by the presence of two rate regimes (a root regime, and a single shift to a new regime), and two distinct shift configurations: one configuration with a shift leading to an increase in diversification rate at the base of clade X, and the other configuration with a decrease in diversification rate at the base of clade Y. Clade Z always belongs to the root regime.
+
+It is important to note that although cohort matrices appear to be made up of blocks, **the cohort analysis is applied at the species level**. Species that share the same rate regimes appear in the same color, and so they appear as blocks. We will be referring to blocks for convenience, but this is really an analysis of macroevolutionary cohorts of species. 
 
 The first thing to note is that as this is a full pairwise matrix, lineages will of course always share the same rate dynamics with themselves, so there will always be blocks with a value of 1, arranged along the diagonal. Also,the top left triangle of the matrix will mirror the bottom right triangle. We will now examine the other patterns in detail. The top left block in the cohort matrix has a value of 0.4. This block represents a rate dynamic comparison between clade X and clade Z. As clade X has its own rate regime with a probability of 0.6, that means its rate parameters are decoupled from those of clade Z in 60% of the posterior distribution. Therefore, for 40% of the posterior, the two clades belong to the same rate regime, hence a value of 0.4 in the cohort matrix. We get an equivalent scenario for boxes representing the comparison of clades Y and Z. Clades X and Y, despite being sister clades, never share the same rate regime, as there is always a shift at the base of either one of those clades. Therefore, we get a value of 0 for the middle right block of the cohort matrix. 
 
