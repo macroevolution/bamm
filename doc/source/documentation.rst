@@ -12,7 +12,9 @@ BAMM Documentation
 
    introduction
    bammgraph
-   rateshifts   
+   rateshifts
+   fossilbamm
+   strapp   
    quickstart
    settingup
    configuration
