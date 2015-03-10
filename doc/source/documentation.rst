@@ -22,6 +22,7 @@ BAMM Documentation
    time-flip
    mc3
    advanced
+   colorbreaks
 
    faq
    troubleshooting

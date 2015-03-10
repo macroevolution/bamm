@@ -315,9 +315,10 @@ Regardless of which approach you use, bear in mind that it is incorrect to assum
 
 In the toy example :ref:`above<toyshifts>`, we had evidence for rate heterogeneity in the dataset (with posterior probability 1.0), yet the marginal shift probabilities (0.49, 0.51) are not "significant".  This is a most important point: you can have massive evidence for rate heterogeneity in your dataset, but your marginal shift probabilities will be a function of the frequency distribution of **distinct alternative shift configurations**.
 
+.. _cohortExplanation:
 
 Macroevolutionary cohort analysis
----------------------------------------
+---------------------------------
 
 In order to avoid some of the challenges associated with visualizing complex rate shift dynamics on large trees, we developed a solution that condenses the rate regime dynamics into a single graphic: the **cohort analysis**. The cohort matrix depicts the pairwise probability that any two lineages share the same macroevolutionary rate dynamics. The cohort matrix method is fully explained in this (`Systematic Biology article <http://sysbio.oxfordjournals.org/content/63/4/610>`_).
 

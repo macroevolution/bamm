@@ -1,10 +1,14 @@
-
+.. _colorbreaks:
 
 Color ramps and phylorate plots
 ===============================
 
 
 When plotting instantaneous rates along the branches of a phylogeny with ``plot.bammdata`` (as well as with any other BAMMtools function that creates a phylorate plot), it is important to keep in mind how rates are mapped to colors, and what this can mean for interpretation. 
+
+
+What options are available?
+...........................
 
 ``plot.bammdata`` has a number of options available to bin rates into particular colors (the breaksmethod options). Depending on the dataset, these different options can lead to drastically different phylorate plots. On top of these breaksmethods, there are additional data transformation/truncation options that will modify the behavior of the breaksmethods. 
 
@@ -38,12 +42,14 @@ It is important to understand that while these different color mapping methods c
 
 We illustrate these differences with an example. This is a BAMM analysis of primate body mass (Vos and Moors 2008). For each breaks method, we generated a histogram showing the frequency of rate values in the dataset, colored according to the selected breaks method. Vertical bars show how the rates have been binned. 
 
+From these histograms, it is clear that there are segments of the phylogeny with much higher rates than for the rest of the phylogeny, but these segments encompass only a very small subset (the histogram has a long tail). 
+
 .. _breaksTest:
 .. figure:: figs/breaksTest.png
 	:width: 700
 	:align: center
 
-Now we show how these different methods produce different phylorate figures. 
+Now we show how these different methods produce different phylorate figures. Due to the long tail of the distribution of rates, the linear breaks method does a poor job of showing rate variation across the phylogeny. 
 
 .. _breaksTestTrees:
 .. figure:: figs/breaksTestTrees.png
@@ -54,7 +60,7 @@ Now we show how these different methods produce different phylorate figures.
 What should you do?
 ...................
 
-Although, we have provided a number of options to best convey rate variation across a phylogeny, it is now possible to generate a large number of different phylorate plots and it is important to not misuse these options. 
+Although, we have provided a number of options to best convey rate variation across a phylogeny, it is now possible to generate a large number of different phylorate plots and it is important to not misuse these options. Despite what may be written in an accompanying text, people will interpret these phylorate plots as evidence of significant rate dynamics. Therefore it will be important to carefully select from these options.
 
 The goal is to find the right balance between a visually appealing figure and one that properly portrays the information at hand. We do not want to hide real rate variation, but we also do not want to exaggerate rate heterogeneity "noise" coming from non-core shifts. 
 
