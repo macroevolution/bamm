@@ -12,16 +12,15 @@ OS X
 **Note**: See `Setting Up BAMM <settingup.html>`_ to download and install
 BAMM using Homebrew.
 
-`bamm-2.2.0-MacOSX.tar.gz
-<http://www-personal.umich.edu/~carlosja/bamm-2.2.0-MacOSX.tar.gz>`_
+`bamm-2.3.0-MacOSX.tar.gz
+<https://dl.dropboxusercontent.com/u/34644229/bamm-2.3.0-MacOSX.tar.gz>`_
 
 Requires OS X 10.7.5 or greater.
 
 Windows
 -------
 
-`bamm-2.2.0-Windows.zip
-<http://www-personal.umich.edu/~carlosja/bamm-2.2.0-Windows.zip>`_
+**A compiled version of BAMM for Windows is currently not available. Please compile from source.**
 
 Requires Windows 7 or greater (does not run on Windows XP).
 
@@ -65,6 +64,12 @@ Read important changes to BAMM since its release:
 
 Previous Versions
 =================
+
+`bamm-2.2.0-MacOSX.tar.gz
+<http://www-personal.umich.edu/~carlosja/bamm-2.2.0-MacOSX.tar.gz>`_
+
+`bamm-2.2.0-Windows.zip
+<http://www-personal.umich.edu/~carlosja/bamm-2.2.0-Windows.zip>`_
 
 You may download previous versions of the binaries and examples
 for BAMM using the following links:
