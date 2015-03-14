@@ -278,7 +278,7 @@ Finding the single *best* shift configuration
 From the above plot, we can see that a single rate shift configuration has a higher posterior probability than any other. This shift configuration is the one with the *maximum a posteriori* (MAP) probability. This is one estimate of the overall best rate set of rate shifts given our data. If you are to show a single set of rate shifts on a phylogeny for publication, this would be a good one to go with::
 
 	priorshifts <- getBranchShiftPriors(whales, prior.whales)
-	best <- getBestShiftConfiguration(edata, threshold = priorshifts)
+	best <- getBestShiftConfiguration(edata, prior = priorshifts)
 	plot.bammdata(best, lwd = 2)
 	addBAMMshifts(best, cex=2.5)
 
