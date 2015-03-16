@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "Prior.h"
 #include "SpExModel.h"
+#include <algorithm>
 
 PreservationRateProposal::PreservationRateProposal
     (Random& random, Settings& settings, Model& model, Prior& prior) :
