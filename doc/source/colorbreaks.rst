@@ -57,14 +57,21 @@ Now we show how these different methods produce different phylorate figures. Due
 	:align: center
 
 
+A note of caution
+.................
+
+**WARNING: You cannot interpret colors alone as evidence of rate heterogeneity.**
+
+As an example, if you have a bamm analysis where there are no core shifts, i.e., there is no real rate heterogeneity, stochastic noise in the BAMM posterior distribution can be emphasized through the selection of particular color options, such as the quantile colorbreaks method. As these methods define colors on a relative, and not on an absolute scale, it is easy to create a deceptive phylorate plot. This is a common issue in real datasets. 
+
+
+
 What should you do?
 ...................
 
-Although, we have provided a number of options to best convey rate variation across a phylogeny, it is now possible to generate a large number of different phylorate plots and it is important to not misuse these options. Despite what may be written in an accompanying text, people will interpret these phylorate plots as evidence of significant rate dynamics. Therefore it will be important to carefully select from these options.
+Although, we have provided a number of options to best convey rate variation across a phylogeny, it is now possible to generate a large number of different phylorate plots and it is important to not misuse these options. **Colors can be misleading, and there is no general guideline for displaying rate heterogeneity.** We have included multiple options in BAMM to allow you, the user, to determine what works best for your data. If 98% of the lineages in your phylogeny have a slow rate of speciation and 2% have a very fast rate, a linear mapping may work best, because it will effectively show two colors. If you have intermediate rates, or a broad range of rate classes, then the quantile or jenks methods may work. We refrain from providing strong guidelines here and merely equip you with the tools to explore the most effective presentation of your data.
 
-The goal is to find the right balance between a visually appealing figure and one that properly portrays the information at hand. We do not want to hide real rate variation, but we also do not want to exaggerate rate heterogeneity "noise" coming from non-core shifts. 
-
-One recommendation would be to use the locations of core shifts as a guide for what **should** be emphasized with the colors. In the above figure, the linear method fails to highlight existing rate shifts, although log-transformation of the rates, or use of ``color.interval`` alleviates the problem. The quantile method is exaggerating the existing rate variation in this case. The jenks method appears to do a good job in most cases. We suggest that ``color.interval`` only be employed when necessary, in combination with the ``linear`` breaksmethod, as the misuse of this option can lead to misrepresentation of rates on a phylogeny. 
+One starting point could be to use the locations of core shifts as a guide for what **should** be emphasized with the colors. In the above figure, the linear method fails to highlight existing rate shifts, although log-transformation of the rates, or use of ``color.interval`` alleviates the problem. The quantile method is exaggerating the existing rate variation in this case. The jenks method appears to do a good job. We suggest that ``color.interval`` only be employed when necessary, in combination with the ``linear`` breaksmethod, as the misuse of this option can lead to misrepresentation of rates on a phylogeny. 
 
 
 How do I plot these histograms?

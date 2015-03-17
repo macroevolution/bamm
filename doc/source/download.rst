@@ -20,7 +20,8 @@ Requires OS X 10.7.5 or greater.
 Windows
 -------
 
-**A compiled version of BAMM for Windows is currently not available. Please compile from source.**
+`bamm-2.3.0-windows.zip
+<https://dl.dropboxusercontent.com/u/34644229/bamm-2.3.0-windows.zip>`_
 
 Requires Windows 7 or greater (does not run on Windows XP).
 
