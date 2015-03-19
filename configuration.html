@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>6. Configuration &mdash; bamm 1.0 documentation</title>
+    <title>8. Configuration &mdash; bamm 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,23 +23,23 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 1.0 documentation" href="index.html" />
-    <link rel="next" title="7. Analyzing BAMM output with BAMMtools" href="postprocess.html" />
-    <link rel="prev" title="5. Setting Up BAMM" href="settingup.html" /> 
+    <link rel="top" title="bamm 1.0 documentation" href="documentation.html" />
+    <link rel="next" title="9. Analyzing BAMM output with BAMMtools" href="postprocess.html" />
+    <link rel="prev" title="7. Setting Up BAMM" href="settingup.html" /> 
   </head>
-  <body>
+  <body role="document">
 <div class="pageheader">
     <img src="_static/bamm-header.png" /img>
 </div>
 
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="postprocess.html" title="7. Analyzing BAMM output with BAMMtools"
+          <a href="postprocess.html" title="9. Analyzing BAMM output with BAMMtools"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="settingup.html" title="5. Setting Up BAMM"
+          <a href="settingup.html" title="7. Setting Up BAMM"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -48,35 +48,35 @@
  
       </ul>
     </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">6. Configuration</a><ul>
-<li><a class="reference internal" href="#control-file">6.1. Control File</a></li>
-<li><a class="reference internal" href="#general-options-and-parameters">6.2. General Options and Parameters</a><ul>
-<li><a class="reference internal" href="#general">6.2.1. General</a></li>
-<li><a class="reference internal" href="#priors">6.2.2. Priors</a></li>
-<li><a class="reference internal" href="#mcmc-simulation">6.2.3. MCMC Simulation</a></li>
-<li><a class="reference internal" href="#metropolis-coupled-mcmc">6.2.4. Metropolis Coupled MCMC</a></li>
-<li><a class="reference internal" href="#parameter-update-rates">6.2.5. Parameter Update Rates</a></li>
+<li><a class="reference internal" href="#">8. Configuration</a><ul>
+<li><a class="reference internal" href="#control-file">8.1. Control File</a></li>
+<li><a class="reference internal" href="#general-options-and-parameters">8.2. General Options and Parameters</a><ul>
+<li><a class="reference internal" href="#general">8.2.1. General</a></li>
+<li><a class="reference internal" href="#priors">8.2.2. Priors</a></li>
+<li><a class="reference internal" href="#mcmc-simulation">8.2.3. MCMC Simulation</a></li>
+<li><a class="reference internal" href="#metropolis-coupled-mcmc">8.2.4. Metropolis Coupled MCMC</a></li>
+<li><a class="reference internal" href="#parameter-update-rates">8.2.5. Parameter Update Rates</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#speciation-extinction-model">6.3. Speciation/Extinction Model</a><ul>
-<li><a class="reference internal" href="#id1">6.3.1. General</a></li>
-<li><a class="reference internal" href="#id2">6.3.2. Priors</a></li>
-<li><a class="reference internal" href="#id3">6.3.3. MCMC Simulation</a></li>
-<li><a class="reference internal" href="#starting-parameters">6.3.4. Starting Parameters</a></li>
-<li><a class="reference internal" href="#id4">6.3.5. Parameter Update Rates</a></li>
+<li><a class="reference internal" href="#speciation-extinction-model">8.3. Speciation/Extinction Model</a><ul>
+<li><a class="reference internal" href="#id1">8.3.1. General</a></li>
+<li><a class="reference internal" href="#id2">8.3.2. Priors</a></li>
+<li><a class="reference internal" href="#id3">8.3.3. MCMC Simulation</a></li>
+<li><a class="reference internal" href="#starting-parameters">8.3.4. Starting Parameters</a></li>
+<li><a class="reference internal" href="#id4">8.3.5. Parameter Update Rates</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#phenotypic-evolution-model">6.4. Phenotypic Evolution Model</a><ul>
-<li><a class="reference internal" href="#id5">6.4.1. General</a></li>
-<li><a class="reference internal" href="#mcmc-tuning">6.4.2. MCMC Tuning</a></li>
-<li><a class="reference internal" href="#id6">6.4.3. Starting Parameters</a></li>
-<li><a class="reference internal" href="#id7">6.4.4. Priors</a></li>
-<li><a class="reference internal" href="#id8">6.4.5. Parameter Update Rates</a></li>
-<li><a class="reference internal" href="#data-output">6.4.6. Data Output</a></li>
+<li><a class="reference internal" href="#phenotypic-evolution-model">8.4. Phenotypic Evolution Model</a><ul>
+<li><a class="reference internal" href="#id5">8.4.1. General</a></li>
+<li><a class="reference internal" href="#mcmc-tuning">8.4.2. MCMC Tuning</a></li>
+<li><a class="reference internal" href="#id6">8.4.3. Starting Parameters</a></li>
+<li><a class="reference internal" href="#id7">8.4.4. Priors</a></li>
+<li><a class="reference internal" href="#id8">8.4.5. Parameter Update Rates</a></li>
+<li><a class="reference internal" href="#data-output">8.4.6. Data Output</a></li>
 </ul>
 </li>
 </ul>
@@ -85,16 +85,18 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="settingup.html"
-                        title="previous chapter">5. Setting Up BAMM</a></p>
+                        title="previous chapter">7. Setting Up BAMM</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="postprocess.html"
-                        title="next chapter">7. Analyzing BAMM output with BAMMtools</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/configuration.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+                        title="next chapter">9. Analyzing BAMM output with BAMMtools</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/configuration.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -113,12 +115,12 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="configuration">
-<h1>6. Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
+<h1>8. Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="control-file">
-<h2>6.1. Control File<a class="headerlink" href="#control-file" title="Permalink to this headline">¶</a></h2>
+<h2>8.1. Control File<a class="headerlink" href="#control-file" title="Permalink to this headline">¶</a></h2>
 <p>Configuration options and parameters in BAMM are specified in a <em>control file</em>,
 a plain text file in which each line contains the name of the option or
 parameter, an equal sign, and the value of the option or parameter:</p>
@@ -126,295 +128,295 @@ parameter, an equal sign, and the value of the option or parameter:</p>
 runMCMC = 1
 </pre></div>
 </div>
-<p>The path of the control file, relative to the directory in which <tt class="docutils literal"><span class="pre">bamm</span></tt>
-is called, is specified with the flag <tt class="docutils literal"><span class="pre">-c</span></tt>:</p>
+<p>The path of the control file, relative to the directory in which <code class="docutils literal"><span class="pre">bamm</span></code>
+is called, is specified with the flag <code class="docutils literal"><span class="pre">-c</span></code>:</p>
 <div class="highlight-none"><div class="highlight"><pre>./bamm -c divcontrol.txt
 </pre></div>
 </div>
 </div>
 <div class="section" id="general-options-and-parameters">
-<h2>6.2. General Options and Parameters<a class="headerlink" href="#general-options-and-parameters" title="Permalink to this headline">¶</a></h2>
+<h2>8.2. General Options and Parameters<a class="headerlink" href="#general-options-and-parameters" title="Permalink to this headline">¶</a></h2>
 <p>The following describes the configuration options and parameters
 that are required regardless of the specific model used.
 For true or false values, 1 is used for true and 0 is used for false.
-File paths are relative to the directory in which <tt class="docutils literal"><span class="pre">bamm</span></tt> is called.</p>
+File paths are relative to the directory in which <code class="docutils literal"><span class="pre">bamm</span></code> is called.</p>
 <div class="section" id="general">
-<h3>6.2.1. General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
+<h3>8.2.1. General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">modeltype</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">modeltype</span></code></dt>
 <dd>The type of model BAMM uses for analysis.
-If <tt class="docutils literal"><span class="pre">speciationextinction</span></tt>, run with a speciation/extinction model.
-If <tt class="docutils literal"><span class="pre">trait,</span></tt> run with a phenotypic evolution model.</dd>
-<dt><tt class="docutils literal"><span class="pre">treefile</span></tt></dt>
+If <code class="docutils literal"><span class="pre">speciationextinction</span></code>, run with a speciation/extinction model.
+If <code class="docutils literal"><span class="pre">trait,</span></code> run with a phenotypic evolution model.</dd>
+<dt><code class="docutils literal"><span class="pre">treefile</span></code></dt>
 <dd>The file path of the input tree (in Newick format).
 For speciation/extinction analyses, the tree must be ultrametric,
 fully bifurcating, and have unique tip names.</dd>
-<dt><tt class="docutils literal"><span class="pre">runInfoFilename</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">runInfoFilename</span></code></dt>
 <dd>The path of the file to output general information about the current run.</dd>
-<dt><tt class="docutils literal"><span class="pre">sampleFromPriorOnly</span></tt></dt>
-<dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, run by sampling from the prior only
+<dt><code class="docutils literal"><span class="pre">sampleFromPriorOnly</span></code></dt>
+<dd>If <code class="docutils literal"><span class="pre">1</span></code>, run by sampling from the prior only
 (ignoring likelihood contribution to posterior).
-If <tt class="docutils literal"><span class="pre">0</span></tt>, run the full analysis.</dd>
-<dt><tt class="docutils literal"><span class="pre">autotune</span></tt></dt>
+If <code class="docutils literal"><span class="pre">0</span></code>, run the full analysis.</dd>
+<dt><code class="docutils literal"><span class="pre">autotune</span></code></dt>
 <dd>Experimental option for tuning MCMC operators.</dd>
-<dt><tt class="docutils literal"><span class="pre">runMCMC</span></tt></dt>
-<dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, run the MCMC sampler.
-If <tt class="docutils literal"><span class="pre">0</span></tt>, just check to see if the data can be loaded correctly.</dd>
-<dt><tt class="docutils literal"><span class="pre">simulatePriorShifts</span></tt></dt>
-<dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, simulate prior distribution of the number of shift events,
+<dt><code class="docutils literal"><span class="pre">runMCMC</span></code></dt>
+<dd>If <code class="docutils literal"><span class="pre">1</span></code>, run the MCMC sampler.
+If <code class="docutils literal"><span class="pre">0</span></code>, just check to see if the data can be loaded correctly.</dd>
+<dt><code class="docutils literal"><span class="pre">simulatePriorShifts</span></code></dt>
+<dd>If <code class="docutils literal"><span class="pre">1</span></code>, simulate prior distribution of the number of shift events,
 given the hyperprior on the Poisson rate parameter.
 This is necessary to compute the Bayes factor.</dd>
-<dt><tt class="docutils literal"><span class="pre">loadEventData</span></tt></dt>
-<dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, load a previous event state (event locations and parameter
+<dt><code class="docutils literal"><span class="pre">loadEventData</span></code></dt>
+<dd>If <code class="docutils literal"><span class="pre">1</span></code>, load a previous event state (event locations and parameter
 values) from a file. This allows a run to be continued even after a
 previous run has finished. The file format is identical to that of the
-default output file <tt class="docutils literal"><span class="pre">event_data.txt</span></tt>. Only the data from the last
+default output file <code class="docutils literal"><span class="pre">event_data.txt</span></code>. Only the data from the last
 generation will be processed if the file contains data for multiple
 generations. For example, to load the data from a previous run, copy the
-output event file (<tt class="docutils literal"><span class="pre">event_data.txt</span></tt>) to something like
-<tt class="docutils literal"><span class="pre">event_data_in.txt</span></tt> and use this file in the <tt class="docutils literal"><span class="pre">eventDataInfile</span></tt> option
-(below). Note that <tt class="docutils literal"><span class="pre">event_data.txt</span></tt> will be overwritten by the new run
+output event file (<code class="docutils literal"><span class="pre">event_data.txt</span></code>) to something like
+<code class="docutils literal"><span class="pre">event_data_in.txt</span></code> and use this file in the <code class="docutils literal"><span class="pre">eventDataInfile</span></code> option
+(below). Note that <code class="docutils literal"><span class="pre">event_data.txt</span></code> will be overwritten by the new run
 (unless you change its name in the configuration file), so if you&#8217;d like to
 keep those data, copy the file to a new one.</dd>
-<dt><tt class="docutils literal"><span class="pre">eventDataInfile</span></tt></dt>
-<dd>The file path of the event data to be loaded (used only if <tt class="docutils literal"><span class="pre">loadEventData</span>
-<span class="pre">=</span> <span class="pre">1</span></tt>).</dd>
-<dt><tt class="docutils literal"><span class="pre">initializeModel</span></tt></dt>
-<dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, initializes MCMC.
-If <tt class="docutils literal"><span class="pre">0</span></tt>, just check parameter file and ensure that data can be read.</dd>
-<dt><tt class="docutils literal"><span class="pre">seed</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">eventDataInfile</span></code></dt>
+<dd>The file path of the event data to be loaded (used only if <code class="docutils literal"><span class="pre">loadEventData</span>
+<span class="pre">=</span> <span class="pre">1</span></code>).</dd>
+<dt><code class="docutils literal"><span class="pre">initializeModel</span></code></dt>
+<dd>If <code class="docutils literal"><span class="pre">1</span></code>, initializes MCMC.
+If <code class="docutils literal"><span class="pre">0</span></code>, just check parameter file and ensure that data can be read.</dd>
+<dt><code class="docutils literal"><span class="pre">seed</span></code></dt>
 <dd>Seed for the random number generator.
-If <tt class="docutils literal"><span class="pre">-1</span></tt>, the seed is obtained from the clock time.</dd>
-<dt><tt class="docutils literal"><span class="pre">overwrite</span></tt></dt>
-<dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, overwrite output files if they already exist with identical
+If <code class="docutils literal"><span class="pre">-1</span></code>, the seed is obtained from the clock time.</dd>
+<dt><code class="docutils literal"><span class="pre">overwrite</span></code></dt>
+<dd>If <code class="docutils literal"><span class="pre">1</span></code>, overwrite output files if they already exist with identical
 filenames.
-If <tt class="docutils literal"><span class="pre">0</span></tt>, do not run if output files already exist with identical filenames.</dd>
-<dt><tt class="docutils literal"><span class="pre">validateEventConfiguration</span></tt></dt>
-<dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, rejects proposals that cause a branch and both of its direct
+If <code class="docutils literal"><span class="pre">0</span></code>, do not run if output files already exist with identical filenames.</dd>
+<dt><code class="docutils literal"><span class="pre">validateEventConfiguration</span></code></dt>
+<dd>If <code class="docutils literal"><span class="pre">1</span></code>, rejects proposals that cause a branch and both of its direct
 descendants to have at least one event. Such event configuration may cause
 the parameters of the parent event to change to unrealistic values.
-If <tt class="docutils literal"><span class="pre">0</span></tt>, no such proposals are immediately rejected.
-The default value is <tt class="docutils literal"><span class="pre">0</span></tt>.</dd>
+If <code class="docutils literal"><span class="pre">0</span></code>, no such proposals are immediately rejected.
+The default value is <code class="docutils literal"><span class="pre">0</span></code>.</dd>
 </dl>
 </div>
 <div class="section" id="priors">
-<h3>6.2.2. Priors<a class="headerlink" href="#priors" title="Permalink to this headline">¶</a></h3>
+<h3>8.2.2. Priors<a class="headerlink" href="#priors" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">poissonRatePrior</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">poissonRatePrior</span></code></dt>
 <dd>The rate parameter of the exponential prior on the rate parameter
 of the Poisson process. Smaller values favor greater numbers of distinct
 evolutionary regimes on the tree. Suggested values:
-<tt class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">1.0</span></tt> for smaller datasets (&lt; 500 tips) or
-<tt class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">0.1</span></tt> or even <tt class="docutils literal"><span class="pre">0.2</span></tt> for large (5000+ tips).</dd>
+<code class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">1.0</span></code> for smaller datasets (&lt; 500 tips) or
+<code class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">0.1</span></code> or even <code class="docutils literal"><span class="pre">0.2</span></code> for large (5000+ tips).</dd>
 </dl>
 </div>
 <div class="section" id="mcmc-simulation">
-<h3>6.2.3. MCMC Simulation<a class="headerlink" href="#mcmc-simulation" title="Permalink to this headline">¶</a></h3>
+<h3>8.2.3. MCMC Simulation<a class="headerlink" href="#mcmc-simulation" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">numberOfGenerations</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">numberOfGenerations</span></code></dt>
 <dd>Number of MCMC generations to run.</dd>
-<dt><tt class="docutils literal"><span class="pre">mcmcWriteFreq</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">mcmcWriteFreq</span></code></dt>
 <dd>Frequency (in generations) at which to print MCMC details
-to <tt class="docutils literal"><span class="pre">mcmcOutfile</span></tt>.</dd>
-<dt><tt class="docutils literal"><span class="pre">eventDataWriteFreq</span></tt></dt>
+to <code class="docutils literal"><span class="pre">mcmcOutfile</span></code>.</dd>
+<dt><code class="docutils literal"><span class="pre">eventDataWriteFreq</span></code></dt>
 <dd>Frequency (in generations) at which to print event details
-to <tt class="docutils literal"><span class="pre">eventDataOutfile</span></tt>.</dd>
-<dt><tt class="docutils literal"><span class="pre">printFreq</span></tt></dt>
+to <code class="docutils literal"><span class="pre">eventDataOutfile</span></code>.</dd>
+<dt><code class="docutils literal"><span class="pre">printFreq</span></code></dt>
 <dd>Frequency (in generations) at which to print output to the screen.</dd>
-<dt><tt class="docutils literal"><span class="pre">outName</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">outName</span></code></dt>
 <dd>If present (may be commented out), prefixes output files with the given
 text.</dd>
-<dt><tt class="docutils literal"><span class="pre">mcmcOutfile</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">mcmcOutfile</span></code></dt>
 <dd>The path of the file to which to write the MCMC output.</dd>
-<dt><tt class="docutils literal"><span class="pre">eventDataOutfile</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">eventDataOutfile</span></code></dt>
 <dd>The path of the file to which to write the raw event data.
 All of the results are contained in this file, and all branch-specific
 speciation rates, shift positions, marginal distributions, etc.,
-can be reconstructed from this output. See <a class="reference internal" href="postprocess.html#bammtools"><em>Analyzing BAMM output with BAMMtools</em></a>
+can be reconstructed from this output. See <a class="reference internal" href="postprocess.html#bammtools"><span>Analyzing BAMM output with BAMMtools</span></a>
 for more information on working with this output format.</dd>
-<dt><tt class="docutils literal"><span class="pre">outputAcceptanceInfo</span></tt></dt>
-<dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, outputs whether each proposal was accepted.
+<dt><code class="docutils literal"><span class="pre">outputAcceptanceInfo</span></code></dt>
+<dd>If <code class="docutils literal"><span class="pre">1</span></code>, outputs whether each proposal was accepted.
 The number identifying the proposal matches the one in the code.
-The default value is <tt class="docutils literal"><span class="pre">0</span></tt> (i.e., do not output this information).</dd>
-<dt><tt class="docutils literal"><span class="pre">acceptanceInfoFileName</span></tt></dt>
+The default value is <code class="docutils literal"><span class="pre">0</span></code> (i.e., do not output this information).</dd>
+<dt><code class="docutils literal"><span class="pre">acceptanceInfoFileName</span></code></dt>
 <dd>The path of the file to which to write whether each proposal was accepted.
-<tt class="docutils literal"><span class="pre">outputAcceptedInfo</span></tt> must be set to <tt class="docutils literal"><span class="pre">1</span></tt> for this information to be
-written. The default value is <tt class="docutils literal"><span class="pre">acceptance_info.txt</span></tt>.</dd>
-<dt><tt class="docutils literal"><span class="pre">acceptanceResetFreq</span></tt></dt>
+<code class="docutils literal"><span class="pre">outputAcceptedInfo</span></code> must be set to <code class="docutils literal"><span class="pre">1</span></code> for this information to be
+written. The default value is <code class="docutils literal"><span class="pre">acceptance_info.txt</span></code>.</dd>
+<dt><code class="docutils literal"><span class="pre">acceptanceResetFreq</span></code></dt>
 <dd>Frequency in which to reset the acceptance information.
-The default value is <tt class="docutils literal"><span class="pre">1000</span></tt>.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateEventLocationScale</span></tt></dt>
+The default value is <code class="docutils literal"><span class="pre">1000</span></code>.</dd>
+<dt><code class="docutils literal"><span class="pre">updateEventLocationScale</span></code></dt>
 <dd>Scale parameter for updating local moves of events on the tree.
 This defines the width of the sliding window proposal. This parameter
 is specified in units of &#8220;total tree depth&#8221; to minimize scale dependence.
 Suppose you have a tree of age <em>T</em> (<em>T</em> is the time of the root node). Parameter
-<tt class="docutils literal"><span class="pre">updateEventLocationScale</span></tt> is in units of T. A value of 0.05 means that the uniform
+<code class="docutils literal"><span class="pre">updateEventLocationScale</span></code> is in units of T. A value of 0.05 means that the uniform
 distribution for event location changes has a width of 0.05T.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateEventRateScale</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateEventRateScale</span></code></dt>
 <dd>Scale parameter (proportional shrinking/expanding) for updating
 the rate parameter of the Poisson process.</dd>
-<dt><tt class="docutils literal"><span class="pre">localGlobalMoveRatio</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">localGlobalMoveRatio</span></code></dt>
 <dd>Ratio of local to global moves of events.</dd>
 </dl>
 </div>
 <div class="section" id="metropolis-coupled-mcmc">
-<h3>6.2.4. Metropolis Coupled MCMC<a class="headerlink" href="#metropolis-coupled-mcmc" title="Permalink to this headline">¶</a></h3>
+<h3>8.2.4. Metropolis Coupled MCMC<a class="headerlink" href="#metropolis-coupled-mcmc" title="Permalink to this headline">¶</a></h3>
 <p>The Metropolis coupled MCMC implementation in BAMM is based on a
 &#8220;global exchange scheme&#8221; for synchronization as described in
 Altekar et al (2004) Parallel Metropolis coupled Markov chain
 Monte Carlo for Bayesian phylogenetic inference.</p>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">numberOfChains</span></tt></dt>
-<dd>Number of Markov chains to run. The default value is <tt class="docutils literal"><span class="pre">1</span></tt>.</dd>
-<dt><tt class="docutils literal"><span class="pre">deltaT</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">numberOfChains</span></code></dt>
+<dd>Number of Markov chains to run. The default value is <code class="docutils literal"><span class="pre">1</span></code>.</dd>
+<dt><code class="docutils literal"><span class="pre">deltaT</span></code></dt>
 <dd>Temperature increment parameter. This value should be &gt; 0.
-The temperature for the <img class="math" src="_images/math/34857b3ba74ce5cd8607f3ebd23e9015908ada71.png" alt="i"/>-th chain is calculated as
-<img class="math" src="_images/math/83eaea22d4dec024e10bb9b4aa567e4ea5f91624.png" alt="1 / [1 + \Delta T \times (i - 1)]"/>.
-The default value is <tt class="docutils literal"><span class="pre">0.1</span></tt>.</dd>
-<dt><tt class="docutils literal"><span class="pre">swapPeriod</span></tt></dt>
+The temperature for the <img class="math" src="_images/math/a581f053bbfa5115f42c13094857cdd12a37ec49.png" alt="i"/>-th chain is calculated as
+<img class="math" src="_images/math/6e4fa62fa63e059c82f51746f690a16417fff886.png" alt="1 / [1 + \Delta T \times (i - 1)]"/>.
+The default value is <code class="docutils literal"><span class="pre">0.1</span></code>.</dd>
+<dt><code class="docutils literal"><span class="pre">swapPeriod</span></code></dt>
 <dd>Number of generations in which to propose a chain swap.
-The default value is <tt class="docutils literal"><span class="pre">1000</span></tt>.</dd>
-<dt><tt class="docutils literal"><span class="pre">chainSwapFileName</span></tt></dt>
+The default value is <code class="docutils literal"><span class="pre">1000</span></code>.</dd>
+<dt><code class="docutils literal"><span class="pre">chainSwapFileName</span></code></dt>
 <dd>Name of the file in which to output data about each chain swap proposal.
 The format of each line is
-<tt class="docutils literal"><span class="pre">[generation],[rank_1],[rank_2],[swap_accepted]</span></tt>
-where <tt class="docutils literal"><span class="pre">[generation]</span></tt> is the generation when the swap proposal was made,
-<tt class="docutils literal"><span class="pre">[rank_1]</span></tt> and <tt class="docutils literal"><span class="pre">[rank_2]</span></tt> are the chains that were chosen
+<code class="docutils literal"><span class="pre">[generation],[rank_1],[rank_2],[swap_accepted]</span></code>
+where <code class="docutils literal"><span class="pre">[generation]</span></code> is the generation when the swap proposal was made,
+<code class="docutils literal"><span class="pre">[rank_1]</span></code> and <code class="docutils literal"><span class="pre">[rank_2]</span></code> are the chains that were chosen
 (chain 1 is the coldest, chain 2 is the second coldest, and so on),
-and <tt class="docutils literal"><span class="pre">[swap_accepted]</span></tt> is whether the swap was made.
-The default value is <tt class="docutils literal"><span class="pre">chain_swap.txt</span></tt>.</dd>
+and <code class="docutils literal"><span class="pre">[swap_accepted]</span></code> is whether the swap was made.
+The default value is <code class="docutils literal"><span class="pre">chain_swap.txt</span></code>.</dd>
 </dl>
 </div>
 <div class="section" id="parameter-update-rates">
-<h3>6.2.5. Parameter Update Rates<a class="headerlink" href="#parameter-update-rates" title="Permalink to this headline">¶</a></h3>
+<h3>8.2.5. Parameter Update Rates<a class="headerlink" href="#parameter-update-rates" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">updateRateEventNumber</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateRateEventNumber</span></code></dt>
 <dd>Relative frequency of MCMC moves that change the number of events,
 where the location of a new event is randomly picked across the whole tree.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateRateEventNumberForBranch</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateRateEventNumberForBranch</span></code></dt>
 <dd>Relative frequency of MCMC moves that change the number of events,
 where the location of a new event is chosen by first
 picking a random branch, then a random location within that branch.
 This setting is hidden and set to 0 by default.
-If used (i.e., set to &gt; 0), <tt class="docutils literal"><span class="pre">updateRateEventNumber</span></tt> should be set to 0.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateRateEventPosition</span></tt></dt>
+If used (i.e., set to &gt; 0), <code class="docutils literal"><span class="pre">updateRateEventNumber</span></code> should be set to 0.</dd>
+<dt><code class="docutils literal"><span class="pre">updateRateEventPosition</span></code></dt>
 <dd>Relative frequency of MCMC moves that change the location of an event
 on the tree.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateRateEventRate</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateRateEventRate</span></code></dt>
 <dd>Relative frequency of MCMC moves that change the rate at which events occur.</dd>
-<dt><tt class="docutils literal"><span class="pre">initialNumberEvents</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">initialNumberEvents</span></code></dt>
 <dd>Initial number of non-root processes.</dd>
 </dl>
 </div>
 </div>
 <div class="section" id="speciation-extinction-model">
-<h2>6.3. Speciation/Extinction Model<a class="headerlink" href="#speciation-extinction-model" title="Permalink to this headline">¶</a></h2>
+<h2>8.3. Speciation/Extinction Model<a class="headerlink" href="#speciation-extinction-model" title="Permalink to this headline">¶</a></h2>
 <p>The following describes the configuration options and parameters
 that are specific to speciation/extinction analyses in BAMM.</p>
 <div class="section" id="id1">
-<h3>6.3.1. General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>8.3.1. General<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">useGlobalSamplingProbability</span></tt></dt>
-<dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, look for a global correction for incomplete sampling
+<dt><code class="docutils literal"><span class="pre">useGlobalSamplingProbability</span></code></dt>
+<dd>If <code class="docutils literal"><span class="pre">1</span></code>, look for a global correction for incomplete sampling
 (globalSamplingProbability).
-If <tt class="docutils literal"><span class="pre">0</span></tt>, look for a file that specifies clade-specific corrections
-for incomplete sampling (<tt class="docutils literal"><span class="pre">sampleProbsFilename</span></tt>).</dd>
-<dt><tt class="docutils literal"><span class="pre">globalSamplingProbability</span></tt></dt>
+If <code class="docutils literal"><span class="pre">0</span></code>, look for a file that specifies clade-specific corrections
+for incomplete sampling (<code class="docutils literal"><span class="pre">sampleProbsFilename</span></code>).</dd>
+<dt><code class="docutils literal"><span class="pre">globalSamplingProbability</span></code></dt>
 <dd>Percentage of total number of species sampled in the phylogeny
 (between 0 and 1).</dd>
-<dt><tt class="docutils literal"><span class="pre">sampleProbsFilename</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">sampleProbsFilename</span></code></dt>
 <dd>The path of a file containing clade-specific corrections for
 incomplete sampling.</dd>
 </dl>
 </div>
 <div class="section" id="id2">
-<h3>6.3.2. Priors<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h3>8.3.2. Priors<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">lambdaInitPrior</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">lambdaInitPrior</span></code></dt>
 <dd>Prior on the inital lambda (rate parameter of the exponential distribution)
 for the speciation rate. Applies to all non-root events.</dd>
-<dt><tt class="docutils literal"><span class="pre">lambdaShiftPrior</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">lambdaShiftPrior</span></code></dt>
 <dd>Prior on the the lambda shift parameter (standard deviation of the normal
 distribution) for the speciation rate. The mean of the distribution
 is fixed at zero, which is equal to a constant rate diversification process.
 Applies to non-root events.</dd>
-<dt><tt class="docutils literal"><span class="pre">lambdaIsTimeVariablePrior</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">lambdaIsTimeVariablePrior</span></code></dt>
 <dd>Prior on the time mode for the speciation rate.
 This prior is the probability that the speciation rate for a new event
 is time-variable (i.e., time-dependent) vs. constant through time.</dd>
-<dt><tt class="docutils literal"><span class="pre">muInitPrior</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">muInitPrior</span></code></dt>
 <dd>Prior on the extinction rate (rate paramater of the exponential
 distribution). Applies to non-root events.</dd>
-<dt><tt class="docutils literal"><span class="pre">segLength</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">segLength</span></code></dt>
 <dd>The &#8220;grain&#8221; of the likelihood calculations. It approximates the
 continuous-time change in diversification rates by breaking each branch
 into a constant-rate diversification segments, with each segment equal to
-<tt class="docutils literal"><span class="pre">segLength</span></tt>. The parameter is specified in units of total tree depth. If
-you have a tree of age T = 100, and set <tt class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">0.05</span></tt>, the segment
+<code class="docutils literal"><span class="pre">segLength</span></code>. The parameter is specified in units of total tree depth. If
+you have a tree of age T = 100, and set <code class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">0.05</span></code>, the segment
 size will be 5.  A branch of length 20 would thus have the exponential
 speciation-rate change approximated by 4 segments. If the value is greater
-than the branch length (e.g., <tt class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">0.20</span></tt> in this case) BAMM will
+than the branch length (e.g., <code class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">0.20</span></code> in this case) BAMM will
 not break the branch into segments but use the mean rate across the entire
 branch.</dd>
 </dl>
 </div>
 <div class="section" id="id3">
-<h3>6.3.3. MCMC Simulation<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<h3>8.3.3. MCMC Simulation<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">updateLambdaInitScale</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateLambdaInitScale</span></code></dt>
 <dd>Scale parameter for updating the initial speciation rate for each process.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateLambdaShiftScale</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateLambdaShiftScale</span></code></dt>
 <dd>Scale parameter for the exponential change parameter for speciation.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateMuInitScale</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateMuInitScale</span></code></dt>
 <dd>Scale parameter for updating initial extinction rate for each process.</dd>
-<dt><tt class="docutils literal"><span class="pre">minCladeSizeForShift</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">minCladeSizeForShift</span></code></dt>
 <dd>Allows you to constrain the location of possible rate-change events
 to occur only on branches with at least this many descendant tips.
-A value of <tt class="docutils literal"><span class="pre">1</span></tt> allows shifts to occur on all branches.</dd>
+A value of <code class="docutils literal"><span class="pre">1</span></code> allows shifts to occur on all branches.</dd>
 </dl>
 </div>
 <div class="section" id="starting-parameters">
-<h3>6.3.4. Starting Parameters<a class="headerlink" href="#starting-parameters" title="Permalink to this headline">¶</a></h3>
+<h3>8.3.4. Starting Parameters<a class="headerlink" href="#starting-parameters" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">lambdaInit0</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">lambdaInit0</span></code></dt>
 <dd>Initial speciation rate (at the root of the tree).</dd>
-<dt><tt class="docutils literal"><span class="pre">lambdaShift0</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">lambdaShift0</span></code></dt>
 <dd>Initial rate change parameter for speciation at the root.
-If <tt class="docutils literal"><span class="pre">0</span></tt>, speciation rates will not change through time.
+If <code class="docutils literal"><span class="pre">0</span></code>, speciation rates will not change through time.
 A negative value implies decreasing rates through time.</dd>
-<dt><tt class="docutils literal"><span class="pre">muInit0</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">muInit0</span></code></dt>
 <dd>Initial extinction rate at the root.</dd>
 </dl>
 </div>
 <div class="section" id="id4">
-<h3>6.3.5. Parameter Update Rates<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<h3>8.3.5. Parameter Update Rates<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">updateRateLambda0</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateRateLambda0</span></code></dt>
 <dd>Relative frequency of MCMC moves that change the initial speciation rate
 associated with an event.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateRateLambdaShift</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateRateLambdaShift</span></code></dt>
 <dd>Relative frequency of MCMC moves that change the exponential shift parameter
 of a speciation rate associated with an event.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateRateLambdaTimeMode</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateRateLambdaTimeMode</span></code></dt>
 <dd>Relative frequency of MCMC moves that change whether the speciation rate
 for an event is time-variable (i.e., time-dependent)
 or constant through time.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateRateMu0</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateRateMu0</span></code></dt>
 <dd>Relative frequency of MCMC moves that change the extinction rate for a given
 event.</dd>
 </dl>
 </div>
 </div>
 <div class="section" id="phenotypic-evolution-model">
-<h2>6.4. Phenotypic Evolution Model<a class="headerlink" href="#phenotypic-evolution-model" title="Permalink to this headline">¶</a></h2>
+<h2>8.4. Phenotypic Evolution Model<a class="headerlink" href="#phenotypic-evolution-model" title="Permalink to this headline">¶</a></h2>
 <p>The following describes the configuration options and parameters
 specific to the phenotypic evolution model in BAMM.
 The parameter &#8220;beta&#8221; represents the rate of phenotypic evolution
 at any point in time.</p>
 <div class="section" id="id5">
-<h3>6.4.1. General<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h3>8.4.1. General<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">traitfile</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">traitfile</span></code></dt>
 <dd>The path to a file that contains the phenotypic trait data.
 Traits must be continuous characters.
 Each line must have a species name and the corresponding trait value,
@@ -424,72 +426,72 @@ All species in the trait data file must be in the tree and vice versa.</dd>
 </dl>
 </div>
 <div class="section" id="mcmc-tuning">
-<h3>6.4.2. MCMC Tuning<a class="headerlink" href="#mcmc-tuning" title="Permalink to this headline">¶</a></h3>
+<h3>8.4.2. MCMC Tuning<a class="headerlink" href="#mcmc-tuning" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">updateBetaInitScale</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateBetaInitScale</span></code></dt>
 <dd>Scale operator for proportional shrinking/expanding move to update
 the initial phenotypic rate for rate regimes.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateNodeStateScale</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateNodeStateScale</span></code></dt>
 <dd>Scale operator for sliding window move to update ancestral states
 at internal nodes.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateBetaShiftScale</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateBetaShiftScale</span></code></dt>
 <dd>Scale operator for sliding window move to update initial phenotypic rate.</dd>
 </dl>
 </div>
 <div class="section" id="id6">
-<h3>6.4.3. Starting Parameters<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<h3>8.4.3. Starting Parameters<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">betaInit</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">betaInit</span></code></dt>
 <dd>Initial value of the phenotypic evolutionary process at the root
 of the tree.</dd>
-<dt><tt class="docutils literal"><span class="pre">betaShiftInit</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">betaShiftInit</span></code></dt>
 <dd>Initial value of the exponential change parameter for the phenotypic
 evolutionary process (at the root of the tree).
-If <tt class="docutils literal"><span class="pre">0</span></tt>, then the process has a constant rate.
+If <code class="docutils literal"><span class="pre">0</span></code>, then the process has a constant rate.
 If negative, it implies decreasing rates through time.</dd>
 </dl>
 </div>
 <div class="section" id="id7">
-<h3>6.4.4. Priors<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<h3>8.4.4. Priors<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">betaInitPrior</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">betaInitPrior</span></code></dt>
 <dd>Parameter (rate) of the prior (exponential) on the inital phenotypic
 evolutionary rate associated with regimes, for non-root events.</dd>
-<dt><tt class="docutils literal"><span class="pre">betaShiftPrior</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">betaShiftPrior</span></code></dt>
 <dd>Parameter (stdandard deviation) of the prior (normal) on the rate-change
 parameter for non-root events.</dd>
-<dt><tt class="docutils literal"><span class="pre">betaIsTimeVariablePrior</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">betaIsTimeVariablePrior</span></code></dt>
 <dd>Prior on the time mode for the phenotypic evolution rate.
 This prior is the probability that the phenotypic rate for a new event
 is time-variable (i.e., time-dependent) vs. constant through time.</dd>
-<dt><tt class="docutils literal"><span class="pre">useObservedMinMaxAsTraitPriors</span></tt></dt>
-<dd>If <tt class="docutils literal"><span class="pre">1</span></tt>, puts a uniform prior density on the distribution of ancestral
+<dt><code class="docutils literal"><span class="pre">useObservedMinMaxAsTraitPriors</span></code></dt>
+<dd>If <code class="docutils literal"><span class="pre">1</span></code>, puts a uniform prior density on the distribution of ancestral
 character states, with upper and lower bonds determined by the min and max
 of the observed data.</dd>
-<dt><tt class="docutils literal"><span class="pre">traitPriorMin</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">traitPriorMin</span></code></dt>
 <dd>User-defined minimum value for the uniform density on the distribution
 of ancestral character states. Only used if
-<tt class="docutils literal"><span class="pre">useObservedMinMaxAsTraitPriors</span> <span class="pre">=</span> <span class="pre">0</span></tt>.</dd>
-<dt><tt class="docutils literal"><span class="pre">traitPriorMax</span></tt></dt>
+<code class="docutils literal"><span class="pre">useObservedMinMaxAsTraitPriors</span> <span class="pre">=</span> <span class="pre">0</span></code>.</dd>
+<dt><code class="docutils literal"><span class="pre">traitPriorMax</span></code></dt>
 <dd>User-defined maximum value for the uniform density on the distribution
 of ancestral character states. Only used if
-<tt class="docutils literal"><span class="pre">useObservedMinMaxAsTraitPriors</span> <span class="pre">=</span> <span class="pre">0</span></tt>.</dd>
+<code class="docutils literal"><span class="pre">useObservedMinMaxAsTraitPriors</span> <span class="pre">=</span> <span class="pre">0</span></code>.</dd>
 </dl>
 </div>
 <div class="section" id="id8">
-<h3>6.4.5. Parameter Update Rates<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<h3>8.4.5. Parameter Update Rates<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">updateRateBeta0</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateRateBeta0</span></code></dt>
 <dd>Relative frequency of moves that change the initial phenotypic rate
 associated with an event.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateRateBetaShift</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateRateBetaShift</span></code></dt>
 <dd>Relative frequency of moves that change the exponential shift parameter
 of a phenotypic rate associated with an event.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateRateBetaTimeMode</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateRateBetaTimeMode</span></code></dt>
 <dd>Relative frequency of MCMC moves that change whether
 the phenotypic evolution rate for an event is time-variable
 (i.e., time-dependent) or constant through time.</dd>
-<dt><tt class="docutils literal"><span class="pre">updateRateNodeState</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">updateRateNodeState</span></code></dt>
 <dd>Relative frequency of moves update the value of ancestral character stats.
 You have as many ancestral states as you have internal nodes in your tree,
 so there are a lot of parameters: this value should, in general,
@@ -499,23 +501,23 @@ that need to be updated.</dd>
 </dl>
 </div>
 <div class="section" id="data-output">
-<h3>6.4.6. Data Output<a class="headerlink" href="#data-output" title="Permalink to this headline">¶</a></h3>
+<h3>8.4.6. Data Output<a class="headerlink" href="#data-output" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">nodeStateOutfile</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">nodeStateOutfile</span></code></dt>
 <dd>The path of the file to which to write the node state data
 (i.e., trait values).
 The data are written as a tree in the Newick format,
 where the &#8220;branch length&#8221; of each node is the node&#8217;s trait value.
 The tree includes the ancestral trait value data.
-At each time point (see <tt class="docutils literal"><span class="pre">nodeStateWriteFreq</span></tt>),
+At each time point (see <code class="docutils literal"><span class="pre">nodeStateWriteFreq</span></code>),
 the generation and the current node state tree are written on a new line.
 This set of trees may be read in R using the ape library
-(<tt class="docutils literal"><span class="pre">read.tree('node_state.txt',</span> <span class="pre">keep.multi=T)</span></tt>).
-The setting <tt class="docutils literal"><span class="pre">nodeStateOutfile</span></tt> is normally hidden
-and its default value is <tt class="docutils literal"><span class="pre">node_state.txt</span></tt>.</dd>
-<dt><tt class="docutils literal"><span class="pre">nodeStateWriteFreq</span></tt></dt>
+(<code class="docutils literal"><span class="pre">read.tree('node_state.txt',</span> <span class="pre">keep.multi=T)</span></code>).
+The setting <code class="docutils literal"><span class="pre">nodeStateOutfile</span></code> is normally hidden
+and its default value is <code class="docutils literal"><span class="pre">node_state.txt</span></code>.</dd>
+<dt><code class="docutils literal"><span class="pre">nodeStateWriteFreq</span></code></dt>
 <dd>Frequency (in generations) at which to print the node state data.
-This setting is normally hidden and its default value is <tt class="docutils literal"><span class="pre">0</span></tt>
+This setting is normally hidden and its default value is <code class="docutils literal"><span class="pre">0</span></code>
 (i.e., do not write any node state data).</dd>
 </dl>
 </div>
@@ -528,14 +530,14 @@ This setting is normally hidden and its default value is <tt class="docutils lit
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="postprocess.html" title="7. Analyzing BAMM output with BAMMtools"
+          <a href="postprocess.html" title="9. Analyzing BAMM output with BAMMtools"
              >next</a></li>
         <li class="right" >
-          <a href="settingup.html" title="5. Setting Up BAMM"
+          <a href="settingup.html" title="7. Setting Up BAMM"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -545,9 +547,9 @@ This setting is normally hidden and its default value is <tt class="docutils lit
       </ul>
     </div>
 
-    <div class="footer">
-        &copy; Copyright 2014 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015 BAMM Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b3+.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -7,7 +7,15 @@ Advanced analysis options
 
 Accounting for *non-random* incomplete taxon sampling in diversification studies
 --------------------------------------------------------------------------------
-It is well-known that incomplete taxon sampling can bias analyses of speciation and extinction from phylogenetic trees. If you have an incompletely-sampled tree (e.g., some fraction < 1 of the total extant species richness of your focal taxon), you can easily specify this sampling fraction to generate unbiased estimates of speciation and extinction under the assumption that *species are missing at random from the tree*. In your controlfile, you can specify the percentage of species that have been sampled by setting the ``globalSamplingFraction`` parameter. Specifically, you should have the following settings in your control file::
+
+**CAUTION**: For analyses of higher level phylogenetic trees where you have single representatives of different groups,
+such as genus-level or family-level phylogenies, we **strongly recommend** that you use a stochastic polytomy resolver - such as PASTIS - to place the missing species
+in the tree. The PASTIS method is described `here <http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12117/abstract>`_ , and there 
+is an associated R package. Using the analytical correction for incomplete taxon sampling
+is less effective when your phylogenies are extremely incomplete (e.g., < 10% of tips sampled). Even with the uncertainty introduced by the PASTIS approach, 
+you will obtain better results using this for highly incomplete phylogenies. 
+
+**For less incomplete phylogenies**: It is well-known that incomplete taxon sampling can bias analyses of speciation and extinction from phylogenetic trees. If you have an incompletely-sampled tree (e.g., some fraction < 1 of the total extant species richness of your focal taxon), you can easily specify this sampling fraction to generate unbiased estimates of speciation and extinction under the assumption that *species are missing at random from the tree*. In your controlfile, you can specify the percentage of species that have been sampled by setting the ``globalSamplingFraction`` parameter. Specifically, you should have the following settings in your control file::
 
 	useGlobalSamplingProbability = 1
 	globalSamplingFraction = XYZ

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>9. Metropolis coupled Markov chain Monte Carlo [(MC)3] &mdash; bamm 1.0 documentation</title>
+    <title>11. Metropolis coupled Markov chain Monte Carlo [(MC)3] &mdash; bamm 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,23 +23,23 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 1.0 documentation" href="index.html" />
-    <link rel="next" title="10. Advanced analysis options" href="advanced.html" />
-    <link rel="prev" title="8. Time-flip proposal: Time-constant and time-variable shifts" href="time-flip.html" /> 
+    <link rel="top" title="bamm 1.0 documentation" href="documentation.html" />
+    <link rel="next" title="12. Advanced analysis options" href="advanced.html" />
+    <link rel="prev" title="10. Time-flip proposal: Time-constant and time-variable shifts" href="time-flip.html" /> 
   </head>
-  <body>
+  <body role="document">
 <div class="pageheader">
     <img src="_static/bamm-header.png" /img>
 </div>
 
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="advanced.html" title="10. Advanced analysis options"
+          <a href="advanced.html" title="12. Advanced analysis options"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="time-flip.html" title="8. Time-flip proposal: Time-constant and time-variable shifts"
+          <a href="time-flip.html" title="10. Time-flip proposal: Time-constant and time-variable shifts"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -48,15 +48,15 @@
  
       </ul>
     </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">9. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]</a><ul>
-<li><a class="reference internal" href="#multi-core-metropolis-coupled-mcmc-mc4">9.1. Multi-core Metropolis coupled MCMC [(MC)<sup>4</sup>]</a></li>
-<li><a class="reference internal" href="#mc3-settings-in-bamm">9.2. (MC)<sup>3</sup> settings in BAMM</a><ul>
-<li><a class="reference internal" href="#control-file-settings">9.2.1. Control file settings</a></li>
-<li><a class="reference internal" href="#determine-the-best-settings">9.2.2. Determine the best settings</a></li>
+<li><a class="reference internal" href="#">11. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]</a><ul>
+<li><a class="reference internal" href="#multi-core-metropolis-coupled-mcmc-mc4">11.1. Multi-core Metropolis coupled MCMC [(MC)<sup>4</sup>]</a></li>
+<li><a class="reference internal" href="#mc3-settings-in-bamm">11.2. (MC)<sup>3</sup> settings in BAMM</a><ul>
+<li><a class="reference internal" href="#control-file-settings">11.2.1. Control file settings</a></li>
+<li><a class="reference internal" href="#determine-the-best-settings">11.2.2. Determine the best settings</a></li>
 </ul>
 </li>
 </ul>
@@ -65,16 +65,18 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="time-flip.html"
-                        title="previous chapter">8. Time-flip proposal: Time-constant and time-variable shifts</a></p>
+                        title="previous chapter">10. Time-flip proposal: Time-constant and time-variable shifts</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="advanced.html"
-                        title="next chapter">10. Advanced analysis options</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/mc3.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+                        title="next chapter">12. Advanced analysis options</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/mc3.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -93,10 +95,10 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="metropolis-coupled-markov-chain-monte-carlo-mc3">
-<span id="mc3"></span><h1>9. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]<a class="headerlink" href="#metropolis-coupled-markov-chain-monte-carlo-mc3" title="Permalink to this headline">¶</a></h1>
+<span id="mc3"></span><h1>11. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]<a class="headerlink" href="#metropolis-coupled-markov-chain-monte-carlo-mc3" title="Permalink to this headline">¶</a></h1>
 <p>The Markov chain Monte Carlo (MCMC) method implemented in BAMM
 estimates the posterior probability distribution of diversification models
 that best describe a particular phylogenetic dataset.
@@ -122,44 +124,44 @@ As a result, a chain that is stuck in a local optimum
 may immediately jump to another area of the landscape.</p>
 <p>The implementation of (MC)<sup>3</sup> in BAMM follows that described in
 <a class="reference external" href="http://bioinformatics.oxfordjournals.org/content/20/3/407.full.pdf">Altekar et al. 2004</a>.
-For each chain <img class="math" src="_images/math/34857b3ba74ce5cd8607f3ebd23e9015908ada71.png" alt="i"/>, its temperature <img class="math" src="_images/math/69b7960de2d0464d76554a59404da87b450fe890.png" alt="\beta_i"/> is set to
-<img class="math" src="_images/math/3a3af71e4d3e41fdab13d9391c9faa023d72a531.png" alt="\beta_i = [1 + \Delta T \times (i - 1)]^{-1}"/>,
-where <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> is the temperature increment parameter.
-For example, if there are 4 chains and <img class="math" src="_images/math/c83402ba2c5ade45af23e6d878801292cca4db43.png" alt="\Delta T = 0.1"/>,
+For each chain <img class="math" src="_images/math/a581f053bbfa5115f42c13094857cdd12a37ec49.png" alt="i"/>, its temperature <img class="math" src="_images/math/af98ebbbe7174c893ed8f4c7fc046767210ce3a6.png" alt="\beta_i"/> is set to
+<img class="math" src="_images/math/1e2fd3cdbc4ba9884ebab93cf519cb7b5131e4f9.png" alt="\beta_i = [1 + \Delta T \times (i - 1)]^{-1}"/>,
+where <img class="math" src="_images/math/9976423b4508d96713220e748655bf30cd6beb8e.png" alt="\Delta T"/> is the temperature increment parameter.
+For example, if there are 4 chains and <img class="math" src="_images/math/655954c3208d9fa5aaf6c8c51fd968598e711364.png" alt="\Delta T = 0.1"/>,
 the temperatures of each chain are 1, 0.9091, 0.8333, and 0.7692.
 The temperature of the cold chain is always 1.
-Note that the value of <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> should be greater than 0
+Note that the value of <img class="math" src="_images/math/9976423b4508d96713220e748655bf30cd6beb8e.png" alt="\Delta T"/> should be greater than 0
 and chosen such that the probability of accepting a swap
 is between 20% and 60% (Altekar et al. 2004).</p>
-<p>The temperature of each chain <img class="math" src="_images/math/34857b3ba74ce5cd8607f3ebd23e9015908ada71.png" alt="i"/> goes into the calculation
+<p>The temperature of each chain <img class="math" src="_images/math/a581f053bbfa5115f42c13094857cdd12a37ec49.png" alt="i"/> goes into the calculation
 of the acceptance probability for a within-model proposal
 (i.e., not involving changes in the dimensionality of the model):</p>
 <div class="math">
-<p><img src="_images/math/f100118d753191c94a8b068ec64003604d6abb39.png" alt="\alpha_i = \text{min}\left\{ 1,
+<p><img src="_images/math/0cb6d0e8f17399a636d80d21856a0e668286d18c.png" alt="\alpha_i = \text{min}\left\{ 1,
     \left(
     \cfrac{f(\theta_i')}{f(\theta_i)} \times
     \cfrac{\pi(\theta_i')}{\pi(\theta_i)}
     \right)^{\beta_i} \times
     \cfrac{q(\theta_i | \theta_i')}{q(\theta_i' | \theta_i)}
 \right\}"/></p>
-</div><p>where <img class="math" src="_images/math/3523c117421a3db7f0c97a381c8fe5a6bd18d161.png" alt="\theta_i"/> and <img class="math" src="_images/math/e04c0116d617299aac5a548319bc479c3897923e.png" alt="\theta_i'"/> are parameter vectors
-corresponding to the current and proposed states for chain <img class="math" src="_images/math/34857b3ba74ce5cd8607f3ebd23e9015908ada71.png" alt="i"/>,
-<img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816437.png" alt="f"/> and <img class="math" src="_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/> are the corresponding likelihood
+</div><p>where <img class="math" src="_images/math/b8f3474543da212ad1bc580e4d98fc2d64482a70.png" alt="\theta_i"/> and <img class="math" src="_images/math/1505e21d68316d3c46053074448fb5b35d93c504.png" alt="\theta_i'"/> are parameter vectors
+corresponding to the current and proposed states for chain <img class="math" src="_images/math/a581f053bbfa5115f42c13094857cdd12a37ec49.png" alt="i"/>,
+<img class="math" src="_images/math/0001d02b63ede2fe3219e05a7cd09c82ae6298b6.png" alt="f"/> and <img class="math" src="_images/math/c1bd4cb4e3647c6b2356b7ccf2f52aeffedd1b61.png" alt="\pi"/> are the corresponding likelihood
 and prior density functions,
-and <img class="math" src="_images/math/bb5cb996372836b4b6bbed384e4d253b77b2388f.png" alt="q(\theta_i' | \theta_i)"/> is the relative probability
-of proposing a move to parameter vector <img class="math" src="_images/math/e04c0116d617299aac5a548319bc479c3897923e.png" alt="\theta_i'"/>
-given that the current state is <img class="math" src="_images/math/3523c117421a3db7f0c97a381c8fe5a6bd18d161.png" alt="\theta_i"/>.
+and <img class="math" src="_images/math/7ad6d43844c7bf1a9cdc49a7c62badc704f8d58f.png" alt="q(\theta_i' | \theta_i)"/> is the relative probability
+of proposing a move to parameter vector <img class="math" src="_images/math/1505e21d68316d3c46053074448fb5b35d93c504.png" alt="\theta_i'"/>
+given that the current state is <img class="math" src="_images/math/b8f3474543da212ad1bc580e4d98fc2d64482a70.png" alt="\theta_i"/>.
 A similar calculation is done for the acceptance probability for proposals
 that change the dimensionality of the model.</p>
 <p>After a certain number of generations, two randomly chosen chains
-<img class="math" src="_images/math/8122aa89ea6e80784c6513d22787ad86e36ad0cc.png" alt="j"/> and <img class="math" src="_images/math/8c325612684d41304b9751c175df7bcc0f61f64f.png" alt="k"/> are swapped with acceptance probability</p>
+<img class="math" src="_images/math/d32c78b759903e3f4bd4fd2ce0b86358f7500c5d.png" alt="j"/> and <img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/> are swapped with acceptance probability</p>
 <div class="math">
-<p><img src="_images/math/93b3795a99a3fb71e71f20c3cfb67cd125d7ceaf.png" alt="\alpha = \text{min}\left\{ 1,
+<p><img src="_images/math/2430dfb6e6aac4837ac6a5d7e52e6c68a813e5e2.png" alt="\alpha = \text{min}\left\{ 1,
     \left(\cfrac{f(\theta_k)}{f(\theta_j)}\right)^{\beta_j} \times
     \left(\cfrac{f(\theta_j)}{f(\theta_k)}\right)^{\beta_k}
 \right\}"/></p>
 </div><div class="section" id="multi-core-metropolis-coupled-mcmc-mc4">
-<h2>9.1. Multi-core Metropolis coupled MCMC [(MC)<sup>4</sup>]<a class="headerlink" href="#multi-core-metropolis-coupled-mcmc-mc4" title="Permalink to this headline">¶</a></h2>
+<h2>11.1. Multi-core Metropolis coupled MCMC [(MC)<sup>4</sup>]<a class="headerlink" href="#multi-core-metropolis-coupled-mcmc-mc4" title="Permalink to this headline">¶</a></h2>
 <p>Using a single CPU, the amount of time a run takes to finish
 scales linearly with the number of chains.
 Because chains are mostly independent from each other,
@@ -168,52 +170,52 @@ they may be set up to run on different CPUs in parallel.
 BAMM implements this parallelization using threads in C++11.</p>
 </div>
 <div class="section" id="mc3-settings-in-bamm">
-<h2>9.2. (MC)<sup>3</sup> settings in BAMM<a class="headerlink" href="#mc3-settings-in-bamm" title="Permalink to this headline">¶</a></h2>
+<h2>11.2. (MC)<sup>3</sup> settings in BAMM<a class="headerlink" href="#mc3-settings-in-bamm" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="control-file-settings">
-<h3>9.2.1. Control file settings<a class="headerlink" href="#control-file-settings" title="Permalink to this headline">¶</a></h3>
+<h3>11.2.1. Control file settings<a class="headerlink" href="#control-file-settings" title="Permalink to this headline">¶</a></h3>
 <p>There are four settings in BAMM that control the behavior of (MC)<sup>3</sup>.
 They are in the template and example control files
-under the heading <tt class="docutils literal"><span class="pre">METROPOLIS</span> <span class="pre">COUPLED</span> <span class="pre">MCMC</span></tt>.
-The number of Markov chains to use is specified with <tt class="docutils literal"><span class="pre">numberOfChains</span></tt>.
-The <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> value is specified with <tt class="docutils literal"><span class="pre">deltaT</span></tt>.
+under the heading <code class="docutils literal"><span class="pre">METROPOLIS</span> <span class="pre">COUPLED</span> <span class="pre">MCMC</span></code>.
+The number of Markov chains to use is specified with <code class="docutils literal"><span class="pre">numberOfChains</span></code>.
+The <img class="math" src="_images/math/9976423b4508d96713220e748655bf30cd6beb8e.png" alt="\Delta T"/> value is specified with <code class="docutils literal"><span class="pre">deltaT</span></code>.
 The number of generations between chain swap proposals
-is specified with <tt class="docutils literal"><span class="pre">swapPeriod</span></tt>.
-BAMM will output to a file (<tt class="docutils literal"><span class="pre">chain_swap.txt</span></tt> by default)
+is specified with <code class="docutils literal"><span class="pre">swapPeriod</span></code>.
+BAMM will output to a file (<code class="docutils literal"><span class="pre">chain_swap.txt</span></code> by default)
 the generation in which a swap proposal occurred,
 the ranking of the two chains chosen
 (1 is the cold chain, 2 is the first heated chain, etc.),
 and whether the swap was accepted.
-The file to which to output these data is specified with <tt class="docutils literal"><span class="pre">chainSwapFileName</span></tt>.</p>
+The file to which to output these data is specified with <code class="docutils literal"><span class="pre">chainSwapFileName</span></code>.</p>
 <p>Our preliminary tests show that four chains produces good MCMC mixing.
-The <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> value should be set such that the probability
+The <img class="math" src="_images/math/9976423b4508d96713220e748655bf30cd6beb8e.png" alt="\Delta T"/> value should be set such that the probability
 of accepting a chain swap proposal is between 20% and 60%.
 For small to medium sized trees (&lt; 1,000 taxa),
-we have found that <img class="math" src="_images/math/c83402ba2c5ade45af23e6d878801292cca4db43.png" alt="\Delta T = 0.1"/> works well.
-For large trees, <img class="math" src="_images/math/945d7f173555ed9783a91fb3b9e80329f4f41f90.png" alt="\Delta T = 0.05"/>
-or <img class="math" src="_images/math/e64369d1075b11efc6db521dc5608715f1cc9748.png" alt="\Delta T = 0.01"/> works better.
+we have found that <img class="math" src="_images/math/655954c3208d9fa5aaf6c8c51fd968598e711364.png" alt="\Delta T = 0.1"/> works well.
+For large trees, <img class="math" src="_images/math/66d1150c546da907d4c466d12175784a8caab137.png" alt="\Delta T = 0.05"/>
+or <img class="math" src="_images/math/7284b41786576a34398a7c9a0c6aca6ec58b401a.png" alt="\Delta T = 0.01"/> works better.
 We have not examined the effects of the swap period in detail,
 but in terms of run time,
 the smaller the swap period, the longer the run takes to complete.
 A swap period of 1000 has worked for us.</p>
 </div>
 <div class="section" id="determine-the-best-settings">
-<h3>9.2.2. Determine the best settings<a class="headerlink" href="#determine-the-best-settings" title="Permalink to this headline">¶</a></h3>
-<p>In the <tt class="docutils literal"><span class="pre">tools</span></tt> directory of the BAMM GitHub repository,
-we have provided an R script, <tt class="docutils literal"><span class="pre">chainSwapPercent.R</span></tt>,
-and a bash script (OS X and Linux only), <tt class="docutils literal"><span class="pre">chain-swap-percent.sh</span></tt>,
-to help determine the optimal <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> value for a specific data set.
+<h3>11.2.2. Determine the best settings<a class="headerlink" href="#determine-the-best-settings" title="Permalink to this headline">¶</a></h3>
+<p>In the <code class="docutils literal"><span class="pre">tools</span></code> directory of the BAMM GitHub repository,
+we have provided an R script, <code class="docutils literal"><span class="pre">chainSwapPercent.R</span></code>,
+and a bash script (OS X and Linux only), <code class="docutils literal"><span class="pre">chain-swap-percent.sh</span></code>,
+to help determine the optimal <img class="math" src="_images/math/9976423b4508d96713220e748655bf30cd6beb8e.png" alt="\Delta T"/> value for a specific data set.
 These scripts print out the percent acceptance of the chain swap proposals
 by testing all combinations of the given values of
-swap period, <img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/>, and number of chains.
+swap period, <img class="math" src="_images/math/9976423b4508d96713220e748655bf30cd6beb8e.png" alt="\Delta T"/>, and number of chains.
 Both scripts work similarly,
 so choose one or the other depending on convenience.</p>
 <p>To use either of the scripts,
 first make sure you are in the directory containing your data files.
 We assume that the scripts are located in <em>~/bamm/tools</em>
-and that the BAMM executable can be run as <tt class="docutils literal"><span class="pre">bamm</span></tt>.
+and that the BAMM executable can be run as <code class="docutils literal"><span class="pre">bamm</span></code>.
 The following examples assume that you would like to test
 all combinations for the number of chains of 2, 4, and 6,
-<img class="math" src="_images/math/9aa82340bf6dc42b34f1d3f04d1b4ce188366934.png" alt="\Delta T"/> of 0.01 and 0.05, and swap period of 100 and 1000.
+<img class="math" src="_images/math/9976423b4508d96713220e748655bf30cd6beb8e.png" alt="\Delta T"/> of 0.01 and 0.05, and swap period of 100 and 1000.
 To use the R script, run in R:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">source</span><span class="p">(</span><span class="s">&quot;~/bamm/tools/chainSwapPercent.R&quot;</span><span class="p">)</span>
 <span class="n">chainSwapPercent</span><span class="p">(</span><span class="n">bammPath</span> <span class="o">=</span> <span class="s">&#39;bamm&#39;</span><span class="p">,</span> <span class="n">controlfile</span> <span class="o">=</span> <span class="s">&#39;divcontrol.txt&#39;</span><span class="p">,</span>
@@ -223,7 +225,7 @@ To use the R script, run in R:</p>
 </pre></div>
 </div>
 <p>This will produce the following output:</p>
-<div class="highlight-python"><pre>  |==================================================================| 100%
+<div class="highlight-python"><div class="highlight"><pre>  |==================================================================| 100%
   nChains deltaT swapP percent accepted proposed
 1       2   0.01   100 0.98125      157      160
 2       2   0.01  1000 1.00000       16       16
@@ -236,13 +238,15 @@ To use the R script, run in R:</p>
 9       6   0.01   100 0.98125      157      160
 10      6   0.01  1000 1.00000       16       16
 11      6   0.05   100 0.75625      121      160
-12      6   0.05  1000 0.93750       15       16</pre>
+12      6   0.05  1000 0.93750       15       16
+</pre></div>
 </div>
 <p>These results may be saved into a variable by assigning the variable
 the result of the <em>chainSwapPercent</em> function.</p>
 <p>To use the bash script, run in a terminal:</p>
-<div class="highlight-python"><pre>~/bamm/tools/chain-swap-percent.sh --numberOfChains 2 4 6
-    --deltaT 0.01 0.05 --swapPeriod 1000 --run bamm -c divcontrol.txt</pre>
+<div class="highlight-python"><div class="highlight"><pre>~/bamm/tools/chain-swap-percent.sh --numberOfChains 2 4 6
+    --deltaT 0.01 0.05 --swapPeriod 1000 --run bamm -c divcontrol.txt
+</pre></div>
 </div>
 <p>The output will be similar to that produced by the R script.</p>
 </div>
@@ -255,14 +259,14 @@ the result of the <em>chainSwapPercent</em> function.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="advanced.html" title="10. Advanced analysis options"
+          <a href="advanced.html" title="12. Advanced analysis options"
              >next</a></li>
         <li class="right" >
-          <a href="time-flip.html" title="8. Time-flip proposal: Time-constant and time-variable shifts"
+          <a href="time-flip.html" title="10. Time-flip proposal: Time-constant and time-variable shifts"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -272,9 +276,9 @@ the result of the <em>chainSwapPercent</em> function.</p>
       </ul>
     </div>
 
-    <div class="footer">
-        &copy; Copyright 2014 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015 BAMM Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b3+.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

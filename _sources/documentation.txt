@@ -12,7 +12,9 @@ BAMM Documentation
 
    introduction
    bammgraph
-   rateshifts   
+   rateshifts
+   fossilbamm
+   strapp   
    quickstart
    settingup
    configuration
@@ -20,6 +22,7 @@ BAMM Documentation
    time-flip
    mc3
    advanced
+   colorbreaks
 
    faq
    troubleshooting

@@ -23,16 +23,16 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 1.0 documentation" href="index.html" />
+    <link rel="top" title="bamm 1.0 documentation" href="documentation.html" />
     <link rel="next" title="3. Rate Shifts on Phylogenies: Theoretical Background" href="rateshifts.html" />
     <link rel="prev" title="1. Introduction" href="introduction.html" /> 
   </head>
-  <body>
+  <body role="document">
 <div class="pageheader">
     <img src="_static/bamm-header.png" /img>
 </div>
 
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -48,7 +48,7 @@
  
       </ul>
     </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
@@ -70,12 +70,14 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="rateshifts.html"
                         title="next chapter">3. Rate Shifts on Phylogenies: Theoretical Background</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/bammgraph.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/bammgraph.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -94,11 +96,11 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="bamm-graph-gallery">
 <span id="bammgraphs"></span><h1>2. BAMM graph gallery<a class="headerlink" href="#bamm-graph-gallery" title="Permalink to this headline">¶</a></h1>
-<p>A collection of graphics from BAMM and BAMMtools. R code to produce images is given below each panel. Much more detail on BAMMtools analysis is given <a class="reference internal" href="postprocess.html#bammtools"><em>here</em></a>.</p>
+<p>A collection of graphics from BAMM and BAMMtools. R code to produce images is given below each panel. Much more detail on BAMMtools analysis is given <a class="reference internal" href="postprocess.html#bammtools"><span>here</span></a>.</p>
 <div class="section" id="phylorate-plot">
 <h2>2.1. Phylorate plot<a class="headerlink" href="#phylorate-plot" title="Permalink to this headline">¶</a></h2>
 <div class="figure align-center" id="bammgraphgallery1">
@@ -111,6 +113,28 @@
 <span class="n">plot</span><span class="o">.</span><span class="n">bammdata</span><span class="p">(</span><span class="n">edata_whales</span><span class="p">,</span> <span class="n">lwd</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&quot;polar&quot;</span><span class="p">,</span> <span class="n">pal</span><span class="o">=</span><span class="s">&quot;temperature&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="figure align-center" id="bammgraphgallery1-5">
+<a class="reference internal image-reference" href="_images/breaksForGallery.png"><img alt="_images/breaksForGallery.png" src="_images/breaksForGallery.png" style="width: 700px;" /></a>
+</div>
+<p>Multiple options are available in BAMMtools for mapping colors to rates in phylorate plots. Changing these options can be particularly useful if the distribution of rates across th phylogeny is heavily skewed. See <a class="reference external" href="colorbreaks.html">Color ramps and phylorate plots</a> for more information:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">par</span><span class="p">(</span><span class="n">mfrow</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">mar</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">xpd</span><span class="o">=</span><span class="n">TRUE</span><span class="p">)</span>
+
+<span class="n">q</span> <span class="o">&lt;-</span> <span class="n">plot</span><span class="o">.</span><span class="n">bammdata</span><span class="p">(</span><span class="n">ed</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">breaksmethod</span><span class="o">=</span><span class="s">&#39;linear&#39;</span><span class="p">,</span> <span class="n">lwd</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">addBAMMshifts</span><span class="p">(</span><span class="n">ed</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">reset</span><span class="o">=</span><span class="n">FALSE</span><span class="p">,</span> <span class="n">cex</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">title</span><span class="p">(</span><span class="n">sub</span><span class="o">=</span><span class="s">&#39;linear&#39;</span><span class="p">,</span><span class="n">cex</span><span class="o">.</span><span class="n">sub</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">line</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">addBAMMlegend</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">corners</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">220</span><span class="p">),</span> <span class="n">side</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">las</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">q</span> <span class="o">&lt;-</span> <span class="n">plot</span><span class="o">.</span><span class="n">bammdata</span><span class="p">(</span><span class="n">ed</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">breaksmethod</span><span class="o">=</span><span class="s">&#39;linear&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">.</span><span class="n">interval</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="n">NA</span><span class="p">,</span><span class="mf">0.12</span><span class="p">),</span> <span class="n">lwd</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">addBAMMshifts</span><span class="p">(</span><span class="n">ed</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">reset</span><span class="o">=</span><span class="n">FALSE</span><span class="p">,</span> <span class="n">cex</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">title</span><span class="p">(</span><span class="n">sub</span><span class="o">=</span><span class="s">&#39;linear - color.interval&#39;</span><span class="p">,</span><span class="n">cex</span><span class="o">.</span><span class="n">sub</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">line</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">addBAMMlegend</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">corners</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">220</span><span class="p">),</span> <span class="n">side</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">las</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">q</span> <span class="o">&lt;-</span> <span class="n">plot</span><span class="o">.</span><span class="n">bammdata</span><span class="p">(</span><span class="n">ed</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">breaksmethod</span><span class="o">=</span><span class="s">&#39;jenks&#39;</span><span class="p">,</span> <span class="n">lwd</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">addBAMMshifts</span><span class="p">(</span><span class="n">ed</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">reset</span><span class="o">=</span><span class="n">FALSE</span><span class="p">,</span> <span class="n">cex</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">title</span><span class="p">(</span><span class="n">sub</span><span class="o">=</span><span class="s">&#39;jenks&#39;</span><span class="p">,</span><span class="n">cex</span><span class="o">.</span><span class="n">sub</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">line</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">addBAMMlegend</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">corners</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">220</span><span class="p">),</span> <span class="n">side</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">las</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="individual-rate-shift-configurations-sampled-by-bamm">
 <h2>2.2. Individual rate-shift configurations sampled by BAMM<a class="headerlink" href="#individual-rate-shift-configurations-sampled-by-bamm" title="Permalink to this headline">¶</a></h2>
@@ -118,20 +142,21 @@
 <a class="reference internal image-reference" href="_images/bammgraphgallery2.png"><img alt="_images/bammgraphgallery2.png" src="_images/bammgraphgallery2.png" style="width: 500px;" /></a>
 </div>
 <p>Phylorate plots for three evolutionary rate configurations (speciation) sampled by BAMM for the cetacean phylogeny, under two different color schemes (warm colors = fast rates). Columns show the 10<sup>th</sup>, 20<sup>th</sup>, and 30<sup>th</sup> samples from the posterior distribution included as an example in BAMMtools (see the <strong>events.whales</strong> dataset). Black circles denote the position of the macroevolutionary regime shifts present in each sample. Every sample from the posterior contains a potentially unique configuration of shift locations, which are sampled in proportion to their posterior probability. The trees shown in this figure differ from the preceding figure, which shows the mean marginal rates over all samples in the posterior. Note the consistent spike and subsequent deceleration in rates that occurs after shift events:</p>
-<div class="highlight-python"><pre>ixx &lt;- rep(c(10, 30, 40), 2);
+<div class="highlight-python"><div class="highlight"><pre>ixx &lt;- rep(c(10, 30, 40), 2);
 plot.new()
 par(mfrow=c(2,3));
 colschemes &lt;- list();
-colschemes[1:3] &lt;- 'temperature'
-colschemes[4:6] &lt;- list(c('blue', 'gray', 'red'))
+colschemes[1:3] &lt;- &#39;temperature&#39;
+colschemes[4:6] &lt;- list(c(&#39;blue&#39;, &#39;gray&#39;, &#39;red&#39;))
 
 for (i in 1:length(ixx)) {
         par(mar=c(0,0,0,0))
         index &lt;- ixx[i]
         eventsub &lt;- subsetEventData(edata_whales, index=index);
-        plot.bammdata(eventsub, method='polar', pal= colschemes[[i]], par.reset=FALSE, lwd=3)
-        addBAMMshifts(eventsub, method='polar', index=1, col='white', bg='black', cex=5, par.reset=FALSE)
-}</pre>
+        plot.bammdata(eventsub, method=&#39;polar&#39;, pal= colschemes[[i]], par.reset=FALSE, lwd=3)
+        addBAMMshifts(eventsub, method=&#39;polar&#39;, index=1, col=&#39;white&#39;, bg=&#39;black&#39;, cex=5, par.reset=FALSE)
+}
+</pre></div>
 </div>
 </div>
 <div class="section" id="distinct-shift-configurations-and-their-frequencies">
@@ -152,7 +177,7 @@ for (i in 1:length(ixx)) {
 <div class="figure align-center" id="bammgraphgallery4">
 <a class="reference internal image-reference" href="_images/bammgraphgallery4.png"><img alt="_images/bammgraphgallery4.png" src="_images/bammgraphgallery4.png" style="width: 700px;" /></a>
 </div>
-<p>Macroevolutionary cohort analysis displays the pairwise probability that any two species share a common macroevolutionary rate dynamic. These pairwise probabilities can be extracted quickly from BAMM output using the function <tt class="docutils literal"><span class="pre">getCohortMatrix</span></tt>. The example above shows the cohort matrix for the whales dataset included with BAMMtools. Each cell of the cohort matrix corresponds to a pair of tip taxa from the whale phylogeny; the phylogeny is plotted for reference in the left and upper margins of the figure. You can read this plot by drawing an imaginary line between any two tips of the tree; the color of the matrix at their intersection is the probability that those taxa share a common rate dynamic. Species pairs that share a common rate dynamic have red cohort matrix colors; species with decoupled macroevolutionary dynamics have blue cohort matrix colors (the legend on the right gives the actual cohort probability). The cohort matrix method is fully explained in this (<a class="reference external" href="http://sysbio.oxfordjournals.org/content/early/2014/04/01/sysbio.syu025">Systematic Biology article</a>). The biological interpretation of the above results is that there are two general macroevolutionary dynamics across whales: one pertaining to the dolphins, and one pertaining to the non-dolphins. The single isolated lineage in the middle of the plot that shows intermediate correlations with the &#8220;fast clade&#8221; (dolphins) and &#8220;slow lineages&#8221; (non-dolphins) is the killer whale. BAMMtools provides functions that allow easy generation of cohort matrices:</p>
+<p><a class="reference internal" href="rateshifts.html#cohortexplanation"><span>Macroevolutionary cohort analysis</span></a> displays the pairwise probability that any two species share a common macroevolutionary rate dynamic. These pairwise probabilities can be extracted quickly from BAMM output using the function <code class="docutils literal"><span class="pre">getCohortMatrix</span></code>. The example above shows the cohort matrix for the whales dataset included with BAMMtools. Each cell of the cohort matrix corresponds to a pair of tip taxa from the whale phylogeny; the phylogeny is plotted for reference in the left and upper margins of the figure. You can read this plot by drawing an imaginary line between any two tips of the tree; the color of the matrix at their intersection is the probability that those taxa share a common rate dynamic. Species pairs that share a common rate dynamic have red cohort matrix colors; species with decoupled macroevolutionary dynamics have blue cohort matrix colors (the legend on the right gives the actual cohort probability). The cohort matrix method is fully explained in this (<a class="reference external" href="http://sysbio.oxfordjournals.org/content/63/4/610">Systematic Biology article</a>). The biological interpretation of the above results is that there are two general macroevolutionary dynamics across whales: one pertaining to the dolphins, and one pertaining to the non-dolphins. The single isolated lineage in the middle of the plot that shows intermediate correlations with the &#8220;fast clade&#8221; (dolphins) and &#8220;slow lineages&#8221; (non-dolphins) is the killer whale. BAMMtools provides functions that allow easy generation of cohort matrices:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">cmat</span> <span class="o">&lt;-</span> <span class="n">getCohortMatrix</span><span class="p">(</span><span class="n">edata_whales</span><span class="p">)</span>
 <span class="n">cohorts</span><span class="p">(</span><span class="n">cmat</span><span class="p">,</span> <span class="n">edata_whales</span><span class="p">,</span> <span class="n">lwd</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">pal</span><span class="o">=</span><span class="s">&quot;temperature&quot;</span><span class="p">)</span>
 </pre></div>
@@ -217,7 +242,7 @@ for (i in 1:length(ixx)) {
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -234,9 +259,9 @@ for (i in 1:length(ixx)) {
       </ul>
     </div>
 
-    <div class="footer">
-        &copy; Copyright 2014 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015 BAMM Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b3+.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

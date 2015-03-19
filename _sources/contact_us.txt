@@ -6,7 +6,7 @@ Contact Us
 Please post any questions, comments, suggestions, possible bugs, etc. to our
 `BAMM Google Groups <https://groups.google.com/forum/#!forum/bamm-project>`_
 page. You may also contact us directly:
-Dan Rabosky <drabosky@umich.edu> or Carlos Anderson <carlosja@umich.edu>.
+Dan Rabosky <drabosky@umich.edu>.
 
 If you are reporting a problem, please include (if possible) the data files
 that led to the problem, the control file, and as much information as possible

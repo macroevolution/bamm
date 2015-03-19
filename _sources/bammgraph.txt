@@ -21,8 +21,31 @@ A **phylorate plot** showing speciation rates (cool colors = slow, warm = fast) 
 	edata_whales <- getEventData(whales, events.whales, burnin=0.1)
 	plot.bammdata(edata_whales, lwd=2, method="polar", pal="temperature")
 
-	 
- 
+
+.. _bammgraphgallery1.5:
+.. figure:: figs/breaksForGallery.png
+	:width: 700
+	:align: center
+
+Multiple options are available in BAMMtools for mapping colors to rates in phylorate plots. Changing these options can be particularly useful if the distribution of rates across th phylogeny is heavily skewed. See `Color ramps and phylorate plots <colorbreaks.html>`_ for more information::
+
+	par(mfrow=c(1,3), mar=c(1, 0.5, 0.5, 0.5), xpd=TRUE)
+
+	q <- plot.bammdata(ed, tau=0.001, breaksmethod='linear', lwd=2)
+	addBAMMshifts(ed, par.reset=FALSE, cex=2)
+	title(sub='linear',cex.sub=2, line=-1)
+	addBAMMlegend(q, corners=c(0, 1, 140, 220), side=4, las=1)
+
+	q <- plot.bammdata(ed, tau=0.001, breaksmethod='linear', color.interval=c(NA,0.12), lwd=2)
+	addBAMMshifts(ed, par.reset=FALSE, cex=2)
+	title(sub='linear - color.interval',cex.sub=2, line=-1)
+	addBAMMlegend(q, corners=c(0, 1, 140, 220), side=4, las=1)
+
+	q <- plot.bammdata(ed, tau=0.001, breaksmethod='jenks', lwd=2)
+	addBAMMshifts(ed, par.reset=FALSE, cex=2)
+	title(sub='jenks',cex.sub=2, line=-1) 
+	addBAMMlegend(q, corners=c(0, 1, 140, 220), side=4, las=1)
+
  
 
 Individual rate-shift configurations sampled by BAMM
@@ -74,7 +97,7 @@ Macroevolutionary cohort matrix
    :width: 700
    :align: center
 
-Macroevolutionary cohort analysis displays the pairwise probability that any two species share a common macroevolutionary rate dynamic. These pairwise probabilities can be extracted quickly from BAMM output using the function ``getCohortMatrix``. The example above shows the cohort matrix for the whales dataset included with BAMMtools. Each cell of the cohort matrix corresponds to a pair of tip taxa from the whale phylogeny; the phylogeny is plotted for reference in the left and upper margins of the figure. You can read this plot by drawing an imaginary line between any two tips of the tree; the color of the matrix at their intersection is the probability that those taxa share a common rate dynamic. Species pairs that share a common rate dynamic have red cohort matrix colors; species with decoupled macroevolutionary dynamics have blue cohort matrix colors (the legend on the right gives the actual cohort probability). The cohort matrix method is fully explained in this (`Systematic Biology article <http://sysbio.oxfordjournals.org/content/early/2014/04/01/sysbio.syu025>`_). The biological interpretation of the above results is that there are two general macroevolutionary dynamics across whales: one pertaining to the dolphins, and one pertaining to the non-dolphins. The single isolated lineage in the middle of the plot that shows intermediate correlations with the "fast clade" (dolphins) and "slow lineages" (non-dolphins) is the killer whale. BAMMtools provides functions that allow easy generation of cohort matrices::
+:ref:`Macroevolutionary cohort analysis<cohortExplanation>` displays the pairwise probability that any two species share a common macroevolutionary rate dynamic. These pairwise probabilities can be extracted quickly from BAMM output using the function ``getCohortMatrix``. The example above shows the cohort matrix for the whales dataset included with BAMMtools. Each cell of the cohort matrix corresponds to a pair of tip taxa from the whale phylogeny; the phylogeny is plotted for reference in the left and upper margins of the figure. You can read this plot by drawing an imaginary line between any two tips of the tree; the color of the matrix at their intersection is the probability that those taxa share a common rate dynamic. Species pairs that share a common rate dynamic have red cohort matrix colors; species with decoupled macroevolutionary dynamics have blue cohort matrix colors (the legend on the right gives the actual cohort probability). The cohort matrix method is fully explained in this (`Systematic Biology article <http://sysbio.oxfordjournals.org/content/63/4/610>`_). The biological interpretation of the above results is that there are two general macroevolutionary dynamics across whales: one pertaining to the dolphins, and one pertaining to the non-dolphins. The single isolated lineage in the middle of the plot that shows intermediate correlations with the "fast clade" (dolphins) and "slow lineages" (non-dolphins) is the killer whale. BAMMtools provides functions that allow easy generation of cohort matrices::
 
 	cmat <- getCohortMatrix(edata_whales)
 	cohorts(cmat, edata_whales, lwd=3, pal="temperature")
