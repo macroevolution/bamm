@@ -31,7 +31,7 @@ it will cause a previously heated chain to become the main chain.
 As a result, a chain that is stuck in a local optimum
 may immediately jump to another area of the landscape.
 
-The implementation of |MC3| in BAMM follows that described in
+The implementation of |MC3| in BAMM is described in
 `Shi & Rabosky 2015 <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_.
 For each chain :math:`i`, its temperature :math:`\beta_i` is set to
 :math:`\beta_i = [1 + \Delta T \times (i - 1)]^{-1}`,
