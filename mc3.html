@@ -122,8 +122,8 @@ If a swap involving the cold chain is successful,
 it will cause a previously heated chain to become the main chain.
 As a result, a chain that is stuck in a local optimum
 may immediately jump to another area of the landscape.</p>
-<p>The implementation of (MC)<sup>3</sup> in BAMM follows that described in
-<a class="reference external" href="http://bioinformatics.oxfordjournals.org/content/20/3/407.full.pdf">Altekar et al. 2004</a>.
+<p>The implementation of (MC)<sup>3</sup> in BAMM is described in
+<a class="reference external" href="http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract">Shi &amp; Rabosky 2015</a>.
 For each chain <img class="math" src="_images/math/a581f053bbfa5115f42c13094857cdd12a37ec49.png" alt="i"/>, its temperature <img class="math" src="_images/math/af98ebbbe7174c893ed8f4c7fc046767210ce3a6.png" alt="\beta_i"/> is set to
 <img class="math" src="_images/math/1e2fd3cdbc4ba9884ebab93cf519cb7b5131e4f9.png" alt="\beta_i = [1 + \Delta T \times (i - 1)]^{-1}"/>,
 where <img class="math" src="_images/math/9976423b4508d96713220e748655bf30cd6beb8e.png" alt="\Delta T"/> is the temperature increment parameter.
@@ -132,7 +132,7 @@ the temperatures of each chain are 1, 0.9091, 0.8333, and 0.7692.
 The temperature of the cold chain is always 1.
 Note that the value of <img class="math" src="_images/math/9976423b4508d96713220e748655bf30cd6beb8e.png" alt="\Delta T"/> should be greater than 0
 and chosen such that the probability of accepting a swap
-is between 20% and 60% (Altekar et al. 2004).</p>
+is between 20% and 60% <a class="reference external" href="http://bioinformatics.oxfordjournals.org/content/20/3/407.full.pdf">(Altekar et al. 2004)</a>.</p>
 <p>The temperature of each chain <img class="math" src="_images/math/a581f053bbfa5115f42c13094857cdd12a37ec49.png" alt="i"/> goes into the calculation
 of the acceptance probability for a within-model proposal
 (i.e., not involving changes in the dimensionality of the model):</p>

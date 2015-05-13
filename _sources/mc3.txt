@@ -31,9 +31,8 @@ it will cause a previously heated chain to become the main chain.
 As a result, a chain that is stuck in a local optimum
 may immediately jump to another area of the landscape.
 
-The implementation of |MC3| in BAMM follows that described in
-`Altekar et al. 2004
-<http://bioinformatics.oxfordjournals.org/content/20/3/407.full.pdf>`_.
+The implementation of |MC3| in BAMM is described in
+`Shi & Rabosky 2015 <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_.
 For each chain :math:`i`, its temperature :math:`\beta_i` is set to
 :math:`\beta_i = [1 + \Delta T \times (i - 1)]^{-1}`,
 where :math:`\Delta T` is the temperature increment parameter.
@@ -42,7 +41,7 @@ the temperatures of each chain are 1, 0.9091, 0.8333, and 0.7692.
 The temperature of the cold chain is always 1.
 Note that the value of :math:`\Delta T` should be greater than 0
 and chosen such that the probability of accepting a swap
-is between 20% and 60% (Altekar et al. 2004).
+is between 20% and 60% `(Altekar et al. 2004) <http://bioinformatics.oxfordjournals.org/content/20/3/407.full.pdf>`_.
 
 The temperature of each chain :math:`i` goes into the calculation
 of the acceptance probability for a within-model proposal
