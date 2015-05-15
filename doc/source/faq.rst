@@ -11,6 +11,8 @@ The primary methodological description of the full BAMM model was published in *
 
 This paper contains a description of the model, the reversible jump MCMC implementation, a comprehensive performance evaluation, and an empirical application. An earlier paper used a related implementation that assumed constant rates of diversification through time within evolutionary rate regimes (`Rabosky et al. 2013 <http://www.nature.com/ncomms/2013/130606/ncomms2958/full/ncomms2958.html>`_). 
 
+Macroevolutionary cohort analyses were described and published in `Systematic Biology 2014 <http://sysbio.oxfordjournals.org/content/63/4/610>`_. The MC3 implementation of BAMM, and the usage of Bayes factors for assessing evidence in favor of rate shifts, were published in `Evolution 2015 <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_. 
+
 If you use BAMMtools for analysis and visualization of BAMM results, you should cite the `BAMMtools package <http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12199/abstract>`_.
 
 How much data does it need?
