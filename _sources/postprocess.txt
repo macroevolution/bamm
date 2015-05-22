@@ -372,7 +372,7 @@ The variable *marg_probs* becomes a copy of our phylogenetic tree, but where eac
 Bayes factors for rate shifts
 ---------------------------------------
 
-As explained :ref:`here<bayesfactorbranches>`, we can compute the Bayes factors associated with a shift on a particular branch. Despite numerous difficulties associated with computing Bayes factors more generally, it is straightforward and natural in this context to compute them. To be clear, we are now advocating a very different use of Bayes factors than we described previously on :ref:`this page<bayesfactors>`. Now, we are computing the Bayes factor associated with a rate shift on a particular branch of our phylogeny. This provides us with a robust measure of evidence for a rate shift on a particular branch that is effectively independent of the effects of whatever prior parameter we placed on the number of shift events. 
+As explained :ref:`here<bayesfactorbranches>` and in this `Evolution article<http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_, we can compute the Bayes factors associated with a shift on a particular branch. Despite numerous difficulties associated with computing Bayes factors more generally, it is straightforward and natural in this context to compute them. To be clear, we are now advocating a very different use of Bayes factors than we described previously on :ref:`this page<bayesfactors>`. Now, we are computing the Bayes factor associated with a rate shift on a particular branch of our phylogeny. This provides us with a robust measure of evidence for a rate shift on a particular branch that is effectively independent of the effects of whatever prior parameter we placed on the number of shift events. 
 
 To compute the Bayes factors for the *topological location* of rate shifts on our tree, we first compute the probability of a rate shift on each branch of our phylogeny under the prior alone::
 
@@ -502,7 +502,7 @@ Macroevolutionary cohort analysis
 
 .. _cohorts:
 
-Macroevolutionary cohort analysis provides a way of summarizing the extent to which species share correlated macroevolutionary dynamics. The method is explained in this (`Systematic Biology article <http://sysbio.oxfordjournals.org/content/63/4/610>`_). The basic idea is to visualize the pairwise probabilities that any two species share a common macroevolutionary rate regime. The first step is to generate a cohort matrix, which contains the pairwise probabilities of shared macroevolutionary dynamics. This is then passed to the ``cohorts`` function, which generates the plot::
+Macroevolutionary cohort analysis provides a way of summarizing the extent to which species share correlated macroevolutionary dynamics. The method is explained in this `Systematic Biology article <http://sysbio.oxfordjournals.org/content/63/4/610>`_. The basic idea is to visualize the pairwise probabilities that any two species share a common macroevolutionary rate regime. The first step is to generate a cohort matrix, which contains the pairwise probabilities of shared macroevolutionary dynamics. This is then passed to the ``cohorts`` function, which generates the plot::
 
 	data(events.whales, whales)
 	edata <- getEventData(whales, events.whales, burnin=0.1)

@@ -45,6 +45,8 @@ we recommend installing the latest version.
 * BAMMtools 2.0 uses branch-specific Bayes factors to identify
   credible sets of :ref:`shift configurations <rateshifts>`.
 
+`Take a look <colorbreaks.html>`_ at a new webpage that explains some of the intricacies of phylorate plot interpretation.
+
 Please see the `Changes <changes.html>`_ page for more information.
 
 

@@ -29,6 +29,9 @@ A **phylorate plot** showing speciation rates (cool colors = slow, warm = fast) 
 
 Multiple options are available in BAMMtools for mapping colors to rates in phylorate plots. Changing these options can be particularly useful if the distribution of rates across th phylogeny is heavily skewed. See `Color ramps and phylorate plots <colorbreaks.html>`_ for more information::
 
+	data(primates, events.primates)
+	ed <- getEventData(primates, events.primates, burnin=0.25, type = 'trait')
+
 	par(mfrow=c(1,3), mar=c(1, 0.5, 0.5, 0.5), xpd=TRUE)
 
 	q <- plot.bammdata(ed, tau=0.001, breaksmethod='linear', lwd=2)
