@@ -6,6 +6,8 @@
 
 #include <algorithm>
 
+#define USE_ANALYTICAL_POSTERIOR
+
 
 EventRateProposal::EventRateProposal
     (Random& random, Settings& settings, Model& model, Prior& prior) :
@@ -43,12 +45,22 @@ void EventRateProposal::reject()
 
 double EventRateProposal::acceptanceRatio()
 {
-    double logPriorRatio = computeLogPriorRatio();
+    
     double logQRatio = computeLogQRatio();
 
+#ifdef USE_ANALYTICAL_POSTERIOR
+    
+    double logPosteriorRatio = computeLogPosteriorRatio();
+    double t = _model.getTemperatureMH();
+    double logRatio = t * logPosteriorRatio + logQRatio;
+    
+#else
+    double logPriorRatio = computeLogPriorRatio();   
     double t = _model.getTemperatureMH();
     double logRatio = t * logPriorRatio + logQRatio;
-
+    
+#endif
+    
     if (std::isfinite(logRatio)) {
         return std::min(1.0, std::exp(logRatio));
     } else {
@@ -68,3 +80,22 @@ double EventRateProposal::computeLogQRatio()
 {
     return std::log(_cterm);
 }
+
+
+// May 26 , 2015: directly compute log-posterior ratio
+//  after correspondence with Bret Larget / Cecile Ane
+double EventRateProposal::computeLogPosteriorRatio()
+{
+    
+    double NN = (double)_model.getNumberOfEvents();
+    
+    double logPosteriorRatio = NN * (std::log(_proposedEventRate) - std::log(_currentEventRate) );
+    logPosteriorRatio += (_settings.get<double>("poissonRatePrior") + 1 ) * (_currentEventRate - _proposedEventRate);
+    
+    return logPosteriorRatio;
+
+}
+
+#undef USE_ANALYTICAL_POSTERIOR
+
+

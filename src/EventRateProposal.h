@@ -26,6 +26,7 @@ public:
 private:
 
     double computeLogLikelihoodRatio();
+    double computeLogPosteriorRatio();
     double computeLogPriorRatio();
     double computeLogQRatio();
 

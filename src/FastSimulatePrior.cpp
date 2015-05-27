@@ -20,6 +20,7 @@
 #include "Stat.h"
 #include "EventCountLog.h"
 
+#define USE_ANALYTICAL_POSTERIOR_EVENTRATE
 
 FastSimulatePrior::FastSimulatePrior(Random& random, Settings* sp) :
     _random(random), sttings(sp)
@@ -186,10 +187,29 @@ void FastSimulatePrior::updateEventRateMH()
     double cterm = exp( _updateEventRateScale * (_random.uniform() - 0.5) );
     setEventRate(cterm * oldEventRate);
 
+#ifdef USE_ANALYTICAL_POSTERIOR_EVENTRATE
+    
+    double LogPriorRatio = 0.0;
+ 
+    double logProposalRatio = log(cterm);
+    
+    // change to proposal ratio to reflect probability
+    // of drawing new Poisson rate conditional on current value and number of events
+    
+    logProposalRatio += ((double)_numberEvents) * (std::log( getEventRate())  - std::log(oldEventRate));
+    logProposalRatio +=  (_poissonRatePrior + 1) * (oldEventRate - getEventRate() );
+    
+#else
+    
     double LogPriorRatio =
         Stat::lnExponentialPDF(getEventRate(), _poissonRatePrior) -
         Stat::lnExponentialPDF(oldEventRate, _poissonRatePrior);
+    
     double logProposalRatio = log(cterm);
+    
+#endif
+    
+
 
     double logHR = LogPriorRatio + logProposalRatio;
     const bool acceptMove = acceptMetropolisHastings(logHR);
@@ -537,6 +557,7 @@ void FastSimulatePrior::writePriorProbsToFile_Experimental()
 }
 
 
+#undef USE_ANALYTICAL_POSTERIOR_EVENTRATE
 
 
 
