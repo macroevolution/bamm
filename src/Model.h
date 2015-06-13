@@ -53,6 +53,10 @@ public:
 
     void initializeModelFromEventDataFile(const std::string& fileName);
 
+    // DEBUG function:
+    void printEventValidStatus();
+
+    
     int getNumberOfEvents();
     BranchEvent* getRootEvent();
 
@@ -70,6 +74,7 @@ public:
     void forwardSetHistoriesRecursive(Node* p);
 
     BranchEvent* addRandomEventToTree();
+    BranchEvent* addFixedParameterEventToRandomLocation();
     BranchEvent* addRandomEventToTreeOnRandomBranch();
     BranchEvent* addEventToTree(BranchEvent* newEvent);
 
@@ -86,6 +91,7 @@ public:
     double acceptanceRatio();
 
     bool isEventConfigurationValid(BranchEvent* be);
+    bool testEventConfigurationComprehensive();
     
 protected:
 
@@ -108,6 +114,8 @@ protected:
         (Node* x, double time, const std::vector<std::string>& parameters) = 0;
 
     virtual BranchEvent* newBranchEventWithRandomParameters(double x) = 0;
+    
+    virtual BranchEvent* newBranchEventWithParametersFromSettings(double x) = 0;
 
     virtual void setDeletedEventParameters(BranchEvent* be) = 0;
     virtual double calculateLogQRatioJump() = 0;

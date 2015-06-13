@@ -138,6 +138,8 @@ BranchEvent* TraitModel::newBranchEventWithReadParameters
 }
 
 
+
+
 double TraitModel::betaInitParameter(const std::vector<std::string>& parameters)
 {
     return convert_string<double>(parameters[0]);
@@ -181,6 +183,40 @@ BranchEvent* TraitModel::newBranchEventWithRandomParameters(double x)
     return new TraitBranchEvent(newbeta, newBetaShift, newIsTimeVariable,
         _tree->mapEventToTree(x), _tree, _random, x);
 }
+
+
+// TODO: test this : has not been checked
+//     also not implemented in constructor for TraitModel yet
+BranchEvent* TraitModel::newBranchEventWithParametersFromSettings(double x)
+{
+    
+    // x is map time
+    double newbeta = _settings.get<double>("betaInit0");
+    double newBetaShift = _settings.get<double>("betaShift0");
+    bool newIsTimeVariable = _prior.generateBetaIsTimeVariableFromPrior();
+
+    
+    // TODO: This needs to be refactored somewhere else
+    // Computes the jump density for the addition of new parameters.
+#ifdef NEGATIVE_SHIFT_PARAM
+    newBetaShift = -fabs(newBetaShift);
+    double dens_term = std::log(2.0);
+#else
+    double dens_term = 0.0;
+#endif
+    
+    _logQRatioJump = 0.0;
+    
+    _logQRatioJump += _prior.betaInitPrior(newbeta);
+    if (newIsTimeVariable) {
+        _logQRatioJump += dens_term + _prior.betaShiftPrior(newBetaShift);
+    }
+    
+    return new TraitBranchEvent(newbeta, newBetaShift, newIsTimeVariable,
+                                _tree->mapEventToTree(x), _tree, _random, x);
+    
+}
+
 
 
 void TraitModel::setDeletedEventParameters(BranchEvent* be)

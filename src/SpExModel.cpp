@@ -113,18 +113,46 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
 
     _tree->setNodeSpeciationParameters();
     _tree->setNodeExtinctionParameters();
+    
+    _extinctionProbMax = _settings.get<double>("extinctionProbMax");
 
+    
     // Initialize by previous event histories (or from initial event number)
     if (_settings.get<bool>("loadEventData")) {
         initializeModelFromEventDataFile(_settings.get("eventDataInfile"));
     } else {
         int initialNumberOfEvents = _settings.get<int>("initialNumberEvents");
         for (int i = 0; i < initialNumberOfEvents; i++) {
-            addRandomEventToTree();
+            
+            // TODO: this adds event to tree with parameters sampled from the prior
+            //       should give option to pull parameters from root event (lambdaInit)
+            //       etc such that you can add many events but the initial likelihood is
+            //       still the same as with a single event
+            //addRandomEventToTree();
+        
+            // This (below) function adds parameters to random locations
+            //  but fixes parameters to the initial values specified in control file
+            addFixedParameterEventToRandomLocation();
+            
+            
+            // DEBUG
+            std::cout << "Event: \t" << i << "\t" << computeLogLikelihood() << std::endl;
+            
         }
     }
 
-    _extinctionProbMax = _settings.get<double>("extinctionProbMax");
+    if (_settings.get<bool>("validateEventConfiguration")){
+        bool isValid = testEventConfigurationComprehensive();
+        if (!isValid){
+            std::cout << "\nInitial event configuration is invalid\n";
+            std::cout << "Please check your output carefully" << std::endl;
+            printEventValidStatus();
+        }
+    }
+    
+    // DEBUG
+    //printEventValidStatus();
+    
 
     setCurrentLogLikelihood(computeLogLikelihood());
 
@@ -274,6 +302,35 @@ void SpExModel::setMeanBranchParameters()
 }
 
 
+BranchEvent* SpExModel::newBranchEventWithParametersFromSettings(double x)
+{
+    
+    // x is map time
+    
+    
+    double newLam = _settings.get<double>("lambdaInit0");
+    double newMu = _settings.get<double>("muInit0");
+    double newMuShift = _settings.get<double>("muShift0");
+    bool newIsTimeVariable = _prior.generateLambdaIsTimeVariableFromPrior();
+    double newLambdaShift = _settings.get<double>("lambdaShift0");
+    
+    // TODO: This needs to be refactored somewhere else
+    // Computes the jump density for the addition of new parameters.
+    _logQRatioJump = 0.0;    // Set to zero to clear previous values
+    _logQRatioJump = _prior.lambdaInitPrior(newLam);
+    if (newIsTimeVariable) {
+        _logQRatioJump += _prior.lambdaShiftPrior(newLambdaShift);
+    }
+    _logQRatioJump += _prior.muInitPrior(newMu);
+    _logQRatioJump += _prior.muShiftPrior(newMuShift);
+    
+    return new SpExBranchEvent(newLam, newLambdaShift, newMu,
+                               newMuShift, newIsTimeVariable, _tree->mapEventToTree(x),
+                               _tree, _random, x);
+
+}
+
+
 BranchEvent* SpExModel::newBranchEventWithRandomParameters(double x)
 {
     double newLam = _prior.generateLambdaInitFromPrior();
@@ -345,9 +402,7 @@ double SpExModel::computeLogLikelihood()
 {
     if (_sampleFromPriorOnly)
         return 0.0;
-
-    // DEBUG
-    //printNodeProbs();
+ 
 
     double logLikelihood = 0.0;
 
@@ -361,13 +416,18 @@ double SpExModel::computeLogLikelihood()
             
             double LL = computeSpExProbBranch(node->getLfDesc());
             double LR = computeSpExProbBranch(node->getRtDesc());
-
+            
             logLikelihood += (LL + LR);
 
             // Does not include root node, so it is conditioned
             // on basal speciation event occurring:
             if (node != _tree->getRoot()) {
                 logLikelihood  += log(node->getNodeLambda());
+                
+                // DEBUG
+                //std::cout << node << "\tlambda:\t" << node->getNodeLambda();
+                //std::cout << "\tEvents:\t" << node->getBranchHistory()->getNumberOfBranchEvents() << std::endl;
+                
                 node->setDinit(1.0);
             }
         }
@@ -378,22 +438,7 @@ double SpExModel::computeLogLikelihood()
         logLikelihood += computePreservationLogProb();  
     }
 
- 
-    // DEBUG mess
-    //std::cout << "logLik final post-pres\t" << logLikelihood << std::endl;
-    //std::cout << "In computeLogLikelihood; SpExModel::printNodeProbs" << std::endl;
-    //printNodeProbs();
-    //std::cout << "ommitting lambdas: " << tmpLik << "\tFull: " << logLikelihood << std::endl;
-    
-    /*
-    double tmp = 0.0;
-    for (int i = 0; i < postOrderNodes.size(); i++){
-        tmp += _Dfinalvec[i];
-    }
-    std::cout << "computed from D_vec_final: " << tmp << std::endl;
-    std::cout << "ExProb: " << _tmpvar << std::endl;
-    outputDebugVectors();
-    */
+
     
     return logLikelihood;
 }
@@ -432,7 +477,12 @@ double SpExModel::computeSpExProbBranch(Node* node)
     
     bool isExtant = (std::abs(node->getTime() - _observationTime)) < 0.01;
 
-
+    // TODO: confirm that this is correctly doing the following:
+    //        computing the probability of an unobserved lineage
+    //         going extinct before the present (or not being sampled)
+    //         given a last occurrence time in a tree (eg extinction observed)
+    //         and then initializing everything for the downstream calculations
+    
     
     if (node->isInternal() == false & isExtant == false){
     // case 1: node is fossil tip
@@ -462,6 +512,24 @@ double SpExModel::computeSpExProbBranch(Node* node)
             double exProb = 0.0;
         
             computeSpExProb(spProb, exProb, curLam, curMu, curPsi, D0, E0, deltaT);
+
+            // exProb cannot exceed max probability of extinction
+            //   necessary to avoid overflow/underflow issues
+            //   as E0 approaches 1.0
+            // spProb cannot exceed 1.0
+            //   this will also happen as extinction becomes
+            //   numerically equal to zero. Hence we automatically
+            //   set any such values such that the computed log-likelihood
+            //   is -INFINITY to avoid overflow/underflow at the boundaries
+            //   of permitted parameters.
+            // Fix added June 13 2015
+            // TODO: re-re-recheck this for fossilBAMM
+            //  also re-check E0 initializations for
+            //  extinct terminal branches
+            
+            if (exProb > _extinctionProbMax || spProb > 1.0 ){
+                return -INFINITY;
+            }
             
             E0 = exProb;
             
@@ -522,8 +590,27 @@ double SpExModel::computeSpExProbBranch(Node* node)
         // in spProb and exProb (through reference passing)
         computeSpExProb(spProb, exProb, curLam, curMu, curPsi, D0, E0, deltaT);
 
+        // exProb cannot exceed max probability of extinction
+        //   necessary to avoid overflow/underflow issues
+        //   as E0 approaches 1.0
+        // spProb cannot exceed 1.0
+        //   this will also happen as extinction becomes
+        //   numerically equal to zero. Hence we automatically
+        //   set any such values such that the computed log-likelihood
+        //   is -INFINITY to avoid overflow/underflow at the boundaries
+        //   of permitted parameters.
+        // Fix added June 13 2015
+        
+        if (exProb > _extinctionProbMax || spProb > 1.0 ){
+             return -INFINITY;
+        }
+        
         logLikelihood += std::log(spProb);
+        
+        //std::cout << node << "curLam:\t" << curLam << "\tcurMu:\t" << curMu << "\tspProb:\t" << spProb << std::endl;
 
+        //std::cout << node << "E0:\t" << E0 << "\tD0:\t" << D0 << "sprob:\t" << std::log(spProb) << std::endl;
+        
         // DEBUG
         //_Dfinalvec[nodeindex] += std::log(spProb);
         
@@ -584,9 +671,20 @@ double SpExModel::computeSpExProbBranch(Node* node)
     
                 computeSpExProb(sprob, eprob, clam, cmu, cpsi, (double)1.0, E0, tt);
                 
+                // DEBUG
+                //std::cout << node << "\tEprob:\t" << eprob << std::endl;
+                
                 E0 = eprob;
                 et = st;
-        
+                
+                // E0 cannot exceed max probability of extinction
+                //   necessary to avoid overflow/underflow issues
+                //   as E0 approaches 1.0
+                if (E0 > _extinctionProbMax){
+
+                    return -INFINITY;
+                }
+                
             }
             
             
@@ -609,12 +707,24 @@ double SpExModel::computeSpExProbBranch(Node* node)
     // DEBUG
     //_Efinalvec[nodeindex] = E0;
  
+    // BUG VERSION
+    // Fixed June 13 2015:
+    // Did not check for valid E0, exProb, and spProb values
+    // during segment calculations on branches - only at ends of branch.
+    // This allowed numerical problems causing E0 = 1 and spProb > 1
+    // on individual branch segments. This was probably introduced when
+    // fossil calculations were introduced. Unlikely to have compromised any
+    // analyses as led to easily diagnosable pathologies when E0 = 1 on
+    // branch segments
+    //
+    // BUG VERSION included only this check below - now commented out:
+    //if (E0 > _extinctionProbMax) {
+    //    return -INFINITY;
+    //}
     
-    // Clearly a problem if extinction values approaching/equaling 1.0
-    // If so, set to -Inf, leading to automatic rejection of state
-    if (E0 > _extinctionProbMax) {
-        return -INFINITY;
-    }
+    
+    
+    // *************************************************// 
 
     // To CONDITION on survival, uncomment the line below;
     // or to NOT condition on survival, comment the line below
@@ -627,6 +737,9 @@ double SpExModel::computeSpExProbBranch(Node* node)
  
         logLikelihood -= std::log(1.0 - E0);
     }
+    
+    // *************************************************//
+    
     
     return logLikelihood;
 }
@@ -696,6 +809,12 @@ void SpExModel::computeSpExProb(double& spProb, double& exProb,
     
     spProb = (4.0 * D0) / ( (2.0 * ( 1 - (c2 * c2)) ) + X + Y );
 
+    // DEBUG
+    //std::cout << "\n\tFF\t" << FF << "\tc1\t" << c1 << "\tc2\t" << c2;
+    //std::cout << "\n\tA\t" << A << "\tB\t" << B << "\tX\t" << X << "\tY\t" << Y << "\n" << std::endl;
+    
+    
+    
 }
 
 /*

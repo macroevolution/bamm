@@ -57,6 +57,7 @@ private:
     double muShiftParameter(const std::vector<std::string>& parameters);
 
     virtual BranchEvent* newBranchEventWithRandomParameters(double x);
+    virtual BranchEvent* newBranchEventWithParametersFromSettings(double x);
     virtual BranchEvent* newBranchEventFromLastDeletedEvent();
 
     virtual void setMeanBranchParameters();

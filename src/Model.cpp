@@ -273,6 +273,17 @@ BranchEvent* Model::addRandomEventToTree()
     return addEventToTree(newEvent);
 }
 
+BranchEvent* Model::addFixedParameterEventToRandomLocation()
+{
+    double aa = _tree->getRoot()->getMapStart();
+    double bb = _tree->getTotalMapLength();
+    double x = _random.uniform(aa, bb);
+    
+    BranchEvent* newEvent = newBranchEventWithParametersFromSettings(x);
+    
+    return addEventToTree(newEvent);
+}
+
 
 BranchEvent* Model::addRandomEventToTreeOnRandomBranch()
 {
@@ -398,10 +409,23 @@ BranchEvent* Model::removeRandomEventFromTree()
 }
 
 
+// Model::isEventConfigurationValid
+//   Tests whether an event can be placed in a triad configuration:
+//   This is when you have an event on a particular branch and on both
+//   descendant branches. The configuration leads to an unusual pathology whereby
+//   speciation rate can load up on the node bracketed by events.
+//   This logical check can be used to reject these configurations
+//   as they arise if desired.
+//   Define this configuration as having ancestral branch XX
+//   and YY and ZZ denoting right and left descendant branches, respectively
+
 bool Model::isEventConfigurationValid(BranchEvent* be)
 {
     bool isValidConfig = false;
 
+    bool forwardConfigValid = false;
+    bool backwardConfigValid = false;
+    
     if (be->getEventNode() == _tree->getRoot()) {
         Node* rt = _tree->getRoot()->getRtDesc();
         Node* lf = _tree->getRoot()->getLfDesc();
@@ -416,10 +440,15 @@ bool Model::isEventConfigurationValid(BranchEvent* be)
     } else {
         int badsum = 0;
 
+        // Backward check phase: tests whether events on YY or ZZ are valid
+        
+        
         Node* anc = be->getEventNode()->getAnc();
         Node* lf = anc->getLfDesc();
         Node* rt = anc->getRtDesc();
 
+        
+    
         // Test ancestor for events on branch
 
         if (anc == _tree->getRoot()) {
@@ -439,15 +468,45 @@ bool Model::isEventConfigurationValid(BranchEvent* be)
             badsum++;
 
         if (badsum == 3) {
-            isValidConfig = false;
+            backwardConfigValid = false;
         } else if (badsum < 3) {
-            isValidConfig = true;
+            backwardConfigValid = true;
         } else {
             log(Error) << "Problem in Model::isEventConfigurationValid\n";
             std::exit(1);
         }
+        
+        // Forward check phase: tests whether events on XX are valid
+        // does not count focal branch since there is
+        // obviously an event on branch defined by event be
+        anc = be->getEventNode();
+        lf = anc->getLfDesc();
+        rt = anc->getRtDesc();
+        badsum = 0;
+        
+        if (lf != NULL && rt != NULL && backwardConfigValid){
+            if (lf->getBranchHistory()->getNumberOfBranchEvents() > 0){
+                badsum++;
+            }
+            if (rt->getBranchHistory()->getNumberOfBranchEvents() > 0){
+                badsum++;
+            }
+            
+            if (badsum == 2) {
+                forwardConfigValid = false;
+            } else{
+                forwardConfigValid = true;
+            }
+    
+        }
+        
+        if (forwardConfigValid && backwardConfigValid){
+            isValidConfig = true;
+        }
+        
     }
 
+    
     return isValidConfig;
 }
 
@@ -520,3 +579,49 @@ void Model::setTemperatureMH(double x)
         std::exit(1);
     }
 }
+
+void Model::printEventValidStatus()
+{
+    
+    std::cout << "\nChecking event configuration: Model::printEventValidStatus " << std::endl;
+    
+    EventSet::iterator it;
+    for (it = _eventCollection.begin(); it != _eventCollection.end(); ++it) {
+        
+        bool isValid = isEventConfigurationValid((*it));
+
+        std::cout << (*it)->getEventNode() << "\tisValid:\t " << isValid << std::endl;
+    }
+
+
+}
+
+
+
+bool Model::testEventConfigurationComprehensive()
+{
+    bool isValidAll = true;
+    
+    EventSet::iterator it;
+    for (it = _eventCollection.begin(); it != _eventCollection.end(); ++it){
+        bool isValidSingle = isEventConfigurationValid((*it));
+        if (!isValidSingle){
+            isValidAll = false;
+            break;
+        }
+    }
+    return isValidAll;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
