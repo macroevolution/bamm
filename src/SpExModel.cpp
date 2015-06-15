@@ -456,8 +456,7 @@ double SpExModel::computeSpExProbBranch(Node* node)
     double E0 = node->getEinit();    // Initial extinction probability
     
     
-    
-    
+
     // 3 scenarios:
     //   i. node is extant tip
     //   ii. node is fossil last occurrence, an unsampled or extinct tip
@@ -516,9 +515,7 @@ double SpExModel::computeSpExProbBranch(Node* node)
             // exProb cannot exceed max probability of extinction
             //   necessary to avoid overflow/underflow issues
             //   as E0 approaches 1.0
-            // spProb cannot exceed 1.0
-            //   this will also happen as extinction becomes
-            //   numerically equal to zero. Hence we automatically
+            // Hence we automatically
             //   set any such values such that the computed log-likelihood
             //   is -INFINITY to avoid overflow/underflow at the boundaries
             //   of permitted parameters.
@@ -527,7 +524,13 @@ double SpExModel::computeSpExProbBranch(Node* node)
             //  also re-check E0 initializations for
             //  extinct terminal branches
             
-            if (exProb > _extinctionProbMax || spProb > 1.0 ){
+            //if (exProb > _extinctionProbMax || spProb > 1.0 ){
+            // This line above is incorrect: spProb CAN exceed 1.0
+            // if sum of D0 and E0 > 1. I think theoretical bound on
+            // value of D(t) is E0 + D0 (check).
+            
+            if (exProb > _extinctionProbMax ){
+                
                 return -INFINITY;
             }
             
@@ -583,6 +586,10 @@ double SpExModel::computeSpExProbBranch(Node* node)
         double curPsi = _preservationRate;
 
         
+        // DEBUG
+        //std::cout << "Node: \t" << node << "\tDO\t" << D0 << "\tE0\t" << E0 << std::endl;
+        
+        
         double spProb = 0.0;
         double exProb = 0.0;
 
@@ -593,16 +600,24 @@ double SpExModel::computeSpExProbBranch(Node* node)
         // exProb cannot exceed max probability of extinction
         //   necessary to avoid overflow/underflow issues
         //   as E0 approaches 1.0
-        // spProb cannot exceed 1.0
-        //   this will also happen as extinction becomes
-        //   numerically equal to zero. Hence we automatically
+        // Hence we automatically
         //   set any such values such that the computed log-likelihood
         //   is -INFINITY to avoid overflow/underflow at the boundaries
         //   of permitted parameters.
         // Fix added June 13 2015
         
-        if (exProb > _extinctionProbMax || spProb > 1.0 ){
-             return -INFINITY;
+        // DEBUG
+        //std::cout << "exProb/spProb " << exProb << "\t" << spProb << "\tST/ET\t" << startTime << "\t" << endTime << std::endl;
+        
+        
+        //if (exProb > _extinctionProbMax || spProb > 1.0 ){
+        // This line above is incorrect: spProb CAN exceed 1.0
+        // if sum of D0 and E0 > 1. I think theoretical bound on
+        // value of D(t) is E0 + D0 (check).
+        
+        if (exProb > _extinctionProbMax ){
+        
+            return -INFINITY;
         }
         
         logLikelihood += std::log(spProb);
