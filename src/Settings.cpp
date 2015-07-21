@@ -152,7 +152,7 @@ void Settings::initializeGlobalSettings()
     addParameter("acceptanceInfoFileName", "acceptance_info.txt", NotRequired);
 
     // TODO: New params May 30 2014, need documented
-    addParameter("maxNumberEvents", "500", NotRequired);
+    addParameter("maxNumberEvents", "5000", NotRequired);
     addParameter("priorSim_IntervalGenerations", "5000", NotRequired);
     addParameter("fastSimulatePrior_Generations", "5000000", NotRequired);
     addParameter("fastSimulatePrior_SampleFreq", "50", NotRequired);
