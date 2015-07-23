@@ -68,7 +68,8 @@ chainSwapPercent <- function(bammPath = 'bamm', controlfile, nChains = 4,
                         invisible = TRUE, show.output.on.console = FALSE)
                 }
                 data <- read.csv(
-                    paste(id, 'chain_swap.txt', sep='_'))$swapAccepted
+                    paste(id, 'chain_swap.txt', sep='_'))
+                data <- data[which(data$rank_1 == 1), 'swapAccepted']
                 data <- tail(data, (1 - burnin) * length(data))
                 resVec <- c(nChains[i], deltaT[j], swapPeriod[k],
                     mean(data), sum(data), length(data))

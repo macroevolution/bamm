@@ -116,14 +116,17 @@ do
 
             percent=$(Rscript -e "data = read.csv(\"$realSwapFileName\"); \
                                   data = tail(data, 0.8 * nrow(data)); \
+                                  data = data[which(data$rank_1 == 1),]; \
                                   cat(mean(data\$swapAccepted))")
 
             accepted=$(Rscript -e "data = read.csv(\"$realSwapFileName\"); \
                                    data = tail(data, 0.8 * nrow(data)); \
+                                   data = data[which(data$rank_1 == 1),]; \
                                    cat(sum(data\$swapAccepted))")
 
             proposed=$(Rscript -e "data = read.csv(\"$realSwapFileName\"); \
                                    data = tail(data, 0.8 * nrow(data)); \
+                                   data = data[which(data$rank_1 == 1),]; \
                                    cat(nrow(data))")
 
             # Print current options
