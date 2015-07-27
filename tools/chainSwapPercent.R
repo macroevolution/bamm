@@ -74,7 +74,9 @@ chainSwapPercent <- function(bammPath = 'bamm', controlfile, nChains = 4,
                 resVec <- c(nChains[i], deltaT[j], swapPeriod[k],
                     mean(data), sum(data), length(data))
                 res <- rbind(res, resVec)
-                file.remove(list.files(pattern = id))
+                if (deleteTempFiles) {
+                	file.remove(list.files(pattern = id))
+                }
                 counter <- counter + 1
                 setTxtProgressBar(pb, counter)
             }
