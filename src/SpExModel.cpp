@@ -184,7 +184,7 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
 
     Model::calculateUpdateWeights();
     
-    testPreservationRate();
+    //testPreservationRate();
 
 }
 
@@ -622,8 +622,6 @@ double SpExModel::computeLogLikelihood()
     if (_hasPaleoData){
         logLikelihood += computePreservationLogProb();  
     }
-
-
     
     return logLikelihood;
 }
@@ -969,7 +967,6 @@ double SpExModel::computeSpExProbBranch(Node* node)
     
     // *************************************************//
     
-    
     return logLikelihood;
 }
 
@@ -1109,15 +1106,21 @@ double SpExModel::computePreservationLogProb()
     double logLik = 0.0;
 
     if (_numberOccurrences > 0){
-    
+        
         logLik = (double)_numberOccurrences * std::log(_preservationRate);
         
     }else if (_numberOccurrences < 0){
         
-        for (int i = 0; i <= (int)_relPresRate.size(); i++){
+        for (int i = 0; i < (int)_relPresRate.size(); i++){
+
+            if (_fossilCount[i] > 0){
+                
+                double logprate = std::log(_preservationRate) + std::log(_relPresRate[i]);
+                
+                logLik += logprate * (double)_fossilCount[i];
+            }
             
-            double logprate = std::log(_preservationRate * _relPresRate[i]);
-            logLik += logprate * (double)_fossilCount[i];
+
         }
         
     }else{
