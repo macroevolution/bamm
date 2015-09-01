@@ -741,7 +741,7 @@ double SpExModel::computeSpExProbBranch(Node* node)
             endTime = startTime;
             
         }
-        
+ 
         // Prob that lineage went extinct before present
         // E0 could be the new D0 for the next calculation
         //  however, we will factor this out and start with 1.0.
