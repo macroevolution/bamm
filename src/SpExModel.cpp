@@ -18,6 +18,7 @@
 #include "Prior.h"
 #include "Tools.h"
 
+
 #include <cstdlib>
 #include <cmath>
 #include <vector>
@@ -182,6 +183,8 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
 
 
     Model::calculateUpdateWeights();
+    
+    testPreservationRate();
 
 }
 
@@ -233,12 +236,194 @@ void SpExModel::initializeHasPaleoData()
             _observationTime = _tree->getAge();
         }
         
+    }else if (_numberOccurrences == -1){
+        // This is the flag to tell BAMM to expect a formal
+        // preservation rate file.
+        
+
+        
+
+        _hasPaleoData = true;
+        _observationTime = _settings.get<double>("observationTime");
+        if (_observationTime <= 0){
+            _observationTime = _tree->getAge();
+        }else if ( _observationTime < _tree->getAge() ){
+            std::cout << "WARNING: invalid initial observation time" << std::endl;
+            std::cout << "\t... setting observationTime to tree MAX TIME" << std::endl;
+            _observationTime = _tree->getAge();
+        }
+        
+        if (_settings.get("fossilDataFile") == ""){
+            std::cout << "Invalid input file for fossil occurrences" << std::endl;
+            std::cout << "This must be specified if <<numberOccurrences>> = -1" << std::endl;
+            exit(0);
+        }else{
+        
+            getFossilDataFromFile(_settings.get("fossilDataFile"));
+ 
+        }        
+        
+        
     }else{
         std::cout << "Invalid number of occurrences in controlfile" << std::endl;
         exit(0);
     }
     
+    _hasMassExtinctionData = _settings.get<bool>("hasMassExtinctions");
+    
+    if (_hasMassExtinctionData){
+        //std::cout << "file: " << _settings.get("massExtinctionFile");
+        getMassExtinctionDataFromFile();
+    }
+    
 
+}
+
+void SpExModel::getFossilDataFromFile(std::string fileName)
+{
+    
+
+    std::ifstream inputFile(fileName.c_str());
+    
+    if (!inputFile) {
+        log(Error) << "Could not read data from file "
+        << "<<" << fileName << ">>.\n";
+        std::exit(1);
+    }
+    
+    log() << "Reading fossil data from file <<" << fileName << ">>.\n";
+ 
+    while (inputFile){
+        std::string tempstring;
+        getline(inputFile, tempstring, '\t');
+        _stagenames.push_back(tempstring);
+        getline(inputFile, tempstring, '\t');
+        _startTime.push_back(atof(tempstring.c_str()));
+        getline(inputFile, tempstring, '\t');
+        _endTime.push_back(atof(tempstring.c_str()));
+        getline(inputFile, tempstring, '\t');
+        _relPresRate.push_back(atof(tempstring.c_str()));
+        getline(inputFile, tempstring, '\n');
+        _fossilCount.push_back(atof(tempstring.c_str()));
+
+        // this OK?
+        if (inputFile.peek() == EOF) {
+            break;
+        }
+    }
+    
+    inputFile.close();
+ 
+    if (_endTime[(int)_endTime.size()-1] < _observationTime){
+        _endTime[(int)_endTime.size()-1] = _observationTime;
+        
+        std::cout << "WARNING: preservation file should have final time bin" << std::endl;
+        std::cout << "consistent with <<observationTime>>" << std::endl;
+        std::cout << "Resetting end time of final bin to <<observationTime>> " << std::endl;
+ 
+    }
+    
+    
+}
+
+void SpExModel::getMassExtinctionDataFromFile()
+{
+
+    std::string fileName = _settings.get("massExtinctionFile");
+ 
+    std::ifstream inputFile(fileName.c_str());
+    
+    if (!inputFile) {
+        log(Error) << "Could not read data from file "
+        << "<<" << fileName << ">>.\n";
+        std::exit(1);
+    }
+    
+    log() << "Reading fossil data from file <<" << fileName << ">>.\n";
+
+    while (inputFile){
+        std::string tempstring;
+        getline(inputFile, tempstring, '\t');
+        _massExtinctionTime.push_back(atof(tempstring.c_str()));
+        getline(inputFile, tempstring, '\n');
+        _massExtinctionIntensity.push_back(atof(tempstring.c_str()));
+        
+        // this OK?
+        if (inputFile.peek() == EOF) {
+            break;
+        }
+    }
+    
+    inputFile.close();
+    
+    for (int i = 0; i < (int)_massExtinctionIntensity.size(); i++){
+        std::cout << "MassEx Pars" << std::endl;
+        std::cout << _massExtinctionIntensity[i] << std::endl;
+        std::cout << _massExtinctionTime[i] << std::endl;
+    }
+
+    if ((int)_massExtinctionIntensity.size() > 1){
+        std::cout << "Only single (terminal) mass extinction currently supported" << std::endl;
+        exit(0);
+    }
+
+}
+
+
+
+
+double SpExModel::getScaledPreservationRate(double abstime)
+{
+    double rate = 0.0;
+    if (_numberOccurrences > 0){
+        rate = _preservationRate;
+    }else if (_numberOccurrences < 0){
+        for (int i = 0; i < (int)_startTime.size(); i++){
+            if (abstime >= _startTime[i] & abstime <= _endTime[i]){
+                rate = _relPresRate[i] * _preservationRate;
+                break;
+            }
+        }
+ 
+    }else{
+        std::cout << "Invalid _numberOccurrences" << std::endl;
+        exit(0);
+    }
+
+
+    return rate;
+}
+
+void SpExModel::testPreservationRate(void)
+{
+    
+    for (int i = 0; i < (int)_startTime.size(); i++){
+        std::cout << _startTime[i] << "\t" << _endTime[i] << "\t" << _relPresRate[i] << std::endl;
+    }
+    
+    
+    double tt = 0.0;
+    while (tt < _observationTime){
+        std::cout << "Time : " << tt << "\tPresRate: " << getScaledPreservationRate(tt) << std::endl;
+        tt += 10;
+    }
+    
+}
+
+
+// Returns probability that a given lineage alive at start of interval will
+// have gone extinct, on account of mass extinctions alone.
+double SpExModel::getMassExtinctionPointIntensity(double t_start, double t_end)
+{
+    double psurvive = 1.0;
+    
+    for (int i = 0; i < (int)_massExtinctionTime.size(); i++){
+        if ((t_start <= _massExtinctionTime[i]) & (t_end >= _massExtinctionTime[i]))
+            psurvive *= (1 - _massExtinctionIntensity[i]);
+    }
+    
+    return (1 - psurvive);
+    
 }
 
 
@@ -491,6 +676,10 @@ double SpExModel::computeSpExProbBranch(Node* node)
         double startTime = node->getBrlen() + ddt;
         double endTime = startTime;
         
+        // MASS EXTINCTION INTENSITY
+        E0 = getMassExtinctionPointIntensity(node->getTime(), _observationTime);
+ 
+        
         while (startTime > node->getBrlen()){
             startTime -= _segLength;
             if (startTime < node->getBrlen() ){
@@ -504,8 +693,23 @@ double SpExModel::computeSpExProbBranch(Node* node)
             double curMu = node->computeExtinctionRateIntervalRelativeTime
             (startTime, endTime);
             
-            // TODO: curPsi can be computed once we have interval-specific psi values
-            double curPsi = _preservationRate;
+            // TODO: check interval-specific psi values
+            // curPsi can be computed once we have interval-specific psi values
+            //
+            //
+            // Old way:
+            //double curPsi = _preservationRate;
+    
+            double atime = node->getAnc()->getTime() + startTime;
+            double curPsi = getScaledPreservationRate(atime);
+            
+            // This (above) definition of atime should work because:
+            //    for a given node, startTime = 0 occurs at the ROOTWARD
+            //    end of branch starting with the node. Hence, at startTIme = 0
+            //    you are at the parent node (node->getAnc()).
+            // Then you simply add this time to the absolute age of the parent node
+            //    to get the absolute time.
+            
             
             double spProb = 0.0;
             double exProb = 0.0;
@@ -566,6 +770,7 @@ double SpExModel::computeSpExProbBranch(Node* node)
     double startTime = node->getBrlen();
     double endTime = node->getBrlen();
  
+ 
     while (startTime > 0) {
         startTime -= _segLength;
         if (startTime < 0) {
@@ -583,8 +788,12 @@ double SpExModel::computeSpExProbBranch(Node* node)
         double curMu = node->computeExtinctionRateIntervalRelativeTime
             (startTime, endTime);
 
-        double curPsi = _preservationRate;
-
+        
+        // TODO: doublecheck calculations of curPsi for stage-specific rates.
+        //double curPsi = _preservationRate;
+        
+        double atime = node->getAnc()->getTime() + startTime;
+        double curPsi = getScaledPreservationRate(atime);
         
         // DEBUG
         //std::cout << "Node: \t" << node << "\tDO\t" << D0 << "\tE0\t" << E0 << std::endl;
@@ -679,7 +888,12 @@ double SpExModel::computeSpExProbBranch(Node* node)
                 double cmu = node->computeExtinctionRateIntervalRelativeTime
                 (st, et);
                 
-                double cpsi = _preservationRate;
+                // TODO: doublecheck stage-specific preservation rates.
+                //double cpsi = _preservationRate;
+                
+                double atime = node->getAnc()->getTime() + startTime;
+                double cpsi = getScaledPreservationRate(atime);
+                
                 
                 double sprob = 0.0;
                 double eprob = 0.0;
@@ -892,8 +1106,27 @@ double SpExModel::computeLogPrior()
 
 double SpExModel::computePreservationLogProb()
 {
-    double logLik = (double)_numberOccurrences * std::log(_preservationRate);
+    double logLik = 0.0;
 
+    if (_numberOccurrences > 0){
+    
+        logLik = (double)_numberOccurrences * std::log(_preservationRate);
+        
+    }else if (_numberOccurrences < 0){
+        
+        for (int i = 0; i <= (int)_relPresRate.size(); i++){
+            
+            double logprate = std::log(_preservationRate * _relPresRate[i]);
+            logLik += logprate * (double)_fossilCount[i];
+        }
+        
+    }else{
+        std::cout << "Invalid _numberOccurrences variable in SpExModel::computePreservationLogProb";
+        std::cout << std::endl;
+        exit(0);
+    }
+    
+    
     return logLik;
 }
 

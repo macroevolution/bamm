@@ -40,6 +40,14 @@ public:
     void   setHasPaleoData(bool x);
     
     void   initializeHasPaleoData();
+
+    double getScaledPreservationRate(double abstime);
+    void   testPreservationRate();
+    
+    void   getFossilDataFromFile(std::string);
+    void   getMassExtinctionDataFromFile();
+    double getMassExtinctionPointIntensity(double t_start, double t_end);
+    
     
     // Debugging likelihood function:
     void   printNodeProbs();
@@ -103,6 +111,7 @@ private:
     // Time at which tree is observed, relative to root
     double _observationTime;
     
+    
     // this will change at some point
     //   to allow greater flexibility of preservation model
     int     _numberOccurrences;
@@ -123,6 +132,26 @@ private:
     
     void initializeDebugVectors();
     void outputDebugVectors();
+    
+    
+    // TODO: these vectors are used to hold stage-specific
+    // preservation information. They should be moved to their
+    // own class.
+    std::vector<std::string> _stagenames;
+    std::vector<double> _startTime;
+    std::vector<double> _endTime;
+    std::vector<double> _relPresRate;
+    std::vector<double> _fossilCount;
+    
+    //TODO: Mass extinction stuff:
+    // should also be moved to own class
+    // and ideally, treated as actual parameter
+    
+    std::vector<double>      _massExtinctionTime;
+    std::vector<double>      _massExtinctionIntensity;
+    bool _hasMassExtinctionData;
+    
+    
     
 };
 

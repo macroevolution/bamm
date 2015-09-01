@@ -178,6 +178,10 @@ void Settings::initializeGlobalSettings()
     addParameter("updatePreservationRateScale", "1.0", NotRequired);
     addParameter("preservationRatePrior", "1.0", NotRequired);
     
+    addParameter("fossilDataFile", "", NotRequired);
+    addParameter("hasMassExtinctions", "0", NotRequired);
+    addParameter("massExtinctionFile", "", NotRequired);
+    
     /*********************************************************/
     
     
