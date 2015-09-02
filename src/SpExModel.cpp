@@ -273,6 +273,10 @@ void SpExModel::initializeHasPaleoData()
     
     if (_hasMassExtinctionData){
         //std::cout << "file: " << _settings.get("massExtinctionFile");
+        
+        std::cout << "Error in SpExModel::initializeHasPaleoData" << std::endl;
+        std::cout << "Parameter <<_hasMassExtinctionData>> has been deprecated" << std::endl;
+        
         getMassExtinctionDataFromFile();
     }
     
@@ -657,7 +661,7 @@ double SpExModel::computeSpExProbBranch(Node* node)
     //      Problems were observed with simulated trees when the tolerance parameter
     //      was set to 0.00001, as it was flagging many extant taxa as extinct.
     
-    bool isExtant = (std::abs(node->getTime() - _observationTime)) < 0.01;
+    bool isExtant = (std::abs(node->getTime() - _observationTime)) < 0.005;
 
     // TODO: confirm that this is correctly doing the following:
     //        computing the probability of an unobserved lineage
@@ -667,16 +671,19 @@ double SpExModel::computeSpExProbBranch(Node* node)
     
     
     if (node->isInternal() == false & isExtant == false){
+    
     // case 1: node is fossil tip
     
+        //std::cout << node->getName() << "\tE0: \t" << E0 << std::endl;
+        
         double ddt = _observationTime - node->getTime();
         
         double startTime = node->getBrlen() + ddt;
         double endTime = startTime;
         
         // MASS EXTINCTION INTENSITY
-        E0 = getMassExtinctionPointIntensity(node->getTime(), _observationTime);
- 
+        //E0 = getMassExtinctionPointIntensity(node->getTime(), _observationTime);
+        // above line should be commented out if initializing from file
         
         while (startTime > node->getBrlen()){
             startTime -= _segLength;
@@ -741,7 +748,8 @@ double SpExModel::computeSpExProbBranch(Node* node)
             endTime = startTime;
             
         }
- 
+        
+        
         // Prob that lineage went extinct before present
         // E0 could be the new D0 for the next calculation
         //  however, we will factor this out and start with 1.0.

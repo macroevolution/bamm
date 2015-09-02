@@ -1164,9 +1164,12 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
     
     // Tree must be ultrametric to use this option
     // TODO: this check for ultrametric must be more informative
-    
-    assertTreeIsUltrametric();
-    
+ 
+    // 2015.09.01: comment out this option. Now allows user to
+    // specify sampling fractions for n/u trees, even if this option
+    // not yet extensively tested.
+    //assertTreeIsUltrametric();
+ 
     std::ifstream infile(fname.c_str());
 
     
