@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2. BAMM graph gallery &mdash; bamm 2.3.0 documentation</title>
+    <title>2. BAMM graph gallery &mdash; bamm 2.4.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.3.0',
+        VERSION:     '2.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 2.3.0 documentation" href="documentation.html" />
+    <link rel="top" title="bamm 2.4.0 documentation" href="documentation.html" />
     <link rel="next" title="3. Rate Shifts on Phylogenies: Theoretical Background" href="rateshifts.html" />
     <link rel="prev" title="1. Introduction" href="introduction.html" /> 
   </head>
@@ -108,7 +108,7 @@
 </div>
 <p>A <strong>phylorate plot</strong> showing speciation rates (cool colors = slow, warm = fast) along each branch of the whale phylogeny from Steeman <em>et al.</em> (2009). Each unique color section of a branch represents the mean of the marginal posterior density of speciation rates on a localized segment of a phylogenetic tree. The &#8220;background rate&#8221; for lineages involves a temporal deceleration in speciation rates (note warm colors at root). One clade - the dolphins - is characterized by a massive increase in the rate of speciation:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">library</span><span class="p">(</span><span class="n">BAMMtools</span><span class="p">)</span>
-<span class="n">data</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">prior</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
+<span class="n">data</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
 <span class="n">edata_whales</span> <span class="o">&lt;-</span> <span class="n">getEventData</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">bammdata</span><span class="p">(</span><span class="n">edata_whales</span><span class="p">,</span> <span class="n">lwd</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&quot;polar&quot;</span><span class="p">,</span> <span class="n">pal</span><span class="o">=</span><span class="s">&quot;temperature&quot;</span><span class="p">)</span>
 </pre></div>
@@ -168,9 +168,7 @@ for (i in 1:length(ixx)) {
 <a class="reference internal image-reference" href="_images/bammgraphgallery3.png"><img alt="_images/bammgraphgallery3.png" src="_images/bammgraphgallery3.png" style="width: 500px;" /></a>
 </div>
 <p>BAMM enables the user to tabulate the &#8220;distinct shift configurations&#8221; within a given dataset as well as the posterior probability of each configuration. Each distinct shift configuration may have been sampled multiple times during simulation of the posterior. This is directly analogous to a credible set of topologies from a Bayesian phylogenetic analysis. This example shows 95% credible set of shift configurations from the analysis of the whale phylogeny:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">data</span><span class="p">(</span><span class="n">prior</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
-<span class="n">pset</span> <span class="o">&lt;-</span> <span class="n">getBranchShiftPriors</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">prior</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
-<span class="n">cset</span> <span class="o">&lt;-</span> <span class="n">credibleShiftSet</span><span class="p">(</span><span class="n">edata_whales</span><span class="p">,</span> <span class="n">pset</span><span class="p">,</span> <span class="n">BFcriterion</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cset</span> <span class="o">&lt;-</span> <span class="n">credibleShiftSet</span><span class="p">(</span><span class="n">edata_whales</span><span class="p">,</span> <span class="n">expectedNumberOfShifts</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">credibleshiftset</span><span class="p">(</span><span class="n">cset</span><span class="p">,</span> <span class="n">lwd</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -192,10 +190,9 @@ for (i in 1:length(ixx)) {
 <a class="reference internal image-reference" href="_images/bammgraphgallery5.png"><img alt="_images/bammgraphgallery5.png" src="_images/bammgraphgallery5.png" style="width: 700px;" /></a>
 </div>
 <p>BAMM and BAMMtools can also be used to analyze rates of phenotypic evolution. Here are the four most probable macroevolutionary rate shift configurations (and their overall frequencies) for the evolution of body size across a phylogenetic tree of living primates. As in the above phylorate plots, branch colors reflect the instantaneous rate of body size evolution. This dataset is included as an example with BAMMtools:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">data</span><span class="p">(</span><span class="n">primates</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">primates</span><span class="p">,</span> <span class="n">prior</span><span class="o">.</span><span class="n">primates</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">data</span><span class="p">(</span><span class="n">primates</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">primates</span><span class="p">)</span>
 <span class="n">ed_prim</span> <span class="o">&lt;-</span> <span class="n">getEventData</span><span class="p">(</span><span class="n">primates</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">primates</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s">&quot;trait&quot;</span><span class="p">)</span>
-<span class="n">pprior</span> <span class="o">&lt;-</span> <span class="n">getBranchShiftPriors</span><span class="p">(</span><span class="n">primates</span><span class="p">,</span> <span class="n">prior</span><span class="o">.</span><span class="n">primates</span><span class="p">)</span>
-<span class="n">css_prim</span> <span class="o">&lt;-</span> <span class="n">credibleShiftSet</span><span class="p">(</span><span class="n">ed_prim</span><span class="p">,</span> <span class="n">pprior</span><span class="p">)</span>
+<span class="n">css_prim</span> <span class="o">&lt;-</span> <span class="n">credibleShiftSet</span><span class="p">(</span><span class="n">ed_prim</span><span class="p">,</span> <span class="n">expectedNumberOfShifts</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">credibleshiftset</span><span class="p">(</span><span class="n">css_prim</span><span class="p">,</span> <span class="n">lwd</span><span class="o">=</span><span class="mf">1.7</span><span class="p">,</span> <span class="n">plotmax</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>

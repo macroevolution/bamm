@@ -88,17 +88,9 @@ For those interested in exploring rate heterogeneity in the form of a histogram,
 	#create phylorate plot to generate output
 	q <- plot.bammdata(ed, breaksmethod='jenks')
 
-	plot.new();
-	x = q$colordens[,1]
-	y = q$colordens[,2]
-	plot.window(xlim = c(min(0,min(x)), max(x)), ylim = c(0, max(y)))
-	segments(x, y, x, 0, lend = 2, col = q$colordens[,3], lwd=3)
-	axis(1, signif(seq(min(0,min(x)), max(x), length.out = 5), 2), xaxs = "i", cex.axis = 0.75, tcl = NA, mgp = c(0, 0.25, 0))
-	axis(2, round(seq(0, max(y), length.out = 3), 0), las = 1, yaxs = "i", cex.axis = 0.75, tcl = NA, mgp = c(0, 0.25, 0))
-	    
-	#add breaks as vertical lines
-	abline(v=q$colorbreaks, lwd=0.2, lty=1)
-	title(main='jenks', cex.main=2)
+	ratesHistogram(q, plotBrks = TRUE, xlab = 'trait rates')
+
+	title(main='jenks', cex.main=1)
 
 
 

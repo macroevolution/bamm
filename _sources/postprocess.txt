@@ -165,7 +165,7 @@ Bayes factors for model comparison
 ..................................
 .. _bayesfactors:
 
-There is a critical issue that arises in model comparisons using BAMM: inferences on the posterior distribution of models are not independent of the prior. This is generally not an issue if you are using a conservative prior (``poissonRatePrior = 1``, for example), because a model with zero rate shifts will have a high prior probability. However, if you set ``poissonRatePrior = 0.1`` (or some other value < 1), your expected number of diversification shifts under the prior alone will increase. Hence, simply by manipulating the prior, you can potentially achieve a posterior distribution that is quite different from zero, even in the absence of diversification rate heterogeneity.
+There is a critical issue that arises in model comparisons using BAMM: inferences on the posterior distribution of models are not independent of the prior. This is generally not an issue if you are using a conservative prior (``poissonRatePrior = 1``, for example), because a model with zero rate shifts will have a high prior probability. However, if you set ``poissonRatePrior = 0.1`` (or some other value < 1), your expected number of diversification shifts under the prior alone will increase. Hence, simply by manipulating the prior, you can potentially achieve a posterior distribution that is quite different from zero, even in the absence of evidence for diversification rate heterogeneity.
 
 The solution that we advocate is to explicitly compare the evidence for models with at least one diversification shift to the evidence for the *null* model. Formally, there isn't really a null model in BAMM, but for our purposes, it makes sense to think about model with zero rate shifts as the null hypothesis. In a Bayesian framework, we can do this by computing the Bayes factor associated with two models. This is computed as 
 
@@ -174,34 +174,28 @@ The solution that we advocate is to explicitly compare the evidence for models w
 
 where :math:`Pr(D|M_i)` is the probability of the data given model :math:`M_i` and :math:`\pi(M_i)` is the prior probability of model :math:`M_i`. Bayes factors are notoriously difficult to compute for many applications, but they are trivial from BAMM output. 
 
-**We suggest that (usually) the overall best model from a BAMM analysis is the model with the highest Bayes factor relative to the null model**, :math:`M_0`. BAMMtools makes it easy to compute Bayes factor evidence in favor of one model relative to another.  The analysis described below assumes that you have generated an *MCMC output file* involving simulation from the **prior only**, and that you have the corresponding output file from full BAMM run. You can configure BAMM to perform a prior simulation using the BAMM control file by ensuring that `simulatePriorShifts = 1`. We have not yet identified a closed-form analytical solution to the prior distribution on the number of shifts (but we suspect that one may exist). However, it is straightforward to simulate this distribution. You can even run a BAMM analysis while *only* performing a prior simulation by setting::
+**We suggest that (usually) the overall best model from a BAMM analysis is the model with the highest Bayes factor relative to the null model**, :math:`M_0`. 
 
-	simulatePriorShifts = 1
-	initializeModel = 0
-	runMCMC = 0
-	
-The first 6 lines of your prior simulation file should look something like this::
+Prior distribution in BAMM
+--------------------------
+.. _analyticalprior:
 
-	N_shifts,prob
-	0,0.445591
-	1,0.302179
-	2,0.156216
-	3,0.0644693
-	4,0.0222653
-	5,0.00678463
+The primary goal of BAMM is to understand rate heterogeneity in a phylogeny without having to pre-specify the number or location of rate regimes. Rather than putting a prior on the number of shifts (*k*) directly, BAMM uses a weaker prior on the rate of the Poisson process that produces *k* (the Poisson rate prior: :math:`\pi(\lambda_{P})`). Understanding how much evidence there is for *k* shifts along your tree therefore requires that you determine the prior probability of *k* shifts under the specified Poisson rate prior used, which is calculated analytically as
 
-where each value after the comma is the prior probability of the corresponding model with *N_shifts*. Assuming you have files *prior_mcmc_out.txt* and *post_mcmc_out.txt* for your analysis, you can compute a pairwise Bayes factor matrix as::
+.. math::
+	P(k | \pi( \lambda_{P} )) = {\frac{ \pi( \lambda_{P}) } {( \pi( \lambda_{P}) + 1)^{k+1}}}
+
+Even a weak prior will have an effect on the posterior, so it is important to assess the evidence in favor of each number of shifts by taking the prior into account using Bayes Factors. BAMMtools makes it easy to compute Bayes factor evidence in favor of one model relative to another.  The analysis described below assumes that you have generated an *MCMC output file* from a full BAMM run and that you know the ``expectedNumberofShifts`` specified in the *control file*::
 
 	postfile <- "post_mcmc_out.txt"
-	priorfile <- "prior_mcmc_out.txt"
-	bfmat <- computeBayesFactors(postfile, priorfile, burnin=0.1)
+	bfmat <- computeBayesFactors(postfile, expectedNumberofShifts=1, burnin=0.1)
 	
 and this will return a pairwise matrix of Bayes factors. For the whales dataset, you can do this as::
 
-	data(prior.whales, mcmc.whales)
-	computeBayesFactors(mcmc.whales, prior.whales, burnin=0.1)
+	data(mcmc.whales)
+	computeBayesFactors(mcmc.whales, expectedNumberofShifts=1, burnin=0.1)
 
-It is very important to recognize that model probabilities for rarely sampled models are likely to be inaccurate. Hence, BAMMtools will not attempt to compute a Bayes factor for any model comparison where either model has a posterior or prior probability of (approximately) zero. For the whale example dataset, the Bayes factor evidence in favor of a model with a rate shift, relative to the null model, is very strong (BF > 70). 
+It is very important to recognize that model probabilities for rarely sampled models are likely to be inaccurate. Hence, BAMMtools will not attempt to compute a Bayes factor for any model comparison where either model has a posterior or prior probability of (approximately) zero. The default output of computeBayesFactors is a matrix of pairwise Bayes Factors comparing all models with a posterior/prior greater than zero. In general, the first column of this output matrix is the comparison of all the models relative to the model with the lowest number of supported shifts (often zero).
 
 In the case of the whales example dataset, the Bayes factors for a model with *k* shifts relative to a null model with *0* shifts is ::
 	
@@ -213,9 +207,17 @@ In the case of the whales example dataset, the Bayes factors for a model with *k
 	4		21.5
 	5		10.8
  
+For the whale example dataset, the Bayes factor evidence in favor of a model with a rate shift, relative to the null model, is very strong (BF > 70).
 This tells us that a model with a single diversification shift is the best overall model, at least by comparison to the null model with zero shifts. Bayes factors greater than 20 generally imply substantial evidence for one model over another; values greater than 50 are *very strong* evidence in favor of the numerator model. Here, it's pretty clear that a model with a single rate shift is much, much better than a model that lacks rate shifts.
 
-Occasionally, you may encounter a dataset where the posterior probability of the null model is so low that it cannot be estimated (e.g., it is never sampled during simulation of the posterior). Likewise, the prior probability of the models with high posterior probability might be very (i.e., inestimably) low, depending on your value for `poissonRatePrior`. In this case, you will not be able to compute a Bayes factor. However, you can explicitly show the posterior and prior distributions recovered through your analysis to make it clear that the posterior distribution is shifted relative to the prior. We are actively working on strategies to address the problem of model selection when the posterior and/or prior probabilities approach zero. 
+Occasionally, you may encounter a dataset where the posterior probability of the null model is so low that it cannot be estimated (e.g., it is never sampled during simulation of the posterior). Likewise, the prior probability of the models with high posterior probability might be very (i.e., inestimably) low, depending on your value for `expectedNumberofShifts`. In this case, you will not be able to compute a Bayes factor. However, you can explicitly show the posterior and prior distributions recovered through your analysis to make it clear that the posterior distribution is shifted relative to the prior. We are actively working on strategies to address the problem of model selection when the posterior and/or prior probabilities approach zero. 
+
+BAMMtools also has a function for visualizing the prior and posterior simultaneously. This is useful to see what models are not being sampled in the posterior, and also to evaluate how far from the prior the posterior has moved. To use it ::
+
+	data(mcmc.whales)
+	plotPrior(mcmc.whales, expectedNumberofShifts=1)
+	
+The prior and posterior being similiar does not mean that BAMM has not converged, as there may be strong agreement between the prior and posterior in any given dataset. For instance, the whale tree has strong support for a single shift, and so the two distributions have not diverged by much, but Bayes Factors tell us that the difference is ''significant'' (i.e., the shift from the prior to the posterior is large).
 
 Mean phylorate plot
 -------------------
@@ -245,19 +247,15 @@ You can also view a phylorate plot for any sample from the posterior. For exampl
 
 Bayesian credible sets of shift configurations
 ----------------------------------------------
+.. _crediblesets:
 
-BAMM enables us to identify the 95% credible set of distinct shift configurations (for more on distinct shift configurations, see :ref:`here<rateshifts>`). Each sample from the posterior simulated using BAMM is a potentially unique configuration of rate shifts and parameters across a phylogeny. The *95% credible set* is the set of distinct shift configurations that account for 95% of the probability of the data. First, we need to estimate the expected frequency of observing rate shifts on each branch under the prior. We won't worry about why we are doing this for the moment; you can read more :ref:`here<coreshifts>`. **New in BAMMtools 2.0, core shifts are identified based on an explicit Bayes factor criterion.** Please read the special documentation on core and non-core shifts, because this is a confusing topic.
+The central goal of BAMM is to identify the relative evidence across a phylogeny for rate heterogeneity. Part of the modeling process involves placing a number of shifts at specific locations through the tree (shift configurations), however the precise location of each shift should not be overinterpreted. Evolution is complicated, it is highly unlikely that an empirical tree will have unambiguous evidence for the precise location of a shift. The more likely scenario is that several positions, both along a single branch or on successive branches, will have evidence for rate shifts.
 
-To plot the credible shift set, we need the **simulated prior distribution** on the number of rate shifts (this is generated by default by BAMM). We have included an example of this file in BAMMtools.::
+BAMM enables us to identify the 95% credible set of distinct shift configurations (for more on distinct shift configurations, see :ref:`here<rateshifts>`). Each sample from the posterior simulated using BAMM is a potentially unique configuration of rate shifts and parameters across a phylogeny. The *95% credible set* is the set of distinct shift configurations that account for 95% of the probability of the data. First, we need to estimate the expected frequency of observing rate shifts on each branch under the prior. We won't worry about why we are doing this for the moment; you can read more :ref:`here<coreshifts>`. Core shift locations are identified based on the shift's marginal odds. Please read the special documentation on core and non-core shifts, because this is a confusing topic.
 
-	# Load the prior data on whales
-	data(prior.whales) 
-	# Get the prior on the branch shifts
-	priorshifts <- getBranchShiftPriors(whales, prior.whales)
+To plot the credible shift set, we need the **prior distribution** on the number of rate shifts (this is generated internally by BAMMtools). We can then estimate the credible set of rate shifts using the BAMMtools function ``credibleShiftSet``::
 
-Now, using this prior information, we can estimate the credible set of rate shifts using the BAMMtools function ``credibleShiftSet``::
-
-	css <- credibleShiftSet(edata, priorshifts, set.limit = 0.95)
+	css <- credibleShiftSet(edata, expectedNumberOfShifts=1, threshold=5, set.limit = 0.95)
 
 Here is the number of distinct shift configurations in the data::
 
@@ -277,8 +275,7 @@ Finding the single *best* shift configuration
 ---------------------------------------------
 From the above plot, we can see that a single rate shift configuration has a higher posterior probability than any other. This shift configuration is the one with the *maximum a posteriori* (MAP) probability. This is one estimate of the overall best rate set of rate shifts given our data. If you are to show a single set of rate shifts on a phylogeny for publication, this would be a good one to go with::
 
-	priorshifts <- getBranchShiftPriors(whales, prior.whales)
-	best <- getBestShiftConfiguration(edata, prior = priorshifts)
+	best <- getBestShiftConfiguration(edata, expectedNumberofShifts=1)
 	plot.bammdata(best, lwd = 2)
 	addBAMMshifts(best, cex=2.5)
 
@@ -286,7 +283,7 @@ Here, we have generated a phylorate plot for the best overall shift configuratio
 
 Related to this, we could have pulled out any *specific sample* from a particular shift configuration for plotting using the ``credibleShiftSet`` object. The assignments of individual samples to specific shift configurations are stored in the ``indices`` component of the ``credibleshiftset`` object. This is a list, and you can access the full vector of the *most-probable* shift configuration as follows::
 
-	css <- css <- credibleShiftSet(edata, priorshifts, set.limit = 0.95)
+	css <- credibleShiftSet(edata, expectedNumberOfShifts=1, set.limit = 0.95)
 	css$indices[[1]] 
 	
 The samples that can be assigned to the second most-probable shift configuration can be identified by ``css$indices[[2]]``, and the indices for the k'th most-probable configuration are ``css$indices[[k]]``. You could plot any specific sample from any shift configuration as follows by first pulling out the relevant sample index, then using ``subsetEventData``::
@@ -320,8 +317,7 @@ Viewing some random shift configurations
 ----------------------------------------
 To give you some intuition for the distinct shift configurations in your dataset, we have included a function to plot random samples from the posterior and the associated shifts. Here, we will plot random samples from the posterior that are assignable to one of the distinct shift configurations that we have identified::
 
-	priorshifts <- getBranchShiftPriors(whales, prior.whales)
-	dsc <- distinctShiftConfigurations(edata, priorshifts, BFcriterion = 5)
+	dsc <- distinctShiftConfigurations(edata, expectedNumberOfShifts=1, threshold=5)
 	# Here is one random sample with the BEST shift configuration
 	plot.bammshifts(dsc, edata, rank=1, legend=F)
 	# Here is another (read the label text):
@@ -369,30 +365,36 @@ BAMMtools enables the user to summarize *marginal shift probabilities*. This is 
 	
 The variable *marg_probs* becomes a copy of our phylogenetic tree, but where each branch length has been transformed into the corresponding marginal shift probability. The marginal shift probabilities can be a little misleading, because we might have relatively low confidence in precisely which branch a shift occurred on, but nonetheless have extremely high confidence that a shift occurred *somewhere* in the vicinity. More importantly, the marginal shift probabilities don't accurately account for the expected number of shifts that would occur in the data under the prior alone (again, see :ref:`this section<rateshifts>` for more on this). This is a major issue and we have recently overhauled BAMMtools to use a measure of evidence for rate shifts that is largely independent of the prior: the **Bayes factor**. 
 
-Bayes factors for rate shifts
----------------------------------------
+.. _marginalodds:
 
-As explained :ref:`here<bayesfactorbranches>` and in this `Evolution article <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_, we can compute the Bayes factors associated with a shift on a particular branch. Despite numerous difficulties associated with computing Bayes factors more generally, it is straightforward and natural in this context to compute them. To be clear, we are now advocating a very different use of Bayes factors than we described previously on :ref:`this page<bayesfactors>`. Now, we are computing the Bayes factor associated with a rate shift on a particular branch of our phylogeny. This provides us with a robust measure of evidence for a rate shift on a particular branch that is effectively independent of the effects of whatever prior parameter we placed on the number of shift events. 
+Marginal odds for rate shift locations
+--------------------------------------
 
-To compute the Bayes factors for the *topological location* of rate shifts on our tree, we first compute the probability of a rate shift on each branch of our phylogeny under the prior alone::
+As explained :ref:`here<bayesfactorbranches>` and in this `Evolution article <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_, we can compute the marginal odds that a shift is associated with a particular branch. To be clear, this method is not meant to identify the *number* of shifts, to do that see :ref:`this page<bayesfactors>`. Here, we are discussing how to compute the relative evidence that a rate shift is on a particular branch of our phylogeny. To do this, we find the ratio between the probability of a shift along that branch in the posterior and the prior odds of a shift along that branch. This **marginal odds ratio** is superficially similar to a Bayes Factor, and we have previously used that term in the `Evolution article <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_. However, because the marginal odds of a shift along the tree are a *summary statistic* and not a component of *model selection*, they are not formal Bayes Factors. 
 
-	priorshifts <- getBranchShiftPriors(edata, prior.whales)
+This is an important point: you **cannot** use the marginal odds of the branches to select the number of shifts along a tree. To understand why, consider the whale tree where Bayes Factors support a single shift, but the marginal odds are over 20 for three separate branches leading up to the dolphin clade. These high marginal odds show the relative support each of those three branches has for the **one** shift supported by the Bayes Factor, and is not evidence of three shifts. To see this, plot the credible shifts from the posterior distribution of the whale tree and note that you only ever have **one** shift on each of those three branches. You do not find evidence for a shift on all three branches on the trees in the posterior. **The only strong evidence for a shift on a specific branch is when that shift occurs in >95% of the posterior**, which rarely occurs in empirical data. As stated in :ref:`here<credibleshifts>` the primary goal of BAMM is not to specify the exact location of shifts, as due to both the reality of the amount of data present in a phylogeny and the complex nature of biological evolution, it will rarely be possible to have high confidence in a specific shift magnitude and location. 
 
-This object is a copy of our phylogeny, but where the length of each branch is equal to the prior probability of a rate shift. This is the expected probability that our statistical model would find a rate shift on a particular branch **even if there is no variation in diversification rate** across our tree. We can then use these prior probabilities to compute the Bayes factor associated with a rate shift on each branch of the phylogeny::
+What the marginal odds **do** provide is a robust measure of evidence for a rate shift on a particular branch that is effectively independent of the effects of whatever prior parameter we placed on the number of shift events. 
 
-	bftree <- bayesFactorBranches(edata, priorshifts)
+To compute the marginal odds ratio for the *topological location* of rate shifts on our tree, we first compute the probability of a rate shift on each branch of our phylogeny under the prior alone::
+
+	priorshifts <- getBranchShiftPriors(edata)
+
+This object is a copy of our phylogeny, but where the length of each branch is equal to the prior probability of a rate shift. This is the expected probability that our statistical model would find a rate shift on a particular branch **even if there is no variation in diversification rate** across our tree. We can then use these prior probabilities to compute the marginal odds ratio associated with a rate shift on each branch of the phylogeny::
+
+	motree <- marginalOddsRatioBranches(edata)
 	
-This is now a copy of our phylogenetic tree where each branch is replaced with the Bayes factor evidence for a rate shift on that branch. We can plot this tree to view the relative support for a rate shift on each branch with ``plot.phylo`` :: 
+This is now a copy of our phylogenetic tree where each branch is replaced with the marginal odds ratio for a rate shift on that branch. We can plot this tree to view the relative support for a rate shift on each branch with ``plot.phylo`` :: 
 
-	plot.phylo(bftree, cex=0.2)
+	plot.phylo(motree, cex=0.2)
 	
-For the whales, you can see that a single branch has overwhelming evidence for a rate shift, with a Bayes factor > 700 in favor of a rate shift (see ``max(bftree$edge.length))``. If you want to get the specific node associated with the highest overall Bayes factor, you could do::
+For the whales, you can see that a single branch has overwhelming evidence for a rate shift, with a marginal odds ratio > 700 in favor of a rate shift (see ``max(motree$edge.length))``. If you want to get the specific node associated with the highest overall Bayes factor, you could do::
 
-	edgemax <- which(bftree$edge.length == max(bftree$edge.length))
-	bftree$edge[edgemax ,2] 
+	edgemax <- which(motree$edge.length == max(motree$edge.length))
+	motree$edge[edgemax ,2] 
 	# this should give node 141 for the whales...
 	
-Use of Bayes factors in this context has many advantages. Suppose that you have two branches, one of which is very short and the other of which is very long. Under the prior alone, you'd expect a higher marginal probability of a rate shift on the long branch. In fact, the relative probability of a shift on the longer branch should be exactly equal to the ratio of the branch lengths. Now, imagine that both branches have a marginal shift probability of 0.8. The Bayes factor analysis of shift probabilities would find much stronger evidence for a rate shift on the short branch, because it has a *lower prior probability of a shift*. This tells us that there's actually more evidence for a shift on the short branch, because the data contained enough evidence to actually push the posterior further away from the prior, relative to the long branch.
+Use of marginal odds ratios in this context has many advantages. Suppose that you have two branches, one of which is very short and the other of which is very long. Under the prior alone, you'd expect a higher marginal probability of a rate shift on the long branch. In fact, the relative probability of a shift on the longer branch should be exactly equal to the ratio of the branch lengths. Now, imagine that both branches have a marginal shift probability of 0.8. The marginal odds ratio would find much stronger evidence for a rate shift on the short branch, because it has a *lower prior probability of a shift*. This tells us that there's actually more evidence for a shift on the short branch, because the data contained enough evidence to actually push the posterior further away from the prior, relative to the long branch.
 
 
 Clade-specific evolutionary rates

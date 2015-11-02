@@ -1,7 +1,21 @@
 :orphan:
 
+.. _changes:
+
 BAMM Changes
 ============
+
+2.5.0
+-----
+*October 10, 2015*
+
+ * Fixed bug in acceptance probability for MCMC moves that update the Poisson rate parameter. This is the most serious bug we have encountered in BAMM and **would have magnified the effects of the prior on the posterior distribution of the number of shifts**. If you previously used the default value of ``poissonRatePrior = 1.0``, you will probably notice little effect on inference, but *it may have had an impact in some cases*. We are grateful to Cécile Ané and Bret Larget for helping us solve this. We fixed this in June 2015 but are flagging it here.  
+ 
+ * There was a bug in the computation of extinction probabilities that would have affected extinction probability calculations for a relatively small fraction of nodes in the tree. This **may** have affected some results, however - please check. 
+ 
+ * the option ``validateEventConfiguration`` is an internal debugging option that should have had a default value of 0, but was instead set to 1 (this led to a bug in the Hastings ratio that would have affected a very small fraction of MCMC moves).   
+
+
 
 2.2.0
 -----

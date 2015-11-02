@@ -188,6 +188,24 @@ These priors may work for your dataset, but they may also be very poor choices: 
 	
 and the relevant output file will be generated in your working directory. See the help file (``?setBAMMpriors``) for more information. To be clear: this does not optimize priors to your dataset. It simply chooses a set of priors that we have found to be reasonable for most datasets and scales the distributions based on the age (root depth) of your tree and the variance of your trait data. A more complete explanation :ref:`can be found here<ratepriors>`.
 
+As of BAMMtools v2.1, you can generate a customized controlfile from within R. Doing the following::
+
+	> library(BAMMtools)
+	> generateControlFile(file = 'divcontrol.txt', type = 'diversification')
+
+will create a template controlfile similar to the one that is available for download from this webpage. Additionally, one can specify BAMM parameter values and have them directly supplied to the controlfile template. The parameters are supplied in the form of a list. Following the whales example used throughout the website, and using evolutionary rate parameter priors supplied by ``setBAMMpriors``, one can easily create a customized controlfile with the following::
+
+	> library(BAMMtools)
+	> generateControlFile('divcontrol.txt', type = 'diversification', params = list(
+		treefile = 'whales.tre',
+		globalSamplingFraction = '0.98',
+		numberOfGenerations = '1000000',
+		overwrite = '1',
+		lambdaInitPrior = '1.889,
+		lambdaShiftPrior = '0.032,
+		muInitPrior = '1.889',
+		poissonRatePrior = '1'))
+
 
 BAMM output: brief
 ------------------

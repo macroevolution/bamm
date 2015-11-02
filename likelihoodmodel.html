@@ -1,0 +1,304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>8. The BAMM likelihood function &mdash; bamm 2.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="bamm 2.4.0 documentation" href="documentation.html" />
+    <link rel="next" title="14. Color ramps and phylorate plots" href="colorbreaks.html" />
+    <link rel="prev" title="13. Advanced analysis options" href="advanced.html" /> 
+  </head>
+  <body role="document">
+<div class="pageheader">
+    <img src="_static/bamm-header.png" /img>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="colorbreaks.html" title="14. Color ramps and phylorate plots"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="advanced.html" title="13. Advanced analysis options"
+             accesskey="P">previous</a> |</li>
+<li><a href="index.html">Home</a>&nbsp;|</li>
+<li><a href="download.html">Download</a>&nbsp;|</li>
+<li><a href="documentation.html">Documentation</a>&nbsp;|</li>
+<li><a href="contact_us.html">Contact Us</a></li>
+ 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="documentation.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">8. The BAMM likelihood function</a><ul>
+<li><a class="reference internal" href="#is-the-bamm-likelihood-correct">8.1. Is the BAMM likelihood correct?</a></li>
+<li><a class="reference internal" href="#is-the-bamm-likelihood-computed-correctly">8.2. Is the BAMM likelihood computed correctly?</a></li>
+<li><a class="reference internal" href="#numerical-approximations-in-bamm">8.3. Numerical approximations in BAMM</a><ul>
+<li><a class="reference internal" href="#discretization-of-evolutionary-rates-for-the-time-varying-process">8.3.1. Discretization of evolutionary rates for the time-varying process</a></li>
+<li><a class="reference internal" href="#maximum-possible-extinction-probability">8.3.2. Maximum possible extinction probability</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="advanced.html"
+                        title="previous chapter">13. Advanced analysis options</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="colorbreaks.html"
+                        title="next chapter">14. Color ramps and phylorate plots</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/likelihoodmodel.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="the-bamm-likelihood-function">
+<span id="likelihood"></span><h1>8. The BAMM likelihood function<a class="headerlink" href="#the-bamm-likelihood-function" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="is-the-bamm-likelihood-correct">
+<h2>8.1. Is the BAMM likelihood correct?<a class="headerlink" href="#is-the-bamm-likelihood-correct" title="Permalink to this headline">¶</a></h2>
+<p>A recent post to our Github repository called attention to one seemingly peculiar feature of the likelihood function in BAMM. The likelihood function is, of course, the core of inference using BAMM. If the likelihood function is incorrect, or if it is based on flawed assumptions, inferences based on the method may be problematic. Note that here we are concerned with whether the theoretical model in BAMM itself is correct, not whether the model itself is implemented correctly. In <a class="reference internal" href="#testlikelihood"><span>this section below</span></a> , we describe how users can validate the actual BAMM likelihood itself (e.g., is the program computing what we think it is computing?). But for now, some theory.</p>
+<p>The BAMM likelihood is based on a set of differential equations that describe transition probabilities for a stochastic birth-death process. These equations are solved from tips-to-root of a phylogeny along individual branches, and probabilities are combined at nodes; when we&#8217;ve reached the root, we will have computed the likelihood for the full tree. The <a class="reference external" href="http://sysbio.oxfordjournals.org/content/56/5/701.abstract">original BiSSE paper</a> remains my (DLR) all-time favorite explanation (both graphically and mathematically) for how the likelihood of a phylogeny can be computed under a birth-death process; I strongly recommend it as a prelude to the discussion below.</p>
+<p>The likelihood calculations in BAMM are simpler than those in BiSSE, because BAMM is not concerned with character states &#8211; or at least, in BAMM, we know which state (shift regime) we are in. BiSSE is a somewhat more complex, because the method integrates over all possible (unobserved) transitions in character states.</p>
+<p>The differential equations for the BAMM likelihood involve two probabilities. The first, <img class="math" src="_images/math/045ed46a8b2be5e501f87130829398141a0ca7db.png" alt="D(t)"/>, is the probability that a lineage at some point in time (i.e., a location on an observed branch of a phylogeny) gives rise to all observed downstream data &#8211; specifically, all the lineages descended from this particular point on the tree. The second equation, <img class="math" src="_images/math/a4fc1ca8d5e77bf02fca6cad6600471b37079b27.png" alt="E(t)"/>, describes the probability that a lineage at the same point in time (along with all of its descendants) has gone extinct before the present. Letting <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> denote the speciation rate and <img class="math" src="_images/math/126e84ba38f7dece5f0ad64e929b9588b20f6440.png" alt="\mu"/> the extinction rate, we have:</p>
+<div class="math">
+<p><img src="_images/math/fa99132063db579f92c2691efb398d253cb7e86b.png" alt="\frac{dD}{dt} = -(\lambda + \mu)D(t) - 2 \lambda D(t) E(t)"/></p>
+</div><div class="math">
+<p><img src="_images/math/a31ac6a0d25dfed46b033784671b93d5c570d871.png" alt="\frac{dE}{dt} = \mu -(\lambda + \mu)E(t) + \lambda E(t)^2"/></p>
+</div><p>These equations are derived from considering the state space for all possible events that could have happened on some infinitesimal time interval <img class="math" src="_images/math/5b4271afe7fc7c0ee84172e0ad19b82caf450c00.png" alt="\Delta t"/>. For the extinction probability <img class="math" src="_images/math/a4fc1ca8d5e77bf02fca6cad6600471b37079b27.png" alt="E(t)"/>, BAMM assumes that any given interval of time <img class="math" src="_images/math/5b4271afe7fc7c0ee84172e0ad19b82caf450c00.png" alt="\Delta t"/> can be described by one of the following events:</p>
+<div class="figure align-center" id="extinctionprob1">
+<a class="reference internal image-reference" href="_images/BAMM_E_t_3event.png"><img alt="_images/BAMM_E_t_3event.png" src="_images/BAMM_E_t_3event.png" style="width: 550px;" /></a>
+</div>
+<p>That is, a lineage alive at some time in the past can go extinct before the present (along with all of its descendants) if one of the following occurs on <img class="math" src="_images/math/5b4271afe7fc7c0ee84172e0ad19b82caf450c00.png" alt="\Delta t"/> :</p>
+<ul>
+<li><ol class="first lowerroman">
+<li><dl class="first docutils">
+<dt>Extinction on <img class="math" src="_images/math/5b4271afe7fc7c0ee84172e0ad19b82caf450c00.png" alt="\Delta t"/></dt>
+<dd><p class="first last">This event occurs with probability proportional to <img class="math" src="_images/math/126e84ba38f7dece5f0ad64e929b9588b20f6440.png" alt="\mu"/>.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</li>
+<li><ol class="first lowerroman" start="2">
+<li><dl class="first docutils">
+<dt>No extinction, no speciation</dt>
+<dd><p class="first last">Nothing happens on the focal interval, but the lineage and all of its descendants goes extinct before the present. This event occurs with probability <img class="math" src="_images/math/3950abf883ac391575ecf94c661e39236f81988c.png" alt="-(\lambda + \mu)E(t)"/>.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</li>
+<li><ol class="first lowerroman" start="2">
+<li><dl class="first docutils">
+<dt>Speciation</dt>
+<dd><p class="first last">A speciation event occurs on <img class="math" src="_images/math/5b4271afe7fc7c0ee84172e0ad19b82caf450c00.png" alt="\Delta t"/>, but both descendant lineages (and any additional descendants) go extinct before the present. This event occurs with probability proportional to <img class="math" src="_images/math/22435c51538a1af1917ba9edbdd470aa718bfefa.png" alt="\lambda E(t)^2"/>.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</li>
+</ul>
+<p>These three terms are combined into the differential equation for the change in the extinction probability with respect to time, <img class="math" src="_images/math/c1f7a147799f1bb48f38dbd8e1acd5e894534d11.png" alt="dE / dt"/>.</p>
+<p>There is one curious feature of scenarios described above as used in BAMM, and it is that they neglect another type of event that <em>could have occurred</em> on <img class="math" src="_images/math/5b4271afe7fc7c0ee84172e0ad19b82caf450c00.png" alt="\Delta t"/>. Specifically, it is possible that a lineage could have undergone a shift to an entirely new macroevolutionary rate regime, but that the lineage &#8211; along with all of its descendants &#8211; went extinct before the present. Specifically, we might augment the set of events presented above with a fourth case:</p>
+<div class="figure align-center" id="extinctionprob2">
+<a class="reference internal image-reference" href="_images/BAMM_E_t.png"><img alt="_images/BAMM_E_t.png" src="_images/BAMM_E_t.png" style="width: 850px;" /></a>
+</div>
+<p>The heavy line in case (iv) represents a macroevolutionary rate regime that differs from the parent process. In the BAMM model, the rate at which new events occur is governed by a hierarchical Poisson distribution with rate <img class="math" src="_images/math/7327d24dc2d12421147d5944f0fc23e67753f1b0.png" alt="\Lambda"/> (the <code class="docutils literal"><span class="pre">eventRate</span></code> parameter as output by BAMM is the product of <img class="math" src="_images/math/7327d24dc2d12421147d5944f0fc23e67753f1b0.png" alt="\Lambda"/> and the total tree length). The probability of undergoing a rate shift is thus proportional to <img class="math" src="_images/math/7327d24dc2d12421147d5944f0fc23e67753f1b0.png" alt="\Lambda"/>, but the probability of future extinction is not easily computed, because we do not know the parameters of the new rate regime. Formally, we might imagine a term <img class="math" src="_images/math/b39932b8cbb311eeee9815738f6be3757737b2ff.png" alt="\Omega"/> that describes the probability of future extinction for a lineage that has unknown evolutionary rate parameters, thus modifying the equation <img class="math" src="_images/math/a4fc1ca8d5e77bf02fca6cad6600471b37079b27.png" alt="E(t)"/> above to:</p>
+<div class="math">
+<p><img src="_images/math/7ddc12d99d0308bdf39b90bcd50dbe5c4a7c2edc.png" alt="\frac{dE}{dt} = \mu -(\lambda + \mu)E(t) + \lambda E(t)^2 + \Lambda \Omega"/></p>
+</div><p>Thus, lineages shift to a new process on <img class="math" src="_images/math/5b4271afe7fc7c0ee84172e0ad19b82caf450c00.png" alt="\Delta t"/> with probability proportional to <img class="math" src="_images/math/7327d24dc2d12421147d5944f0fc23e67753f1b0.png" alt="\Lambda"/>, but then the process and all of its descendants go extinct before the present. Computing the probability <img class="math" src="_images/math/b39932b8cbb311eeee9815738f6be3757737b2ff.png" alt="\Omega"/> is, in our opinion, not feasible. One would have to integrate over the chance of extinction for all possible diversification histories, weighting each history by its relative probability. We have very little information about the universe of possible diversification histories (and even less about the relative probabilities of those histories), so it seems like this is a quantity that cannot be computed. One possible solution may be to use empirical parameterizations, perhaps estimating the underlying distributions of diversification histories from the fossil record (or potentially, other molecular phylogenetic studies). However, we also suspect that the set of all processes (diversification shifts) that occurred but subsequently went extinct might be drawn from a different probability distribution than the set of processes that survived to the present to be observed. If this is true, then there is no possible information about <img class="math" src="_images/math/b39932b8cbb311eeee9815738f6be3757737b2ff.png" alt="\Omega"/> that can be gained from molecular phylogenies alone.</p>
+<p>What is the difference between this model and BiSSE (or related models), where lineages can shift to other evolutionary rate regimes (e.g., alternative character states)? The difference is that, in BiSSE, the parameters of the process are fixed, but the locations of the transitions are unknown. Hence, the BiSSE likelihood involves integration over all possible transitions in diversification processes, but there are a finite set of such processes (2 for BiSSE), and the parameters of the processes are known. Computing <img class="math" src="_images/math/b39932b8cbb311eeee9815738f6be3757737b2ff.png" alt="\Omega"/> is an entirely different beast, because we need to integrate over all possible transitions to processes with unknown parameters and which are drawn from unknown probability density functions.</p>
+<p>But we should note again that this leads to a weird condition in the BAMM model, which was not clearly discussed in Rabosky&#8217;s <a class="reference external" href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0089543">(2014)</a> description of BAMM. In practical terms, the BAMM likelihood assumes that some lineages effectively <em>see into the future</em> and modify their event state space based on future outcomes: specifically, a lineage cannot undergo a rate shift if it is destined for extinction.</p>
+<p><strong>Fortunately, we haven&#8217;t seen any evidence that this assumption has consequences for inference</strong>. Moreover, qualitatively similar assumptions are fairly widespread in the modeling of diversification and phenotypic evolution. For example, several methods are available that compute diversification histories on phylogenetic trees assuming a fixed-in-advance number of diversification shifts. The &#8220;split&#8221; class of models for state-dependent diversification (e.g., split BiSSE) would be one such example: the likelihood is computed under a model that presupposes a shift in diversification rates at a particular location on the tree, but the E(t) and D(t) calculations do not account for a stochastic process that could have generated shifts to other (potentially unknown, unobserved) diversification processes. In fact, any method of modeling diversification that allows heterogeneous extinction processes across the tree (e.g., MEDUSA) is formally making the same assumption as BAMM, because the models do not allow lineages destined for future extinction (the <img class="math" src="_images/math/a4fc1ca8d5e77bf02fca6cad6600471b37079b27.png" alt="E(t)"/> component of the likelihood) to undergo diversification rate shifts.</p>
+<p>But I should be clear about my view that <strong>none of this is likely to matter in practice</strong>. And in any event, it&#8217;s testable. Just simulate data with rate shifts (some of which may lead to extinct clades in their entirety), and see if it has any consequences for inference about the set of processes inferred for the observed part of the tree. We&#8217;ve done this and have found no consequences for inference, but perhaps you&#8217;ll find something different.</p>
+</div>
+<div class="section" id="is-the-bamm-likelihood-computed-correctly">
+<span id="testlikelihood"></span><h2>8.2. Is the BAMM likelihood computed correctly?<a class="headerlink" href="#is-the-bamm-likelihood-computed-correctly" title="Permalink to this headline">¶</a></h2>
+<p>Given the model and its assumptions (see above), we now turn to a different question: is BAMM correctly computing the likelihood of the process described above? As an independent test of this, we implemented the BAMM likelihood function in R (BAMMtools v2.1) and have created a tool that enables users to test whether BAMM is doing what it is supposed to be doing. This assumes, of course, that we have also implemented the likelihood function correctly in R, but we hope that other researchers find it easier to evaluate our R code than the BAMM C++ code itself.</p>
+<p>The function <code class="docutils literal"><span class="pre">BAMMlikelihood</span></code> will return the log-likelihood for a given configuration of events (and associated parameters) on a phylogenetic tree. Let&#8217;s do this using the built-in whales dataset in BAMMtools:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">library</span><span class="p">(</span><span class="n">BAMMtools</span><span class="p">)</span>
+<span class="n">data</span><span class="p">(</span><span class="n">whales</span><span class="p">,</span> <span class="n">mcmc</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We need to make sure we are considering precisely the same generations for the mcmc file as for the event data file, so we will get the intersection of these and just take 50 of them for some representative calculations:</p>
+<div class="highlight-python"><div class="highlight"><pre>iset &lt;- intersect(mcmc.whales$generation, events.whales$generation)
+iset &lt;- iset[round(seq(1, length(iset), length.out=50))]
+events &lt;- events.whales[events$generation %in% iset, ]
+mcmc &lt;-   mcmc.whales[mcmc.whales$generation %in% iset, ]
+</pre></div>
+</div>
+<p>We also need to ensure that we use exactly the same <code class="docutils literal"><span class="pre">segLength</span></code> parameter for these calculations that were used for the BAMM analysis (see <a class="reference internal" href="#numericalapprox"><span>here</span></a> for more info on this). Now we compute the likelihood of the final generation:</p>
+<div class="highlight-python"><div class="highlight"><pre>BAMMlikelihood(whales, events, gen=&quot;last&quot;, segLength = 0.02)
+# which returns:
+        [1] -271.5134
+
+mcmc$logLik[nrow(mcmc)]
+# which returns:
+        [1] -271.513
+</pre></div>
+</div>
+<p>So, close &#8211; but are they close enough? Let&#8217;s do 50 samples:</p>
+<div class="highlight-python"><div class="highlight"><pre>ll &lt;- BAMMlikelihood(whales, events2, gen = &quot;all&quot;, segLength = 0.02)
+plot(mcmc$logLik ~ ll)
+lines(x=c(-350,-250), y=c(-350, -250), lwd=1, col=&#39;red&#39;)
+</pre></div>
+</div>
+<p>These should look precisely identical (please let us know if for some reason they appear to be different!). We can look at the average and maximum differences between these values:</p>
+<div class="highlight-python"><div class="highlight"><pre>mean(abs(ll - mcmc2$logLik))
+# which returns:
+        [1] 0.0002577647
+max(abs(ll - mcmc2$logLik))
+# which returns:
+        [1] 0.000505146
+</pre></div>
+</div>
+<p>With this set of 50 samples, we see that the maximum difference between likelihoods computed by BAMM and by an independent R implementation is a very small number, which suggests that BAMM is doing what it should be doing. Again, this assumes that the R implementation is also correct &#8211; e.g., that we haven&#8217;t just re-implemented a set of incorrect equations into R. As one additional test, we will compute the likelihoods of a phylogeny using another implementation of the birth-death process. We will use Rich FitzJohn&#8217;s excellent <a class="reference external" href="http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2012.00234.x/abstract">diversitree</a> package for this. The likelihoods in diversitree and BAMM aren&#8217;t exactly identical, because the diversitree log-likelihoods include a constant term <code class="docutils literal"><span class="pre">sum(log(2:(N</span> <span class="pre">-</span> <span class="pre">1)))</span></code>, where N is the number of tips in the tree. However, since all diversitree log-likelihoods contain this term (it is a constant that depends solely on the number of tips in the tree), we can merely subtract it to attain the BAMM likelihood (for the constant rate process):</p>
+<div class="highlight-python"><div class="highlight"><pre>library(diversitree)
+lfx &lt;- make.bd(whales)
+constant &lt;- sum(log(2:(ntips - 1)))
+parvec1 &lt;- c(0.1, 0.05)
+names(parvec1) &lt;- c(&quot;lambda&quot;, &quot;mu&quot;)
+
+# the diversitree log-likelihood, minus the constant term
+lfx(parvec1) - constant
+        [1] -282.386
+
+# BAMM log-likelihood for the same parameters:
+BAMMlikelihood(whales, parvec1)
+        [1] -282.386
+
+# Another parameter set:
+parvec2 &lt;- c(0.5, 0.49)
+names(parvec2) &lt;- c(&quot;lambda&quot;, &quot;mu&quot;)
+
+# here&#39;s the diversitree log-likelihood, minus the constant term
+lfx(parvec2) - constant # diversitree log-likelihood
+        [1] -312.8122
+
+# The BAMM log-likelihood:
+BAMMlikelihood(whales, parvec2)
+        [1] -312.8122
+</pre></div>
+</div>
+<p>Although the diversitree functions do not (at present) allow us to compute the likelihood of a multi-process model (e.g., a BAMM event configuration with <img class="math" src="_images/math/ed30a36cf8fc762b6f8ce2be32037e4fb3e0c0ad.png" alt="\geq"/> 1 rate shift), we can verify that BAMM, diversitree, and the <code class="docutils literal"><span class="pre">BAMMlikelihood</span></code> function from BAMMtools compute precisely the same log-likelihood for a given parameterization of the constant-rate birth-death process.</p>
+<p>While we are at it, this function also allows us to estimate how much slower BAMM would be if it performed calculations in R with no calls to underlying C++ or C code. On my machine, it takes approximately 0.175 seconds to perform a single likelihood calculation (for the whales data) using the <code class="docutils literal"><span class="pre">BAMMlikelihood</span></code> function. For comparison, I can do approximately 10,000 generations of MCMC simulation on the same dataset per second, and the likelihood computation itself is (very conservatively) 20% of the total computation time required to execute a single generation of MCMC sampling (thus, 80% of the time BAMM is running, it is doing something other than computing the likelihood).</p>
+<p>Using these (very rough) numbers, I estimate that BAMM can do 10,000 / 0.2 = 50,000 likelihood calculations per second. Dividing this number by the time to compute the likelihood in R, we get 50,000 / 0.175 <img class="math" src="_images/math/0605c9e832553cfc28dd71bab914ce3b5ec98756.png" alt="\approx"/> 280000. So, BAMM&#8217;s C++ implementation is (very approximately) about 5 orders of magnitude faster than a pure R-based implementation would be for a tree of this size.</p>
+</div>
+<div class="section" id="numerical-approximations-in-bamm">
+<span id="numericalapprox"></span><h2>8.3. Numerical approximations in BAMM<a class="headerlink" href="#numerical-approximations-in-bamm" title="Permalink to this headline">¶</a></h2>
+<p>BAMM makes several numerical approximations that we will state here explicitly.</p>
+<div class="section" id="discretization-of-evolutionary-rates-for-the-time-varying-process">
+<h3>8.3.1. Discretization of evolutionary rates for the time-varying process<a class="headerlink" href="#discretization-of-evolutionary-rates-for-the-time-varying-process" title="Permalink to this headline">¶</a></h3>
+<p>BAMM uses a &#8220;fast&#8221; form of numerical integration where branches of a phylogeny are broken into segments of relative length <code class="docutils literal"><span class="pre">segLength</span></code> and a constant-rate birth-death process is assumed on each interval. Thus, for a time-varying diversification process, we discretize the exponential change process into units defined by <code class="docutils literal"><span class="pre">segLength</span></code>. This allows for much faster calculations relative to more accurate forms of numerical integration. To be clear, the likelihood itself is not approximated: it is the rates that are approximated (which may, in turn, affect the likelihood). In any event, the consequences of this are easy to test. Here, we will use the functions and data from <a class="reference internal" href="#testlikelihood"><span>this section</span></a> and explore the consequences of <code class="docutils literal"><span class="pre">segLength</span></code>.</p>
+<p>If the segment size is greater than the length of a given branch, BAMM will treat the branch as a single segment (e.g., a mean value for <img class="math" src="_images/math/1ab0134b6e0837594649c75a2ed83cfd85a2d03d.png" alt="\lambda"/> and <img class="math" src="_images/math/126e84ba38f7dece5f0ad64e929b9588b20f6440.png" alt="\mu"/> will be computed for the branch, and they will be passed to the speciation-extinction equations for the constant-rate birth-death process). If <code class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">1.0</span></code>, then no splitting will occur on any branches: mean rates will be computed for each branch. If <code class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">0.02</span></code>, branches will be split into segments with length equal to 2% of the crown depth of the tree. Here are some comparisons:</p>
+<div class="highlight-python"><div class="highlight"><pre># the coarsest possible discretization:
+BAMMlikelihood(whales, events, gen=&quot;last&quot;, segLength = 1)
+        [1] -273.1068
+
+# getting finer
+BAMMlikelihood(whales, events, gen=&quot;last&quot;, segLength = 0.1)
+        [1] -272.0331
+
+# the default value (BAMM v 2.5)
+BAMMlikelihood(whales, events, gen=&quot;last&quot;, segLength = 0.02)
+        [1] -271.5134
+
+# and a very fine partitioning:
+BAMMlikelihood(whales, events, gen=&quot;last&quot;, segLength = 0.0001)
+        [1] -271.4763
+</pre></div>
+</div>
+<p>Despite the 200-fold difference in the grain (0.02 v 0.001), the difference in log-likelihoods is marginal (<img class="math" src="_images/math/0605c9e832553cfc28dd71bab914ce3b5ec98756.png" alt="\approx"/> 0.037), and it comes at a significant computational cost (approximately 200x increase in the number of operations required to compute the likelihood). Please let us know if you find that any inferences are affected by use of the defaults for <code class="docutils literal"><span class="pre">segLength</span></code>.</p>
+<p>For a set of time-homogeneous diversification processes, e.g., <img class="math" src="_images/math/03707bb66bb96a8f49c65cdb4fb609d321e3840f.png" alt="\lambda_i(t) = \lambda_i"/> and <img class="math" src="_images/math/5f1cfba9ca9d10d26258641e0a48d22b414c43b6.png" alt="\mu_i(t) = \mu_i"/>, the BAMM likelihood will be exact. <code class="docutils literal"><span class="pre">segLength</span></code> will only influence the calculations when rates vary as a continuous function of time.</p>
+</div>
+<div class="section" id="maximum-possible-extinction-probability">
+<h3>8.3.2. Maximum possible extinction probability<a class="headerlink" href="#maximum-possible-extinction-probability" title="Permalink to this headline">¶</a></h3>
+<p>Some parameter values may lead to extinction probabilities that are sufficiently close to 1.0 that they are subject to numerical underflow/overflow issues. Specifically, if the <img class="math" src="_images/math/a4fc1ca8d5e77bf02fca6cad6600471b37079b27.png" alt="E(t)"/> equations described above take a value that is numerically indistinguishable from 1, the likelihood of the data will be <img class="math" src="_images/math/aa451b2e35255229ee2d4ec55b492d3a06e25638.png" alt="-\infty"/>. To ensure that this rejection is platform independent, BAMM automatically rejects any moves (by setting the log-likelihood equal to -INF) where the extinction probability exceeds a predetermined threshold value. This threshold is <code class="docutils literal"><span class="pre">extinctionProbMax</span></code> and can be set manually in the control file. Note that this is not the extinction rate: it is the maximum permitted value of <img class="math" src="_images/math/a4fc1ca8d5e77bf02fca6cad6600471b37079b27.png" alt="E(t)"/> in the differential equations above, or the probability that a lineage at some time (along with all of its descendants) has gone extinct before the present).</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="colorbreaks.html" title="14. Color ramps and phylorate plots"
+             >next</a></li>
+        <li class="right" >
+          <a href="advanced.html" title="13. Advanced analysis options"
+             >previous</a> |</li>
+<li><a href="index.html">Home</a>&nbsp;|</li>
+<li><a href="download.html">Download</a>&nbsp;|</li>
+<li><a href="documentation.html">Documentation</a>&nbsp;|</li>
+<li><a href="contact_us.html">Contact Us</a></li>
+ 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015 BAMM Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b3+.
+    </div>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-49579863-1', 'bamm-project.org');
+ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

@@ -1,1 +1,0 @@
-/Users/pascaltitle/bamm/build/CMakeFiles/bamm.dir
