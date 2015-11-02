@@ -19,6 +19,8 @@
 #include <cstdlib>
 #include <vector>
 
+#define ENABLE_HASTINGS_RATIO_BUG
+
 
 Model::Model(Random& random, Settings& settings) :
     _random(random), _settings(settings), _prior(_random, &_settings),
@@ -419,8 +421,31 @@ BranchEvent* Model::removeRandomEventFromTree()
 //   Define this configuration as having ancestral branch XX
 //   and YY and ZZ denoting right and left descendant branches, respectively
 
+//   TODO: fix validateEventConfiguration
+//   Oct 2015: First of all, this is technically inappropriate
+//              but it is still an important option.
+//              So, from one perspective, it is a "Hastings Ratio Bug".
+//              However, I think the code itself is not doing what it is supposed
+//              to be doing.
+//              It should (if iplemented correctly) have a theoretically very small effect
+//              on the posterior. It has quite a large effect, suggesting it is inappropriately
+//              rejecting many other event configurations besides the "triad" configuration
+//              described above.
+
 bool Model::isEventConfigurationValid(BranchEvent* be)
 {
+    
+#ifndef ENABLE_HASTINGS_RATIO_BUG
+    std::cout << "\n********* ERROR *********** " << std::endl;
+    std::cout << "validateEventConfiguration is no longer a valid option in BAMM" << std::endl;
+    std::cout << "\nYou will have to go to src/Model.cpp and recompile " << std::endl;
+    std::cout << "after uncommenting the ENABLE_HASTINGS_RATIO_BUG macro" << std::endl;
+    std::cout << "\n\n" << std::endl;
+    
+    exit(0);
+    
+#endif
+    
     bool isValidConfig = false;
 
     bool forwardConfigValid = false;

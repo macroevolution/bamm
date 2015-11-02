@@ -27,9 +27,9 @@ Settings::Settings(const std::string& controlFilename,
             break;
         }
     }
-
+ 
     initializeGlobalSettings();
-
+ 
     // Initialize specific settings for model type
     if (modelType == "speciationextinction") {
         initializeSpeciationExtinctionSettings();
@@ -44,6 +44,9 @@ Settings::Settings(const std::string& controlFilename,
 
     checkAllSettingsAreUserDefined();
     checkAllOutputFilesAreWriteable();
+    
+    validateSettings();
+    
 }
 
 
@@ -102,10 +105,10 @@ void Settings::initializeGlobalSettings()
     addParameter("loadEventData", "0", NotRequired);
     addParameter("eventDataInfile", "event_data_in.txt", NotRequired);
     addParameter("initializeModel", "0");
-    addParameter("simulatePriorShifts", "1", NotRequired);
+    addParameter("simulatePriorShifts", "0", NotRequired);
     addParameter("numberOfGenerations", "0");
     addParameter("seed", "-1", NotRequired);
-    addParameter("validateEventConfiguration", "1", NotRequired);
+    addParameter("validateEventConfiguration", "0", NotRequired);
     addParameter("checkUltrametric", "1", NotRequired);
 
     // MCMC tuning
@@ -120,7 +123,8 @@ void Settings::initializeGlobalSettings()
     addParameter("chainSwapFileName", "chain_swap.txt", NotRequired);
 
     // Priors
-    addParameter("poissonRatePrior", "0.0");
+    addParameter("poissonRatePrior", "0.0", NotRequired);
+    addParameter("expectedNumberOfEvents", "0.0", NotRequired);
 
     // Output
     addParameter("outName", "", NotRequired);
@@ -229,9 +233,12 @@ void Settings::initializeSpeciationExtinctionSettings()
 
     // Maximum value of extinction probability on branch that will be tolerated:
     // to avoid numerical overflow issues (especially rounding to 1)
-    addParameter("extinctionProbMax", "0.999", NotRequired);
+    addParameter("extinctionProbMax", "0.9999", NotRequired);
     
     addParameter("conditionOnSurvival", "-1", NotRequired);
+    addParameter("alwaysRecomputeE0", "0", NotRequired);
+    
+    addParameter("combineExtinctionAtNodes", "if_different", NotRequired);
     
     
     /********************************************************/
@@ -294,6 +301,7 @@ void Settings::addParameter(const std::string& name, const std::string& value,
     _parameters.insert(Parameter(name,
         SettingsParameter(name, value, userDefined, deprecated)));
 }
+
 
 
 void Settings::initializeSettingsWithUserValues()
@@ -468,6 +476,7 @@ bool Settings::anyOutputFileExists() const
 }
 
 
+
 bool Settings::fileExists(const std::string& filename) const
 {
     std::ifstream inFile(filename.c_str());
@@ -563,3 +572,54 @@ void Settings::exitWithErrorOutputFileExists() const
                << "or set \"overwrite = 1\" in the control file.\n";
     std::exit(1);
 }
+
+
+
+void Settings::set(const std::string& name, const std::string& value)
+{
+    ParameterMap::iterator it = _parameters.find(name);
+    if (it != _parameters.end()) {
+        
+        (it->second).setStringValue(value);
+        
+    }
+}
+
+void Settings::validateSettings(void)
+{
+    //std::cout << "Initial P/E\t" << this->get("poissonRatePrior");
+    //std::cout << "\t" << this->get("expectedNumberOfEvents") << std::endl;
+    
+    double minval = 0.000001;
+    double poisson = this->get<double>("poissonRatePrior");
+    double expected = this->get<double>("expectedNumberOfEvents");
+    
+    if (poisson < minval & expected < minval){
+        std::cout << "You must specify either:\n";
+        std::cout << "\tpoissonRatePrior = <value>, or\n";
+        std::cout << "\texpectedNumberOfEvents = <value>\n";
+        exit(0);
+    }
+    
+    if (poisson < minval & expected >= minval){
+        poisson = 1 / expected;
+        
+        std::ostringstream s;
+        s << poisson;
+        this->set("poissonRatePrior", s.str());
+    }
+ 
+    //std::cout << "End P/E\t" << this->get("poissonRatePrior");
+    //std::cout << "\t" << this->get("expectedNumberOfEvents") << std::endl;
+    
+
+}
+
+
+
+
+
+
+
+
+

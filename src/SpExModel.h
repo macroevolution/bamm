@@ -13,6 +13,7 @@ class Random;
 class Settings;
 class BranchEvent;
 class Proposal;
+class SpExBranchEvent;
 
 
 class SpExModel : public Model
@@ -112,6 +113,8 @@ private:
     
     double _tmpvar;
     
+    // October 2015 fixes
+    bool _lambdaIsTimeVariable;
     
     
     // Debugging
@@ -123,6 +126,19 @@ private:
     
     void initializeDebugVectors();
     void outputDebugVectors();
+    
+     
+    // BAMM updates October 2015:
+    double computeMeanExponentialRateForInterval
+                    (double rate_init, double rate_shift, double t_start, double t_end);
+    double recomputeE0(double start_time, double end_time, double lam_init, double lam_shift,
+                        double mu_init, double mu_shift, double Etip);
+    
+    bool _alwaysRecomputeE0;
+    
+    std::string _combineExtinctionAtNodes;
+    
+    
     
 };
 

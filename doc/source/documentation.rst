@@ -13,15 +13,18 @@ BAMM Documentation
    introduction
    bammgraph
    rateshifts
-   fossilbamm
-   strapp   
+
    quickstart
    settingup
    configuration
    postprocess
+   likelihoodmodel
+   fossilbamm
+   strapp      
    time-flip
    mc3
    advanced
+   likelihoodmodel
    colorbreaks
 
    faq

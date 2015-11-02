@@ -66,14 +66,14 @@ Read important changes to BAMM since its release:
 Previous Versions
 =================
 
+You may download previous versions of the binaries and examples
+for BAMM using the following links:
+
 `bamm-2.2.0-MacOSX.tar.gz
 <http://www-personal.umich.edu/~carlosja/bamm-2.2.0-MacOSX.tar.gz>`_
 
 `bamm-2.2.0-Windows.zip
 <http://www-personal.umich.edu/~carlosja/bamm-2.2.0-Windows.zip>`_
-
-You may download previous versions of the binaries and examples
-for BAMM using the following links:
 
 `bamm-2.1.0-MacOSX.tar.gz
 <http://www-personal.umich.edu/~carlosja/bamm-2.1.0-MacOSX.tar.gz>`_

@@ -63,6 +63,10 @@ void Node::init(int x)
     _nodeLikelihood = 0.0;
 
     _canHoldEvent = false;
+    
+    _eEnd = -1.0;
+    _hasDownstreamRateShift = false;
+    _inheritFromLeft = false;
 }
 
 
@@ -474,8 +478,7 @@ double Node::getPointExtinction(double branchtime)
     return curMu;
 }
 
-
-
+// These should be relative times.
 double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
         double tstop)
 {
@@ -483,6 +486,7 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
     //if ((tstart >= tstop) | (tstart < 0) | (tstop > getBrlen()) ) {
     
     if ((tstart >= tstop) | (tstart < 0) ) {
+        std::cout << tstart << "\t" << tstop << std::endl;
         std::cout << "Invalid arguments to Node::computeSPeciationRateIntervalRelativeTime"
              << std::endl;
         throw;
@@ -574,6 +578,95 @@ double Node::computeSpeciationRateIntervalRelativeTime(double tstart,
 
     return rate;
 }
+
+double Node::computeSpeciationRateIntervalRelativeTime(double t_init, double tstart,
+                                                       double tstop)
+{
+    // For FOSSIL process, do not check if tstop > getBrlen()
+    //if ((tstart >= tstop) | (tstart < 0) | (tstop > getBrlen()) ) {
+    
+    if ((tstart >= tstop) | (tstart < 0) ) {
+        std::cout << "Invalid arguments to Node::computeSPeciationRateIntervalRelativeTime"
+        << std::endl;
+        throw;
+    }
+    BranchHistory* bh = getBranchHistory();
+    
+    double rate = 0.0;
+    
+    // COnvert start and stop times to absolute times...
+    t_init += getAnc()->getTime();
+    tstart += getAnc()->getTime();
+    tstop += getAnc()->getTime();
+        
+    double t1 = tstart;
+    double t2 = tstop;
+        
+    SpExBranchEvent* lastEvent = static_cast<SpExBranchEvent*>(bh->getLastEvent(t_init));
+        
+    t1 -= lastEvent->getAbsoluteTime();
+    t2 -= lastEvent->getAbsoluteTime();
+        
+    double zpar = lastEvent->getLamShift();
+    double lam0 = lastEvent->getLamInit();
+        
+    rate = integrateExponentialRateFunction(lam0, zpar, t1, t2);
+    rate /= (t2 - t1);
+        
+    if ((t1 < 0 ) | (t2 < t1)) {
+        log(Error) << "Times are bad in "
+        "Node::computeSpeciationRateIntervalRelTime.\n";
+        std::exit(1);
+    }
+    
+    return rate;
+}
+
+
+
+double Node::computeExtinctionRateIntervalRelativeTime(double t_init, double tstart, double tstop)
+{
+    
+    if ((tstart >= tstop) | (tstart < 0) ) {
+        std::cout << "Invalid arguments to Node::computeExtinctionRateIntervalRelativeTime"
+        << std::endl;
+        throw;
+    }
+    
+    
+    BranchHistory* bh = getBranchHistory();
+    
+    double rate = 0.0;
+    
+    t_init += getAnc()->getTime();
+    tstart += getAnc()->getTime();
+    tstop += getAnc()->getTime();
+        
+    double t1 = tstart;
+    double t2 = tstop;
+        
+    SpExBranchEvent* lastEvent =
+    static_cast<SpExBranchEvent*>(bh->getLastEvent(t_init));
+        
+    // Times must be relative to event occurrence time:
+    t1 -= lastEvent->getAbsoluteTime();
+    t2 -= lastEvent->getAbsoluteTime();
+        
+    double zpar = lastEvent->getMuShift();
+    double mu0  = lastEvent->getMuInit();
+        
+    rate = integrateExponentialRateFunction(mu0, zpar, t1, t2);
+    rate /= (t2 - t1);
+        
+    if ((t1 < 0 ) | (t2 < t1)) {
+        log(Error) << "Times are bad in "
+        "Node::computeExtinctionRateInterval.\n";
+    std::exit(1);
+    }
+    
+    return rate;
+}
+
 
 
 double Node::computeExtinctionRateIntervalRelativeTime(double tstart,

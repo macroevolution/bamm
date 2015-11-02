@@ -75,6 +75,16 @@ private:
     // Flag for whether node can or cannot define branch that can hold event:
     bool _canHoldEvent;
     
+    // HOlds value of Extinction probability at end of branch
+    double _eEnd;
+    
+    // determines whether the descendants of a node have
+    // a rates shift somewhere in their history
+    
+    bool _hasDownstreamRateShift;
+    
+    bool _inheritFromLeft;
+    
 
 public:
 
@@ -204,7 +214,9 @@ public:
         (double tstart, double tstop);
     double computeExtinctionRateIntervalRelativeTime
         (double tstart, double tstop);
-
+    double computeSpeciationRateIntervalRelativeTime(double t_init, double tstart, double tstop);
+    double computeSpeciationRateIntervalAbsoluteTime(double t_init, double tstart, double tstop);
+    double computeExtinctionRateIntervalRelativeTime(double t_init, double tstart, double tstop);
     double getPointExtinction(double branchtime);
     
     double integrateExponentialRateFunction(double par_init, double shift, double t1, double t2);
@@ -213,6 +225,15 @@ public:
 
     std::string getRandomRightDesc();
     std::string getRandomLeftDesc();
+    
+    double getExtinctionEnd(void);
+    void setExtinctionEnd(double x);
+    
+    bool getHasDownstreamRateShift(void);
+    void setHasDownstreamRateShift(bool x);
+    
+    bool getInheritFromLeft(void);
+    void setInheritFromLeft(bool x);
     
 };
 
@@ -587,6 +608,38 @@ inline std::string Node::getCladeName()
 {
     return _cladeName;
 }
+
+inline void Node::setExtinctionEnd(double x)
+{
+    _eEnd = x;
+}
+
+inline double Node::getExtinctionEnd(void)
+{
+    return _eEnd;
+}
+
+
+inline void Node::setHasDownstreamRateShift(bool x)
+{
+    _hasDownstreamRateShift = x;
+}
+
+inline bool Node::getHasDownstreamRateShift(void)
+{
+    return _hasDownstreamRateShift;
+}
+
+inline bool Node::getInheritFromLeft(void)
+{
+    return _inheritFromLeft;
+}
+
+inline void Node::setInheritFromLeft(bool x)
+{
+    _inheritFromLeft = x;
+}
+
 
 
 #endif

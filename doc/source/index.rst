@@ -27,28 +27,41 @@ the R package `BAMMtools <http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.1
 - Go to our `Frequently Asked Questions <faq.html>`_ page to see common
   questions and answers.
 
+Recommended reading
+===========================
+
+* **Is the BAMM likelihood theoretically valid?** Find out `here <likelihoodmodel.html>`_
+
+* **Is the BAMM likelihood computed correctly**, given the assumptions of the model? Learn more about testing it :ref:`here <testlikelihood>`
+
+* We strongly recommend that you read our documentation on how to (and how not to) interpret `rate shifts <rateshifts.html>`_ on phylogenies. This section addresses some of the most common pitfalls with interpreting BAMM analyses.  
 
 Recent changes
-==============
+=================
 
 We've made a number of changes - some major - to both BAMM and BAMMtools
 that significantly improve performance and reliability.
 If you have used a previous version of BAMM or BAMMtools,
 we recommend installing the latest version.
 
-* Metropolis coupled MCMC implemented by default to facilitate convergence.
-  The MC3 is described :ref:`here <mc3>`.
+* BAMMtools now computes the prior analytically for the compound Poisson process model; there is thus no need to simulate the prior distribution of the number of shifts. More on this #HERE
+
+* BAMMtools 2.1 uses branch-specific marginal odds ratios to identify
+  credible sets of :ref:`shift configurations <rateshifts>`. More about why we made this change #HERE
+
+* Users can now use BAMMtools to test whether BAMM is correctly computing likelihoods (see :ref:`here<testlikelihood>`). 
+
+* Some important bug fixes are documented :ref:`here<changes>`.  
 
 * Comprehensive overhaul of BAMM's C++ core for transparency
   and extensibility
-
-* BAMMtools 2.0 uses branch-specific Bayes factors to identify
-  credible sets of :ref:`shift configurations <rateshifts>`.
+  
+* Metropolis coupled MCMC implemented by default to facilitate convergence.
+  The MC3 is described :ref:`here <mc3>`.
 
 `Take a look <colorbreaks.html>`_ at a new webpage that explains some of the intricacies of phylorate plot interpretation.
 
 Please see the `Changes <changes.html>`_ page for more information.
-
 
 Support
 =======

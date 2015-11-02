@@ -119,7 +119,8 @@ int BranchHistory::getNumberOfEventsOnInterval(double t1, double t2)
     EventSet::iterator it;
     for (it = _eventsOnBranch.begin(); it != _eventsOnBranch.end(); ++it) {
         double atime = (*it)->getAbsoluteTime();
-        if ((atime > t1) && (atime <= t2)) {
+        //if ((atime > t1) && (atime <= t2)) {
+        if ((atime >= t1) && (atime < t2)) {
             n_events++;
         }
     }

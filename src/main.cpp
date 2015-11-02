@@ -62,7 +62,14 @@ int main (int argc, char* argv[])
     delete modelFactory;
 
     if (settings.get<bool>("simulatePriorShifts")){
-        FastSimulatePrior fsp(random, &settings);
+        
+        std::cout << "\n***********************************************" << std::endl;
+        std::cout << "You selected to simulate the prior distribution of shifts." << std::endl;
+        std::cout << "This option has been disabled, as the " << std::endl;
+        std::cout << "exact (analytical) prior is now implemented in BAMMtools. " << std::endl;
+        std::cout << "Please consult the website or BAMMtools documentation " << std::endl;
+        std::cout << "for more information\n\n" << std::endl;
+        //FastSimulatePrior fsp(random, &settings);
     }
 
     log(Message, runInfoFile) << "End time: " << currentTime() << "\n";

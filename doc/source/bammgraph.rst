@@ -17,7 +17,7 @@ Phylorate plot
 A **phylorate plot** showing speciation rates (cool colors = slow, warm = fast) along each branch of the whale phylogeny from Steeman *et al.* (2009). Each unique color section of a branch represents the mean of the marginal posterior density of speciation rates on a localized segment of a phylogenetic tree. The "background rate" for lineages involves a temporal deceleration in speciation rates (note warm colors at root). One clade - the dolphins - is characterized by a massive increase in the rate of speciation::
 
 	library(BAMMtools)
-	data(whales, events.whales, prior.whales)
+	data(whales, events.whales)
 	edata_whales <- getEventData(whales, events.whales, burnin=0.1)
 	plot.bammdata(edata_whales, lwd=2, method="polar", pal="temperature")
 
@@ -87,9 +87,7 @@ Distinct shift configurations and their frequencies
 
 BAMM enables the user to tabulate the "distinct shift configurations" within a given dataset as well as the posterior probability of each configuration. Each distinct shift configuration may have been sampled multiple times during simulation of the posterior. This is directly analogous to a credible set of topologies from a Bayesian phylogenetic analysis. This example shows 95% credible set of shift configurations from the analysis of the whale phylogeny::
 
-	data(prior.whales)
-	pset <- getBranchShiftPriors(whales, prior.whales)
-	cset <- credibleShiftSet(edata_whales, pset, BFcriterion=3)
+	cset <- credibleShiftSet(edata_whales, expectedNumberOfShifts=1, threshold=3)
 	plot.credibleshiftset(cset, lwd=2.5)
  
 Macroevolutionary cohort matrix
@@ -119,10 +117,9 @@ Phenotypic evolutionary rates
 
 BAMM and BAMMtools can also be used to analyze rates of phenotypic evolution. Here are the four most probable macroevolutionary rate shift configurations (and their overall frequencies) for the evolution of body size across a phylogenetic tree of living primates. As in the above phylorate plots, branch colors reflect the instantaneous rate of body size evolution. This dataset is included as an example with BAMMtools::
 
-	data(primates, events.primates, prior.primates)
+	data(primates, events.primates)
 	ed_prim <- getEventData(primates, events.primates, burnin=0.1, type = "trait")
-	pprior <- getBranchShiftPriors(primates, prior.primates)
-	css_prim <- credibleShiftSet(ed_prim, pprior)
+	css_prim <- credibleShiftSet(ed_prim, expectedNumberOfShifts=1)
 	plot.credibleshiftset(css_prim, lwd=1.7, plotmax=4)
  
 

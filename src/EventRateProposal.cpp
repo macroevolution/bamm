@@ -48,18 +48,18 @@ double EventRateProposal::acceptanceRatio()
     
     double logQRatio = computeLogQRatio();
 
-#ifdef USE_ANALYTICAL_POSTERIOR
-    
+//#ifdef USE_ANALYTICAL_POSTERIOR
+   
     double logPosteriorRatio = computeLogPosteriorRatio();
     double t = _model.getTemperatureMH();
     double logRatio = t * logPosteriorRatio + logQRatio;
-    
-#else
-    double logPriorRatio = computeLogPriorRatio();   
-    double t = _model.getTemperatureMH();
-    double logRatio = t * logPriorRatio + logQRatio;
-    
-#endif
+
+//#else
+//    double logPriorRatio = computeLogPriorRatio();   
+//    double t = _model.getTemperatureMH();
+//    double logRatio = t * logPriorRatio + logQRatio;
+//    
+//#endif
     
     if (std::isfinite(logRatio)) {
         return std::min(1.0, std::exp(logRatio));

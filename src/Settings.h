@@ -27,6 +27,8 @@ public:
     std::string get(const std::string& name) const;
     template<typename T> T get(const std::string& name) const;
 
+    void set(const std::string& name, const std::string& value);
+  
     void printCurrentSettings(std::ostream& out = std::cout) const;
 
 private:
@@ -66,7 +68,7 @@ private:
     void exitWithErrorOutputFileExists() const;
 
     static const size_t NumberOfParamsToPrefix = 10;
-
+ 
     // Parameters that settings knows about
     ParameterMap _parameters;
     
@@ -75,6 +77,12 @@ private:
 
     // Parameters read from the command line
     std::vector<UserParameter> _commandLineParameters;
+    
+    // function to handle the validation of settings for
+    //   expanded oct 2015 options
+    void validateSettings(void);
+    
+    
 };
 
 
@@ -95,6 +103,9 @@ inline T Settings::get(const std::string& name) const
         std::exit(1);
     }
 }
+
+
+
 
 
 #endif
