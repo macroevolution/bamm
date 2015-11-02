@@ -44,10 +44,10 @@ that significantly improve performance and reliability.
 If you have used a previous version of BAMM or BAMMtools,
 we recommend installing the latest version.
 
-* BAMMtools now computes the prior analytically for the compound Poisson process model; there is thus no need to simulate the prior distribution of the number of shifts. More on this #HERE
+* BAMMtools now computes the prior analytically for the compound Poisson process model; there is thus no need to simulate the prior distribution of the number of shifts. More on this :ref:`here<analyticalprior>`.
 
 * BAMMtools 2.1 uses branch-specific marginal odds ratios to identify
-  credible sets of :ref:`shift configurations <rateshifts>`. More about why we made this change #HERE
+  credible sets of :ref:`shift configurations <rateshifts>`. More about why we made this change :ref:`here<marginalodds>`.
 
 * Users can now use BAMMtools to test whether BAMM is correctly computing likelihoods (see :ref:`here<testlikelihood>`). 
 

@@ -178,6 +178,8 @@ where :math:`Pr(D|M_i)` is the probability of the data given model :math:`M_i` a
 
 Prior distribution in BAMM
 --------------------------
+.. _analyticalprior:
+
 The primary goal of BAMM is to understand rate heterogeneity in a phylogeny without having to pre-specify the number or location of rate regimes. Rather than putting a prior on the number of shifts (*k*) directly, BAMM uses a weaker prior on the rate of the Poisson process that produces *k* (the Poisson rate prior: :math:`\pi(\lambda_{P})`). Understanding how much evidence there is for *k* shifts along your tree therefore requires that you determine the prior probability of *k* shifts under the specified Poisson rate prior used, which is calculated analytically as
 
 .. math::
@@ -363,8 +365,10 @@ BAMMtools enables the user to summarize *marginal shift probabilities*. This is 
 	
 The variable *marg_probs* becomes a copy of our phylogenetic tree, but where each branch length has been transformed into the corresponding marginal shift probability. The marginal shift probabilities can be a little misleading, because we might have relatively low confidence in precisely which branch a shift occurred on, but nonetheless have extremely high confidence that a shift occurred *somewhere* in the vicinity. More importantly, the marginal shift probabilities don't accurately account for the expected number of shifts that would occur in the data under the prior alone (again, see :ref:`this section<rateshifts>` for more on this). This is a major issue and we have recently overhauled BAMMtools to use a measure of evidence for rate shifts that is largely independent of the prior: the **Bayes factor**. 
 
+.. _marginalodds:
+
 Marginal odds for rate shift locations
----------------------------------------
+--------------------------------------
 
 As explained :ref:`here<bayesfactorbranches>` and in this `Evolution article <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_, we can compute the marginal odds that a shift is associated with a particular branch. To be clear, this method is not meant to identify the *number* of shifts, to do that see :ref:`this page<bayesfactors>`. Here, we are discussing how to compute the relative evidence that a rate shift is on a particular branch of our phylogeny. To do this, we find the ratio between the probability of a shift along that branch in the posterior and the prior odds of a shift along that branch. This **marginal odds ratio** is superficially similar to a Bayes Factor, and we have previously used that term in the `Evolution article <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_. However, because the marginal odds of a shift along the tree are a *summary statistic* and not a component of *model selection*, they are not formal Bayes Factors. 
 
