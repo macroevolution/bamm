@@ -68,9 +68,9 @@ Extinction calculations at nodes
 .............................................
 In BiSSE and related models, the extinction probabilities :math:`E(t)` at internal nodes are always identical for a given character state. The occurrence of a speciation event does not change the probability of extinction for a lineage in the i'th character state. That is, if a speciation event happens at time :math:`t`, and if a lineage is in state `i`, the probability of extinction after some infinitesimal interval before the speciation event :math:`E_i(t - \Delta t)` will be very similar to the probability of extinction after the speciation event :math:`E_i(t + \Delta t)`. This is because the :math:`E_i(t)` term integrates over all diversification histories that *could have occurred while yielding an extinct clade* given that the lineage is currently (at time :math:`t`) in state :math:`i`. 
 
-Because BAMM does not allow rate shifts on unobserved lineages (because we cannot analytically solve the differential equation above that contains a :math:`\Lambda \Omega` term, as explained above), BAMM must deal with the scenario where the extinction probabilities at internal nodes differ on the right and left descendant branches, which we will denote by :math:`E_{R}(t)` and :math:`E_{L}(t)`. For a given internal node, it is possible that :math:`E_{R}(t)` and :math:`E_{L}(t)` will not be equal if there is a rate shift on the right, left, or both descendant branches (or any of their descendant lineages). We thus need to condition our :math:`E(t)` calculations on the occurrence of a rate shift. 
+However, BAMM must deal with the scenario where the extinction probabilities at internal nodes differ on the right and left descendant branches, which we will denote by :math:`E_{R}(t)` and :math:`E_{L}(t)`. For a given internal node, it is possible that :math:`E_{R}(t)` and :math:`E_{L}(t)` will not be equal if there is a rate shift on the right, left, or both descendant branches (or any of their descendant lineages). We thus need to condition our :math:`E(t)` calculations on the occurrence of a rate shift. 
 
-To be clear, this is not a BAMM problem *per se*. **This scenario arises in all models that allow diversification shifts on particular lineages (or at particular nodes) but that do not allow rate shifts on unobserved lineages**. In other words, this issue is relevant to all models that purport to compute the likelihood of a rate shift on a phylogenetic tree when :math:`\mu > 0`. Widely-used approaches that must confront this issue include the `MEDUSA model <http://www.pnas.org/content/106/32/13410.abstract>`_, the 'split' option for `BiSSE, QuaSSE, and related models  <http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2012.00234.x/abstract>`_, the DDD models with different shift regimes on `specific subclades  <http://www.jstor.org/stable/10.1086/667574>`_, and multi-process shift models as currently implemented in `RPANDA <http://www.pnas.org/content/108/39/16327.abstract>`_. 
+This issue is relevant to all models that purport to compute the likelihood of a rate shift on a phylogenetic tree when :math:`\mu > 0`. Widely-used approaches that must confront this issue include the `MEDUSA model <http://www.pnas.org/content/106/32/13410.abstract>`_, the 'split' option for `BiSSE, QuaSSE, and related models  <http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2012.00234.x/abstract>`_, the DDD models with different shift regimes on `specific subclades  <http://www.jstor.org/stable/10.1086/667574>`_, and multi-process shift models as currently implemented in `RPANDA <http://www.pnas.org/content/108/39/16327.abstract>`_. 
 
 We do not know how all of these models handle the scenario where :math:`E_{R}(t)` and :math:`E_{L}(t)` are different (at the time of this writing, there are at least 3 different ways that the implementations listed above deal with this). Our approach in BAMM is the following:
 
@@ -78,7 +78,18 @@ We do not know how all of these models handle the scenario where :math:`E_{R}(t)
 	
 * If the right and left branches are **not** identical in diversification history (e.g., at least one rate shift occurs somewhere downstream, such that :math:`E_{L}(t) \neq  E_{R}(t)`), we set the initial extinction probability at the start of the branch upstream of the node equal to :math:`E_{R}(t) E_{L}(t)`. 
 
-We cannot guarantee that this is the optimal way of doing this, but to our knowledge, there has been no exploration of this issue. 
+We cannot guarantee that this is the optimal way of handling this issue, but to our knowledge, there has been no exploration of the *correct* way to deal with :math:`E(t)` values at nodes under diversification process with rate shifts and :math:`\mu > 0`. In any event, we continue to find that BAMM generally does a reasonable job of inferring speciation and extinction rates when data are simulated under multi-rate diversification processes, which suggests that this method for handling :math:`E(t)` calculations leads to something that provides at least a close approximation to the true probability.
+
+However, prior to October 2015, BAMM handled the :math:`E(t)` calculations at nodes by arbitrarily designating one descendant lineage as representing the parent process, and simply ignoring the :math:`E(t)` value for the other branch. **This modification has the potential to impact results obtained with BAMM**. In the cetacean example dataset, we find weaker support for a rate shift after incorporating this change. 
+
+This is not to say that results obtained with older versions of BAMM are incorrect, but our simulations and analysis have convinced us that the current algorithm performs better on average. We have provided users with the option of specifying how these extinction probabilities should be handled at nodes. The default (which you thus do not need to specify), can be set (in the control file or at the command line) with the option::
+
+	combineExtinctionAtNodes = "if_different"
+	
+However, if you want to handle these calculations exactly as they were handled with the previous version of BAMM (< v2.4), you can specify::
+
+
+	combineExtinctionAtNodes = "left"
  
 
 .. _testlikelihood: 
