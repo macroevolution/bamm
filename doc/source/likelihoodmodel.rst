@@ -86,7 +86,7 @@ We need to make sure we are considering precisely the same generations for the m
  	
 We also need to ensure that we use exactly the same ``segLength`` parameter for these calculations that were used for the BAMM analysis (see :ref:`here<numericalapprox>` for more info on this). Now we compute the likelihood of the final generation::
 
-	BAMMlikelihood(whales, events, gen="last", segLength = 0.02)
+	BAMMlikelihood(whales, events.whales, gen="last", segLength = 0.02)
 	# which returns:
 		[1] -271.5134
 	
@@ -102,10 +102,10 @@ So, close -- but are they close enough? Let's do 50 samples::
 	
 These should look precisely identical (please let us know if for some reason they appear to be different!). We can look at the average and maximum differences between these values::
 
-	mean(abs(ll - mcmc2$logLik))
+	mean(abs(ll - mcmc$logLik))
 	# which returns:
 		[1] 0.0002577647
-	max(abs(ll - mcmc2$logLik))
+	max(abs(ll - mcmc$logLik))
 	# which returns:
 		[1] 0.000505146
 	
