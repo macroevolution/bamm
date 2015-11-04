@@ -21,7 +21,7 @@ Windows
 -------
 
 `bamm-2.4.0-windows.zip
-<https://dl.dropboxusercontent.com/u/34644229/bamm-2.4.0-windows.zip>`_
+<https://dl.dropboxusercontent.com/u/34644229/bamm-2.4.0-Windows.zip>`_
 
 Requires Windows 7 or greater (does not run on Windows XP).
 
