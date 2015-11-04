@@ -1,0 +1,18 @@
+citHeader("To cite package BAMMtools in publications use:")
+
+citEntry(entry="Article",
+         title = "BAMMtools: an R package for the analysis of evolutionary dynamics on phylogenetic trees",
+         author = personList(as.person("DL Rabosky"),
+         as.person("MC Grundler"),
+         as.person("CJ Anderson"),
+         as.person("PO Title"),
+         as.person("JJ Shi"),
+         as.person("JW Brown"),
+         as.person("H Huang"),
+         as.person("JG Larson")),
+	 journal = "Methods in Ecology and Evolution",
+         year = "2014",
+         volume = "5",
+         pages = "701-707",
+         textVersion = "Rabosky Daniel L, Michael C Grundler, Carlos J Anderson, Pascal O Title, Jeff J Shi, Joseph W Brown, Huateng Huang and Joanna G Larson. 2014. BAMMtools: an R package for the analysis of evolutionary dynamics on phylogenetic trees. Methods in Ecology and Evolution 5:701-707.")
+
