@@ -111,19 +111,19 @@ We need to make sure we are considering precisely the same generations for the m
 	events <- events.whales[events.whales$generation %in% iset, ]
  	mcmc <-  mcmc.whales[mcmc.whales$generation %in% iset, ]
  	
-We also need to ensure that we use exactly the same ``segLength`` parameter for these calculations that were used for the BAMM analysis (see :ref:`here<numericalapprox>` for more info on this). Now we compute the likelihood of the final generation::
+We also need to ensure that we use exactly the same ``segLength`` parameter for these calculations that were used for the BAMM analysis (see :ref:`here<numericalapprox>` for more info on this), as well as the same global sampling fraction (the included whales dataset was run with a sampling fraction of 0.98). Now we compute the likelihood of the final generation::
 
-	BAMMlikelihood(whales, events.whales, gen="last", segLength = 0.02)
+	BAMMlikelihood(whales, events.whales, gen="last", segLength = 0.02, sf = 0.98)
 	# which returns:
-		[1] -265.8267
+		[1] -272.6831
 	
 	mcmc$logLik[nrow(mcmc)]
 	# which returns:
-		[1] -271.513
+		[1] -272.683
 		
 So, close -- but are they close enough? Let's do 50 samples::
 
-	ll <- BAMMlikelihood(whales, events, gen = "all", segLength = 0.02)
+	ll <- BAMMlikelihood(whales, events, gen = "all", segLength = 0.02, sf = 0.98)
 	plot(mcmc$logLik ~ ll)
 	lines(x=c(-350,-250), y=c(-350, -250), lwd=1, col='red')	
 	
@@ -131,10 +131,10 @@ These should look precisely identical (please let us know if for some reason the
 
 	mean(abs(ll - mcmc$logLik))
 	# which returns:
-		[1] 0.0002577647
+		[1] 0.0002952669
 	max(abs(ll - mcmc$logLik))
 	# which returns:
-		[1] 0.000505146
+		[1] 0.0005066073
 	
 With this set of 50 samples, we see that the maximum difference between likelihoods computed by BAMM and by an independent R implementation is a very small number, which suggests that BAMM is doing what it should be doing. Again, this assumes that the R implementation is also correct -- e.g., that we haven't just re-implemented a set of incorrect equations into R. As one additional test, we will compute the likelihoods of a phylogeny using another implementation of the birth-death process. We will use Rich FitzJohn's excellent `diversitree <http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2012.00234.x/abstract>`_ package for this. The likelihoods in diversitree and BAMM aren't exactly identical, because the diversitree log-likelihoods include a constant term ``sum(log(2:(N - 1)))``, where N is the number of tips in the tree. However, since all diversitree log-likelihoods contain this term (it is a constant that depends solely on the number of tips in the tree), we can merely subtract it to attain the BAMM likelihood (for the constant rate process)::
 
@@ -185,20 +185,20 @@ BAMM uses a "fast" form of numerical integration where branches of a phylogeny a
 If the segment size is greater than the length of a given branch, BAMM will treat the branch as a single segment (e.g., a mean value for :math:`\lambda` and :math:`\mu` will be computed for the branch, and they will be passed to the speciation-extinction equations for the constant-rate birth-death process). If ``segLength = 1.0``, then no splitting will occur on any branches: mean rates will be computed for each branch. If ``segLength = 0.02``, branches will be split into segments with length equal to 2% of the crown depth of the tree. Here are some comparisons: ::
 
 	# the coarsest possible discretization:
-	BAMMlikelihood(whales, events, gen="last", segLength = 1)
-		[1] -273.1068
+	BAMMlikelihood(whales, events, gen = "last", segLength = 1, sf = 0.98)
+		[1] -276.7793
 	
 	# getting finer
-	BAMMlikelihood(whales, events, gen="last", segLength = 0.1)
-		[1] -272.0331
+	BAMMlikelihood(whales, events, gen = "last", segLength = 0.1, sf = 0.98)
+		[1] -272.7604
 
 	# the default value (BAMM v 2.5)
-	BAMMlikelihood(whales, events, gen="last", segLength = 0.02)
-		[1] -271.5134
+	BAMMlikelihood(whales, events, gen = "last", segLength = 0.02, sf = 0.98)
+		[1] -272.6831
 	
 	# and a very fine partitioning:
-	BAMMlikelihood(whales, events, gen="last", segLength = 0.0001)
-		[1] -271.4763
+	BAMMlikelihood(whales, events, gen = "last", segLength = 0.0001, sf = 0.98)
+		[1] -272.6776
 	
 Despite the 200-fold difference in the grain (0.02 v 0.001), the difference in log-likelihoods is marginal (:math:`\approx` 0.037), and it comes at a significant computational cost (approximately 200x increase in the number of operations required to compute the likelihood). Please let us know if you find that any inferences are affected by use of the defaults for ``segLength``. 
 	
