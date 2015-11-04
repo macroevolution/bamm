@@ -37,17 +37,17 @@ Multiple options are available in BAMMtools for mapping colors to rates in phylo
 	q <- plot.bammdata(ed, tau=0.001, breaksmethod='linear', lwd=2)
 	addBAMMshifts(ed, par.reset=FALSE, cex=2)
 	title(sub='linear',cex.sub=2, line=-1)
-	addBAMMlegend(q, corners=c(0, 1, 140, 220), side=4, las=1)
+	addBAMMlegend(q, location=c(0, 1, 140, 220))
 
 	q <- plot.bammdata(ed, tau=0.001, breaksmethod='linear', color.interval=c(NA,0.12), lwd=2)
 	addBAMMshifts(ed, par.reset=FALSE, cex=2)
 	title(sub='linear - color.interval',cex.sub=2, line=-1)
-	addBAMMlegend(q, corners=c(0, 1, 140, 220), side=4, las=1)
+	addBAMMlegend(q, location=c(0, 1, 140, 220))
 
 	q <- plot.bammdata(ed, tau=0.001, breaksmethod='jenks', lwd=2)
 	addBAMMshifts(ed, par.reset=FALSE, cex=2)
-	title(sub='jenks',cex.sub=2, line=-1) 
-	addBAMMlegend(q, corners=c(0, 1, 140, 220), side=4, las=1)
+	title(sub='jenks',cex.sub=2, line=-1)
+	addBAMMlegend(q, location=c(0, 1, 140, 220))
 
  
 

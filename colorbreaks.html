@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>14. Color ramps and phylorate plots &mdash; bamm 2.4.0 documentation</title>
+    <title>9. Color ramps and phylorate plots &mdash; bamm 2.4.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 2.4.0 documentation" href="documentation.html" />
-    <link rel="next" title="15. Frequently Asked Questions" href="faq.html" />
-    <link rel="prev" title="8. The BAMM likelihood function" href="likelihoodmodel.html" /> 
+    <link rel="next" title="10. Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="8. Advanced analysis options" href="advanced.html" /> 
   </head>
   <body role="document">
 <div class="pageheader">
@@ -36,10 +36,10 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="faq.html" title="15. Frequently Asked Questions"
+          <a href="faq.html" title="10. Frequently Asked Questions"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="likelihoodmodel.html" title="8. The BAMM likelihood function"
+          <a href="advanced.html" title="8. Advanced analysis options"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -52,21 +52,21 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">14. Color ramps and phylorate plots</a><ul>
-<li><a class="reference internal" href="#what-options-are-available">14.1. What options are available?</a></li>
-<li><a class="reference internal" href="#a-note-of-caution">14.2. A note of caution</a></li>
-<li><a class="reference internal" href="#what-should-you-do">14.3. What should you do?</a></li>
-<li><a class="reference internal" href="#how-do-i-plot-these-histograms">14.4. How do I plot these histograms?</a></li>
+<li><a class="reference internal" href="#">9. Color ramps and phylorate plots</a><ul>
+<li><a class="reference internal" href="#what-options-are-available">9.1. What options are available?</a></li>
+<li><a class="reference internal" href="#a-note-of-caution">9.2. A note of caution</a></li>
+<li><a class="reference internal" href="#what-should-you-do">9.3. What should you do?</a></li>
+<li><a class="reference internal" href="#how-do-i-plot-these-histograms">9.4. How do I plot these histograms?</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="likelihoodmodel.html"
-                        title="previous chapter">8. The BAMM likelihood function</a></p>
+  <p class="topless"><a href="advanced.html"
+                        title="previous chapter">8. Advanced analysis options</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="faq.html"
-                        title="next chapter">15. Frequently Asked Questions</a></p>
+                        title="next chapter">10. Frequently Asked Questions</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -96,10 +96,10 @@
           <div class="body" role="main">
             
   <div class="section" id="color-ramps-and-phylorate-plots">
-<span id="colorbreaks"></span><h1>14. Color ramps and phylorate plots<a class="headerlink" href="#color-ramps-and-phylorate-plots" title="Permalink to this headline">¶</a></h1>
+<span id="colorbreaks"></span><h1>9. Color ramps and phylorate plots<a class="headerlink" href="#color-ramps-and-phylorate-plots" title="Permalink to this headline">¶</a></h1>
 <p>When plotting instantaneous rates along the branches of a phylogeny with <code class="docutils literal"><span class="pre">plot.bammdata</span></code> (as well as with any other BAMMtools function that creates a phylorate plot), it is important to keep in mind how rates are mapped to colors, and what this can mean for interpretation.</p>
 <div class="section" id="what-options-are-available">
-<h2>14.1. What options are available?<a class="headerlink" href="#what-options-are-available" title="Permalink to this headline">¶</a></h2>
+<h2>9.1. What options are available?<a class="headerlink" href="#what-options-are-available" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal"><span class="pre">plot.bammdata</span></code> has a number of options available to bin rates into particular colors (the breaksmethod options). Depending on the dataset, these different options can lead to drastically different phylorate plots. On top of these breaksmethods, there are additional data transformation/truncation options that will modify the behavior of the breaksmethods.</p>
 <p>The breaksmethod options are:</p>
 <ol class="arabic">
@@ -144,17 +144,17 @@
 </div>
 </div>
 <div class="section" id="a-note-of-caution">
-<h2>14.2. A note of caution<a class="headerlink" href="#a-note-of-caution" title="Permalink to this headline">¶</a></h2>
+<h2>9.2. A note of caution<a class="headerlink" href="#a-note-of-caution" title="Permalink to this headline">¶</a></h2>
 <p><strong>WARNING: You cannot interpret colors alone as evidence of rate heterogeneity.</strong></p>
 <p>As an example, if you have a bamm analysis where there are no core shifts, i.e., there is no real rate heterogeneity, stochastic noise in the BAMM posterior distribution can be emphasized through the selection of particular color options, such as the quantile colorbreaks method. As these methods define colors on a relative, and not on an absolute scale, it is easy to create a deceptive phylorate plot. This is a common issue in real datasets.</p>
 </div>
 <div class="section" id="what-should-you-do">
-<h2>14.3. What should you do?<a class="headerlink" href="#what-should-you-do" title="Permalink to this headline">¶</a></h2>
+<h2>9.3. What should you do?<a class="headerlink" href="#what-should-you-do" title="Permalink to this headline">¶</a></h2>
 <p>Although, we have provided a number of options to best convey rate variation across a phylogeny, it is now possible to generate a large number of different phylorate plots and it is important to not misuse these options. <strong>Colors can be misleading, and there is no general guideline for displaying rate heterogeneity.</strong> We have included multiple options in BAMM to allow you, the user, to determine what works best for your data. If 98% of the lineages in your phylogeny have a slow rate of speciation and 2% have a very fast rate, a linear mapping may work best, because it will effectively show two colors. If you have intermediate rates, or a broad range of rate classes, then the quantile or jenks methods may work. We refrain from providing strong guidelines here and merely equip you with the tools to explore the most effective presentation of your data.</p>
 <p>One starting point could be to use the locations of core shifts as a guide for what <strong>should</strong> be emphasized with the colors. In the above figure, the linear method fails to highlight existing rate shifts, although log-transformation of the rates, or use of <code class="docutils literal"><span class="pre">color.interval</span></code> alleviates the problem. The quantile method is exaggerating the existing rate variation in this case. The jenks method appears to do a good job. We suggest that <code class="docutils literal"><span class="pre">color.interval</span></code> only be employed when necessary, in combination with the <code class="docutils literal"><span class="pre">linear</span></code> breaksmethod, as the misuse of this option can lead to misrepresentation of rates on a phylogeny.</p>
 </div>
 <div class="section" id="how-do-i-plot-these-histograms">
-<h2>14.4. How do I plot these histograms?<a class="headerlink" href="#how-do-i-plot-these-histograms" title="Permalink to this headline">¶</a></h2>
+<h2>9.4. How do I plot these histograms?<a class="headerlink" href="#how-do-i-plot-these-histograms" title="Permalink to this headline">¶</a></h2>
 <p>For those interested in exploring rate heterogeneity in the form of a histogram, we demonstrate how the above histograms were created:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">library</span><span class="p">(</span><span class="n">BAMMtools</span><span class="p">)</span>
 <span class="c">#load data</span>
@@ -182,10 +182,10 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="faq.html" title="15. Frequently Asked Questions"
+          <a href="faq.html" title="10. Frequently Asked Questions"
              >next</a></li>
         <li class="right" >
-          <a href="likelihoodmodel.html" title="8. The BAMM likelihood function"
+          <a href="advanced.html" title="8. Advanced analysis options"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
