@@ -61,7 +61,7 @@ This is a quickstart guide to some of the analyses discussed below (and many mor
 * Extract the rate shift configuration with the highest posterior probability with ``getBestShiftConfiguration``
 * Visualize random samples from the posterior distribution of rate shifts using ``plot.bammshifts``
 * Generate phylorate plots for the distinct rate shift configurations in your 95% credible set using ``plot.credibleshiftset``
-* Evaluate evidence for diversification shifts on each branch with ``bayesFactorBranches``
+* Evaluate evidence for diversification shifts on each branch with ``marginalOddsRatioBranches``
 * Plot rates through time with ``plotRateThroughTime(...)``
 * Compute clade-specific marginal distributions of rates with ``getCladeRates(...)`` 
 
@@ -188,12 +188,12 @@ The primary goal of BAMM is to understand rate heterogeneity in a phylogeny with
 Even a weak prior will have an effect on the posterior, so it is important to assess the evidence in favor of each number of shifts by taking the prior into account using Bayes Factors. BAMMtools makes it easy to compute Bayes factor evidence in favor of one model relative to another.  The analysis described below assumes that you have generated an *MCMC output file* from a full BAMM run and that you know the ``expectedNumberofShifts`` specified in the *control file*::
 
 	postfile <- "post_mcmc_out.txt"
-	bfmat <- computeBayesFactors(postfile, expectedNumberofShifts=1, burnin=0.1)
+	bfmat <- computeBayesFactors(postfile, expectedNumberOfShifts=1, burnin=0.1)
 	
 and this will return a pairwise matrix of Bayes factors. For the whales dataset, you can do this as::
 
 	data(mcmc.whales)
-	computeBayesFactors(mcmc.whales, expectedNumberofShifts=1, burnin=0.1)
+	computeBayesFactors(mcmc.whales, expectedNumberOfShifts=1, burnin=0.1)
 
 It is very important to recognize that model probabilities for rarely sampled models are likely to be inaccurate. Hence, BAMMtools will not attempt to compute a Bayes factor for any model comparison where either model has a posterior or prior probability of (approximately) zero. The default output of computeBayesFactors is a matrix of pairwise Bayes Factors comparing all models with a posterior/prior greater than zero. In general, the first column of this output matrix is the comparison of all the models relative to the model with the lowest number of supported shifts (often zero).
 
@@ -210,12 +210,12 @@ In the case of the whales example dataset, the Bayes factors for a model with *k
 For the whale example dataset, the Bayes factor evidence in favor of a model with a rate shift, relative to the null model, is very strong (BF > 70).
 This tells us that a model with a single diversification shift is the best overall model, at least by comparison to the null model with zero shifts. Bayes factors greater than 20 generally imply substantial evidence for one model over another; values greater than 50 are *very strong* evidence in favor of the numerator model. Here, it's pretty clear that a model with a single rate shift is much, much better than a model that lacks rate shifts.
 
-Occasionally, you may encounter a dataset where the posterior probability of the null model is so low that it cannot be estimated (e.g., it is never sampled during simulation of the posterior). Likewise, the prior probability of the models with high posterior probability might be very (i.e., inestimably) low, depending on your value for `expectedNumberofShifts`. In this case, you will not be able to compute a Bayes factor. However, you can explicitly show the posterior and prior distributions recovered through your analysis to make it clear that the posterior distribution is shifted relative to the prior. We are actively working on strategies to address the problem of model selection when the posterior and/or prior probabilities approach zero. 
+Occasionally, you may encounter a dataset where the posterior probability of the null model is so low that it cannot be estimated (e.g., it is never sampled during simulation of the posterior). Likewise, the prior probability of the models with high posterior probability might be very (i.e., inestimably) low, depending on your value for `expectedNumberOfShifts`. In this case, you will not be able to compute a Bayes factor. However, you can explicitly show the posterior and prior distributions recovered through your analysis to make it clear that the posterior distribution is shifted relative to the prior. We are actively working on strategies to address the problem of model selection when the posterior and/or prior probabilities approach zero. 
 
 BAMMtools also has a function for visualizing the prior and posterior simultaneously. This is useful to see what models are not being sampled in the posterior, and also to evaluate how far from the prior the posterior has moved. To use it ::
 
 	data(mcmc.whales)
-	plotPrior(mcmc.whales, expectedNumberofShifts=1)
+	plotPrior(mcmc.whales, expectedNumberOfShifts=1)
 	
 The prior and posterior being similiar does not mean that BAMM has not converged, as there may be strong agreement between the prior and posterior in any given dataset. For instance, the whale tree has strong support for a single shift, and so the two distributions have not diverged by much, but Bayes Factors tell us that the difference is ''significant'' (i.e., the shift from the prior to the posterior is large).
 
@@ -275,7 +275,7 @@ Finding the single *best* shift configuration
 ---------------------------------------------
 From the above plot, we can see that a single rate shift configuration has a higher posterior probability than any other. This shift configuration is the one with the *maximum a posteriori* (MAP) probability. This is one estimate of the overall best rate set of rate shifts given our data. If you are to show a single set of rate shifts on a phylogeny for publication, this would be a good one to go with::
 
-	best <- getBestShiftConfiguration(edata, expectedNumberofShifts=1)
+	best <- getBestShiftConfiguration(edata, expectedNumberOfShifts=1)
 	plot.bammdata(best, lwd = 2)
 	addBAMMshifts(best, cex=2.5)
 
@@ -293,10 +293,10 @@ The samples that can be assigned to the second most-probable shift configuration
 	plot.bammdata(rsample)
 	addBAMMshifts(rsample, cex=2)
 	
-In the example above, we've pulled out the 5'th sample that was assigned to the most-probable shift configuration. 
+In the example above, we've pulled out the 5'th sample that was assigned to the most-probable shift configuration:: 
 
-	first <- subsetEventData(css, index=1)
-	second <- subsetEventData(css, index = 2)
+	first <- subsetEventData(edata, index=1)
+	second <- subsetEventData(edata, index = 2)
 	# Plotting the second most probable configuration:
 	plot.bammdata(second)
 	addBAMMshifts(second, cex=2)
@@ -378,11 +378,11 @@ What the marginal odds **do** provide is a robust measure of evidence for a rate
 
 To compute the marginal odds ratio for the *topological location* of rate shifts on our tree, we first compute the probability of a rate shift on each branch of our phylogeny under the prior alone::
 
-	priorshifts <- getBranchShiftPriors(edata)
+	priorshifts <- getBranchShiftPriors(edata, expectedNumberOfShifts = 1)
 
 This object is a copy of our phylogeny, but where the length of each branch is equal to the prior probability of a rate shift. This is the expected probability that our statistical model would find a rate shift on a particular branch **even if there is no variation in diversification rate** across our tree. We can then use these prior probabilities to compute the marginal odds ratio associated with a rate shift on each branch of the phylogeny::
 
-	motree <- marginalOddsRatioBranches(edata)
+	motree <- marginalOddsRatioBranches(edata, expectedNumberOfShifts = 1)
 	
 This is now a copy of our phylogenetic tree where each branch is replaced with the marginal odds ratio for a rate shift on that branch. We can plot this tree to view the relative support for a rate shift on each branch with ``plot.phylo`` :: 
 
@@ -452,7 +452,7 @@ should produce a plot with density shading on confidence regions for your specia
 You can also use ``plotRateThroughTime`` to plot speciation through time curves for just a portion of your phylogeny. We can do this by feeding a node number in to ``plotRateThroughTime``, and the function will just compute and plot the rates for this subtree. To find a particular node number for your tree, you can plot the tree (using ape), and then plot your node numbers directly on the tree, like this::
 
 	plot.phylo(whales)
-	nodelabels(whales)
+	nodelabels()
 	
 Another way of doing this is to extract the most recent common ancestor (MRCA) node for your clade, by specifying the names of 2 descendant species from the clade that span the focal clade::
 
@@ -482,6 +482,8 @@ There are many other options available through ``plotRateThroughTime``, so pleas
 	
 That's the quick and dirty way of plotting rates through time. Often, you will want more control over the plotting process. The core BAMM operation for plotting a rate-through-time curve involves the generation of a rate-through-time matrix, like this::
 
+	data(primates, events.primates)
+	edata <- getEventData(primates, events.primates, burnin=0.1, nsamples=1000, type='trait')
 	rtt <- getRateThroughTimeMatrix(edata)
 
 which returns a list of rate-through-time matrices plus a vector of the time points at which the rates were computed. If your rate matrix was for trait evolution, you will have a component *rtt$beta* in your rtt object (components *rtt$lambda* and *rtt$mu* if you are modeling speciation-extinction). To get the mean rates at any point in time::
@@ -493,8 +495,10 @@ and to do a simple no-frills plot::
 	plot(meanTraitRate ~ rtt$times)
 	
 You can also include and exclude nodes from the calculation of the rate-through-time matrix (assuming you know the node to exclude or include)::
-
-	rtt_subtree <- getRateThroughTimeMatrix(edata, node = mrca)
+	
+	plot(primates, cex=0.5)
+	nodelabels(node=370)
+	rtt_subtree <- getRateThroughTimeMatrix(edata, node = 370)
 	
 Please see code underlying some BAMM graph gallery plots for more on working with these objects. 
  
