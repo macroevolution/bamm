@@ -18,16 +18,14 @@ BAMM Documentation
    settingup
    configuration
    postprocess
+   advanced
+   colorbreaks   
+   faq    
    likelihoodmodel
-   fossilbamm
+   mc3
    strapp      
    time-flip
-   mc3
-   advanced
-   likelihoodmodel
-   colorbreaks
-
-   faq
+   fossilbamm
    troubleshooting
    glossary
 

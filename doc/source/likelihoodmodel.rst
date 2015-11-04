@@ -64,6 +64,22 @@ But we should note again that this leads to a weird condition in the BAMM model,
 
 But I should be clear about my view that **none of this is likely to matter in practice**. And in any event, it's testable. Just simulate data with rate shifts (some of which may lead to extinct clades in their entirety), and see if it has any consequences for inference about the set of processes inferred for the observed part of the tree. We've done this and have found no consequences for inference, but perhaps you'll find something different.
  
+Extinction calculations at nodes
+.............................................
+In BiSSE and related models, the extinction probabilities :math:`E(t)` at internal nodes are always identical for a given character state. The occurrence of a speciation event does not change the probability of extinction for a lineage in the i'th character state. That is, if a speciation event happens at time :math:`t`, and if a lineage is in state `i`, the probability of extinction after some infinitesimal interval before the speciation event :math:`E_i(t - \Delta t)` will be very similar to the probability of extinction after the speciation event :math:`E_i(t + \Delta t)`. This is because the :math:`E_i(t)` term integrates over all diversification histories that *could have occurred while yielding an extinct clade* given that the lineage is currently (at time :math:`t`) in state :math:`i`. 
+
+Because BAMM does not allow rate shifts on unobserved lineages (because we cannot analytically solve the differential equation above that contains a :math:`\Lambda \Omega` term, as explained above), BAMM must deal with the scenario where the extinction probabilities at internal nodes differ on the right and left descendant branches, which we will denote by :math:`E_{R}(t)` and :math:`E_{L}(t)`. For a given internal node, it is possible that :math:`E_{R}(t)` and :math:`E_{L}(t)` will not be equal if there is a rate shift on the right, left, or both descendant branches (or any of their descendant lineages). We thus need to condition our :math:`E(t)` calculations on the occurrence of a rate shift. 
+
+To be clear, this is not a BAMM problem *per se*. **This scenario arises in all models that allow diversification shifts on particular lineages (or at particular nodes) but that do not allow rate shifts on unobserved lineages**. In other words, this issue is relevant to all models that purport to compute the likelihood of a rate shift on a phylogenetic tree when :math:`\mu > 0`. Widely-used approaches that must confront this issue include the `MEDUSA model <http://www.pnas.org/content/106/32/13410.abstract>`_, the 'split' option for `BiSSE, QuaSSE, and related models  <http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2012.00234.x/abstract>`_, the DDD models with different shift regimes on `specific subclades  <http://www.jstor.org/stable/10.1086/667574>`_, and multi-process shift models as currently implemented in `RPANDA <http://www.pnas.org/content/108/39/16327.abstract>`_. 
+
+We do not know how all of these models handle the scenario where :math:`E_{R}(t)` and :math:`E_{L}(t)` are different (at the time of this writing, there are at least 3 different ways that the implementations listed above deal with this). Our approach in BAMM is the following:
+
+* If the right and left branches are identical in diversification history (no shifts occur anywhere on any downstream branches), :math:`E_{L}(t) = E_{R}(t)` and there is no need to condition the extinction probability on the occurrence of any rate shifts. The initial extinction probability on the parent branch is equal to the value at the end of (either) descendant branch.
+	
+* If the right and left branches are **not** identical in diversification history (e.g., at least one rate shift occurs somewhere downstream, such that :math:`E_{L}(t) \neq  E_{R}(t)`), we set the initial extinction probability at the start of the branch upstream of the node equal to :math:`E_{R}(t) E_{L}(t)`. 
+
+We cannot guarantee that this is the optimal way of doing this, but to our knowledge, there has been no exploration of this issue. 
+ 
 
 .. _testlikelihood: 
 
@@ -86,7 +102,7 @@ We need to make sure we are considering precisely the same generations for the m
  	
 We also need to ensure that we use exactly the same ``segLength`` parameter for these calculations that were used for the BAMM analysis (see :ref:`here<numericalapprox>` for more info on this). Now we compute the likelihood of the final generation::
 
-	BAMMlikelihood(whales, events, gen="last", segLength = 0.02)
+	BAMMlikelihood(whales, events.whales, gen="last", segLength = 0.02)
 	# which returns:
 		[1] -271.5134
 	
@@ -102,10 +118,10 @@ So, close -- but are they close enough? Let's do 50 samples::
 	
 These should look precisely identical (please let us know if for some reason they appear to be different!). We can look at the average and maximum differences between these values::
 
-	mean(abs(ll - mcmc2$logLik))
+	mean(abs(ll - mcmc$logLik))
 	# which returns:
 		[1] 0.0002577647
-	max(abs(ll - mcmc2$logLik))
+	max(abs(ll - mcmc$logLik))
 	# which returns:
 		[1] 0.000505146
 	
