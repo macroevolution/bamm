@@ -6,7 +6,7 @@ The BAMM likelihood function
 Is the BAMM likelihood correct?
 .................................    
 
-A recent post to our Github repository called attention to one seemingly peculiar feature of the likelihood function in BAMM. The likelihood function is, of course, the core of inference using BAMM. If the likelihood function is incorrect, or if it is based on flawed assumptions, inferences based on the method may be problematic. Note that here we are concerned with whether the theoretical model in BAMM itself is correct, not whether the model itself is implemented correctly. In :ref:`this section below<testlikelihood>` , we describe how users can validate the actual BAMM likelihood itself (e.g., is the program computing what we think it is computing?). But for now, some theory. 
+A recent post to our Github repository called attention to one seemingly peculiar feature of the likelihood function in BAMM. The likelihood function is, of course, the core of inference using BAMM. If the likelihood function is incorrect, or if it is based on flawed assumptions, inferences based on the method may be problematic. Note that here we are concerned with whether the theoretical model in BAMM itself is correct, not whether the model itself is implemented correctly. In :ref:`this section below<testlikelihood>`, we describe how users can validate the actual BAMM likelihood itself (e.g., is the program computing what we think it is computing?). But for now, some theory. 
 
 The BAMM likelihood is based on a set of differential equations that describe transition probabilities for a stochastic birth-death process. These equations are solved from tips-to-root of a phylogeny along individual branches, and probabilities are combined at nodes; when we've reached the root, we will have computed the likelihood for the full tree. The `original BiSSE paper <http://sysbio.oxfordjournals.org/content/56/5/701.abstract>`_ remains my (DLR) all-time favorite explanation (both graphically and mathematically) for how the likelihood of a phylogeny can be computed under a birth-death process; I strongly recommend it as a prelude to the discussion below.
 
@@ -97,14 +97,14 @@ We need to make sure we are considering precisely the same generations for the m
 	
 	iset <- intersect(mcmc.whales$generation, events.whales$generation)
 	iset <- iset[round(seq(1, length(iset), length.out=50))]
-	events <- events.whales[events$generation %in% iset, ]
- 	mcmc <-   mcmc.whales[mcmc.whales$generation %in% iset, ]
+	events <- events.whales[events.whales$generation %in% iset, ]
+ 	mcmc <-  mcmc.whales[mcmc.whales$generation %in% iset, ]
  	
 We also need to ensure that we use exactly the same ``segLength`` parameter for these calculations that were used for the BAMM analysis (see :ref:`here<numericalapprox>` for more info on this). Now we compute the likelihood of the final generation::
 
 	BAMMlikelihood(whales, events.whales, gen="last", segLength = 0.02)
 	# which returns:
-		[1] -271.5134
+		[1] -265.8267
 	
 	mcmc$logLik[nrow(mcmc)]
 	# which returns:
@@ -112,7 +112,7 @@ We also need to ensure that we use exactly the same ``segLength`` parameter for 
 		
 So, close -- but are they close enough? Let's do 50 samples::
 
-	ll <- BAMMlikelihood(whales, events2, gen = "all", segLength = 0.02)
+	ll <- BAMMlikelihood(whales, events, gen = "all", segLength = 0.02)
 	plot(mcmc$logLik ~ ll)
 	lines(x=c(-350,-250), y=c(-350, -250), lwd=1, col='red')	
 	
@@ -129,7 +129,7 @@ With this set of 50 samples, we see that the maximum difference between likeliho
 
 	library(diversitree)
 	lfx <- make.bd(whales)
-	constant <- sum(log(2:(ntips - 1)))
+	constant <- sum(log(2:(Ntip(whales) - 1)))
 	parvec1 <- c(0.1, 0.05)
 	names(parvec1) <- c("lambda", "mu")
 	
