@@ -31,14 +31,11 @@ These equations are derived from considering the state space for all possible ev
    
 That is, a lineage alive at some time in the past can go extinct before the present (along with all of its descendants) if one of the following occurs on :math:`\Delta t` : 
  
-* (i) Extinction on :math:`\Delta t` 
-	This event occurs with probability proportional to :math:`\mu`. 
+* Extinction on :math:`\Delta t`: This event occurs with probability proportional to :math:`\mu`. 
 	
-* (ii) No extinction, no speciation 
-	Nothing happens on the focal interval, but the lineage and all of its descendants goes extinct before the present. This event occurs with probability :math:`-(\lambda + \mu)E(t)`.
+* No extinction, no speciation : Nothing happens on the focal interval, but the lineage and all of its descendants goes extinct before the present. This event occurs with probability :math:`-(\lambda + \mu)E(t)`.
 	
-* (ii) Speciation 
-	A speciation event occurs on :math:`\Delta t`, but both descendant lineages (and any additional descendants) go extinct before the present. This event occurs with probability proportional to :math:`\lambda E(t)^2`. 
+* Speciation : A speciation event occurs on :math:`\Delta t`, but both descendant lineages (and any additional descendants) go extinct before the present. This event occurs with probability proportional to :math:`\lambda E(t)^2`. 
  
 These three terms are combined into the differential equation for the change in the extinction probability with respect to time, :math:`dE / dt`. 
 
@@ -168,7 +165,7 @@ Although the diversitree functions do not (at present) allow us to compute the l
 
 While we are at it, this function also allows us to estimate how much slower BAMM would be if it performed calculations in R with no calls to underlying C++ or C code. On my machine, it takes approximately 0.175 seconds to perform a single likelihood calculation (for the whales data) using the ``BAMMlikelihood`` function. For comparison, I can do approximately 10,000 generations of MCMC simulation on the same dataset per second, and the likelihood computation itself is (very conservatively) 20% of the total computation time required to execute a single generation of MCMC sampling (thus, 80% of the time BAMM is running, it is doing something other than computing the likelihood). 
 
-Using these (very rough) numbers, I estimate that BAMM can do 10,000 / 0.2 = 50,000 likelihood calculations per second. Dividing this number by the time to compute the likelihood in R, we get 50,000 / 0.175 :math:`\approx` 280000. So, BAMM's C++ implementation is (very approximately) about 5 orders of magnitude faster than a pure R-based implementation would be for a tree of this size. 
+Using these (very rough) numbers, I estimate that BAMM can do 10,000 / 0.2 = 50,000 likelihood calculations per second. Dividing this number by the time to compute the likelihood in R, we get 50,000 / 0.175 :math:`\approx` 280000. So, the likelihood computation using BAMM's C++ implementation is (very) approximately 5 orders of magnitude faster than a pure R-based implementation would be for a tree of this size.
     
 .. _numericalapprox: 
 
