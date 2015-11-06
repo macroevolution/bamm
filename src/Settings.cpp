@@ -124,7 +124,7 @@ void Settings::initializeGlobalSettings()
 
     // Priors
     addParameter("poissonRatePrior", "0.0", NotRequired);
-    addParameter("expectedNumberOfEvents", "0.0", NotRequired);
+    addParameter("expectedNumberOfShifts", "0.0", NotRequired);
 
     // Output
     addParameter("outName", "", NotRequired);
@@ -588,16 +588,16 @@ void Settings::set(const std::string& name, const std::string& value)
 void Settings::validateSettings(void)
 {
     //std::cout << "Initial P/E\t" << this->get("poissonRatePrior");
-    //std::cout << "\t" << this->get("expectedNumberOfEvents") << std::endl;
+    //std::cout << "\t" << this->get("expectedNumberOfShifts") << std::endl;
     
     double minval = 0.000001;
     double poisson = this->get<double>("poissonRatePrior");
-    double expected = this->get<double>("expectedNumberOfEvents");
+    double expected = this->get<double>("expectedNumberOfShifts");
     
     if (poisson < minval & expected < minval){
         std::cout << "You must specify either:\n";
         std::cout << "\tpoissonRatePrior = <value>, or\n";
-        std::cout << "\texpectedNumberOfEvents = <value>\n";
+        std::cout << "\texpectedNumberOfShifts = <value>\n";
         exit(0);
     }
     
@@ -610,7 +610,7 @@ void Settings::validateSettings(void)
     }
  
     //std::cout << "End P/E\t" << this->get("poissonRatePrior");
-    //std::cout << "\t" << this->get("expectedNumberOfEvents") << std::endl;
+    //std::cout << "\t" << this->get("expectedNumberOfShifts") << std::endl;
     
 
 }
