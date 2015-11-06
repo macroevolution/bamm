@@ -3,10 +3,14 @@
 The BAMM likelihood function
 ==========================================================
 
+Introduction: models for rate shifts
+............................................
+This page discusses a number of important theoretical issues involving BAMM. The objective is both to clarify BAMM's assumptions, and also to point out some outstanding theoretical problems/challenges for future work. These issues are more general than BAMM and (probably) apply to all other software implementations and modeling frameworks that purport to compute the likelihood of a phylogenetic tree with a mapped (= assumed) configuration of **rate shifts** and **non-zero extinction**. Other implementations/approaches that must confront this issue include the `MEDUSA model <http://www.pnas.org/content/106/32/13410.abstract>`_, the 'split' option for `BiSSE, QuaSSE, and related models  <http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2012.00234.x/abstract>`_, the DDD models with different shift regimes on `specific subclades  <http://www.jstor.org/stable/10.1086/667574>`_, and multi-process shift models as currently implemented in `RPANDA <http://www.pnas.org/content/108/39/16327.abstract>`_. 
+
 Is the BAMM likelihood correct?
 .................................    
 
-A recent `post <https://github.com/macroevolution/bamm/issues/137>`_ to our Github repository called attention to one seemingly peculiar feature of the likelihood function in BAMM. The likelihood function is, of course, the core of inference using BAMM. If the likelihood function is incorrect, or if it is based on flawed assumptions, inferences based on the method may be problematic. Note that here we are concerned with whether the theoretical model in BAMM itself is correct, not whether the model itself is implemented correctly. In :ref:`this section below<testlikelihood>`, we describe how users can validate the actual BAMM likelihood itself (e.g., is the program computing what we think it is computing?). But for now, some theory. 
+A recent `post <https://github.com/macroevolution/bamm/issues/137>`_ to our Github repository called attention to one seemingly peculiar feature of the likelihood function in BAMM. The likelihood function is, of course, the core of inference using BAMM. If the likelihood function is incorrect, or if it is based on flawed assumptions, inferences based on the method may be problematic. Note that here we are concerned with whether the theoretical model in BAMM itself is correct, not whether the model itself is implemented correctly. In :ref:`this<testlikelihood>` section, we describe how users can validate the actual BAMM likelihood itself (e.g., is the program computing what we think it is computing?). But for now, some theory. 
 
 The BAMM likelihood is based on a set of differential equations that describe transition probabilities for a stochastic birth-death process. These equations are solved from tips-to-root of a phylogeny along individual branches, and probabilities are combined at nodes; when we've reached the root, we will have computed the likelihood for the full tree. The `original BiSSE paper <http://sysbio.oxfordjournals.org/content/56/5/701.abstract>`_ remains my (DLR) all-time favorite explanation (both graphically and mathematically) for how the likelihood of a phylogeny can be computed under a birth-death process; I strongly recommend it as a prelude to the discussion below.
 
@@ -61,15 +65,95 @@ But we should note again that this leads to a weird condition in the BAMM model,
 
 But I should be clear about my view that **none of this is likely to matter in practice**. And in any event, it's testable. Just simulate data with rate shifts (some of which may lead to extinct clades in their entirety), and see if it has any consequences for inference about the set of processes inferred for the observed part of the tree. We've done this and have found no consequences for inference, but perhaps you'll find something different.
  
+.. _whatprocess:  
+
+What, exactly, is the process modeled by BAMM?
+..................................................... 
+ 
+In this section, we describe the specific process that is being modeled by using the equations defined in the preceding section. We will focus on the simplest possible scenario, where a single lineage in a reconstructed phylogenetic tree is observed to have a single rate shift:
+ 
+.. _shifttype0: 
+.. figure:: figs/lhmodel/branch_history.png
+   :width: 400
+   :align: center 
+  
+In this trivial case, we have a single observed lineage with a mapped diversification history. We are concerned with a lineage in a reconstructed phylogenetic tree that begins at time :math:`t_1` and survives (with no other observed extant descendants) until time :math:`T`. Moreover, the mapped diversification history indicates that a diversification rate shift must have occurred on at least one lineage at time :math:`t_2`, during which diversification parameters for at least one lineages switched from the base rate (:math:`\lambda_1 , \mu_1`) to a new set of rate parameters (:math:`\lambda_2 , \mu_2`). For further reference, I label the segment :math:`t_1` to :math:`t_2` as "A" and segment :math:`t_2` to :math:`T` as "B".
+  
+ 
+There are several evolutionary processes that are, in principle, consistent with the branch history shown above. Here is what we observe:
+
+* A single lineage originated at time :math:`t_1` . We will assume that the observed branch history is bracketed by a speciation event at :math:`t_1`, as if it is a branch in a reconstructed phylogenetic tree. 
+* The lineage survived to the present with only a single extant descendant
+* The diversification parameters of the reconstructed lineage switched from (:math:`\lambda_1 , \mu_1`) to (:math:`\lambda_2 , \mu_2`) at time :math:`t_2` (this is assumed, since we are computing the probability of a branch with a **fixed, mapped** rate shift)
+
+Here are some scenarios that are potentially consistent with the single branch above:
+
+ 
+.. _shifttype1: 
+.. figure:: figs/lhmodel/shifttype_fig.001.png
+   :width: 600
+   :align: center 
+ 
+In the **Type 1** shift scenario, a single lineage alive at time :math:`t_2` is chosen at random to undergo a rate shift. The process then continues, but -- if multiple lineages existed at time :math:`t_2` -- then the process contains a mixture of different types. If there are exactly :math:`N` lineages alive immediately before time :math:`t_2`, then at the time of the rate shift, exactly one lineage will have the new parameters (:math:`\lambda_2 , \mu_2`), and the other :math:`N - 1` lineages will have the parameters of the parent process. 
+
+In the **Type 2** shift scenario, all lineages alive at time :math:`t_2` undergo a simultaneous rate shift, but only a single lineage survives to be observed. In both cases, we require that the lineage that survives to the present include (in its history) the mapped (= assumed) diversification shift. Otherwise, we would be observing a lineage in the present day that had no rate shift. 
+
+We can imagine an additional type of shift-and-survival scenario, **Type 3**, where a single lineage undergoes a rate shift, but the lineage that survives to the present to be observed is not required to belong to the "shift" rate type. In other words, if the process survives to the present, it is not necessary that the surviving lineage be a descendant of the "rate shift" lineage. The **Type 3** scenario is still conditioning on the occurrence of a mapped diversification shift but not on the presence of the shift in the reconstructed tree.
+
+To evaluate the likelihood equations that we have implemented in BAMM, we asked a simple question: does the equation for the extinction probability, :math:`E(t)`, match the probability of lineage extinction for simulated instances of any of the three processes described above? To address this, we simulated lineage histories under each of the three scenarios describe and tabulated the fraction of such simulations that went extinct before the present. We compared these *simulation-derived* extinction probabilities to the exact extinction probabilities computed using the analytical solution to the differential equation for :math:`E(t)` that is implemented in BAMM. R code for these simulations is provided as a downloadable file :download:`here<rcode/BAMM_likelihood_analysis.R>`. 
+
+There are at least two ways that have been used in the literature (and by other implementations at some point in their existence) to compute the likelihood of a branch such as this:
+
+* BAMM passes previously-computed extinction probabilities down the tree, thus conditioning on the existence of mapped (observed) diversification shifts. BAMM initializes the calculation for :math:`E(t_1)` with the already-computed value for the previous segment (B), or :math:`E(t_2)`. Thus, BAMM does not recompute the extinction probability on new branch segments. This calculation was described in Rabosky (2014, PLoS ONE) and was originally (and is currently) implemented this way. We refer to this algorithm for handling extinction as *pass-down*, since values for :math:`E(t)` are computed by passing previously computed values rootwards down the tree.
+
+* An alternative approach is to compute the extinction probability :math:`E(t_1)` by ignoring the extinction probability computed for the process on interval B (:math:`t_2` to :math:`T`). The calculation for the :math:`t_2 - t_1` segment (A) is initialized by applying the parameter set for segment A (:math:`\lambda_1 , \mu_1`) to the time interval B (:math:`t_2 - T`). Thus, for any given branch segment with distinct parameters, this approach recomputes the initial extinction probability for the branch segment (:math:`E(0)`). We refer to this algorithm as *recomputed*.
+
+Standard (non-split) BiSSE always recomputes :math:`E(0)`. This is technically correct for the BiSSE process, because BiSSE is integrating over all possible events that *could have led to an extinct clade* given that a lineage is in some particular character state at a particular point in time. However, this is not appropriate for the process modeled by BAMM (and other methods), because we are assuming the existence of a mapped diversification shift on a particular branch. 
+ 
+We simulated extinction probabilities under each of these 3 scenarios (Type 1, Type 2, and Type 3). We initialized each simulation with a single lineage and with parameters :math:`\lambda_1` and :math:`\mu_1`. Then:
+
+* For **Type 1** simulation: If the process is extant at time :math:`t_2`, a single lineage is chosen at random to shift to the new parameters. The process is said to become extinct if all descendants of the "shift" lineage go extinct before the present.
+* For **Type 2** simulation: If the process is extant at time :math:`t_2`, all lineages still alive at that time undergo a simultaneous shift in rates to the new parameters. The process becomes extinct if all lineages have become extinct before the present.
+* For **Type 3 simulation**: If the process is extant at time :math:`t_2`, a single lineage is chosen at random to shift to the new parameters. The process is said to become extinct only if all lineages become extinct. Thus, all descendants of the original lineage alive at time :math:`t_1` must die out for the process to become extinct.
+
+The results presented below do not depend on the specific distributions from which the rate parameters are drawn. Nor should they: if the *recomputed* and/or *pass-down* (BAMM) implementations are mathematically correct, it will make no difference what parameter values are used: the extinction probabilities will match precisely the simulated expectation.
+
+This figure shows the relationship between the BAMM/pass-down extinction probabilities and the simulated extinction probabilities for the three scenarios (R code for simulations and figures is :download:`here<rcode/BAMM_likelihood_analysis.R>`):
+
+.. _bammEprobs: 
+.. figure:: rcode/x_extinctionprobs_bamm.png
+   :width: 600
+   :align: center 
+
+We see that BAMM extinction probabilities are identical to those simulated under the Type 2 shift scenario. The Type 1 and Type 3 scenarios, in which a single lineage is sampled at random to undergo a rate shift, do not yield identical extinction probabilities to that computed by BAMM. However, the computation with *recomputing* performs substantially worse than BAMM, and the resulting extinction probabilities are largely uncorrelated with the true value:
+
+.. _recomputedEprobs: 
+.. figure:: rcode/x_extinctionprobs_recomputed.png
+   :width: 600
+   :align: center 
+
+This is an important exercise, because it clarifies to us that the assumptions of BAMM are slightly different from what we originally assumed (at the time of BAMM's release, I would have naively assumed that the equations corresponded to a Type I scenario). In any event, these scenarios may effectively be identical in practice. Specifically, for a shift on a single branch, the scenarios we are modeling with BAMM include the following:
+ 
+* S1: No speciation before the rate shift; lineage undergoes shift; one or more descendant lineages survive to the present.
+
+* S2: Speciation on time interval (:math:`t_1, t_2`), and all lineages extant at time :math:`t_2` undergo a rate shift. However, all but one of these lineages originating at this point in time go extinct before the present. 
+
+Here is a figure illustrating possible realizations of these scenarios, for the case where a rate shift is mapped to a single branch and leaves a clade with three extant descendants. 
+
+.. _shiftscenario: 
+.. figure:: figs/lhmodel/shifttype_fig_true.png
+   :width: 450
+   :align: center   
+  
+This brings us to our next challenge: how to combine :math:`E(t)` values at nodes when the descendant lineages have different shift histories (e.g., they are *of different types*). 
+
 Extinction calculations at nodes
 .............................................
 In BiSSE and related models, the extinction probabilities :math:`E(t)` at internal nodes are always identical for a given character state. The occurrence of a speciation event does not change the probability of extinction for a lineage in the i'th character state. That is, if a speciation event happens at time :math:`t`, and if a lineage is in state `i`, the probability of extinction after some infinitesimal interval before the speciation event :math:`E_i(t - \Delta t)` will be very similar to the probability of extinction after the speciation event :math:`E_i(t + \Delta t)`. This is because the :math:`E_i(t)` term integrates over all diversification histories that *could have occurred while yielding an extinct clade* given that the lineage is currently (at time :math:`t`) in state :math:`i`. 
 
 However, BAMM must deal with the scenario where the extinction probabilities at internal nodes differ on the right and left descendant branches, which we will denote by :math:`E_{R}(t)` and :math:`E_{L}(t)`. For a given internal node, it is possible that :math:`E_{R}(t)` and :math:`E_{L}(t)` will not be equal if there is a rate shift on the right, left, or both descendant branches (or any of their descendant lineages). We thus need to condition our :math:`E(t)` calculations on the occurrence of a rate shift. 
 
-This issue is relevant to all models that purport to compute the likelihood of a rate shift on a phylogenetic tree when :math:`\mu > 0`. Widely-used approaches that must confront this issue include the `MEDUSA model <http://www.pnas.org/content/106/32/13410.abstract>`_, the 'split' option for `BiSSE, QuaSSE, and related models  <http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2012.00234.x/abstract>`_, the DDD models with different shift regimes on `specific subclades  <http://www.jstor.org/stable/10.1086/667574>`_, and multi-process shift models as currently implemented in `RPANDA <http://www.pnas.org/content/108/39/16327.abstract>`_. 
-
-We do not know how all of these models handle the scenario where :math:`E_{R}(t)` and :math:`E_{L}(t)` are different (at the time of this writing, there are at least 3 different ways that the implementations listed above deal with this). Our approach in BAMM is the following:
+This issue is relevant to all models that purport to compute the likelihood of a rate shift on a phylogenetic tree when :math:`\mu > 0`. We do not know how all other modeling frameworks handle the scenario where :math:`E_{R}(t)` and :math:`E_{L}(t)` are different (at the time of this writing, there are at least 3 different ways that the implementations listed above deal with this). Our approach in BAMM is the following:
 
 * If the right and left branches are identical in diversification history (no shifts occur anywhere on any downstream branches), :math:`E_{L}(t) = E_{R}(t)` and there is no need to condition the extinction probability on the occurrence of any rate shifts. The initial extinction probability on the parent branch is equal to the value at the end of (either) descendant branch.
 	
@@ -87,6 +171,22 @@ However, if you want to handle these calculations exactly as they were handled w
 
 
 	combineExtinctionAtNodes = "left"
+ 
+
+.. _otherIssues:
+
+Theoretical issues for rate shift models
+.................................................................
+ 
+This section is just to raise some theoretical concerns with multi-type branching processes as applied to phylogenetic trees. In particular, while many researchers are now using or developing these methods, there are a number of issues that could benefit from additional theoretical attention:
+
+* All methods of which we are aware that compute the likelihood of a fixed configuration of rate shifts on phylogenetic trees (with the potential for extinction) assume that diversification shifts **do not happen** on branches that are unobserved (or that go extinct before the present). We have found no evidence that this is a problem for empirical inference, but are there any conditions under which we should be concerned about this?
+
+* How should :math:`E(t)` calculations at nodes be handled? We have found that the current approach used by BAMM performs well, but we acknowledge that theoretical justification for our handling of it is lacking.
+
+* We do not know how to simulate the extinction probability :math:`E(t)` for an entire diversification history as applied to a phylogenetic tree. The simulations described above are straightforward for single branches, but we have been unable to identify a simulation algorithm that can exactly reproduce the extinction probability for an entire process (e.g., a full tree with mapped rate shifts) as computed for any models that purport to compute the likelihood of a phylogenetic tree under under a fixed configuration of diversification rate shifts.
+
+* Other methods described above that assume rate shifts happen at particular nodes are *probably* assuming something similar to the **Type 2** scenario described :ref:`here<whatprocess>`. However, can we identify a set of (numerically or analytically) tractable differential equations that correspond to the **Type 1** process described :ref:`here<shifttype1>`?
  
 
 .. _testlikelihood: 
