@@ -75,7 +75,7 @@ Consider the analysis of whale diversification, which we've included as an examp
    :width: 650
    :align: center
 
-Overall, we have moderately strong evidence for a shift in diversification dynamics somewhere near the origin of the dolphin clade, and the posterior probability that at least one of the shifts illustrated above occurs is greater than 0.91 (conditional, of course, on the prior number of shifts). Although we are have good evidence that a shift in dynamics **has** occurred, we cannot pin down a precise location of the shift. It would be incorrect to assert that the shift occurred on the branch with the highest marginal probability. In reality, we cannot be very confident about the precise location of a shift for this dataset.
+Overall, we have moderately strong evidence for a shift in diversification dynamics somewhere near the origin of the dolphin clade, and the posterior probability that at least one of the shifts illustrated above occurs is greater than 0.91 (conditional, of course, on the prior number of shifts). Although we have good evidence that a shift in dynamics **has** occurred, we cannot pin down a precise location of the shift. It would be incorrect to assert that the shift occurred on the branch with the highest marginal probability. In reality, we cannot be very confident about the precise location of a shift for this dataset.
 
 
 Rate shifts are not independent
@@ -212,7 +212,7 @@ This quantity has an appealing intuitive interpretation. It is a measure of post
 	data(whales, events.whales)
 	edata <- getEventData(whales, events.whales, burnin=0.1)
 	branch_priors <- getBranchShiftPriors(whales, expectedNumberOfShifts = 1)
-	mo <- marginalOddsBranches(edata, branch_priors)
+	mo <- marginalOddsRatioBranches(edata, branch_priors)
 
 The object ``mo`` is now a copy of our phylogenetic tree where the branch lengths have been scaled to equal the corresponding marginal odds ratio. Let's go back to the whale tree and look at the marginal odds associated with a rate shift on the 3 branches with the highest marginal shift probability:
 
