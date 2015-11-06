@@ -55,7 +55,7 @@ There are many possible settings that can be tweaked in BAMM. The next two secti
 Speciation-extinction analyses
 ------------------------------
 
-You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file :download:`template_diversification.txt<template_diversification.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data. Here's an example :download:`phylogenetic tree of whales<examples/whaletree.txt>` that is used elsewhere in this documentation.
+You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file :download:`template_diversification.txt<filesForDownload/template_diversification.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data. Here's an example :download:`phylogenetic tree of whales<filesForDownload/whaletree.txt>` that is used elsewhere in this documentation.
 
 If you open the template file, you'll see that there are extensive comments. For each parameter in the BAMM control file, we've included a brief description on the line following the parameter. For example: ::
 
@@ -127,7 +127,7 @@ Phenotypic evolution
 
 This section is redundant with the preceding section on **speciation-extinction**, with a few differences.
 
-You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file :download:`template_trait.txt<template_trait.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data.
+You must have an ultrametric phylogenetic tree. For optimal performance with the *quick-start* settings, the tree should be calibrated in units of millions of years (e.g, a branch length of 1.0 implies 1.0 million years). As a template, use the example file :download:`template_trait.txt<filesForDownload/template_trait.txt>`. The default values in this file work reasonably well for most trees calibrated on million-year timescales but may not work for your data.
 
 If you open the template file, you'll see that there are extensive comments. For each parameter in the BAMM control file, we've included a brief description on the line following the parameter. For example: ::
 
@@ -143,7 +143,7 @@ This is where you specify the name of your phylogenetic tree. For example, ``tre
 
 	traitfile = %%%%
 
-The trait file should consist of a 2 column text file, with species name followed by a tab, followed by the relevant trait value. Here is an :download:`example file<examples/primates_logmass.txt>` of log-transformed primate body masses, and :download:`here<examples/primatetree.txt>` is the corresponding Newick format tree. You should be able to plug these into the control file and get BAMM to run.
+The trait file should consist of a 2 column text file, with species name followed by a tab, followed by the relevant trait value. Here is an :download:`example file<filesForDownload/primates_logmass.txt>` of log-transformed primate body masses, and :download:`here<filesForDownload/primatetree.txt>` is the corresponding Newick format tree. You should be able to plug these into the control file and get BAMM to run.
 
 The other parameters we will force you to define explicitly have to do with output. This parameter block looks like this in the template::
 
