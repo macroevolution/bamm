@@ -68,14 +68,14 @@ Is this really an issue with real datasets?
 
 We have encountered very few datasets where signal of a shift in rate dynamics along a particular branch is so strong that we can exclude alternative shift configurations with probability > 0.95. 
 
-Consider the analysis of whale diversification, which we've included as an example dataset in BAMMtools. We also use this dataset as an empirical example in the primary description of the BAMM model. The figure below shows reconstructed speciation rates through time during the whale radiation (red = fast, blue = slow) under BAMM. Overall, the model with the highest posterior probability had two rate dynamics, and a model with just a single rate dynamic had a posterior probability approaching zero. The marginal (branch-specific) probabilities of a rate shift occurring on the 3 most likely branches are as follows:
+Consider the analysis of whale diversification, which we've included as an example dataset in BAMMtools. We also use this dataset as an empirical example in the primary description of the BAMM model. The figure below shows reconstructed speciation rates through time during the whale radiation (red = fast, blue = slow) under BAMM. Overall, the best model is one with a single shift (Bayes factor evidence for a model with 1 shift relative to 0 shifts is 17.2 for the example dataset). The marginal (branch-specific) probabilities of a rate shift occurring on the 3 most likely branches are as follows:
  
 .. _whalemarg1:  
-.. figure:: figs/xfig3a.png
+.. figure:: rcode/x_whale_marginals.png
    :width: 650
    :align: center
 
-Overall, we have very strong evidence for a shift in diversification dynamics somewhere near the origin of the dolphin clade, and the probability that at least one of the shifts illustrated above occurs is greater than 0.99. Although we are confident that a shift in dynamics **has** occurred, we cannot pin down a precise location of the shift. It would be incorrect to assert that the shift occurred on the branch with the highest marginal probability; it is almost as likely (p = 0.43) that the shift occurred on one of the ancestral branches immediately preceding the origin of the dolphin clade. 
+Overall, we have moderately strong evidence for a shift in diversification dynamics somewhere near the origin of the dolphin clade, and the posterior probability that at least one of the shifts illustrated above occurs is greater than 0.91 (conditional, of course, on the prior number of shifts). Although we are have good evidence that a shift in dynamics **has** occurred, we cannot pin down a precise location of the shift. It would be incorrect to assert that the shift occurred on the branch with the highest marginal probability. In reality, we cannot be very confident about the precise location of a shift for this dataset.
 
 
 Rate shifts are not independent
@@ -96,10 +96,10 @@ There are many types of information that can be extracted from a BAMM run. Here 
 Shift configurations sampled with BAMM
 --------------------------------------
 
-One of the most important ideas to grasp regarding BAMM is that BAMM simulates a posterior distribution of *shift configurations* on phylogenetic trees. Hence, every sample from a posterior simulated with BAMM may contain a potentially unique configuration of rate shifts. Here are 3 different shift configurations for the primates dataset included in BAMMtools. The fourth tree is a phylorate plot, showing instantaneous (marginal) phenotypic evolutionary rates at a fine-grained set of points along the phylogeny. Note that the shift configurations are different for each sample from the posterior. 
+One of the most important ideas to grasp regarding BAMM is that BAMM simulates a posterior distribution of *shift configurations* on phylogenetic trees. Hence, every sample from a posterior simulated with BAMM may contain a potentially unique configuration of rate shifts. Here are 4 different shift configurations drawn from the posterior for the whales analysis included in BAMMtools. Branches are colored by speciation rate, and the same color map is used for each sample (thus, red means the same thing for each plot). Note that the shift configurations are different for each sample from the posterior. 
 
-.. _primateconfigs:  
-.. figure:: figs/xprimates_shiftconfigs.png
+.. _whaleconfigs:  
+.. figure:: rcode/xx_whale_postshiftsamples.png
    :width: 650
    :align: center
 
@@ -170,10 +170,10 @@ We feel that this is issue is sufficiently important that we have made addressin
 Marginal odds ratios as evidence for rate shift locations
 ---------------------------------------------------------
 
-.. _bayesfactorbranches:
+.. _marginaloddsbranches:
 
-Our solution to the problem above is to compute a *maringal odds ratio* of a shift happening on each branch in our phylogeny. This is a nice solution that accounts for the effects of the prior and branch length on our perceived evidence for a rate shift. We thank 
-`Jeremy Brown <http://www.phyleaux1.lsu.edu>`_ for suggesting this approach to assessing relative support context. The implementation of marginal odds ratios in the BAMM framework is also described in `Shi & Rabosky 2015 <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_, although there (and previously on this website) the technically incorrect term 'branch specific-Bayes Factors' is used.
+Our solution to the problem above is to compute a *marginal odds ratio* of a shift happening on each branch in our phylogeny. This is a nice solution that accounts for the effects of the prior and branch length on our perceived evidence for a rate shift. We thank 
+`Jeremy Brown <http://www.phyleaux1.lsu.edu>`_ for suggesting this approach to assessing relative support context. The implementation of marginal odds ratios in the BAMM framework is also described in `Shi & Rabosky 2015 <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_, although there (and previously on this website) the technically incorrect term 'branch specific-Bayes Factors' is used. We now consider this incorrect because these branch-specific quantities are a summary statistic. We now prefer to refer to these as *branch-specific pseudo-Bayes factors* as they simply summarize the frequency of observing one or more rate shifts on a branch relative to the prior expectation; there is no formal model for a rate shift on an individual branch. 
 
 Here, we will consider a worked example using the whales dataset that is distributed with BAMMtools. The basic idea is to imagine that, in the context of a BAMM analysis, each branch can be described by one of two models: either there is a rate shift on the branch, or there is no rate shift on the branch. Let's compute the marginal shift probabilities on the whale phylogeny::
 
@@ -181,56 +181,47 @@ Here, we will consider a worked example using the whales dataset that is distrib
 	edata <- getEventData(whales, events.whales, burnin=0.1)
 	margprobs <- marginalShiftProbsTree(edata)
 
-We will now look carefully at the 3 branches with the highest marginal shift probabilities in the whale analysis. Here they are, plotted:
+We will now look carefully at the 3 branches with the highest marginal shift probabilities in the whale analysis. Here they are, plotted as before:
 
 .. _bayesfactorbranches1:  
-.. figure:: v2rcode/bayesfactorbranches1.png
-   :width: 380
+.. figure:: rcode/x_whale_marginals.png
+   :width: 500
    :align: center
 
-These are posterior probabilities of shifts on three individual branches (and, in ape node format, these are nodes 16, 140, and 141). But what about the prior probabilities of a rate shift on those branches? BAMMtools has a function to automatically calculate the prior probability of a shift on any given branch (there is a short appendix :ref:`here<appendix1>` that shows how this is done). In BAMMtools, we could just do::
+These are posterior probabilities of shifts on three individual branches (and, in ape node format, these are nodes 132, 140, and 141). But what about the prior probabilities of a rate shift on those branches? BAMMtools has a function to automatically calculate the prior probability of a shift on any given branch (there is a short appendix :ref:`here<appendix1>` that shows how this is done). In BAMMtools, we could just do::
 
 	branch_priors <- getBranchShiftPriors(whales, expectedNumberOfShifts = 1)
 
 The object ``branch_priors`` is now a copy of our phylogenetic tree, but where each branch length is equal to the *prior* probability of a rate shift. Here are the prior probabilities for the 3 branches identified above as having elevated marginal shift probabilities:
  
 .. _bayesfactorbranches2:  
-.. figure:: v2rcode/bayesfactorbranches2.png
-   :width: 380
+.. figure:: rcode/x_whale_priors.png
+   :width: 500
    :align: center
 
-Note that the prior probability of a shift is proportional to the branch length. The longest branch, with a marginal (posterior) probability of 0.06, also has the greatest probability of a shift expected under the prior alone (*prob = 0.025*). But the shortest branch is the one with the lowest overall prior probability. In fact, our prior expectation is that we are 25 times more likely to see a shift on the long branch relative to the short branch. We will now compute branch-specific Bayes factors associated with a *rate shift* relative to *no rate shift*. 
+The prior probability of a shift is proportional to the branch length. Interestingly, the branch with the lowest marginal shift probability (node 141; p = 0.14) is also the branch with the lowest prior probability of a shift (0.002). We will now marginal odds ratios associated with a *rate shift* relative to *no rate shift*. 
 
-Let :math:`P_S` denote the posterior probabilities of either observing a shift on some particular branch, and let :math:`\pi_S` denote the corresponding prior probability of a shift on that branch. The posterior probability of no shift (:math:`P_{NS}` is just :math:`P_{NS} = 1 - P_S`, and the prior probability of no shift (:math:`\pi_{NS}`) can be computed the same way. The Bayes factor evidence for a *rate shift* relative to *no rate shift* is given by
+Let :math:`P_S` denote the posterior probability of observing a shift on some particular branch., and let :math:`\pi_S` denote the corresponding prior probability of a shift on that branch. The marginal odds ratio for a *rate shift* relative to *no rate shift* is given by
 
 .. math::
 
-	MO_{SHIFT} = \frac{\frac{P_S}{\pi_S}}{\frac{P_{NS}}{\pi_{NS}}} = {\frac{P_S}{(1 - P_S)}}{\frac{(1 - \pi_S)}{\pi_S}}	
+	MO_{SHIFT} =  \frac{P_S}{\pi_S}	
 
-This quantity has an appealing intuitive interpretation. It is a measure of the posterior odds of two models (shift versus no shift), normalized by their prior odds ratio. Values of 20 or so imply reasonably strong support for one model over another. One way to think about this is to imagine a scenario where the posterior probability of a rate shift on a branch is 0.95, and the prior probabilities of shift and no shift are equal (:math:`\pi_S = 0.5`). The Bayes factor in favor of a rate shift would just be 0.95 / 0.05, or 19. Because the "null model" (no rate shift) has a posterior probability of 0.05, we can (very loosely) relate this Bayes factor to a traditional p-value in classical hypothesis testing: a Bayes factor of approximately 20 corresponds approximately to a null hypothesis p-value (no shift) of 0.05. BAMMtools enables us to easily compute the Bayes factor evidence for a rate shift on each branch of our phylogeny::
-
-
+This quantity has an appealing intuitive interpretation. It is a measure of posterior odds of a rate shift normalized by the prior expectation.::
+ 
 	data(whales, events.whales)
 	edata <- getEventData(whales, events.whales, burnin=0.1)
 	branch_priors <- getBranchShiftPriors(whales, expectedNumberOfShifts = 1)
 	mo <- marginalOddsBranches(edata, branch_priors)
 
-The object ``mo`` is now a copy of our phylogenetic tree where the branch lengths have been scaled to equal the corresponding marginal odds ratio. Let's go back to the whale tree and look at the Bayes factor evidence for a rate shift on the 3 branches with the highest marginal shift probability:
+The object ``mo`` is now a copy of our phylogenetic tree where the branch lengths have been scaled to equal the corresponding marginal odds ratio. Let's go back to the whale tree and look at the marginal odds associated with a rate shift on the 3 branches with the highest marginal shift probability:
 
 .. _bayesfactorbranches3:  
-.. figure:: v2rcode/bayesfactorbranches3.png
-   :width: 380
+.. figure:: rcode/x_whale_marginalodds.png
+   :width: 500
    :align: center
-
-You can see that the marginal odds ratio provides a clearer interpretation of these shift probabilities. This shows that the branch with the strongest evidence for a rate shift is, by far, the shortest branch overall. Marginal odds ratios of this magnitude (> 800) are very strong evidence in favor of a model with a rate shift on this branch. The marginal shift probabilities for the 2 branches at the top aren't all that different (0.37 and 0.55), but - relative to their prior expectation - there is much stronger evidence for a shift on the short branch. Conversely, our perception of already-weak evidence for a shift on the long branch (marginal probability = 0.06) drops even further, as it now has a Bayes factor of 2.6 (not worth mentioning). In fact, we can redraw our phylogeny, scaling each branch length by the Bayes factor support for a rate shift. We simply plot the object returned by ``marginalOddsBranches`` with ``plot.phylo``:
-
-.. _bayesfactorbranches4:  
-.. figure:: v2rcode/bayesfactorbranches4.png
-   :width: 380
-   :align: center
-
-
-This is the same tree as above, and we have highlighted the same 3 branches. The blue scale bar denotes a length of 100 marginal odds ratio units. **Critically** the marginal odds ratio tells you the relative odds that a shift occurred on a specific branch *given a shift occurred at all*. You **cannot use these to determine the number of shifts in the tree!** Three branches in the whale tree have strong support (high marginal odds ratios) for a shift, but looking at the credible shift set (see :ref:`here<distinctconfigurations1>`) makes clear that in none of the posterior distribution do you see shifts on all three branches. The marginal odds ratios tell you the weight of evidence supporting a shift along a particular branch, not the number of shifts supported by the tree. 
+ 
+**Critically** the marginal odds ratio tells you the relative odds that a shift occurred on a specific branch *given a shift occurred at all*. You **cannot use these to determine the number of shifts in the tree!**  Three branches in the whale tree have strong support (high marginal odds ratios) for a shift, but looking at the credible shift set (see :ref:`here<distinctconfigurations1>`) makes clear that in none of the posterior distribution do you see shifts on all three branches. The marginal odds ratios tell you the weight of evidence supporting a shift along a particular branch after normalizing by the branch length itself (e.g., because longer branches are more likely to have shifts under the prior alone).
 
 All of this is background to appreciating perhaps the most important concept in a Bayesian analysis of diversification: the notions of **distinct shift configurations** and **credible shift sets**. 
 
@@ -265,42 +256,34 @@ If you look carefully, you'll see that there are a few shifts that pop up more f
    
 There are a lot of rate shifts here! Note how most of the terminal branches are associated with at least 1 rate shift in the posterior. This is not unexpected, given that they are generally longer than the internal branches. Regardless, if we took enough samples from the posterior, **we would eventually observe a shift associated with every node**. Most of the shifts illustrated above are meaningless: they aren't supported by the data and exist only because we have a non-zero prior probability of a rate shift on a particular branch. Hence, they have low marginal probabilities and perhaps only occur once in our dataset. 
 
-To enumerate the topologically distinct shift configurations in our dataset, it makes little sense to focus on rate shifts that are not supported by the data. Our solution is to divide rate shifts into **core shifts** and **non-core** shifts. **Core shifts** are those that contribute appreciably to your ability to model the data. **Non-core shifts** are simply ephemeral shifts that don't really contribute anything: they are simply what you expect under the prior distribution for rate shifts across the tree. To identify **core** and **non-core** shifts in BAMMtools 2.0+, we used an explicit Bayes factor criterion as described :ref:`here<bayesfactorbranches>`. Specifically, we compute the Bayes factor associated with a rate shift for every branch in the phylogeny. We then exclude all nodes that are unimportant using a Bayes factor criterion. 
+To enumerate the topologically distinct shift configurations in our dataset, it makes little sense to focus on rate shifts that are not supported by the data. Our solution is to divide rate shifts into **core shifts** and **non-core** shifts. **Core shifts** are those that contribute appreciably to your ability to model the data. **Non-core shifts** are simply ephemeral shifts that don't really contribute anything: they are simply what you expect under the prior distribution for rate shifts across the tree. To identify **core** and **non-core** shifts in BAMMtools 2.0+, we used marginal odds ratios on branches as described :ref:`here<marginaloddsbranches>`. Specifically, we compute the marginal odds ratio associated with a rate shift for every branch in the phylogeny. We then exclude all nodes that are unimportant using a pre-determined threshold value for this.
 
-**Nodes with Bayes factors less than or equal to 1 have marginal shift probabilities equal to or less than you would expect under the prior alone.** In general, Bayes factors less than 5 imply such weak evidence for a rate shift that they wouldn't be worth mentioning.  Here, we'll apply a Bayes factor criterion of 3 to the whale phylogeny, thus including only those rate shift nodes supported by Bayes factors of 3 or greater:
-
-.. _distinctshiftconfigurations3:  
-.. figure:: v2rcode/distinctshiftconfigs3.png
-   :width: 500
-   :align: center
-
-We can now enumerate the set of topologically distinct shift configurations that are distinguished by the presence or absence of rate shifts at one or more of the nodes shown in the preceding figure. We will now use the ``plot.credibleshiftset`` function from BAMMtools to summarize the credible set of macroevolutionary rate configurations using this Bayes factor criterion. Here's the R code to do this::
+**Nodes with marginal odds ratios less than or equal to 1 have marginal shift probabilities equal to or less than you would expect under the prior alone.** In general, marginal odds ratios less than 5 are fairly weak, and we recommend excluding them to focus on branches with marginal probabilities that are substantially elevated relative to the prior.  Here, we'll apply a marginal odds ratio criterion of 5 to the whale phylogeny, thus including only those rate shift nodes supported by marginal odds ratios greater than or equal to 5. We can enumerate the set of topologically distinct shift configurations that are distinguished by the presence or absence of rate shifts at one or more of the nodes with marginal odds ratios greater than 5. We will now use the ``plot.credibleshiftset`` function from BAMMtools to summarize the credible set of macroevolutionary rate configurations using this marginal odds ratio criterion. Here's the R code to do this::
 
 	data(whales, events.whales)
 	edata <- getEventData(whales, events.whales, burnin=0.1)
-	css <- credibleShiftSet(edata, expectedNumberOfShifts=1, threshold=3) 
+	css <- credibleShiftSet(edata, expectedNumberOfShifts=1, threshold=5) 
 	plot(css)
 
 And here is the 95% credible set of macroevolutionary shift configurations:
 
 .. _distinctshiftconfigurations4:  
-.. figure:: v2rcode/distinctshiftconfigs4.png
-   :width: 500
+.. figure:: rcode/x_whale_credibleshiftset.png
+   :width: 700
    :align: center
 
-This figure contains a wealth of important information. It says that 54% of the samples in your posterior can be assigned to a single shift configuration: specifically, one where a shift at one of the nodes leading to the dolphins underwent a major increase in speciation rate. And 36% of the posterior distribution has a shift on the branch immediately ancestral to that one. To be clear, these are the **same two branches** we identified :ref:`earlier<bayesfactorbranches3>` as having major evidence for a rate shift (Bayes factors of 69 and 819; ape format nodes 140 and 141). Importantly, this also shows us that fully 2.3% of the samples in the posterior had zero core shifts. Together, these four shift configurations account for 96.1% of the posterior distribution. 
-
- 
+This figure contains a wealth of important information. It says that 46% of the samples in your posterior can be assigned to a single shift configuration: specifically, one where a shift at one of the nodes leading to the dolphins underwent a major increase in speciation rate. 29% of the posterior distribution has a shift on the branch immediately ancestral to that one, and 14% of the posterior has a shift on one of the descendant branches. To be clear, these are the **same two branches** we identified :ref:`earlier<bayesfactorbranches3>` as having major evidence for a rate shift. Importantly, this also shows us that fully 9.3% of the samples in the posterior had zero core shifts. Together, these four shift configurations account for 96.1% of the posterior distribution. 
+  
 Overall *best* shift configuration
 ----------------------------------
 
-Marginal shift probabilities and Bayes factors associated with particular shifts don't tell you much about the most likely sets of shifts that generated your dataset, and it is generally not possible to show all shift configurations sampled during simulation of the posterior. One possibility is to show the maximum *a posteriori* probability (MAP) shift configuration. This is the distinct shift configuration with the highest posterior probability - e.g., the one that was sampled most often. 
+Marginal shift probabilities and marginal odds ratios associated with particular branches don't tell you much about the most likely sets of shifts that generated your dataset, and it is generally not possible to show all shift configurations sampled during simulation of the posterior. One possibility is to show the maximum *a posteriori* probability (MAP) shift configuration. This is the distinct shift configuration with the highest posterior probability - e.g., the one that was sampled most often. 
  
 In BAMMtools, it is straightforward to estimate (and plot) this. Considering the whales dataset::
 
 	data(whales, events.whales)
 	ed <- getEventData(whales, events.whales, burnin=0.1)
-	best <- getBestShiftConfiguration(ed, expectedNumberOfShifts=1, threshold=3)
+	best <- getBestShiftConfiguration(ed, expectedNumberOfShifts=1, threshold=5)
 	plot.bammdata(best, lwd=1.25)
 	addBAMMshifts(best, cex=2)
 
@@ -309,9 +292,9 @@ In general, if you show just a single shift configuration estimated with BAMM fo
 How *not* to interpret node-specific shift evidence
 --------------------------------------------------------
 
-Thus far, we have discussed two types of evidence that can be evaluated in favor of a rate shift at a particular node: marginal shift probabilities, and Bayes factors. We argued that Bayes factors were better than marginal shift probabilities because they explicitly account for the prior expectation on the number of shift events per branch. 
+Thus far, we have discussed two types of evidence that can be evaluated in favor of a rate shift at a particular node: marginal shift probabilities, and marginal odds ratios. We argued that marginal odds ratios were better than marginal shift probabilities because they explicitly account for the prior expectation on the number of shift events per branch. 
 
-Regardless of which approach you use, bear in mind that it is incorrect to assume that you need "significant" (p > 0.95) marginal shift probabilities (or substantial branch-specific Bayes factor support) to demonstrate significant rate heterogeneity in your dataset. The evidence for rate heterogeneity comes from considering the posterior probabilities on the number of shifts, or - even better - the Bayes factor evidence in favor of model with *k* shifts (:math:`M_k`) relative to a model with 0 shifts (:math:`M_0`).
+Regardless of which approach you use, bear in mind that it is incorrect to assume that you need "significant" (p > 0.95) marginal shift probabilities to demonstrate significant rate heterogeneity in your dataset. The evidence for rate heterogeneity comes from considering the posterior probabilities on the number of shifts, or - even better - the Bayes factor evidence in favor of model with *k* shifts (:math:`M_k`) relative to a model with 0 shifts (:math:`M_0`).
 
 In the toy example :ref:`above<toyshifts>`, we had evidence for rate heterogeneity in the dataset (with posterior probability 1.0), yet the marginal shift probabilities (0.49, 0.51) are not "significant".  This is a most important point: you can have massive evidence for rate heterogeneity in your dataset, but your marginal shift probabilities will be a function of the frequency distribution of **distinct alternative shift configurations**.
 
@@ -320,7 +303,7 @@ In the toy example :ref:`above<toyshifts>`, we had evidence for rate heterogenei
 Macroevolutionary cohort analysis
 ---------------------------------
 
-In order to avoid some of the challenges associated with visualizing complex rate shift dynamics on large trees, we developed a solution that condenses the rate regime dynamics into a single graphic: the **cohort analysis**. The cohort matrix depicts the pairwise probability that any two lineages share the same macroevolutionary rate dynamics. The cohort matrix method is fully explained in this (`Systematic Biology article <http://sysbio.oxfordjournals.org/content/63/4/610>`_).
+In order to avoid some of the challenges associated with visualizing complex rate shift dynamics on large trees, we developed a solution that condenses the rate regime dynamics into a single graphic: the **cohort analysis**. The cohort matrix depicts the pairwise probability that any two lineages share the same macroevolutionary rate dynamics. The cohort matrix method is fully explained in this `Systematic Biology article <http://sysbio.oxfordjournals.org/content/63/4/610>`_.
 
 For each posterior sample from a BAMM analysis, a value of 1 is assigned to a pair of lineages that belong to the same rate regime, and a value of 0 is assigned if they do not. These pairwise values are then averaged across the full set of sampled shift configurations from the posterior distribution.
 

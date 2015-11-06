@@ -791,7 +791,7 @@ double SpExModel::computeSpExProbBranch(Node* node)
     
     if (parent == _tree->getRoot() & _conditionOnSurvival == true){
  
-        logLikelihood -= std::log(1.0 - E0);
+         logLikelihood -= std::log(1.0 - E0);
     }
  
     
