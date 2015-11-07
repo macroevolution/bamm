@@ -175,8 +175,6 @@ However, if you want to handle these calculations exactly as they were handled w
 	combineExtinctionAtNodes = "left"
  
 
-.. _otherIssues:
-
 Why extinction handling at nodes matters
 ------------------------------------------------- 
 
@@ -222,6 +220,7 @@ We will assume that rate shifts happened on the branch leading to lineage A and 
 
 The results above suggest that arbitrary inheritance of :math:`E(t)` values through nodes, or recomputing :math:`E(t)` values at the start of internal branches, may not yield valid likelihoods. 
 
+.. _otherIssues: 
  
 Theoretical issues for rate shift models
 .................................................................
