@@ -5,7 +5,7 @@ The BAMM likelihood function
 
 Introduction: models for rate shifts
 ............................................
-This page discusses a number of important theoretical issues involving BAMM. The objective is both to clarify BAMM's assumptions, and also to point out some outstanding theoretical problems/challenges for future work. These issues are more general than BAMM and (probably) apply to all other software implementations and modeling frameworks that purport to compute the likelihood of a phylogenetic tree with a mapped (= assumed) configuration of **rate shifts** and **non-zero extinction**. Other implementations/approaches that must confront this issue include the `MEDUSA model <http://www.pnas.org/content/106/32/13410.abstract>`_, the 'split' option for `BiSSE, QuaSSE, and related models  <http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2012.00234.x/abstract>`_, the DDD models with different shift regimes on `specific subclades  <http://www.jstor.org/stable/10.1086/667574>`_, and multi-process shift models as currently implemented in `RPANDA <http://www.pnas.org/content/108/39/16327.abstract>`_. 
+This page discusses a number of important theoretical issues involving BAMM. The objective is both to clarify BAMM's assumptions, and also to point out some outstanding theoretical problems/challenges for future work. These issues are more general than BAMM and (probably) apply to all other software implementations and modeling frameworks that purport to compute the likelihood of a phylogenetic tree with a mapped (= assumed) configuration of **rate shifts** under the condition of **non-zero extinction rates**. Other implementations/approaches that must confront this issue include the `MEDUSA model <http://www.pnas.org/content/106/32/13410.abstract>`_, the 'split' option for `BiSSE, QuaSSE, and related models  <http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2012.00234.x/abstract>`_, the DDD models with different shift regimes on `specific subclades  <http://www.jstor.org/stable/10.1086/667574>`_, and multi-process shift models as currently implemented in `RPANDA <http://www.pnas.org/content/108/39/16327.abstract>`_. 
 
 Is the BAMM likelihood correct?
 .................................    
@@ -145,7 +145,9 @@ Here is a figure illustrating possible realizations of these scenarios, for the 
    :width: 450
    :align: center   
   
-This brings us to our next challenge: how to combine :math:`E(t)` values at nodes when the descendant lineages have different shift histories (e.g., they are *of different types*). 
+If extinction probabilities are *recomputed*, the calculations are failing to condition on the existence of a known ( = assumed) rate shift at a particular point in time. In the toy example above, we are computing the likelihood of a rate shift assuming a shift happened at time :math:`t_2`. If we recompute :math:`E(t)` after we move rootwards past this event, then extinction probabilities will be incorrect. A lineage on the interval time :math:`t_1 - t_2` has a probability of extinction that must be conditioned on the fact that, if it survives to time :math:`t_2`, a rate shift will occur that may make it more or less likely to go extinct.  
+  
+This brings us to our next challenge: how to combine :math:`E(t)` values at nodes when the descendant lineages have different shift histories (e.g., they are *of different types*)? This problem cannot be decoupled from the issue of recomputing.
 
 Extinction calculations at nodes
 .............................................
@@ -175,6 +177,32 @@ However, if you want to handle these calculations exactly as they were handled w
 
 .. _otherIssues:
 
+Why extinction handling at nodes matters
+------------------------------------------------- 
+
+Here is a simple example to illustrate how extinction handling at nodes can exert a major influence on tree likelihoods. Consider the following 4-taxon phylogenetic tree, with two mapped rate shifts: 
+
+.. _fourtaxon1: 
+.. figure:: figs/lhmodel/x_tree_extinction.png
+   :width: 500
+   :align: center   
+
+Here, we have separate rate shifts (black circles) on lineages leading to taxon A and taxon C. The backbone of the tree, plus lineages B and D, are governed by the *parent process*, which begins at the root. There are thus 3 distinct shift regimes on this tree: the lineage A regime, lineage C regime, and the root regime. 
+
+Consider the following parameterization for these regimes:
+
+* Root regime: Very high extinction and very high speciation
+* Lineage A regime: no extinction
+* Lineage C regime: no extinction
+
+Suppose we handle the :math:`E(t)` values at nodes by always favoring the root regime value. Thus, our calculation at the rootward side of node AB would begin with the value obtained at the rootward end of the branch segement leading to lineage B, and our calculation on the rootward side of CD would begin with the value from lineage D (as both B and D are governed entirely by the root regime). Given the parameterization defined above, the true probability of extinction of the process can be low: a lineage that begins at the root only has to survive a relatively short period of time until a rate shift is assumed to happen. **Because the shift parameters (lineage A and C regimes) have zero extinction, the process is assured to survive to the present if it survives to the time of the shift.** 
+
+However, by not conditioning on these shifts, our calculated extinction probabilities for the tree can be arbitrarily close to 1. Under the parameterization above, we will compute very high extinction probabilities for the tree as a whole, because the :math:`E(t)` values at the rootwards end of each basal branch will approach 1.0. This is is because those values will have been computed as the probability that a lineage in the root state goes extinct before the present, which could be very high, since we ignore the shifts occurring on lineages A and C. In fact, simply by making those basal branches arbitrarily small and/or increasing speciation and extinction rates on the root regime, we can make the (computed) tree extinction probability close to 1 despite the fact that multiple shifts have occurred that would make true extinction of such a process unlikely.
+
+To see how this would affect our likelihoods, consider the effects of conditioning such a process on survival to the present: you divide the likelihood by the probability of survival of the left and right descendant branches, which -- as the computed :math:`E(t)` approaches 1 -- can lead to tree likelihoods that approach infinity. **But this appears to be a result of not conditioning our calculations on the occurrence of downstream rate shifts that render survival of the process much more likely.** We've found that this issue can lead to severely biased likelihoods, and the effect on the likelihood is not limited to conditioning on tree survival. 
+ 
+This issue is relevant to the issue of recomputing :math:`E(t)` values raised in the preceding section. If the initial :math:`E(t)` values for every branch are recomputed using the current parameter values, we run into the same problem illustrated here: extinction probabilities :math:`E(t)` will not be conditioned on the assumed shift configuration.
+ 
 Theoretical issues for rate shift models
 .................................................................
  
