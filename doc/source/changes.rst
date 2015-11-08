@@ -7,15 +7,46 @@ BAMM Changes
 
 2.5.0
 -----
-*October 10, 2015*
+*Nov 4, 2015*
 
- * Fixed bug in acceptance probability for MCMC moves that update the Poisson rate parameter. This is the most serious bug we have encountered in BAMM and **would have magnified the effects of the prior on the posterior distribution of the number of shifts**. If you previously used the default value of ``poissonRatePrior = 1.0``, you will probably notice little effect on inference, but *it may have had an impact in some cases*. We are grateful to Cécile Ané and Bret Larget for helping us solve this. We fixed this in June 2015 but are flagging it here.  
+New features and enhancements
+.............................
+
+* The prior distribution on the number of shifts is now specified with parameter ``expectedNumberOfShifts``. This is simply the inverse of the previously-used parameter ``poissonRatePrior``. BAMM control files will accept either parameter name but we find that ``expectedNumberOfShifts`` is more intuitive.
+
+* No more prior simulation in BAMM. The relevant BAMMtools functions now accept an argument for ``expectedNumberOfShifts`` and compute the full prior distribution from that information.
+
+* We made a major change to the algorithm for handling extinction probabilities :math:`E(t)` at internal nodes when the two branches descended from a node differ in their shift histories. We don't consider the previous approach a bug *per se*, but have convinced ourselves that the new way has a better theoretical justification. We explain why we made this change :ref:`here <extinctionNodes>`. 
+
+
+BAMMtools enhancements
+............................. 
+
+* We have added a new function to BAMMtools, ``BAMMlikelihood``, which is an R-based tool for replicating the calculations implemented in BAMM. This is described :ref:`here <testlikelihood>`
+
+* Changes to BAMMtools rate plotting functions, including improved histograms, color break options, and more.
+
+* No more "branch specific Bayes factors" for distinguishing between core and non-core shifts. We have replaced this terminology with a related concept - the *marginal odds ratio*. Note that neither "branch specific Bayes factors" nor "marginal odds ratios" can be used for formal model selection; we have explained this in detail on our conceptualpage about the interpretation of `rate shifts <rateshifts.html>`_ . 
+
+Bug fixes
+............................. 
+
+* the option ``validateEventConfiguration`` is an internal debugging option that should have had a default value of 0, but was instead set to 1 (this led to a bug in the Hastings ratio that would have affected a very small fraction of MCMC moves).
  
- * There was a bug in the computation of extinction probabilities that would have affected extinction probability calculations for a relatively small fraction of nodes in the tree. This **may** have affected some results, however - please check. 
+* Fixed bug introduced during programming of fossil BAMM that sometimes recomputed extinction probabilities :math:`E(t)`. An explanation for why extinction probabilities must account for downstream shift histories is found :ref:`here <whatprocess>`. (this bug was not incorporated into the compiled version of BAMM that was distributed on the website but could have affected some analyses where users compiled BAMM code themselves).   
+
+
+2.4.0
+-----
+
+*June 13, 2015*
+
+* Caught a bug introduced during programming of fossil BAMM that allowed numerical overflow issues to occur to the extinction probability when E(t) approached 1.0 (this bug was not incorporated into the compiled version of BAMM that was distributed on the website but could have affected some analyses where users compiled BAMM code themselves). 
+
+*May 26, 2015*
+
+* Fixed bug in acceptance probability for MCMC moves that update the Poisson rate parameter. This is the most serious bug we have encountered in BAMM and **would have magnified the effects of the prior on the posterior distribution of the number of shifts**. If you previously used the default value of ``poissonRatePrior = 1.0``, you will probably notice little effect on inference, but *it may have had an impact in some cases*. We are grateful to Cécile Ané and Bret Larget for helping us solve this.  
  
- * the option ``validateEventConfiguration`` is an internal debugging option that should have had a default value of 0, but was instead set to 1 (this led to a bug in the Hastings ratio that would have affected a very small fraction of MCMC moves).   
-
-
 
 2.2.0
 -----

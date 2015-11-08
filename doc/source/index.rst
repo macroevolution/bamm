@@ -30,7 +30,7 @@ the R package `BAMMtools <http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.1
 Recommended reading
 ===========================
 
-* **Is the BAMM likelihood theoretically valid?** Find out `here <likelihoodmodel.html>`_
+* **What are the assumptions of the BAMM likelihood?** Find out `here <likelihoodmodel.html>`_
 
 * **Is the BAMM likelihood computed correctly**, given the assumptions of the model? Learn more about testing it :ref:`here <testlikelihood>`
 

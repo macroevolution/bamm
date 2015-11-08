@@ -149,6 +149,8 @@ If extinction probabilities are *recomputed*, the calculations are failing to co
   
 This brings us to our next challenge: how to combine :math:`E(t)` values at nodes when the descendant lineages have different shift histories (e.g., they are *of different types*)? This problem cannot be decoupled from the issue of recomputing.
 
+.. _extinctionNodes: 
+
 Extinction calculations at nodes
 .............................................
 In BiSSE and related models, the extinction probabilities :math:`E(t)` at internal nodes are always identical for a given character state. The occurrence of a speciation event does not change the probability of extinction for a lineage in the i'th character state. That is, if a speciation event happens at time :math:`t`, and if a lineage is in state `i`, the probability of extinction after some infinitesimal interval before the speciation event :math:`E_i(t - \Delta t)` will be very similar to the probability of extinction after the speciation event :math:`E_i(t + \Delta t)`. This is because the :math:`E_i(t)` term integrates over all diversification histories that *could have occurred while yielding an extinct clade* given that the lineage is currently (at time :math:`t`) in state :math:`i`. 
