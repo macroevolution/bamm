@@ -8,13 +8,13 @@ library(TeachingDemos)
 ################################
 
 #--------------------------------------------------
-# bammgraphgallery1.png: polar phyloplot of whales
+# whales_polar.png: polar phyloplot of whales
 
 library(BAMMtools)
 data(whales, events.whales)
 edata_whales <- getEventData(whales, events.whales, burnin=0.1)
 
-png(height=500, width=500, file = "bammgraphgallery1.png");
+png(height=500, width=500, file = "whales_polar.png");
 par(mar=c(1,1,1,1))
 plot.bammdata(edata_whales, lwd=3, method="polar", pal="temperature")
 dev.off();
@@ -47,14 +47,14 @@ dev.off()
 
 
 # -------------------------------------------------------------
-# bammgraphgallery3.png: separate rate configurations
+# whales_sepRateShiftConfigs.png: separate rate configurations
 
 data(whales, events.whales)
 edata_whales <- getEventData(whales, events.whales, burnin=0.1)
 
 ixx <- rep(c(10, 30, 40), 2);
 
-png(height=700, width=1000, file = "bammgraphgallery3.png")
+png(height=700, width=1000, file = "whales_sepRateShiftConfigs.png")
 plot.new()
 par(mfrow=c(2,3));
  
@@ -74,20 +74,20 @@ dev.off();
 
 
 # -------------------------------------------------------------
-# bammgraphgallery4.png: distinct shift configurations
+# whales_distinctShiftConfigs.png: distinct shift configurations
 
 pset <- getBranchShiftPriors(whales, expectedNumberOfShifts = 1)
 cset <- credibleShiftSet(edata_whales, expectedNumberOfShifts = 1, threshold=3)
-png(height=700, width=700, file = "bammgraphgallery4.png")
+png(height=700, width=700, file = "whales_distinctShiftConfigs.png")
 plot.credibleshiftset(cset, lwd=2.5)
 dev.off()
 
 
 
 # -------------------------------------------------------------
-# bammgraphgallery5.png: cohort matrix for whales
+# whales_cohort.png: cohort matrix for whales
 
-png(height=1000, width=1000, file = "bammgraphgallery5.png")
+png(height=1000, width=1000, file = "whales_cohort.png")
 
 data(whales, events.whales)
 edata_whales <- getEventData(whales, events.whales, burnin=0.1)
@@ -99,9 +99,9 @@ dev.off()
 
 
 # ------------------------------------------------------
-# bammgraphgallery6.png: trait credible shift sets
+# primates_credShiftSet.png: trait credible shift sets
 
-png(height=700, width=700, file = "bammgraphgallery6.png")
+png(height=700, width=700, file = "primates_credShiftSet.png")
 
 data(primates, events.primates)
 ed_prim <- getEventData(primates, events.primates, burnin=0.1, type = "trait", nsamples=1000)
@@ -113,12 +113,12 @@ dev.off()
 
 
 # --------------------------------------------------------------------
-# bammgraphgallery7.png: separated rate through time plots for whales
+# whales_RatesThroughTime.png: separated rate through time plots for whales
 
 data(whales, events.whales)
 edata_whales <- getEventData(whales, events.whales, burnin=0.1)
 
-png(width=1000, height=350, file = "bammgraphgallery7.png")
+png(width=1000, height=350, file = "whales_RatesThroughTime.png")
 
 par(mfrow=c(1,3))
 st <- max(branching.times(whales))
@@ -134,9 +134,9 @@ dev.off()
 
 
 # --------------------------------------------------------------------------------
-# bammgraphgallery8.png: separated rate through time plots for whales, grayscale
+# whales_RatesThroughTimeBW.png: separated rate through time plots for whales, grayscale
 
-png(width=1000, height=350, file = "bammgraphgallery8.png")
+png(width=1000, height=350, file = "whales_RatesThroughTimeBW.png")
  
 par(mfrow=c(1,3))
 st <- max(branching.times(whales))

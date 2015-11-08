@@ -58,8 +58,7 @@ General
 
 ``simulatePriorShifts``
     If ``1``, simulate prior distribution of the number of shift events,
-    given the hyperprior on the Poisson rate parameter.
-    This is necessary to compute the Bayes factor.
+    given the hyperprior on the Poisson rate parameter. As the prior probabilities of shifts can now be calculated analytically (as described :ref:`here<analyticalprior>`), this option is no longer necessary and is set to ``0`` by default. 
 
 ``loadEventData``
     If ``1``, load a previous event state (event locations and parameter
@@ -93,7 +92,7 @@ General
 
 ``validateEventConfiguration``
     If ``1``, rejects proposals that cause a branch and both of its direct
-    descendants to have at least one event. Such event configuration may cause
+    descendants to have at least one event. Such an event configuration may cause
     the parameters of the parent event to change to unrealistic values.
     If ``0``, no such proposals are immediately rejected.
     The default value is ``0``.
@@ -102,12 +101,12 @@ General
 Priors
 ......
 
-``poissonRatePrior``
-    The rate parameter of the exponential prior on the rate parameter
-    of the Poisson process. Smaller values favor greater numbers of distinct
-    evolutionary regimes on the tree. Suggested values:
-    ``poissonRatePrior = 1.0`` for smaller datasets (< 500 tips) or
-    ``poissonRatePrior = 0.1`` or even ``0.2`` for large (5000+ tips).
+``expectedNumberOfShifts``
+    BAMM will use this value to calculate the prior probability distribution on the number of rate shifts. In previous versions of BAMM this was specified via the ``poissonRatePrior``, which is simply :math:`\frac{1}{expectedNumberOfShifts}`. Suggested values:
+
+    ``expectedNumberOfShifts = 1.0`` for smaller datasets (< 500 tips) or
+
+    ``expectedNumberOfShifts = 10`` or even ``50`` for large (5000+ tips).
 
 MCMC Simulation
 ...............

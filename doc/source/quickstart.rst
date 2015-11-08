@@ -35,7 +35,7 @@ On Windows machines, you would run::
 
     bamm -c myControlFile.txt
 
-You may `download <http://bamm-project.org/download.html>`_ example control files (or if you have the development repository, it is located in the directory ``examples/`` ). Use these as a template for setting up your own analyses. The control file is simply a text file with a set of parameter names, followed by the "equals" sign (=), followed by the parameter value. Anything on a line of the control file to the right of a pound sign (#) will be ignored by the program (e.g., it is considered a *comment*). Part of your control file might look like this::
+You may download example control files for :download:`diversification<filesForDownload/template_diversification.txt>`  or :download:`trait<filesForDownload/template_trait.txt>` analyses. Use these as a template for setting up your own analyses. The control file is simply a text file with a set of parameter names, followed by the "equals" sign (=), followed by the parameter value. Anything on a line of the control file to the right of a pound sign (#) will be ignored by the program (e.g., it is considered a *comment*). Part of your control file might look like this::
 
 	# This line is a comment. It will not be read by BAMM
 	modeltype = speciationextinction        
@@ -46,7 +46,7 @@ You may `download <http://bamm-project.org/download.html>`_ example control file
 	useGlobalSamplingProbability = 1        
 	globalSamplingFraction = 0.81            
 	seed = 12345
-	poissonRatePrior = 1.0 # Another comment here
+	expectedNumberOfShifts = 1.0 # Another comment here
 
 There are many possible settings that can be tweaked in BAMM. The next two sections give you a simple recipe for running the program on your data, depending on whether you are analyzing speciation-extinction rates or phenotypic evolutionary rates. **There is no guarantee that these settings will work for your dataset**.
 
@@ -79,7 +79,7 @@ This is where you specify the name of your phylogenetic tree. For example, ``tre
 	
 	printFreq = %%%%
 
-    acceptanceResetFreq = %%%%
+	acceptanceResetFreq = %%%%
 
 ``numberOfGenerations`` is the number of simulation steps you want in your MCMC analysis. ``printFreq`` is the frequency that BAMM will write some simple information to the screen so you can track the progress of the run. ``mcmcWriteFreq`` and ``eventDataWriteFreq`` tells BAMM how often to write the two basic types of output to file.
 
@@ -103,14 +103,14 @@ You'll want to increase all of these once you are sure the program is correctly 
 
 One other block of parameters can be critical to BAMM performance: the priors that you place on your evolutionary rate parameters. The prior block in your control file looks similar to this (ignoring most comments in the template file)::
 
-	poissonRatePrior = 1.0
+	expectedNumberOfShifts = 1.0
 	lambdaInitPrior = 1.0
 	lambdaShiftPrior = 0.05
 	muInitPrior = 1.0
 
 These priors may work for your dataset. They may also be extremely inadequate. To this end, we have included a function in the BAMMtools package to help you choose appropriate prior values. The function, ``setBAMMpriors``, will automatically generate a prior block as a text file that you can copy and paste over the prior block in the template file. To do this, you need to install BAMMtools (see `here <postprocess.html>`_), and you need your phylogenetic tree. Assuming you have a phylogenetic tree file ``my_tree.tre``, you can generate the prior block with::
 	
-	> library(BAMMtools) # Assuming you have installed BAMMtools !
+	> library(BAMMtools) # Assuming you have installed BAMMtools!
 	> setBAMMpriors("my_tree.tre")
 	
 and the relevant output file will be generated in your working directory. See the help file (``?setBAMMpriors``) for more information. To be clear: this does not optimize priors to your dataset. It simply chooses a set of priors that we have found to be reasonable for most datasets and scales the distributions based on the age (root depth) of your tree. A more complete explanation :ref:`can be found here<ratepriors>`.
@@ -176,14 +176,14 @@ You'll want to increase most of these once you are sure the program is correctly
 
 As for the speciation-extinction models, the priors you place on phenotypic evolutionary parameters can have a substantial impact on BAMM performance. The prior block in your (trait) template control file looks similar to this::
 
-	poissonRatePrior = 1
+	expectedNumberOfShifts = 1
 	betaInitPrior = 1
 	betaShiftPrior = 0.05
 	useObservedMinMaxAsTraitPriors = 1
 
 These priors may work for your dataset, but they may also be very poor choices: it really depends on the scale of your tree (e.g., depth of the tree) and the variances in your trait values. The function ``setBAMMpriors`` (BAMMtools) will automatically generate a prior block as a text file that you can copy and paste over the prior block in the template file. This new set of priors is matched to the "scale" of your data. To do this, you need to install BAMMtools (see `here <postprocess.html>`_), and you need your phylogenetic tree. Assuming you have a phylogenetic tree file ``my_tree.tre`` and a trait dataset ``my_traitfile.txt``, you can generate the prior block with::
 	
-	> library(BAMMtools) # Assuming you have installed BAMMtools !
+	> library(BAMMtools) # Assuming you have installed BAMMtools!
 	> setBAMMpriors(phy = "my_tree.tre", traits = "my_traitfile.txt")
 	
 and the relevant output file will be generated in your working directory. See the help file (``?setBAMMpriors``) for more information. To be clear: this does not optimize priors to your dataset. It simply chooses a set of priors that we have found to be reasonable for most datasets and scales the distributions based on the age (root depth) of your tree and the variance of your trait data. A more complete explanation :ref:`can be found here<ratepriors>`.
@@ -204,7 +204,7 @@ will create a template controlfile similar to the one that is available for down
 		lambdaInitPrior = '1.889,
 		lambdaShiftPrior = '0.032,
 		muInitPrior = '1.889',
-		poissonRatePrior = '1'))
+		expectedNumberOfShifts = '1'))
 
 
 BAMM output: brief

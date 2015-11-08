@@ -84,29 +84,29 @@ dev.off()
 # node 140:
 # node 141
 
-library(BAMMtools)
-data(whales, mcmc.whales, events.whales)
-ed <- getEventData(whales, events.whales, burnin=0.1)
+# library(BAMMtools)
+# data(whales, mcmc.whales, events.whales)
+# ed <- getEventData(whales, events.whales, burnin=0.1)
 
-nodemat <- matrix(0, nrow=length(ed$eventData), ncol=max(ed$edge))
+# nodemat <- matrix(0, nrow=length(ed$eventData), ncol=max(ed$edge))
 
  
-for (i in 1:length(ed$eventData)){
-	tmp <- ed$eventData[[i]]
-	nodemat[i,tmp$node] <- 1
-}
+# for (i in 1:length(ed$eventData)){
+	# tmp <- ed$eventData[[i]]
+	# nodemat[i,tmp$node] <- 1
+# }
 
 
-plot(nodemat[,146])
+# plot(nodemat[,146])
 
-ss <- spectrum0.ar(nodemat[,140])
+# ss <- spectrum0.ar(nodemat[,140])
 
 
-plot.new()
-par(mfrow=c(3,1))
-plot(nodemat[,132], type = "l")
-plot(nodemat[,140], type = "l")
-plot(nodemat[,141], type = "l")
+# plot.new()
+# par(mfrow=c(3,1))
+# plot(nodemat[,132], type = "l")
+# plot(nodemat[,140], type = "l")
+# plot(nodemat[,141], type = "l")
 
 
 

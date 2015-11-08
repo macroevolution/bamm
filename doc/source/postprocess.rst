@@ -370,7 +370,7 @@ The variable *marg_probs* becomes a copy of our phylogenetic tree, but where eac
 Marginal odds for rate shift locations
 --------------------------------------
 
-As explained :ref:`here<bayesfactorbranches>` and in this `Evolution article <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_, we can compute the marginal odds that a shift is associated with a particular branch. To be clear, this method is not meant to identify the *number* of shifts, to do that see :ref:`this page<bayesfactors>`. Here, we are discussing how to compute the relative evidence that a rate shift is on a particular branch of our phylogeny. To do this, we find the ratio between the probability of a shift along that branch in the posterior and the prior odds of a shift along that branch. This **marginal odds ratio** is superficially similar to a Bayes Factor, and we have previously used that term in the `Evolution article <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_. However, because the marginal odds of a shift along the tree are a *summary statistic* and not a component of *model selection*, they are not formal Bayes Factors. 
+As explained :ref:`here<marginaloddsbranches>` and in this `Evolution article <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_, we can compute the marginal odds that a shift is associated with a particular branch. To be clear, this method is not meant to identify the *number* of shifts, to do that see :ref:`this page<bayesfactors>`. Here, we are discussing how to compute the relative evidence that a rate shift is on a particular branch of our phylogeny. To do this, we find the ratio between the probability of a shift along that branch in the posterior and the prior odds of a shift along that branch. This **marginal odds ratio** is superficially similar to a Bayes Factor, and we have previously used that term in the `Evolution article <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_. However, because the marginal odds of a shift along the tree are a *summary statistic* and not a component of *model selection*, they are not formal Bayes Factors. 
 
 This is an important point: **you cannot use the marginal odds of the branches to select the number of shifts along a tree.** To understand why, consider the whale tree where Bayes Factors support a single shift, but the marginal odds are over 20 for three separate branches leading up to the dolphin clade. These high marginal odds show the relative support each of those three branches has for the **one** shift supported by the Bayes Factor, and is not evidence of three shifts. To see this, plot the credible shifts from the posterior distribution of the whale tree and note that you only ever have **one** shift on each of those three branches. You do not find evidence for a shift on all three branches on the trees in the posterior. **The only strong evidence for a shift on a specific branch is when that shift occurs in >95% of the posterior**, which rarely occurs in empirical data. As stated in :ref:`here<credibleshifts>` the primary goal of BAMM is not to specify the exact location of shifts, as due to both the reality of the amount of data present in a phylogeny and the complex nature of biological evolution, it will rarely be possible to have high confidence in a specific shift magnitude and location. 
 
@@ -443,7 +443,7 @@ Rate-through-time analysis
 
 .. _bammtoolsRTT:
 
-Plotting a rate-through-time curve (example :ref:`here<bammgraphgallery6>`) is trivial. BAMM's built-in function ``plotRateThroughTime`` makes it easy to generate plots of rates through time::
+Plotting a rate-through-time curve (example :ref:`here<whales_RatesThroughTime>`) is trivial. BAMM's built-in function ``plotRateThroughTime`` makes it easy to generate plots of rates through time::
 
 	plotRateThroughTime(edata, ratetype="speciation")
 	
@@ -515,7 +515,7 @@ Macroevolutionary cohort analysis provides a way of summarizing the extent to wh
 	cmat <- getCohortMatrix(edata)
 	cohorts(cmat, edata)
 
-A macroevolutionary cohort matrix for whales is shown :ref:`here<bammgraphgallery4>`.
+A macroevolutionary cohort matrix for whales is shown :ref:`here<whales_cohort>`.
 
 
 Cumulative shift probabilities
