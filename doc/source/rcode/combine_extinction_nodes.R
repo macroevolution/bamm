@@ -1,7 +1,3 @@
-
-
-
-
 # This script illustrates issues with combining extinction probabilities at nodes.
 # 
 #
@@ -33,6 +29,77 @@ D_func <- function(lam, mu, E0, D0, dt) {
 }
 
 
+# EXERCISE 1: LIKELIHOOD OF SIMPLE 2 TAXON TREE WITH STEM BRANCH
+# AND RATE SHIFT
+# Compute likelihood of a simple tree with one internal node:
+# (A:99,B:99):1
+# 
+#  Imagine shift happens IMMEDIATELY
+#  At origin of lineage A. 
+#
+
+# What is likelihood of tree as a function of mu_root?
+# Hold lambda_root = 0.5
+#
+#
+mu_vec <- seq(0.0001, 1, length.out=100)
+lmat <- matrix(NA, nrow=100, ncol=2)
+
+# A branch likelihood is 0
+
+
+for (i in 1:length(mu_vec)){
+	
+	
+	lhA <- log(D_func(0.5, mu_vec[i], 0, 1, 99))
+	 
+	exprob_A <- 0
+	exprob_B <- E_func(0.5, mu_vec[i], 0, 99)
+	
+	exprob_AB_1 <- exprob_A * exprob_B
+	exprob_AB_2 <- exprob_B
+	
+	exprob_root_1 <- E_func(0.5, mu_vec[i], exprob_AB_1, 1)
+	exprob_root_2 <- E_func(0.5, mu_vec[i], exprob_AB_2, 1)
+		
+ 	D1 <- log(D_func(0.5, mu_vec[i], 0, 1, 99)) 
+ 	D1 <- D1 + log(D_func(0.5, mu_vec[i], exprob_AB_1, 1, 1))
+ 	D1 <- D1 + log(0.5) # likelihood of the speciation event
+ 	
+ 	D2 <- log(D_func(0.5, mu_vec[i], 0, 1, 100))
+ 	D2 <- D2 + log(0.5)	
+	
+	lmat[i,1] <- D1 - log(1 - exprob_root_1)
+	lmat[i,2] <- D2 - log(1 - exprob_root_2)
+	
+}
+
+
+png(height = 600, width=600, file = "likelihood_nodecombine.png")
+plot.new()
+par(mar=c(6,6,1,1))
+plot.window(xlim=c(0, 1), ylim=c(-50, 15))
+lines(mu_vec, lmat[,1], lwd=5, col="red")
+lines(mu_vec, lmat[,2], lwd= 5, col="blue")
+arrows(x0 = 0.6, x1= 0.85, y0 = 10, y1 = -0.5, lwd=2, length=0.15, col="blue")
+
+arrows(x0 = 0.5, x1 = 0.5, y0=-40, y1=-51, lwd=2, length=0.15)
+
+axis(1, at=seq(-0.2, 1.2, by =0.2), cex.axis=1.3)
+axis(2, at=seq(-60,10, by=10), las=1, cex.axis=1.3)
+text(x=0.5, y=-38, label="Root speciation rate", cex=1.7, font=3)
+
+mtext("Extinction rate for root process", 1, cex=1.9, line=4)
+mtext("log-likelihood of tree", 2, cex=1.9, line=4)
+text(x=0.6, y=10, label="Numerical failure", pos=2, cex=1.7, font=3, col="blue")
+ 
+
+
+dev.off()
+
+
+# EXERCISE 2: LIKELIHOOD OF 4-TAXON TREE AS SHOWN ON WEBSITE
+#
 # this pertains to a tree of the form
 # ((A:99,B:99):1,(C:99,D:99):1);
 # We will assume that shifts happen on branches A and C
@@ -293,6 +360,7 @@ AIC_2  - AIC_4_fp
 
 
 
+#################### 
  
  
  

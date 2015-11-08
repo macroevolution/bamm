@@ -204,21 +204,42 @@ This issue is relevant to the issue of recomputing :math:`E(t)` values raised in
 Extinction at nodes: a worked example
 ------------------------------------------------- 
 
-I have attached some R code :download:`here<rcode/combine_extinction_nodes.R>` that illustrates very substantial differences in results that can be obtained for a simple 4-taxon tree, depending on how these :math:`E(t)` values are handled at nodes. The tree we will consider is this::
+I have attached some R code :download:`here<rcode/combine_extinction_nodes.R>` that illustrates very substantial differences in results that can be obtained for a simple 2-taxon and 4-taxon trees, depending on how these :math:`E(t)` values are handled at nodes. In the simplest 2-taxon example (single speciation event, plus a stem lineage), the tree is this::
 
-	((A:99,B:99):1,(C:99,D:99):1);
+	(A:99,B:99):1
 
-We will assume that rate shifts happened on the branch leading to lineage A and to lineage C, and that the shifts occurred exactly 1 time unit into the branch; we will also assume that the rate shifts on B and D have identical parameters. 
+We will assume that a rate shift happened *immediately* after the origin of lineage A, such that the entire A branch has its own set of rate parameters. Lineage B diversifies under the root parameters. Clearly, this is an evolutionary process that has not done very much: there is a single speciation event, the clade only has two taxa, and the process is old (100 time units). Our intuition should tell us that the most likely diversification parameters for this scenario should favor a net diversification rate of approximately zero. We can put some numbers of this intuition by noting that any variant of simple constant-rate birth-death estimators will give us very low estimates for net diversification for this process (:math:`N = 2`, :math:`age = 100`). 
 
-* For a 4 taxon tree as shown above, treating :math:`E(t)` values at nodes by *favoring the parent process* leads to substantial differences in likelihoods and parameters, relative to the case when :math:`E(t)` values are multiplied together.
+We will compute the likelihood of this tree, conditioning on survival of the process to the present, under two methods of combining :math:`E(t)` values at nodes:
 
-* The likelihood for the case where :math:`E(t)` values are multiplied together shows good behavior: the maximum likelihood of the tree with 2 rate shifts is not much better than the constant rate birth-death process.  
+* By multiplying them together, as recommended above
 
-* The likelihood of the shift configuration is much higher (relative to a constant-rate birth-death process) when the :math:`E(t)` are taken from the parent process at nodes. The corresponding parameters are strange (extinction rates much higher than speciation across all branches except for lineages A and C after shift events).
+* By arbitrarily choosing the :math:`E(t)` value for a single lineage, specifically the one that corresponds to the parent (root) process
 
-* I believe that the likelihood obtained if you consider initialize :math:`E(0)` calculations for branch segments with values for the parent / root process leads to theoretically invalid likelihoods. I *think* (but have not proven) that my calculations in R code linked :download:`above<rcode/combine_extinction_nodes.R>` demonstrate a situation where the computed likelihood is approximately 70 log-likelihood units higher than its theoretical maximum for a simple 4 taxon tree, given the parameters at the root of the tree.  
+We will assume that the root speciation rate is :math:`\lambda = 0.5`, that the process undergoes a single speciation event, and that the progeny lineage labelled *A* immediately shifts to an *inert* diversification state (:math:`\lambda = 0, \mu = 0`). The probability of the inert branch is thus 1, since we assume that neither speciation nor extinction can change the probability of the data (which is initialized at :math:`D(0) = 1`). 
 
-The results above suggest that arbitrary inheritance of :math:`E(t)` values through nodes, or recomputing :math:`E(t)` values at the start of internal branches, may not yield valid likelihoods. 
+In the figure below, we show the log-likelihood of this tree as function of :math:`\mu` (again, assuming that :math:`\lambda = 0.5`), under the two methods for combining :math:`E(t)` values. **Results for the "multiply" algorithm are shown in red, and results for the "arbitrary" algorithm are shown in blue**. 
+
+.. _nodecombine: 
+.. figure:: figs/lhmodel/likelihood_nodecombine.png
+   :width: 450
+   :align: center   
+
+When :math:`E(t)` values are multiplied together, the likelihood surface has a single peak (**red curve**) corresponding roughly to :math:`\lambda = \mu`, which is essentially what we should expect from this model. However, something very different happens for the *arbitrary* scenario (**blue curve**), where we assume that :math:`E(t)` on the basal branch segment is computed with parameters of the parent (root) process. Here, the log-likelihood becomes increasingly large with :math:`\mu > \lambda`, and the log-likelihoods suggest that net diversification has been (substantially) negative. I suspect that the likelihood of the tree under this algorithm will increase indefinitely with increasing :math:`\mu`, but the calculations fail for numerical reasons at approximately :math:`\mu = 0.85` (the numerical reason being that the computed extinction probability at the root is equal to 1.0 within the limits of machine epsilon). The wobbly bit in the blue curve with high extinction also appears to be due to rounding issues. 
+
+For the two taxon tree, we conclude the following:
+
+* Treating :math:`E(t)` values at nodes by *arbitrarily favoring the parent process* leads to substantial differences in likelihoods and parameters, relative to the case when :math:`E(t)` values are multiplied together.
+
+* The likelihood for the case where :math:`E(t)` values are multiplied together shows good behavior, or at least accords with our intuition for a birth-death process where *not much happens* over the duration of the process.
+
+* The parameters estimated under the *arbitrary* :math:`E(t)` handling are strange: the likelihood surface appears to favor increasingly high rates of extinction relative to speciation.
+
+I believe that the likelihood obtained if you initialize :math:`E(0)` calculations for branch segments with values for the parent / root process leads to theoretically invalid likelihoods, and -- at least in this case -- it appears to be due to conditioning on non-extinction of the process. After all, if we know that a speciation event generated an *inert* lineage at :math:`t = 1` time units into the process, the true probability of extinction should be low. But by favoring the parent process, we condition using extinction probabilities at the root that are arbitrarily close to 1.
+
+The R code linked :download:`above<rcode/combine_extinction_nodes.R>` also augments this exercise for a 4 taxon tree (showing this is not specific to the stem clade described here), and also compares likelihoods to those obtained for a constant-rate birth-death process with no shifts.
+
+The results above suggest that arbitrary inheritance of :math:`E(t)` values through nodes, or recomputing :math:`E(t)` values at the start of internal branches, probably does not yield valid likelihoods. 
 
 .. _otherIssues: 
  
