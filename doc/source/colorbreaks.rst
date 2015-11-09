@@ -44,15 +44,15 @@ We illustrate these differences with an example. This is a BAMM analysis of prim
 
 From these histograms, it is clear that there are segments of the phylogeny with much higher rates than for the rest of the phylogeny, but these segments encompass only a very small subset (the histogram has a long tail). 
 
-.. _breaksTest:
-.. figure:: figs/breaksTest.png
+.. _rateHistogramsv:
+.. figure:: figures/rateHistograms.png
 	:width: 700
 	:align: center
 
 Now we show how these different methods produce different phylorate figures. Due to the long tail of the distribution of rates, the linear breaks method does a poor job of showing rate variation across the phylogeny. 
 
-.. _breaksTestTrees:
-.. figure:: figs/breaksTestTrees.png
+.. _breaksmethodPhylorates:
+.. figure:: figures/breaksmethodPhylorates.png
 	:width: 700
 	:align: center
 

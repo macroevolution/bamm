@@ -147,10 +147,11 @@ Phylogenetic uncertainty will matter if you do in fact care about *specific* asp
 Although BAMM does not directly allow modeling of phylogenetic uncertainty, it is straightforward to perform BAMM analyses across distributions of phylogenies taken from a Bayesian analysis. We will soon be adding documentation on how you can use your bash shell (on the OSX or Linux operating systems) to perform a BAMM analysis across a sample of trees.
 
 
+.. _eventdatafile:
+
 Understanding the event data file
 ---------------------------------
 
-.. _eventdatafile:
 
 The event data file is the core of a BAMM analysis. Many advanced analyses can be done with this output. Each sample from the posterior under BAMM's model of rate shift variation consists of:
 

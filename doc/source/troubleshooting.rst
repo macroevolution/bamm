@@ -98,10 +98,11 @@ instructions on how to contact us.
 Analysis
 --------
 
+.. _convergenceproblems:
+
 The MCMC does not converge
 ..........................
 
-.. _convergenceproblems:
 
 Achieving satisfactory convergence with BAMM can be difficult. We know that the likelihood surface for the BAMM model is rugged, with lots of peaks and valleys. We are developing several new MCMC proposals for moving, splitting, and merging events on trees that should facilitate convergence. In the meantime, we suggest several options.
 
