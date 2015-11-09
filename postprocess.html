@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>7. Analyzing BAMM output with BAMMtools &mdash; bamm 2.4.0 documentation</title>
+    <title>7. Analyzing BAMM output with BAMMtools &mdash; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.4.0',
+        VERSION:     '2.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 2.4.0 documentation" href="documentation.html" />
+    <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" />
     <link rel="next" title="8. Advanced analysis options" href="advanced.html" />
     <link rel="prev" title="6. Configuration" href="configuration.html" /> 
   </head>
@@ -158,7 +158,7 @@
 </li>
 <li><dl class="first docutils">
 <dt><strong>Bayes factors for model comparison</strong></dt>
-<dd><p class="first last">Robust model selection with <a class="reference internal" href="#bayesfactors"><span>Bayes factors</span></a></p>
+<dd><p class="first last">Robust model selection with <a class="reference internal" href="#bayesfactors"><span>Bayes factors</span></a>.</p>
 </dd>
 </dl>
 </li>
@@ -170,19 +170,19 @@
 </li>
 <li><dl class="first docutils">
 <dt><strong>Branch and tip-specific evolutionary rates</strong></dt>
-<dd><p class="first last">Estimate marginal densities of rates for individual <a class="reference internal" href="#branchrates"><span>branches and tips</span></a></p>
+<dd><p class="first last">Estimate marginal densities of rates for individual <a class="reference internal" href="#branchrates"><span>branches and tips</span></a>.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Rate-through-time analysis</strong></dt>
-<dd><p class="first last">Analyze and plot macroevolutionary <a class="reference internal" href="#bammtoolsrtt"><span>rates through time</span></a></p>
+<dd><p class="first last">Analyze and plot macroevolutionary <a class="reference internal" href="#bammtoolsrtt"><span>rates through time</span></a>.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Macroevolutionary cohort analysis</strong></dt>
-<dd><p class="first last">Visualize sets of taxa with <a class="reference internal" href="#cohorts"><span>shared rate dynamics</span></a></p>
+<dd><p class="first last">Visualize sets of taxa with <a class="reference internal" href="#cohorts"><span>shared rate dynamics</span></a>.</p>
 </dd>
 </dl>
 </li>
@@ -268,7 +268,7 @@ effectiveSize(postburn$logLik)
 <div class="highlight-python"><div class="highlight"><pre><span class="n">post_probs</span><span class="p">[</span><span class="s">&#39;X&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">post_probs</span><span class="p">[</span><span class="s">&#39;Y&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>In general, any model that is not included in <em>names(post_probs)</em> was so lousy that it was never even sampled. Thus, if you fail to observe a model &#8216;0&#8217; in this set, this means that you have such overwhelming evidence for diversification rate heterogeneity in your data that this model probability is effectively 0 (bear in mind that a model with name &#8216;0&#8217; is model <img class="math" src="_images/math/a4444e4939d5397d61e29984e82d4ced75649a7a.png" alt="M_0"/>, or a model with no rate shifts). The probability of model &#8216;0&#8217; is the posterior probability of a model with just a single evolutionary rate dynamic (no rate shifts). We&#8217;ll discuss the use of Bayes factors in gauging model support a little further down in <a class="reference internal" href="#bayesfactors"><span>this document</span></a>, but posterior model probabilities are a valuable way of identifying the best model (or set of models).</p>
+<p>In general, any model that is not included in <em>names(post_probs)</em> was so lousy that it was never even sampled. Thus, if you fail to observe a model &#8216;0&#8217; in this set, this means that you have such overwhelming evidence for diversification rate heterogeneity in your data that this model probability is effectively 0 (bear in mind that a model with name &#8216;0&#8217; is model <img class="math" src="_images/math/a4444e4939d5397d61e29984e82d4ced75649a7a.png" alt="M_0"/>, or a model with no rate shifts). The probability of model &#8216;0&#8217; is the posterior probability of a model with just a single evolutionary rate dynamic (no rate shifts). We&#8217;ll discuss the use of Bayes factors in gauging model support a little further down in <a class="reference internal" href="#bayesfactors"><span>this document</span></a>, because Bayes factors &#8211; unlike model posterior probabilities &#8211; are theoretically invariant to the prior on the number of shifts (and should should always be preferred when they can be computed).</p>
 <p>Alternatively, if we have our <em>bammdata</em> object, we can summarize the posterior distribution of the number of shifts using summary methods:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">library</span><span class="p">(</span><span class="n">BAMMtools</span><span class="p">)</span>
 <span class="n">tree</span> <span class="o">&lt;-</span> <span class="n">read</span><span class="o">.</span><span class="n">tree</span><span class="p">(</span><span class="s">&quot;mytree.tre&quot;</span><span class="p">)</span>
@@ -281,12 +281,13 @@ effectiveSize(postburn$logLik)
 </div>
 <div class="section" id="bayes-factors-for-model-comparison">
 <h2>7.6. Bayes factors for model comparison<a class="headerlink" href="#bayes-factors-for-model-comparison" title="Permalink to this headline">¶</a></h2>
-<p id="bayesfactors">There is a critical issue that arises in model comparisons using BAMM: inferences on the posterior distribution of models are not independent of the prior. This is generally not an issue if you are using a conservative prior (<code class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">1</span></code>, for example), because a model with zero rate shifts will have a high prior probability. However, if you set <code class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">0.1</span></code> (or some other value &lt; 1), your expected number of diversification shifts under the prior alone will increase. Hence, simply by manipulating the prior, you can potentially achieve a posterior distribution that is quite different from zero, even in the absence of evidence for diversification rate heterogeneity.</p>
+<p id="bayesfactors">There is a critical issue that arises in model comparisons using BAMM: inferences on the posterior distribution of models are not independent of the prior. This is generally not an issue if you are using a conservative prior (<code class="docutils literal"><span class="pre">expectedNumberOfShifts</span> <span class="pre">=</span> <span class="pre">1</span></code>, for example), because a model with zero rate shifts will have a high prior probability. However, if you set <code class="docutils literal"><span class="pre">expectedNumberOfShifts</span> <span class="pre">=</span> <span class="pre">0.1</span></code> (or some other value &lt; 1), your expected number of diversification shifts under the prior alone will increase. Hence, simply by manipulating the prior, you can potentially achieve a posterior distribution that is quite different from zero, even in the absence of evidence for diversification rate heterogeneity.</p>
 <p>The solution that we advocate is to explicitly compare the evidence for models with at least one diversification shift to the evidence for the <em>null</em> model. Formally, there isn&#8217;t really a null model in BAMM, but for our purposes, it makes sense to think about model with zero rate shifts as the null hypothesis. In a Bayesian framework, we can do this by computing the Bayes factor associated with two models. This is computed as</p>
 <div class="math">
 <p><img src="_images/math/1dc7bb02b4570f86808e970ec9ff25d7a5a688c1.png" alt="BF_{ij} = {\frac{Pr(M_i | D)}{\pi{(M_i )}} } {\frac{\pi(M_j ) } {Pr(M_j | D)}}"/></p>
 </div><p>where <img class="math" src="_images/math/65de6628af9c6a4a893c836c8d2de05a25d5d7d4.png" alt="Pr(D|M_i)"/> is the probability of the data given model <img class="math" src="_images/math/adfd934da867e636e40c4f7dfe964c92f370b0fe.png" alt="M_i"/> and <img class="math" src="_images/math/7908b047336803429138183193b2388c939999b1.png" alt="\pi(M_i)"/> is the prior probability of model <img class="math" src="_images/math/adfd934da867e636e40c4f7dfe964c92f370b0fe.png" alt="M_i"/>. Bayes factors are notoriously difficult to compute for many applications, but they are trivial from BAMM output.</p>
 <p><strong>We suggest that (usually) the overall best model from a BAMM analysis is the model with the highest Bayes factor relative to the null model</strong>, <img class="math" src="_images/math/a4444e4939d5397d61e29984e82d4ced75649a7a.png" alt="M_0"/>.</p>
+<p>There is one complication that can arise, and it is that &#8211; in many cases &#8211; you wish to perform a Bayes factor comparison between models where one model is never sampled. For example, you might be running a BAMM analysis on a large phylogenetic dataset with lots of rate heterogeneity, and you find that you never sample a model with 0 shifts in the posterior. Hence, you&#8217;ll formally be unable to compute Bayes factor comparisons involving this model. There are several possible solutions to this scenario, none of which are implemented in BAMMtools. One strategy is to compute a <strong>minimum Bayes factor</strong>, by setting the posterior probability of the unsampled model equal to its maximum possible value. Suppose you have a posterior of 1000 samples and have never sampled <img class="math" src="_images/math/a4444e4939d5397d61e29984e82d4ced75649a7a.png" alt="M_0"/>, the &#8220;null&#8221; model with 0 shifts (e.g., all samples have at least one shift). You can approximate an upper bound on the probability of <img class="math" src="_images/math/a4444e4939d5397d61e29984e82d4ced75649a7a.png" alt="M_0"/> as roughly 1 / 1000 (as you have 1000 samples and no observations of <img class="math" src="_images/math/a4444e4939d5397d61e29984e82d4ced75649a7a.png" alt="M_0"/>), and you could substitute this value into the equation used to compute the Bayes factor. Note that the true posterior probability of <img class="math" src="_images/math/a4444e4939d5397d61e29984e82d4ced75649a7a.png" alt="M_0"/> could have been <strong>vastly lower</strong> (but probably not much higher); hence, any Bayes factors where the posterior probability of <img class="math" src="_images/math/a4444e4939d5397d61e29984e82d4ced75649a7a.png" alt="M_0"/> is in the denominator will be underestimates. This is an acceptable practical solution to describing the evidence against <img class="math" src="_images/math/a4444e4939d5397d61e29984e82d4ced75649a7a.png" alt="M_0"/> when <img class="math" src="_images/math/a4444e4939d5397d61e29984e82d4ced75649a7a.png" alt="M_0"/> is so unlikely as to never be sampled. However, a Bayes factor computed in this fashion is a minimum estimate, and cannot be used to argue that rate heterogeneity is unlikely (because it is almost certain that the true Bayes factor evidence against <img class="math" src="_images/math/a4444e4939d5397d61e29984e82d4ced75649a7a.png" alt="M_0"/> is greater).</p>
 <div class="section" id="prior-distribution-in-bamm">
 <h3>7.6.1. Prior distribution in BAMM<a class="headerlink" href="#prior-distribution-in-bamm" title="Permalink to this headline">¶</a></h3>
 <p id="analyticalprior">The primary goal of BAMM is to understand rate heterogeneity in a phylogeny without having to pre-specify the number or location of rate regimes. Rather than putting a prior on the number of shifts (<em>k</em>) directly, BAMM uses a weaker prior on the rate of the Poisson process that produces <em>k</em> (the Poisson rate prior: <img class="math" src="_images/math/d8e49b4421f76d0c55dd5b34e5aa40bbff7e8d4b.png" alt="\pi(\lambda_{P})"/>). Understanding how much evidence there is for <em>k</em> shifts along your tree therefore requires that you determine the prior probability of <em>k</em> shifts under the specified Poisson rate prior used, which is calculated analytically as</p>
@@ -306,22 +307,20 @@ effectiveSize(postburn$logLik)
 <p>In the case of the whales example dataset, the Bayes factors for a model with <em>k</em> shifts relative to a null model with <em>0</em> shifts is</p>
 <div class="highlight-python"><div class="highlight"><pre>shifts          Bayes factor
 0               1.0
-1               71.8
-2               55.3
-3               31.7
-4               21.5
-5               10.8
+1               17.2
+2               10.9
+3               4.5
+4               2.3
+5               0.9
 </pre></div>
 </div>
-<p>For the whale example dataset, the Bayes factor evidence in favor of a model with a rate shift, relative to the null model, is very strong (BF &gt; 70).
-This tells us that a model with a single diversification shift is the best overall model, at least by comparison to the null model with zero shifts. Bayes factors greater than 20 generally imply substantial evidence for one model over another; values greater than 50 are <em>very strong</em> evidence in favor of the numerator model. Here, it&#8217;s pretty clear that a model with a single rate shift is much, much better than a model that lacks rate shifts.</p>
-<p>Occasionally, you may encounter a dataset where the posterior probability of the null model is so low that it cannot be estimated (e.g., it is never sampled during simulation of the posterior). Likewise, the prior probability of the models with high posterior probability might be very (i.e., inestimably) low, depending on your value for <cite>expectedNumberOfShifts</cite>. In this case, you will not be able to compute a Bayes factor. However, you can explicitly show the posterior and prior distributions recovered through your analysis to make it clear that the posterior distribution is shifted relative to the prior. We are actively working on strategies to address the problem of model selection when the posterior and/or prior probabilities approach zero.</p>
+<p>For the whale example dataset, the Bayes factor evidence in favor of a model with a rate shift, relative to the null model, is moderate (BF &gt; 17). This tells us that a model with a single diversification shift is the best overall model, at least by comparison to the null model with zero shifts. Bayes factors greater than 20 generally imply strong evidence for one model over another; values greater than 50 are <em>very strong</em> evidence in favor of the numerator model. Here, these data suggest that a model with a single rate shift is better than a model that lacks rate shifts, but the one shift model is is not decisively better. There is no definitive Bayes factor criterion for &#8220;significance&#8221;, but many researchers consider values greater than 12 to be consistent with at least some effect.</p>
+<p>As discussed above, you may encounter a dataset where the posterior probability of the null model is so low that it cannot be estimated (e.g., it is never sampled during simulation of the posterior). Likewise, the prior probability of the models with high posterior probability might be very (i.e., inestimably) low, depending on your value for <cite>expectedNumberOfShifts</cite>. In this case, you will not be able to compute a Bayes factor. However, you can explicitly show the posterior and prior distributions recovered through your analysis to make it clear that the posterior distribution is shifted relative to the prior. We are actively working on strategies to address the problem of model selection when the posterior and/or prior probabilities approach zero (see also the previous section).</p>
 <p>BAMMtools also has a function for visualizing the prior and posterior simultaneously. This is useful to see what models are not being sampled in the posterior, and also to evaluate how far from the prior the posterior has moved. To use it</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">data</span><span class="p">(</span><span class="n">mcmc</span><span class="o">.</span><span class="n">whales</span><span class="p">)</span>
 <span class="n">plotPrior</span><span class="p">(</span><span class="n">mcmc</span><span class="o">.</span><span class="n">whales</span><span class="p">,</span> <span class="n">expectedNumberOfShifts</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The prior and posterior being similiar does not mean that BAMM has not converged, as there may be strong agreement between the prior and posterior in any given dataset. For instance, the whale tree has strong support for a single shift, and so the two distributions have not diverged by much, but Bayes Factors tell us that the difference is &#8216;&#8217;significant&#8217;&#8217; (i.e., the shift from the prior to the posterior is large).</p>
 </div>
 <div class="section" id="mean-phylorate-plot">
 <h3>7.6.2. Mean phylorate plot<a class="headerlink" href="#mean-phylorate-plot" title="Permalink to this headline">¶</a></h3>
@@ -454,37 +453,19 @@ addBAMMshifts(msc.config, cex = 2)
 </div>
 <div class="section" id="marginal-shift-probabilities">
 <h3>7.6.7. Marginal shift probabilities<a class="headerlink" href="#marginal-shift-probabilities" title="Permalink to this headline">¶</a></h3>
-<p>BAMMtools enables the user to summarize <em>marginal shift probabilities</em>. This is nothing more than the marginal probability that each branch contains a shift event (see <a class="reference internal" href="rateshifts.html#rateshifts"><span>here</span></a> for why these can be difficult to interpret). The next few lines of code will compute the marginal shift probabilities for each branch, then plot a new phylogenetic tree where the branch lengths are scaled by the probability that they contain a shift event:</p>
+<p>BAMMtools enables the user to summarize <em>marginal shift probabilities</em>. This is nothing more than the marginal probability that each branch contains one or more shift events (see <a class="reference internal" href="rateshifts.html#rateshifts"><span>here</span></a> for why these can be difficult to interpret). The next few lines of code will compute the marginal shift probabilities for each branch, then plot a new phylogenetic tree where the branch lengths are scaled by the probability that they contain a shift event:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">marg_probs</span> <span class="o">&lt;-</span> <span class="n">marginalShiftProbsTree</span><span class="p">(</span><span class="n">edata</span><span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">phylo</span><span class="p">(</span><span class="n">marg_probs</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The variable <em>marg_probs</em> becomes a copy of our phylogenetic tree, but where each branch length has been transformed into the corresponding marginal shift probability. The marginal shift probabilities can be a little misleading, because we might have relatively low confidence in precisely which branch a shift occurred on, but nonetheless have extremely high confidence that a shift occurred <em>somewhere</em> in the vicinity. More importantly, the marginal shift probabilities don&#8217;t accurately account for the expected number of shifts that would occur in the data under the prior alone (again, see <a class="reference internal" href="rateshifts.html#rateshifts"><span>this section</span></a> for more on this). This is a major issue and we have recently overhauled BAMMtools to use a measure of evidence for rate shifts that is largely independent of the prior: the <strong>Bayes factor</strong>.</p>
+<p>The variable <em>marg_probs</em> becomes a copy of our phylogenetic tree, but where each branch length has been transformed into the corresponding marginal shift probability. The marginal shift probabilities can be a little misleading, because we might have relatively low confidence in precisely which branch a shift occurred on, but nonetheless have extremely high confidence that a shift occurred <em>somewhere</em> in the vicinity.</p>
 </div>
 <div class="section" id="marginal-odds-for-rate-shift-locations">
 <span id="marginalodds"></span><h3>7.6.8. Marginal odds for rate shift locations<a class="headerlink" href="#marginal-odds-for-rate-shift-locations" title="Permalink to this headline">¶</a></h3>
-<p>As explained <a class="reference internal" href="rateshifts.html#bayesfactorbranches"><span>here</span></a> and in this <a class="reference external" href="http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract">Evolution article</a>, we can compute the marginal odds that a shift is associated with a particular branch. To be clear, this method is not meant to identify the <em>number</em> of shifts, to do that see <a class="reference internal" href="#bayesfactors"><span>this page</span></a>. Here, we are discussing how to compute the relative evidence that a rate shift is on a particular branch of our phylogeny. To do this, we find the ratio between the probability of a shift along that branch in the posterior and the prior odds of a shift along that branch. This <strong>marginal odds ratio</strong> is superficially similar to a Bayes Factor, and we have previously used that term in the <a class="reference external" href="http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract">Evolution article</a>. However, because the marginal odds of a shift along the tree are a <em>summary statistic</em> and not a component of <em>model selection</em>, they are not formal Bayes Factors.</p>
-<p>This is an important point: you <strong>cannot</strong> use the marginal odds of the branches to select the number of shifts along a tree. To understand why, consider the whale tree where Bayes Factors support a single shift, but the marginal odds are over 20 for three separate branches leading up to the dolphin clade. These high marginal odds show the relative support each of those three branches has for the <strong>one</strong> shift supported by the Bayes Factor, and is not evidence of three shifts. To see this, plot the credible shifts from the posterior distribution of the whale tree and note that you only ever have <strong>one</strong> shift on each of those three branches. You do not find evidence for a shift on all three branches on the trees in the posterior. <strong>The only strong evidence for a shift on a specific branch is when that shift occurs in &gt;95% of the posterior</strong>, which rarely occurs in empirical data. As stated in <a class="reference internal" href="rateshifts.html#credibleshifts"><span>here</span></a> the primary goal of BAMM is not to specify the exact location of shifts, as due to both the reality of the amount of data present in a phylogeny and the complex nature of biological evolution, it will rarely be possible to have high confidence in a specific shift magnitude and location.</p>
-<p>What the marginal odds <strong>do</strong> provide is a robust measure of evidence for a rate shift on a particular branch that is effectively independent of the effects of whatever prior parameter we placed on the number of shift events.</p>
-<p>To compute the marginal odds ratio for the <em>topological location</em> of rate shifts on our tree, we first compute the probability of a rate shift on each branch of our phylogeny under the prior alone:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">priorshifts</span> <span class="o">&lt;-</span> <span class="n">getBranchShiftPriors</span><span class="p">(</span><span class="n">edata</span><span class="p">,</span> <span class="n">expectedNumberOfShifts</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>This object is a copy of our phylogeny, but where the length of each branch is equal to the prior probability of a rate shift. This is the expected probability that our statistical model would find a rate shift on a particular branch <strong>even if there is no variation in diversification rate</strong> across our tree. We can then use these prior probabilities to compute the marginal odds ratio associated with a rate shift on each branch of the phylogeny:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">motree</span> <span class="o">&lt;-</span> <span class="n">marginalOddsRatioBranches</span><span class="p">(</span><span class="n">edata</span><span class="p">,</span> <span class="n">expectedNumberOfShifts</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>This is now a copy of our phylogenetic tree where each branch is replaced with the marginal odds ratio for a rate shift on that branch. We can plot this tree to view the relative support for a rate shift on each branch with <code class="docutils literal"><span class="pre">plot.phylo</span></code></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">plot</span><span class="o">.</span><span class="n">phylo</span><span class="p">(</span><span class="n">motree</span><span class="p">,</span> <span class="n">cex</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>For the whales, you can see that a single branch has overwhelming evidence for a rate shift, with a marginal odds ratio &gt; 700 in favor of a rate shift (see <code class="docutils literal"><span class="pre">max(motree$edge.length))</span></code>. If you want to get the specific node associated with the highest overall Bayes factor, you could do:</p>
-<div class="highlight-python"><div class="highlight"><pre>edgemax &lt;- which(motree$edge.length == max(motree$edge.length))
-motree$edge[edgemax ,2]
-# this should give node 141 for the whales...
-</pre></div>
-</div>
-<p>Use of marginal odds ratios in this context has many advantages. Suppose that you have two branches, one of which is very short and the other of which is very long. Under the prior alone, you&#8217;d expect a higher marginal probability of a rate shift on the long branch. In fact, the relative probability of a shift on the longer branch should be exactly equal to the ratio of the branch lengths. Now, imagine that both branches have a marginal shift probability of 0.8. The marginal odds ratio would find much stronger evidence for a rate shift on the short branch, because it has a <em>lower prior probability of a shift</em>. This tells us that there&#8217;s actually more evidence for a shift on the short branch, because the data contained enough evidence to actually push the posterior further away from the prior, relative to the long branch.</p>
+<p>As explained <a class="reference internal" href="rateshifts.html#marginaloddsbranches"><span>here</span></a> and in this <a class="reference external" href="http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract">Evolution article</a>, we can compute the marginal odds that a shift is associated with a particular branch. To be clear, this method is not meant to identify the <em>number</em> of shifts, to do that see <a class="reference internal" href="#bayesfactors"><span>this page</span></a>. Here, we are discussing how to compute the evidence for a shift that is independent of the prior. This is used in BAMM to distinguish between core and non-core shifts, in the estimation of the 95% credible set of rate shifts. But it is not the same as identifying the best location of one or more rate shifts.</p>
+<p>To compute marginal odds, we find the ratio between the probability of a shift along that branch in the posterior and the prior odds of a shift along that branch. This <strong>marginal odds ratio</strong> is superficially similar to a Bayes Factor, and we have previously used that term in the <a class="reference external" href="http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract">Evolution article</a>. However, because the marginal odds of a shift along the tree are a <em>summary statistic</em> and not a component of <em>model selection</em>, they are not formal Bayes Factors.</p>
+<p>This is an important point: <strong>you cannot use the marginal odds ratios for branches to select the number of shifts along a tree.</strong> To understand why, consider the whale tree where Bayes Factors support a single shift, but the marginal odds are over 20 for three separate branches leading up to the dolphin clade. These high marginal odds show the relative support each of those three branches has for the <strong>one</strong> shift supported by the Bayes Factor, and is not evidence of three shifts. To see this, plot the credible shift set from the posterior distribution of the whale tree (as in the preceding sections) and note that you only ever have <strong>one</strong> shift on each of those three branches. You do not find evidence for a shift on all three branches on the trees in the posterior. <strong>The only strong evidence for a shift on a specific branch is when that shift occurs in &gt;95% of the posterior</strong>, which we find to be fairly rare in empirical data. As stated in <a class="reference internal" href="rateshifts.html#credibleshifts"><span>here</span></a> the primary goal of BAMM is not to specify the exact location of shifts, as due to both the reality of the amount of data present in a phylogeny and the complex nature of biological evolution, it will rarely be possible to have high confidence in a specific shift magnitude and location.</p>
+<p>What the marginal odds <strong>do</strong> provide is an estimate of the &#8220;density&#8221; of shifts on a particular branch, independent of the length of the branch. But note that this can conflict directly with the <em>marginal shift probabilities</em>. In the whale dataset, for example, the branch with the highest marginal odds of a shift is not the branch with the highest marginal shift probability. When there is a conflict, we suggest that the marginal shift probabilities are your overall best measure of the location of a shift. But the marginal odds ratio is critical for distinguishing core and non-core rate shifts.</p>
 </div>
 </div>
 <div class="section" id="clade-specific-evolutionary-rates">
@@ -524,7 +505,7 @@ quantile(nondolphinrate$lambda, c(0.05, 0.95))
 </div>
 <div class="section" id="rate-through-time-analysis">
 <h2>7.9. Rate-through-time analysis<a class="headerlink" href="#rate-through-time-analysis" title="Permalink to this headline">¶</a></h2>
-<p id="bammtoolsrtt">Plotting a rate-through-time curve (example <a class="reference internal" href="bammgraph.html#bammgraphgallery6"><span>here</span></a>) is trivial. BAMM&#8217;s built-in function <code class="docutils literal"><span class="pre">plotRateThroughTime</span></code> makes it easy to generate plots of rates through time:</p>
+<p id="bammtoolsrtt">Plotting a rate-through-time curve (example <a class="reference internal" href="bammgraph.html#whales-ratesthroughtime"><span>here</span></a>) is trivial. BAMM&#8217;s built-in function <code class="docutils literal"><span class="pre">plotRateThroughTime</span></code> makes it easy to generate plots of rates through time:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">plotRateThroughTime</span><span class="p">(</span><span class="n">edata</span><span class="p">,</span> <span class="n">ratetype</span><span class="o">=</span><span class="s">&quot;speciation&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -591,7 +572,7 @@ tipnode2 &lt;- which(whales$tip.label == species2)
 <span class="n">cohorts</span><span class="p">(</span><span class="n">cmat</span><span class="p">,</span> <span class="n">edata</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>A macroevolutionary cohort matrix for whales is shown <a class="reference internal" href="bammgraph.html#bammgraphgallery4"><span>here</span></a>.</p>
+<p>A macroevolutionary cohort matrix for whales is shown <a class="reference internal" href="bammgraph.html#whales-cohort"><span>here</span></a>.</p>
 </div>
 <div class="section" id="cumulative-shift-probabilities">
 <h2>7.11. Cumulative shift probabilities<a class="headerlink" href="#cumulative-shift-probabilities" title="Permalink to this headline">¶</a></h2>

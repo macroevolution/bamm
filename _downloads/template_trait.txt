@@ -60,14 +60,12 @@ overwrite = 0
 # PRIORS
 ################################################################################
 
-poissonRatePrior = 1.0
-# The rate parameter of the exponential prior on the rate parameter of the
-# Poisson process. Smaller values favor greater numbers of distinct
-# evolutionary regimes on the tree
+expectedNumberOfShifts = 1.0
+# prior on the number of shifts in diversification
 # Suggested values: 
-#     poissonRatePrior = 1.0 for small trees (< 500 tips)
-#	  poissonRatePrior = 0.1 or even 0.02 for large trees (> 5000 tips) 
- 
+#     expectedNumberOfShifts = 1.0 for small trees (< 500 tips)
+#	  expectedNumberOfShifts = 10 or even 50 for large trees (> 5000 tips) 
+
 betaInitPrior = 1.0
 # Prior (rate parameter of exponential) on the initial
 # phenotypic evolutionary rate associated with regimes

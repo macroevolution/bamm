@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>8. Advanced analysis options &mdash; bamm 2.4.0 documentation</title>
+    <title>8. Advanced analysis options &mdash; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.4.0',
+        VERSION:     '2.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 2.4.0 documentation" href="documentation.html" />
+    <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" />
     <link rel="next" title="9. Color ramps and phylorate plots" href="colorbreaks.html" />
     <link rel="prev" title="7. Analyzing BAMM output with BAMMtools" href="postprocess.html" /> 
   </head>
@@ -107,7 +107,7 @@
 <span id="incompsampling"></span><h2>8.1. Accounting for <em>non-random</em> incomplete taxon sampling in diversification studies<a class="headerlink" href="#accounting-for-non-random-incomplete-taxon-sampling-in-diversification-studies" title="Permalink to this headline">¶</a></h2>
 <p><strong>CAUTION</strong>: For analyses of higher level phylogenetic trees where you have single representatives of different groups,
 such as genus-level or family-level phylogenies, we <strong>strongly recommend</strong> that you use a stochastic polytomy resolver - such as PASTIS - to place the missing species
-in the tree. The PASTIS method is described <a class="reference external" href="http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12117/abstract">here</a> , and there
+in the tree. The PASTIS method is described <a class="reference external" href="http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12117/abstract">here</a>, and there
 is an associated R package. Using the analytical correction for incomplete taxon sampling
 is less effective when your phylogenies are extremely incomplete (e.g., &lt; 10% of tips sampled). Even with the uncertainty introduced by the PASTIS approach,
 you will obtain better results using this for highly incomplete phylogenies.</p>
@@ -209,7 +209,7 @@ betaShiftInit = 0.0
 <div class="section" id="accounting-for-phylogenetic-uncertainty">
 <h2>8.4. Accounting for phylogenetic uncertainty<a class="headerlink" href="#accounting-for-phylogenetic-uncertainty" title="Permalink to this headline">¶</a></h2>
 <p>Some researchers consider it important to account for phylogenetic uncertainty when performing macroevolutionary analyses. At present, there is no direct way of accounting for phylogenetic uncertainty in BAMM itself. It remains unclear whether phylogenetic uncertainty generally matters for the sorts of conclusions obtained with BAMM. My (DLR) personal view is that phylogenetic uncertainty is very much an issue for <strong>some types</strong> of results obtained using BAMM (and other programs), and (usually) not an issue at all for many other types of results.</p>
-<p>When does phylogenetic uncertainty <strong>not</strong> matter? For general inference on the overall tempo and mode of diversification, it is quite unlikely that - in general - your focal tree (say, MCC tree from BEAST, or ML tree from RAxML) is <em>so bad</em> that your broad-scale inferences in evolutionary dynamics are inaccurate. One reason for this is the somewhat paradoxical observation that confidence in <em>macroevolutionary conclusions</em> can be negatively correlated with confidence in <em>phylogenetic conclusions</em>. For example, consider a phylogeny showing a pattern of an early burst in lineage diversification, such that most major lineages arose during a brief period of time. You might never be able to resolve the <em>precise</em> order of branching of those lineages, and as such, you will always have a tree that is poorly resolved at the base. However, you might nonetheless be extremely confident that branch lengths are short near the base of the radiation (indeed, this is why you have low confidence in your topology!), and this means that your inferences on speciation rates themselves might be extremely robust. If you consider speciation in whales, as shown <a class="reference internal" href="bammgraph.html#bammgraphgallery6"><span>here</span></a> and <a class="reference internal" href="bammgraph.html#bammgraphgallery7"><span>here</span></a>, phylogenetic uncertainty isn&#8217;t going to change the big-picture conclusions: there was clearly a massive spike in evolutionary rates in some ancestral lineage leading to, or immediately nested within, the dolphin clade.</p>
+<p>When does phylogenetic uncertainty <strong>not</strong> matter? For general inference on the overall tempo and mode of diversification, it is quite unlikely that - in general - your focal tree (say, MCC tree from BEAST, or ML tree from RAxML) is <em>so bad</em> that your broad-scale inferences in evolutionary dynamics are inaccurate. One reason for this is the somewhat paradoxical observation that confidence in <em>macroevolutionary conclusions</em> can be negatively correlated with confidence in <em>phylogenetic conclusions</em>. For example, consider a phylogeny showing a pattern of an early burst in lineage diversification, such that most major lineages arose during a brief period of time. You might never be able to resolve the <em>precise</em> order of branching of those lineages, and as such, you will always have a tree that is poorly resolved at the base. However, you might nonetheless be extremely confident that branch lengths are short near the base of the radiation (indeed, this is why you have low confidence in your topology!), and this means that your inferences on speciation rates themselves might be extremely robust. If you consider speciation in whales, as shown <a class="reference internal" href="bammgraph.html#whales-ratesthroughtime"><span>here</span></a> and <a class="reference internal" href="bammgraph.html#whales-ratesthroughtimebw"><span>here</span></a>, phylogenetic uncertainty isn&#8217;t going to change the big-picture conclusions: there was clearly a massive spike in evolutionary rates in some ancestral lineage leading to, or immediately nested within, the dolphin clade.</p>
 <p>Phylogenetic uncertainty will matter if you do in fact care about <em>specific</em> aspects of changes in evolutionary dynamics. If you really care about the <em>precise</em> location of the shift in evolutionary dynamics, then the exact sequence of branching at the base of the dolphin radiation (to continue with the aforementioned example) <strong>will</strong> matter. Please keep in mind, however, that the BAMM model (and all other models), are merely statistical models that have imposed on the data. So, excessively fretting about whether the true shift in evolutionary dynamics occurred on branch <em>A</em> or branch <em>B</em> is somewhat unproductive, because the notion of a discrete shift is itself an assumption of the model we are using for inference.</p>
 <p>Although BAMM does not directly allow modeling of phylogenetic uncertainty, it is straightforward to perform BAMM analyses across distributions of phylogenies taken from a Bayesian analysis. We will soon be adding documentation on how you can use your bash shell (on the OSX or Linux operating systems) to perform a BAMM analysis across a sample of trees.</p>
 </div>

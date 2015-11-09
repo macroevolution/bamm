@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>4. Quick-start guide to BAMM &mdash; bamm 2.4.0 documentation</title>
+    <title>4. Quick-start guide to BAMM &mdash; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.4.0',
+        VERSION:     '2.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 2.4.0 documentation" href="documentation.html" />
+    <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" />
     <link rel="next" title="5. Setting Up BAMM" href="settingup.html" />
     <link rel="prev" title="3. Rate Shifts on Phylogenies: Theoretical Background" href="rateshifts.html" /> 
   </head>
@@ -128,7 +128,7 @@ min(v$edge.length)
 <div class="highlight-python"><div class="highlight"><pre>bamm -c myControlFile.txt
 </pre></div>
 </div>
-<p>You may <a class="reference external" href="http://bamm-project.org/download.html">download</a> example control files (or if you have the development repository, it is located in the directory <code class="docutils literal"><span class="pre">examples/</span></code> ). Use these as a template for setting up your own analyses. The control file is simply a text file with a set of parameter names, followed by the &#8220;equals&#8221; sign (=), followed by the parameter value. Anything on a line of the control file to the right of a pound sign (#) will be ignored by the program (e.g., it is considered a <em>comment</em>). Part of your control file might look like this:</p>
+<p>You may download example control files for <a class="reference download internal" href="_downloads/template_diversification.txt"><code class="xref download docutils literal"><span class="pre">diversification</span></code></a>  or <a class="reference download internal" href="_downloads/template_trait.txt"><code class="xref download docutils literal"><span class="pre">trait</span></code></a> analyses. Use these as a template for setting up your own analyses. The control file is simply a text file with a set of parameter names, followed by the &#8220;equals&#8221; sign (=), followed by the parameter value. Anything on a line of the control file to the right of a pound sign (#) will be ignored by the program (e.g., it is considered a <em>comment</em>). Part of your control file might look like this:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># This line is a comment. It will not be read by BAMM</span>
 <span class="n">modeltype</span> <span class="o">=</span> <span class="n">speciationextinction</span>
 <span class="n">treefile</span> <span class="o">=</span> <span class="n">myPhylogeny</span><span class="o">.</span><span class="n">tre</span>
@@ -138,7 +138,7 @@ min(v$edge.length)
 <span class="n">useGlobalSamplingProbability</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">globalSamplingFraction</span> <span class="o">=</span> <span class="mf">0.81</span>
 <span class="n">seed</span> <span class="o">=</span> <span class="mi">12345</span>
-<span class="n">poissonRatePrior</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c"># Another comment here</span>
+<span class="n">expectedNumberOfShifts</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c"># Another comment here</span>
 </pre></div>
 </div>
 <p>There are many possible settings that can be tweaked in BAMM. The next two sections give you a simple recipe for running the program on your data, depending on whether you are analyzing speciation-extinction rates or phenotypic evolutionary rates. <strong>There is no guarantee that these settings will work for your dataset</strong>.</p>
@@ -158,13 +158,13 @@ min(v$edge.length)
 </pre></div>
 </div>
 <p>This is where you specify the name of your phylogenetic tree. For example, <code class="docutils literal"><span class="pre">treefile</span> <span class="pre">=</span> <span class="pre">mytree.tre</span></code>. The other parameters we will force you to define explicitly have to do with output. This parameter block looks like this in the template:</p>
-<div class="highlight-python"><div class="highlight"><pre>    numberOfGenerations = %%%%
+<div class="highlight-python"><div class="highlight"><pre>numberOfGenerations = %%%%
 
-    mcmcWriteFreq = %%%%
+mcmcWriteFreq = %%%%
 
-    eventDataWriteFreq = %%%%
+eventDataWriteFreq = %%%%
 
-    printFreq = %%%%
+printFreq = %%%%
 
 acceptanceResetFreq = %%%%
 </pre></div>
@@ -185,14 +185,14 @@ Its value should be a divisor of <code class="docutils literal"><span class="pre
 </div>
 <p>You&#8217;ll want to increase all of these once you are sure the program is correctly loading your data etc, but it&#8217;s a good first check.</p>
 <p>One other block of parameters can be critical to BAMM performance: the priors that you place on your evolutionary rate parameters. The prior block in your control file looks similar to this (ignoring most comments in the template file):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">poissonRatePrior</span> <span class="o">=</span> <span class="mf">1.0</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">expectedNumberOfShifts</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="n">lambdaInitPrior</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="n">lambdaShiftPrior</span> <span class="o">=</span> <span class="mf">0.05</span>
 <span class="n">muInitPrior</span> <span class="o">=</span> <span class="mf">1.0</span>
 </pre></div>
 </div>
 <p>These priors may work for your dataset. They may also be extremely inadequate. To this end, we have included a function in the BAMMtools package to help you choose appropriate prior values. The function, <code class="docutils literal"><span class="pre">setBAMMpriors</span></code>, will automatically generate a prior block as a text file that you can copy and paste over the prior block in the template file. To do this, you need to install BAMMtools (see <a class="reference external" href="postprocess.html">here</a>), and you need your phylogenetic tree. Assuming you have a phylogenetic tree file <code class="docutils literal"><span class="pre">my_tree.tre</span></code>, you can generate the prior block with:</p>
-<div class="highlight-python"><div class="highlight"><pre>&gt; library(BAMMtools) # Assuming you have installed BAMMtools !
+<div class="highlight-python"><div class="highlight"><pre>&gt; library(BAMMtools) # Assuming you have installed BAMMtools!
 &gt; setBAMMpriors(&quot;my_tree.tre&quot;)
 </pre></div>
 </div>
@@ -247,14 +247,14 @@ Its value should be a divisor of <code class="docutils literal"><span class="pre
 </div>
 <p>You&#8217;ll want to increase most of these once you are sure the program is correctly loading your data etc, but it&#8217;s a good first check.</p>
 <p>As for the speciation-extinction models, the priors you place on phenotypic evolutionary parameters can have a substantial impact on BAMM performance. The prior block in your (trait) template control file looks similar to this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">poissonRatePrior</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">expectedNumberOfShifts</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">betaInitPrior</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">betaShiftPrior</span> <span class="o">=</span> <span class="mf">0.05</span>
 <span class="n">useObservedMinMaxAsTraitPriors</span> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
 </div>
 <p>These priors may work for your dataset, but they may also be very poor choices: it really depends on the scale of your tree (e.g., depth of the tree) and the variances in your trait values. The function <code class="docutils literal"><span class="pre">setBAMMpriors</span></code> (BAMMtools) will automatically generate a prior block as a text file that you can copy and paste over the prior block in the template file. This new set of priors is matched to the &#8220;scale&#8221; of your data. To do this, you need to install BAMMtools (see <a class="reference external" href="postprocess.html">here</a>), and you need your phylogenetic tree. Assuming you have a phylogenetic tree file <code class="docutils literal"><span class="pre">my_tree.tre</span></code> and a trait dataset <code class="docutils literal"><span class="pre">my_traitfile.txt</span></code>, you can generate the prior block with:</p>
-<div class="highlight-python"><div class="highlight"><pre>&gt; library(BAMMtools) # Assuming you have installed BAMMtools !
+<div class="highlight-python"><div class="highlight"><pre>&gt; library(BAMMtools) # Assuming you have installed BAMMtools!
 &gt; setBAMMpriors(phy = &quot;my_tree.tre&quot;, traits = &quot;my_traitfile.txt&quot;)
 </pre></div>
 </div>
@@ -274,7 +274,7 @@ Its value should be a divisor of <code class="docutils literal"><span class="pre
         lambdaInitPrior = &#39;1.889,
         lambdaShiftPrior = &#39;0.032,
         muInitPrior = &#39;1.889&#39;,
-        poissonRatePrior = &#39;1&#39;))
+        expectedNumberOfShifts = &#39;1&#39;))
 </pre></div>
 </div>
 </div>

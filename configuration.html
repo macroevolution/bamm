@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>6. Configuration &mdash; bamm 2.4.0 documentation</title>
+    <title>6. Configuration &mdash; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.4.0',
+        VERSION:     '2.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 2.4.0 documentation" href="documentation.html" />
+    <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" />
     <link rel="next" title="7. Analyzing BAMM output with BAMMtools" href="postprocess.html" />
     <link rel="prev" title="5. Setting Up BAMM" href="settingup.html" /> 
   </head>
@@ -164,8 +164,7 @@ If <code class="docutils literal"><span class="pre">0</span></code>, run the ful
 If <code class="docutils literal"><span class="pre">0</span></code>, just check to see if the data can be loaded correctly.</dd>
 <dt><code class="docutils literal"><span class="pre">simulatePriorShifts</span></code></dt>
 <dd>If <code class="docutils literal"><span class="pre">1</span></code>, simulate prior distribution of the number of shift events,
-given the hyperprior on the Poisson rate parameter.
-This is necessary to compute the Bayes factor.</dd>
+given the hyperprior on the Poisson rate parameter. As the prior probabilities of shifts can now be calculated analytically (as described <a class="reference internal" href="postprocess.html#analyticalprior"><span>here</span></a>), this option is no longer necessary and is set to <code class="docutils literal"><span class="pre">0</span></code> by default.</dd>
 <dt><code class="docutils literal"><span class="pre">loadEventData</span></code></dt>
 <dd>If <code class="docutils literal"><span class="pre">1</span></code>, load a previous event state (event locations and parameter
 values) from a file. This allows a run to be continued even after a
@@ -193,7 +192,7 @@ filenames.
 If <code class="docutils literal"><span class="pre">0</span></code>, do not run if output files already exist with identical filenames.</dd>
 <dt><code class="docutils literal"><span class="pre">validateEventConfiguration</span></code></dt>
 <dd>If <code class="docutils literal"><span class="pre">1</span></code>, rejects proposals that cause a branch and both of its direct
-descendants to have at least one event. Such event configuration may cause
+descendants to have at least one event. Such an event configuration may cause
 the parameters of the parent event to change to unrealistic values.
 If <code class="docutils literal"><span class="pre">0</span></code>, no such proposals are immediately rejected.
 The default value is <code class="docutils literal"><span class="pre">0</span></code>.</dd>
@@ -202,12 +201,11 @@ The default value is <code class="docutils literal"><span class="pre">0</span></
 <div class="section" id="priors">
 <h3>6.2.2. Priors<a class="headerlink" href="#priors" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><code class="docutils literal"><span class="pre">poissonRatePrior</span></code></dt>
-<dd>The rate parameter of the exponential prior on the rate parameter
-of the Poisson process. Smaller values favor greater numbers of distinct
-evolutionary regimes on the tree. Suggested values:
-<code class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">1.0</span></code> for smaller datasets (&lt; 500 tips) or
-<code class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">0.1</span></code> or even <code class="docutils literal"><span class="pre">0.2</span></code> for large (5000+ tips).</dd>
+<dt><code class="docutils literal"><span class="pre">expectedNumberOfShifts</span></code></dt>
+<dd><p class="first">BAMM will use this value to calculate the prior probability distribution on the number of rate shifts. In previous versions of BAMM this was specified via the <code class="docutils literal"><span class="pre">poissonRatePrior</span></code>, which is simply <img class="math" src="_images/math/f9c8f8b936b94e43eade2307f47b848171a72b08.png" alt="\frac{1}{expectedNumberOfShifts}"/>. Suggested values:</p>
+<p><code class="docutils literal"><span class="pre">expectedNumberOfShifts</span> <span class="pre">=</span> <span class="pre">1.0</span></code> for smaller datasets (&lt; 500 tips) or</p>
+<p class="last"><code class="docutils literal"><span class="pre">expectedNumberOfShifts</span> <span class="pre">=</span> <span class="pre">10</span></code> or even <code class="docutils literal"><span class="pre">50</span></code> for large (5000+ tips).</p>
+</dd>
 </dl>
 </div>
 <div class="section" id="mcmc-simulation">

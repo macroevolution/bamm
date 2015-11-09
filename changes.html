@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>BAMM Changes &mdash; bamm 2.4.0 documentation</title>
+    <title>BAMM Changes &mdash; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.4.0',
+        VERSION:     '2.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 2.4.0 documentation" href="documentation.html" /> 
+    <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" /> 
   </head>
   <body role="document">
 <div class="pageheader">
@@ -45,16 +45,22 @@
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">BAMM Changes</a><ul>
-<li><a class="reference internal" href="#id1">2.5.0</a></li>
-<li><a class="reference internal" href="#id2">2.2.0</a></li>
-<li><a class="reference internal" href="#id3">2.1.0</a></li>
-<li><a class="reference internal" href="#id4">2.0.0</a><ul>
+<li><a class="reference internal" href="#id1">2.5.0</a><ul>
 <li><a class="reference internal" href="#new-features-and-enhancements">New features and enhancements</a></li>
+<li><a class="reference internal" href="#bammtools-enhancements">BAMMtools enhancements</a></li>
 <li><a class="reference internal" href="#bug-fixes">Bug fixes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id2">2.4.0</a></li>
+<li><a class="reference internal" href="#id3">2.2.0</a></li>
+<li><a class="reference internal" href="#id4">2.1.0</a></li>
+<li><a class="reference internal" href="#id5">2.0.0</a><ul>
+<li><a class="reference internal" href="#id6">New features and enhancements</a></li>
+<li><a class="reference internal" href="#id7">Bug fixes</a></li>
 <li><a class="reference internal" href="#other-changes">Other changes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id5">1.0.0</a></li>
+<li><a class="reference internal" href="#id8">1.0.0</a></li>
 </ul>
 </li>
 </ul>
@@ -91,17 +97,45 @@
 <span id="changes"></span><h1>BAMM Changes<a class="headerlink" href="#bamm-changes" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
 <h2>2.5.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p><em>October 10, 2015</em></p>
-<blockquote>
-<div><ul class="simple">
-<li>Fixed bug in acceptance probability for MCMC moves that update the Poisson rate parameter. This is the most serious bug we have encountered in BAMM and <strong>would have magnified the effects of the prior on the posterior distribution of the number of shifts</strong>. If you previously used the default value of <code class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">1.0</span></code>, you will probably notice little effect on inference, but <em>it may have had an impact in some cases</em>. We are grateful to Cécile Ané and Bret Larget for helping us solve this. We fixed this in June 2015 but are flagging it here.</li>
-<li>There was a bug in the computation of extinction probabilities that would have affected extinction probability calculations for a relatively small fraction of nodes in the tree. This <strong>may</strong> have affected some results, however - please check.</li>
-<li>the option <code class="docutils literal"><span class="pre">validateEventConfiguration</span></code> is an internal debugging option that should have had a default value of 0, but was instead set to 1 (this led to a bug in the Hastings ratio that would have affected a very small fraction of MCMC moves).</li>
+<p><em>Nov 4, 2015</em></p>
+<div class="section" id="new-features-and-enhancements">
+<h3>New features and enhancements<a class="headerlink" href="#new-features-and-enhancements" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>The prior distribution on the number of shifts is now specified with parameter <code class="docutils literal"><span class="pre">expectedNumberOfShifts</span></code>. This is simply the inverse of the previously-used parameter <code class="docutils literal"><span class="pre">poissonRatePrior</span></code>. BAMM control files will accept either parameter name but we find that <code class="docutils literal"><span class="pre">expectedNumberOfShifts</span></code> is more intuitive.</li>
+<li>No more prior simulation in BAMM. The relevant BAMMtools functions now accept an argument for <code class="docutils literal"><span class="pre">expectedNumberOfShifts</span></code> and compute the full prior distribution from that information.</li>
+<li>We made a major change to the algorithm for handling extinction probabilities <img class="math" src="_images/math/a4fc1ca8d5e77bf02fca6cad6600471b37079b27.png" alt="E(t)"/> at internal nodes when the two branches descended from a node differ in their shift histories. We don&#8217;t consider the previous approach a bug <em>per se</em>, but have convinced ourselves that the new way has a better theoretical justification. We explain why we made this change <a class="reference internal" href="likelihoodmodel.html#extinctionnodes"><span>here</span></a>.</li>
 </ul>
-</div></blockquote>
+</div>
+<div class="section" id="bammtools-enhancements">
+<h3>BAMMtools enhancements<a class="headerlink" href="#bammtools-enhancements" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>We have added a new function to BAMMtools, <code class="docutils literal"><span class="pre">BAMMlikelihood</span></code>, which is an R-based tool for replicating the calculations implemented in BAMM. This is described <a class="reference internal" href="likelihoodmodel.html#testlikelihood"><span>here</span></a>.</li>
+<li>Changes to BAMMtools rate plotting functions, including improved histograms, color break options, and more.</li>
+<li>New functions, including <code class="docutils literal"><span class="pre">generateControlFile</span></code> (to generate BAMM control files from within R), <code class="docutils literal"><span class="pre">plotPrior</span></code> (to visualize the prior and posterior distributions on the number of rate shifts), and <code class="docutils literal"><span class="pre">ratesHistogram</span></code> (to visualize the distribution of rates across a phylogeny).</li>
+<li>No more &#8220;branch specific Bayes factors&#8221; for distinguishing between core and non-core shifts. We have replaced this terminology with a related concept - the <em>marginal odds ratio</em>. Note that neither &#8220;branch specific Bayes factors&#8221; nor &#8220;marginal odds ratios&#8221; can be used for formal model selection; we have explained this in detail on our conceptual page about the interpretation of <a class="reference external" href="rateshifts.html">rate shifts</a> .</li>
+</ul>
+</div>
+<div class="section" id="bug-fixes">
+<h3>Bug fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>the option <code class="docutils literal"><span class="pre">validateEventConfiguration</span></code> is an internal debugging option that should have had a default value of 0, but was instead set to 1 (this led to a bug in the Hastings ratio that would have affected a very small fraction of MCMC moves).</li>
+<li>Fixed bug introduced during programming of fossil BAMM that sometimes recomputed extinction probabilities <img class="math" src="_images/math/a4fc1ca8d5e77bf02fca6cad6600471b37079b27.png" alt="E(t)"/>. An explanation for why extinction probabilities must account for downstream shift histories is found <a class="reference internal" href="likelihoodmodel.html#whatprocess"><span>here</span></a> (this bug was not incorporated into the compiled version of BAMM that was distributed on the website but could have affected some analyses where users compiled BAMM code themselves).</li>
+</ul>
+</div>
 </div>
 <div class="section" id="id2">
-<h2>2.2.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2>2.4.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p><em>June 13, 2015</em></p>
+<ul class="simple">
+<li>Caught a bug introduced during programming of fossil BAMM that allowed numerical overflow issues to occur to the extinction probability when E(t) approached 1.0 (this bug was not incorporated into the compiled version of BAMM that was distributed on the website but could have affected some analyses where users compiled BAMM code themselves).</li>
+</ul>
+<p><em>May 26, 2015</em></p>
+<ul class="simple">
+<li>Fixed bug in acceptance probability for MCMC moves that update the Poisson rate parameter. This is the most serious bug we have encountered in BAMM and <strong>would have magnified the effects of the prior on the posterior distribution of the number of shifts</strong>. If you previously used the default value of <code class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">1.0</span></code>, you will probably notice little effect on inference, but <em>it may have had an impact in some cases</em>. We are grateful to Cécile Ané and Bret Larget for helping us solve this.</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>2.2.0<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p><em>September 5, 2014</em></p>
 <ul class="simple">
 <li>Parallelism is now implemented using C++11 threads<ul>
@@ -115,8 +149,8 @@
 <li>Fix bug in initialization of trait values</li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h2>2.1.0<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>2.1.0<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p><em>July 21, 2014</em></p>
 <ul class="simple">
 <li>Add proposal to change the number of events
@@ -131,11 +165,11 @@ be set to 0 when this new proposal is used</li>
 or adding initial events</li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h2>2.0.0<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>2.0.0<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <p><em>June 11, 2014</em></p>
-<div class="section" id="new-features-and-enhancements">
-<h3>New features and enhancements<a class="headerlink" href="#new-features-and-enhancements" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>New features and enhancements<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Metropolis-coupled MCMC<ul>
 <li>Implementation from Altekar et al 2004
@@ -172,8 +206,8 @@ when <em>k</em> &gt; 0, use the symmetrical function of <em>k</em> &lt; 0</li>
 <li>Display better error messages related to reading a tree</li>
 </ul>
 </div>
-<div class="section" id="bug-fixes">
-<h3>Bug fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>Bug fixes<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Properly prefix file names if it includes a directory</li>
 <li>Fix detection of negative branches</li>
@@ -189,8 +223,8 @@ when <em>k</em> &gt; 0, use the symmetrical function of <em>k</em> &lt; 0</li>
 </ul>
 </div>
 </div>
-<div class="section" id="id5">
-<h2>1.0.0<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h2>1.0.0<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
 <p><em>March 5, 2014</em></p>
 <ul class="simple">
 <li>Initial release</li>

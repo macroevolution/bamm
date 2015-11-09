@@ -30,11 +30,13 @@ the R package `BAMMtools <http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.1
 Recommended reading
 ===========================
 
-* **Is the BAMM likelihood theoretically valid?** Find out `here <likelihoodmodel.html>`_
+* We strongly recommend that you read our documentation on how to (and how not to) interpret `rate shifts <rateshifts.html>`_ on phylogenies. This section addresses some of the most common pitfalls with interpreting BAMM analyses.  
+
+* **What are the assumptions of the BAMM likelihood?** Find out `here <likelihoodmodel.html>`_
 
 * **Is the BAMM likelihood computed correctly**, given the assumptions of the model? Learn more about testing it :ref:`here <testlikelihood>`
 
-* We strongly recommend that you read our documentation on how to (and how not to) interpret `rate shifts <rateshifts.html>`_ on phylogenies. This section addresses some of the most common pitfalls with interpreting BAMM analyses.  
+
 
 Recent changes
 =================
