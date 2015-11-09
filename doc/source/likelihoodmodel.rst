@@ -55,9 +55,11 @@ The heavy line in case (iv) represents a macroevolutionary rate regime that diff
 .. math::	
 	\frac{dE}{dt} = \mu -(\lambda + \mu)E(t) + \lambda E(t)^2 + \Lambda \Omega
 
-Thus, lineages shift to a new process on :math:`\Delta t` with probability proportional to :math:`\Lambda`, but then the process and all of its descendants go extinct before the present. Computing the probability :math:`\Omega` is, in our opinion, not feasible. One would have to integrate over the chance of extinction for all possible diversification histories, weighting each history by its relative probability. We have very little information about the universe of possible diversification histories (and even less about the relative probabilities of those histories), so it seems like this is a quantity that cannot be computed. One possible solution may be to use empirical parameterizations, perhaps estimating the underlying distributions of diversification histories from the fossil record (or potentially, other molecular phylogenetic studies). However, we also suspect that the set of all processes (diversification shifts) that occurred but subsequently went extinct might be drawn from a different probability distribution than the set of processes that survived to the present to be observed. If this is true, then there is no possible information about :math:`\Omega` that can be gained from molecular phylogenies alone.
+Thus, lineages shift to a new process on :math:`\Delta t` with probability proportional to :math:`\Lambda`, but then the process and all of its descendants go extinct before the present. Computing the probability :math:`\Omega` is, in our opinion, not feasible. One would have to integrate over the chance of extinction for all possible diversification histories, weighting each history by its relative probability. We have very little information about the universe of possible diversification histories (and even less about the relative probabilities of those histories), so it seems like this is a quantity that cannot be computed. One possible solution may be to use empirical parameterizations, perhaps estimating distributions of diversification histories from the fossil record (or potentially, other molecular phylogenetic studies). 
 
-What is the difference between this model and BiSSE (or related models), where lineages can shift to other evolutionary rate regimes (e.g., alternative character states)? The difference is that, in BiSSE, the parameters of the process are fixed, but the locations of the transitions are unknown. Hence, the BiSSE likelihood involves integration over all possible transitions in diversification processes, but there are a finite set of such processes (2 for BiSSE), and the parameters of the processes are known. Computing :math:`\Omega` is an entirely different beast, because we need to integrate over all possible transitions to processes with unknown parameters and which are drawn from unknown probability density functions. 
+We also suspect that the set of all processes (diversification shifts) that occurred but subsequently went extinct might be drawn from a different probability distribution than the set of processes that survived to the present to be observed. If this is true, then there is **no possible information** about :math:`\Omega` that can be gained from molecular phylogenies alone.
+
+What is the difference between this model and BiSSE (or related models), where lineages can shift to other evolutionary rate regimes (e.g., alternative character states)? The difference is that, in BiSSE, the parameters of the process are fixed, but the locations of the transitions are unknown. Hence, the BiSSE likelihood involves integration over all possible transitions in diversification processes, but there are a finite set of such processes (2 for BiSSE), and the parameters of the processes are known. Computing :math:`\Omega` is not tractable, because we need to integrate over all possible transitions to processes with unknown parameters and which are drawn from unknown probability density functions. 
 
 But we should note again that this leads to a weird condition in the BAMM model, which was not clearly discussed in Rabosky's `(2014) <http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0089543>`_ description of BAMM. In practical terms, the BAMM likelihood assumes that some lineages effectively *see into the future* and modify their event state space based on future outcomes: specifically, a lineage cannot undergo a rate shift if it is destined for extinction. 
 
@@ -114,7 +116,7 @@ We simulated extinction probabilities under each of these 3 scenarios (Type 1, T
 
 * For **Type 1** simulation: If the process is extant at time :math:`t_2`, a single lineage is chosen at random to shift to the new parameters. The process is said to become extinct if all descendants of the "shift" lineage go extinct before the present.
 * For **Type 2** simulation: If the process is extant at time :math:`t_2`, all lineages still alive at that time undergo a simultaneous shift in rates to the new parameters. The process becomes extinct if all lineages have become extinct before the present.
-* For **Type 3 simulation**: If the process is extant at time :math:`t_2`, a single lineage is chosen at random to shift to the new parameters. The process is said to become extinct only if all lineages become extinct. Thus, all descendants of the original lineage alive at time :math:`t_1` must die out for the process to become extinct.
+* For **Type 3** simulation: If the process is extant at time :math:`t_2`, a single lineage is chosen at random to shift to the new parameters. The process is said to become extinct only if all lineages become extinct. Thus, all descendants of the original lineage alive at time :math:`t_1` must die out for the process to become extinct.
 
 The results presented below do not depend on the specific distributions from which the rate parameters are drawn. Nor should they: if the *recomputed* and/or *pass-down* (BAMM) implementations are mathematically correct, it will make no difference what parameter values are used: the extinction probabilities will match precisely the simulated expectation.
 
@@ -252,7 +254,7 @@ This section is just to raise some theoretical concerns with multi-type branchin
 
 * All methods of which we are aware that compute the likelihood of a fixed configuration of rate shifts on phylogenetic trees (with the potential for extinction) assume that diversification shifts **do not happen** on branches that are unobserved (or that go extinct before the present). We have found no evidence that this is a problem for empirical inference, but are there any conditions under which we should be concerned about this?
 
-* How should :math:`E(t)` calculations at nodes be handled? We have found that the current approach used by BAMM performs well, but we acknowledge that theoretical justification for our handling of it is lacking. 
+* How should :math:`E(t)` calculations at nodes be handled? We have found that the current approach used by BAMM performs well (and we've compared this approach to alternatives, such as the arbitrary approach described above), but we acknowledge that theoretical justification for our handling of it is lacking. 
 
 * We do not know how to simulate the extinction probability :math:`E(t)` for an entire diversification history as applied to a phylogenetic tree. The simulations described above are straightforward for single branches, but we have been unable to identify a simulation algorithm that can exactly reproduce the extinction probability for an entire process (e.g., a full tree with mapped rate shifts) as computed for any models that purport to compute the likelihood of a phylogenetic tree under under a fixed configuration of diversification rate shifts.
 
@@ -290,16 +292,16 @@ We also need to ensure that we use exactly the same ``segLength`` parameter for 
 		
 So, close -- but are they close enough? Let's do 50 samples::
 
-	ll <- BAMMlikelihood(whales, events, gen = "all", segLength = 0.02, sf = 0.98)
-	plot(mcmc$logLik ~ ll)
+	rloglik <- BAMMlikelihood(whales, events, gen = "all", segLength = 0.02, sf = 0.98)
+	plot(mcmc$logLik ~ rloglik)
 	lines(x=c(-350,-250), y=c(-350, -250), lwd=1, col='red')	
 	
 These should look precisely identical (please let us know if for some reason they appear to be different!). We can look at the average and maximum differences between these values::
 
-	mean(abs(ll - mcmc$logLik))
+	mean(abs(rloglik - mcmc$logLik))
 	# which returns:
 		[1] 0.0002952669
-	max(abs(ll - mcmc$logLik))
+	max(abs(rloglik - mcmc$logLik))
 	# which returns:
 		[1] 0.0005066073
 	
