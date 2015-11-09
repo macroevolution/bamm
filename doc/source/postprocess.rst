@@ -32,19 +32,19 @@ The sections below include:
 	:ref:`This section<numbershifts>` describes how to analyze the number and location of rate shifts from a Bayesian perspective.
 	
 * **Bayes factors for model comparison**
-	Robust model selection with :ref:`Bayes factors<bayesfactors>`
+	Robust model selection with :ref:`Bayes factors<bayesfactors>`.
 
 * **Clade-specific evolutionary rates**
 	Estimating mean rates for :ref:`specific clades<claderates>`.
 
 * **Branch and tip-specific evolutionary rates**
-	Estimate marginal densities of rates for individual :ref:`branches and tips<branchrates>`
+	Estimate marginal densities of rates for individual :ref:`branches and tips<branchrates>`.
 
 * **Rate-through-time analysis**
-	Analyze and plot macroevolutionary :ref:`rates through time<bammtoolsRTT>`
+	Analyze and plot macroevolutionary :ref:`rates through time<bammtoolsRTT>`.
 
 * **Macroevolutionary cohort analysis**
-	Visualize sets of taxa with :ref:`shared rate dynamics<cohorts>`
+	Visualize sets of taxa with :ref:`shared rate dynamics<cohorts>`.
 
 
 BAMMtools quickstart guide

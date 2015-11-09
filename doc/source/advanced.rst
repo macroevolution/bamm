@@ -10,7 +10,7 @@ Accounting for *non-random* incomplete taxon sampling in diversification studies
 
 **CAUTION**: For analyses of higher level phylogenetic trees where you have single representatives of different groups,
 such as genus-level or family-level phylogenies, we **strongly recommend** that you use a stochastic polytomy resolver - such as PASTIS - to place the missing species
-in the tree. The PASTIS method is described `here <http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12117/abstract>`_ , and there 
+in the tree. The PASTIS method is described `here <http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12117/abstract>`_, and there 
 is an associated R package. Using the analytical correction for incomplete taxon sampling
 is less effective when your phylogenies are extremely incomplete (e.g., < 10% of tips sampled). Even with the uncertainty introduced by the PASTIS approach, 
 you will obtain better results using this for highly incomplete phylogenies. 

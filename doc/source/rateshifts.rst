@@ -333,7 +333,7 @@ The whale dataset provides a relatively simple example of a cohort analysis. Aga
 
 The large blue blocks A and D clearly show that across the posterior distribution of the BAMM analysis, the dolphin clade almost never shares the same rate regime as the rest of the phylogeny. 
 
-There is a small clade, represented by blocks E, F and G, that contains porpoises, narwhals and belugas, which is sister to the dolphin clade. Interestingly, we see that in about 40% of the posterior, this clade shares the same rate regime as the dolphin clade (hence the light blue in block G), and in the rest of the posterior, it has the root rate regime, which is why the block labeled F has a value of ~ 60 - 70% (tan color). 
+There is a small clade, represented by blocks E, F and G, that contains porpoises, narwhals and belugas, which is sister to the dolphin clade. Interestingly, we see that in about 40% of the posterior, this clade shares the same rate regime as the dolphin clade (hence the light blue in block G), and in the rest of the posterior, it is governed by the parent rate regime, which is why the block labeled F has a value of ~ 60 - 70% (tan color). 
 
 
 

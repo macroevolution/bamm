@@ -22,18 +22,20 @@ New features and enhancements
 BAMMtools enhancements
 ............................. 
 
-* We have added a new function to BAMMtools, ``BAMMlikelihood``, which is an R-based tool for replicating the calculations implemented in BAMM. This is described :ref:`here <testlikelihood>`
+* We have added a new function to BAMMtools, ``BAMMlikelihood``, which is an R-based tool for replicating the calculations implemented in BAMM. This is described :ref:`here <testlikelihood>`.
 
 * Changes to BAMMtools rate plotting functions, including improved histograms, color break options, and more.
 
-* No more "branch specific Bayes factors" for distinguishing between core and non-core shifts. We have replaced this terminology with a related concept - the *marginal odds ratio*. Note that neither "branch specific Bayes factors" nor "marginal odds ratios" can be used for formal model selection; we have explained this in detail on our conceptualpage about the interpretation of `rate shifts <rateshifts.html>`_ . 
+* New functions, including ``generateControlFile`` (to generate BAMM control files from within R), ``plotPrior`` (to visualize the prior and posterior distributions on the number of rate shifts), and ``ratesHistogram`` (to visualize the distribution of rates across a phylogeny).
+
+* No more "branch specific Bayes factors" for distinguishing between core and non-core shifts. We have replaced this terminology with a related concept - the *marginal odds ratio*. Note that neither "branch specific Bayes factors" nor "marginal odds ratios" can be used for formal model selection; we have explained this in detail on our conceptual page about the interpretation of `rate shifts <rateshifts.html>`_ . 
 
 Bug fixes
 ............................. 
 
 * the option ``validateEventConfiguration`` is an internal debugging option that should have had a default value of 0, but was instead set to 1 (this led to a bug in the Hastings ratio that would have affected a very small fraction of MCMC moves).
  
-* Fixed bug introduced during programming of fossil BAMM that sometimes recomputed extinction probabilities :math:`E(t)`. An explanation for why extinction probabilities must account for downstream shift histories is found :ref:`here <whatprocess>`. (this bug was not incorporated into the compiled version of BAMM that was distributed on the website but could have affected some analyses where users compiled BAMM code themselves).   
+* Fixed bug introduced during programming of fossil BAMM that sometimes recomputed extinction probabilities :math:`E(t)`. An explanation for why extinction probabilities must account for downstream shift histories is found :ref:`here <whatprocess>` (this bug was not incorporated into the compiled version of BAMM that was distributed on the website but could have affected some analyses where users compiled BAMM code themselves).   
 
 
 2.4.0
