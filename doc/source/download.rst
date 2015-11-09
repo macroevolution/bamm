@@ -12,16 +12,16 @@ OS X
 **Note**: See `Setting Up BAMM <settingup.html>`_ to download and install
 BAMM using Homebrew.
 
-`bamm-2.4.0-MacOSX.tar.gz
-<https://dl.dropboxusercontent.com/u/34644229/bamm-2.4.0-MacOSX.tar.gz>`_
+`bamm-2.5.0-MacOSX.tar.gz
+<https://dl.dropboxusercontent.com/u/34644229/bamm-2.5.0-MacOSX.tar.gz>`_
 
 Requires OS X 10.7.5 or greater.
 
 Windows
 -------
 
-`bamm-2.4.0-windows.zip
-<https://dl.dropboxusercontent.com/u/34644229/bamm-2.4.0-Windows.zip>`_
+`bamm-2.5.0-windows.zip
+<https://dl.dropboxusercontent.com/u/34644229/bamm-2.5.0-Windows.zip>`_
 
 Requires Windows 7 or greater (does not run on Windows XP).
 
