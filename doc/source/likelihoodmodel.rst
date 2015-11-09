@@ -171,7 +171,7 @@ This is not to say that results obtained with older versions of BAMM are incorre
 
 	combineExtinctionAtNodes = "if_different"
 	
-However, if you want to handle these calculations exactly as they were handled with the previous version of BAMM (< v2.4), you can specify::
+However, if you want to handle these calculations exactly as they were handled with the previous version of BAMM (< v2.5), you can specify::
 
 
 	combineExtinctionAtNodes = "left"
