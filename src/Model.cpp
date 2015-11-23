@@ -66,6 +66,8 @@ Model::~Model()
     for (Proposal* proposal : _proposals) {
         delete proposal;
     }
+    
+    delete _rootEvent;
 }
 
 
