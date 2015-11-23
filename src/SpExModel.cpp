@@ -967,6 +967,9 @@ double SpExModel::computeLogPrior()
     logPrior += _prior.lambdaInitRootPrior(rootEvent->getLamInit());
     if (rootEvent->isTimeVariable()) {
         logPrior += _prior.lambdaShiftRootPrior(rootEvent->getLamShift());
+        //logPrior += std::log(_prior.lambdaIsTimeVariablePrior());
+    }else{
+        //logPrior += std::log(1.0 - _prior.lambdaIsTimeVariablePrior());
     }
     logPrior += _prior.muInitRootPrior(rootEvent->getMuInit());
     logPrior += _prior.muShiftRootPrior(rootEvent->getMuShift());
@@ -978,7 +981,11 @@ double SpExModel::computeLogPrior()
         logPrior += _prior.lambdaInitPrior(event->getLamInit());
         if (event->isTimeVariable()) {
             logPrior += _prior.lambdaShiftPrior(event->getLamShift());
+        //    logPrior += std::log(_prior.lambdaIsTimeVariablePrior());
+        }else{
+        //    logPrior += std::log(1.0 - _prior.lambdaIsTimeVariablePrior());
         }
+        
         logPrior += _prior.muInitPrior(event->getMuInit());
         logPrior += _prior.muShiftPrior(event->getMuShift());
     }

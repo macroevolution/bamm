@@ -98,6 +98,12 @@ double Prior::generateLambdaInitFromPrior()
     }
 }
 
+double Prior::lambdaIsTimeVariablePrior()
+{
+    return _lambdaIsTimeVariablePrior;
+}
+
+
 
 double Prior::muInitPrior(double x)
 {
@@ -194,6 +200,11 @@ bool Prior::generateBetaIsTimeVariableFromPrior()
     return _random.trueWithProbability(_betaIsTimeVariablePrior);
 }
 
+double Prior::betaIsTimeVariablePrior()
+{
+    return _betaIsTimeVariablePrior;
+}
+
 
 double Prior::lambdaInitRootPrior(double x)
 {
@@ -201,6 +212,8 @@ double Prior::lambdaInitRootPrior(double x)
         return lambdaInitPrior(x);
     } else {
         return Stat::lnExponentialPDF(x, _lambdaInitRootPrior);
+        std::cout << "Invalid call to lambdaInitRootPrior"  << std::endl;
+        exit(0);
     }
 
 }
@@ -214,6 +227,11 @@ double Prior::lambdaShiftRootPrior(double x)
         //TODO: what is going on here?
         // lambdaShiftRootPrior has been deprecated,
         // but why is this implemented as an exponential???
+        // TODO: throwing exception here as should never
+        //  get here, but need more tests to remove.
+        std::cout << "Invalid call to lambdaInitRootPrior"  << std::endl;
+        exit(0);
+        
         
         return Stat::lnExponentialPDF(x, _lambdaShiftRootPrior);
     }
@@ -225,6 +243,11 @@ double Prior::muInitRootPrior(double x)
     if (fabs(_muInitRootPrior + 1) < _UPDATE_TOL) {
         return muInitPrior(x);
     } else {
+
+        // TODO: throwing exception here as should never
+        //  get here, but need more tests to remove.
+        std::cout << "Invalid call to muInitRootPrior"  << std::endl;
+        exit(0);
         return Stat::lnExponentialPDF(x, _muInitRootPrior);
     }
 }
@@ -238,7 +261,8 @@ double Prior::muShiftRootPrior(double x)
         //TODO: what is going on here?
         // muShiftRootPrior has been deprecated,
         // but why is this implemented as an exponential???
-        
+        std::cout << "Invalid call to muShiftRootPrior"  << std::endl;
+        exit(0);
         return Stat::lnExponentialPDF(x, _muShiftRootPrior);
     }
 }

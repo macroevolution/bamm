@@ -38,6 +38,7 @@ public:
     double generateMuInitFromPrior(); 
 
     bool generateLambdaIsTimeVariableFromPrior();
+    double lambdaIsTimeVariablePrior();
     
     double poissonRatePrior(double);
     double generatePoissonRateFromPrior();
@@ -49,6 +50,7 @@ public:
     double generateBetaShiftFromPrior();
 
     bool generateBetaIsTimeVariableFromPrior();
+    double betaIsTimeVariablePrior();
     
     double preservationRatePrior(double);
     
