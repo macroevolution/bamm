@@ -70,6 +70,10 @@ private:
     ModelDataWriter* _dataWriter;
 
     int _acceptanceResetFreq;
+
+    // convergence criteria
+    int _ESS, _checkEvery, _maxGenerations, _outputFreq;
+    double _burninFrac;
 };
 
 
