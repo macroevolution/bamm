@@ -11,7 +11,6 @@
 
 #include <algorithm>
 #include <thread>
-#include <iostream>
 
 
 MetropolisCoupledMCMC::MetropolisCoupledMCMC
@@ -71,6 +70,9 @@ void MetropolisCoupledMCMC::run()
     } else {
         std::vector<double> nshifts;
         std::vector<double> loglik;
+
+        log() << "\nStopping at ESS > " << _ESS << ", checking every " << _checkEvery << " generations w/ burnin " << _burninFrac << "\n\n";
+
         while (generation < _nGenerations) {
             int generationEnd = std::min(generation + _swapPeriod, _nGenerations);
             runChains(generation, generationEnd);
@@ -85,12 +87,12 @@ void MetropolisCoupledMCMC::run()
             if (generation % _checkEvery == 0) {
                 double nshifts_ess = Stat::ESS(nshifts, _burninFrac);
                 double loglik_ess = Stat::ESS(loglik, _burninFrac);
-                std::cout << std::endl << "NShifts ESS: " << nshifts_ess << " LogLik ESS: " << loglik_ess << " Target ESS: " << _ESS << std::endl;
+                log() << "\nNShifts ESS: " << nshifts_ess << " LogLik ESS: " << loglik_ess << "\n";
                 if (loglik_ess > _ESS && nshifts_ess > _ESS){
-                    std::cout << "Target ESS reached!" << std::endl;
+                    log() << "Target ESS of " << _ESS << " reached!\n";
                     break;
                 } else {
-                    std::cout << std::endl;
+                    log() << "\n";
                 }
             }
         }
