@@ -72,7 +72,7 @@ void MetropolisCoupledMCMC::run()
     } else {
         std::vector<double> nshifts;
         std::vector<double> loglik;
-        while (generation < _nGenerations || generation > _maxGenerations) {
+        while (generation < _maxGenerations) {
             int generationEnd = std::min(generation + _swapPeriod, _nGenerations);
             runChains(generation, generationEnd);
             generation = generationEnd;
@@ -83,7 +83,7 @@ void MetropolisCoupledMCMC::run()
                 nshifts.push_back(_chains[_coldChainIndex]->model().getNumberOfEvents());
                 loglik.push_back(_chains[_coldChainIndex]->model().getCurrentLogLikelihood());
             }
-            if (generation % _checkEvery == 0) {
+            if (generation > _nGenerations && generation % _checkEvery == 0) {
                 double nshifts_ess = Stat::ESS(nshifts, _burninFrac);
                 double loglik_ess = Stat::ESS(loglik, _burninFrac);
                 std::cout << std::endl << "NShifts ESS: " << nshifts_ess << " LogLik ESS: " << loglik_ess << " Target ESS: " << _ESS << std::endl;
