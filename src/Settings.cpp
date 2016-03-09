@@ -166,7 +166,6 @@ void Settings::initializeGlobalSettings()
     // Convergence criterion parameters
     addParameter("convergenceESS", "0", NotRequired);
     addParameter("convergenceCheckFreq", "1000000", NotRequired);
-    addParameter("convergenceMaxGenerations", "10000000", NotRequired);
     addParameter("convergenceBurninFrac", "0.1", NotRequired);
 
 
