@@ -72,7 +72,7 @@ private:
     int _acceptanceResetFreq;
 
     // convergence criteria
-    int _ESS, _checkEvery, _maxGenerations, _outputFreq;
+    int _ESS, _checkEvery, _outputFreq;
     double _burninFrac;
 };
 
