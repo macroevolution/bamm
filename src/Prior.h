@@ -9,6 +9,7 @@
 
 class Settings;
 class Random;
+class Tree;
 
 
 class Prior
@@ -53,6 +54,7 @@ public:
     double betaIsTimeVariablePrior();
     
     double preservationRatePrior(double);
+    void autoInitializePriors(Tree*);
     
     
 // Root priors:

@@ -1124,6 +1124,7 @@ Node* Tree::chooseInternalNodeAtRandom()
 // TODO: check initialization for incomplete sampling for fossil process
 void Tree::initializeSpeciationExtinctionModel(double sampFrac)
 {
+    samplingFrac = sampFrac;
     double  speciationInit = sampFrac;
     double  extinctionInit = (double)1 - sampFrac;
 
@@ -1187,11 +1188,11 @@ void Tree::initializeSpeciationExtinctionModel(std::string fname)
 
     // First number in file is sampling probability for "backbone" of the tree
     getline(infile, tempstring, '\n');
-    double backboneSampProb = std::atof(tempstring.c_str());
-    double backboneInitial = 1.0 - backboneSampProb;
+    samplingFrac = std::atof(tempstring.c_str());
+    double backboneInitial = 1.0 - samplingFrac;
 
     // std::atof returns 0.0 if the conversion fails
-    if (backboneSampProb == 0.0) {
+    if (samplingFrac == 0.0) {
         log(Error) << "The first line of the sampling probability file\n"
                    << "must be the global sampling probability (> 0.0).\n";
         std::exit(1);

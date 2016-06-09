@@ -38,6 +38,10 @@ SpExModel::SpExModel(Random& random, Settings& settings) :
     _muInit0 = _settings.get<double>("muInit0");
     _muShift0 = _settings.get<double>("muShift0");
 
+    if (_settings.get<bool>("autoInitPriors")) {
+        _prior.autoInitializePriors(_tree);
+    }
+
     _alwaysRecomputeE0 = _settings.get<bool>("alwaysRecomputeE0");
     
     

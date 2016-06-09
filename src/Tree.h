@@ -244,6 +244,7 @@ public:
 
     std::vector<Node*> terminalNodes();
     std::vector<double> traitValues();
+    double samplingFrac; // global sampling fraction
 };
 
 
