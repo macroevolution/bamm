@@ -21,6 +21,7 @@ BAMM Documentation
    advanced
    colorbreaks   
    faq    
+   prior
    likelihoodmodel
    mc3
    strapp      
