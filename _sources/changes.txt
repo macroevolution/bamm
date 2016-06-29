@@ -28,7 +28,7 @@ BAMMtools enhancements
 
 * New functions, including ``generateControlFile`` (to generate BAMM control files from within R), ``plotPrior`` (to visualize the prior and posterior distributions on the number of rate shifts), and ``ratesHistogram`` (to visualize the distribution of rates across a phylogeny).
 
-* No more "branch specific Bayes factors" for distinguishing between core and non-core shifts. We have replaced this terminology with a related concept - the *marginal odds ratio*. Note that neither "branch specific Bayes factors" nor "marginal odds ratios" can be used for formal model selection; we have explained this in detail on our conceptual page about the interpretation of `rate shifts <rateshifts.html>`_ . 
+* No more "branch specific Bayes factors" for distinguishing between core and non-core shifts. We have replaced this terminology with a related concept - the *marginal odds ratio*. Note that neither "branch specific Bayes factors" nor "marginal odds ratios" can be used for formal model selection; we have explained this in detail on our conceptual page about the interpretation of `rate shifts <rateshifts.html>`_. 
 
 Bug fixes
 ............................. 

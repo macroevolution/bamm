@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>16. Troubleshooting &mdash; bamm 2.5.0 documentation</title>
+    <title>17. Troubleshooting &mdash; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" />
-    <link rel="next" title="17. Glossary" href="glossary.html" />
-    <link rel="prev" title="15. fossil BAMM" href="fossilbamm.html" /> 
+    <link rel="next" title="18. Glossary" href="glossary.html" />
+    <link rel="prev" title="16. fossil BAMM" href="fossilbamm.html" /> 
   </head>
   <body role="document">
 <div class="pageheader">
@@ -36,10 +36,10 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="glossary.html" title="17. Glossary"
+          <a href="glossary.html" title="18. Glossary"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="fossilbamm.html" title="15. fossil BAMM"
+          <a href="fossilbamm.html" title="16. fossil BAMM"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -52,22 +52,22 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">16. Troubleshooting</a><ul>
-<li><a class="reference internal" href="#installation">16.1. Installation</a><ul>
-<li><a class="reference internal" href="#you-don-t-know-where-to-put-the-bamm-directory">16.1.1. You don&#8217;t know where to put the bamm directory</a></li>
+<li><a class="reference internal" href="#">17. Troubleshooting</a><ul>
+<li><a class="reference internal" href="#installation">17.1. Installation</a><ul>
+<li><a class="reference internal" href="#you-don-t-know-where-to-put-the-bamm-directory">17.1.1. You don&#8217;t know where to put the bamm directory</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#running">16.2. Running</a><ul>
-<li><a class="reference internal" href="#on-os-x-you-get-an-error-that-says-something-like-dyld-unknown-required-load-command-0x80000022">16.2.1. On OS X, you get an error that says something like &#8220;dyld: unknown required load command 0x80000022&#8221;</a></li>
-<li><a class="reference internal" href="#on-windows-you-get-an-error-that-says-bamm-exe-is-not-a-valid-win32-application">16.2.2. On Windows, you get an error that says &#8220;bamm.exe is not a valid Win32 application&#8221;</a></li>
-<li><a class="reference internal" href="#on-unix-linux-you-get-the-error-message-enable-multithreading-to-use-std-thread-operation-not-permitted">16.2.3. On Unix/Linux, you get the error message &#8220;Enable multithreading to use std::thread: Operation not permitted&#8221;</a></li>
-<li><a class="reference internal" href="#you-get-an-error-message-by-bamm">16.2.4. You get an error message by BAMM</a></li>
-<li><a class="reference internal" href="#basic-troubleshooting">16.2.5. Basic troubleshooting</a></li>
-<li><a class="reference internal" href="#you-get-an-operating-system-error-e-g-segmentation-fault">16.2.6. You get an operating system error (e.g., segmentation fault)</a></li>
+<li><a class="reference internal" href="#running">17.2. Running</a><ul>
+<li><a class="reference internal" href="#on-os-x-you-get-an-error-that-says-something-like-dyld-unknown-required-load-command-0x80000022">17.2.1. On OS X, you get an error that says something like &#8220;dyld: unknown required load command 0x80000022&#8221;</a></li>
+<li><a class="reference internal" href="#on-windows-you-get-an-error-that-says-bamm-exe-is-not-a-valid-win32-application">17.2.2. On Windows, you get an error that says &#8220;bamm.exe is not a valid Win32 application&#8221;</a></li>
+<li><a class="reference internal" href="#on-unix-linux-you-get-the-error-message-enable-multithreading-to-use-std-thread-operation-not-permitted">17.2.3. On Unix/Linux, you get the error message &#8220;Enable multithreading to use std::thread: Operation not permitted&#8221;</a></li>
+<li><a class="reference internal" href="#you-get-an-error-message-by-bamm">17.2.4. You get an error message by BAMM</a></li>
+<li><a class="reference internal" href="#basic-troubleshooting">17.2.5. Basic troubleshooting</a></li>
+<li><a class="reference internal" href="#you-get-an-operating-system-error-e-g-segmentation-fault">17.2.6. You get an operating system error (e.g., segmentation fault)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#analysis">16.3. Analysis</a><ul>
-<li><a class="reference internal" href="#the-mcmc-does-not-converge">16.3.1. The MCMC does not converge</a></li>
+<li><a class="reference internal" href="#analysis">17.3. Analysis</a><ul>
+<li><a class="reference internal" href="#the-mcmc-does-not-converge">17.3.1. The MCMC does not converge</a></li>
 </ul>
 </li>
 </ul>
@@ -76,10 +76,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="fossilbamm.html"
-                        title="previous chapter">15. fossil BAMM</a></p>
+                        title="previous chapter">16. fossil BAMM</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="glossary.html"
-                        title="next chapter">17. Glossary</a></p>
+                        title="next chapter">18. Glossary</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -90,14 +90,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -109,54 +106,54 @@
           <div class="body" role="main">
             
   <div class="section" id="troubleshooting">
-<h1>16. Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h1>
+<h1>17. Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="installation">
-<h2>16.1. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<h2>17.1. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="you-don-t-know-where-to-put-the-bamm-directory">
-<h3>16.1.1. You don&#8217;t know where to put the bamm directory<a class="headerlink" href="#you-don-t-know-where-to-put-the-bamm-directory" title="Permalink to this headline">¶</a></h3>
+<h3>17.1.1. You don&#8217;t know where to put the bamm directory<a class="headerlink" href="#you-don-t-know-where-to-put-the-bamm-directory" title="Permalink to this headline">¶</a></h3>
 <p>On OS X, you may move the uncompressed <code class="docutils literal"><span class="pre">bamm</span></code> directory (folder) to your home
 directory. For example, if it was uncompressed in your Downloads directory:</p>
-<div class="highlight-python"><div class="highlight"><pre>mv ~/Downloads/bamm-1.0.0 ~
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mv</span> <span class="o">~/</span><span class="n">Downloads</span><span class="o">/</span><span class="n">bamm</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span> <span class="o">~</span>
 </pre></div>
 </div>
 <p>To run BAMM within your data directory, you will need to specify its full
 location (path):</p>
-<div class="highlight-python"><div class="highlight"><pre>~/bamm-1.0.0/bamm -c divcontrol.txt
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">~/</span><span class="n">bamm</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">bamm</span> <span class="o">-</span><span class="n">c</span> <span class="n">divcontrol</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 <p>On Windows, you may move the uncompressed &#8220;bamm&#8221; directory (folder) to your
 <code class="docutils literal"><span class="pre">C:</span></code> drive. To run BAMM within your data directory, you will need to specify
 its full path:</p>
-<div class="highlight-python"><div class="highlight"><pre>c:\bamm\bamm -c divcontrol.txt
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">c</span><span class="p">:</span>\<span class="n">bamm</span>\<span class="n">bamm</span> <span class="o">-</span><span class="n">c</span> <span class="n">divcontrol</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="running">
-<h2>16.2. Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
+<h2>17.2. Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="on-os-x-you-get-an-error-that-says-something-like-dyld-unknown-required-load-command-0x80000022">
-<h3>16.2.1. On OS X, you get an error that says something like &#8220;dyld: unknown required load command 0x80000022&#8221;<a class="headerlink" href="#on-os-x-you-get-an-error-that-says-something-like-dyld-unknown-required-load-command-0x80000022" title="Permalink to this headline">¶</a></h3>
+<h3>17.2.1. On OS X, you get an error that says something like &#8220;dyld: unknown required load command 0x80000022&#8221;<a class="headerlink" href="#on-os-x-you-get-an-error-that-says-something-like-dyld-unknown-required-load-command-0x80000022" title="Permalink to this headline">¶</a></h3>
 <p>This likely means that you are trying to run BAMM on an older version of OS X.
 Please run BAMM on OS X 10.5 or greater.</p>
 </div>
 <div class="section" id="on-windows-you-get-an-error-that-says-bamm-exe-is-not-a-valid-win32-application">
-<h3>16.2.2. On Windows, you get an error that says &#8220;bamm.exe is not a valid Win32 application&#8221;<a class="headerlink" href="#on-windows-you-get-an-error-that-says-bamm-exe-is-not-a-valid-win32-application" title="Permalink to this headline">¶</a></h3>
+<h3>17.2.2. On Windows, you get an error that says &#8220;bamm.exe is not a valid Win32 application&#8221;<a class="headerlink" href="#on-windows-you-get-an-error-that-says-bamm-exe-is-not-a-valid-win32-application" title="Permalink to this headline">¶</a></h3>
 <p>This likely means that you are trying to run BAMM on an unsupported version
 of Windows (such as Windows XP). Please run BAMM on Windows 7 or greater.</p>
 </div>
 <div class="section" id="on-unix-linux-you-get-the-error-message-enable-multithreading-to-use-std-thread-operation-not-permitted">
-<h3>16.2.3. On Unix/Linux, you get the error message &#8220;Enable multithreading to use std::thread: Operation not permitted&#8221;<a class="headerlink" href="#on-unix-linux-you-get-the-error-message-enable-multithreading-to-use-std-thread-operation-not-permitted" title="Permalink to this headline">¶</a></h3>
+<h3>17.2.3. On Unix/Linux, you get the error message &#8220;Enable multithreading to use std::thread: Operation not permitted&#8221;<a class="headerlink" href="#on-unix-linux-you-get-the-error-message-enable-multithreading-to-use-std-thread-operation-not-permitted" title="Permalink to this headline">¶</a></h3>
 <p>We have found this problem with some versions of the GNU C++ compiler,
 where CMake does not properly link a required threading library.
 We are working on a solution, but in the meantime,
 you can manually compile BAMM (without using CMake) as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>g++ -DBAMM_VERSION=\&quot;2.2.0\&quot; -DBAMM_VERSION_DATE=\&quot;2014-09-05\&quot; -DGIT_COMMIT_ID=\&quot;NA\&quot; -pthread -std=c++11 -o bamm ../src/\*.cpp
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">DBAMM_VERSION</span><span class="o">=</span>\<span class="s2">&quot;2.2.0</span><span class="se">\&quot;</span><span class="s2"> -DBAMM_VERSION_DATE=</span><span class="se">\&quot;</span><span class="s2">2014-09-05</span><span class="se">\&quot;</span><span class="s2"> -DGIT_COMMIT_ID=</span><span class="se">\&quot;</span><span class="s2">NA</span><span class="se">\&quot;</span><span class="s2"> -pthread -std=c++11 -o bamm ../src/\*.cpp</span>
 </pre></div>
 </div>
 <p>Make sure to run this command in an empty <code class="docutils literal"><span class="pre">build</span></code> directory.</p>
 </div>
 <div class="section" id="you-get-an-error-message-by-bamm">
-<h3>16.2.4. You get an error message by BAMM<a class="headerlink" href="#you-get-an-error-message-by-bamm" title="Permalink to this headline">¶</a></h3>
+<h3>17.2.4. You get an error message by BAMM<a class="headerlink" href="#you-get-an-error-message-by-bamm" title="Permalink to this headline">¶</a></h3>
 <p>Most error messages in BAMM are descriptive and therefore it should not be
 difficult to correct the problem. If BAMM cannot find the control file or
 any file specified within the control file, such as the tree file, make sure
@@ -168,11 +165,11 @@ Please go to <a class="reference external" href="http://bamm-project.org/contact
 instructions on how to contact us.</p>
 </div>
 <div class="section" id="basic-troubleshooting">
-<h3>16.2.5. Basic troubleshooting<a class="headerlink" href="#basic-troubleshooting" title="Permalink to this headline">¶</a></h3>
+<h3>17.2.5. Basic troubleshooting<a class="headerlink" href="#basic-troubleshooting" title="Permalink to this headline">¶</a></h3>
 <p>The simplest way to localize potential problems is to first try to load your
 data without doing anything else. You can do this by setting the following
 parameter in your controlfile:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">initializeModel</span> <span class="o">=</span> <span class="mi">0</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">initializeModel</span> <span class="o">=</span> <span class="mi">0</span>
 </pre></div>
 </div>
 <p>This tells BAMM to simply try reading the tree (and associated trait or taxon
@@ -180,7 +177,7 @@ sampling datafiles). If this works fine, your problem is probably elsewhere.
 The next step is to try initializing your MCMC simulation, without actually
 running it. This step involves actually computing likelihoods and priors,
 so may reveal problems with those steps:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">initializeModel</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">initializeModel</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">runMCMC</span> <span class="o">=</span> <span class="mi">0</span>
 </pre></div>
 </div>
@@ -189,7 +186,7 @@ Go to <a class="reference external" href="http://bamm-project.org/contact_us.htm
 instructions on how to contact us.</p>
 </div>
 <div class="section" id="you-get-an-operating-system-error-e-g-segmentation-fault">
-<h3>16.2.6. You get an operating system error (e.g., segmentation fault)<a class="headerlink" href="#you-get-an-operating-system-error-e-g-segmentation-fault" title="Permalink to this headline">¶</a></h3>
+<h3>17.2.6. You get an operating system error (e.g., segmentation fault)<a class="headerlink" href="#you-get-an-operating-system-error-e-g-segmentation-fault" title="Permalink to this headline">¶</a></h3>
 <p>Other possible errors may arise, not discussed above. This may include errors
 that mention &#8220;Segmentation fault&#8221;, or &#8220;Floating point error&#8221;. Please contact
 us with information about system errors.
@@ -198,15 +195,15 @@ instructions on how to contact us.</p>
 </div>
 </div>
 <div class="section" id="analysis">
-<h2>16.3. Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h2>
+<h2>17.3. Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="the-mcmc-does-not-converge">
-<h3>16.3.1. The MCMC does not converge<a class="headerlink" href="#the-mcmc-does-not-converge" title="Permalink to this headline">¶</a></h3>
-<p id="convergenceproblems">Achieving satisfactory convergence with BAMM can be difficult. We know that the likelihood surface for the BAMM model is rugged, with lots of peaks and valleys. We are developing several new MCMC proposals for moving, splitting, and merging events on trees that should facilitate convergence. In the meantime, we suggest several options.</p>
-<p><strong>First</strong>, don&#8217;t be afraid to run BAMM for a really, really long time if you are having convergence issues. The implementation is fast. We suggest sampling very infrequently so as to not generate overwhelming quantities of output. Running BAMM for <img class="math" src="_images/math/a66751969320d2cf053481afa81334377bb911ce.png" alt="10^9"/> generations, sampling parameters every <img class="math" src="_images/math/550df0159f2d6d5bf2a137c8484c0b557cf6edde.png" alt="10^6"/> generations, is not unreasonable for some datasets.</p>
+<span id="convergenceproblems"></span><h3>17.3.1. The MCMC does not converge<a class="headerlink" href="#the-mcmc-does-not-converge" title="Permalink to this headline">¶</a></h3>
+<p>Achieving satisfactory convergence with BAMM can be difficult. We know that the likelihood surface for the BAMM model is rugged, with lots of peaks and valleys. We are developing several new MCMC proposals for moving, splitting, and merging events on trees that should facilitate convergence. In the meantime, we suggest several options.</p>
+<p><strong>First</strong>, don&#8217;t be afraid to run BAMM for a really, really long time if you are having convergence issues. The implementation is fast. We suggest sampling very infrequently so as to not generate overwhelming quantities of output. Running BAMM for <img class="math" src="_images/math/efe8c3b1dfba1f7cf45cd0f2e87ba3e8d48690ac.png" alt="10^9"/> generations, sampling parameters every <img class="math" src="_images/math/4e3e30fcf8f5b44fd4e61386ba457022ddf17304.png" alt="10^6"/> generations, is not unreasonable for some datasets.</p>
 <p><strong>Second</strong>, make sure your priors are not maladjusted. For example, if you have a phylogenetic tree that is calibrated in units of substitutions (rather than millions of years), the default priors in BAMM&#8217;s control file could lead to significant difficulties. We suggest using the BAMMtools function <code class="docutils literal"><span class="pre">setBAMMpriors</span></code> to choose priors that are reasonably matched to your dataset. There is no guarantee that these priors will be any good, but they are at least reasonably scaled to your data.</p>
 <p><strong>Third</strong>: one of the most common problems in moving between &#8220;peaks&#8221; on the macroevolutionary rate shift landscape is that peaks are separated by valleys that require multiple moves to traverse. You might have an optimum at N = 7 shifts, and another at N = 3 shifts, and both of these scenarios might have equivalent posterior probabilities. However, if shift configurations with 4, 5, and 6 shifts have lower posterior probabilities than either 3 or 7, it will be very hard to move between these submodels. One solution we have found to work involves increasing the value of the hyperprior on the Poisson rate parameter governing the number of rate shifts. For large datasets, we have experienced dramatic improvements in performance by <em>flattening</em> this distribution. To flatten this (thus allowing the algorithm to explore a broader range of shift configurations), you would choose a lower value for the <code class="docutils literal"><span class="pre">poissonRatePrior</span></code>. The default is 1.0, but setting this to <code class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">0.1</span></code> or even <code class="docutils literal"><span class="pre">poissonRatePrior</span> <span class="pre">=</span> <span class="pre">0.02</span></code> (for very large trees) is reasonable and should facilitate convergence.</p>
 <p><strong>Fourth</strong>, try restricting the regions of the tree where shifts are permitted to occur. BAMM has an argument <code class="docutils literal"><span class="pre">minCladeSizeForShift</span></code> that enables you to constrain your analysis to only allow rate shifts to occur on branches that have at least <code class="docutils literal"><span class="pre">minCladeSizeForShift</span></code> descendants. The default value, 1, allows shifts to occur on all branches. However, if you set <code class="docutils literal"><span class="pre">minCladeSizeForShift</span> <span class="pre">=</span> <span class="pre">10</span></code>, you would only allow rate shifts to occur on branches with at least 10 descendants. Thus, BAMM would not waste time putting rate shifts on terminal branches (or, for that matter, any branches with &lt; 10 tip descendants).</p>
-<p><strong>Fifth</strong>, consider reducing model complexity. If you are having trouble getting convergence with the full BAMM analysis, try running your analysis after &#8220;turning off&#8221; the time-varying rates component of BAMM. Thus, you would just be running a version of BAMM that allowed mixtures of different constant-rate processes across a phylogeny. Parameter settings to run this model are explained <a class="reference internal" href="advanced.html#constantratebamm"><span>here</span></a>.</p>
+<p><strong>Fifth</strong>, consider reducing model complexity. If you are having trouble getting convergence with the full BAMM analysis, try running your analysis after &#8220;turning off&#8221; the time-varying rates component of BAMM. Thus, you would just be running a version of BAMM that allowed mixtures of different constant-rate processes across a phylogeny. Parameter settings to run this model are explained <a class="reference internal" href="advanced.html#constantratebamm"><span class="std std-ref">here</span></a>.</p>
 <p><strong>Finally</strong>: if you have tried some or all of the above, and still have issues with convergence, we encourage you to explore your data further to assess whether you <em>should</em> expect the BAMM model to fit your data. One recent example we have seen involved a dataset where maximum phenotypic divergences were observed between the most closely related species (suggesting the possibility of character displacement). This pattern is not something that BAMM can really model at present: even though BAMM allows phenotypic rates to vary through time, the model still predicts that, on average, phenotypic similarity should be positively related to phylogenetic relatedness.</p>
 </div>
 </div>
@@ -222,10 +219,10 @@ instructions on how to contact us.</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="glossary.html" title="17. Glossary"
+          <a href="glossary.html" title="18. Glossary"
              >next</a></li>
         <li class="right" >
-          <a href="fossilbamm.html" title="15. fossil BAMM"
+          <a href="fossilbamm.html" title="16. fossil BAMM"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -237,7 +234,7 @@ instructions on how to contact us.</p>
 
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b3+.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

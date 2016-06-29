@@ -82,14 +82,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -107,18 +104,18 @@
 <p>If you have previously downloaded or installed BAMM,
 you may check which version of BAMM you have
 using the <code class="docutils literal"><span class="pre">--version</span></code> option in <code class="docutils literal"><span class="pre">bamm</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">bamm</span> <span class="o">--</span><span class="n">version</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">bamm</span> <span class="o">--</span><span class="n">version</span>
 </pre></div>
 </div>
 <p>If <code class="docutils literal"><span class="pre">bamm</span></code> is not automatically found by your operating system,
 you need to specify the directory in which <code class="docutils literal"><span class="pre">bamm</span></code> is located:</p>
-<div class="highlight-python"><div class="highlight"><pre>~/bamm/build/bamm --version
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">~/</span><span class="n">bamm</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">bamm</span> <span class="o">--</span><span class="n">version</span>
 </pre></div>
 </div>
 <p>The previous command assumes that <code class="docutils literal"><span class="pre">bamm</span></code> is located
 in the <code class="docutils literal"><span class="pre">~/bamm/build</span></code> directory.
 If <code class="docutils literal"><span class="pre">bamm</span></code> is in your current directory, you may run:</p>
-<div class="highlight-python"><div class="highlight"><pre>./bamm --version
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">bamm</span> <span class="o">--</span><span class="n">version</span>
 </pre></div>
 </div>
 </div>
@@ -128,19 +125,19 @@ If <code class="docutils literal"><span class="pre">bamm</span></code> is in you
 <li><p class="first">Install <a class="reference external" href="http://brew.sh">Homebrew</a>, if not installed.</p>
 </li>
 <li><p class="first">Run the following commands:</p>
-<div class="highlight-python"><div class="highlight"><pre>brew tap macroevolution/bamm
-brew install bamm
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">brew</span> <span class="n">tap</span> <span class="n">macroevolution</span><span class="o">/</span><span class="n">bamm</span>
+<span class="n">brew</span> <span class="n">install</span> <span class="n">bamm</span>
 </pre></div>
 </div>
 <p>If you&#8217;ve installed BAMM before
 but you want to upgrade to a new version, run:</p>
-<div class="highlight-python"><div class="highlight"><pre>brew update
-brew upgrade bamm
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">brew</span> <span class="n">update</span>
+<span class="n">brew</span> <span class="n">upgrade</span> <span class="n">bamm</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">You may now run <code class="docutils literal"><span class="pre">bamm</span></code> from any directory in your system.
-See <a class="reference internal" href="#running"><span>Running</span></a> below and the <a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
+See <a class="reference internal" href="#running"><span class="std std-ref">Running</span></a> below and the <a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
 to learn how to configure and run BAMM.</p>
 </li>
 </ol>
@@ -162,13 +159,13 @@ tar.gz file containing the executable file for BAMM.</p>
 open the Terminal application and run the following command
 from the directory in which BAMM was downloaded
 (the actual version of BAMM may be different):</p>
-<div class="highlight-python"><div class="highlight"><pre>tar -xzf bamm-1.0.0-MacOSX.tar.gz
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">tar</span> <span class="o">-</span><span class="n">xzf</span> <span class="n">bamm</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">MacOSX</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
 </pre></div>
 </div>
 <p>This will uncompress the single file <code class="docutils literal"><span class="pre">bamm</span></code> into the current directory.</p>
 </li>
 <li><p class="first">You may copy or move the file <code class="docutils literal"><span class="pre">bamm</span></code> to any directory in your system.
-See <a class="reference internal" href="#running"><span>Running</span></a> below and the <a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
+See <a class="reference internal" href="#running"><span class="std std-ref">Running</span></a> below and the <a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
 to learn how to configure and run BAMM.</p>
 </li>
 </ol>
@@ -187,7 +184,7 @@ Note that the DLL files must present together with the <code class="docutils lit
 <li>Open the command-line program in Windows by clicking on the Start button
 and typing &#8220;cmd&#8221; in the search text box. Use the <code class="docutils literal"><span class="pre">cd</span></code> command
 to go to the directory where BAMM is located.
-See <a class="reference internal" href="#running"><span>Running</span></a> below and the <a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
+See <a class="reference internal" href="#running"><span class="std std-ref">Running</span></a> below and the <a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
 to learn how to configure and run BAMM.</li>
 </ol>
 <p><strong>Note:</strong> Test that <code class="docutils literal"><span class="pre">bamm</span></code> will run on your system by simply running
@@ -205,32 +202,32 @@ We also assume you have <a class="reference external" href="http://git-scm.com">
 <a class="reference external" href="http://www.cmake.org">CMake</a> installed.</p>
 <ol class="arabic">
 <li><p class="first">Get the latest version of BAMM:</p>
-<div class="highlight-python"><div class="highlight"><pre>git clone https://github.com/macroevolution/bamm.git
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">macroevolution</span><span class="o">/</span><span class="n">bamm</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
 <p>This will create the directory <code class="docutils literal"><span class="pre">bamm</span></code> in your current directory.</p>
 </li>
 <li><p class="first">Go into the <code class="docutils literal"><span class="pre">bamm</span></code> directory and create a build directory where
 the final executable will be created, then go into that directory:</p>
-<div class="highlight-python"><div class="highlight"><pre>mkdir build
-cd build
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">build</span>
+<span class="n">cd</span> <span class="n">build</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">Run <code class="docutils literal"><span class="pre">cmake</span></code>, and if successful, run <code class="docutils literal"><span class="pre">make</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre>cmake ..
-make -j
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cmake</span> <span class="o">..</span>
+<span class="n">make</span> <span class="o">-</span><span class="n">j</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal"><span class="pre">-j</span></code> option will compile in parallel.</p>
 </li>
 <li><p class="first">You can run <code class="docutils literal"><span class="pre">bamm</span></code> from this directory, or you may wish to install it
 in a more permanent location:</p>
-<div class="highlight-python"><div class="highlight"><pre>sudo make install
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">make</span> <span class="n">install</span>
 </pre></div>
 </div>
 <p>You may now run <code class="docutils literal"><span class="pre">bamm</span></code> from any directory in your system.
-See <a class="reference internal" href="#running"><span>Running</span></a> below and the <a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
+See <a class="reference internal" href="#running"><span class="std std-ref">Running</span></a> below and the <a class="reference external" href="http://bamm-project.org/quickstart.html">Quick-start guide to BAMM</a>
 to learn how to configure and run BAMM.</p>
 </li>
 </ol>
@@ -239,18 +236,18 @@ to learn how to configure and run BAMM.</p>
 <span id="id6"></span><h2>5.5. Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
 <p>To run <code class="docutils literal"><span class="pre">bamm</span></code>, you should specify a <em>contol</em> file. For example,
 if your control file is named <code class="docutils literal"><span class="pre">divcontrol.txt</span></code>, run the following:</p>
-<div class="highlight-python"><div class="highlight"><pre>bamm -c divcontrol.txt
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">bamm</span> <span class="o">-</span><span class="n">c</span> <span class="n">divcontrol</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 <p>Note that if <code class="docutils literal"><span class="pre">bamm</span></code> is not installed in a common location,
 you need to specify the directory in which <code class="docutils literal"><span class="pre">bamm</span></code> is located:</p>
-<div class="highlight-python"><div class="highlight"><pre>~/bamm/build/bamm -c divcontrol.txt
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">~/</span><span class="n">bamm</span><span class="o">/</span><span class="n">build</span><span class="o">/</span><span class="n">bamm</span> <span class="o">-</span><span class="n">c</span> <span class="n">divcontrol</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 <p>The previous command assumes that <code class="docutils literal"><span class="pre">bamm</span></code> is located
 in the <code class="docutils literal"><span class="pre">~/bamm/build</span></code> directory.
 If <code class="docutils literal"><span class="pre">bamm</span></code> is in your current directory, you may run:</p>
-<div class="highlight-python"><div class="highlight"><pre>./bamm -c divcontrol.txt
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">bamm</span> <span class="o">-</span><span class="n">c</span> <span class="n">divcontrol</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 <p>Any file names specified in the control file are relative to the directory
@@ -259,12 +256,12 @@ the executable <code class="docutils literal"><span class="pre">bamm</span></cod
 <p>Any option in the control file may be overridden in the command-line
 by prefixing the option name by <code class="docutils literal"><span class="pre">--</span></code>, followed by the new value.
 For example, to set the seed to 1234, run:</p>
-<div class="highlight-python"><div class="highlight"><pre>bamm -c divcontrol.txt --seed 1234
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">bamm</span> <span class="o">-</span><span class="n">c</span> <span class="n">divcontrol</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">seed</span> <span class="mi">1234</span>
 </pre></div>
 </div>
 <p>To set the initial lambda at the root of the tree to 0.05
 and the print frequency to 5000, run:</p>
-<div class="highlight-python"><div class="highlight"><pre>bamm -c divcontrol.txt --lambdaInit0 0.05 --printFreq 5000
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">bamm</span> <span class="o">-</span><span class="n">c</span> <span class="n">divcontrol</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">lambdaInit0</span> <span class="mf">0.05</span> <span class="o">--</span><span class="n">printFreq</span> <span class="mi">5000</span>
 </pre></div>
 </div>
 <p>When run, BAMM produces a file named <code class="docutils literal"><span class="pre">run_info.txt</span></code> that logs
@@ -298,7 +295,7 @@ time-stamps, and a list of parameters/options and their values.</p>
 
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b3+.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

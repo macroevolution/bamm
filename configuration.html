@@ -99,14 +99,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -124,13 +121,13 @@
 <p>Configuration options and parameters in BAMM are specified in a <em>control file</em>,
 a plain text file in which each line contains the name of the option or
 parameter, an equal sign, and the value of the option or parameter:</p>
-<div class="highlight-none"><div class="highlight"><pre>treefile = whaletree.tre
+<div class="highlight-none"><div class="highlight"><pre><span></span>treefile = whaletree.tre
 runMCMC = 1
 </pre></div>
 </div>
 <p>The path of the control file, relative to the directory in which <code class="docutils literal"><span class="pre">bamm</span></code>
 is called, is specified with the flag <code class="docutils literal"><span class="pre">-c</span></code>:</p>
-<div class="highlight-none"><div class="highlight"><pre>./bamm -c divcontrol.txt
+<div class="highlight-none"><div class="highlight"><pre><span></span>./bamm -c divcontrol.txt
 </pre></div>
 </div>
 </div>
@@ -164,7 +161,7 @@ If <code class="docutils literal"><span class="pre">0</span></code>, run the ful
 If <code class="docutils literal"><span class="pre">0</span></code>, just check to see if the data can be loaded correctly.</dd>
 <dt><code class="docutils literal"><span class="pre">simulatePriorShifts</span></code></dt>
 <dd>If <code class="docutils literal"><span class="pre">1</span></code>, simulate prior distribution of the number of shift events,
-given the hyperprior on the Poisson rate parameter. As the prior probabilities of shifts can now be calculated analytically (as described <a class="reference internal" href="postprocess.html#analyticalprior"><span>here</span></a>), this option is no longer necessary and is set to <code class="docutils literal"><span class="pre">0</span></code> by default.</dd>
+given the hyperprior on the Poisson rate parameter. As the prior probabilities of shifts can now be calculated analytically (as described <a class="reference internal" href="postprocess.html#analyticalprior"><span class="std std-ref">here</span></a>), this option is no longer necessary and is set to <code class="docutils literal"><span class="pre">0</span></code> by default.</dd>
 <dt><code class="docutils literal"><span class="pre">loadEventData</span></code></dt>
 <dd>If <code class="docutils literal"><span class="pre">1</span></code>, load a previous event state (event locations and parameter
 values) from a file. This allows a run to be continued even after a
@@ -202,7 +199,7 @@ The default value is <code class="docutils literal"><span class="pre">0</span></
 <h3>6.2.2. Priors<a class="headerlink" href="#priors" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
 <dt><code class="docutils literal"><span class="pre">expectedNumberOfShifts</span></code></dt>
-<dd><p class="first">BAMM will use this value to calculate the prior probability distribution on the number of rate shifts. In previous versions of BAMM this was specified via the <code class="docutils literal"><span class="pre">poissonRatePrior</span></code>, which is simply <img class="math" src="_images/math/f9c8f8b936b94e43eade2307f47b848171a72b08.png" alt="\frac{1}{expectedNumberOfShifts}"/>. Suggested values:</p>
+<dd><p class="first">BAMM will use this value to calculate the prior probability distribution on the number of rate shifts. In previous versions of BAMM this was specified via the <code class="docutils literal"><span class="pre">poissonRatePrior</span></code>, which is simply <img class="math" src="_images/math/a5bd3885191bb20b78076c63bab63aea11b08e1f.png" alt="\frac{1}{expectedNumberOfShifts}"/>. Suggested values:</p>
 <p><code class="docutils literal"><span class="pre">expectedNumberOfShifts</span> <span class="pre">=</span> <span class="pre">1.0</span></code> for smaller datasets (&lt; 500 tips) or</p>
 <p class="last"><code class="docutils literal"><span class="pre">expectedNumberOfShifts</span> <span class="pre">=</span> <span class="pre">10</span></code> or even <code class="docutils literal"><span class="pre">50</span></code> for large (5000+ tips).</p>
 </dd>
@@ -230,7 +227,7 @@ text.</dd>
 <dd>The path of the file to which to write the raw event data.
 All of the results are contained in this file, and all branch-specific
 speciation rates, shift positions, marginal distributions, etc.,
-can be reconstructed from this output. See <a class="reference internal" href="postprocess.html#bammtools"><span>Analyzing BAMM output with BAMMtools</span></a>
+can be reconstructed from this output. See <a class="reference internal" href="postprocess.html#bammtools"><span class="std std-ref">Analyzing BAMM output with BAMMtools</span></a>
 for more information on working with this output format.</dd>
 <dt><code class="docutils literal"><span class="pre">outputAcceptanceInfo</span></code></dt>
 <dd>If <code class="docutils literal"><span class="pre">1</span></code>, outputs whether each proposal was accepted.
@@ -268,8 +265,8 @@ Monte Carlo for Bayesian phylogenetic inference.</p>
 <dd>Number of Markov chains to run. The default value is <code class="docutils literal"><span class="pre">1</span></code>.</dd>
 <dt><code class="docutils literal"><span class="pre">deltaT</span></code></dt>
 <dd>Temperature increment parameter. This value should be &gt; 0.
-The temperature for the <img class="math" src="_images/math/a581f053bbfa5115f42c13094857cdd12a37ec49.png" alt="i"/>-th chain is calculated as
-<img class="math" src="_images/math/6e4fa62fa63e059c82f51746f690a16417fff886.png" alt="1 / [1 + \Delta T \times (i - 1)]"/>.
+The temperature for the <img class="math" src="_images/math/df0deb143e5ac127f00bd248ee8001ecae572adc.png" alt="i"/>-th chain is calculated as
+<img class="math" src="_images/math/5c619b8e8da0029532ae8c5d6da7b2fbc18c4014.png" alt="1 / [1 + \Delta T \times (i - 1)]"/>.
 The default value is <code class="docutils literal"><span class="pre">0.1</span></code>.</dd>
 <dt><code class="docutils literal"><span class="pre">swapPeriod</span></code></dt>
 <dd>Number of generations in which to propose a chain swap.
@@ -547,7 +544,7 @@ This setting is normally hidden and its default value is <code class="docutils l
 
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b3+.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

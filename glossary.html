@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>17. Glossary &mdash; bamm 2.5.0 documentation</title>
+    <title>18. Glossary &mdash; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" />
-    <link rel="prev" title="16. Troubleshooting" href="troubleshooting.html" /> 
+    <link rel="prev" title="17. Troubleshooting" href="troubleshooting.html" /> 
   </head>
   <body role="document">
 <div class="pageheader">
@@ -35,7 +35,7 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="troubleshooting.html" title="16. Troubleshooting"
+          <a href="troubleshooting.html" title="17. Troubleshooting"
              accesskey="P">previous</a></li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -48,7 +48,7 @@
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="troubleshooting.html"
-                        title="previous chapter">16. Troubleshooting</a></p>
+                        title="previous chapter">17. Troubleshooting</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -59,14 +59,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -78,13 +75,13 @@
           <div class="body" role="main">
             
   <div class="section" id="glossary">
-<span id="id1"></span><h1>17. Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>18. Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h1>
 <p>Keywords in BAMM and BAMMtools. Alphabetical. Words in glossary are in <strong>bold</strong>.</p>
 <dl class="docutils">
 <dt><strong>Core shift</strong></dt>
 <dd>A rate shift location (e.g., associated with a particular branch in a phylogeny) that has a marginal probability greater than some threshold value. In the BAMM model, the very manner in which shifts are proposed and deleted during MCMC simulation means that, sooner or later, a shift will be sampled on every branch of the tree. Most of these are <em>non-core shifts</em> that don&#8217;t stick around and which don&#8217;t contribute to your ability to model the data. To distinguish between <strong>core</strong> and <strong>non-core</strong> shifts in the posterior, we identify all shift locations where shifts are observed more often that expected under the prior alone. If the frequency of observing a shift at a particular location is not different from that which we expect under the prior alone, we term this a &#8220;non-core&#8221; shift location. We then ignore all <strong>non-core</strong> shifts during the enumeration of <strong>distinct shift configurations</strong>.</dd>
 <dt><strong>Credible set of shift configurations</strong></dt>
-<dd>The set of <strong>distinct shift configurations</strong> that account for some total probability of the data (typically 95%). To delimit this set, we identify all <strong>distinct shift configurations</strong> and rank them by their posterior probability. The set of shifts (starting with the most probable) that sum to 0.95 (for the 95% credible set) is this set. Alternatively, if you have N total <strong>distinct shift configurations</strong>, with probability <img class="math" src="_images/math/da50e5cc9a5771001e261279c133d5c05f8f240d.png" alt="p_1, p_2, ... p_N"/>, the 95% credible set is the smallest set (of N total) that sum to a cumulative probability of 0.95. The idea of <em>credible set of phylogenetic trees</em> is conceptually identical to this.</dd>
+<dd>The set of <strong>distinct shift configurations</strong> that account for some total probability of the data (typically 95%). To delimit this set, we identify all <strong>distinct shift configurations</strong> and rank them by their posterior probability. The set of shifts (starting with the most probable) that sum to 0.95 (for the 95% credible set) is this set. Alternatively, if you have N total <strong>distinct shift configurations</strong>, with probability <img class="math" src="_images/math/9ebf42aae52e9a58548d29b8bc50c2caa6469521.png" alt="p_1, p_2, ... p_N"/>, the 95% credible set is the smallest set (of N total) that sum to a cumulative probability of 0.95. The idea of <em>credible set of phylogenetic trees</em> is conceptually identical to this.</dd>
 <dt><strong>Cumulative shift probability tree</strong></dt>
 <dd>A phylogenetic tree where branch lengths are scaled by the cumulative probability that a rate shift occurred somewhere between the focal branch and the root of the tree. For a given branch X, this is computed by summing the marginal shift probabilities for each branch that lies on the path connecting X to the root. A value of 0.98 means that 98% of the samples from the posterior have a rate shift somewhere between the focal branch and the root. This would also imply that macroevolutionary dynamics for branch X and the root are decoupled (e.g., in distinct regimes) for 98% of samples in the posterior.</dd>
 <dt><strong>Distinct shift configuration</strong></dt>
@@ -122,7 +119,7 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="troubleshooting.html" title="16. Troubleshooting"
+          <a href="troubleshooting.html" title="17. Troubleshooting"
              >previous</a></li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -134,7 +131,7 @@
 
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b3+.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

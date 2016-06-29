@@ -27,6 +27,9 @@ the R package `BAMMtools <http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.1
 - Go to our `Frequently Asked Questions <faq.html>`_ page to see common
   questions and answers.
 
+
+- We include a new page discussing concerns that have been raised about sensitivity of BAMM to the prior on the number of rate `shifts <prior.html>`_ .
+
 Recommended reading
 ===========================
 
@@ -64,6 +67,13 @@ we recommend installing the latest version.
 `Take a look <colorbreaks.html>`_ at a new webpage that explains some of the intricacies of phylorate plot interpretation.
 
 Please see the `Changes <changes.html>`_ page for more information.
+
+
+Concerns about the reliability of BAMM
+=======================================
+
+Concerns about BAMM's reliability were raised at the Evolution 2016 conference in Austin. See our page on `reliability <prior.html>`_ for our response to these concerns.
+
 
 Support
 =======

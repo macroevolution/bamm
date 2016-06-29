@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" />
-    <link rel="next" title="11. The BAMM likelihood function" href="likelihoodmodel.html" />
+    <link rel="next" title="11. Is the posterior on the number of shifts overly sensitive to the prior?" href="prior.html" />
     <link rel="prev" title="9. Color ramps and phylorate plots" href="colorbreaks.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="likelihoodmodel.html" title="11. The BAMM likelihood function"
+          <a href="prior.html" title="11. Is the posterior on the number of shifts overly sensitive to the prior?"
              accesskey="N">next</a></li>
         <li class="right" >
           <a href="colorbreaks.html" title="9. Color ramps and phylorate plots"
@@ -72,8 +72,8 @@
   <p class="topless"><a href="colorbreaks.html"
                         title="previous chapter">9. Color ramps and phylorate plots</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="likelihoodmodel.html"
-                        title="next chapter">11. The BAMM likelihood function</a></p>
+  <p class="topless"><a href="prior.html"
+                        title="next chapter">11. Is the posterior on the number of shifts overly sensitive to the prior?</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -84,14 +84,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -115,11 +112,11 @@
 </div>
 <div class="section" id="how-much-data-does-it-need">
 <h3>10.1.2. How much data does it need?<a class="headerlink" href="#how-much-data-does-it-need" title="Permalink to this headline">¶</a></h3>
-<p><strong>Not much</strong>. There is no general rule here, but if your dataset is large enough to consider doing any other sort of diversification analysis, then it is probably large enough for BAMM. The whale diversification analysis shown in the <a class="reference internal" href="bammgraph.html#bammgraphs"><span>graph gallery</span></a> uses a time-calibrated tree with 89 tips. We&#8217;ve had good success using BAMM on trees that are considerably smaller than this.</p>
+<p><strong>Not much</strong>. There is no general rule here, but if your dataset is large enough to consider doing any other sort of diversification analysis, then it is probably large enough for BAMM. The whale diversification analysis shown in the <a class="reference internal" href="bammgraph.html#bammgraphs"><span class="std std-ref">graph gallery</span></a> uses a time-calibrated tree with 89 tips. We&#8217;ve had good success using BAMM on trees that are considerably smaller than this.</p>
 </div>
 <div class="section" id="how-often-should-i-sample-the-chain">
-<h3>10.1.3. How often should I sample the chain?<a class="headerlink" href="#how-often-should-i-sample-the-chain" title="Permalink to this headline">¶</a></h3>
-<p id="howmanyevents">Your first consideration should be: for how long should I run the chain? The answer to this question has a lot to do with how quickly the chain converges and how well it samples the posterior. We suggest that there is little advantage in going to more than 5000 samples from the posterior, and potentially large costs: for large datasets, sampling too frequently with BAMM can literally generate gigabytes of highly autocorrelated and mostly-unusable output. Moreover, due to memory issues with R, BAMMtools cannot handle output files of that size. So, pick a chain length (e.g., <img class="math" src="_images/math/247e75c24478d91d470a83f7602243c5585e4b2c.png" alt="10^7"/> generations), and then specify a sample frequency that should give you somewhere between 500 and 5000 samples from the posterior after burnin.</p>
+<span id="howmanyevents"></span><h3>10.1.3. How often should I sample the chain?<a class="headerlink" href="#how-often-should-i-sample-the-chain" title="Permalink to this headline">¶</a></h3>
+<p>Your first consideration should be: for how long should I run the chain? The answer to this question has a lot to do with how quickly the chain converges and how well it samples the posterior. We suggest that there is little advantage in going to more than 5000 samples from the posterior, and potentially large costs: for large datasets, sampling too frequently with BAMM can literally generate gigabytes of highly autocorrelated and mostly-unusable output. Moreover, due to memory issues with R, BAMMtools cannot handle output files of that size. So, pick a chain length (e.g., <img class="math" src="_images/math/9ef688bfa7c01db65bded6f3ebdee27258b0dec1.png" alt="10^7"/> generations), and then specify a sample frequency that should give you somewhere between 500 and 5000 samples from the posterior after burnin.</p>
 </div>
 <div class="section" id="how-many-generations-should-i-expect-to-run-bamm-for">
 <h3>10.1.4. How many generations should I expect to run BAMM for?<a class="headerlink" href="#how-many-generations-should-i-expect-to-run-bamm-for" title="Permalink to this headline">¶</a></h3>
@@ -133,14 +130,14 @@
 <h3>10.1.6. What is the actual model implemented in BAMM for time-varying rates?<a class="headerlink" href="#what-is-the-actual-model-implemented-in-bamm-for-time-varying-rates" title="Permalink to this headline">¶</a></h3>
 <p>The model originally described for time-varying macroevolutionary rate regimes (e.g., <a class="reference external" href="http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0089543">Rabosky 2014</a>) used a simple exponential change function for rates through time:</p>
 <div class="math">
-<p><img src="_images/math/3ffa6607eb769caa4f09246bcf1f7c7dfe0eaaf1.png" alt="\lambda(t) = \lambda_{0}e^{k t}"/></p>
-</div><p>We have since come to recognize that this model is not ideal, because it is highly asymmetric with respect to increasing (k &gt; 0) and decreasing (k &lt; 0) rates through time. Specifically, the prior we place on <em>k</em> is symmetric (normal), but the rates are not. The problem, put simply, is that negative values of <em>k</em> can only decrease the evolutionary rate to zero. However, positive values - even of equivalent absolute value - can lead to extremely large values. Just consider the values of the exponential function above evaluated at <img class="math" src="_images/math/fbfee6e77a29dfdb652d55a0d21ff8270dff36f8.png" alt="\lambda_{0} = 1"/>, <img class="math" src="_images/math/45a61cd273ad73925fc0b386ea68f70b0c6d3333.png" alt="t = 1"/>, <img class="math" src="_images/math/5d5e24dbfc8411bf3c25c38fa02a3af9e9d346bc.png" alt="k = -10"/> and <img class="math" src="_images/math/feb6e6d73795e558876f3fba7a6084928c289eb9.png" alt="k = 10"/>.  With <em>k = -10</em>, the value of the rate function approaches zero, but with <em>k = +10</em>, it is 22026.47. Yet both of these <em>k</em> values have equal prior densities.</p>
+<p><img src="_images/math/d38baee9e5ba3441cc008f5058a245789b606b95.png" alt="\lambda(t) = \lambda_{0}e^{k t}"/></p>
+</div><p>We have since come to recognize that this model is not ideal, because it is highly asymmetric with respect to increasing (k &gt; 0) and decreasing (k &lt; 0) rates through time. Specifically, the prior we place on <em>k</em> is symmetric (normal), but the rates are not. The problem, put simply, is that negative values of <em>k</em> can only decrease the evolutionary rate to zero. However, positive values - even of equivalent absolute value - can lead to extremely large values. Just consider the values of the exponential function above evaluated at <img class="math" src="_images/math/051bc3ec06bd3f8d047c193e85463ee6336dec6b.png" alt="\lambda_{0} = 1"/>, <img class="math" src="_images/math/e183f1a850350e9dbeedd8d16f87b511e5893c82.png" alt="t = 1"/>, <img class="math" src="_images/math/814136af5784bcb52cae4941fc641b1cf5d2a24e.png" alt="k = -10"/> and <img class="math" src="_images/math/67a8e2229ead68d7445823d5574b9c0271d60f55.png" alt="k = 10"/>.  With <em>k = -10</em>, the value of the rate function approaches zero, but with <em>k = +10</em>, it is 22026.47. Yet both of these <em>k</em> values have equal prior densities.</p>
 <p>We thus modified the exponential change function to make it symmetric. For <em>k &lt; 0</em>, we use the exponential change function defined above. For <em>k &gt; 0</em>, we use the function</p>
 <div class="math">
-<p><img src="_images/math/1a59467ffecda7b87744b9f61e3ae9aae8ae6fcc.png" alt="\lambda(t) = \lambda_{0} (2 - e^{-k t})"/></p>
-</div><p>If <em>k &gt; 0</em>, this function asymptotically approaches the limiting value <img class="math" src="_images/math/b41d3149f13f5fbea43a4b2d626ac4497d5e36d1.png" alt="2\lambda_{0}"/>.</p>
-<p>This has the nice property that the function <img class="math" src="_images/math/fb2560ade70d8ae6c836f8870929f17424ef5b5c.png" alt="\lambda(t)"/> is symmetric about the line <img class="math" src="_images/math/bc39a03abf0ee75f2c15c454ba82996787b01165.png" alt="x = \lambda_{0}"/>, for positive and negative values of k with the same absolute value.</p>
-<p>Note that in BAMM v2.0, the model allows &#8220;flipping&#8221; between time-constant and time-varying diversification modes. The theory underlying this new proposal class is described <a class="reference internal" href="time-flip.html#timefliptheory"><span>here</span></a>. Hence, the model does not assume that diversification shifts result in a new time-varying diversification process, but allows for such processes if they are supported by the data.</p>
+<p><img src="_images/math/73b6362d6cfb3561a264a000f2a7c0381ee8e9e5.png" alt="\lambda(t) = \lambda_{0} (2 - e^{-k t})"/></p>
+</div><p>If <em>k &gt; 0</em>, this function asymptotically approaches the limiting value <img class="math" src="_images/math/9dff200ab757129e2f3e916bb46ecf3198f3bb5c.png" alt="2\lambda_{0}"/>.</p>
+<p>This has the nice property that the function <img class="math" src="_images/math/e9014ef0b51d1b1d968db80f8f90e5fea9518b97.png" alt="\lambda(t)"/> is symmetric about the line <img class="math" src="_images/math/253e1f2e06dd8938ad8f3777b1218fa0cf271910.png" alt="x = \lambda_{0}"/>, for positive and negative values of k with the same absolute value.</p>
+<p>Note that in BAMM v2.0, the model allows &#8220;flipping&#8221; between time-constant and time-varying diversification modes. The theory underlying this new proposal class is described <a class="reference internal" href="time-flip.html#timefliptheory"><span class="std std-ref">here</span></a>. Hence, the model does not assume that diversification shifts result in a new time-varying diversification process, but allows for such processes if they are supported by the data.</p>
 </div>
 <div class="section" id="how-can-bamm-detect-diversity-dependent-changes-in-speciation-rates">
 <h3>10.1.7. How can BAMM detect diversity-dependent changes in speciation rates?<a class="headerlink" href="#how-can-bamm-detect-diversity-dependent-changes-in-speciation-rates" title="Permalink to this headline">¶</a></h3>
@@ -151,7 +148,7 @@
 </div>
 <div class="section" id="why-does-my-phylorate-plot-not-show-variation-when-i-know-there-are-significant-rate-shifts-in-my-dataset">
 <h3>10.1.8. Why does my phylorate plot not show variation when I know there are significant rate shifts in my dataset?<a class="headerlink" href="#why-does-my-phylorate-plot-not-show-variation-when-i-know-there-are-significant-rate-shifts-in-my-dataset" title="Permalink to this headline">¶</a></h3>
-<p>It is possible that the distribution of rates across your phylogeny is highly skewed. See <a class="reference internal" href="colorbreaks.html#colorbreaks"><span>this page</span></a> for more information.</p>
+<p>It is possible that the distribution of rates across your phylogeny is highly skewed. See <a class="reference internal" href="colorbreaks.html#colorbreaks"><span class="std std-ref">this page</span></a> for more information.</p>
 </div>
 </div>
 </div>
@@ -166,7 +163,7 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="likelihoodmodel.html" title="11. The BAMM likelihood function"
+          <a href="prior.html" title="11. Is the posterior on the number of shifts overly sensitive to the prior?"
              >next</a></li>
         <li class="right" >
           <a href="colorbreaks.html" title="9. Color ramps and phylorate plots"
@@ -181,7 +178,7 @@
 
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b3+.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

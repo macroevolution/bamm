@@ -47,10 +47,10 @@ The sections below include:
 	Visualize sets of taxa with :ref:`shared rate dynamics<cohorts>`.
 
 
+.. _workflow:
+
 BAMMtools quickstart guide
 ..........................
-
-.. _workflow:
 
 This is a quickstart guide to some of the analyses discussed below (and many more are possible). Additional ideas are illustrated in the R code samples available on the :ref:`BAMM graph gallery<bammgraphs>`, and the **BAMMtools** package contains functions for a number of additional analyses.  
 
@@ -66,10 +66,11 @@ This is a quickstart guide to some of the analyses discussed below (and many mor
 * Compute clade-specific marginal distributions of rates with ``getCladeRates(...)`` 
 
 
+.. _bammoutput:
+
 BAMM output and the *bammdata* object
 .....................................
 
-.. _bammoutput:
 
 BAMM output
 -----------
@@ -126,10 +127,10 @@ As an additional test for convergence, we recommend analyzing multiple independe
 If you are having trouble with convergence, please see the section on :ref:`troubleshooting convergence issues<convergenceproblems>`.  
 
 
+.. _numbershifts:
 
 Analysis of rate shifts
 ..........................
-.. _numbershifts:
 
 In the BAMM framework, many different shift configurations may be (more-or-less) equally plausible. BAMM samples shift configurations in proportion to their posterior probability. In principle, this means that each sample from your posterior contains a potentially unique configuration of regime shift events. 
 
@@ -161,9 +162,10 @@ Alternatively, if we have our *bammdata* object, we can summarize the posterior 
 
 ``shift_probs`` is now a dataframe giving the posterior probabilities of each rate shift count observed during simulation of the posterior. 
 
+.. _bayesfactors:
+
 Bayes factors for model comparison
 ..................................
-.. _bayesfactors:
 
 There is a critical issue that arises in model comparisons using BAMM: inferences on the posterior distribution of models are not independent of the prior. This is generally not an issue if you are using a conservative prior (``expectedNumberOfShifts = 1``, for example), because a model with zero rate shifts will have a high prior probability. However, if you set ``expectedNumberOfShifts = 0.1`` (or some other value < 1), your expected number of diversification shifts under the prior alone will increase. Hence, simply by manipulating the prior, you can potentially achieve a posterior distribution that is quite different from zero, even in the absence of evidence for diversification rate heterogeneity.
 
@@ -178,9 +180,10 @@ where :math:`Pr(D|M_i)` is the probability of the data given model :math:`M_i` a
 
 There is one complication that can arise, and it is that -- in many cases -- you wish to perform a Bayes factor comparison between models where one model is never sampled. For example, you might be running a BAMM analysis on a large phylogenetic dataset with lots of rate heterogeneity, and you find that you never sample a model with 0 shifts in the posterior. Hence, you'll formally be unable to compute Bayes factor comparisons involving this model. There are several possible solutions to this scenario, none of which are implemented in BAMMtools. One strategy is to compute a **minimum Bayes factor**, by setting the posterior probability of the unsampled model equal to its maximum possible value. Suppose you have a posterior of 1000 samples and have never sampled :math:`M_0`, the "null" model with 0 shifts (e.g., all samples have at least one shift). You can approximate an upper bound on the probability of :math:`M_0` as roughly 1 / 1000 (as you have 1000 samples and no observations of :math:`M_0`), and you could substitute this value into the equation used to compute the Bayes factor. Note that the true posterior probability of :math:`M_0` could have been **vastly lower** (but probably not much higher); hence, any Bayes factors where the posterior probability of :math:`M_0` is in the denominator will be underestimates. This is an acceptable practical solution to describing the evidence against :math:`M_0` when :math:`M_0` is so unlikely as to never be sampled. However, a Bayes factor computed in this fashion is a minimum estimate, and cannot be used to argue that rate heterogeneity is unlikely (because it is almost certain that the true Bayes factor evidence against :math:`M_0` is greater).  
 
+.. _analyticalprior:
+
 Prior distribution in BAMM
 --------------------------
-.. _analyticalprior:
 
 The primary goal of BAMM is to understand rate heterogeneity in a phylogeny without having to pre-specify the number or location of rate regimes. Rather than putting a prior on the number of shifts (*k*) directly, BAMM uses a weaker prior on the rate of the Poisson process that produces *k* (the Poisson rate prior: :math:`\pi(\lambda_{P})`). Understanding how much evidence there is for *k* shifts along your tree therefore requires that you determine the prior probability of *k* shifts under the specified Poisson rate prior used, which is calculated analytically as
 
@@ -244,9 +247,10 @@ You can also view a phylorate plot for any sample from the posterior. For exampl
 	addBAMMshifts(e2, cex=2)
 	
 
+.. _crediblesets:
+
 Bayesian credible sets of shift configurations
 ----------------------------------------------
-.. _crediblesets:
 
 The central goal of BAMM is to identify the relative evidence across a phylogeny for rate heterogeneity. Part of the modeling process involves placing a number of shifts at specific locations through the tree (shift configurations), however the precise location of each shift should not be overinterpreted. Evolution is complicated, it is highly unlikely that an empirical tree will have unambiguous evidence for the precise location of a shift. The more likely scenario is that several positions, both along a single branch or on successive branches, will have evidence for rate shifts.
 
@@ -377,9 +381,10 @@ This is an important point: **you cannot use the marginal odds ratios for branch
 
 What the marginal odds **do** provide is an estimate of the "density" of shifts on a particular branch, independent of the length of the branch. But note that this can conflict directly with the *marginal shift probabilities*. In the whale dataset, for example, the branch with the highest marginal odds of a shift is not the branch with the highest marginal shift probability. When there is a conflict, we suggest that the marginal shift probabilities are your overall best measure of the location of a shift. But the marginal odds ratio is critical for distinguishing core and non-core rate shifts.
 
+.. _claderates:
+
 Clade-specific evolutionary rates
 .................................
-.. _claderates:
 
 Estimating clade-specific rates with BAMMtools is straightforward. To compute the overall rate of speciation, extinction, or trait evolution, you can use the function ``getCladeRates``, which computes the average rate for the focal clade. Here we will use an example from the ``whales`` example dataset that is included with BAMMtools::
 
@@ -410,18 +415,21 @@ You can also use the ``node`` argument to ``getCladeRates`` to **exclude** all t
 	
 And you can see that the non-dolphin (background) rate is much lower than the dolphin rate. These are *mean time-averaged clade-specific rates*. If diversification rates have changed dramatically through the history of a particular clade, a single overall mean rate might not be particularly informative.
 
+.. _branchrates:
+
 Branch & tip-specific evolutionary rates
 ........................................
-.. _branchrates:
 
 BAMM can estimate marginal distributions of evolutionary rates for any point in time along a phylogenetic tree (this is what the the function ``plot.bammdata`` is going to generate a phylorate plot). Sometimes, however, it is useful to have mean rates for individual branches. To pull out the mean rates for individual branches, you can use the function ``getMeanBranchLengthTree`` (see the ``?getMeanBranchLengthTree`` for help on this function). The function generates a copy of your original phylogenetic tree, but where each branch length is replaced by the mean of the marginal distribution of evolutionary rates on each branch. The function can be used to extract branch-specific mean rates of speciation, extinction, net diversification, and trait evolution.
 
 You can also estimate individual tip-specific rates. For the whale example, this is actually included as part of your bammdata object. If ``edata`` is the bammdata object for whales, the components ``edata$meanTipLambda`` and ``edata$meanTipMu`` are the relevant model-averaged mean rates of speciation and extinction at the tips of the tree.
 
+
+.. _bammtoolsRTT:
+
 Rate-through-time analysis
 ..........................
 
-.. _bammtoolsRTT:
 
 Plotting a rate-through-time curve (example :ref:`here<whales_RatesThroughTime>`) is trivial. BAMM's built-in function ``plotRateThroughTime`` makes it easy to generate plots of rates through time::
 
@@ -482,11 +490,12 @@ You can also include and exclude nodes from the calculation of the rate-through-
 	
 Please see code underlying some BAMM graph gallery plots for more on working with these objects. 
  
+
+.. _cohorts:
  
 Macroevolutionary cohort analysis
 .....................................
 
-.. _cohorts:
 
 Macroevolutionary cohort analysis provides a way of summarizing the extent to which species share correlated macroevolutionary dynamics. The method is explained in this `Systematic Biology article <http://sysbio.oxfordjournals.org/content/63/4/610>`_. The basic idea is to visualize the pairwise probabilities that any two species share a common macroevolutionary rate regime. The first step is to generate a cohort matrix, which contains the pairwise probabilities of shared macroevolutionary dynamics. This is then passed to the ``cohorts`` function, which generates the plot::
 

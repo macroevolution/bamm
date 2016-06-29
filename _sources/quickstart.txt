@@ -111,7 +111,7 @@ One other block of parameters can be critical to BAMM performance: the priors th
 These priors may work for your dataset. They may also be extremely inadequate. To this end, we have included a function in the BAMMtools package to help you choose appropriate prior values. The function, ``setBAMMpriors``, will automatically generate a prior block as a text file that you can copy and paste over the prior block in the template file. To do this, you need to install BAMMtools (see `here <postprocess.html>`_), and you need your phylogenetic tree. Assuming you have a phylogenetic tree file ``my_tree.tre``, you can generate the prior block with::
 	
 	> library(BAMMtools) # Assuming you have installed BAMMtools!
-	> setBAMMpriors("my_tree.tre")
+	> setBAMMpriors(read.tree("my_tree.tre"))
 	
 and the relevant output file will be generated in your working directory. See the help file (``?setBAMMpriors``) for more information. To be clear: this does not optimize priors to your dataset. It simply chooses a set of priors that we have found to be reasonable for most datasets and scales the distributions based on the age (root depth) of your tree. A more complete explanation :ref:`can be found here<ratepriors>`.
 

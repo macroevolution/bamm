@@ -47,6 +47,7 @@
 <li><a class="reference internal" href="#">Welcome</a></li>
 <li><a class="reference internal" href="#recommended-reading">Recommended reading</a></li>
 <li><a class="reference internal" href="#recent-changes">Recent changes</a></li>
+<li><a class="reference internal" href="#concerns-about-the-reliability-of-bamm">Concerns about the reliability of BAMM</a></li>
 <li><a class="reference internal" href="#support">Support</a></li>
 </ul>
 
@@ -60,14 +61,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -99,6 +97,7 @@ produced using BAMM and BAMMtools.</li>
 <a class="reference external" href="quickstart.html">Quick-start Guide to BAMM</a>.</li>
 <li>Go to our <a class="reference external" href="faq.html">Frequently Asked Questions</a> page to see common
 questions and answers.</li>
+<li>We include a new page discussing concerns that have been raised about sensitivity of BAMM to the prior on the number of rate <a class="reference external" href="prior.html">shifts</a> .</li>
 </ul>
 </div>
 <div class="section" id="recommended-reading">
@@ -106,7 +105,7 @@ questions and answers.</li>
 <ul class="simple">
 <li>We strongly recommend that you read our documentation on how to (and how not to) interpret <a class="reference external" href="rateshifts.html">rate shifts</a> on phylogenies. This section addresses some of the most common pitfalls with interpreting BAMM analyses.</li>
 <li><strong>What are the assumptions of the BAMM likelihood?</strong> Find out <a class="reference external" href="likelihoodmodel.html">here</a></li>
-<li><strong>Is the BAMM likelihood computed correctly</strong>, given the assumptions of the model? Learn more about testing it <a class="reference internal" href="likelihoodmodel.html#testlikelihood"><span>here</span></a></li>
+<li><strong>Is the BAMM likelihood computed correctly</strong>, given the assumptions of the model? Learn more about testing it <a class="reference internal" href="likelihoodmodel.html#testlikelihood"><span class="std std-ref">here</span></a></li>
 </ul>
 </div>
 <div class="section" id="recent-changes">
@@ -116,18 +115,22 @@ that significantly improve performance and reliability.
 If you have used a previous version of BAMM or BAMMtools,
 we recommend installing the latest version.</p>
 <ul class="simple">
-<li>BAMMtools now computes the prior analytically for the compound Poisson process model; there is thus no need to simulate the prior distribution of the number of shifts. More on this <a class="reference internal" href="postprocess.html#analyticalprior"><span>here</span></a>.</li>
+<li>BAMMtools now computes the prior analytically for the compound Poisson process model; there is thus no need to simulate the prior distribution of the number of shifts. More on this <a class="reference internal" href="postprocess.html#analyticalprior"><span class="std std-ref">here</span></a>.</li>
 <li>BAMMtools 2.1 uses branch-specific marginal odds ratios to identify
-credible sets of <a class="reference internal" href="rateshifts.html#rateshifts"><span>shift configurations</span></a>. More about why we made this change <a class="reference internal" href="postprocess.html#marginalodds"><span>here</span></a>.</li>
-<li>Users can now use BAMMtools to test whether BAMM is correctly computing likelihoods (see <a class="reference internal" href="likelihoodmodel.html#testlikelihood"><span>here</span></a>).</li>
-<li>Some important bug fixes are documented <a class="reference internal" href="changes.html#changes"><span>here</span></a>.</li>
+credible sets of <a class="reference internal" href="rateshifts.html#rateshifts"><span class="std std-ref">shift configurations</span></a>. More about why we made this change <a class="reference internal" href="postprocess.html#marginalodds"><span class="std std-ref">here</span></a>.</li>
+<li>Users can now use BAMMtools to test whether BAMM is correctly computing likelihoods (see <a class="reference internal" href="likelihoodmodel.html#testlikelihood"><span class="std std-ref">here</span></a>).</li>
+<li>Some important bug fixes are documented <a class="reference internal" href="changes.html#changes"><span class="std std-ref">here</span></a>.</li>
 <li>Comprehensive overhaul of BAMM&#8217;s C++ core for transparency
 and extensibility</li>
 <li>Metropolis coupled MCMC implemented by default to facilitate convergence.
-The MC3 is described <a class="reference internal" href="mc3.html#mc3"><span>here</span></a>.</li>
+The MC3 is described <a class="reference internal" href="mc3.html#mc3"><span class="std std-ref">here</span></a>.</li>
 </ul>
 <p><a class="reference external" href="colorbreaks.html">Take a look</a> at a new webpage that explains some of the intricacies of phylorate plot interpretation.</p>
 <p>Please see the <a class="reference external" href="changes.html">Changes</a> page for more information.</p>
+</div>
+<div class="section" id="concerns-about-the-reliability-of-bamm">
+<h1>Concerns about the reliability of BAMM<a class="headerlink" href="#concerns-about-the-reliability-of-bamm" title="Permalink to this headline">¶</a></h1>
+<p>Concerns about BAMM&#8217;s reliability were raised at the Evolution 2016 conference in Austin. See our page on <a class="reference external" href="prior.html">reliability</a> for our response to these concerns.</p>
 </div>
 <div class="section" id="support">
 <h1>Support<a class="headerlink" href="#support" title="Permalink to this headline">¶</a></h1>
@@ -156,7 +159,7 @@ The MC3 is described <a class="reference internal" href="mc3.html#mc3"><span>her
 
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b3+.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

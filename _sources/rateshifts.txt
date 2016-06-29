@@ -27,11 +27,11 @@ The point is that BAMM - and every other model that assumes discrete shifts in d
 This is not a weakness *per se* of BAMM, and it applies to all other "macroevolutionary" scale modeling frameworks of which we are aware. However, recognizing the limitations of the discrete shift framework has a number of practical implications for interpreting patterns in data.  
 
 
+.. _credibleshifts:
 
 Multiple distinct rate shift configurations can explain your data
 .................................................................
 
-.. _credibleshifts:
 
 With most phylogenetic datasets, it is unlikely that you will be able to identify the specific branches on which rate shifts have occurred with extremely high confidence. More typically, you will be unable to exclude several different shift configurations that potentially account for a given pattern of phylogenetic branching or phenotypic diversity. 
 
@@ -59,10 +59,10 @@ Simply speaking, reporting only the *maximum likelihood* shift location on a phy
 Addressing this issue is one of the primary reasons that we created BAMM.
 
 
+.. _distinctconfigurations1:
+
 Is this really an issue with real datasets?
 -------------------------------------------
-
-.. _distinctconfigurations1:
  
 **Yes**.
 
@@ -167,10 +167,11 @@ This leads to one major difficulty with the interpretation of marginal shift pro
 	
 We feel that this is issue is sufficiently important that we have made addressing this challenge a major feature of BAMMtools 2.0.	
 
+.. _marginaloddsbranches:
+
 Marginal odds ratios as evidence for rate shift locations
 ---------------------------------------------------------
 
-.. _marginaloddsbranches:
 
 Our solution to the problem above is to compute a *marginal odds ratio* of a shift happening on each branch in our phylogeny. This is a nice solution that accounts for the effects of the prior and branch length on our perceived evidence for a rate shift. We thank 
 `Jeremy Brown <http://www.phyleaux1.lsu.edu>`_ for suggesting this approach to assessing relative support context. The implementation of marginal odds ratios in the BAMM framework is also described in `Shi & Rabosky 2015 <http://onlinelibrary.wiley.com/doi/10.1111/evo.12681/abstract>`_, although there (and previously on this website) the technically incorrect term 'branch specific-Bayes Factors' is used. We now consider this incorrect because these branch-specific quantities are a summary statistic. We now prefer to refer to these as *branch-specific pseudo-Bayes factors* as they simply summarize the frequency of observing one or more rate shifts on a branch relative to the prior expectation; there is no formal model for a rate shift on an individual branch. 
@@ -371,12 +372,14 @@ where :math:`\Phi_{k,i}` is an indicator variable that takes a value of 1 if a s
 
 The cumulative shift probability tree can be computed with the function ``cumulativeShiftProbsTree``. Although this a useful approach, we believe that identifying macroevolutionary cohorts (see function ``cohorts``) provides greater insight into patterns of diversification rate heterogeneity across phylogenies.
  
+
+ .. _appendix1:
+ 
 Appendix
 .....................
 
 Computing prior probabilities of rate shifts on branches
 ----------------------------------------------------------
-.. _appendix1:
 
 The function ``getBranchShiftPriors`` computes the prior probability of a rate shift on each branch of a phylogenetic tree. Let the prior (whole-tree) probability of :math:`i` rate shifts on a phylogeny be denoted by :math:`\pi_i`, such that 
 

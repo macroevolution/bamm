@@ -77,14 +77,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -135,12 +132,12 @@
 <p>It is important to understand that while these different color mapping methods can lead to different phylorate plots, <strong>the underlying raw data remains the same</strong> (or log-transformed) and any downstream quantitative analyses of rates are completely unaffected by the breaks method chosen.</p>
 <p>We illustrate these differences with an example. This is a BAMM analysis of primate body mass (Vos and Moors 2008). For each breaks method, we generated a histogram showing the frequency of rate values in the dataset, colored according to the selected breaks method. Vertical bars show how the rates have been binned.</p>
 <p>From these histograms, it is clear that there are segments of the phylogeny with much higher rates than for the rest of the phylogeny, but these segments encompass only a very small subset (the histogram has a long tail).</p>
-<div class="figure align-center" id="breakstest">
-<a class="reference internal image-reference" href="_images/breaksTest.png"><img alt="_images/breaksTest.png" src="_images/breaksTest.png" style="width: 700px;" /></a>
+<div class="figure align-center" id="ratehistogramsv">
+<a class="reference internal image-reference" href="_images/rateHistograms.png"><img alt="_images/rateHistograms.png" src="_images/rateHistograms.png" style="width: 700px;" /></a>
 </div>
 <p>Now we show how these different methods produce different phylorate figures. Due to the long tail of the distribution of rates, the linear breaks method does a poor job of showing rate variation across the phylogeny.</p>
-<div class="figure align-center" id="breakstesttrees">
-<a class="reference internal image-reference" href="_images/breaksTestTrees.png"><img alt="_images/breaksTestTrees.png" src="_images/breaksTestTrees.png" style="width: 700px;" /></a>
+<div class="figure align-center" id="breaksmethodphylorates">
+<a class="reference internal image-reference" href="_images/breaksmethodPhylorates.png"><img alt="_images/breaksmethodPhylorates.png" src="_images/breaksmethodPhylorates.png" style="width: 700px;" /></a>
 </div>
 </div>
 <div class="section" id="a-note-of-caution">
@@ -156,17 +153,17 @@
 <div class="section" id="how-do-i-plot-these-histograms">
 <h2>9.4. How do I plot these histograms?<a class="headerlink" href="#how-do-i-plot-these-histograms" title="Permalink to this headline">¶</a></h2>
 <p>For those interested in exploring rate heterogeneity in the form of a histogram, we demonstrate how the above histograms were created:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">library</span><span class="p">(</span><span class="n">BAMMtools</span><span class="p">)</span>
-<span class="c">#load data</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">library</span><span class="p">(</span><span class="n">BAMMtools</span><span class="p">)</span>
+<span class="c1">#load data</span>
 <span class="n">data</span><span class="p">(</span><span class="n">primates</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">primates</span><span class="p">)</span>
-<span class="n">ed</span> <span class="o">&lt;-</span> <span class="n">getEventData</span><span class="p">(</span><span class="n">primates</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">primates</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s">&#39;trait&#39;</span><span class="p">)</span>
+<span class="n">ed</span> <span class="o">&lt;-</span> <span class="n">getEventData</span><span class="p">(</span><span class="n">primates</span><span class="p">,</span> <span class="n">events</span><span class="o">.</span><span class="n">primates</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;trait&#39;</span><span class="p">)</span>
 
-<span class="c">#create phylorate plot to generate output</span>
-<span class="n">q</span> <span class="o">&lt;-</span> <span class="n">plot</span><span class="o">.</span><span class="n">bammdata</span><span class="p">(</span><span class="n">ed</span><span class="p">,</span> <span class="n">breaksmethod</span><span class="o">=</span><span class="s">&#39;jenks&#39;</span><span class="p">)</span>
+<span class="c1">#create phylorate plot to generate output</span>
+<span class="n">q</span> <span class="o">&lt;-</span> <span class="n">plot</span><span class="o">.</span><span class="n">bammdata</span><span class="p">(</span><span class="n">ed</span><span class="p">,</span> <span class="n">breaksmethod</span><span class="o">=</span><span class="s1">&#39;jenks&#39;</span><span class="p">)</span>
 
-<span class="n">ratesHistogram</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">plotBrks</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">xlab</span> <span class="o">=</span> <span class="s">&#39;trait rates&#39;</span><span class="p">)</span>
+<span class="n">ratesHistogram</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">plotBrks</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">xlab</span> <span class="o">=</span> <span class="s1">&#39;trait rates&#39;</span><span class="p">)</span>
 
-<span class="n">title</span><span class="p">(</span><span class="n">main</span><span class="o">=</span><span class="s">&#39;jenks&#39;</span><span class="p">,</span> <span class="n">cex</span><span class="o">.</span><span class="n">main</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">title</span><span class="p">(</span><span class="n">main</span><span class="o">=</span><span class="s1">&#39;jenks&#39;</span><span class="p">,</span> <span class="n">cex</span><span class="o">.</span><span class="n">main</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -197,7 +194,7 @@
 
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b3+.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
