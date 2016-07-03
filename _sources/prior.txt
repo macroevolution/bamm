@@ -11,7 +11,7 @@ At the recent Evolution conference, Brian Moore gave a thought-provoking `talk <
 BAMM v2.5 was released in part due to several bug reports from one of the authors of the talk; see Github issue `136 <https://github.com/macroevolution/bamm/issues/136>`_ 
 and issue `137 <https://github.com/macroevolution/bamm/issues/137>`_ . Analyses using the most recent version, BAMM v2.5 (available since November 2015), yields robust inferences on the posterior that are largely independent of the prior. We document our re-analysis of results discussed verbally in the talk and posted to social media for :ref:`constant rate<nr_constantrate>` phylogenies and for the 87-taxon :ref:`whale<nr_whales>` phylogeny distributed with ``BAMMtools``.  
 
-BAMM assumes that the number of diversification rate regimes on phylogenetic trees is governed by a Poisson distribution with an exponential hyperprior on the Poisson rate parameter. Theoretically, it turns out that this distribution is simply a geometric distribution with a rate parameter p = 1 / (1 + :math:`\gamma`). Viewed in this fashion, :math:`\gamma` is simply the mean of the prior distribution on the number of rate shifts. In specifying a BAMM analysis, :math:`\gamma` is identical to the control parameter ``expectedNumberOfShifts``, or -- using an older version of BAMM -- the inverse of the ``poissonRatePrior`` parameter.
+BAMM assumes that the number of diversification rate regimes on phylogenetic trees is governed by a Poisson distribution with an exponential hyperprior on the Poisson rate parameter. Theoretically, it turns out that this distribution is simply a geometric distribution with a rate parameter p = 1 / (1 + :math:`\gamma`). Viewed in this fashion, :math:`\gamma` is simply the mean of the prior distribution on the number of rate shifts. In specifying a BAMM analysis, :math:`\gamma` is identical to the control parameter ``expectedNumberOfShifts``, or -- using an older version of BAMM -- the inverse of the ``poissonRatePrior`` parameter. We had not worked out the analytical solution to the prior model in BAMM until May 2015; however, it turns out that this is a very well-known distribution with its own Wikipedia `section <https://en.wikipedia.org/wiki/Negative_binomial_distribution#Gamma.E2.80.93Poisson_mixture>`_ . We provide a brief derivation of the analytical prior :ref:`below<rateshiftprior>`, but our result follows immediately from the more general solution for the gamma-Poisson mixture model. 
 
 **We are enthusiastic about scientific dialogue on BAMM's performance and on alternative inference frameworks for macroevolutionary dynamics.** However, it is imperative that theoretical considerations be separated from implementation-related issues that are specific to particular releases of the software program. 
  
@@ -190,14 +190,54 @@ That is, each point corresponds to a prior probability of a particular number of
 
 Why did we fail to detect the event rate bug in pre-2.5 BAMM?
 ------------------------------------------------------------------
-Several reasons. First, we did not have the analytical solution to the true prior in hand. This was only resolved after discussions with Cecile Ané at a BAMM workshop that was held in Ann Arbor in May 2015. Hence, we did not have a true analytical expectation for comparison. Second, BAMM performed well in practice. Model selection with Bayes factors continued to perform well for all previous versions of BAMM (even when both posterior and prior distributions included the *event rate* bug). We have seen little evidence that previous versions of BAMM have been prone to overfitting. Finally, speciation and extinction rate estimates obtained by BAMM were, in general, highly correlated with the true values in the generating model for BAMM 2.4 and earlier; we have been using, since December 2014, a full *BAMM process* simulator to validate BAMM. This code is available as a Github `repository <https://github.com/macroevolution/simtree>`_ and, though documentation is still incomplete, the code provides simulation of phylogenies under a complete Poisson process and includes rate shifts leading to unobserved and extinct lineages. Hence, we have yet seen no indication that previous versions performed poorly in practice. 
+Several reasons. First, we did not have the :ref:`analytical<rateshiftprior>` solution to the true prior in hand. This was only resolved after discussions with Cecile Ané at a BAMM workshop that was held in Ann Arbor in May 2015. Hence, we did not have a true analytical expectation for comparison. Second, BAMM performed well in practice. Model selection with Bayes factors continued to perform well for all previous versions of BAMM (even when both posterior and prior distributions included the *event rate* bug). We have seen little evidence that previous versions of BAMM have been prone to overfitting. Finally, speciation and extinction rate estimates obtained by BAMM were, in general, highly correlated with the true values in the generating model for BAMM 2.4 and earlier; we have been using, since December 2014, a full *BAMM process* simulator to validate BAMM. This code is available as a Github `repository <https://github.com/macroevolution/simtree>`_ and, though documentation is still incomplete, the code provides simulation of phylogenies under a complete Poisson process and includes rate shifts leading to unobserved and extinct lineages. Hence, we have yet seen no indication that previous versions performed poorly in practice. 
 
 How can I report implementation errors to the developers?
 ------------------------------------------------------------------
 We have two standard channels for bug reporting and/or other concerns about BAMM and BAMMtools. These include our Github `page <https://github.com/macroevolution/bamm>`_ , which provides an archived forum for bug reports and other issues. Likewise, we maintain a Google `group <https://groups.google.com/forum/#!forum/bamm-project>`_ dedicated to questions and comments about BAMM. 
 
 
+.. _rateshiftprior: 
 
+Appendix: Analytical prior on the number of rate shifts 
+---------------------------------------------------------------------------
+Here, we demonstrate that a Poisson distribution with an exponential hyperprior on the number of rate shifts follows a simple geometric distribution. This derivation is a well-known analytical `result <https://en.wikipedia.org/wiki/Negative_binomial_distribution#Gamma.E2.80.93Poisson_mixture>`_ that relates the Poisson and gamma distributions to the negative binomial distribution (this topic also covered in multiple `blogs <https://probabilityandstats.wordpress.com/tag/poisson-gamma-mixture/>`_ and probability theory `textbooks <https://www.amazon.com/Probability-Random-Processes-Geoffrey-Grimmett/dp/0198572220>`_). The exponential distribution is a special case of the gamma distribution; the geometric distribution, as a special case of the negative binomial, can be derived immediately from the relationship between the gamma and the exponential distributions.  
+
+Below, we give the (slightly simpler) derivation in terms of the Poisson and exponential distributions. The probability of k shifts under the BAMM model is the product of Poisson and exponential densities. We can integrate over the Poisson parameter :math:`\Lambda` to express the probability density of the number of shifts as a function of exponential hyperprior :math:`\theta`:     
+
+.. math::
+
+	Pr(k | \theta) = \int^{\infty}_{0} Pr(k | \Lambda) Pr(\Lambda | \theta) d\Lambda
+
+This can be expanded to:
+
+.. math::
+	Pr(k | \theta) =   \int^{\infty}_{0} \frac{\Lambda^{k}e^{-\Lambda}}{k!} \theta e^{-\theta\Lambda} d\Lambda
+
+and reduced to
+
+.. math::
+	Pr(k|\theta) = \frac{\theta}{k!}  \int^{\infty}_{0} \Lambda^{k} e^{-\Lambda (1 + \theta)} d\Lambda
+
+which can be solved analytically using a gamma function identity, specifically:
+
+.. math::
+ 	\int^{\infty}_{0} \Lambda^{k} e^{-\Lambda (1 + \theta)} d\Lambda \rightarrow \frac{\Gamma (x + 1)}{a^{x+1}}
+ 	
+and thus the full expression becomes 	
+ 	
+.. math::
+	Pr(k|\theta) = \frac{\Gamma(k+1)}{k!} \frac{\theta}{(1+\theta)^{k+1}} = \frac{\theta}{(\theta + 1)^{k+1}} 	
+ 	
+Letting :math:`\gamma` = 1 / :math:`\theta`, we have: 	
+ 	
+.. math::
+	Pr(k|\gamma) = \frac{\frac{1}{\gamma}}{(\frac{1}{\gamma} + 1)^{k+1}} = \frac{\frac{1}{\gamma}}{(\frac{1}{\gamma} + 1)(\frac{1}{\gamma} + 1)^{k}} = (\frac{1}{\gamma + 1})(\frac{\gamma}{\gamma + 1})^{k} 	
+
+which is simply a geometric distribution with parameter p = 1 / (:math:`\gamma` + 1).
+
+This solution enabled diagnosis of the *event rate* bug, which affected BAMM v2.3 and earlier (resolved May 2015).
+ 
 
 
 
