@@ -7,6 +7,8 @@ BAMM (Bayesian Analysis of Macroevolutionary Mixtures) is a program for
 modeling complex dynamics of speciation, extinction, and trait evolution on
 phylogenetic trees.
 
+**A preliminary response to a recently-published** `critique <http://www.pnas.org/content/early/2016/08/09/1518659113.full>`_ **of BAMM can be found** `on this page <replication.html>`_.
+
 BAMM is oriented entirely towards detecting and quantifying heterogeneity in
 evolutionary rates. It uses reversible jump Markov chain Monte Carlo to
 automatically explore a vast universe of candidate models of lineage
@@ -35,9 +37,9 @@ Recommended reading
 
 * We strongly recommend that you read our documentation on how to (and how not to) interpret `rate shifts <rateshifts.html>`_ on phylogenies. This section addresses some of the most common pitfalls with interpreting BAMM analyses.  
 
-* **What are the assumptions of the BAMM likelihood?** Find out `here <likelihoodmodel.html>`_
+* **What are the assumptions of the BAMM likelihood?** Find out `here <likelihoodmodel.html>`_.
 
-* **Is the BAMM likelihood computed correctly**, given the assumptions of the model? Learn more about testing it :ref:`here <testlikelihood>`
+* **Is the BAMM likelihood computed correctly**, given the assumptions of the model? Learn more about testing it :ref:`here <testlikelihood>`.
 
 
 
