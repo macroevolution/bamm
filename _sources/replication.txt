@@ -10,11 +10,12 @@ Summary
 ----------
 Empirical results from Moore et al (MEA) cannot be replicated with standard usage of BAMM:
 
-* MEA added a **hidden and undocumented** setting to their BAMM control files and modified its default value. This was not acknowledged in their manuscript.
+* MEA added a **hidden and undocumented** setting to their BAMM control files and modified its default value. This was not acknowledged in their manuscript. 
+* This setting appears as the last line in all BAMM control files to accompany the MEA `Dryad <http://datadryad.org/resource/doi:10.5061/dryad.mb0sd>`_ submission.
 * This setting was a *developer-only* option that changes how the extinction probabilities are calculated in BAMM
 * MEA's modification reactivated an implementation concern that they `pointed out <https://github.com/macroevolution/bamm/issues/137>`_ in 2015
 * We had fixed this issue in the November 2015 release of BAMM (v2.5)
-* However, we released v2.5 with a hidden shortcut for experimentation, which was purposefully activated by MEA in all analyses (it cannot be activated by accident, as the parameter is not included in any template files and the setting they used is not documented)
+* However, we released v2.5 with a hidden shortcut for experimentation, which was activated by MEA in all analyses (this setting cannot be activated by accident, as the parameter is not included in any template files and the setting they used is not documented)
 * When BAMM v2.5 is used with the correct (default) setting, empirical pathologies observed by MEA cannot be replicated.
 
 **We strongly recommend that researchers do not alter the values of hidden/undocumented parameters in BAMM, most of which are intended for internal use by BAMM developers**. Altering these settings may induce pathological behaviors relative to the default/recommended value. 
