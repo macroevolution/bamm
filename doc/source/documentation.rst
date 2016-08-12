@@ -22,6 +22,7 @@ BAMM Documentation
    colorbreaks   
    faq    
    prior
+   replication
    likelihoodmodel
    mc3
    strapp      

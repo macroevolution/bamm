@@ -116,7 +116,6 @@ MEDUSA-like model
 
 To run a Bayesian MEDUSA-like model, where the rate of speciation and extinction is constant within specific shift regimes, you can set your MCMC move frequencies as follows::
 	
-	lambdaIsTimeVariablePrior = 0
 	updateRateEventNumber = 0.1
 	updateRateEventPosition = 1
 	updateRateEventRate = 1
