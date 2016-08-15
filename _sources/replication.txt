@@ -4,7 +4,7 @@
 Replication tests of empirical results from Moore et al (2016)
 ================================================================================
 
-This page is not our full or formal response to the Moore et al (2016) `critique <http://www.pnas.org/content/early/2016/08/09/1518659113.full>`_ of BAMM, but addresses replicability of empirical results from the paper.
+This page is not our full or formal response to the Moore et al (2016) `critique <http://www.pnas.org/content/early/2016/08/09/1518659113.full>`_ of BAMM, but addresses replicability of empirical results from the paper. See additional assessment on `this page <developertoggle.html>`_, which also briefly addresses the claim that BAMM estimates of speciation rates are uncorrelated with the true values.
 
 Summary
 ----------
@@ -17,6 +17,7 @@ Empirical results from Moore et al (MEA) cannot be replicated with standard usag
 * We had fixed this issue in the November 2015 release of BAMM (v2.5)
 * However, we released v2.5 with a hidden shortcut for experimentation, which was activated by MEA in all analyses (this setting cannot be activated by accident, as the parameter is not included in any template files and the setting they used is not documented)
 * When BAMM v2.5 is used with the correct (default) setting, empirical pathologies observed by MEA cannot be replicated.
+* We demonstrate that speciation and extinction estimates under the setting used by MEA are actually *more biased* than under the default value for BAMM; see the `following page <developertoggle.html>`_. The hidden setting activated by MEA has no theoretical or practical justification that we can discern.
 
 **We strongly recommend that researchers do not alter the values of hidden/undocumented parameters in BAMM, most of which are intended for internal use by BAMM developers**. Altering these settings may induce pathological behaviors relative to the default/recommended value. 
 

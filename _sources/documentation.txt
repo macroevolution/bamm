@@ -23,6 +23,7 @@ BAMM Documentation
    faq    
    prior
    replication
+   developertoggle
    likelihoodmodel
    mc3
    strapp      

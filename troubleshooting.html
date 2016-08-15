@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>18. Troubleshooting &mdash; bamm 2.5.0 documentation</title>
+    <title>19. Troubleshooting &mdash; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" />
-    <link rel="next" title="19. Glossary" href="glossary.html" />
-    <link rel="prev" title="17. fossil BAMM" href="fossilbamm.html" /> 
+    <link rel="next" title="20. Glossary" href="glossary.html" />
+    <link rel="prev" title="18. fossil BAMM" href="fossilbamm.html" /> 
   </head>
   <body role="document">
 <div class="pageheader">
@@ -36,10 +36,10 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="glossary.html" title="19. Glossary"
+          <a href="glossary.html" title="20. Glossary"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="fossilbamm.html" title="17. fossil BAMM"
+          <a href="fossilbamm.html" title="18. fossil BAMM"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -52,22 +52,22 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">18. Troubleshooting</a><ul>
-<li><a class="reference internal" href="#installation">18.1. Installation</a><ul>
-<li><a class="reference internal" href="#you-don-t-know-where-to-put-the-bamm-directory">18.1.1. You don&#8217;t know where to put the bamm directory</a></li>
+<li><a class="reference internal" href="#">19. Troubleshooting</a><ul>
+<li><a class="reference internal" href="#installation">19.1. Installation</a><ul>
+<li><a class="reference internal" href="#you-don-t-know-where-to-put-the-bamm-directory">19.1.1. You don&#8217;t know where to put the bamm directory</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#running">18.2. Running</a><ul>
-<li><a class="reference internal" href="#on-os-x-you-get-an-error-that-says-something-like-dyld-unknown-required-load-command-0x80000022">18.2.1. On OS X, you get an error that says something like &#8220;dyld: unknown required load command 0x80000022&#8221;</a></li>
-<li><a class="reference internal" href="#on-windows-you-get-an-error-that-says-bamm-exe-is-not-a-valid-win32-application">18.2.2. On Windows, you get an error that says &#8220;bamm.exe is not a valid Win32 application&#8221;</a></li>
-<li><a class="reference internal" href="#on-unix-linux-you-get-the-error-message-enable-multithreading-to-use-std-thread-operation-not-permitted">18.2.3. On Unix/Linux, you get the error message &#8220;Enable multithreading to use std::thread: Operation not permitted&#8221;</a></li>
-<li><a class="reference internal" href="#you-get-an-error-message-by-bamm">18.2.4. You get an error message by BAMM</a></li>
-<li><a class="reference internal" href="#basic-troubleshooting">18.2.5. Basic troubleshooting</a></li>
-<li><a class="reference internal" href="#you-get-an-operating-system-error-e-g-segmentation-fault">18.2.6. You get an operating system error (e.g., segmentation fault)</a></li>
+<li><a class="reference internal" href="#running">19.2. Running</a><ul>
+<li><a class="reference internal" href="#on-os-x-you-get-an-error-that-says-something-like-dyld-unknown-required-load-command-0x80000022">19.2.1. On OS X, you get an error that says something like &#8220;dyld: unknown required load command 0x80000022&#8221;</a></li>
+<li><a class="reference internal" href="#on-windows-you-get-an-error-that-says-bamm-exe-is-not-a-valid-win32-application">19.2.2. On Windows, you get an error that says &#8220;bamm.exe is not a valid Win32 application&#8221;</a></li>
+<li><a class="reference internal" href="#on-unix-linux-you-get-the-error-message-enable-multithreading-to-use-std-thread-operation-not-permitted">19.2.3. On Unix/Linux, you get the error message &#8220;Enable multithreading to use std::thread: Operation not permitted&#8221;</a></li>
+<li><a class="reference internal" href="#you-get-an-error-message-by-bamm">19.2.4. You get an error message by BAMM</a></li>
+<li><a class="reference internal" href="#basic-troubleshooting">19.2.5. Basic troubleshooting</a></li>
+<li><a class="reference internal" href="#you-get-an-operating-system-error-e-g-segmentation-fault">19.2.6. You get an operating system error (e.g., segmentation fault)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#analysis">18.3. Analysis</a><ul>
-<li><a class="reference internal" href="#the-mcmc-does-not-converge">18.3.1. The MCMC does not converge</a></li>
+<li><a class="reference internal" href="#analysis">19.3. Analysis</a><ul>
+<li><a class="reference internal" href="#the-mcmc-does-not-converge">19.3.1. The MCMC does not converge</a></li>
 </ul>
 </li>
 </ul>
@@ -76,10 +76,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="fossilbamm.html"
-                        title="previous chapter">17. fossil BAMM</a></p>
+                        title="previous chapter">18. fossil BAMM</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="glossary.html"
-                        title="next chapter">19. Glossary</a></p>
+                        title="next chapter">20. Glossary</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -106,11 +106,11 @@
           <div class="body" role="main">
             
   <div class="section" id="troubleshooting">
-<h1>18. Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h1>
+<h1>19. Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="installation">
-<h2>18.1. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<h2>19.1. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="you-don-t-know-where-to-put-the-bamm-directory">
-<h3>18.1.1. You don&#8217;t know where to put the bamm directory<a class="headerlink" href="#you-don-t-know-where-to-put-the-bamm-directory" title="Permalink to this headline">¶</a></h3>
+<h3>19.1.1. You don&#8217;t know where to put the bamm directory<a class="headerlink" href="#you-don-t-know-where-to-put-the-bamm-directory" title="Permalink to this headline">¶</a></h3>
 <p>On OS X, you may move the uncompressed <code class="docutils literal"><span class="pre">bamm</span></code> directory (folder) to your home
 directory. For example, if it was uncompressed in your Downloads directory:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mv</span> <span class="o">~/</span><span class="n">Downloads</span><span class="o">/</span><span class="n">bamm</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span> <span class="o">~</span>
@@ -130,19 +130,19 @@ its full path:</p>
 </div>
 </div>
 <div class="section" id="running">
-<h2>18.2. Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
+<h2>19.2. Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="on-os-x-you-get-an-error-that-says-something-like-dyld-unknown-required-load-command-0x80000022">
-<h3>18.2.1. On OS X, you get an error that says something like &#8220;dyld: unknown required load command 0x80000022&#8221;<a class="headerlink" href="#on-os-x-you-get-an-error-that-says-something-like-dyld-unknown-required-load-command-0x80000022" title="Permalink to this headline">¶</a></h3>
+<h3>19.2.1. On OS X, you get an error that says something like &#8220;dyld: unknown required load command 0x80000022&#8221;<a class="headerlink" href="#on-os-x-you-get-an-error-that-says-something-like-dyld-unknown-required-load-command-0x80000022" title="Permalink to this headline">¶</a></h3>
 <p>This likely means that you are trying to run BAMM on an older version of OS X.
 Please run BAMM on OS X 10.5 or greater.</p>
 </div>
 <div class="section" id="on-windows-you-get-an-error-that-says-bamm-exe-is-not-a-valid-win32-application">
-<h3>18.2.2. On Windows, you get an error that says &#8220;bamm.exe is not a valid Win32 application&#8221;<a class="headerlink" href="#on-windows-you-get-an-error-that-says-bamm-exe-is-not-a-valid-win32-application" title="Permalink to this headline">¶</a></h3>
+<h3>19.2.2. On Windows, you get an error that says &#8220;bamm.exe is not a valid Win32 application&#8221;<a class="headerlink" href="#on-windows-you-get-an-error-that-says-bamm-exe-is-not-a-valid-win32-application" title="Permalink to this headline">¶</a></h3>
 <p>This likely means that you are trying to run BAMM on an unsupported version
 of Windows (such as Windows XP). Please run BAMM on Windows 7 or greater.</p>
 </div>
 <div class="section" id="on-unix-linux-you-get-the-error-message-enable-multithreading-to-use-std-thread-operation-not-permitted">
-<h3>18.2.3. On Unix/Linux, you get the error message &#8220;Enable multithreading to use std::thread: Operation not permitted&#8221;<a class="headerlink" href="#on-unix-linux-you-get-the-error-message-enable-multithreading-to-use-std-thread-operation-not-permitted" title="Permalink to this headline">¶</a></h3>
+<h3>19.2.3. On Unix/Linux, you get the error message &#8220;Enable multithreading to use std::thread: Operation not permitted&#8221;<a class="headerlink" href="#on-unix-linux-you-get-the-error-message-enable-multithreading-to-use-std-thread-operation-not-permitted" title="Permalink to this headline">¶</a></h3>
 <p>We have found this problem with some versions of the GNU C++ compiler,
 where CMake does not properly link a required threading library.
 We are working on a solution, but in the meantime,
@@ -153,7 +153,7 @@ you can manually compile BAMM (without using CMake) as follows:</p>
 <p>Make sure to run this command in an empty <code class="docutils literal"><span class="pre">build</span></code> directory.</p>
 </div>
 <div class="section" id="you-get-an-error-message-by-bamm">
-<h3>18.2.4. You get an error message by BAMM<a class="headerlink" href="#you-get-an-error-message-by-bamm" title="Permalink to this headline">¶</a></h3>
+<h3>19.2.4. You get an error message by BAMM<a class="headerlink" href="#you-get-an-error-message-by-bamm" title="Permalink to this headline">¶</a></h3>
 <p>Most error messages in BAMM are descriptive and therefore it should not be
 difficult to correct the problem. If BAMM cannot find the control file or
 any file specified within the control file, such as the tree file, make sure
@@ -165,7 +165,7 @@ Please go to <a class="reference external" href="http://bamm-project.org/contact
 instructions on how to contact us.</p>
 </div>
 <div class="section" id="basic-troubleshooting">
-<h3>18.2.5. Basic troubleshooting<a class="headerlink" href="#basic-troubleshooting" title="Permalink to this headline">¶</a></h3>
+<h3>19.2.5. Basic troubleshooting<a class="headerlink" href="#basic-troubleshooting" title="Permalink to this headline">¶</a></h3>
 <p>The simplest way to localize potential problems is to first try to load your
 data without doing anything else. You can do this by setting the following
 parameter in your controlfile:</p>
@@ -186,7 +186,7 @@ Go to <a class="reference external" href="http://bamm-project.org/contact_us.htm
 instructions on how to contact us.</p>
 </div>
 <div class="section" id="you-get-an-operating-system-error-e-g-segmentation-fault">
-<h3>18.2.6. You get an operating system error (e.g., segmentation fault)<a class="headerlink" href="#you-get-an-operating-system-error-e-g-segmentation-fault" title="Permalink to this headline">¶</a></h3>
+<h3>19.2.6. You get an operating system error (e.g., segmentation fault)<a class="headerlink" href="#you-get-an-operating-system-error-e-g-segmentation-fault" title="Permalink to this headline">¶</a></h3>
 <p>Other possible errors may arise, not discussed above. This may include errors
 that mention &#8220;Segmentation fault&#8221;, or &#8220;Floating point error&#8221;. Please contact
 us with information about system errors.
@@ -195,9 +195,9 @@ instructions on how to contact us.</p>
 </div>
 </div>
 <div class="section" id="analysis">
-<h2>18.3. Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h2>
+<h2>19.3. Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="the-mcmc-does-not-converge">
-<span id="convergenceproblems"></span><h3>18.3.1. The MCMC does not converge<a class="headerlink" href="#the-mcmc-does-not-converge" title="Permalink to this headline">¶</a></h3>
+<span id="convergenceproblems"></span><h3>19.3.1. The MCMC does not converge<a class="headerlink" href="#the-mcmc-does-not-converge" title="Permalink to this headline">¶</a></h3>
 <p>Achieving satisfactory convergence with BAMM can be difficult. We know that the likelihood surface for the BAMM model is rugged, with lots of peaks and valleys. We are developing several new MCMC proposals for moving, splitting, and merging events on trees that should facilitate convergence. In the meantime, we suggest several options.</p>
 <p><strong>First</strong>, don&#8217;t be afraid to run BAMM for a really, really long time if you are having convergence issues. The implementation is fast. We suggest sampling very infrequently so as to not generate overwhelming quantities of output. Running BAMM for <img class="math" src="_images/math/efe8c3b1dfba1f7cf45cd0f2e87ba3e8d48690ac.png" alt="10^9"/> generations, sampling parameters every <img class="math" src="_images/math/4e3e30fcf8f5b44fd4e61386ba457022ddf17304.png" alt="10^6"/> generations, is not unreasonable for some datasets.</p>
 <p><strong>Second</strong>, make sure your priors are not maladjusted. For example, if you have a phylogenetic tree that is calibrated in units of substitutions (rather than millions of years), the default priors in BAMM&#8217;s control file could lead to significant difficulties. We suggest using the BAMMtools function <code class="docutils literal"><span class="pre">setBAMMpriors</span></code> to choose priors that are reasonably matched to your dataset. There is no guarantee that these priors will be any good, but they are at least reasonably scaled to your data.</p>
@@ -219,10 +219,10 @@ instructions on how to contact us.</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="glossary.html" title="19. Glossary"
+          <a href="glossary.html" title="20. Glossary"
              >next</a></li>
         <li class="right" >
-          <a href="fossilbamm.html" title="17. fossil BAMM"
+          <a href="fossilbamm.html" title="18. fossil BAMM"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>

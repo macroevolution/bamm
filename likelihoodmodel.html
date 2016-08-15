@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>13. The BAMM likelihood function &mdash; bamm 2.5.0 documentation</title>
+    <title>14. The BAMM likelihood function &mdash; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" />
-    <link rel="next" title="14. Metropolis coupled Markov chain Monte Carlo [(MC)3]" href="mc3.html" />
-    <link rel="prev" title="12. Replication tests of empirical results from Moore et al (2016)" href="replication.html" /> 
+    <link rel="next" title="15. Metropolis coupled Markov chain Monte Carlo [(MC)3]" href="mc3.html" />
+    <link rel="prev" title="13. The Moore et al (2016) use of developer switch “random” was not scientifically justified" href="developertoggle.html" /> 
   </head>
   <body role="document">
 <div class="pageheader">
@@ -36,10 +36,10 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="mc3.html" title="14. Metropolis coupled Markov chain Monte Carlo [(MC)3]"
+          <a href="mc3.html" title="15. Metropolis coupled Markov chain Monte Carlo [(MC)3]"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="replication.html" title="12. Replication tests of empirical results from Moore et al (2016)"
+          <a href="developertoggle.html" title="13. The Moore et al (2016) use of developer switch “random” was not scientifically justified"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -52,20 +52,20 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">13. The BAMM likelihood function</a><ul>
-<li><a class="reference internal" href="#introduction-models-for-rate-shifts">13.1. Introduction: models for rate shifts</a></li>
-<li><a class="reference internal" href="#is-the-bamm-likelihood-correct">13.2. Is the BAMM likelihood correct?</a></li>
-<li><a class="reference internal" href="#what-exactly-is-the-process-modeled-by-bamm">13.3. What, exactly, is the process modeled by BAMM?</a></li>
-<li><a class="reference internal" href="#extinction-calculations-at-nodes">13.4. Extinction calculations at nodes</a><ul>
-<li><a class="reference internal" href="#why-extinction-handling-at-nodes-matters">13.4.1. Why extinction handling at nodes matters</a></li>
-<li><a class="reference internal" href="#extinction-at-nodes-a-worked-example">13.4.2. Extinction at nodes: a worked example</a></li>
+<li><a class="reference internal" href="#">14. The BAMM likelihood function</a><ul>
+<li><a class="reference internal" href="#introduction-models-for-rate-shifts">14.1. Introduction: models for rate shifts</a></li>
+<li><a class="reference internal" href="#is-the-bamm-likelihood-correct">14.2. Is the BAMM likelihood correct?</a></li>
+<li><a class="reference internal" href="#what-exactly-is-the-process-modeled-by-bamm">14.3. What, exactly, is the process modeled by BAMM?</a></li>
+<li><a class="reference internal" href="#extinction-calculations-at-nodes">14.4. Extinction calculations at nodes</a><ul>
+<li><a class="reference internal" href="#why-extinction-handling-at-nodes-matters">14.4.1. Why extinction handling at nodes matters</a></li>
+<li><a class="reference internal" href="#extinction-at-nodes-a-worked-example">14.4.2. Extinction at nodes: a worked example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#theoretical-issues-for-rate-shift-models">13.5. Theoretical issues for rate shift models</a></li>
-<li><a class="reference internal" href="#is-the-bamm-likelihood-computed-correctly">13.6. Is the BAMM likelihood computed correctly?</a></li>
-<li><a class="reference internal" href="#numerical-approximations-in-bamm">13.7. Numerical approximations in BAMM</a><ul>
-<li><a class="reference internal" href="#discretization-of-evolutionary-rates-for-the-time-varying-process">13.7.1. Discretization of evolutionary rates for the time-varying process</a></li>
-<li><a class="reference internal" href="#maximum-possible-extinction-probability">13.7.2. Maximum possible extinction probability</a></li>
+<li><a class="reference internal" href="#theoretical-issues-for-rate-shift-models">14.5. Theoretical issues for rate shift models</a></li>
+<li><a class="reference internal" href="#is-the-bamm-likelihood-computed-correctly">14.6. Is the BAMM likelihood computed correctly?</a></li>
+<li><a class="reference internal" href="#numerical-approximations-in-bamm">14.7. Numerical approximations in BAMM</a><ul>
+<li><a class="reference internal" href="#discretization-of-evolutionary-rates-for-the-time-varying-process">14.7.1. Discretization of evolutionary rates for the time-varying process</a></li>
+<li><a class="reference internal" href="#maximum-possible-extinction-probability">14.7.2. Maximum possible extinction probability</a></li>
 </ul>
 </li>
 </ul>
@@ -73,11 +73,11 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="replication.html"
-                        title="previous chapter">12. Replication tests of empirical results from Moore et al (2016)</a></p>
+  <p class="topless"><a href="developertoggle.html"
+                        title="previous chapter">13. The Moore et al (2016) use of developer switch “random” was not scientifically justified</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="mc3.html"
-                        title="next chapter">14. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]</a></p>
+                        title="next chapter">15. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -104,14 +104,14 @@
           <div class="body" role="main">
             
   <div class="section" id="the-bamm-likelihood-function">
-<span id="likelihood"></span><h1>13. The BAMM likelihood function<a class="headerlink" href="#the-bamm-likelihood-function" title="Permalink to this headline">¶</a></h1>
+<span id="likelihood"></span><h1>14. The BAMM likelihood function<a class="headerlink" href="#the-bamm-likelihood-function" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction-models-for-rate-shifts">
-<h2>13.1. Introduction: models for rate shifts<a class="headerlink" href="#introduction-models-for-rate-shifts" title="Permalink to this headline">¶</a></h2>
+<h2>14.1. Introduction: models for rate shifts<a class="headerlink" href="#introduction-models-for-rate-shifts" title="Permalink to this headline">¶</a></h2>
 <p>This page discusses a number of important theoretical issues involving BAMM. The objective is both to clarify BAMM&#8217;s assumptions, and also to point out some outstanding theoretical problems/challenges for future work. These issues are more general than BAMM and (probably) apply to all other software implementations and modeling frameworks that purport to compute the likelihood of a phylogenetic tree with a mapped (= assumed) configuration of <strong>rate shifts</strong> under the condition of <strong>non-zero extinction rates</strong>. Other implementations/approaches that must confront the issues raised below include the <a class="reference external" href="http://www.pnas.org/content/106/32/13410.abstract">MEDUSA model</a>, the &#8216;split&#8217; option for <a class="reference external" href="http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2012.00234.x/abstract">BiSSE</a>, <a class="reference external" href="http://sysbio.oxfordjournals.org/content/59/6/619.abstract">QuaSSE</a>, <a class="reference external" href="http://sysbio.oxfordjournals.org/content/60/4/451">GeoSSE</a>, and related models, the DDD models with different shift regimes on <a class="reference external" href="http://www.jstor.org/stable/10.1086/667574">specific subclades</a>, and multi-process shift models as currently implemented in <a class="reference external" href="http://www.pnas.org/content/108/39/16327.abstract">RPANDA</a>.</p>
 <p><strong>This page was drafted in response to a public report (October 2, 2015) on our Github page suggesting that BAMM&#8217;s likelihood calculations are incorrect because BAMM ignores the possibility of rate shifts on unobserved, extinct lineages</strong>. The post is archived <a class="reference external" href="https://github.com/macroevolution/bamm/issues/137">here</a> . This same criticism was raised in a 2014 conference <a class="reference external" href="http://2014.botanyconference.org/engine/search/index.php?func=detail&amp;aid=734">talk</a> and, most recently, in a published <a class="reference external" href="http://sysbio.oxfordjournals.org/content/early/2016/04/01/sysbio.syw026">critique</a> of the widely-used MEDUSA method for studying diversification rate heterogeneity. A number of researchers have asked us about this property of the BAMM likelihood; this page is our response. We thank Sebastian Hoehna for raising this issue on our dedicated bug-report <a class="reference external" href="https://github.com/macroevolution/bamm/issues/137">forum</a>  and providing us the opportunity to clarify the theoretical foundations of BAMM&#8217;s likelihood calculations and also for pointing out a <a class="reference external" href="https://github.com/macroevolution/bamm/issues/136">problem</a> with the default <code class="docutils literal"><span class="pre">validateEventConfiguration</span></code> option in the program. We have been testing BAMM (since December 2014) using a Github-archived simulator that <a class="reference external" href="https://github.com/macroevolution/simtree">generates</a> phylogenies under a process that includes rate shifts on extinct &amp; unobserved lineages and haven&#8217;t found appreciable consequences for inference, but it&#8217;s worth going into some detail here on this and related topics.</p>
 </div>
 <div class="section" id="is-the-bamm-likelihood-correct">
-<h2>13.2. Is the BAMM likelihood correct?<a class="headerlink" href="#is-the-bamm-likelihood-correct" title="Permalink to this headline">¶</a></h2>
+<h2>14.2. Is the BAMM likelihood correct?<a class="headerlink" href="#is-the-bamm-likelihood-correct" title="Permalink to this headline">¶</a></h2>
 <p>A <a class="reference external" href="https://github.com/macroevolution/bamm/issues/137">post</a> to our Github &#8220;issues&#8221; page (posted October 2, 2015) suggested that BAMM&#8217;s likelihood calculations were incorrect. If the likelihood function is incorrect, or if it is based on flawed assumptions, inferences based on the method may be problematic. Note that here we are concerned with whether the theoretical model in BAMM itself is correct, not whether the model itself is implemented correctly. In <a class="reference internal" href="#testlikelihood"><span class="std std-ref">this</span></a> section, we describe how users can validate the actual BAMM likelihood itself (e.g., is the program computing what we think it is computing?). But for now, some theory.</p>
 <p>The BAMM likelihood is based on a set of differential equations that describe transition probabilities for a stochastic birth-death process. These equations are solved from tips-to-root of a phylogeny along individual branches, and probabilities are combined at nodes; when we&#8217;ve reached the root, we will have computed the likelihood for the full tree. The <a class="reference external" href="http://sysbio.oxfordjournals.org/content/56/5/701.abstract">original BiSSE paper</a> remains my (DLR) all-time favorite explanation (both graphically and mathematically) for how the likelihood of a phylogeny can be computed under a birth-death process; I strongly recommend it as a prelude to the discussion below.</p>
 <p>The likelihood calculations in BAMM are simpler than those in BiSSE, because BAMM is not concerned with character states &#8211; or at least, in BAMM, we know which state (shift regime) we are in. BiSSE is somewhat more complex, because the method integrates over all possible (unobserved) transitions in character states.</p>
@@ -147,7 +147,7 @@
 <p>In December 2014, we created an explicit BAMM process <a class="reference external" href="https://github.com/macroevolution/simtree">simulator</a> that would generate phylogenetic trees under a formal Poisson process. This simulator allows rate shifts to occur on branches leading to unobserved or otherwise extinct clades. We have been using this simulation algorithm for our own internal validation of BAMM&#8217;s performance for all updates of BAMM since January 2015. Thus far, we have found no consequences for inference &#8211; even if, as pointed out on our bug forum, there are theoretical grounds for considering this issue &#8211; but perhaps you&#8217;ll find something different.</p>
 </div>
 <div class="section" id="what-exactly-is-the-process-modeled-by-bamm">
-<span id="whatprocess"></span><h2>13.3. What, exactly, is the process modeled by BAMM?<a class="headerlink" href="#what-exactly-is-the-process-modeled-by-bamm" title="Permalink to this headline">¶</a></h2>
+<span id="whatprocess"></span><h2>14.3. What, exactly, is the process modeled by BAMM?<a class="headerlink" href="#what-exactly-is-the-process-modeled-by-bamm" title="Permalink to this headline">¶</a></h2>
 <p>BAMM version 2.5 was released in response to a comprehensive assessment of BAMM&#8217;s performance that occurred following bug reports (see <a class="reference external" href="https://github.com/macroevolution/bamm/issues/136">issue 136</a> and <a class="reference external" href="https://github.com/macroevolution/bamm/issues/137">issue 137</a>) to our Github forum in October 2015. Addressing these issues led us to conclude that there are fundamental conceptual questions that need to be answered about precisely <em>how</em> researchers should compute the likelihood of a fixed mapping (&#8220;painting&#8221;) of diversification rate regimes on a phylogenetic tree.</p>
 <p>We will now attempt to identify the specific process that is being modeled by using the likelihood equations implemented in BAMM. We will focus on the simplest possible scenario, where a single lineage in a reconstructed phylogenetic tree is observed to have a single rate shift:</p>
 <div class="figure align-center" id="shifttype0">
@@ -202,7 +202,7 @@
 <p>This brings us to our next challenge: how to combine <img class="math" src="_images/math/4a5896b3cd2183400b4ecfa6f3e0246330bce52f.png" alt="E(t)"/> values at nodes when the descendant lineages have different shift histories (e.g., they are <em>of different types</em>)? This problem cannot be decoupled from the issue of recomputing.</p>
 </div>
 <div class="section" id="extinction-calculations-at-nodes">
-<span id="extinctionnodes"></span><h2>13.4. Extinction calculations at nodes<a class="headerlink" href="#extinction-calculations-at-nodes" title="Permalink to this headline">¶</a></h2>
+<span id="extinctionnodes"></span><h2>14.4. Extinction calculations at nodes<a class="headerlink" href="#extinction-calculations-at-nodes" title="Permalink to this headline">¶</a></h2>
 <p>We now turn to the issue of how BAMM should handle extinction calculations at internal nodes. We also thank a poster to our Github for the second part of their <a class="reference external" href="https://github.com/macroevolution/bamm/issues/137">issue 137</a> (October 2015) for pointing out the arbitrariness with which older versions of BAMM were handling this calculation. This led us to consider a new implementation of these calculations, which were released in BAMM v 2.5.</p>
 <p>In BiSSE and related models, the extinction probabilities <img class="math" src="_images/math/4a5896b3cd2183400b4ecfa6f3e0246330bce52f.png" alt="E(t)"/> at internal nodes are always identical for a given character state. The occurrence of a speciation event does not change the probability of extinction for a lineage in the i&#8217;th character state. That is, if a speciation event happens at time <img class="math" src="_images/math/5ec053cf70dc1c98cc297322250569eda193e7a4.png" alt="t"/>, and if a lineage is in state <cite>i</cite>, the probability of extinction after some infinitesimal interval before the speciation event <img class="math" src="_images/math/483481197fe74cbb0f0da0a42d9a0f0d5c9ce54f.png" alt="E_i(t - \Delta t)"/> will be very similar to the probability of extinction after the speciation event <img class="math" src="_images/math/4df6924a6900efe079888a18777158bd7bfde2dc.png" alt="E_i(t + \Delta t)"/>. This is because the <img class="math" src="_images/math/fc8ca54865e2284fb7d9a65e917acc90a7559372.png" alt="E_i(t)"/> term integrates over all diversification histories that <em>could have occurred while yielding an extinct clade</em> given that the lineage is currently (at time <img class="math" src="_images/math/5ec053cf70dc1c98cc297322250569eda193e7a4.png" alt="t"/>) in state <img class="math" src="_images/math/df0deb143e5ac127f00bd248ee8001ecae572adc.png" alt="i"/>.</p>
 <p>However, BAMM must deal with the scenario where the extinction probabilities at internal nodes differ on the right and left descendant branches, which we will denote by <img class="math" src="_images/math/c26665ea2f66ded186818ed0c63db28c189c453b.png" alt="E_{R}(t)"/> and <img class="math" src="_images/math/da39f1a86825392df84a8b42a188c64320205d3e.png" alt="E_{L}(t)"/>. For a given internal node, it is possible that <img class="math" src="_images/math/c26665ea2f66ded186818ed0c63db28c189c453b.png" alt="E_{R}(t)"/> and <img class="math" src="_images/math/da39f1a86825392df84a8b42a188c64320205d3e.png" alt="E_{L}(t)"/> will not be equal if there is a rate shift on the right, left, or both descendant branches (or any of their descendant lineages). We thus need to condition our <img class="math" src="_images/math/4a5896b3cd2183400b4ecfa6f3e0246330bce52f.png" alt="E(t)"/> calculations on the occurrence of a rate shift.</p>
@@ -222,7 +222,7 @@
 </pre></div>
 </div>
 <div class="section" id="why-extinction-handling-at-nodes-matters">
-<h3>13.4.1. Why extinction handling at nodes matters<a class="headerlink" href="#why-extinction-handling-at-nodes-matters" title="Permalink to this headline">¶</a></h3>
+<h3>14.4.1. Why extinction handling at nodes matters<a class="headerlink" href="#why-extinction-handling-at-nodes-matters" title="Permalink to this headline">¶</a></h3>
 <p>Here is a simple example to illustrate how extinction handling at nodes can exert a major influence on tree likelihoods. Consider the following 4-taxon phylogenetic tree, with two mapped rate shifts:</p>
 <div class="figure align-center" id="fourtaxon1">
 <a class="reference internal image-reference" href="_images/x_tree_extinction.png"><img alt="_images/x_tree_extinction.png" src="_images/x_tree_extinction.png" style="width: 500px;" /></a>
@@ -240,7 +240,7 @@
 <p>This issue is relevant to the issue of recomputing <img class="math" src="_images/math/4a5896b3cd2183400b4ecfa6f3e0246330bce52f.png" alt="E(t)"/> values raised in the preceding section. If the initial <img class="math" src="_images/math/4a5896b3cd2183400b4ecfa6f3e0246330bce52f.png" alt="E(t)"/> values for every branch are recomputed using the current parameter values, we run into the same problem illustrated here: extinction probabilities <img class="math" src="_images/math/4a5896b3cd2183400b4ecfa6f3e0246330bce52f.png" alt="E(t)"/> will not be conditioned on the assumed shift configuration.</p>
 </div>
 <div class="section" id="extinction-at-nodes-a-worked-example">
-<h3>13.4.2. Extinction at nodes: a worked example<a class="headerlink" href="#extinction-at-nodes-a-worked-example" title="Permalink to this headline">¶</a></h3>
+<h3>14.4.2. Extinction at nodes: a worked example<a class="headerlink" href="#extinction-at-nodes-a-worked-example" title="Permalink to this headline">¶</a></h3>
 <p>I have attached some R code <a class="reference download internal" href="_downloads/combine_extinction_nodes.R" download=""><code class="xref download docutils literal"><span class="pre">here</span></code></a> that illustrates very substantial differences in results that can be obtained for simple 2-taxon and 4-taxon trees, depending on how these <img class="math" src="_images/math/4a5896b3cd2183400b4ecfa6f3e0246330bce52f.png" alt="E(t)"/> values are handled at nodes. In the simplest 2-taxon example (single speciation event, plus a stem lineage), the tree is this:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">A</span><span class="p">:</span><span class="mi">99</span><span class="p">,</span><span class="n">B</span><span class="p">:</span><span class="mi">99</span><span class="p">):</span><span class="mi">1</span>
 </pre></div>
@@ -269,7 +269,7 @@
 </div>
 </div>
 <div class="section" id="theoretical-issues-for-rate-shift-models">
-<span id="otherissues"></span><h2>13.5. Theoretical issues for rate shift models<a class="headerlink" href="#theoretical-issues-for-rate-shift-models" title="Permalink to this headline">¶</a></h2>
+<span id="otherissues"></span><h2>14.5. Theoretical issues for rate shift models<a class="headerlink" href="#theoretical-issues-for-rate-shift-models" title="Permalink to this headline">¶</a></h2>
 <p>This section is just to raise some theoretical concerns with multi-type branching processes as applied to phylogenetic trees. In particular, while many researchers are now using or developing these methods, there are a number of issues that could benefit from additional theoretical attention:</p>
 <ul class="simple">
 <li>All methods of which we are aware that compute the likelihood of a fixed configuration of rate shifts on phylogenetic trees (with the potential for extinction) assume that diversification shifts <strong>do not happen</strong> on branches that are unobserved (or that go extinct before the present). We have found no evidence that this is a problem for empirical inference, but are there any conditions under which we should be concerned about this?</li>
@@ -279,7 +279,7 @@
 </ul>
 </div>
 <div class="section" id="is-the-bamm-likelihood-computed-correctly">
-<span id="testlikelihood"></span><h2>13.6. Is the BAMM likelihood computed correctly?<a class="headerlink" href="#is-the-bamm-likelihood-computed-correctly" title="Permalink to this headline">¶</a></h2>
+<span id="testlikelihood"></span><h2>14.6. Is the BAMM likelihood computed correctly?<a class="headerlink" href="#is-the-bamm-likelihood-computed-correctly" title="Permalink to this headline">¶</a></h2>
 <p>Given the model and its assumptions (see above), we now turn to a different question: is BAMM correctly computing the likelihood of the process described above? As an independent test of this, we implemented the BAMM likelihood function in R (BAMMtools v2.1) and have created a tool that enables users to test whether BAMM is doing what it is supposed to be doing. This assumes, of course, that we have also implemented the likelihood function correctly in R, but we hope that other researchers find it easier to evaluate our R code than the BAMM C++ code itself.</p>
 <p>The function <code class="docutils literal"><span class="pre">BAMMlikelihood</span></code> will return the log-likelihood for a given configuration of events (and associated parameters) on a phylogenetic tree. Let&#8217;s do this using the built-in whales dataset in BAMMtools:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">library</span><span class="p">(</span><span class="n">BAMMtools</span><span class="p">)</span>
@@ -351,10 +351,10 @@ max(abs(rloglik - mcmc$logLik))
 <p>Using these (very rough) numbers, I estimate that BAMM can do 10,000 / 0.2 = 50,000 likelihood calculations per second. Dividing this number by the time to compute the likelihood in R, we get 50,000 / 0.175 <img class="math" src="_images/math/7480d09d210b45db2505dc78ea8dcdf9158cad81.png" alt="\approx"/> 280000. So, the likelihood computation using BAMM&#8217;s C++ implementation is (very) approximately 5 orders of magnitude faster than a pure R-based implementation would be for a tree of this size.</p>
 </div>
 <div class="section" id="numerical-approximations-in-bamm">
-<span id="numericalapprox"></span><h2>13.7. Numerical approximations in BAMM<a class="headerlink" href="#numerical-approximations-in-bamm" title="Permalink to this headline">¶</a></h2>
+<span id="numericalapprox"></span><h2>14.7. Numerical approximations in BAMM<a class="headerlink" href="#numerical-approximations-in-bamm" title="Permalink to this headline">¶</a></h2>
 <p>BAMM makes several numerical approximations that we will state here explicitly.</p>
 <div class="section" id="discretization-of-evolutionary-rates-for-the-time-varying-process">
-<h3>13.7.1. Discretization of evolutionary rates for the time-varying process<a class="headerlink" href="#discretization-of-evolutionary-rates-for-the-time-varying-process" title="Permalink to this headline">¶</a></h3>
+<h3>14.7.1. Discretization of evolutionary rates for the time-varying process<a class="headerlink" href="#discretization-of-evolutionary-rates-for-the-time-varying-process" title="Permalink to this headline">¶</a></h3>
 <p>BAMM uses a &#8220;fast&#8221; form of numerical integration where branches of a phylogeny are broken into segments of relative length <code class="docutils literal"><span class="pre">segLength</span></code> and a constant-rate birth-death process is assumed on each interval. Thus, for a time-varying diversification process, we discretize the exponential change process into units defined by <code class="docutils literal"><span class="pre">segLength</span></code>. This allows for much faster calculations relative to more accurate forms of numerical integration. To be clear, the likelihood itself is not approximated: it is the rates that are approximated (which may, in turn, affect the likelihood). In any event, the consequences of this are easy to test. Here, we will use the functions and data from <a class="reference internal" href="#testlikelihood"><span class="std std-ref">this section</span></a> and explore the consequences of <code class="docutils literal"><span class="pre">segLength</span></code>.</p>
 <p>If the segment size is greater than the length of a given branch, BAMM will treat the branch as a single segment (e.g., a mean value for <img class="math" src="_images/math/76f1d8ace30435987c01a00ca53a71cba1f40e6c.png" alt="\lambda"/> and <img class="math" src="_images/math/d79e8a2c7ce54906c2b25549da38bdbe02cf40d6.png" alt="\mu"/> will be computed for the branch, and they will be passed to the speciation-extinction equations for the constant-rate birth-death process). If <code class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">1.0</span></code>, then no splitting will occur on any branches: mean rates will be computed for each branch. If <code class="docutils literal"><span class="pre">segLength</span> <span class="pre">=</span> <span class="pre">0.02</span></code>, branches will be split into segments with length equal to 2% of the crown depth of the tree. Here are some comparisons:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># the coarsest possible discretization:</span>
@@ -378,7 +378,7 @@ max(abs(rloglik - mcmc$logLik))
 <p>For a set of time-homogeneous diversification processes, e.g., <img class="math" src="_images/math/7a9db458ea63508258abc4ceead2429099fe1655.png" alt="\lambda_i(t) = \lambda_i"/> and <img class="math" src="_images/math/87fb3fcc177de792100a672bbb9f32a09e45e470.png" alt="\mu_i(t) = \mu_i"/>, the BAMM likelihood will be exact. <code class="docutils literal"><span class="pre">segLength</span></code> will only influence the calculations when rates vary as a continuous function of time.</p>
 </div>
 <div class="section" id="maximum-possible-extinction-probability">
-<h3>13.7.2. Maximum possible extinction probability<a class="headerlink" href="#maximum-possible-extinction-probability" title="Permalink to this headline">¶</a></h3>
+<h3>14.7.2. Maximum possible extinction probability<a class="headerlink" href="#maximum-possible-extinction-probability" title="Permalink to this headline">¶</a></h3>
 <p>Some parameter values may lead to extinction probabilities that are sufficiently close to 1.0 that they are subject to numerical underflow/overflow issues. Specifically, if the <img class="math" src="_images/math/4a5896b3cd2183400b4ecfa6f3e0246330bce52f.png" alt="E(t)"/> equations described above take a value that is numerically indistinguishable from 1, the likelihood of the data will be <img class="math" src="_images/math/7ddd14fea1a936768c4d34c3067b427de73219c9.png" alt="-\infty"/>. To ensure that this rejection is platform independent, BAMM automatically rejects any moves (by setting the log-likelihood equal to -INF) where the extinction probability exceeds a predetermined threshold value. This threshold is <code class="docutils literal"><span class="pre">extinctionProbMax</span></code> and can be set manually in the control file. Note that this is not the extinction rate: it is the maximum permitted value of <img class="math" src="_images/math/4a5896b3cd2183400b4ecfa6f3e0246330bce52f.png" alt="E(t)"/> in the differential equations above, or the probability that a lineage at some time (along with all of its descendants) has gone extinct before the present).</p>
 </div>
 </div>
@@ -394,10 +394,10 @@ max(abs(rloglik - mcmc$logLik))
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="mc3.html" title="14. Metropolis coupled Markov chain Monte Carlo [(MC)3]"
+          <a href="mc3.html" title="15. Metropolis coupled Markov chain Monte Carlo [(MC)3]"
              >next</a></li>
         <li class="right" >
-          <a href="replication.html" title="12. Replication tests of empirical results from Moore et al (2016)"
+          <a href="developertoggle.html" title="13. The Moore et al (2016) use of developer switch “random” was not scientifically justified"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>

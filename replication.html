@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" />
-    <link rel="next" title="13. The BAMM likelihood function" href="likelihoodmodel.html" />
+    <link rel="next" title="13. The Moore et al (2016) use of developer switch “random” was not scientifically justified" href="developertoggle.html" />
     <link rel="prev" title="11. Is the posterior on the number of shifts overly sensitive to the prior?" href="prior.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="likelihoodmodel.html" title="13. The BAMM likelihood function"
+          <a href="developertoggle.html" title="13. The Moore et al (2016) use of developer switch “random” was not scientifically justified"
              accesskey="N">next</a></li>
         <li class="right" >
           <a href="prior.html" title="11. Is the posterior on the number of shifts overly sensitive to the prior?"
@@ -68,8 +68,8 @@
   <p class="topless"><a href="prior.html"
                         title="previous chapter">11. Is the posterior on the number of shifts overly sensitive to the prior?</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="likelihoodmodel.html"
-                        title="next chapter">13. The BAMM likelihood function</a></p>
+  <p class="topless"><a href="developertoggle.html"
+                        title="next chapter">13. The Moore et al (2016) use of developer switch “random” was not scientifically justified</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -97,7 +97,7 @@
             
   <div class="section" id="replication-tests-of-empirical-results-from-moore-et-al-2016">
 <span id="replication"></span><h1>12. Replication tests of empirical results from Moore et al (2016)<a class="headerlink" href="#replication-tests-of-empirical-results-from-moore-et-al-2016" title="Permalink to this headline">¶</a></h1>
-<p>This page is not our full or formal response to the Moore et al (2016) <a class="reference external" href="http://www.pnas.org/content/early/2016/08/09/1518659113.full">critique</a> of BAMM, but addresses replicability of empirical results from the paper.</p>
+<p>This page is not our full or formal response to the Moore et al (2016) <a class="reference external" href="http://www.pnas.org/content/early/2016/08/09/1518659113.full">critique</a> of BAMM, but addresses replicability of empirical results from the paper. See additional assessment on <a class="reference external" href="developertoggle.html">this page</a>, which also briefly addresses the claim that BAMM estimates of speciation rates are uncorrelated with the true values.</p>
 <div class="section" id="summary">
 <h2>12.1. Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
 <p>Empirical results from Moore et al (MEA) cannot be replicated with standard usage of BAMM:</p>
@@ -109,6 +109,7 @@
 <li>We had fixed this issue in the November 2015 release of BAMM (v2.5)</li>
 <li>However, we released v2.5 with a hidden shortcut for experimentation, which was activated by MEA in all analyses (this setting cannot be activated by accident, as the parameter is not included in any template files and the setting they used is not documented)</li>
 <li>When BAMM v2.5 is used with the correct (default) setting, empirical pathologies observed by MEA cannot be replicated.</li>
+<li>We demonstrate that speciation and extinction estimates under the setting used by MEA are actually <em>more biased</em> than under the default value for BAMM; see the <a class="reference external" href="developertoggle.html">following page</a>. The hidden setting activated by MEA has no theoretical or practical justification that we can discern.</li>
 </ul>
 <p><strong>We strongly recommend that researchers do not alter the values of hidden/undocumented parameters in BAMM, most of which are intended for internal use by BAMM developers</strong>. Altering these settings may induce pathological behaviors relative to the default/recommended value.</p>
 </div>
@@ -285,7 +286,7 @@ for (i in 1:50){
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="likelihoodmodel.html" title="13. The BAMM likelihood function"
+          <a href="developertoggle.html" title="13. The Moore et al (2016) use of developer switch “random” was not scientifically justified"
              >next</a></li>
         <li class="right" >
           <a href="prior.html" title="11. Is the posterior on the number of shifts overly sensitive to the prior?"
