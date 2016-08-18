@@ -4,7 +4,9 @@
 Replication tests of empirical results from Moore et al (2016)
 ================================================================================
 
-This page is not our full or formal response to the Moore et al (2016) `critique <http://www.pnas.org/content/early/2016/08/09/1518659113.full>`_ of BAMM, but addresses replicability of empirical results from the paper. See additional assessment on `this page <developertoggle.html>`_, which also briefly addresses the claim that BAMM estimates of speciation rates are uncorrelated with the true values.
+This page is not our full or formal response to the Moore et al (2016) `critique <http://www.pnas.org/content/early/2016/08/09/1518659113.full>`_ of BAMM, but addresses replicability of empirical results from the paper. See additional assessment on `this page <developertoggle.html>`_, which also briefly addresses the claim that BAMM estimates of speciation rates are uncorrelated with the true values. 
+
+On  separate page, we also demonstrate that the Moore et al `likelihood function <mea_likelihood.html>`_ is invalid and leads to probabilities that can exceed 1 (e.g., :math:`P(X) \rightarrow \infty`). 
 
 Summary
 ----------
