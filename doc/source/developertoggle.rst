@@ -4,8 +4,8 @@
 The Moore et al (2016) use of developer switch “random” was not scientifically justified
 =========================================================================================
 
-Moore et al (2016) obtained their results by activating a hidden developer switch, 
-``combineExtinctionAtNodes = random``. This parameter was undocumented and unavailable for general use; the only mention of this option in any BAMM-associated code and documentation occurs on these `lines <https://github.com/macroevolution/bamm/blob/master/src/SpExModel.cpp#L463-L471>`_ in BAMM's C++ code. As we have shown on the previous `page <replication.html>`_, MEA's use of ``random`` dramatically increased the effects of the model prior on the posterior. 
+Moore et al (2016; MEA) obtained their results by activating a hidden developer switch, 
+``combineExtinctionAtNodes = random``. This parameter was undocumented and unavailable for general use; the only mention of this option in any BAMM-associated code and documentation occurs on these `lines <https://github.com/macroevolution/bamm/blob/master/src/SpExModel.cpp#L463-L471>`_ in BAMM's C++ code. As we have shown on the previous `page <replication.html>`_, MEA's use of ``random`` dramatically increased the effects of the model prior on the posterior. On a separate page, we also demonstrate that the MEA `likelihood function <mea_likelihood.html>`_ is invalid and leads to probabilities that can exceed 1 (e.g., :math:`P(X) \rightarrow \infty`). 
 
 Summary
 ----------

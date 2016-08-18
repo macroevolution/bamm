@@ -31,6 +31,7 @@ BAMM Documentation
    fossilbamm
    troubleshooting
    glossary
+   mea_likelihood
 
 Search
 ======
