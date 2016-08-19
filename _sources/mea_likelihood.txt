@@ -209,6 +209,26 @@ These results are not a function of inappropriate conditioning
 The root (initial) state is assumed to be known under the data augmentation; there is no justification for weighting root states by equilibrium frequencies during the conditioning. In their article, MEA perform the same conditioning that we use in the examples above.
 
 
+.. _mea_conditioning:
+
+Where is the incorrect conditioning in the MEA code?
+.................................................................
+The MEA code distributed with their Dryad data package demonstrates that they have computed E(t) without conditioning on the data augmentation, which explains the results given above using their code; see function ``MEA_prob_PNAS_implementation`` used above. But it's easy to see where this theoretical error occurs in their code. The MEA code for the likelihood calculation is complex, but there is one place where it is easy to see that they have not correctly conditioned :math:`E(t)` on the data augmentation. Lines 120 - 122 of the R file ``likelihoodModel.R`` that accompanies their submission clearly illustrates that their root extinction probabilities are computed only with the current values of the process and that they ignore all downstream data augmentation. Lines 119 - 120 are at the end of their likelihood calculator function, ``MonteCarloLikelihood(...)``::
+
+      # Root   
+      node_process <-processes[getProcessForBranchAtTime(this_node,this_node,
+      					start_time,processes,tree),]
+      log_likelihood <- 
+      	log(new_d / (1 - getExtinctionProbability(node_process,start_time))^2)
+
+Line 120 selects the process at the root of the tree (e.g., the parameters of the root process at time :math:`t = 0`). The extinction probabilities under each process were already simulated earlier in the code; this occurs on line 50 (``simulated_times``, with call to ``simulateCPBDP``).  This process is passed in to the function ``getExtinctionProbability``, which returns :math:`E(t)` at the root for the single root process while ignoring the data augmentation. 
+
+If this is not transparent, you can hack MEA's code for ``MonteCarloLikelihood`` so that it returns not only the likelihood, but also the extinction probability at the root *and* the ``node_process`` argument. In the :download:`attached file<mea_likelihood/MonteCarloLikelihood_MOD.R>`, we have created a copy of this function but have it return a list that includes not only the likelihood but also these other attributes at the root of the tree. 
+
+With this code, you can follow the instructions from the MEA file ``using_the_likelihood_function.html``, which is distributed in ``supplementary_data/code/monte_carlo_simulation`` from their Dryad submission. You can compute the likelihood of the cetacean phylogeny with the modified function :download:`MonteCarloLikelihood_MOD()<mea_likelihood/MonteCarloLikelihood_MOD.R>`, which simply returns some additional attributes. Whatever parameters you have provided as the root process (e.g., first line of the dataframe ``these_parameters`` in their html code) are used to compute :math:`E(t)`, and **no other data augmentation contributes to this value**. A worked example can be found in the analysis file :download:`linked here<mea_likelihood/MEA_conditioning_example.R>`. 
+
+The proper conditioning to :math:`E(t)` with data-augmented histories is not straightforward and we have developed several approaches to address this problem. **However, the calculations that underlie the MEA PNAS article do not perform any of these strategies and use E(t) calculations as described on this page.**
+
 .. _bisse1:
 
 Failure of incomplete data augmentation ("recompute") with BiSSE
