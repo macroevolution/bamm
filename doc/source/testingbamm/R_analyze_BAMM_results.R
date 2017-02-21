@@ -151,9 +151,6 @@ birthdeath_fit(tree8, node = 148)
 # Diversitree rates for clades from nodes 148 and 240:
 birthdeath_fit(tree8, node = 240) 
   
-# ----------------------------------------------------------------
-# Diversitree rates for clades from nodes 148 and 240:
-z <- bammFit(ed8, actual = true_ed8)
  
   
  

@@ -16,7 +16,7 @@ New features and enhancements
 
 * No more prior simulation in BAMM. The relevant BAMMtools functions now accept an argument for ``expectedNumberOfShifts`` and compute the full prior distribution from that information.
 
-* We made a major change to the algorithm for handling extinction probabilities :math:`E(t)` at internal nodes when the two branches descended from a node differ in their shift histories. We don't consider the previous approach a bug *per se*, but have convinced ourselves that the new way has a better theoretical justification. We explain why we made this change :ref:`here <extinctionNodes>`. 
+* We made a major change to the algorithm for handling extinction probabilities :math:`E(t)` at internal nodes when the two branches descended from a node differ in their shift histories. We don't consider the previous approach a bug *per se*, but have convinced ourselves that the new way has a better theoretical justification. 
 
 
 BAMMtools enhancements
@@ -34,8 +34,6 @@ Bug fixes
 ............................. 
 
 * the option ``validateEventConfiguration`` is an internal debugging option that should have had a default value of 0, but was instead set to 1 (this led to a bug in the Hastings ratio that would have affected a very small fraction of MCMC moves).
- 
-* Fixed bug introduced during programming of fossil BAMM that sometimes recomputed extinction probabilities :math:`E(t)`. An explanation for why extinction probabilities must account for downstream shift histories is found :ref:`here <whatprocess>` (this bug was not incorporated into the compiled version of BAMM that was distributed on the website but could have affected some analyses where users compiled BAMM code themselves).   
 
 
 2.4.0
