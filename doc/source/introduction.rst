@@ -53,16 +53,7 @@ calculation of Bayes factors, plotting evolutionary rates through time,
 estimating clade-specific average rates, and visualizing rate variation along
 the branches of individual phylogenetic trees (as shown :ref:`in this figure<whaleratesintro>`).
 
-**Accounts for non-random taxon sampling.**
-Speciation-extinction calculations in BAMM account for incomplete taxon
-sampling analytically. The program is designed to work with datasets that
-contain large numbers of missing species, and taxon sampling can be
-phylogenetically non-random. The only requirement is that the user is able to
-specify how taxon sampling varies across the tree. For example, you can allow
-individual clades (such as genera or families) in a large phylogenetic tree to
-have different sampling probabilities. Please read :ref:`this section<incompsampling>` for more information on incomplete sampling.
-
-**It is much better than stepwise AIC.**
+**It is better than stepwise AIC.**
 Many methods for modeling evolutionary dynamics use stepwise AIC-based
 approaches that are limited to identifying a single best model. These
 approaches are inherently limited, because many distinct combinations of

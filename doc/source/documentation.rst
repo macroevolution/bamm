@@ -19,19 +19,17 @@ BAMM Documentation
    configuration
    postprocess
    advanced
+
    colorbreaks   
    faq    
-   prior
-   replication
-   developertoggle
    likelihoodmodel
+   testingbamm 	
    mc3
    strapp      
    time-flip
    fossilbamm
    troubleshooting
    glossary
-   mea_likelihood
 
 Search
 ======

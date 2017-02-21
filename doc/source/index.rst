@@ -1,13 +1,36 @@
 :orphan:
 
-Welcome
-=======
 
 BAMM (Bayesian Analysis of Macroevolutionary Mixtures) is a program for
 modeling complex dynamics of speciation, extinction, and trait evolution on
 phylogenetic trees.
 
-**A preliminary response to a recently-published** `critique <http://www.pnas.org/content/early/2016/08/09/1518659113.full>`_ **of BAMM can be found** `on this page <replication.html>`_.
+Response to BAMM critique
+===========================
+
+A comprehensive response to a recent `critique <http://www.pnas.org/content/early/2016/08/09/1518659113.full>`_ of BAMM has now been published in :download:`Systematic Biology<filesForDownload/Rabosky_etal_SystematicBiology_2017.pdf>` . We provide a detailed response to all major claims from the PNAS article.
+
+- Download Dryad `data files <http://datadryad.org/resource/doi:10.5061/dryad.36g21>`_ that accompany our paper.
+
+- Get a pdf of our :download:`Supplementary Information<filesForDownload/SupplementaryMaterial_BAMM_Text&Figures.pdf>` directly (text and figures) without downloading the full Dryad data package.
+
+- Tools for crafting your own performance assessment of BAMM are provided `here <testingbamm.html>`_ .
+
+The debate is best conducted in peer-reviewed literature
+==========================================================
+
+We encourage vigorous scientific debate on the theoretical foundations and performance of BAMM and other methods. However, these issues are extremely technical and we believe that this discussion is best conducted in the peer-reviewed literature. Social media (Twitter, blog posts, etc) is not, in our view, the ideal platform for discussing complex issues that require careful attention to mathematics, algorithms, and/or software implementations. **We will not, in general, use social media to respond to non-peer-reviewed critiques.** Nonetheless: 
+
+- We welcome user feedback and questions on the `BAMM Google Groups <https://groups.google.com/forum/#!forum/bamm-project>`_ page.
+
+- Bug reports can be submitted to our
+  `GitHub <https://github.com/macroevolution/bamm>`_ project site.
+
+- Specific concerns can be submitted directly to Dan Rabosky <drabosky@umich.edu>.
+
+
+Overview
+=========================== 
 
 BAMM is oriented entirely towards detecting and quantifying heterogeneity in
 evolutionary rates. It uses reversible jump Markov chain Monte Carlo to
@@ -35,9 +58,9 @@ the R package `BAMMtools <http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.1
 Recommended reading
 ===========================
 
-* We strongly recommend that you read our documentation on how to (and how not to) interpret `rate shifts <rateshifts.html>`_ on phylogenies. This section addresses some of the most common pitfalls with interpreting BAMM analyses.  
+* We recommend that you read our documentation on how to (and how not to) interpret `rate shifts <rateshifts.html>`_ on phylogenies. This section addresses some of the most common pitfalls with interpreting BAMM analyses.  
 
-* **What are the assumptions of the BAMM likelihood?** Find out `here <likelihoodmodel.html>`_.
+* **What are the assumptions of the BAMM likelihood?** Find out on our likelihood model `page <likelihoodmodel.html>`_.
 
 * **Is the BAMM likelihood computed correctly**, given the assumptions of the model? Learn more about testing it :ref:`here <testlikelihood>`.
 
@@ -53,10 +76,10 @@ we recommend installing the latest version.
 
 * BAMMtools now computes the prior analytically for the compound Poisson process model; there is thus no need to simulate the prior distribution of the number of shifts. More on this :ref:`here<analyticalprior>`.
 
-* BAMMtools 2.1 uses branch-specific marginal odds ratios to identify
+* BAMMtools 2.1+ uses branch-specific marginal odds ratios to identify
   credible sets of :ref:`shift configurations <rateshifts>`. More about why we made this change :ref:`here<marginalodds>`.
 
-* Users can now use BAMMtools to test whether BAMM is correctly computing likelihoods (see :ref:`here<testlikelihood>`). 
+* Users can now use BAMMtools to test whether BAMM is correctly computing likelihoods (see :ref:`here<testlikelihood>`).
 
 * Some important bug fixes are documented :ref:`here<changes>`.  
 
@@ -74,8 +97,7 @@ Please see the `Changes <changes.html>`_ page for more information.
 Concerns about the reliability of BAMM
 =======================================
 
-Concerns about BAMM's reliability were raised at the Evolution 2016 conference in Austin. See our page on `reliability <prior.html>`_ for our response to these concerns.
-
+ 
 
 Support
 =======
