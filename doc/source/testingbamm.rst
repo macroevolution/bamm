@@ -21,13 +21,23 @@ These and other topics are treated at length in the Systematic Biology article. 
 Assessing rate reliability on your own
 ------------------------------------------
 
-We encourage users not to take our assessment of BAMM's performance at face value, but to verify the performance of the method on their own. This page provides simple tools and discussion that may be helpful in crafting a performance assessment of BAMM. We will:
+We encourage users not to take our assessment of BAMM's performance at face value, but to verify the performance of the method on their own. We will:
 
-- Simulate phylogenies with rate shifts under a Poisson process model of rate variation exactly as in MEA
+* Simulate phylogenies with rate shifts under a Poisson process model of rate variation exactly as in MEA
 
-- Analyze the resulting phylogenies with BAMM
+* Analyze the resulting phylogenies with BAMM
 
-- Compute summary statistics that determine how well BAMM performed
+* Compute summary statistics that determine how well BAMM performed
+
+The relevant R files for reproducing these analyses are here:
+
+* General :download:`library<testingbamm/R_test_BAMM_functions.R>` of functions we've assembled to facilitate tree simulation and analysis
+
+* :download:`Script<testingbamm/R_simulate_tree_from_seed.R>` that illustrates how you can simulate *rate shift* trees using MEA's phylogenetic tree simulator
+
+* :download:`Script<testingbamm/R_BatchSimulate_MEA_trees.R>` that illustrates how to perform batch simulation of trees using MEA's tree simulator
+
+* :download:`Script<testingbamm/R_analyze_BAMM_results.R>` that reproduces all BAMM performance assessments below, including all figures and results exactly as they are shown
 
 Simulating trees with rate shifts under a Poisson process
 -----------------------------------------------------------

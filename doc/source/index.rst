@@ -51,10 +51,9 @@ the R package `BAMMtools <http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.1
 
 - Go to our `Frequently Asked Questions <faq.html>`_ page to see common
   questions and answers.
-
-
-- We include a new page discussing concerns that have been raised about sensitivity of BAMM to the prior on the number of rate `shifts <prior.html>`_ .
-
+ 
+- We now include a `page <testingbamm.html>`_  for **DIY BAMM validation**, with guided exercises to illustrate how you can test whether diversification inferences with BAMM are reliable.
+ 
 Recommended reading
 ===========================
 
