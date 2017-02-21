@@ -240,7 +240,7 @@ For the true tree (left), we have added black circles to the (true) shift locati
 	mean(getCladeRates(true_ed9)$lambda)
 	# approximately 0.21
 
-This mean corresponds (:math:`\lambda = 0.21`) corresponds very well to the rate for the root regime, which you can access as: ``ss9[1, ]``. So: on the whole, BAMM did very well at getting the whole-tree mean rate, despite failing to find several tiny rate regimes. 
+This mean (:math:`\lambda = 0.21`) corresponds very well to the rate for the root regime, which you can access as: ``ss9[1, ]``. So: on the whole, BAMM did very well at getting the whole-tree mean rate, despite failing to find several tiny rate regimes. 
 
 Regression analysis of low-power trees is misleading
 ......................................................
