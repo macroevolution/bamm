@@ -59,7 +59,7 @@ Recommended reading
 
 * We recommend that you read our documentation on how to (and how not to) interpret `rate shifts <rateshifts.html>`_ on phylogenies. This section addresses some of the most common pitfalls with interpreting BAMM analyses.  
 
-* **What are the assumptions of the BAMM likelihood?** Find out on our likelihood model `page <likelihoodmodel.html>`_.
+* **What are the assumptions of the BAMM likelihood?** Find out on our likelihood model :ref:`page <likelihood>`.
 
 * **Is the BAMM likelihood computed correctly**, given the assumptions of the model? Learn more about testing it :ref:`here <testlikelihood>`.
 

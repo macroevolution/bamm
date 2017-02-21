@@ -48,14 +48,14 @@ MEA rejected all trees that had (i) fewer than 50 tips, (ii) more than 150 tips,
 
 Attached here is a script that loops over random starting seeds from 1 to 20 and generates corresponding phylogenies using MEA's code.  
 
-**Only 2 trees out of 20 would have satisfied MEA's acceptance criteria: the tree with seed = 8 (with 144 tips) and the tree with seed = 9 (with 85 tips).** Seeds 4, 16, and 20 generates trees that are too small. Most of the remaining seeds generated trees that are larger than 150 tips, including seed = 15 (302 tips; analyzed below).
+**Only 2 trees out of 20 would have satisfied MEA's acceptance criteria: the tree with seed = 8 (with 144 tips) and the tree with seed = 9 (with 85 tips).** Seeds 4, 16, and 20 generate trees that are too small. Most of the remaining seeds generated trees that are larger than 150 tips, including seed = 15 (302 tips; analyzed below).
 
 Below, we will analyze trees generated with the following three seeds: 8, 9, and 15. The tools provided below can be used to craft your own performance assessment of BAMM.
 
 Worked example: tree simulation with specified seed
 ------------------------------------------------------
  
-First, we will load the necessary libraries and an R file we have developed that contains all necessary functions for these analyses.::
+First, we will load the necessary libraries and an R file we have developed that contains all necessary functions for these analyses::
 
 	library(geiger)
 	library(BAMMtools)
