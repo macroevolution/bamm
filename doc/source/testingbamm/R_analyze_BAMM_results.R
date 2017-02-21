@@ -303,13 +303,13 @@ points(j(rates15true$edge.length), j(rates15$edge.length), pch=21, bg=colset)
  
 # Node that there are essentially 3 shift regimes on this tree:
 # the root regime:
-ss[1, ]
+ss15[1, ]
 
 # This regime with 102 tips and fast speciation:
-ss[3, ]
+ss15[3, ]
 
 # and this regime with even faster speciaion and 39 tips:
-ss[4, ]
+ss15[4, ]
 
 # You can see from the plot above that BAMM overestimated one shift clade
 #   and underestimated the other. 

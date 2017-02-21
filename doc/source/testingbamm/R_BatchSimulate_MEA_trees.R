@@ -15,7 +15,7 @@ library(geiger)
 library(ape)
 
 # load tree simulation functions
-source("test_bamm_functions.R")
+source("R_test_bamm_functions.R")
 
 # -------------------------------------
 # Parameter initialization block
