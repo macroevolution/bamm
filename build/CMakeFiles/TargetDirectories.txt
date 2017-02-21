@@ -1,0 +1,7 @@
+/Users/pascaltitle/bamm/build/CMakeFiles/install/local.dir
+/Users/pascaltitle/bamm/build/CMakeFiles/install/strip.dir
+/Users/pascaltitle/bamm/build/CMakeFiles/install.dir
+/Users/pascaltitle/bamm/build/CMakeFiles/list_install_components.dir
+/Users/pascaltitle/bamm/build/CMakeFiles/rebuild_cache.dir
+/Users/pascaltitle/bamm/build/CMakeFiles/edit_cache.dir
+/Users/pascaltitle/bamm/build/CMakeFiles/bamm.dir

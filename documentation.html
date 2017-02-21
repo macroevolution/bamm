@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>BAMM Documentation &mdash; bamm 2.5.0 documentation</title>
+    <title>BAMM Documentation &#8212; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,13 +17,14 @@
         VERSION:     '2.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 2.5.0 documentation" href="#" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="1. Introduction" href="introduction.html" /> 
   </head>
   <body role="document">
@@ -58,7 +59,7 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/documentation.txt"
+      <li><a href="_sources/documentation.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -162,71 +163,43 @@
 <li class="toctree-l2"><a class="reference internal" href="faq.html#general">10.1. General</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="prior.html">11. Is the posterior on the number of shifts overly sensitive to the prior?</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="prior.html#analysis-of-constant-rate-trees-with-bamm-v2-5">11.1. Analysis of constant-rate trees with BAMM v2.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="prior.html#these-results-can-be-validated">11.2. These results can be validated</a></li>
-<li class="toctree-l2"><a class="reference internal" href="prior.html#analysis-of-empirical-phylogenies-with-bamm-v2-5">11.3. Analysis of empirical phylogenies with BAMM v2.5.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="prior.html#how-to-test-the-effects-of-the-prior-on-the-posterior">11.4. How to test the effects of the prior on the posterior</a></li>
-<li class="toctree-l2"><a class="reference internal" href="prior.html#nature-of-the-implementation-differences">11.5. Nature of the implementation differences</a></li>
-<li class="toctree-l2"><a class="reference internal" href="prior.html#impact-of-implementation-differences-on-empirical-inference">11.6. Impact of implementation differences on empirical inference</a></li>
-<li class="toctree-l2"><a class="reference internal" href="prior.html#why-did-we-fail-to-detect-the-event-rate-bug-in-pre-2-5-bamm">11.7. Why did we fail to detect the event rate bug in pre-2.5 BAMM?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="prior.html#how-can-i-report-implementation-errors-to-the-developers">11.8. How can I report implementation errors to the developers?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="prior.html#appendix-analytical-prior-on-the-number-of-rate-shifts">11.9. Appendix: Analytical prior on the number of rate shifts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="likelihoodmodel.html">11. The BAMM likelihood function</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="likelihoodmodel.html#overview">11.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="likelihoodmodel.html#is-the-bamm-likelihood-computed-correctly">11.2. Is the BAMM likelihood computed correctly?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="likelihoodmodel.html#numerical-approximations-in-bamm">11.3. Numerical approximations in BAMM</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="replication.html">12. Replication tests of empirical results from Moore et al (2016)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="replication.html#summary">12.1. Summary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="replication.html#details">12.2. Details</a></li>
-<li class="toctree-l2"><a class="reference internal" href="replication.html#several-theoretical-concerns-raised-by-mea-cannot-be-evaluated">12.3. Several theoretical concerns raised by MEA cannot be evaluated</a></li>
-<li class="toctree-l2"><a class="reference internal" href="replication.html#reanalysis-of-empirical-data-from-moore-et-al-2016">12.4. Reanalysis of empirical data from Moore et al (2016)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="replication.html#reanalysis-of-constant-rate-trees-from-moore-et-al-2016">12.5. Reanalysis of constant-rate trees from Moore et al (2016)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="replication.html#all-empirical-datasets-from-moore-et-al-reanalyzed">12.6. All empirical datasets from Moore et al, reanalyzed</a></li>
-<li class="toctree-l2"><a class="reference internal" href="replication.html#appendix-the-random-option-used-by-moore-et-al-is-not-valid">12.7. Appendix: The &#8220;random&#8221; option used by Moore et al is not valid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testingbamm.html">12. Is BAMM reliable? A DIY approach</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="testingbamm.html#overview">12.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testingbamm.html#assessing-rate-reliability-on-your-own">12.2. Assessing rate reliability on your own</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testingbamm.html#simulating-trees-with-rate-shifts-under-a-poisson-process">12.3. Simulating trees with rate shifts under a Poisson process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testingbamm.html#worked-example-tree-simulation-with-specified-seed">12.4. Worked example: tree simulation with specified seed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testingbamm.html#worked-example-1-tree-with-seed-8">12.5. Worked example #1: tree with seed = 8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testingbamm.html#worked-example-2-tree-with-seed-9">12.6. Worked example #2: tree with seed = 9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testingbamm.html#worked-example-3-tree-with-seed-15">12.7. Worked example #3: tree with seed = 15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testingbamm.html#general-guidelines">12.8. General guidelines</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="developertoggle.html">13. The Moore et al (2016) use of developer switch “random” was not scientifically justified</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="developertoggle.html#summary">13.1. Summary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="developertoggle.html#analysis-of-variable-rates-phylogenies-from-mea">13.2. Analysis of variable rates phylogenies from MEA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="developertoggle.html#are-bamm-rate-estimates-correlated-with-the-true-values">13.3. Are BAMM rate estimates correlated with the true values?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mc3.html">13. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mc3.html#multi-core-metropolis-coupled-mcmc-mc4">13.1. Multi-core Metropolis coupled MCMC [(MC)<sup>4</sup>]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mc3.html#mc3-settings-in-bamm">13.2. (MC)<sup>3</sup> settings in BAMM</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="likelihoodmodel.html">14. The BAMM likelihood function</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="likelihoodmodel.html#introduction-models-for-rate-shifts">14.1. Introduction: models for rate shifts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="likelihoodmodel.html#is-the-bamm-likelihood-correct">14.2. Is the BAMM likelihood correct?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="likelihoodmodel.html#what-exactly-is-the-process-modeled-by-bamm">14.3. What, exactly, is the process modeled by BAMM?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="likelihoodmodel.html#extinction-calculations-at-nodes">14.4. Extinction calculations at nodes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="likelihoodmodel.html#theoretical-issues-for-rate-shift-models">14.5. Theoretical issues for rate shift models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="likelihoodmodel.html#is-the-bamm-likelihood-computed-correctly">14.6. Is the BAMM likelihood computed correctly?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="likelihoodmodel.html#numerical-approximations-in-bamm">14.7. Numerical approximations in BAMM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="strapp.html">14. STRAPP: STructured Rate Permutations on Phylogenies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time-flip.html">15. Time-flip proposal: Time-constant and time-variable shifts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="time-flip.html#calculation-of-parameters-after-a-time-flip">15.1. Calculation of parameters after a time-flip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time-flip.html#acceptance-probability-for-a-time-flip-proposal">15.2. Acceptance probability for a time-flip proposal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time-flip.html#time-flip-proposal-options">15.3. Time-flip proposal options</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="mc3.html">15. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="mc3.html#multi-core-metropolis-coupled-mcmc-mc4">15.1. Multi-core Metropolis coupled MCMC [(MC)<sup>4</sup>]</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mc3.html#mc3-settings-in-bamm">15.2. (MC)<sup>3</sup> settings in BAMM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fossilbamm.html">16. fossil BAMM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">17. Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#installation">17.1. Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#running">17.2. Running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#analysis">17.3. Analysis</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="strapp.html">16. STRAPP: STructured Rate Permutations on Phylogenies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="time-flip.html">17. Time-flip proposal: Time-constant and time-variable shifts</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="time-flip.html#calculation-of-parameters-after-a-time-flip">17.1. Calculation of parameters after a time-flip</a></li>
-<li class="toctree-l2"><a class="reference internal" href="time-flip.html#acceptance-probability-for-a-time-flip-proposal">17.2. Acceptance probability for a time-flip proposal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="time-flip.html#time-flip-proposal-options">17.3. Time-flip proposal options</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="fossilbamm.html">18. fossil BAMM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">19. Troubleshooting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#installation">19.1. Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#running">19.2. Running</a></li>
-<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#analysis">19.3. Analysis</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="glossary.html">20. Glossary</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mea_likelihood.html">21. Is the Moore et al (2016) likelihood a mathematically valid improvement?</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="mea_likelihood.html#summary">21.1. Summary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mea_likelihood.html#the-mea-likelihood-equation-and-computational-algorithm">21.2. The MEA likelihood equation and computational algorithm</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mea_likelihood.html#the-probability-of-a-single-branch-with-mapped-rate-parameters">21.3. The probability of a single branch with mapped rate parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mea_likelihood.html#failure-of-incomplete-data-augmentation-recompute-with-bisse">21.4. Failure of incomplete data augmentation (&#8220;recompute&#8221;) with BiSSE</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">18. Glossary</a></li>
 </ul>
 </div>
 </div>
@@ -258,8 +231,8 @@
     </div>
 
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2015 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+        &#169; Copyright 2015 BAMM Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

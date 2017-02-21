@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1. Introduction &mdash; bamm 2.5.0 documentation</title>
+    <title>1. Introduction &#8212; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,13 +17,14 @@
         VERSION:     '2.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="2. BAMM graph gallery" href="bammgraph.html" />
     <link rel="prev" title="BAMM Documentation" href="documentation.html" /> 
   </head>
@@ -68,7 +69,7 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/introduction.txt"
+      <li><a href="_sources/introduction.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -133,15 +134,7 @@ includes: visualization of distinct evolutionary regimes on phylogenetic trees,
 calculation of Bayes factors, plotting evolutionary rates through time,
 estimating clade-specific average rates, and visualizing rate variation along
 the branches of individual phylogenetic trees (as shown <a class="reference internal" href="#whaleratesintro"><span class="std std-ref">in this figure</span></a>).</p>
-<p><strong>Accounts for non-random taxon sampling.</strong>
-Speciation-extinction calculations in BAMM account for incomplete taxon
-sampling analytically. The program is designed to work with datasets that
-contain large numbers of missing species, and taxon sampling can be
-phylogenetically non-random. The only requirement is that the user is able to
-specify how taxon sampling varies across the tree. For example, you can allow
-individual clades (such as genera or families) in a large phylogenetic tree to
-have different sampling probabilities. Please read <a class="reference internal" href="advanced.html#incompsampling"><span class="std std-ref">this section</span></a> for more information on incomplete sampling.</p>
-<p><strong>It is much better than stepwise AIC.</strong>
+<p><strong>It is better than stepwise AIC.</strong>
 Many methods for modeling evolutionary dynamics use stepwise AIC-based
 approaches that are limited to identifying a single best model. These
 approaches are inherently limited, because many distinct combinations of
@@ -191,8 +184,8 @@ this example is taken from M. Steeman <em>et al.</em>, <em>Syst. Biol.</em> 58:5
     </div>
 
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2015 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+        &#169; Copyright 2015 BAMM Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

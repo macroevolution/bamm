@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>7. Analyzing BAMM output with BAMMtools &mdash; bamm 2.5.0 documentation</title>
+    <title>7. Analyzing BAMM output with BAMMtools &#8212; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,13 +17,14 @@
         VERSION:     '2.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="8. Advanced analysis options" href="advanced.html" />
     <link rel="prev" title="6. Configuration" href="configuration.html" /> 
   </head>
@@ -94,7 +95,7 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/postprocess.txt"
+      <li><a href="_sources/postprocess.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -128,59 +129,50 @@
 <p>The information below is a brief overview to get you started - there is much more than can be done. We first cover a <a class="reference internal" href="#workflow"><span class="std std-ref">sample BAMMtools workflow</span></a> for analyzing rates and rate shifts. The general analyses described in this section apply both to <strong>speciation-extinction</strong> and <strong>phenotypic evolution</strong> studies. As such, they are not treated separately. The primary difference is the name of the parameters (<img class="math" src="_images/math/76f1d8ace30435987c01a00ca53a71cba1f40e6c.png" alt="\lambda"/> and <img class="math" src="_images/math/d79e8a2c7ce54906c2b25549da38bdbe02cf40d6.png" alt="\mu"/> for speciation and extinction, and <img class="math" src="_images/math/410a9d0df9c135dd73b269cba7ef04dcfd932b1f.png" alt="\beta"/> for trait evolution).</p>
 <p>In case you missed it, you really should read <a class="reference internal" href="rateshifts.html#rateshifts"><span class="std std-ref">this section</span></a> before proceeding. Having a solid understanding of <em>distinct shift configurations</em>, <em>marginal shift probabilities</em>, and <em>the overall best shift configuration</em> is critical to appreciating what BAMMtools can do.</p>
 <p>The sections below include:</p>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt><strong>BAMMtools quickstart guide</strong></dt>
-<dd><p class="first last">This is a <a class="reference internal" href="#workflow"><span class="std std-ref">one sentence guide</span></a> to major <em>BAMMtools</em> functions, covering several common analyses.</p>
-</dd>
+<dd>This is a <a class="reference internal" href="#workflow"><span class="std std-ref">one sentence guide</span></a> to major <em>BAMMtools</em> functions, covering several common analyses.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>BAMM output and the *bammdata* object</strong></dt>
-<dd><p class="first last">A <a class="reference internal" href="#bammoutput"><span class="std std-ref">quick overview</span></a> of <strong>BAMM</strong> output files.</p>
-</dd>
+<dd>A <a class="reference internal" href="#bammoutput"><span class="std std-ref">quick overview</span></a> of <strong>BAMM</strong> output files.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Assessing MCMC convergence</strong></dt>
-<dd><p class="first last">Standard tests you should do to check <a class="reference internal" href="#bammconverge"><span class="std std-ref">BAMM convergence</span></a>.</p>
-</dd>
+<dd>Standard tests you should do to check <a class="reference internal" href="#bammconverge"><span class="std std-ref">BAMM convergence</span></a>.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Analysis of rate shifts</strong></dt>
-<dd><p class="first last"><a class="reference internal" href="#numbershifts"><span class="std std-ref">This section</span></a> describes how to analyze the number and location of rate shifts from a Bayesian perspective.</p>
-</dd>
+<dd><a class="reference internal" href="#numbershifts"><span class="std std-ref">This section</span></a> describes how to analyze the number and location of rate shifts from a Bayesian perspective.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Bayes factors for model comparison</strong></dt>
-<dd><p class="first last">Robust model selection with <a class="reference internal" href="#bayesfactors"><span class="std std-ref">Bayes factors</span></a>.</p>
-</dd>
+<dd>Robust model selection with <a class="reference internal" href="#bayesfactors"><span class="std std-ref">Bayes factors</span></a>.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Clade-specific evolutionary rates</strong></dt>
-<dd><p class="first last">Estimating mean rates for <a class="reference internal" href="#claderates"><span class="std std-ref">specific clades</span></a>.</p>
-</dd>
+<dd>Estimating mean rates for <a class="reference internal" href="#claderates"><span class="std std-ref">specific clades</span></a>.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Branch and tip-specific evolutionary rates</strong></dt>
-<dd><p class="first last">Estimate marginal densities of rates for individual <a class="reference internal" href="#branchrates"><span class="std std-ref">branches and tips</span></a>.</p>
-</dd>
+<dd>Estimate marginal densities of rates for individual <a class="reference internal" href="#branchrates"><span class="std std-ref">branches and tips</span></a>.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Rate-through-time analysis</strong></dt>
-<dd><p class="first last">Analyze and plot macroevolutionary <a class="reference internal" href="#bammtoolsrtt"><span class="std std-ref">rates through time</span></a>.</p>
-</dd>
+<dd>Analyze and plot macroevolutionary <a class="reference internal" href="#bammtoolsrtt"><span class="std std-ref">rates through time</span></a>.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Macroevolutionary cohort analysis</strong></dt>
-<dd><p class="first last">Visualize sets of taxa with <a class="reference internal" href="#cohorts"><span class="std std-ref">shared rate dynamics</span></a>.</p>
-</dd>
+<dd>Visualize sets of taxa with <a class="reference internal" href="#cohorts"><span class="std std-ref">shared rate dynamics</span></a>.</dd>
 </dl>
 </li>
 </ul>
@@ -614,8 +606,8 @@ plot.phylo(mytree, edge.color = edgecols)
     </div>
 
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2015 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+        &#169; Copyright 2015 BAMM Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

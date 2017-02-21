@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>BAMM Changes &mdash; bamm 2.5.0 documentation</title>
+    <title>BAMM Changes &#8212; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,13 +17,14 @@
         VERSION:     '2.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="bamm 2.5.0 documentation" href="documentation.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
   </head>
   <body role="document">
 <div class="pageheader">
@@ -68,7 +69,7 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/changes.txt"
+      <li><a href="_sources/changes.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -100,7 +101,7 @@
 <ul class="simple">
 <li>The prior distribution on the number of shifts is now specified with parameter <code class="docutils literal"><span class="pre">expectedNumberOfShifts</span></code>. This is simply the inverse of the previously-used parameter <code class="docutils literal"><span class="pre">poissonRatePrior</span></code>. BAMM control files will accept either parameter name but we find that <code class="docutils literal"><span class="pre">expectedNumberOfShifts</span></code> is more intuitive.</li>
 <li>No more prior simulation in BAMM. The relevant BAMMtools functions now accept an argument for <code class="docutils literal"><span class="pre">expectedNumberOfShifts</span></code> and compute the full prior distribution from that information.</li>
-<li>We made a major change to the algorithm for handling extinction probabilities <img class="math" src="_images/math/4a5896b3cd2183400b4ecfa6f3e0246330bce52f.png" alt="E(t)"/> at internal nodes when the two branches descended from a node differ in their shift histories. We don&#8217;t consider the previous approach a bug <em>per se</em>, but have convinced ourselves that the new way has a better theoretical justification. We explain why we made this change <a class="reference internal" href="likelihoodmodel.html#extinctionnodes"><span class="std std-ref">here</span></a>.</li>
+<li>We made a major change to the algorithm for handling extinction probabilities <img class="math" src="_images/math/4a5896b3cd2183400b4ecfa6f3e0246330bce52f.png" alt="E(t)"/> at internal nodes when the two branches descended from a node differ in their shift histories. We don&#8217;t consider the previous approach a bug <em>per se</em>, but have convinced ourselves that the new way has a better theoretical justification.</li>
 </ul>
 </div>
 <div class="section" id="bammtools-enhancements">
@@ -116,7 +117,6 @@
 <h3>Bug fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>the option <code class="docutils literal"><span class="pre">validateEventConfiguration</span></code> is an internal debugging option that should have had a default value of 0, but was instead set to 1 (this led to a bug in the Hastings ratio that would have affected a very small fraction of MCMC moves).</li>
-<li>Fixed bug introduced during programming of fossil BAMM that sometimes recomputed extinction probabilities <img class="math" src="_images/math/4a5896b3cd2183400b4ecfa6f3e0246330bce52f.png" alt="E(t)"/>. An explanation for why extinction probabilities must account for downstream shift histories is found <a class="reference internal" href="likelihoodmodel.html#whatprocess"><span class="std std-ref">here</span></a> (this bug was not incorporated into the compiled version of BAMM that was distributed on the website but could have affected some analyses where users compiled BAMM code themselves).</li>
 </ul>
 </div>
 </div>
@@ -247,8 +247,8 @@ when <em>k</em> &gt; 0, use the symmetrical function of <em>k</em> &lt; 0</li>
     </div>
 
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2015 BAMM Team.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+        &#169; Copyright 2015 BAMM Team.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
     </div>
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
