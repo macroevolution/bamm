@@ -219,7 +219,17 @@
 <li>52 tips in the 2nd largest regime</li>
 <li>9 tips in the 3rd largest regime (this is row 5 of the dataframe).</li>
 </ul>
-<p>Although there are still a number of tiny rate regimes (e.g., 6 shifts leading to 5 or fewer taxa), at least 3 rate regimes are large enough that we might <em>a priori</em> expect some statistical power to infer them. We will start by making a pair of visual plots to compare the <strong>true</strong> speciation rates across the tree to the <strong>BAMM-inferred</strong> speciation rates. On the left, we&#8217;ll plot the tree with branches colored by true rate. On the right, we will plot the BAMM-inferred rates using the same color scale for rates in both trees.</p>
+<p>Although there are still a number of tiny rate regimes (e.g., 6 shifts leading to 5 or fewer taxa), at least 3 rate regimes are large enough that we might <em>a priori</em> expect some statistical power to infer them. We will start by making a pair of visual plots to compare the <strong>true</strong> speciation rates across the tree to the <strong>BAMM-inferred</strong> speciation rates. On the left, we&#8217;ll plot the tree with branches colored by true rate. On the right, we will plot the BAMM-inferred rates using the same color scale for rates in both trees.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>plot.new()
+par(mfrow=c(1, 2))
+BAMMplot &lt;- plot.bammdata(true_ed8, spex=&quot;s&quot;, breaksmethod=&quot;linear&quot;, lwd=2, tau=0.003)
+mtext(&quot;True rates&quot;, side=3, cex=1.5)
+addBAMMlegend(BAMMplot, location=&quot;left&quot;)
+plot.bammdata(ed8, colorbreaks=BAMMplot$colorbreaks, spex=&quot;s&quot;, lwd=2, tau=0.003)
+mtext(&quot;BAMM estimated rates&quot;, side=3, cex=1.5)
+</pre></div>
+</div>
+<p>And here is the pair of phylorate plots (again, note that the rate-color map is identical for the two trees):</p>
 <div class="figure align-center" id="phylorate8">
 <a class="reference internal image-reference" href="_images/phylorate8.png"><img alt="_images/phylorate8.png" src="_images/phylorate8.png" style="width: 800px;" /></a>
 </div>
