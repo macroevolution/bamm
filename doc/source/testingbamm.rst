@@ -21,9 +21,9 @@ These and other topics are treated at length in the Systematic Biology article. 
 Assessing rate reliability on your own
 ------------------------------------------
 
-We encourage users not to take our assessment of BAMM's performance at face value, but to verify the performance of the method on their own. We will:
+**We encourage users not to take our assessment of BAMM's performance at face value, but to verify the performance of the method on their own.** We will:
 
-* Simulate phylogenies with rate shifts under a Poisson process model of rate variation exactly as in MEA
+* Simulate phylogenies with rate shifts under a Poisson process model of rate variation exactly as in MEA, using their tree simulation code and input parameters
 
 * Analyze the resulting phylogenies with BAMM
 
@@ -42,13 +42,13 @@ The relevant R files for reproducing these analyses are here:
 Simulating trees with rate shifts under a Poisson process
 -----------------------------------------------------------
 
-We will simulate a set of phylogenies using the tree simulator and input parameters used by MEA to generate their purportedly *variable rates* dataset, which they used to argue that BAMM-estimated rates are unreliable. We will perform 20 simulations, seeding the random number generator in each simulation with the corresponding integer (1, 2, 3.... 20), such that you are able to generate trees that are identical to those generated here.
+The :download:`Systematic Biology<filesForDownload/Rabosky_etal_SystematicBiology_2017.pdf>` article (see *Claim 5*) provides a detailed explanation for why MEA's analyses were compromised by low statistical power and ascertainment bias. We encourage readers to consult that section of our article for additional information. 
 
-MEA rejected all trees that had (i) fewer than 50 tips, (ii) more than 150 tips, and (iii) no rate shifts. However, most phylogenies generated under their parameters do not fall into this acceptance region (50 - 150 tips). They rejected the majority of simulated outcomes under their parameters, such that they selected for trees where power to infer rate variation was low (see "Claim 5" and Figure 7 from Rabosky et al 2017, Systematic Biology).
+We will simulate a set of phylogenies using the tree simulator and input parameters used by MEA to generate their purportedly *variable rates* dataset, which they used to argue that BAMM-estimated rates are unreliable. We will perform 20 simulations, seeding the random number generator in each simulation with the corresponding integer (1, 2, 3.... 20), such that you are able to generate trees that are identical to those generated here (setting the *seed* ensures that the random number generator underlying the simulation draws the exact same sequence of random numbers).
 
-Attached here is a script that loops over random starting seeds from 1 to 20 and generates corresponding phylogenies using MEA's code.  
+MEA rejected all trees that had (i) fewer than 50 tips, (ii) more than 150 tips, and (iii) no rate shifts. However, most phylogenies generated under their parameters do not fall into this acceptance region (50 - 150 tips). They rejected the majority of simulated outcomes under their parameters, such that they selected for trees where power to infer rate variation was low (again, see "Claim 5" and Figure 7 from the Systematic Biology article linked above). 
 
-**Only 2 trees out of 20 would have satisfied MEA's acceptance criteria: the tree with seed = 8 (with 144 tips) and the tree with seed = 9 (with 85 tips).** Seeds 4, 16, and 20 generate trees that are too small. Most of the remaining seeds generated trees that are larger than 150 tips, including seed = 15 (302 tips; analyzed below).
+Attached :download:`here<testingbamm/R_BatchSimulate_MEA_trees.R>` is a script that loops over random starting seeds from 1 to 20 and generates corresponding phylogenies using MEA's code. **Only 2 trees out of 20 would have satisfied MEA's acceptance criteria: the tree with seed = 8 (with 144 tips) and the tree with seed = 9 (with 85 tips).** Seeds 4, 16, and 20 generate trees that are too small. Most of the remaining seeds generated trees that are larger than 150 tips, including seed = 15 (302 tips; analyzed below).
 
 Below, we will analyze trees generated with the following three seeds: 8, 9, and 15. The tools provided below can be used to craft your own performance assessment of BAMM.
 
@@ -59,6 +59,7 @@ First, we will load the necessary libraries and an R file we have developed that
 
 	library(geiger)
 	library(BAMMtools)
+	library(diversitree)
 	source("R_test_BAMM_functions.R")
 
 Now we set up input parameterizations exactly as in MEA: we want exponential distributions with mean :math:`\psi` for speciation (:math:`\lambda`) and extinction (:math:`\mu`), such that :math:`\psi_\lambda = 0.15` and :math:`\psi_\mu = 0.05`. We will also set the rate-shift rate (transition rate) :math:`\eta = 0.006`, as in MEA. The conventions used below are arguments that we will pass to MEA's tree simulation function::
@@ -140,7 +141,7 @@ Although there are still a number of tiny rate regimes (e.g., 6 shifts leading t
    :width: 800
    :align: center
 
-So, across this tree, BAMM appears to have more or less correctly inferred the locations with high rates, and it more-or-less gets the background (root regime) rates correct. We have labelled the clades where BAMM inferred high rates by their node reference numbers (in the `ape` package phylo format). These *shift* clades are nodes 148 and 240; you can inspect their true parameters in the dataframe ``ss8``. 
+So, across this tree, BAMM appears to have more or less correctly inferred the locations with high rates, and it more-or-less gets the background (root regime) rates correct. We have labelled the clades where BAMM inferred high rates by their node reference numbers (in the `ape` package phylo format). These *shift* clades are nodes 148 and 240; you can inspect their true parameters in the dataframe ``ss8``. You can also see that there are several small rate regimes in the true (left) rate plot that are not inferred in the BAMM-estimated (right) plot. More on this below.
 
 It also appears that the rates are somewhat overestimated, an issue we will explore in detail in the next few figures. We will now compute the BAMM-inferred speciation rates on each branch of the tree and compare them to the true rates. We'll do this using the function ``getMeanBranchLengthTree``, which expresses the rate-shift information as a phylogenetic tree where the branch lengths are equal to the speciation rate on each branch.::
 
@@ -195,7 +196,9 @@ It is worth asking how different these rates are from what we would get if we ju
 	# estimate = 0.62 vs 0.41 true vs 0.56 BAMM
 	
 In this case, BAMM is overestimating speciation rates for one clade (node 148) relative to `Diversitree`, but estimating them more accurately than `Diversitree` for the other clade (node 240). Keep in mind that this is not really a fair comparison, because we have told `Diversitree` exactly where on the tree to estimate the rates. BAMM had to find the shift location with no *a priori* information about where the shift might be.  
- 
+
+**Finally: should we be surprised that BAMM fails to detect the small rate regimes in the example here (e.g., the small light blue and purple rate regimes in the figure above)?** We address this question at length in the :download:`Systematic Biology<filesForDownload/Rabosky_etal_SystematicBiology_2017.pdf>` article. We use information theoretic evidence to show that, in general, such small rate regimes cannot be inferred by any diversification methodology. The likelihood of very small shift regimes is often very similar across a broad range of parameterizations, such that the likelihood of the data under the true parameters is about the same as the corresponding likelihood under somewhat different parameters. Our formal analysis (see *Claim 5* and associated figures from the Systematic Biology article) demonstrates that most of the phylogenies (>80%) in MEA's *variable rates* dataset lack sufficient information with which BAMM, and any other method, can infer rate variation.
+
 Worked example #2: tree with seed = 9
 ---------------------------------------
 We now turn to the tree generated with ``seed = 9``, which has 85 tips. This tree would have been included in MEA's *variable rates* dataset as it contains the right number of tips and at least one shift. We won't go through the exercise of tree simulation again, but you can use the script given above to repeat these analyses exactly. Simply plug in the new seed index to generate all the relevant files. We will start assuming that you've already run BAMM on this phylogeny::
@@ -283,7 +286,7 @@ Yes, the BAMM slope is zero, but this is attributable solely to the fact that BA
 
 So: across the entire tree, a total of 163 branches belong to the root regime, with a true rate of :math:`\lambda = 0.21`. There are only 5 branches that do not belong to this rate class: two singleton lineages, and another with just 3 branches. BAMM did very well at inferring the overall rate across the tree, but cannot detect rate variation when shift regimes are tiny and/or of small effect. In this example, for the regression slope to suggest *good* performance, BAMM would have to be capable of accurately inferring rates for regimes with just 1 (turquoise) or 2 (green) tips. Moreover, the regression analysis above implies poor performance even when BAMM has estimated, with perfect accuracy, the rates across more than 98% of the branches in the tree!
 
-MEA's claim that BAMM rates are unreliable results from their use of phylogenies that are statistically indistinguishable from a constant-rate birth-death process, thus yielding results similar to those we've illustrated here for ``seed = 9``. We found that more than 80% of MEA's phylogenies contained no information that BAMM, or any other program, could use to infer rate variation (see Figures 8 - 12, Rabosky et al., Systematic Biology, 2017). Their purported *variable rates* dataset is theoretically *information free*, at least from the perspective of among-lineage rate variation. Hence, for approximately 85% of MEA's trees, we expect branch-specific slopes to provide an inaccurate summary of BAMM's performance, and it is unsurprising that MEA found mean slopes of zero when performing branch-specific regression analyses on these data. 
+MEA's claim that BAMM rates are unreliable is due to their analysis of phylogenies that are statistically indistinguishable from a constant-rate birth-death process, thus yielding results similar to those we've illustrated here for ``seed = 9``. We found that more than 80% of MEA's phylogenies contained no information that BAMM (and other programs) could use to infer rate variation (see *Claim 5* and Figures 8 - 12 from the Systematic Biology article). Their purported *variable rates* dataset is largely *information free*, at least from the perspective of among-lineage rate variation. Hence, for the vast majority of MEA's trees, we expect branch-specific slopes to provide an inaccurate summary of BAMM's performance, and it is unsurprising that MEA found mean slopes of zero when performing branch-specific regression analyses on these data. 
  
 Worked example #3: tree with seed = 15
 ----------------------------------------
