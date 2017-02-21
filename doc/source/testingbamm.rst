@@ -58,6 +58,7 @@ Worked example: tree simulation with specified seed
 First, we will load the necessary libraries and an R file we have developed that contains all necessary functions for these analyses::
 
 	library(geiger)
+	library(phytools)
 	library(BAMMtools)
 	library(diversitree)
 	source("R_test_BAMM_functions.R")
