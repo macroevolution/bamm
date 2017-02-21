@@ -507,6 +507,43 @@ j <- function(x){
  
 
 
+# This function converts the events from a tree simulated using the MEA R simulator to BAMM's event data format
+mea_to_edata <- function(tree)	{
+	require(phytools)
+	N <- Ntip(tree)
+	SpecRates <- tree$full_process$current_speciation_rate
+	tipLambda <- setNames(SpecRates[sapply(1:N, function(x,y) which(y==x), y=tree$edge[,2])], tree$tip.label)
+
+	ExtRates <- tree$full_process$current_extinction_rate
+	tipMu <- setNames(ExtRates[sapply(1:N, function(x,y) which(y==x), y=tree$edge[,2])], tree$tip.label)
+	
+	Times <- sapply(tree$full_process$transition_times, function(x) x[2])
+	
+	eventData <- data.frame(generation=0, leftchild="drop", rightchild="drop", abstime=-1, lambdainit=0.1, lambdashift=0, muinit=0.1, mushift=0, n_taxa=0)
+	for (regime in unique(tipLambda))	{
+		Include <- which(tipLambda == regime)
+		Tips <- names(tipLambda)[Include]
+		abstime <- Times[which(SpecRates==regime)[1]]
+		if (is.na(abstime))	{
+			abstime <- 0
+		}
+		if (length(Tips) > 1)	{
+			Node <- findMRCA(tree, Tips)
+			Descs <- getDescendants(tree, Node)
+			Descs <- Descs[Descs <= N]
+			lchild <- as.character(Descs[1])
+			rchild <- as.character(Descs[length(Descs)])
+			eventData <- rbind(eventData, data.frame(generation=0, leftchild=lchild, rightchild=rchild, abstime=abstime, lambdainit=regime, lambdashift=0, muinit=tipMu[lchild], mushift=0, n_taxa=length(Tips)))
+		}
+		else	 if (length(Tips) == 1){
+			eventData <- rbind(eventData, data.frame(generation=0, leftchild=as.character(Tips), rightchild="NA", abstime=abstime, lambdainit=regime, lambdashift=0, muinit=tipMu[Tips], mushift=0, n_taxa=1))
+		}		
+	}
+
+	eventData <- eventData[-1,]
+	eventData <- eventData[order(eventData$abstime),]
+	return(eventData)
+}
 
 
 
