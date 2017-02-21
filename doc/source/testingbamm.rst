@@ -134,7 +134,18 @@ This dataframe ``ss8`` includes all the shift data from the simulated tree, incl
 * 52 tips in the 2nd largest regime
 * 9 tips in the 3rd largest regime (this is row 5 of the dataframe).
 
-Although there are still a number of tiny rate regimes (e.g., 6 shifts leading to 5 or fewer taxa), at least 3 rate regimes are large enough that we might *a priori* expect some statistical power to infer them. We will start by making a pair of visual plots to compare the **true** speciation rates across the tree to the **BAMM-inferred** speciation rates. On the left, we'll plot the tree with branches colored by true rate. On the right, we will plot the BAMM-inferred rates using the same color scale for rates in both trees. 
+Although there are still a number of tiny rate regimes (e.g., 6 shifts leading to 5 or fewer taxa), at least 3 rate regimes are large enough that we might *a priori* expect some statistical power to infer them. We will start by making a pair of visual plots to compare the **true** speciation rates across the tree to the **BAMM-inferred** speciation rates. On the left, we'll plot the tree with branches colored by true rate. On the right, we will plot the BAMM-inferred rates using the same color scale for rates in both trees.::
+
+	plot.new()
+	par(mfrow=c(1, 2))
+	BAMMplot <- plot.bammdata(true_ed8, spex="s", breaksmethod="linear", lwd=2, tau=0.003)
+	mtext("True rates", side=3, cex=1.5)
+	addBAMMlegend(BAMMplot, location="left")
+	plot.bammdata(ed8, colorbreaks=BAMMplot$colorbreaks, spex="s", lwd=2, tau=0.003)
+	mtext("BAMM estimated rates", side=3, cex=1.5)
+ 
+And here is the pair of phylorate plots (again, note that the rate-color map is identical for the two trees): 
+ 
 
 .. _phylorate8: 
 .. figure:: testingbamm/phylorate8.png
