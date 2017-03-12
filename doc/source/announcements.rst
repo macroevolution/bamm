@@ -23,6 +23,6 @@ Workshop participants will arrive in Corvallis (Oregon) any time on Wednesday Ju
 
 **To apply.** please send a CV and a short statement (1-2 paragraphs) detailing your research interests, why you are interested in the course, and your prior experience with R and phylogenetics / comparative methods. Please email your application (or questions) to Dan Rabosky (macroevolution.workshop@gmail.com). 
  
-**Applications will be accepted until April 2, 2016**, but please apply early as spaces are limited. Target audience is graduate students and postdocs but applications from researchers at other career stages are welcome. Preference will be given to students with a clear interest and research focus in phylogenetics & macroevolution. 
+**Applications will be accepted until April 2, 2017**, but please apply early as spaces are limited. Target audience is graduate students and postdocs but applications from researchers at other career stages are welcome. Preference will be given to students with a clear interest and research focus in phylogenetics & macroevolution. 
 
 
