@@ -11,6 +11,7 @@ BAMM Documentation
    :numbered:
 
    introduction
+   announcements
    bammgraph
    rateshifts
 

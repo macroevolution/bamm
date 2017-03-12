@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>12. Is BAMM reliable? A DIY approach &#8212; bamm 2.5.0 documentation</title>
+    <title>13. Is BAMM reliable? A DIY approach &#8212; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="13. Metropolis coupled Markov chain Monte Carlo [(MC)3]" href="mc3.html" />
-    <link rel="prev" title="11. The BAMM likelihood function" href="likelihoodmodel.html" /> 
+    <link rel="next" title="14. Metropolis coupled Markov chain Monte Carlo [(MC)3]" href="mc3.html" />
+    <link rel="prev" title="12. The BAMM likelihood function" href="likelihoodmodel.html" /> 
   </head>
   <body role="document">
 <div class="pageheader">
@@ -37,10 +37,10 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="mc3.html" title="13. Metropolis coupled Markov chain Monte Carlo [(MC)3]"
+          <a href="mc3.html" title="14. Metropolis coupled Markov chain Monte Carlo [(MC)3]"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="likelihoodmodel.html" title="11. The BAMM likelihood function"
+          <a href="likelihoodmodel.html" title="12. The BAMM likelihood function"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -53,28 +53,28 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">12. Is BAMM reliable? A DIY approach</a><ul>
-<li><a class="reference internal" href="#overview">12.1. Overview</a></li>
-<li><a class="reference internal" href="#assessing-rate-reliability-on-your-own">12.2. Assessing rate reliability on your own</a></li>
-<li><a class="reference internal" href="#simulating-trees-with-rate-shifts-under-a-poisson-process">12.3. Simulating trees with rate shifts under a Poisson process</a></li>
-<li><a class="reference internal" href="#worked-example-tree-simulation-with-specified-seed">12.4. Worked example: tree simulation with specified seed</a></li>
-<li><a class="reference internal" href="#worked-example-1-tree-with-seed-8">12.5. Worked example #1: tree with seed = 8</a></li>
-<li><a class="reference internal" href="#worked-example-2-tree-with-seed-9">12.6. Worked example #2: tree with seed = 9</a><ul>
-<li><a class="reference internal" href="#regression-analysis-of-low-power-trees-is-misleading">12.6.1. Regression analysis of low-power trees is misleading</a></li>
+<li><a class="reference internal" href="#">13. Is BAMM reliable? A DIY approach</a><ul>
+<li><a class="reference internal" href="#overview">13.1. Overview</a></li>
+<li><a class="reference internal" href="#assessing-rate-reliability-on-your-own">13.2. Assessing rate reliability on your own</a></li>
+<li><a class="reference internal" href="#simulating-trees-with-rate-shifts-under-a-poisson-process">13.3. Simulating trees with rate shifts under a Poisson process</a></li>
+<li><a class="reference internal" href="#worked-example-tree-simulation-with-specified-seed">13.4. Worked example: tree simulation with specified seed</a></li>
+<li><a class="reference internal" href="#worked-example-1-tree-with-seed-8">13.5. Worked example #1: tree with seed = 8</a></li>
+<li><a class="reference internal" href="#worked-example-2-tree-with-seed-9">13.6. Worked example #2: tree with seed = 9</a><ul>
+<li><a class="reference internal" href="#regression-analysis-of-low-power-trees-is-misleading">13.6.1. Regression analysis of low-power trees is misleading</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#worked-example-3-tree-with-seed-15">12.7. Worked example #3: tree with seed = 15</a></li>
-<li><a class="reference internal" href="#general-guidelines">12.8. General guidelines</a></li>
+<li><a class="reference internal" href="#worked-example-3-tree-with-seed-15">13.7. Worked example #3: tree with seed = 15</a></li>
+<li><a class="reference internal" href="#general-guidelines">13.8. General guidelines</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="likelihoodmodel.html"
-                        title="previous chapter">11. The BAMM likelihood function</a></p>
+                        title="previous chapter">12. The BAMM likelihood function</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="mc3.html"
-                        title="next chapter">13. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]</a></p>
+                        title="next chapter">14. Metropolis coupled Markov chain Monte Carlo [(MC)<sup>3</sup>]</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -101,9 +101,9 @@
           <div class="body" role="main">
             
   <div class="section" id="is-bamm-reliable-a-diy-approach">
-<h1>12. Is BAMM reliable? A DIY approach<a class="headerlink" href="#is-bamm-reliable-a-diy-approach" title="Permalink to this headline">¶</a></h1>
+<h1>13. Is BAMM reliable? A DIY approach<a class="headerlink" href="#is-bamm-reliable-a-diy-approach" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="overview">
-<h2>12.1. Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<h2>13.1. Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>We have demonstrated that major claims from the Moore et al (2016; hereafter, MEA) assessment of BAMM are incorrect or unjustified; see the full <a class="reference download internal" href="_downloads/Rabosky_etal_SystematicBiology_2017.pdf" download=""><code class="xref download docutils literal"><span class="pre">Systematic</span> <span class="pre">Biology</span></code></a> article and associated <a class="reference download internal" href="_downloads/SupplementaryMaterial_BAMM_Text&Figures.pdf" download=""><code class="xref download docutils literal"><span class="pre">Supplementary</span> <span class="pre">Information</span></code></a>. Specifically:</p>
 <ul class="simple">
 <li>The MEA likelihood function is theoretically invalid and did not demonstrate pathologies with the BAMM likelihood that are attributable to unobserved rate shifts.</li>
@@ -115,7 +115,7 @@
 <p>These and other topics are treated at length in the Systematic Biology article. Here we describe how users can independently assess rate reliability with BAMM, using phylogenetic tree simulation code developed by MEA.</p>
 </div>
 <div class="section" id="assessing-rate-reliability-on-your-own">
-<h2>12.2. Assessing rate reliability on your own<a class="headerlink" href="#assessing-rate-reliability-on-your-own" title="Permalink to this headline">¶</a></h2>
+<h2>13.2. Assessing rate reliability on your own<a class="headerlink" href="#assessing-rate-reliability-on-your-own" title="Permalink to this headline">¶</a></h2>
 <p><strong>We encourage users not to take our assessment of BAMM&#8217;s performance at face value, but to verify the performance of the method on their own.</strong> We will:</p>
 <ul class="simple">
 <li>Simulate phylogenies with rate shifts under a Poisson process model of rate variation exactly as in MEA, using their tree simulation code and input parameters</li>
@@ -131,7 +131,7 @@
 </ul>
 </div>
 <div class="section" id="simulating-trees-with-rate-shifts-under-a-poisson-process">
-<h2>12.3. Simulating trees with rate shifts under a Poisson process<a class="headerlink" href="#simulating-trees-with-rate-shifts-under-a-poisson-process" title="Permalink to this headline">¶</a></h2>
+<h2>13.3. Simulating trees with rate shifts under a Poisson process<a class="headerlink" href="#simulating-trees-with-rate-shifts-under-a-poisson-process" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference download internal" href="_downloads/Rabosky_etal_SystematicBiology_2017.pdf" download=""><code class="xref download docutils literal"><span class="pre">Systematic</span> <span class="pre">Biology</span></code></a> article (see <em>Claim 5</em>) provides a detailed explanation for why MEA&#8217;s analyses were compromised by low statistical power and ascertainment bias. We encourage readers to consult that section of our article for additional information.</p>
 <p>We will simulate a set of phylogenies using the tree simulator and input parameters used by MEA to generate their purportedly <em>variable rates</em> dataset, which they used to argue that BAMM-estimated rates are unreliable. We will perform 20 simulations, seeding the random number generator in each simulation with the corresponding integer (1, 2, 3.... 20), such that you are able to generate trees that are identical to those generated here (setting the <em>seed</em> ensures that the random number generator underlying the simulation draws the exact same sequence of random numbers).</p>
 <p>MEA rejected all trees that had (i) fewer than 50 tips, (ii) more than 150 tips, and (iii) no rate shifts. However, most phylogenies generated under their parameters do not fall into this acceptance region (50 - 150 tips). They rejected the majority of simulated outcomes under their parameters, such that they selected for trees where power to infer rate variation was low (again, see &#8220;Claim 5&#8221; and Figure 7 from the Systematic Biology article linked above).</p>
@@ -139,7 +139,7 @@
 <p>Below, we will analyze trees generated with the following three seeds: 8, 9, and 15. The tools provided below can be used to craft your own performance assessment of BAMM.</p>
 </div>
 <div class="section" id="worked-example-tree-simulation-with-specified-seed">
-<h2>12.4. Worked example: tree simulation with specified seed<a class="headerlink" href="#worked-example-tree-simulation-with-specified-seed" title="Permalink to this headline">¶</a></h2>
+<h2>13.4. Worked example: tree simulation with specified seed<a class="headerlink" href="#worked-example-tree-simulation-with-specified-seed" title="Permalink to this headline">¶</a></h2>
 <p>First, we will load the necessary libraries and an R file we have developed that contains all necessary functions for these analyses:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">library</span><span class="p">(</span><span class="n">geiger</span><span class="p">)</span>
 <span class="n">library</span><span class="p">(</span><span class="n">phytools</span><span class="p">)</span>
@@ -200,7 +200,7 @@
 </div>
 </div>
 <div class="section" id="worked-example-1-tree-with-seed-8">
-<h2>12.5. Worked example #1: tree with seed = 8<a class="headerlink" href="#worked-example-1-tree-with-seed-8" title="Permalink to this headline">¶</a></h2>
+<h2>13.5. Worked example #1: tree with seed = 8<a class="headerlink" href="#worked-example-1-tree-with-seed-8" title="Permalink to this headline">¶</a></h2>
 <p>Running BAMM on the <code class="docutils literal"><span class="pre">seed</span> <span class="pre">=</span> <span class="pre">8</span></code> tree should only take a few minutes. We will now assume that you have an event data file for the run, <code class="docutils literal"><span class="pre">s8_event_data.txt</span></code>, along with the true shift data from the original simulation (<code class="docutils literal"><span class="pre">s8_true_eventdata.txt</span></code>).:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Read in tree, mcmc data, and BAMM output</span>
 <span class="n">tree8</span>    <span class="o">&lt;-</span> <span class="n">read</span><span class="o">.</span><span class="n">tree</span><span class="p">(</span><span class="s2">&quot;tree_s8.tre&quot;</span><span class="p">)</span>
@@ -286,7 +286,7 @@ mean(extract.clade(as.phylo(rates8), node = 240)$edge.length)
 <p><strong>Finally: should we be surprised that BAMM fails to detect the small rate regimes in the example here (e.g., the small light blue and purple rate regimes in the figure above)?</strong> We address this question at length in the <a class="reference download internal" href="_downloads/Rabosky_etal_SystematicBiology_2017.pdf" download=""><code class="xref download docutils literal"><span class="pre">Systematic</span> <span class="pre">Biology</span></code></a> article. We use information theoretic evidence to show that, in general, such small rate regimes cannot be inferred by any diversification methodology. The likelihood of very small shift regimes is often very similar across a broad range of parameterizations, such that the likelihood of the data under the true parameters is about the same as the corresponding likelihood under somewhat different parameters. Our formal analysis (see <em>Claim 5</em> and associated figures from the Systematic Biology article) demonstrates that most of the phylogenies (&gt;80%) in MEA&#8217;s <em>variable rates</em> dataset lack sufficient information with which BAMM, and any other method, can infer rate variation.</p>
 </div>
 <div class="section" id="worked-example-2-tree-with-seed-9">
-<h2>12.6. Worked example #2: tree with seed = 9<a class="headerlink" href="#worked-example-2-tree-with-seed-9" title="Permalink to this headline">¶</a></h2>
+<h2>13.6. Worked example #2: tree with seed = 9<a class="headerlink" href="#worked-example-2-tree-with-seed-9" title="Permalink to this headline">¶</a></h2>
 <p>We now turn to the tree generated with <code class="docutils literal"><span class="pre">seed</span> <span class="pre">=</span> <span class="pre">9</span></code>, which has 85 tips. This tree would have been included in MEA&#8217;s <em>variable rates</em> dataset as it contains the right number of tips and at least one shift. We won&#8217;t go through the exercise of tree simulation again, but you can use the script given above to repeat these analyses exactly. Simply plug in the new seed index to generate all the relevant files. We will start assuming that you&#8217;ve already run BAMM on this phylogeny:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">tree9</span>    <span class="o">&lt;-</span> <span class="n">read</span><span class="o">.</span><span class="n">tree</span><span class="p">(</span><span class="s2">&quot;tree_s9.tre&quot;</span><span class="p">)</span>
 <span class="n">ed9</span>      <span class="o">&lt;-</span> <span class="n">getEventData</span><span class="p">(</span><span class="n">tree9</span><span class="p">,</span>  <span class="s2">&quot;s9_event_data.txt&quot;</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">nsamples</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
@@ -328,7 +328,7 @@ mean(getCladeRates(true_ed9)$lambda)
 </div>
 <p>This mean (<img class="math" src="_images/math/6ab5c4a159685940a40df112f046e699d47fc8dd.png" alt="\lambda = 0.21"/>) corresponds very well to the rate for the root regime, which you can access as: <code class="docutils literal"><span class="pre">ss9[1,</span> <span class="pre">]</span></code>. So: on the whole, BAMM did very well at getting the whole-tree mean rate, despite failing to find several tiny rate regimes.</p>
 <div class="section" id="regression-analysis-of-low-power-trees-is-misleading">
-<h3>12.6.1. Regression analysis of low-power trees is misleading<a class="headerlink" href="#regression-analysis-of-low-power-trees-is-misleading" title="Permalink to this headline">¶</a></h3>
+<h3>13.6.1. Regression analysis of low-power trees is misleading<a class="headerlink" href="#regression-analysis-of-low-power-trees-is-misleading" title="Permalink to this headline">¶</a></h3>
 <p>MEA concluded that BAMM-estimated rates are unreliable by performing branch-specific regressions of rates, as above, for trees in their <em>variable rates</em> dataset. They write: <em>&#8221;... the true and estimated branch-specific diversification-rate parameters are uncorrelated when rates of speciation and extinction vary across the tree (Fig. 6, Middle, gray lines).&#8221;</em> However, when simple regression analyses are performed on phylogenies that lack evidence for rate variation, the average slope for branch-specific rates is expected to be zero. Let&#8217;s repeat the branch-specific regression analysis performed above on this low power (<code class="docutils literal"><span class="pre">seed</span> <span class="pre">=</span> <span class="pre">9</span></code>) tree:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>rates9   &lt;- getMeanBranchLengthTree(ed9)$phy
 
@@ -364,7 +364,7 @@ points(j(rates9true$edge.length), j(rates9$edge.length), pch=21, bg=colset)
 </div>
 </div>
 <div class="section" id="worked-example-3-tree-with-seed-15">
-<h2>12.7. Worked example #3: tree with seed = 15<a class="headerlink" href="#worked-example-3-tree-with-seed-15" title="Permalink to this headline">¶</a></h2>
+<h2>13.7. Worked example #3: tree with seed = 15<a class="headerlink" href="#worked-example-3-tree-with-seed-15" title="Permalink to this headline">¶</a></h2>
 <p>We will go through just one more tree - <code class="docutils literal"><span class="pre">seed</span> <span class="pre">=</span> <span class="pre">15</span></code> - the only other tree generated with MEA&#8217;s parameters that contained between 50 and 500 tips for this set of starting seeds. MEA would have rejected this tree, as it exceeded their size selection criterion, but this tree is characteristic of the large number of trees that have sufficient information with which to infer rate variation yet which were excluded from their analyses. As for the <code class="docutils literal"><span class="pre">seed</span> <span class="pre">=</span> <span class="pre">9</span></code> analyses above, we will not repeat the tree simulation exercise: simply plug in <code class="docutils literal"><span class="pre">seed</span> <span class="pre">=</span> <span class="pre">15</span></code> to the relevant line of the script file accompanying this page, and you can generate all necessary input files. We now assume that you have run BAMM on this dataset.:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">tree15</span>    <span class="o">&lt;-</span> <span class="n">read</span><span class="o">.</span><span class="n">tree</span><span class="p">(</span><span class="s2">&quot;tree_s15.tre&quot;</span><span class="p">)</span>
 <span class="n">ed15</span>      <span class="o">&lt;-</span> <span class="n">getEventData</span><span class="p">(</span><span class="n">tree15</span><span class="p">,</span>  <span class="s2">&quot;s15_event_data.txt&quot;</span><span class="p">,</span> <span class="n">burnin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">nsamples</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
@@ -420,7 +420,7 @@ summary(fit)
 <p>So, for this specific fast-speciating clade (node 345), BAMM&#8217;s results are approximately equal to those obtained with a constant-rate birth-death process, which is the <em>true</em> model for this clade (because this clade has diversified under just a single rate regime). This suggests that BAMM&#8217;s overestimate is somewhat expected. Estimates under the exact generating model for this clade, for which we have specified the precise shift location, are only marginally more accurate than those obtained with BAMM.</p>
 </div>
 <div class="section" id="general-guidelines">
-<h2>12.8. General guidelines<a class="headerlink" href="#general-guidelines" title="Permalink to this headline">¶</a></h2>
+<h2>13.8. General guidelines<a class="headerlink" href="#general-guidelines" title="Permalink to this headline">¶</a></h2>
 <p>We hope that the code and illustrative examples given above are useful if you consider performing your own assessment of BAMM&#8217;s performance. As a general set of guidelines:</p>
 <ul class="simple">
 <li>Branch-specific analyses of rates (correlations or regression slopes) are reasonable only when the underlying data are sufficiently informative such that BAMM can infer rate variation. <strong>Naive application of these statistics to trees that are identical to constant-rate trees will (incorrectly) suggest poor performance</strong>.</li>
@@ -440,10 +440,10 @@ summary(fit)
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="mc3.html" title="13. Metropolis coupled Markov chain Monte Carlo [(MC)3]"
+          <a href="mc3.html" title="14. Metropolis coupled Markov chain Monte Carlo [(MC)3]"
              >next</a></li>
         <li class="right" >
-          <a href="likelihoodmodel.html" title="11. The BAMM likelihood function"
+          <a href="likelihoodmodel.html" title="12. The BAMM likelihood function"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>15. Time-flip proposal: Time-constant and time-variable shifts &#8212; bamm 2.5.0 documentation</title>
+    <title>16. Time-flip proposal: Time-constant and time-variable shifts &#8212; bamm 2.5.0 documentation</title>
     
     <link rel="stylesheet" href="_static/bamm.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="16. fossil BAMM" href="fossilbamm.html" />
-    <link rel="prev" title="14. STRAPP: STructured Rate Permutations on Phylogenies" href="strapp.html" /> 
+    <link rel="next" title="17. fossil BAMM" href="fossilbamm.html" />
+    <link rel="prev" title="15. STRAPP: STructured Rate Permutations on Phylogenies" href="strapp.html" /> 
   </head>
   <body role="document">
 <div class="pageheader">
@@ -37,10 +37,10 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="fossilbamm.html" title="16. fossil BAMM"
+          <a href="fossilbamm.html" title="17. fossil BAMM"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="strapp.html" title="14. STRAPP: STructured Rate Permutations on Phylogenies"
+          <a href="strapp.html" title="15. STRAPP: STructured Rate Permutations on Phylogenies"
              accesskey="P">previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
@@ -53,20 +53,20 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="documentation.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">15. Time-flip proposal: Time-constant and time-variable shifts</a><ul>
-<li><a class="reference internal" href="#calculation-of-parameters-after-a-time-flip">15.1. Calculation of parameters after a time-flip</a></li>
-<li><a class="reference internal" href="#acceptance-probability-for-a-time-flip-proposal">15.2. Acceptance probability for a time-flip proposal</a></li>
-<li><a class="reference internal" href="#time-flip-proposal-options">15.3. Time-flip proposal options</a></li>
+<li><a class="reference internal" href="#">16. Time-flip proposal: Time-constant and time-variable shifts</a><ul>
+<li><a class="reference internal" href="#calculation-of-parameters-after-a-time-flip">16.1. Calculation of parameters after a time-flip</a></li>
+<li><a class="reference internal" href="#acceptance-probability-for-a-time-flip-proposal">16.2. Acceptance probability for a time-flip proposal</a></li>
+<li><a class="reference internal" href="#time-flip-proposal-options">16.3. Time-flip proposal options</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="strapp.html"
-                        title="previous chapter">14. STRAPP: STructured Rate Permutations on Phylogenies</a></p>
+                        title="previous chapter">15. STRAPP: STructured Rate Permutations on Phylogenies</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="fossilbamm.html"
-                        title="next chapter">16. fossil BAMM</a></p>
+                        title="next chapter">17. fossil BAMM</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -93,7 +93,7 @@
           <div class="body" role="main">
             
   <div class="section" id="time-flip-proposal-time-constant-and-time-variable-shifts">
-<span id="timefliptheory"></span><h1>15. Time-flip proposal: Time-constant and time-variable shifts<a class="headerlink" href="#time-flip-proposal-time-constant-and-time-variable-shifts" title="Permalink to this headline">¶</a></h1>
+<span id="timefliptheory"></span><h1>16. Time-flip proposal: Time-constant and time-variable shifts<a class="headerlink" href="#time-flip-proposal-time-constant-and-time-variable-shifts" title="Permalink to this headline">¶</a></h1>
 <p><strong>Note: The time-flip proposal is still being tested for reliability,
 so it is currently turned off in the template and example control files.
 It is available but is not the default. It is currently under development.</strong></p>
@@ -127,7 +127,7 @@ by a single parameter (<img class="math" src="_images/math/76f1d8ace30435987c01a
 (<img class="math" src="_images/math/76f1d8ace30435987c01a00ca53a71cba1f40e6c.png" alt="\lambda"/>) and the phenotypic evolution model (<img class="math" src="_images/math/410a9d0df9c135dd73b269cba7ef04dcfd932b1f.png" alt="\beta"/>),
 this discussion will focus on the diversification model.</p>
 <div class="section" id="calculation-of-parameters-after-a-time-flip">
-<h2>15.1. Calculation of parameters after a time-flip<a class="headerlink" href="#calculation-of-parameters-after-a-time-flip" title="Permalink to this headline">¶</a></h2>
+<h2>16.1. Calculation of parameters after a time-flip<a class="headerlink" href="#calculation-of-parameters-after-a-time-flip" title="Permalink to this headline">¶</a></h2>
 <p>When flipping between time-constant and time-variable modes,
 the rate function parameters are modified such that
 the mean speciation rate through time is the same for both modes
@@ -167,7 +167,7 @@ Solving for <img class="math" src="_images/math/99d2b392ca621d85ecada0206d6c9405
 for the time-constant event.</p>
 </div>
 <div class="section" id="acceptance-probability-for-a-time-flip-proposal">
-<h2>15.2. Acceptance probability for a time-flip proposal<a class="headerlink" href="#acceptance-probability-for-a-time-flip-proposal" title="Permalink to this headline">¶</a></h2>
+<h2>16.2. Acceptance probability for a time-flip proposal<a class="headerlink" href="#acceptance-probability-for-a-time-flip-proposal" title="Permalink to this headline">¶</a></h2>
 <p>The acceptance probability for a time-flip proposal
 from a time-constant event to a time-variable event is</p>
 <div class="math">
@@ -249,7 +249,7 @@ from a time-variable event to a time-constant event is</p>
 \right\}"/></p>
 </div></div>
 <div class="section" id="time-flip-proposal-options">
-<h2>15.3. Time-flip proposal options<a class="headerlink" href="#time-flip-proposal-options" title="Permalink to this headline">¶</a></h2>
+<h2>16.3. Time-flip proposal options<a class="headerlink" href="#time-flip-proposal-options" title="Permalink to this headline">¶</a></h2>
 <p>The frequency in which a time-flip proposal occurs,
 relative to other proposals, is given by <code class="docutils literal"><span class="pre">updateRateLambdaTimeMode</span></code>
 and <code class="docutils literal"><span class="pre">updateRateBetaTimeMode</span></code> for the diversification
@@ -288,10 +288,10 @@ the phenotypic evolution model type.</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="fossilbamm.html" title="16. fossil BAMM"
+          <a href="fossilbamm.html" title="17. fossil BAMM"
              >next</a></li>
         <li class="right" >
-          <a href="strapp.html" title="14. STRAPP: STructured Rate Permutations on Phylogenies"
+          <a href="strapp.html" title="15. STRAPP: STructured Rate Permutations on Phylogenies"
              >previous</a> |</li>
 <li><a href="index.html">Home</a>&nbsp;|</li>
 <li><a href="download.html">Download</a>&nbsp;|</li>
