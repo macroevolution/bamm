@@ -13,7 +13,7 @@ OS X
 BAMM using Homebrew.
 
 `bamm-2.5.0-MacOSX.tar.gz
-<https://dl.dropboxusercontent.com/u/34644229/bamm-2.5.0-MacOSX.tar.gz>`_
+<https://www.dropbox.com/s/ky9hpdq6x5b2rl3/bamm-2.5.0-MacOSX.tar.gz?dl=1>`_
 
 Requires OS X 10.7.5 or greater.
 
@@ -21,7 +21,7 @@ Windows
 -------
 
 `bamm-2.5.0-windows.zip
-<https://dl.dropboxusercontent.com/u/34644229/bamm-2.5.0-Windows.zip>`_
+<https://www.dropbox.com/s/2mkajsofwfknz9h/bamm-2.5.0-Windows.zip?dl=1>`_
 
 Requires Windows 7 or greater (does not run on Windows XP).
 
@@ -70,10 +70,10 @@ You may download previous versions of the binaries and examples
 for BAMM using the following links:
 
 `bamm-2.3.0-MacOSX.tar.gz
-<https://dl.dropboxusercontent.com/u/34644229/bamm-2.3.0-MacOSX.tar.gz>`_
+<https://www.dropbox.com/s/sxdbria2fvfvtic/bamm-2.3.0-MacOSX.tar.gz?dl=1>`_
 
 `bamm-2.3.0-Windows.zip
-<https://dl.dropboxusercontent.com/u/34644229/bamm-2.3.0-windows.zip>`_
+<https://www.dropbox.com/s/d2p6wgzeq77fnhn/bamm-2.3.0-windows.zip?dl=1>`_
 
 `bamm-2.2.0-MacOSX.tar.gz
 <http://www-personal.umich.edu/~carlosja/bamm-2.2.0-MacOSX.tar.gz>`_
