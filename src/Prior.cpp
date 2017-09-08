@@ -2,6 +2,7 @@
 #include "Random.h"
 #include "Settings.h"
 #include "Stat.h"
+#include "Tree.h"
 
 #define _UPDATE_TOL 0.0001
 
@@ -54,6 +55,27 @@ Prior::Prior(Random& random, Settings* settings) : _random(random)
 
 Prior::~Prior()
 {
+}
+
+void Prior::autoInitializePriors(Tree* tree)
+{
+    // from BAMMtools::setBAMMpriors
+    // mbt <- max(branching.times(phy));
+    // pb <- (log(total.taxa) - log(2)) / mbt;
+    // lamprior <- 1 / (pb * 5);
+    // lamrootprior <- 1 / (pb * 1);
+    // k1 <- log(0.1) / mbt;
+    // kprior <- -1 * (k1 / 2);
+    double mbt = tree->getAge();
+    double total_taxa = nearbyint(tree->getNumberTips() * (1 / tree->samplingFrac));
+    double pb = (log(total_taxa) - log(2)) / mbt;
+    _muInitPrior = _lambdaInitPrior = 1 / (pb * 5);
+    double k1 = log(0.1) / mbt;
+    _lambdaShiftPrior = -1 * (k1 / 2);
+    std::cout << std::endl << "Autosetting priors {age=" << mbt << ", ntax=" << total_taxa << ", sf=" << tree->samplingFrac << "}" << std::endl;
+    std::cout << "    lambdaInitPrior = " << _lambdaInitPrior << std::endl;
+    std::cout << "    muInitPrior = " << _muInitPrior << std::endl;
+    std::cout << "    lambdaShiftPrior = " << _lambdaShiftPrior << std::endl;
 }
 
 
