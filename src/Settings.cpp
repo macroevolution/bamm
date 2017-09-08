@@ -163,6 +163,12 @@ void Settings::initializeGlobalSettings()
     addParameter("fastSimulatePriorExperimental", "0", NotRequired);
     addParameter("fastSimulatePrior_BurnIn", "0.05", NotRequired);
 
+    // Convergence criterion parameters
+    addParameter("convergenceESS", "0", NotRequired);
+    addParameter("convergenceCheckFreq", "1000000", NotRequired);
+    addParameter("convergenceBurninFrac", "0.1", NotRequired);
+
+
     // maxNumberEvents = for fastSimulatePriorExperimental, maximum number of events...
     // priorSims_intervalGenerations = number of generations per model pair
     // fastSimulatePrior_Generations = sampling gens for simulation of prior

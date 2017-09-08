@@ -5,6 +5,7 @@
 #include "MbRandom.h"
 #include <vector>
 
+#define MAX_LAG 1000
 
 class Stat
 {
@@ -15,6 +16,8 @@ public:
 
     static double lnNormalPDF(double x, double mean, double sd);
     static double lnExponentialPDF(double x, double rate);
+
+    static double ESS(const std::vector<double>& values, double burninFrac);
 
 private:
 

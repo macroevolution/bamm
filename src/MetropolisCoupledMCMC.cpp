@@ -7,6 +7,7 @@
 #include "Model.h"
 #include "ModelDataWriter.h"
 #include "ChainSwapDataWriter.h"
+#include "Stat.h"
 
 #include <algorithm>
 #include <thread>
@@ -19,6 +20,12 @@ MetropolisCoupledMCMC::MetropolisCoupledMCMC
 {
     // Total number of generations to run for each chain
     _nGenerations = _settings.get<int>("numberOfGenerations");
+
+    // autostopping criteria
+    _ESS = _settings.get<int>("convergenceESS");
+    _checkEvery = _settings.get<int>("convergenceCheckFreq");
+    _burninFrac = _settings.get<double>("convergenceBurninFrac");
+    _outputFreq = _settings.get<int>("mcmcWriteFreq");
 
     // MC3 settings
     _nChains = _settings.get<int>("numberOfChains");
@@ -52,11 +59,43 @@ void MetropolisCoupledMCMC::run()
     log() << "\n";
 
     int generation = 0;
-    while (generation < _nGenerations) {
-        int generationEnd = std::min(generation + _swapPeriod, _nGenerations);
-        runChains(generation, generationEnd);
-        generation = generationEnd;
-        tryChainSwap(generation);
+    if (_ESS <= 0) {
+        // not checking for convergence diagnostics
+        while (generation < _nGenerations) {
+            int generationEnd = std::min(generation + _swapPeriod, _nGenerations);
+            runChains(generation, generationEnd);
+            generation = generationEnd;
+            tryChainSwap(generation);
+        }
+    } else {
+        std::vector<double> nshifts;
+        std::vector<double> loglik;
+
+        log() << "\nStopping at ESS > " << _ESS << ", checking every " << _checkEvery << " generations w/ burnin " << _burninFrac << "\n\n";
+
+        while (generation < _nGenerations) {
+            int generationEnd = std::min(generation + _swapPeriod, _nGenerations);
+            runChains(generation, generationEnd);
+            generation = generationEnd;
+            tryChainSwap(generation);
+
+            // check for convergence
+            if (generation % _outputFreq == 0) {
+                nshifts.push_back(_chains[_coldChainIndex]->model().getNumberOfEvents());
+                loglik.push_back(_chains[_coldChainIndex]->model().getCurrentLogLikelihood());
+            }
+            if (generation % _checkEvery == 0) {
+                double nshifts_ess = Stat::ESS(nshifts, _burninFrac);
+                double loglik_ess = Stat::ESS(loglik, _burninFrac);
+                log() << "\nNShifts ESS: " << nshifts_ess << " LogLik ESS: " << loglik_ess << "\n";
+                if (loglik_ess > _ESS && nshifts_ess > _ESS){
+                    log() << "Target ESS of " << _ESS << " reached!\n";
+                    break;
+                } else {
+                    log() << "\n";
+                }
+            }
+        }
     }
 }
 
